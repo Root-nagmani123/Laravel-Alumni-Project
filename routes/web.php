@@ -5,10 +5,11 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AdminController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\BroadcastController;
+
 use App\Http\Controllers\Admin\MemberController;
 use App\Http\Controllers\Admin\GroupController;
 use App\Http\Controllers\Admin\ForumController;
+use App\Http\Controllers\Admin\BroadcastController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -148,13 +149,22 @@ Route::prefix('members')->name('members.')->group(function () {
 
 
 Route::prefix('broadcasts')->name('broadcasts.')->group(function () {
-    Route::get('/', function () {return view('admin.broadcasts.index');})->name('index');
+    
+    Route::get('/', [BroadcastController::class, 'index'])->name('index');
 
 	Route::get('/create', function () {return view('admin.broadcasts.create');})->name('create');
 
     Route::get('/edit', function () {return view('admin.broadcasts.edit');})->name('edit');
 
-    Route::post('/broadcasts', [BroadcastController::class, 'store'])->name('broadcasts.store');
+    Route::post('/', [BroadcastController::class, 'store'])->name('broadcast.store');
+
+    Route::post('/broadcasts/toggle-status', [BroadcastController::class, 'toggleStatus'])->name('toggleStatus');
+
+    Route::delete('/broadcasts/{broadcast}', [BroadcastController::class, 'destroybroadcast'])->name('broadcast.destroy');
+
+    Route::put('/broadcast/{id}', [BroadcastController::class, 'update'])->name('broadcast.update');
+
+
 });
 
 

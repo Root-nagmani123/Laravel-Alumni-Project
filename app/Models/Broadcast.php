@@ -14,6 +14,7 @@ class Broadcast extends Model
         'image_url',
         'video_url',
         'youtube_link',
+        'status',
         'createdBy',
         'is_deleted',
         'deleted_by',

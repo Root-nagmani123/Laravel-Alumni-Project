@@ -33,13 +33,14 @@
         <div class="card-body">
             <h4 class="card-title mb-3">Broadcasts</h4>
             <hr>
-            <form  method="POST" action="{{ route('broadcasts.store') }}" enctype="multipart/form-data">
+            <form method="POST" action="{{ route('broadcasts.broadcast.store') }}" enctype="multipart/form-data">
+                @csrf
                 <div class="row">
                     <div class="col-md-12">
                         <div class="mb-3">
                             <label class="form-label" for="title">Title :</label>
                            <div class="mb-3">
-                            <input type="text" name="title" id="title" class="form-control">
+                            <input type="text" name="title" id="title" class="form-control" required>
                            </div>
                         </div>
                     </div>
@@ -53,7 +54,7 @@
                     </div>
 					 <div class="col-md-12">
                         <div class="mb-3">
-                            <label class="form-label" for="content">Image URL :</label>
+                            <label class="form-label" for="content">Image :</label>
                            <div class="mb-3">
                            <input id="file-upload" multiple="" data-max-file-size="3MB" data-max-files="10" type="file" name="images[]" accept="image/*" class="form-control">
                            </div>
@@ -82,4 +83,13 @@
 </div>
 
 
+@endsection
+@section('scripts')
+<script>
+     @if ($errors->any())
+        @foreach ($errors->all() as $error)
+            toastr.error("{{ $error }}");
+        @endforeach
+    @endif
+</script>
 @endsection
