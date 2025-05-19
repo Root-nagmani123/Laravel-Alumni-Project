@@ -10,7 +10,7 @@ class Broadcast extends Model
 
     protected $fillable = [
         'title',
-        'content',
+        'description',
         'image_url',
         'video_url',
         'youtube_link',

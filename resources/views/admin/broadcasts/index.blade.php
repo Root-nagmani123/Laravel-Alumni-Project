@@ -232,7 +232,7 @@
         // Delete button handling
         document.addEventListener("DOMContentLoaded", function () {
         $('.delete-broadcast-btn').on('click', function () {
-            const forumId = $(this).data('id');
+            const broadcastId = $(this).data('id');
     const status = $(this).attr('data-status');
     
 
@@ -240,7 +240,7 @@
                 Swal.fire({
                     icon: 'warning',
                     title: 'Cannot Delete',
-                    text: 'Topic must be active to delete it!',
+                    text: 'Broadcast must be active to delete it!',
                     confirmButtonColor: '#d33'
                 });
                 return;
@@ -256,7 +256,7 @@
                 confirmButtonText: 'Yes, delete it!'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    document.getElementById(`delete-form-${broadcast}`).submit();
+                    document.getElementById(`delete-form-${broadcastId}`).submit();
                 }
             });
         });

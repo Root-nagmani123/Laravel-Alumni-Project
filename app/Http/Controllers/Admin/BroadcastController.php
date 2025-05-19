@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Broadcast;
+use Illuminate\Support\Facades\Storage;
 class BroadcastController extends Controller
 {
     public function index()
@@ -14,6 +15,7 @@ class BroadcastController extends Controller
 }
     public function store(Request $request)
 {
+    // dd($request);
     // Validate request
     $validated = $request->validate([
         'title' => 'required|string|max:255',
@@ -32,12 +34,12 @@ class BroadcastController extends Controller
     // Save to DB
     $broadcast = Broadcast::create([
         'title' => $validated['title'],
-        'content' => $validated['content'],
+        'description' => $validated['content'],
         'image_url' => $imageUrl ? asset('storage/' . $imageUrl) : null,
         'video_url' => $validated['video_url'] ?? null,
         'createdBy' => auth()->id() ?? null,
         'is_deleted' => 0,
-        'deleted_on' => now(), // default to now, or update logic as needed
+        'deleted_on' => now(),
     ]);
 
     return redirect()->route('broadcasts.index')->with('success', 'Broadcast added successfully!');
@@ -51,8 +53,10 @@ public function toggleStatus(Request $request)
 
     return response()->json(['message' => 'Broadcast status updated successfully.']);
 }
-public function destroy(Broadcast $broadcast)
+public function destroybroadcast(Broadcast $broadcast)
     {
+        if ($broadcast->image_url && Storage::disk('public')->exists($broadcast->image_url))
+        Storage::disk('public')->delete($broadcast->image_url);
         $broadcast->delete();
         return redirect()->route('broadcasts.index')->with('success', 'Broadcast deleted successfully.');
     }
