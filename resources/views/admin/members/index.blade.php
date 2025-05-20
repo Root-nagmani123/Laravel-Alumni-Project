@@ -88,7 +88,7 @@
 										<td>{{ $member->name }}</td>
 										<td>{{ $member->email }}</td>
 										<td>{{ $member->mobile }}</td>
-										<td>{{ $member->Cadre }}, {{ $member->batch }}</td>
+										<td>{{ $member->cader }}, {{ $member->batch }}</td>
 										<td>{{ $member->status }}</td>
 										<td>
 											<a href="{{route('members.edit', $member->id) }}" class="btn btn-warning">Edit</a>

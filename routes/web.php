@@ -11,6 +11,10 @@ use App\Http\Controllers\Admin\GroupController;
 use App\Http\Controllers\Admin\ForumController;
 use App\Http\Controllers\Admin\BroadcastController;
 
+use App\Http\Controllers\Member\AuthController;
+Route::get('/test-member', function () {
+    return 'Member Route Working';
+});
 Route::get('/', function () {
     return view('welcome');
 });
@@ -18,8 +22,24 @@ Route::get('/', function () {
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+Route::redirect('/member','member/login');
+Route::prefix('member')->name('member.')->group(function () {
+    Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login'); // <- Add this
+    Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-
+    Route::middleware('auth:member')->group(function () {
+        Route::get('/dashboard', function () {
+            return view('member.dashboard');
+        })->name('dashboard');
+    });
+});
+Route::prefix('member')->middleware('auth:member')->group(function () {
+    Route::get('dashboard', [DashboardController::class, 'index'])->name('member.dashboard');
+    Route::post('post/like', [DashboardController::class, 'like'])->name('member.post.like');
+    Route::post('post/comment', [DashboardController::class, 'comment'])->name('member.post.comment');
+    Route::post('rsvp/update', [DashboardController::class, 'updateRSVP'])->name('member.rsvp.update');
+});
 
 // Routes accessible *without* login (public)
 Route::prefix('admin')->controller(AdminController::class)->group(function () {
@@ -166,6 +186,8 @@ Route::prefix('broadcasts')->name('broadcasts.')->group(function () {
 
 
 });
+    
+    
 
 
 

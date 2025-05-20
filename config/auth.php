@@ -64,6 +64,10 @@ return [
         'driver' => 'session',
         'provider' => 'admins', // Define provider
     ],
+    'member' => [
+        'driver' => 'session',
+        'provider' => 'members',
+    ],
 ],
 	
 	
@@ -96,6 +100,10 @@ return [
 			'driver' => 'eloquent',
 			'model' => App\Models\Admin\Admin::class,
 		],
+         'members' => [
+        'driver' => 'eloquent',
+        'model' => App\Models\Member::class,
+    ],
 		
 		
 		
