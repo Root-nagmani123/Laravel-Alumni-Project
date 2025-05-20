@@ -51,7 +51,7 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="mb-3">
-                            <label class="form-label">Name</label>
+                            <label class="form-label">Name</label><span class="required">*</span>
                             <input type="text" name="name" id="name" class="form-control" value="{{ old('name') }}">
                             @error('name')
                                 <div class="text-danger">{{ $message }}</div>
@@ -60,13 +60,13 @@
                     </div>
                     <div class="col-md-6">
                         <div class="mb-3">
-                            <label class="form-label">Mobile</label>
+                            <label class="form-label">Mobile</label><span class="required">*</span>
                             <input type="text" name="mobile" id="mobile" class="form-control" value="{{ old('mobile') }}">
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="mb-3">
-                            <label class="form-label">Email</label>
+                            <label class="form-label">Email</label><span class="required">*</span>
                             <input type="text" name="email" id="email" class="form-control" value="{{ old('email') }}">
                             @error('email')
                                 <div class="text-danger">{{ $message }}</div>
@@ -75,7 +75,7 @@
                     </div>
                     <div class="col-md-6">
                         <div class="mb-3">
-                            <label class="form-label">Password</label>
+                            <label class="form-label">Password</label><span class="required">*</span>
                             <input type="password" name="password" id="password" class="form-control">
                             @error('password')
                                 <div class="text-danger">{{ $message }}</div>
@@ -84,25 +84,25 @@
                     </div>
                     <div class="col-md-6">
                         <div class="mb-3">
-                            <label class="form-label">Confirm Password:</label>
+                            <label class="form-label">Confirm Password:</label><span class="required">*</span>
                             <input type="password" name="password_confirmation" id="confirm_password" class="form-control">
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="mb-3">
-                            <label class="form-label">Cadre</label>
+                            <label class="form-label">Cadre</label><span class="required">*</span>
                             <input type="text" name="cadre" id="cadre" class="form-control" value="{{ old('cadre') }}">
                         </div>
                     </div>
                     <div class="col-md-12">
                         <div class="mb-3">
-                            <label class="form-label">Designation</label>
+                            <label class="form-label">Designation</label><span class="required">*</span>
                             <input type="text" name="designation" id="designation" class="form-control" value="{{ old('designation') }}">
                         </div>
                     </div>
                     <div class="col-md-12">
                         <div class="mb-3">
-                            <label class="form-label">Batch</label>
+                            <label class="form-label">Batch</label><span class="required">*</span>
                             <input type="number" name="batch" id="batch" class="form-control" value="{{ old('batch') }}">
                         </div>
                     </div>
