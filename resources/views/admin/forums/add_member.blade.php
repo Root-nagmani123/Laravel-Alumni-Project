@@ -8,7 +8,8 @@
         <div class="row align-items-center">
             <div class="col-12">
                 <div class="d-sm-flex align-items-center justify-space-between">
-                    <h4 class="mb-4 mb-sm-0 card-title">Add Member(s)</h4> <!--<buttton style="float:right;" class="btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#exampleModal1"><i class="bi bi-info"></i>Bulk Add</buttton>-->
+                    <h4 class="mb-4 mb-sm-0 card-title">Add Member(s)</h4>
+                    <!--<buttton style="float:right;" class="btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#exampleModal1"><i class="bi bi-info"></i>Bulk Add</buttton>-->
 
                     <nav aria-label="breadcrumb" class="ms-auto">
                         <ol class="breadcrumb">
@@ -35,39 +36,49 @@
         <div class="col-12">
             <!-- start Person Info -->
             <div class="card">
-                <form method="POST" action="{{ route('forums.save_members') }}" enctype="multipart/form-data" id="AddMemberForm">
-                            @csrf
-
-                            <div class="row mb-3">
-                                <label for="forum_name" class="col-sm-2 col-form-label">Forum Name</label>
-                                <div class="col-sm-10 pt-2">
-                                    <strong><b>{{ $forumName }}</b></strong>
+                <form method="POST" action="{{ route('forums.save_members') }}" enctype="multipart/form-data"
+                    id="AddMemberForm">
+                    @csrf
+                    <div class="card-body">
+                        <h4 class="card-title">Add Members</h4>
+                        <hr>
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Forum Name</label>
+                                    <input type="text" name="forum_name" class="form-control" value="{{ $forumName }}"
+                                        readonly>
                                     <input type="hidden" name="forum_id" value="{{ $forumId }}">
                                 </div>
                             </div>
-
-                            <div class="row mb-3">
-                                <label for="user_id" class="col-sm-2 col-form-label">Member Name<span class="required">*</span></label>
-                                    <div class="col-sm-10">
-                                        <select class="form-control js-example-basic-multiple" name="user_id[]" multiple="multiple" >
-                                             @foreach ($userData as $user)
-                                                <option value="{{ $user->id }}" {{ in_array($user->id, $assignedUsers) ? 'selected' : '' }}>
-                                                 {{ $user->name }}
-                                                </option>
-                                             @endforeach
-                                        </select>
-                                        @error('user_id')
-                                            <div class="text-danger mt-1">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                            </div>
-
-                            <div class="row mb-3">
-                                <div class="col-sm-10 offset-sm-2">
-                                    <button type="submit" class="btn btn-primary">Submit</button>
+                            <div class="col-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Member Name (Multiple Members)*</label>
+                                    <select name="user_id[]" class="form-select" multiple>
+                                        @foreach($userData as $user)
+                                        <option value="{{ $user->id }}"
+                                            {{ in_array($user->id, $assignedUsers) ? 'selected' : '' }}>
+                                            {{ $user->name }}
+                                        </option>
+                                        @endforeach
+                                    </select>
+                                    @error('user_id')
+                                    <div class="text-danger mt-1">{{ $message }}</div>
+                                    @enderror
                                 </div>
                             </div>
-                        </form>
+                        </div>
+                        <hr>
+                        <div class="mb-3 gap-2 float-end">
+                            <button class="btn btn-primary" type="submit">
+                                Submit
+                            </button>
+                            <a href="{{ route('forums.index') }}" class="btn btn-secondary">
+                                Back
+                            </a>
+                        </div>
+                    </div>
+                </form>
             </div>
             <!-- end Person Info -->
         </div>
@@ -76,4 +87,3 @@
 
 
 @endsection
-

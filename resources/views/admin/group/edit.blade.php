@@ -36,22 +36,37 @@
             <form action="{{ route('group.update', $group->id) }}" method="POST">
                 @csrf
                 @method('PUT')
-                <div class="mb-3">
-                    <label class="form-label">Name</label>
-                    <input type="text" name="name" class="form-control" value="{{ $group->name }}" required>
+                <div class="row">
+                    <div class="col-6">
+                        <div class="mb-3">
+                            <label class="form-label">Name</label>
+                            <input type="text" name="name" class="form-control" value="{{ $group->name }}" required>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="mb-3">
+                            <label class="form-label">Status</label>
+                            <select class="form-select" aria-label="Default select" name="status" id="status" required>
+                                <option value="1" {{ $group->status == 1 ? 'selected' : '' }}>Active</option>
+                                <option value="0" {{ $group->status == 0 ? 'selected' : '' }}>Inactive</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
+                <hr>
+
                 <!--<div class="mb-3">
                     <label class="form-label">State ID</label>
                     <input type="number" name="state_id" class="form-control" value="{{ $group->state_id }}">
                 </div>-->
-                <div class="mb-3">
-                    <label class="form-label">Status</label>
-                    <select class="form-select" aria-label="Default select" name="status" id="status" required>
-                        <option value="1" {{ $group->status == 1 ? 'selected' : '' }}>Active</option>
-                        <option value="0" {{ $group->status == 0 ? 'selected' : '' }}>Inactive</option>
-                    </select>
+                <div class="mb-3 gap-2 float-end">
+                    <button class="btn btn-primary" type="submit">
+                        Update
+                    </button>
+                    <a href="{{ route('group.index') }}" class="btn btn-secondary">
+                        Back
+                    </a>
                 </div>
-                <button type="submit" class="btn btn-primary">Update</button>
             </form>
         </div>
     </div>

@@ -1,25 +1,6 @@
 <!--  Header Start -->
 <header class="topbar">
     <div class="with-vertical">
-        <!-- Bootstrap CSS -->
-         <!-- Example Bootstrap 5.0 or later -->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet">
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-        <!-- Toastr CSS -->
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
-        <!-- Bootstrap toggle button CSS -->
-         <link href="https://cdn.jsdelivr.net/npm/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
-
-
-<style>
-.breadcrumb-item + .breadcrumb-item::before {
-    content: none !important;
-}
-.required{
-    color:red;
-}
-</style>
-
 
 
 

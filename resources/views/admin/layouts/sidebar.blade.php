@@ -22,7 +22,7 @@
             <div class="sidebarmenu">
                 <div class="brand-logo d-flex align-items-center nav-logo">
                     <a href="#" class="text-nowrap logo-img">
-                        <img src="{{ asset('admin_assets/images/logos/logo.png') }}" alt="Logo">
+                        <img src="{{ asset('admin_assets/images/logos/logo.png') }}" alt="Logo" class="logo img-fluid">
                     </a>
                 </div>
 
@@ -75,10 +75,12 @@
                         </li>
 
                         <li class="sidebar-item">
-                            <form id="logout-form" action="{{ route('admin.logout') }}" method="POST" style="display: none;">
+                            <form id="logout-form" action="{{ route('admin.logout') }}" method="POST"
+                                style="display: none;">
                                 @csrf
                             </form>
-                            <a class="sidebar-link" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                            <a class="sidebar-link" href="#"
+                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                 <iconify-icon icon="solar:shield-user-line-duotone"></iconify-icon>
                                 <span class="hide-menu">Logout</span>
                             </a>
