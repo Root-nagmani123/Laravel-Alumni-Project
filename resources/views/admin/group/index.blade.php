@@ -74,8 +74,8 @@
                                     <td>
                                         <div class="form-check form-switch d-inline-block">
                                             <input class="form-check-input status-toggle" type="checkbox" role="switch"
-                                                data-table="group" data-column="active_inactive"
-                                                {{ $group->active_inactive == 1 ? 'checked' : '' }}>
+                                                data-table="group" data-column="active_inactive" data-id="{{ $group->id }}"
+                                                {{ $group->status == 1 ? 'checked' : '' }}>
                                         </div>
                                     </td>
 
@@ -102,6 +102,45 @@
         <!-- end Zero Configuration -->
     </div>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+
+
+
+//Toastr message
+    $(document).ready(function() {
+        @if (session('success'))
+            toastr.success("{{ session('success') }}");
+        @endif
+
+    });
+
+    $(document).ready(function () {
+        // AJAX: Toggle group status
+        $('.status-toggle').change(function () {
+            let status = $(this).prop('checked') ? 1 : 0;
+            let groupId = $(this).data('id');
+
+            $.ajax({
+                url: '{{ route("group.toggleStatus") }}',
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    id: groupId,
+                    status: status
+                },
+                success: function (response) {
+
+                    toastr.success(response.message);
+                },
+                error: function () {
+                    toastr.error('Failed to update status.');
+                }
+            });
+        });
+    });
+    </script>
 
 
 @endsection

@@ -108,4 +108,15 @@ class MemberController extends Controller
         return view('admin.members.bulk_upload');
     }
 
+     public function toggleStatus(Request $request)
+    {
+
+        $member = Member::findOrFail($request->id);
+        $member->status = $request->status;
+        $member->save();
+
+        return response()->json(['message' => 'Status updated successfully.']);
+    }
+
+
 }

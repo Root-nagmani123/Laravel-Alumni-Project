@@ -57,4 +57,14 @@ class GroupController extends Controller
         $group->delete();
         return redirect()->route('group.index')->with('success', 'Group deleted successfully.');
     }
+
+     public function toggleStatus(Request $request)
+    {
+
+        $group = Group::findOrFail($request->id);
+        $group->status = $request->status;
+        $group->save();
+
+        return response()->json(['message' => 'Status updated successfully.']);
+    }
 }
