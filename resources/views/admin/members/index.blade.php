@@ -50,7 +50,7 @@
                     <hr>
                     <div id="zero_config_wrapper" class="dataTables_wrapper">
 
-                        
+
                         <table id="zero_config"
                             class="table table-striped table-bordered text-nowrap align-middle dataTable"
                             aria-describedby="zero_config_info">
@@ -88,8 +88,8 @@
                                     <td>
                                         <div class="form-check form-switch d-inline-block">
                                             <input class="form-check-input status-toggle" type="checkbox" role="switch"
-                                                data-table="members" data-column="active_inactive"
-                                                {{ $member->active_inactive == 1 ? 'checked' : '' }}>
+                                                data-table="members" data-column="active_inactive"  data-id="{{ $member->id }}"
+                                                {{ $member->status == 1 ? 'checked' : '' }}>
                                         </div>
                                     </td>
                                 </tr>
@@ -106,6 +106,42 @@
     </div>
 </div>
 
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+//Toastr message
+    $(document).ready(function() {
+        @if (session('success'))
+            toastr.success("{{ session('success') }}");
+        @endif
+
+    });
+
+    $(document).ready(function () {
+        // AJAX: Toggle member status
+        $('.status-toggle').change(function () {
+            let status = $(this).prop('checked') ? 1 : 0;
+            let memberId = $(this).data('id');
+
+            $.ajax({
+                url: '{{ route("members.toggleStatus") }}',
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    id: memberId,
+                    status: status
+                },
+                success: function (response) {
+
+                    toastr.success(response.message);
+                },
+                error: function () {
+                    toastr.error('Failed to update status.');
+                }
+            });
+        });
+    });
+    </script>
 
 
 @endsection

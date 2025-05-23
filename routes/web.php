@@ -47,10 +47,6 @@ Route::prefix('admin')->controller(AdminController::class)->group(function () {
     Route::get('/login', 'index')->name('auth.admin'); // alias for login
     Route::post('/authlogin', 'loginAuth')->name('admin.authlogin'); // login post
 
-
-
-
-
 });
 
 // Routes accessible *only after login* using admin guard
@@ -72,20 +68,11 @@ Route::prefix('admin')->middleware('auth:admin')->controller(AdminController::cl
 	});
 
 
-
-/*	Route::prefix('forums')->name('forums.')->group(function () {
-    Route::get('/', function () {
-        return view('admin.forums.index');
-    })->name('index');
-});
-*/
-
-
 Route::prefix('forums')->name('forums.')->group(function () {
     Route::get('/', [ForumController::class, 'index'])->name('index'); // List all forums
     Route::get('/create', [ForumController::class, 'create'])->name('create'); // Show create form
     Route::post('/', [ForumController::class, 'store'])->name('store'); // Store new memforumsber
-    
+
     Route::put('/{member}', [ForumController::class, 'update'])->name('update'); // Update forums
     Route::delete('/{member}', [ForumController::class, 'destroy'])->name('destroy'); // Delete forums
     Route::get('add_member/{id}', [ForumController::class, 'add_member'])->name('add_member');
@@ -108,25 +95,6 @@ Route::prefix('forums')->name('forums.')->group(function () {
 });
 
 
-
-
-
-/*  Route::prefix('members')->name('members.')->group(function () {
-        Route::get('/', function () {
-            return view('admin.members.index');
-        })->name('index');
-
-        Route::get('/create', function () {
-            return view('admin.members.create');
-        })->name('create');
-
-        Route::get('/edit', function () {
-            return view('admin.members.edit');
-        })->name('edit');
-    });
-	 */
-
-
 Route::prefix('members')->name('members.')->group(function () {
     Route::get('/', [MemberController::class, 'index'])->name('index'); // List all members
     Route::get('/create', [MemberController::class, 'create'])->name('create'); // Show create form
@@ -137,39 +105,36 @@ Route::prefix('members')->name('members.')->group(function () {
 
 	Route::get('/bulk-upload', [MemberController::class, 'bulk_upload_form'])->name('bulk_upload_form'); // Show upload form
     Route::post('/bulk-upload', [MemberController::class, 'bulk_upload_members'])->name('bulk_upload'); // Handle upload
+    Route::post('toggle-status', [MemberController::class, 'toggleStatus'])->name('toggleStatus');
 });
 
 
-
- /*    Route::prefix('group')->name('group.')->group(function () {
-        Route::get('/', function () {
-            return view('admin.group.index');
-        })->name('index');
-
-        Route::get('/create', function () {
-            return view('admin.group.create');
-        })->name('create');
-
-        Route::get('/edit', function () {
-            return view('admin.group.edit');
-        })->name('edit');
-    }); */
-
-
- Route::prefix('group')->name('group.')->group(function () {
+Route::prefix('group')->name('group.')->group(function () {
     Route::get('/', [GroupController::class, 'index'])->name('index');
     Route::get('/create', [GroupController::class, 'create'])->name('create');
     Route::post('/', [GroupController::class, 'store'])->name('store');
     Route::get('/{group}/edit', [GroupController::class, 'edit'])->name('edit');
     Route::put('/{group}', [GroupController::class, 'update'])->name('update');
     Route::delete('/{group}', [GroupController::class, 'destroy'])->name('destroy');
+    Route::post('toggle-status', [GroupController::class, 'toggleStatus'])->name('toggleStatus');
+    Route::get('view_topic/{id}', [GroupController::class, 'view_topic'])->name('topic.view');
+
+
+   /* Route::get('add_topic/{id}', [GroupController::class, 'add_topic'])->name('add_topic');
+    Route::get('save_topic', [GroupController::class, 'save_topic'])->name('save_topic');*/
+
+Route::get('add_topic/{id}', [GroupController::class, 'add_topic'])->name('add_topic');
+
+Route::post('save_topic/{id}', [GroupController::class, 'add_topic'])->name('save_topic');
+
+
+
+
 });
 
 
-
-
 Route::prefix('broadcasts')->name('broadcasts.')->group(function () {
-    
+
     Route::get('/', [BroadcastController::class, 'index'])->name('index');
 
 	Route::get('/create', function () {return view('admin.broadcasts.create');})->name('create');
@@ -186,95 +151,6 @@ Route::prefix('broadcasts')->name('broadcasts.')->group(function () {
 
 
 });
-    
-    
-
-
-
-	/* Route::prefix('socialwall')->name('socialwall.')->group(function () {
-    Route::get('/', function () {
-        return view('admin.socialwall.index');
-    })->name('index');
-
-	    Route::get('/create', function () {
-            return view('admin.socialwall.create');
-        })->name('create');
-	});
-
-
-	 Route::prefix('broadcasts')->name('broadcasts.')->group(function () {
-        Route::get('/', function () {
-            return view('admin.broadcasts.index');
-        })->name('index');
-
-        Route::get('/create', function () {
-            return view('admin.broadcasts.create');
-        })->name('create');
-
-        Route::get('/edit', function () {
-            return view('admin.broadcasts.edit');
-        })->name('edit');
-    });
-
-	  Route::prefix('events')->name('events.')->group(function () {
-        Route::get('/', function () {
-            return view('admin.events.index');
-        })->name('index');
-
-        Route::get('/create', function () {
-            return view('admin.events.create');
-        })->name('create');
-
-        Route::get('/edit', function () {
-            return view('admin.events.edit');
-        })->name('edit');
-    });
-
-
-
-    Route::prefix('forums')->name('forums.')->group(function () {
-        Route::get('/', function () {
-            return view('admin.forums.index');
-        })->name('index');
-
-
-
-        Route::get('/edit', function () {
-            return view('admin.forums.edit');
-        })->name('edit');
-    });
-
-
-    Route::prefix('members')->name('members.')->group(function () {
-        Route::get('/', function () {
-            return view('admin.members.index');
-        })->name('index');
-
-        Route::get('/create', function () {
-            return view('admin.members.create');
-        })->name('create');
-
-        Route::get('/edit', function () {
-            return view('admin.members.edit');
-        })->name('edit');
-    });
-
-
-    Route::prefix('groups')->name('groups.')->group(function () {
-        Route::get('/', function () {
-            return view('admin.groups.index');
-        })->name('index');
-
-        Route::get('/create', function () {
-            return view('admin.groups.create');
-        })->name('create');
-
-        Route::get('/edit', function () {
-            return view('admin.groups.edit');
-        })->name('edit');
-    });
-
-	 */
 
 });
 

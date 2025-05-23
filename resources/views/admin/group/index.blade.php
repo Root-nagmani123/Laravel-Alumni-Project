@@ -69,13 +69,17 @@
                                 <tr class="{{ $loop->odd ? 'odd' : 'even' }}">
                                     <td>{{ $index + 1 }}</td> <!-- Display S.No. -->
                                     <td>{{ $group->name }}</td>
-                                    <td>{{ $group->topics }}</td> <!-- Assuming you want to show topics -->
-                                    <td>{{ $group->created_by }}</td> <!-- Assuming you want to show created by -->
+                                    <!--<td class="text-center"><a class="btn btn-sm btn-primary" href="{{-- route('group.add_topic', ['id' => $group->id]) --}}"><i class="bi bi-plus"></i></a>&nbsp;<a class="btn btn-sm btn-success" href="{{ route('group.topic.view' , ['id' => $group->id] )}}"><i class="bi bi-eye"></i></a></td>-->
+
+                                     <td><a class="btn btn-sm btn-primary"
+                                            href="{{route('group.add_topic', ['id' => $group->id]) }}"> <iconify-icon icon="solar:add-circle-bold"></iconify-icon></a>&nbsp;<a class="btn btn-sm btn-success"
+                                            href="{{ route('group.topic.view' , ['id' => $group->id] )}}"> <iconify-icon icon="solar:eye-bold"></iconify-icon></a></td>
+                                   <td>{{ \Carbon\Carbon::parse($group->created_at)->timezone('Asia/Kolkata')->format('l, d M Y, h:i A') }}</td>
                                     <td>
                                         <div class="form-check form-switch d-inline-block">
                                             <input class="form-check-input status-toggle" type="checkbox" role="switch"
-                                                data-table="group" data-column="active_inactive"
-                                                {{ $group->active_inactive == 1 ? 'checked' : '' }}>
+                                                data-table="group" data-column="active_inactive" data-id="{{ $group->id }}"
+                                                {{ $group->status == 1 ? 'checked' : '' }}>
                                         </div>
                                     </td>
 
@@ -102,6 +106,45 @@
         <!-- end Zero Configuration -->
     </div>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+
+
+
+//Toastr message
+    $(document).ready(function() {
+        @if (session('success'))
+            toastr.success("{{ session('success') }}");
+        @endif
+
+    });
+
+    $(document).ready(function () {
+        // AJAX: Toggle group status
+        $('.status-toggle').change(function () {
+            let status = $(this).prop('checked') ? 1 : 0;
+            let groupId = $(this).data('id');
+
+            $.ajax({
+                url: '{{ route("group.toggleStatus") }}',
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    id: groupId,
+                    status: status
+                },
+                success: function (response) {
+
+                    toastr.success(response.message);
+                },
+                error: function () {
+                    toastr.error('Failed to update status.');
+                }
+            });
+        });
+    });
+    </script>
 
 
 @endsection
