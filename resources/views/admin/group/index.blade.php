@@ -69,8 +69,12 @@
                                 <tr class="{{ $loop->odd ? 'odd' : 'even' }}">
                                     <td>{{ $index + 1 }}</td> <!-- Display S.No. -->
                                     <td>{{ $group->name }}</td>
-                                    <td>{{ $group->topics }}</td> <!-- Assuming you want to show topics -->
-                                    <td>{{ $group->created_by }}</td> <!-- Assuming you want to show created by -->
+                                    <!--<td class="text-center"><a class="btn btn-sm btn-primary" href="{{-- route('group.add_topic', ['id' => $group->id]) --}}"><i class="bi bi-plus"></i></a>&nbsp;<a class="btn btn-sm btn-success" href="{{ route('group.topic.view' , ['id' => $group->id] )}}"><i class="bi bi-eye"></i></a></td>-->
+
+                                     <td><a class="btn btn-sm btn-primary"
+                                            href="{{route('group.add_topic', ['id' => $group->id]) }}"> <iconify-icon icon="solar:add-circle-bold"></iconify-icon></a>&nbsp;<a class="btn btn-sm btn-success"
+                                            href="{{ route('group.topic.view' , ['id' => $group->id] )}}"> <iconify-icon icon="solar:eye-bold"></iconify-icon></a></td>
+                                   <td>{{ \Carbon\Carbon::parse($group->created_at)->timezone('Asia/Kolkata')->format('l, d M Y, h:i A') }}</td>
                                     <td>
                                         <div class="form-check form-switch d-inline-block">
                                             <input class="form-check-input status-toggle" type="checkbox" role="switch"

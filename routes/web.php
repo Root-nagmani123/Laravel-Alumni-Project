@@ -117,6 +117,19 @@ Route::prefix('group')->name('group.')->group(function () {
     Route::put('/{group}', [GroupController::class, 'update'])->name('update');
     Route::delete('/{group}', [GroupController::class, 'destroy'])->name('destroy');
     Route::post('toggle-status', [GroupController::class, 'toggleStatus'])->name('toggleStatus');
+    Route::get('view_topic/{id}', [GroupController::class, 'view_topic'])->name('topic.view');
+
+
+   /* Route::get('add_topic/{id}', [GroupController::class, 'add_topic'])->name('add_topic');
+    Route::get('save_topic', [GroupController::class, 'save_topic'])->name('save_topic');*/
+
+Route::get('add_topic/{id}', [GroupController::class, 'add_topic'])->name('add_topic');
+
+Route::post('save_topic/{id}', [GroupController::class, 'add_topic'])->name('save_topic');
+
+
+
+
 });
 
 
