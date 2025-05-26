@@ -25,12 +25,12 @@ class MemberController extends Controller
         // Validate the incoming request
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'mobile' => 'nullable|string|max:255',
+            'mobile' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:members',
             'password' => 'required|string|min:8|confirmed',
-            'cadre' => 'nullable|string|max:255',
-            'designation' => 'nullable|string|max:255',
-            'batch' => 'nullable|integer',
+            'cadre' => 'required|string|max:255',
+            'designation' => 'required|string|max:255',
+            'batch' => 'required|integer',
         ]);
         // Check if validation fails
         if ($validator->fails()) {

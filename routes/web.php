@@ -10,8 +10,24 @@ use App\Http\Controllers\Admin\MemberController;
 use App\Http\Controllers\Admin\GroupController;
 use App\Http\Controllers\Admin\ForumController;
 use App\Http\Controllers\Admin\BroadcastController;
+use App\Http\Controllers\Admin\EventsController;
+
 
 use App\Http\Controllers\Member\AuthController;
+
+
+Route::get('/clear/1', function () {
+	Artisan::call('cache:clear');
+    Artisan::call('config:cache');
+    Artisan::call('optimize:clear');
+    Artisan::call('view:clear');
+    Artisan::call('route:clear');
+   // Artisan::call('storage:link');
+    return redirect()->back()->with('success', 'Cache cleared successfully');
+});
+
+
+
 Route::get('/test-member', function () {
     return 'Member Route Working';
 });
@@ -127,9 +143,6 @@ Route::get('add_topic/{id}', [GroupController::class, 'add_topic'])->name('add_t
 
 Route::post('save_topic/{id}', [GroupController::class, 'add_topic'])->name('save_topic');
 
-
-
-
 });
 
 
@@ -149,8 +162,52 @@ Route::prefix('broadcasts')->name('broadcasts.')->group(function () {
 
     Route::put('/broadcast/{id}', [BroadcastController::class, 'update'])->name('broadcast.update');
 
+});
+
+
+/* Route::prefix('events')->name('events.')->group(function () {
+
+    Route::get('/', [EventsController::class, 'index'])->name('index');
+
+	Route::get('/create', function () {return view('admin.events.create');})->name('create');
+
+    Route::get('/edit', function () {return view('admin.events.edit');})->name('edit');
+
+    Route::post('/', [EventsController::class, 'store'])->name('events.store');
+
+    Route::post('/events/toggle-status', [EventsController::class, 'toggleStatus'])->name('toggleStatus');
 
 });
+ */
+
+
+/* Route::prefix('events')->name('events.')->group(function () {
+    Route::get('/', [EventsController::class, 'index'])->name('index');
+    Route::get('/create', [EventsController::class, 'create'])->name('create');
+    Route::post('/', [EventsController::class, 'store'])->name('store'); // ✅ This is the missing route
+    Route::get('/{event}/edit', [EventsController::class, 'edit'])->name('edit');
+    Route::put('/{event}', [EventsController::class, 'update'])->name('update');
+    Route::delete('/{event}', [EventsController::class, 'destroy'])->name('destroy');
+	Route::post('toggle-status', [EventsController::class, 'toggleStatus'])->name('toggleStatus');
+});
+
+  */
+
+  Route::prefix('events')->name('events.')->group(function () {
+    Route::get('/', [EventsController::class, 'index'])->name('index');
+    Route::get('/create', [EventsController::class, 'create'])->name('create');
+    Route::post('/', [EventsController::class, 'store'])->name('store');
+    Route::get('/{event}/edit', [EventsController::class, 'edit'])->name('edit');
+    Route::put('/{event}', [EventsController::class, 'update'])->name('update');
+    Route::delete('/{event}', [EventsController::class, 'destroy'])->name('destroy');
+    Route::post('/toggle-status', [EventsController::class, 'toggleStatus'])->name('toggleStatus');
+
+	Route::get('/events/rsvp/{id?}', [EventsController::class, 'rsvp'])->name('rsvp');
+    Route::post('rsvp/toggle-status', [EventsController::class, 'rsvptoggleStatus'])->name('rsvptoggleStatus');
+
+
+});
+
 
 });
 

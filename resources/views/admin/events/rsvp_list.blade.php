@@ -1,6 +1,6 @@
 @extends('admin.layouts.master')
 
-@section('title', 'Events - Alumni | Lal Bahadur Shastri National Academy of Administration')
+@section('title', 'RSVP  Events - Alumni | Lal Bahadur Shastri National Academy of Administration')
 
 @section('content')
 <div class="container-fluid">
@@ -8,7 +8,7 @@
         <div class="row align-items-center">
             <div class="col-12">
                 <div class="d-sm-flex align-items-center justify-space-between">
-                    <h4 class="mb-4 mb-sm-0 card-title">Events</h4>
+                    <h4 class="mb-4 mb-sm-0 card-title">RSVP  Events</h4>
                     <nav aria-label="breadcrumb" class="ms-auto">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item d-flex align-items-center">
@@ -18,7 +18,7 @@
                             </li>
                             <li class="breadcrumb-item" aria-current="page">
                                 <span class="badge fw-medium fs-2 bg-primary-subtle text-primary">
-                                    Events
+                                    RSVP  Events
                                 </span>
                             </li>
                         </ol>
@@ -37,12 +37,12 @@
                 <div class="table-responsive">
                     <div class="row">
                         <div class="col-6">
-                            <h4 class="card-title">Events list</h4>
+                            <h4 class="card-title">RSVP Events list</h4>
                         </div>
                         <div class="col-6">
-                            <div class="float-end gap-2">
+                            <!--<div class="float-end gap-2">
                                 <a href="{{ route('events.create') }}" class="btn btn-primary">+ Add Events</a>
-                            </div>
+                            </div>-->
 
                         </div>
                     </div>
@@ -56,60 +56,35 @@
                             <thead>
                                 <!-- start row -->
                                 <tr>
-									   <th>Title</th>
-                                       <th>Description</th>
-										<th>Start DateTime</th>
-										<th>End DateTime</th>
-										<th>Location</th>
+									   <th>User</th>
+										<th>Event</th>
+										<th>RSVP Date</th>
 										<th>Status</th>
-										<th>Actions</th>
                                 </tr>
                                 <!-- end row -->
                             </thead>
                             <tbody>
-							@foreach ($events as $event)
+							   @foreach ($rsvps as $rsvp)
 								<tr class="odd">
-									<td>{{ $event->title }}</td>
-                                    <td>{{ $event->description }}</td>
-									<td>{{ $event->start_datetime }}</td>
-									<td>{{ $event->end_datetime }}</td>
-									<td>{{ $event->location }}</td>
+									 <td>{{ $rsvp->user->name ?? 'N/A' }}</td>
+									<td>{{ $rsvp->event->title ?? 'N/A' }}</td>
+									<td>{{ $rsvp->responded_at }}</td>
 									<td>
 										<div class="form-check form-switch d-inline-block">
 											<input class="form-check-input status-toggle" type="checkbox" role="switch"
-												   data-table="events" data-column="active_inactive" data-id="{{ $event->id }}"
-												   {{ $event->status == 1 ? 'checked' : '' }}>
+												   data-table="rsvp" data-column="active_inactive" data-id="{{ $rsvp->id }}"
+												   {{ $rsvp->status == 1 ? 'checked' : '' }}>
 										</div>
 									</td>
 
-									@php
-										$event_datetime = \Carbon\Carbon::parse($event->start_datetime);
-										$current_datetime = \Carbon\Carbon::now();
-									@endphp
 
-									<td>
-										@if ($event_datetime > $current_datetime)
-											<a href="{{ route('events.edit', $event->id) }}" class="btn btn-success text-white btn-sm">Edit</a>
-
-											<form action="{{ route('events.destroy', $event->id) }}" method="POST" style="display:inline;">
-												@csrf
-												@method('DELETE')
-												<button type="submit" class="btn btn-danger text-white btn-sm" onclick="return confirm('Are you sure you want to delete?')">
-													Delete
-												</button>
-											</form>
-										@else
-											<button class="btn-sm btn-secondary" disabled>Expired</button>
-											<a class="btn-sm btn-success" href="{{ route('events.rsvp', $event->id) }}">RSVP</a>
-										@endif
-
-
-									</td>
 								</tr>
 							@endforeach
 						</tbody>
                         </table>
-					{{ $events->links() }}
+                        {{-- $event->links() --}}
+
+
 
                     </div>
                 </div>
@@ -134,14 +109,14 @@
         // AJAX: Toggle Events status
         $('.status-toggle').change(function () {
             let status = $(this).prop('checked') ? 1 : 0;
-            let memberId = $(this).data('id');
+            let rsvpId = $(this).data('id');
 
             $.ajax({
-                url: '{{ route("events.toggleStatus") }}',
+                url: '{{ route("events.rsvptoggleStatus") }}',
                 type: 'POST',
                 data: {
                     _token: '{{ csrf_token() }}',
-                    id: memberId,
+                    id: rsvpId,
                     status: status
                 },
                 success: function (response) {
