@@ -160,6 +160,12 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+Route::get('/user_login', function () {
+            return view('user.auth.login');
+        })->name('user_login');
 
+        Route::get('/user_feed', function () {
+            return view('user.feed');
+        })->name('user_feed');
 
 require __DIR__.'/auth.php';
