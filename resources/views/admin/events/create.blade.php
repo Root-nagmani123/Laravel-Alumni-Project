@@ -34,6 +34,11 @@
             <div class="card">
                 <form action="{{ route('events.store') }}" method="POST">
     @csrf
+
+    @if(session('success'))
+        <div class="alert alert-success">{{ session('success') }}</div>
+    @endif
+
     <div class="card-body">
         <h4 class="card-title">Add Event</h4>
         <small class="form-control-feedback">Please add Event detail.</small>
@@ -44,33 +49,33 @@
             <div class="col-md-6">
                 <div class="mb-3">
                     <label class="form-label">Title <span class="required">*</span></label>
-                    <input type="text" name="title" id="title" class="form-control"
-                        value="{{ old('title', $event->title ?? '') }}">
+                    <input type="text" name="title" class="form-control"
+                        value="{{ old('title') }}">
                     @error('title')
-                    <div class="text-danger">{{ $message }}</div>
+                        <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
             </div>
 
-            <!-- Description -->
+            <!-- Description (optional) -->
             <div class="col-md-6">
                 <div class="mb-3">
-                    <label class="form-label">Description <span class="required">*</span></label>
-                    <textarea name="description" class="form-control">{{ old('description', $event->description ?? '') }}</textarea>
+                    <label class="form-label">Description</label>
+                    <textarea name="description" class="form-control">{{ old('description') }}</textarea>
                     @error('description')
-                    <div class="text-danger">{{ $message }}</div>
+                        <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
             </div>
 
-            <!-- Location -->
+            <!-- Location (optional) -->
             <div class="col-md-6">
                 <div class="mb-3">
                     <label class="form-label">Location</label>
-                    <input type="text" name="location" id="location" class="form-control"
-                        value="{{ old('location', $event->location ?? '') }}">
+                    <input type="text" name="location" class="form-control"
+                        value="{{ old('location') }}">
                     @error('location')
-                    <div class="text-danger">{{ $message }}</div>
+                        <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
             </div>
@@ -79,25 +84,25 @@
             <div class="col-md-6">
                 <div class="mb-3">
                     <label class="form-label">Venue <span class="required">*</span></label>
-                    <select name="venue" class="form-control" required>
+                    <select name="venue" class="form-control">
                         <option value="">Select Venue</option>
-                        <option value="online" {{ old('venue', $event->venue ?? '') == 'online' ? 'selected' : '' }}>Online</option>
-                        <option value="physical" {{ old('venue', $event->venue ?? '') == 'physical' ? 'selected' : '' }}>Physical</option>
+                        <option value="online" {{ old('venue') == 'online' ? 'selected' : '' }}>Online</option>
+                        <option value="physical" {{ old('venue') == 'physical' ? 'selected' : '' }}>Physical</option>
                     </select>
                     @error('venue')
-                    <div class="text-danger">{{ $message }}</div>
+                        <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
             </div>
 
-            <!-- URL -->
+            <!-- URL (optional) -->
             <div class="col-md-6">
                 <div class="mb-3">
                     <label class="form-label">Event URL</label>
                     <input type="url" name="url" class="form-control"
-                        value="{{ old('url', $event->url ?? '') }}">
+                        value="{{ old('url') }}">
                     @error('url')
-                    <div class="text-danger">{{ $message }}</div>
+                        <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
             </div>
@@ -106,10 +111,10 @@
             <div class="col-md-6">
                 <div class="mb-3">
                     <label class="form-label">Start Date & Time <span class="required">*</span></label>
-                    <input type="datetime-local" name="start_datetime" id="start_datetime" class="form-control"
-                        value="{{ old('start_datetime', isset($event) ? \Carbon\Carbon::parse($event->start_datetime)->format('Y-m-d\TH:i') : '') }}" required>
+                    <input type="datetime-local" name="start_datetime" class="form-control"
+                        value="{{ old('start_datetime') }}">
                     @error('start_datetime')
-                    <div class="text-danger">{{ $message }}</div>
+                        <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
             </div>
@@ -118,10 +123,10 @@
             <div class="col-md-6">
                 <div class="mb-3">
                     <label class="form-label">End Date & Time <span class="required">*</span></label>
-                    <input type="datetime-local" name="end_datetime" id="end_datetime" class="form-control"
-                        value="{{ old('end_datetime', isset($event) ? \Carbon\Carbon::parse($event->end_datetime)->format('Y-m-d\TH:i') : '') }}" required>
+                    <input type="datetime-local" name="end_datetime" class="form-control"
+                        value="{{ old('end_datetime') }}">
                     @error('end_datetime')
-                    <div class="text-danger">{{ $message }}</div>
+                        <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
             </div>
@@ -144,32 +149,3 @@
 
 @endsection
 
-<div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header text-center">
-                <h5 class="modal-title font-weight-bold" id="exampleModalLabel">Bulk Add Members</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form enctype="multipart/form-data" method="post"
-                    action="{{-- route('members.bulk_upload_members') --}}" id="bulk-upload-form" class="uploader">
-                    <div class="boxmodal footimpt">
-
-
-                        <div class="form-group mt-2">
-                            <label for="file-upload" class="form-label">Upload Excel/CSV File:*</label>
-                            <input id="file-upload" type="file" name="file" accept=".xls,.xlsx,.csv" required />
-                        </div>
-                    </div>
-            </div>
-            <div class="modal-footer">
-                <div class="row">
-                    <button type="button" class="btn btn-secondary col-md-6" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary col-md-6">Upload</button>
-                </div>
-            </div>
-            </form>
-        </div>
-    </div>
-</div>

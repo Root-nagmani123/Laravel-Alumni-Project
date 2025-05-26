@@ -28,7 +28,6 @@ class EventsController extends Controller
 
     public function store(Request $request)
 {
-    // Validation
     $validator = Validator::make($request->all(), [
         'title'          => 'required|string|max:255',
         'description'    => 'nullable|string',
@@ -36,7 +35,7 @@ class EventsController extends Controller
         'venue'          => 'required|in:online,physical',
         'url'            => 'nullable|url|max:255',
         'start_datetime' => 'required|date',
-        'end_datetime'   => 'nullable|date|after_or_equal:start_datetime',
+        'end_datetime'   => 'required|date|after_or_equal:start_datetime',
     ]);
 
     if ($validator->fails()) {
@@ -45,35 +44,19 @@ class EventsController extends Controller
             ->withInput();
     }
 
-    // Create Event
-    $event = new Events();
-    $event->title          = $request->title;
-    $event->description    = $request->description;
-    $event->location       = $request->location;
-    $event->venue          = $request->venue;
-    $event->url            = $request->url;
-    $event->start_datetime = $request->start_datetime;
-    $event->end_datetime   = $request->end_datetime;
-    $event->created_by     = Auth::id();
-    $event->save();
+    Events::create([
+        'title'          => $request->title,
+        'description'    => $request->description,
+        'location'       => $request->location,
+        'venue'          => $request->venue,
+        'url'            => $request->url,
+        'start_datetime' => $request->start_datetime,
+        'end_datetime'   => $request->end_datetime,
+        'created_by'     => Auth::id(),
+    ]);
 
-    /*
-Events::create([
-    'title'          => $request->title,
-    'description'    => $request->description,
-    'location'       => $request->location,
-    'venue'          => $request->venue,
-    'url'            => $request->url,
-    'start_datetime' => $request->start_datetime,
-    'end_datetime'   => $request->end_datetime,
-    'created_by'     => Auth::id(),
-]);
-    */
-
-
-    return redirect('/admin/events')->with('success', 'Event added successfully!');
+    return redirect()->route('events.index')->with('success', 'Event added successfully!');
 }
-
 
     public function edit(Events $event)
 {
