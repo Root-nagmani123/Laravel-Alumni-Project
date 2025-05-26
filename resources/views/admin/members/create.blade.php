@@ -98,7 +98,7 @@
                                         <label class="form-label">Cadre</label><span class="required">*</span>
                                         <input type="text" name="cadre" id="cadre" class="form-control"
                                             value="{{ old('cadre') }}">
-                                              @error('password_confirmation')
+                                              @error('cadre')
                                         <div class="text-danger">{{ $message }}</div>
                                         @enderror
                                     </div>
@@ -108,7 +108,7 @@
                                         <label class="form-label">Designation</label><span class="required">*</span>
                                         <input type="text" name="designation" id="designation" class="form-control"
                                             value="{{ old('designation') }}">
-                                             @error('password_confirmation')
+                                             @error('designation')
                                         <div class="text-danger">{{ $message }}</div>
                                         @enderror
                                     </div>
