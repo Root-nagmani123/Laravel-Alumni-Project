@@ -58,6 +58,9 @@
                                         <label class="form-label">Mobile</label><span class="required">*</span>
                                         <input type="text" name="mobile" id="mobile" class="form-control"
                                             value="{{ old('mobile') }}">
+                                             @error('mobile')
+                                        <div class="text-danger">{{ $message }}</div>
+                                        @enderror
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -85,6 +88,9 @@
                                             class="required">*</span>
                                         <input type="password" name="password_confirmation" id="confirm_password"
                                             class="form-control">
+                                               @error('password_confirmation')
+                                        <div class="text-danger">{{ $message }}</div>
+                                        @enderror
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -92,6 +98,9 @@
                                         <label class="form-label">Cadre</label><span class="required">*</span>
                                         <input type="text" name="cadre" id="cadre" class="form-control"
                                             value="{{ old('cadre') }}">
+                                              @error('password_confirmation')
+                                        <div class="text-danger">{{ $message }}</div>
+                                        @enderror
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -99,6 +108,9 @@
                                         <label class="form-label">Designation</label><span class="required">*</span>
                                         <input type="text" name="designation" id="designation" class="form-control"
                                             value="{{ old('designation') }}">
+                                             @error('password_confirmation')
+                                        <div class="text-danger">{{ $message }}</div>
+                                        @enderror
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -106,6 +118,9 @@
                                         <label class="form-label">Batch</label><span class="required">*</span>
                                         <input type="number" name="batch" id="batch" class="form-control"
                                             value="{{ old('batch') }}">
+                                            @error('batch')
+                                        <div class="text-danger">{{ $message }}</div>
+                                        @enderror
                                     </div>
                                 </div>
                             </div>
