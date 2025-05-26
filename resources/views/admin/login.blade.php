@@ -12,7 +12,7 @@
     <!-- Toaster CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <link rel="stylesheet" href="{{ asset('admin_assets/css/styles.css') }}">
-    <title>Login - Alumni | Lal Bahadur Shastri National Academy of Administration</title>
+    <title>Admin Login - Alumni | Lal Bahadur Shastri National Academy of Administration</title>
 </head>
 
 <body>
