@@ -42,7 +42,7 @@ return new class extends Migration
             $table->string('current_department')->nullable();
             $table->string('current_location')->nullable();
             $table->text('previous_postings')->nullable();
-            $table->boolean('is_deleted')->default(0);
+          //  $table->boolean('is_deleted')->default(0);
             $table->timestamps(); // This will create `created_at` and `updated_at` columns
         });
     }

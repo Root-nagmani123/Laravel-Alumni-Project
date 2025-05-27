@@ -1,19 +1,22 @@
 <?php
 namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
-use App\Models\Member; // defining Member model
+use App\Models\Member;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 use App\Imports\MembersImport;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Models\Topic;
 
 class MemberController extends Controller
 {
     public function index()
     {
-        $members = Member::all(); // get all members
+        //$members = Member::all(); // get all members
+        //$members = Member::whereNull('deleted_at')->get();
+        $members = Member::all();
         return view('admin.members.index', compact('members'));
     }
     public function create()

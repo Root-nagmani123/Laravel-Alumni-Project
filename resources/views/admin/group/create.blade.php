@@ -59,7 +59,7 @@
                 <hr>
                 <div class="mb-3 gap-2 float-end">
                     <button class="btn btn-primary" type="submit">
-                        Submit
+                        Save
                     </button>
                     <a href="{{ route('group.index') }}" class="btn btn-secondary">
                         Back

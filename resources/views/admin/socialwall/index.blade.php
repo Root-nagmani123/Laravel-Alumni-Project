@@ -1,6 +1,6 @@
 @extends('admin.layouts.master')
 
-@section('title', 'forums - Alumni | Lal Bahadur')
+@section('title', 'Social Wall - Alumni | Lal Bahadur')
 
 @section('content')
 <div class="container-fluid">
@@ -8,7 +8,7 @@
         <div class="row align-items-center">
             <div class="col-12">
                 <div class="d-sm-flex align-items-center justify-space-between">
-                    <h4 class="mb-4 mb-sm-0 card-title">Forums</h4>
+                    <h4 class="mb-4 mb-sm-0 card-title">Social Wall</h4>
                     <nav aria-label="breadcrumb" class="ms-auto">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item d-flex align-items-center">
@@ -38,10 +38,16 @@
                             <h4>Social Wall</h4>
                         </div>
                         <div class="col-6">
+<<<<<<< Updated upstream
                             <div class="float-end gap-2">
                                 <a href="{{-- route('admin.socialwall.create') --}}" class="btn btn-primary">+ Add
                                     Social Wall</a>
                             </div>
+=======
+                           <!-- <div class="float-end gap-2">
+                                <a href="{{-- route('admin.socialwall.create') --}}" class="btn btn-primary">+ Add Social Wall</a>
+                            </div>-->
+>>>>>>> Stashed changes
                         </div>
                     </div>
                     <hr>
@@ -54,17 +60,37 @@
                             <thead>
                                 <!-- start row -->
                                 <tr>
+<<<<<<< Updated upstream
                                     <th class="col">S.No.</th>
                                     <th class="col">Name</th>
                                     <th class="col">Members</th>
                                     <th class="col">Topics</th>
                                     <th class="col">Status</th>
                                     <th class="col">Action</th>
+                                    <th class="sorting sorting_asc" tabindex="0" aria-controls="zero_config" rowspan="1"
+                                        colspan="1" aria-sort="ascending"
+                                        aria-label="Name: activate to sort column descending" style="width: 224.625px;">
+                                        S.No.</th>
+                                    <th class="sorting" tabindex="0" aria-controls="zero_config" rowspan="1" colspan="1"
+                                        aria-label="Position: activate to sort column ascending"
+                                        style="width: 225.875px;">Name</th>
+                                    <th class="sorting" tabindex="0" aria-controls="zero_config" rowspan="1" colspan="1"
+                                        aria-label="Office: activate to sort column ascending"
+                                        style="width: 106.453px;">Email</th>
+									<th class="sorting" tabindex="0" aria-controls="zero_config" rowspan="1" colspan="1"
+                                        aria-label="Salary: activate to sort column ascending"
+                                        style="width: 85.8906px;">Status</th>
+
+										  <th class="sorting" tabindex="0" aria-controls="zero_config" rowspan="1" colspan="1"
+                                        aria-label="Salary: activate to sort column ascending"
+                                        style="width: 85.8906px;">Action</th>
+
                                 </tr>
                                 <!-- end row -->
                             </thead>
                             <tbody>
                                 <tr class="odd">
+
                                     <td>1</td>
                                     <td class="sorting_1">
                                         <div class="d-flex align-items-center gap-6">
@@ -98,6 +124,17 @@
                                             </form>
                                         </div>
                                     </td>
+
+                                      @foreach ($users as $index => $user)
+
+										<td>{{ $index + 1 }}</td>
+										<td>{{ $user->name }}</td>
+										<td>{{ $user->email }}</td>
+                                        <td>{{ $user->status }}</td>
+                                        <td>{{-- $user->status --}}</td>
+
+								@endforeach
+
                                 </tr>
                             </tbody>
                         </table>

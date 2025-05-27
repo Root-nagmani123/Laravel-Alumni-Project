@@ -18,6 +18,7 @@ class CreateForumTopicsTable extends Migration
             $table->string('video_link')->nullable();
             $table->string('live_video')->nullable();
             $table->string('video_caption')->nullable();
+            $table->string('image_caption')->nullable();
             $table->integer('status')->nullable();
             $table->integer('forum_id')->nullable();
             $table->integer('group_id')->nullable();

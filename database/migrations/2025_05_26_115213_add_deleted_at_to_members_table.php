@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-       Schema::table('forum_topics', function (Blueprint $table) {
-        $table->string('image_caption')->nullable()->after('images');
-    });
+        Schema::table('members', function (Blueprint $table) {
+            $table->softDeletes();
+        });
     }
 
     /**
@@ -21,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('forum_topics', function (Blueprint $table) {
-        $table->dropColumn('image_caption');
-    });
+        Schema::table('members', function (Blueprint $table) {
+             $table->dropSoftDeletes();
+        });
     }
 };
