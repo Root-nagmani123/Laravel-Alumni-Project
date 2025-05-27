@@ -73,7 +73,7 @@
                 <div class="mb-3">
                     <button class="btn btn-primary hstack gap-6 float-end" type="submit">
                     <i class="material-icons menu-icon">send</i>
-                        Submit
+                        Save
                     </button>
                 </div>
             </form>

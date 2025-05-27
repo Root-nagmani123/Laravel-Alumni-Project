@@ -16,7 +16,8 @@ class SocialWallController extends Controller
     public function index()
     {
        // $users = User::where('is_deleted', 0)->get();
-        $users = Topic::all();
+      $users = Topic::all();
+
         return view('admin.socialwall.index', compact('users'));
     }
 
