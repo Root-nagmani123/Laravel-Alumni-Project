@@ -1,6 +1,6 @@
 @extends('admin.layouts.master')
 
-@section('title', 'Social Wall - Alumni | Lal Bahadur')
+@section('title', 'Social Wall - Alumni | Lal Bahadur Shastri National Academy of Administration')
 
 @section('content')
 <div class="container-fluid">
@@ -27,7 +27,9 @@
             </div>
         </div>
     </div>
-
+@if(session('success'))
+                        <div class="alert alert-success">{{ session('success') }}</div>
+                        @endif
     <div class="datatables">
         <!-- start Zero Configuration -->
         <div class="card">
@@ -35,17 +37,11 @@
                 <div class="table-responsive">
                     <div class="row">
                         <div class="col-6">
-                            <h4>Social Wall</h4>
+                            <h4 class="card-title">Social Wall list</h4>
                         </div>
                         <div class="col-6">
-
-                            <div class="float-end gap-2">
-                                <a href="{{-- route('admin.socialwall.create') --}}" class="btn btn-primary">+ Add
-                                    Social Wall</a>
-                            </div>
-
-                           <!-- <div class="float-end gap-2">
-                                <a href="{{-- route('admin.socialwall.create') --}}" class="btn btn-primary">+ Add Social Wall</a>
+                            <!--<div class="float-end gap-2">
+                                <a href="{{-- route('socialwall.create') --}}" class="btn btn-primary">+ Add Members</a>
                             </div>-->
 
                         </div>
@@ -60,82 +56,42 @@
                             <thead>
                                 <!-- start row -->
                                 <tr>
-
-                                    <th class="col">S.No.</th>
-                                    <th class="col">Name</th>
-                                    <th class="col">Members</th>
-                                    <th class="col">Topics</th>
-                                    <th class="col">Status</th>
-                                    <th class="col">Action</th>
-                                    <th class="sorting sorting_asc" tabindex="0" aria-controls="zero_config" rowspan="1"
-                                        colspan="1" aria-sort="ascending"
-                                        aria-label="Name: activate to sort column descending" style="width: 224.625px;">
-                                        S.No.</th>
-                                    <th class="sorting" tabindex="0" aria-controls="zero_config" rowspan="1" colspan="1"
-                                        aria-label="Position: activate to sort column ascending"
-                                        style="width: 225.875px;">Name</th>
-                                    <th class="sorting" tabindex="0" aria-controls="zero_config" rowspan="1" colspan="1"
-                                        aria-label="Office: activate to sort column ascending"
-                                        style="width: 106.453px;">Email</th>
-									<th class="sorting" tabindex="0" aria-controls="zero_config" rowspan="1" colspan="1"
-                                        aria-label="Salary: activate to sort column ascending"
-                                        style="width: 85.8906px;">Status</th>
-
-										  <th class="sorting" tabindex="0" aria-controls="zero_config" rowspan="1" colspan="1"
-                                        aria-label="Salary: activate to sort column ascending"
-                                        style="width: 85.8906px;">Action</th>
-
+                                    <th>S.No.</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Mobile</th>
+                                    <th>Action</th>
+                                    <th>Status</th>
                                 </tr>
                                 <!-- end row -->
                             </thead>
                             <tbody>
+                               {{-- @foreach($users as $user) --}}
                                 <tr class="odd">
-
-                                    <td>1</td>
-                                    <td class="sorting_1">
-                                        <div class="d-flex align-items-center gap-6">
-                                            <img src="../assets/images/profile/user-5.jpg" width="45"
-                                                class="rounded-circle">
-                                            <h6 class="mb-0"> Airi Satou</h6>
-                                        </div>
-                                    </td>
-                                    <td>Accountant</td>
-                                    <td>Accountant</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
 
                                     <td>
-                                        <div class="form-check form-switch">
+                                        <a href="{{--route('socialwall.edit', $user->id) --}}"
+                                            class="btn btn-success text-white btn-sm">Edit</a>
+                                        <form action="{{--route('socialwall.destroy', $user->id) --}}" method="POST"
+                                            style="display:inline;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger text-white btn-sm" onclick="return confirm('Are you sure you want to delete?')">Delete</button>
+                                        </form>
+                                    </td>
+                                    <td>
+                                        <div class="form-check form-switch d-inline-block">
                                             <input class="form-check-input status-toggle" type="checkbox" role="switch"
-                                                data-table="news" data-column="status" data-id="21" checked="">
+                                                data-table="members" data-column="active_inactive"  data-id="{{-- $user->id --}}"
+                                                {{-- $user->status == 1 ? 'checked' : '' --}}>
                                         </div>
                                     </td>
-                                    <td>
-                                        <div class="d-flex justify-content-start align-items-start gap-2">
-                                            <a href="#" class="btn btn-success text-white btn-sm">
-                                                Edit
-                                            </a>
-                                            <form action="#" method="POST" class="m-0">
-                                                <input type="hidden" name="_token"
-                                                    value="7m53OwU7KaFp1PPyJcyUuVMXW7xvrGr12yL6QycA"> <input
-                                                    type="hidden" name="_method" value="DELETE"> <button type="submit"
-                                                    class="btn btn-danger text-white btn-sm"
-                                                    onclick="return confirm('Are you sure you want to delete?')">
-                                                    Delete
-                                                </button>
-                                            </form>
-                                        </div>
-                                    </td>
-
-                                      @foreach ($users as $index => $user)
-
-										<td>{{ $index + 1 }}</td>
-										<td>{{ $user->name }}</td>
-										<td>{{ $user->email }}</td>
-                                        <td>{{ $user->status }}</td>
-                                        <td>{{-- $user->status --}}</td>
-
-								@endforeach
-
                                 </tr>
+                                {{-- @endforeach --}}
                             </tbody>
                         </table>
 
@@ -147,6 +103,43 @@
         <!-- end Zero Configuration -->
     </div>
 </div>
+
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+//Toastr message
+    $(document).ready(function() {
+        @if (session('success'))
+            toastr.success("{{ session('success') }}");
+        @endif
+
+    });
+
+    $(document).ready(function () {
+        // AJAX: Toggle member status
+        $('.status-toggle').change(function () {
+            let status = $(this).prop('checked') ? 1 : 0;
+            let userId = $(this).data('id');
+
+            $.ajax({
+                url: '{{-- route("socialwall.toggleStatus") --}}',
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    id: userId,
+                    status: status
+                },
+                success: function (response) {
+
+                    toastr.success(response.message);
+                },
+                error: function () {
+                    toastr.error('Failed to update status.');
+                }
+            });
+        });
+    });
+    </script>
 
 
 @endsection
