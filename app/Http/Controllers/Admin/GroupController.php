@@ -4,6 +4,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Group;
 use App\Models\User;
 use App\Models\Topic;
+use App\Models\Member;
 use Illuminate\Http\Request;
 class GroupController extends Controller
 {
@@ -14,7 +15,7 @@ class GroupController extends Controller
     }
     public function create()
     {
-        $users = User::all();
+        $users = Member::all();
 
         return view('admin.group.create', compact('users'));
     }
@@ -29,11 +30,7 @@ class GroupController extends Controller
             'member_type' => 'nullable|integer',
         ]);
 
-
-
-
-
-        Group::create($request->all());
+       Group::create($request->all());
         return redirect()->route('group.index')->with('success', 'Group created successfully.');
     }
     public function edit(Group $group)

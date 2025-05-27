@@ -86,12 +86,11 @@
                                     <td>
                                         <a href="{{ route('group.edit', $group->id) }}"
                                             class="btn btn-success btn-sm">Edit</a>
-                                        <form action="{{ route('group.destroy', $group->id) }}" method="POST"
-                                            style="display:inline;">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                                        </form>
+                                       <form action="{{ route('group.destroy', $group->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this?');">
+    @csrf
+    @method('DELETE')
+    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+</form>
                                     </td>
                                 </tr>
                                 @endforeach
