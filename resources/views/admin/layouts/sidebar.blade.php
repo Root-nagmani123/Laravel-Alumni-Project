@@ -74,6 +74,13 @@
                             </a>
                         </li>
 
+                         <li class="sidebar-item">
+                            <a class="sidebar-link" href="{{ route('events.index') }}">
+                                <iconify-icon icon="solar:shield-user-line-duotone"></iconify-icon>
+                                <span class="icon-small"></span> Events
+                            </a>
+                        </li>
+
                         <li class="sidebar-item">
                             <form id="logout-form" action="{{ route('admin.logout') }}" method="POST"
                                 style="display: none;">
