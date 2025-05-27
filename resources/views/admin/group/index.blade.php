@@ -105,21 +105,19 @@
         <!-- end Zero Configuration -->
     </div>
 </div>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
 <script>
+    $(document).ready(function () {
 
-
-
-//Toastr message
-    $(document).ready(function() {
+        // Toastr message on page load
         @if (session('success'))
             toastr.success("{{ session('success') }}");
         @endif
 
-    });
-
-    $(document).ready(function () {
         // AJAX: Toggle group status
         $('.status-toggle').change(function () {
             let status = $(this).prop('checked') ? 1 : 0;
@@ -134,16 +132,22 @@
                     status: status
                 },
                 success: function (response) {
-
-                    toastr.success(response.message);
+                    // Optional: add a check for response.message
+                    if(response.message){
+                        toastr.success(response.message);
+                    } else {
+                        toastr.success('Status updated.');
+                    }
                 },
                 error: function () {
                     toastr.error('Failed to update status.');
                 }
             });
         });
+
     });
-    </script>
+</script>
+
 
 
 @endsection
