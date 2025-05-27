@@ -125,42 +125,47 @@
     </div>
 </div>
 
+<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+
 <script>
 //Toastr message
-$(document).ready(function() {
-    @if(session('success'))
-    toastr.success("{{ session('success') }}");
-    @endif
+    $(document).ready(function() {
+        @if (session('success'))
+            toastr.success("{{ session('success') }}");
+        @endif
 
-});
+    });
 
-$(document).ready(function() {
-    // AJAX: Toggle Events status
-    $('.status-toggle').change(function() {
-        let status = $(this).prop('checked') ? 1 : 0;
-        let memberId = $(this).data('id');
+    $(document).ready(function () {
+        // AJAX: Toggle member status
+        $('.status-toggle').change(function () {
+            let status = $(this).prop('checked') ? 1 : 0;
+            let eventId = $(this).data('id');
 
-        $.ajax({
-            url: '{{ route("events.toggleStatus") }}',
-            type: 'POST',
-            data: {
-                _token: '{{ csrf_token() }}',
-                id: memberId,
-                status: status
-            },
-            success: function(response) {
+            $.ajax({
+                url: '{{ route("events.toggleStatus") }}',
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    id: eventId,
+                    status: status
+                },
+                success: function (response) {
 
-                toastr.success(response.message);
-            },
-            error: function() {
-                toastr.error('Failed to update status.');
-            }
+                    toastr.success(response.message);
+                },
+                error: function () {
+                    toastr.error('Failed to update status.');
+                }
+            });
         });
     });
-});
-</script>
+    </script>
+
 
 
 @endsection
