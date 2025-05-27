@@ -102,8 +102,11 @@
                                             </button>
                                         </form>
                                         @else
-                                        <a class="btn-sm btn-success"
-                                            href="{{ route('events.rsvp', $event->id) }}">RSVP</a><span class="badge bg-danger">Expired</span>
+                                        <a
+                                            class="btn d-flex bg-primary-subtle w-100 d-block text-primary " href="{{ route('events.rsvp', $event->id) }}">
+                                            RSVP
+                                            <span class="badge ms-auto text-bg-primary">Expired</span>
+                                        </a>
                                         @endif
 
 

@@ -131,7 +131,7 @@
                 </div>
             </div>
         </div>
-
+<hr>
         <!-- Submit and Back -->
         <div class="mb-3 gap-2 float-end">
             <button class="btn btn-primary" type="submit">Save</button>
