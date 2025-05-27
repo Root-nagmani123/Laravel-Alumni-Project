@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\GroupController;
 use App\Http\Controllers\Admin\ForumController;
 use App\Http\Controllers\Admin\BroadcastController;
 use App\Http\Controllers\Admin\EventsController;
+use App\Http\Controllers\DashboardController;
 
 
 use App\Http\Controllers\Member\AuthController;
@@ -67,10 +68,8 @@ Route::prefix('admin')->controller(AdminController::class)->group(function () {
 
 // Routes accessible *only after login* using admin guard
 Route::prefix('admin')->middleware('auth:admin')->controller(AdminController::class)->group(function () {
-    //Route::get('/dashboard', 'dashboard')->name('dashboard'); // protected
-	Route::get('dashboard', 'dashboard')->name('dashboard');
-    //Route::post('/logout', 'logout')->name('logout'); // logout
-    //Route::post('/admin/logout', 'AdminAuth\LoginController@logout')->name('admin.logout');
+	//Route::get('dashboard', 'dashboard')->name('dashboard');
+    Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::post('/admin/logout', 'logout')->name('admin.logout'); // logout
 
 

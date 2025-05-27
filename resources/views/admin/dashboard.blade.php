@@ -1,6 +1,6 @@
 @extends('admin.layouts.master')
 
-@section('title', 'Member - Alumni | Lal Bahadur Shastri National Academy of Administration')
+@section('title', 'Dashboard - Alumni | Lal Bahadur Shastri National Academy of Administration')
 
 @section('content')
 <div class="container-fluid">
@@ -29,12 +29,12 @@
                                         <div class="col-6">
                                             <span class="opacity-75">Total Member</span>
                                             <h4 class="mb-0 text-white mt-1 text-nowrap fs-13 fw-bolder">
-                                                99</h4>
+                                               {{ $total_user }}</h4>
                                         </div>
                                         <div class="col-6 border-start border-light" style="--bs-border-opacity: .15;">
                                             <span class="opacity-75">Forums</span>
                                             <h4 class="mb-0 text-white mt-1 text-nowrap fs-13 fw-bolder">
-                                                440</h4>
+                                                {{ $total_forums }}</h4>
                                         </div>
                                     </div>
                                 </div>
@@ -58,7 +58,7 @@
                         <div class="card-body p-4">
                             <span class="text-dark-light">Topics</span>
                             <div class="hstack gap-6">
-                                <h5 class="mb-0 fs-7">36,358</h5>
+                                <h5 class="mb-0 fs-7">{{ $total_topics }}</h5>
                                 <span class="fs-11 text-dark-light fw-semibold">-12%</span>
                             </div>
                         </div>
@@ -84,7 +84,7 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-body">
-                            
+
                         </div>
                     </div>
                 </div>
@@ -105,81 +105,25 @@
                                     <div class="simplebar-content-wrapper" tabindex="0" role="region"
                                         aria-label="scrollable content" style="height: 100%; overflow: hidden;">
                                         <div class="simplebar-content" style="padding: 0px;">
-                                            <li class="timeline-item d-flex position-relative overflow-hidden">
-                                                <div class="timeline-time mt-n1 text-muted flex-shrink-0 text-end">
-                                                    09:46
-                                                </div>
-                                                <div class="timeline-badge-wrap d-flex flex-column align-items-center">
-                                                    <span class="timeline-badge bg-primary flex-shrink-0 mt-2"></span>
-                                                    <span class="timeline-badge-border d-block flex-shrink-0"></span>
-                                                </div>
-                                                <div class="timeline-desc fs-12 text-muted mt-n1">Payment received
-                                                    from John
-                                                    Doe of $385.90</div>
-                                            </li>
-                                            <li class="timeline-item d-flex position-relative overflow-hidden">
-                                                <div class="timeline-time mt-n8 text-muted flex-shrink-0 text-end">
-                                                    09:46
-                                                </div>
-                                                <div class="timeline-badge-wrap d-flex flex-column align-items-center">
-                                                    <span class="timeline-badge bg-warning flex-shrink-0"></span>
-                                                    <span class="timeline-badge-border d-block flex-shrink-0"></span>
-                                                </div>
-                                                <div class="timeline-desc fs-12 text-dark-light mt-n8 fw-medium d-flex">
-                                                    <span class="flex-shrink-0">New sale recorded</span>
-                                                    <a href="javascript:void(0)"
-                                                        class="text-primary flex-shrink-0">#ML-3467</a>
-                                                </div>
-                                            </li>
-                                            <li class="timeline-item d-flex position-relative overflow-hidden">
-                                                <div class="timeline-time mt-n8 text-muted flex-shrink-0 text-end">
-                                                    09:46
-                                                </div>
-                                                <div class="timeline-badge-wrap d-flex flex-column align-items-center">
-                                                    <span class="timeline-badge bg-warning flex-shrink-0"></span>
-                                                    <span class="timeline-badge-border d-block flex-shrink-0"></span>
-                                                </div>
-                                                <div class="timeline-desc fs-12 text-dark-light mt-n8">Payment was
-                                                    made of $64.95
-                                                    to Michael</div>
-                                            </li>
-                                            <li class="timeline-item d-flex position-relative overflow-hidden">
-                                                <div class="timeline-time mt-n8 text-muted flex-shrink-0 text-end">
-                                                    09:46
-                                                </div>
-                                                <div class="timeline-badge-wrap d-flex flex-column align-items-center">
-                                                    <span class="timeline-badge bg-secondary flex-shrink-0"></span>
-                                                    <span class="timeline-badge-border d-block flex-shrink-0"></span>
-                                                </div>
-                                                <div class="timeline-desc fs-12 text-dark-light mt-n8 fw-medium d-flex">
-                                                    <span class="flex-shrink-0">New sale recorded</span>
-                                                    <a href="javascript:void(0)"
-                                                        class="text-primary flex-shrink-0">#ML-3467</a>
-                                                </div>
-                                            </li>
-                                            <li class="timeline-item d-flex position-relative overflow-hidden">
-                                                <div class="timeline-time mt-n8 text-muted flex-shrink-0 text-end">
-                                                    09:46
-                                                </div>
-                                                <div class="timeline-badge-wrap d-flex flex-column align-items-center">
-                                                    <span class="timeline-badge bg-danger flex-shrink-0"></span>
-                                                    <span class="timeline-badge-border d-block flex-shrink-0"></span>
-                                                </div>
-                                                <div class="timeline-desc fs-12 text-dark-light mt-n8 fw-medium">
-                                                    Project meeting
-                                                </div>
-                                            </li>
-                                            <li class="timeline-item d-flex position-relative overflow-hidden">
-                                                <div class="timeline-time mt-n8 text-muted flex-shrink-0 text-end">
-                                                    09:46
-                                                </div>
-                                                <div class="timeline-badge-wrap d-flex flex-column align-items-center">
-                                                    <span class="timeline-badge bg-primary flex-shrink-0"></span>
-                                                </div>
-                                                <div class="timeline-desc fs-12 text-dark-light mt-n8">Payment
-                                                    received from John
-                                                    Doe of $385.90</div>
-                                            </li>
+                                            @if (!empty($userData))
+    @foreach ($userData as $topic)
+        <li class="timeline-item d-flex position-relative overflow-hidden">
+            <div class="timeline-time mt-n1 text-muted flex-shrink-0 text-end">
+                {{ \Carbon\Carbon::parse($topic->created_at)->format('H:i') }}
+
+            </div>
+            <div class="timeline-badge-wrap d-flex flex-column align-items-center">
+                <span class="timeline-badge bg-primary flex-shrink-0 mt-2"></span>
+                <span class="timeline-badge-border d-block flex-shrink-0"></span>
+            </div>
+            <div class="timeline-desc fs-12 text-muted mt-n1">
+                {{ $topic->title }} &nbsp;<small>Created by: <?= htmlentities($topic->member->name ?? 'Unknown') ?></small>
+            </div>
+        </li>
+    @endforeach
+@else
+    <p>No topics found.</p>
+@endif
                                         </div>
                                     </div>
                                 </div>
