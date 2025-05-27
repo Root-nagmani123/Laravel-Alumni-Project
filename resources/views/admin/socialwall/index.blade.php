@@ -38,16 +38,16 @@
                             <h4>Social Wall</h4>
                         </div>
                         <div class="col-6">
-<<<<<<< Updated upstream
+
                             <div class="float-end gap-2">
                                 <a href="{{-- route('admin.socialwall.create') --}}" class="btn btn-primary">+ Add
                                     Social Wall</a>
                             </div>
-=======
+
                            <!-- <div class="float-end gap-2">
                                 <a href="{{-- route('admin.socialwall.create') --}}" class="btn btn-primary">+ Add Social Wall</a>
                             </div>-->
->>>>>>> Stashed changes
+
                         </div>
                     </div>
                     <hr>
@@ -60,7 +60,7 @@
                             <thead>
                                 <!-- start row -->
                                 <tr>
-<<<<<<< Updated upstream
+
                                     <th class="col">S.No.</th>
                                     <th class="col">Name</th>
                                     <th class="col">Members</th>
