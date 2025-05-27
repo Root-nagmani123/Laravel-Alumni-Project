@@ -18,7 +18,7 @@
                             </li>
                             <li class="breadcrumb-item" aria-current="page">
                                 <span class="badge fw-medium fs-2 bg-primary-subtle text-primary">
-                                Social Wall
+                                    Social Wall
                                 </span>
                             </li>
                         </ol>
@@ -39,40 +39,27 @@
                         </div>
                         <div class="col-6">
                             <div class="float-end gap-2">
-                                <a href="{{-- route('admin.socialwall.create') --}}" class="btn btn-primary">+ Add Social Wall</a>
+                                <a href="{{-- route('admin.socialwall.create') --}}" class="btn btn-primary">+ Add
+                                    Social Wall</a>
                             </div>
                         </div>
                     </div>
                     <hr>
                     <div id="zero_config_wrapper" class="dataTables_wrapper">
-                      
-                      
+
+
                         <table id="zero_config"
                             class="table table-striped table-bordered text-nowrap align-middle dataTable"
                             aria-describedby="zero_config_info">
                             <thead>
                                 <!-- start row -->
                                 <tr>
-                                    <th class="sorting sorting_asc" tabindex="0" aria-controls="zero_config" rowspan="1"
-                                        colspan="1" aria-sort="ascending"
-                                        aria-label="Name: activate to sort column descending" style="width: 224.625px;">
-                                        S.No.</th>
-                                    <th class="sorting" tabindex="0" aria-controls="zero_config" rowspan="1" colspan="1"
-                                        aria-label="Position: activate to sort column ascending"
-                                        style="width: 225.875px;">Name</th>
-                                    <th class="sorting" tabindex="0" aria-controls="zero_config" rowspan="1" colspan="1"
-                                        aria-label="Office: activate to sort column ascending"
-                                        style="width: 106.453px;">Members</th>
-									<th class="sorting" tabindex="0" aria-controls="zero_config" rowspan="1" colspan="1"
-                                        aria-label="Office: activate to sort column ascending"
-                                        style="width: 106.453px;">Topics</th>
-                                    <th class="sorting" tabindex="0" aria-controls="zero_config" rowspan="1" colspan="1"
-                                        aria-label="Salary: activate to sort column ascending"
-                                        style="width: 85.8906px;">Status</th>
-										
-										  <th class="sorting" tabindex="0" aria-controls="zero_config" rowspan="1" colspan="1"
-                                        aria-label="Salary: activate to sort column ascending"
-                                        style="width: 85.8906px;">Action</th>
+                                    <th class="col">S.No.</th>
+                                    <th class="col">Name</th>
+                                    <th class="col">Members</th>
+                                    <th class="col">Topics</th>
+                                    <th class="col">Status</th>
+                                    <th class="col">Action</th>
                                 </tr>
                                 <!-- end row -->
                             </thead>
@@ -87,15 +74,15 @@
                                         </div>
                                     </td>
                                     <td>Accountant</td>
-									 <td>Accountant</td>
-                                    
+                                    <td>Accountant</td>
+
                                     <td>
                                         <div class="form-check form-switch">
                                             <input class="form-check-input status-toggle" type="checkbox" role="switch"
                                                 data-table="news" data-column="status" data-id="21" checked="">
                                         </div>
                                     </td>
-									<td>
+                                    <td>
                                         <div class="d-flex justify-content-start align-items-start gap-2">
                                             <a href="#" class="btn btn-success text-white btn-sm">
                                                 Edit
@@ -114,8 +101,8 @@
                                 </tr>
                             </tbody>
                         </table>
-                       
-                      
+
+
                     </div>
                 </div>
             </div>
