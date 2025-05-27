@@ -27,9 +27,9 @@
             </div>
         </div>
     </div>
-@if(session('success'))
-                        <div class="alert alert-success">{{ session('success') }}</div>
-                        @endif
+    @if(session('success'))
+    <div class="alert alert-success">{{ session('success') }}</div>
+    @endif
     <div class="datatables">
         <!-- start Zero Configuration -->
         <div class="card">
@@ -56,60 +56,63 @@
                             <thead>
                                 <!-- start row -->
                                 <tr>
-									   <th>Title</th>
-                                       <th>Description</th>
-										<th>Start DateTime</th>
-										<th>End DateTime</th>
-										<th>Location</th>
-										<th>Status</th>
-										<th>Actions</th>
+                                    <th class="col">Title</th>
+                                    <th class="col">Description</th>
+                                    <th class="col">Start DateTime</th>
+                                    <th class="col">End DateTime</th>
+                                    <th class="col">Location</th>
+                                    <th class="col">Status</th>
+                                    <th class="col">Actions</th>
                                 </tr>
                                 <!-- end row -->
                             </thead>
                             <tbody>
-							@foreach ($events as $event)
-								<tr class="odd">
-									<td>{{ $event->title }}</td>
+                                @foreach ($events as $event)
+                                <tr class="odd">
+                                    <td>{{ $event->title }}</td>
                                     <td>{{ $event->description }}</td>
-									<td>{{ $event->start_datetime }}</td>
-									<td>{{ $event->end_datetime }}</td>
-									<td>{{ $event->location }}</td>
-									<td>
-										<div class="form-check form-switch d-inline-block">
-											<input class="form-check-input status-toggle" type="checkbox" role="switch"
-												   data-table="events" data-column="active_inactive" data-id="{{ $event->id }}"
-												   {{ $event->status == 1 ? 'checked' : '' }}>
-										</div>
-									</td>
+                                    <td>{{ $event->start_datetime }}</td>
+                                    <td>{{ $event->end_datetime }}</td>
+                                    <td>{{ $event->location }}</td>
+                                    <td>
+                                        <div class="form-check form-switch d-inline-block">
+                                            <input class="form-check-input status-toggle" type="checkbox" role="switch"
+                                                data-table="events" data-column="active_inactive"
+                                                data-id="{{ $event->id }}" {{ $event->status == 1 ? 'checked' : '' }}>
+                                        </div>
+                                    </td>
 
-									@php
-										$event_datetime = \Carbon\Carbon::parse($event->start_datetime);
-										$current_datetime = \Carbon\Carbon::now();
-									@endphp
+                                    @php
+                                    $event_datetime = \Carbon\Carbon::parse($event->start_datetime);
+                                    $current_datetime = \Carbon\Carbon::now();
+                                    @endphp
 
-									<td>
-										@if ($event_datetime > $current_datetime)
-											<a href="{{ route('events.edit', $event->id) }}" class="btn btn-success text-white btn-sm">Edit</a>
+                                    <td>
+                                        @if ($event_datetime > $current_datetime)
+                                        <a href="{{ route('events.edit', $event->id) }}"
+                                            class="btn btn-success text-white btn-sm">Edit</a>
 
-											<form action="{{ route('events.destroy', $event->id) }}" method="POST" style="display:inline;">
-												@csrf
-												@method('DELETE')
-												<button type="submit" class="btn btn-danger text-white btn-sm" onclick="return confirm('Are you sure you want to delete?')">
-													Delete
-												</button>
-											</form>
-										@else
-											<button class="btn-sm btn-secondary" disabled>Expired</button>
-											<a class="btn-sm btn-success" href="{{ route('events.rsvp', $event->id) }}">RSVP</a>
-										@endif
+                                        <form action="{{ route('events.destroy', $event->id) }}" method="POST"
+                                            style="display:inline;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger text-white btn-sm"
+                                                onclick="return confirm('Are you sure you want to delete?')">
+                                                Delete
+                                            </button>
+                                        </form>
+                                        @else
+                                        <a class="btn-sm btn-success"
+                                            href="{{ route('events.rsvp', $event->id) }}">RSVP</a><span class="badge bg-danger">Expired</span>
+                                        @endif
 
 
-									</td>
-								</tr>
-							@endforeach
-						</tbody>
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
                         </table>
-					{{ $events->links() }}
+                        {{ $events->links() }}
 
                     </div>
                 </div>
@@ -123,38 +126,38 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script>
 //Toastr message
-    $(document).ready(function() {
-        @if (session('success'))
-            toastr.success("{{ session('success') }}");
-        @endif
+$(document).ready(function() {
+    @if(session('success'))
+    toastr.success("{{ session('success') }}");
+    @endif
 
-    });
+});
 
-    $(document).ready(function () {
-        // AJAX: Toggle Events status
-        $('.status-toggle').change(function () {
-            let status = $(this).prop('checked') ? 1 : 0;
-            let memberId = $(this).data('id');
+$(document).ready(function() {
+    // AJAX: Toggle Events status
+    $('.status-toggle').change(function() {
+        let status = $(this).prop('checked') ? 1 : 0;
+        let memberId = $(this).data('id');
 
-            $.ajax({
-                url: '{{ route("events.toggleStatus") }}',
-                type: 'POST',
-                data: {
-                    _token: '{{ csrf_token() }}',
-                    id: memberId,
-                    status: status
-                },
-                success: function (response) {
+        $.ajax({
+            url: '{{ route("events.toggleStatus") }}',
+            type: 'POST',
+            data: {
+                _token: '{{ csrf_token() }}',
+                id: memberId,
+                status: status
+            },
+            success: function(response) {
 
-                    toastr.success(response.message);
-                },
-                error: function () {
-                    toastr.error('Failed to update status.');
-                }
-            });
+                toastr.success(response.message);
+            },
+            error: function() {
+                toastr.error('Failed to update status.');
+            }
         });
     });
-    </script>
+});
+</script>
 
 
 @endsection
