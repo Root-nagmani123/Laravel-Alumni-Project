@@ -8,7 +8,7 @@
             <div class="col-12">
                 <div class="d-sm-flex align-items-center justify-space-between">
                     <h4 class="mb-4 mb-sm-0 card-title">Bulk Upload Members</h4>
-                    @if(session('success'))
+                   {{-- @if(session('success'))
                     <div class="alert alert-success">{{ session('success') }}</div>
                     @endif
                     @if($errors->any())
@@ -19,7 +19,7 @@
                             @endforeach
                         </ul>
                     </div>
-                    @endif
+                    @endif--}}
                     <nav aria-label="breadcrumb" class="ms-auto">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item d-flex align-items-center">

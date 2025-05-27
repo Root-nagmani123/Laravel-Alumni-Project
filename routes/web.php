@@ -69,7 +69,7 @@ Route::prefix('admin')->controller(AdminController::class)->group(function () {
 // Routes accessible *only after login* using admin guard
 Route::prefix('admin')->middleware('auth:admin')->controller(AdminController::class)->group(function () {
 	//Route::get('dashboard', 'dashboard')->name('dashboard');
-    Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::post('/admin/logout', 'logout')->name('admin.logout'); // logout
 
 
