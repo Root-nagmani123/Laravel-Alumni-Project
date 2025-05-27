@@ -33905,7 +33905,7 @@ section {
     margin-left: 0; }
 
 .page-center {
-  width: calc(100% - 380px);
+  width: calc(100% - 30px);
   padding-left: 25px;
   padding-right: 25px; }
   .page-center.page-lg {
