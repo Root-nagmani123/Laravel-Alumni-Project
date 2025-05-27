@@ -11,16 +11,9 @@ use App\Http\Controllers\Admin\GroupController;
 use App\Http\Controllers\Admin\ForumController;
 use App\Http\Controllers\Admin\BroadcastController;
 use App\Http\Controllers\Admin\EventsController;
-use App\Http\Controllers\Admin\SocialWallController;
+
 
 use App\Http\Controllers\Member\AuthController;
-
-
-Route::middleware('auth:member')->group(function () {
-    Route::get('/member/dashboard', function () {
-        return view('frontend.member.dashboard'); // a dummy dashboard page
-    })->name('member.dashboard');
-});
 
 
 Route::get('/clear/1', function () {
@@ -38,9 +31,9 @@ Route::get('/clear/1', function () {
 Route::get('/test-member', function () {
     return 'Member Route Working';
 });
-/* Route::get('/', function () {
+Route::get('/', function () {
     return view('welcome');
-}); */
+});
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -81,15 +74,15 @@ Route::prefix('admin')->middleware('auth:admin')->controller(AdminController::cl
     Route::post('/admin/logout', 'logout')->name('admin.logout'); // logout
 
 
-/*
-Route::prefix('socialwall')->name('socialwall.')->group(function () {
+
+	Route::prefix('socialwall')->name('socialwall.')->group(function () {
     Route::get('/', function () {
-        return view('socialwall.index');
+        return view('admin.socialwall.index');
     })->name('index');
 
 
 	});
-*/
+
 
 Route::prefix('forums')->name('forums.')->group(function () {
     Route::get('/', [ForumController::class, 'index'])->name('index'); // List all forums
@@ -172,6 +165,34 @@ Route::prefix('broadcasts')->name('broadcasts.')->group(function () {
 });
 
 
+/* Route::prefix('events')->name('events.')->group(function () {
+
+    Route::get('/', [EventsController::class, 'index'])->name('index');
+
+	Route::get('/create', function () {return view('admin.events.create');})->name('create');
+
+    Route::get('/edit', function () {return view('admin.events.edit');})->name('edit');
+
+    Route::post('/', [EventsController::class, 'store'])->name('events.store');
+
+    Route::post('/events/toggle-status', [EventsController::class, 'toggleStatus'])->name('toggleStatus');
+
+});
+ */
+
+
+/* Route::prefix('events')->name('events.')->group(function () {
+    Route::get('/', [EventsController::class, 'index'])->name('index');
+    Route::get('/create', [EventsController::class, 'create'])->name('create');
+    Route::post('/', [EventsController::class, 'store'])->name('store'); // ✅ This is the missing route
+    Route::get('/{event}/edit', [EventsController::class, 'edit'])->name('edit');
+    Route::put('/{event}', [EventsController::class, 'update'])->name('update');
+    Route::delete('/{event}', [EventsController::class, 'destroy'])->name('destroy');
+	Route::post('toggle-status', [EventsController::class, 'toggleStatus'])->name('toggleStatus');
+});
+
+  */
+
   Route::prefix('events')->name('events.')->group(function () {
     Route::get('/', [EventsController::class, 'index'])->name('index');
     Route::get('/create', [EventsController::class, 'create'])->name('create');
@@ -187,10 +208,6 @@ Route::prefix('broadcasts')->name('broadcasts.')->group(function () {
 
 });
 
-Route::prefix('socialwall')->name('socialwall.')->group(function () {
-Route::get('/socialwall', [SocialWallController::class, 'index'])->name('index');
-
-});
 
 });
 
