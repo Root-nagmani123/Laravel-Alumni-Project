@@ -32,4 +32,11 @@ class Topic extends Model
         'created_date',
         'is_deleted',
     ];
+
+    public function member()
+    {
+        //return $this->belongsTo(Member::class);
+        return $this->belongsTo(Member::class, 'created_by');
+    }
+
 }
