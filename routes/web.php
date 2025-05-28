@@ -93,8 +93,8 @@ Route::prefix('forums')->name('forums.')->group(function () {
     Route::get('add_member/{id}', [ForumController::class, 'add_member'])->name('add_member');
     Route::post('/save_members', [ForumController::class, 'storeMembers'])->name('save_members');
     Route::get('view_member/{id}', [ForumController::class, 'view_member'])->name('view_member');
-    Route::get('add_topic/{id}', [ForumController::class, 'add_topic'])->name('add_topic');
-    Route::post('/save_topic', [ForumController::class, 'save_topic'])->name('save_topic');
+        Route::get('add_topic/{id}', [ForumController::class, 'add_topic'])->name('add_topic');
+        Route::post('/save_topic', [ForumController::class, 'save_topic'])->name('save_topic');
     Route::get('/forums/{id}/topics', [ForumController::class, 'view_forum_topics'])->name('view_topic');
     Route::get('/topics/{id}', [ForumController::class, 'show'])->name('topics.view');
     Route::get('/topics/{id}/edit', [ForumController::class, 'edit'])->name('topics.edit');

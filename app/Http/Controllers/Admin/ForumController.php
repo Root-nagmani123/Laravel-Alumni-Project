@@ -26,7 +26,7 @@ class ForumController extends Controller
 {
     $validator = Validator::make($request->all(), [
         'name' => 'required|string|max:255',
-        
+
        // 'cat_id' => 'nullable|integer',
        // 'user_id' => 'required|array',
         //'user_id.*' => 'integer|exists:users,id', // Validate each user_id
@@ -42,7 +42,7 @@ class ForumController extends Controller
         'name' => $request->input('name'),
        // 'cat_id' => $request->input('cat_id'),
         'status' => 1, // Default status
-        'created_by' => auth()->user()->id, 
+        'created_by' => auth()->user()->id,
     ];
     // Insert into forums table
     $last_id = Forum::create($input)->id; // Create forum and get the last inserted ID
@@ -143,7 +143,7 @@ public function storeMembers(Request $request)
         'forum_id' => 'required|exists:forums,id',
         'user_id' => 'required|array|min:1',
         'user_id.*' => 'exists:users,id',
-        
+
     ]);
 
     $forumId = $request->input('forum_id');
@@ -192,13 +192,14 @@ public function add_topic($id)
     $userData = User::all();
 
     // Get assigned user_ids for this forum
-    
+
 
     return view('admin.forums.add_topic', [
         'forumName' => $forum->name,
         'forumId' => $forum->id,
         'userData' => $userData,
-        
+
+
     ]);
 }
 public function save_topic(Request $request)
@@ -207,7 +208,7 @@ public function save_topic(Request $request)
         'title' => 'required',
         'description' => 'required',
         'status' => 'required',
-        
+
     ]);
     $data = [
         'title' => $request->input('title'),
@@ -217,7 +218,7 @@ public function save_topic(Request $request)
         'video_link' => $request->input('video_link'),
         'video_caption' => $request->input('video_caption'),
         'status' => $request->input('status'),
-        'forum_id' => $request->input('forum_id'),
+        'forum_id' => $request->input('forum_id'), //pull from form
         'created_by' => Auth::id(), // Use Laravel's Auth to get user ID
         'created_date' => now(),
     ];

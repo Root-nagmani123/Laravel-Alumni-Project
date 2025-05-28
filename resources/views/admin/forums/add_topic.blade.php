@@ -43,6 +43,9 @@ $pageName = 'Add Forum Topic'; // Set the page name here
                     <hr>
                     <form method="POST" action="{{ route('forums.save_topic') }}" enctype="multipart/form-data"
                         id="AddMemberForm">
+                        @csrf
+                           <input type="hidden" name="forum_id" value="{{ $forumId }}">
+
                         <!-- Forum Name -->
                         <div class="row mb-3">
                             <label for="forumName" class="col-sm-3 col-form-label">Forum Name</label>

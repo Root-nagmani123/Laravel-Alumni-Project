@@ -83,12 +83,12 @@
                                         </a>
                                     </td>
                                     <td><a class="btn btn-sm btn-primary"
-                                            href="{{ route('forums.add_topic', ['id' => $forum->id]) }}"> <iconify-icon icon="solar:add-circle-bold"></iconify-icon></a>&nbsp;<a class="btn btn-sm btn-success"
-                                            href="{{ route('forums.view_topic' , ['id' => $forum->id] )}}"> <iconify-icon icon="solar:eye-bold"></iconify-icon></a></td>
+                                            href="{{ route('forums.add_topic', ['id' => $forum->id]) }}" title="Add  Topic"> <iconify-icon icon="solar:add-circle-bold"></iconify-icon></a>&nbsp;<a class="btn btn-sm btn-success"
+                                            href="{{ route('forums.view_topic' , ['id' => $forum->id] )}}" title="View Topic"> <iconify-icon icon="solar:eye-bold"></iconify-icon></a></td>
                                     <td>{{ \Carbon\Carbon::parse($forum->created_at)->timezone('Asia/Kolkata')->format('l, d M Y, h:i A') }}
                                     </td>
 
-                                    
+
                                     <!-- <td>
                                         <input class="form-check-input status-toggle" type="checkbox" role="switch" data-table="forum" data-column="active_inactive" data-id="1" checked="">
                                     </td> -->
@@ -108,7 +108,7 @@
 
                                     </td>
                                     <td>
-                                        
+
                                             <div class="form-check form-switch d-inline-block">
                                             <input class="form-check-input status-toggle" type="checkbox" role="switch"
                                                 data-table="group" data-column="active_inactive"
