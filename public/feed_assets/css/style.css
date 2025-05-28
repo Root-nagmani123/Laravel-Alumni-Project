@@ -546,7 +546,7 @@ li {
   color: var(--body-color);
 }
 .scrollToTop.active {
-  bottom: 30px;
+  bottom: 100px;
   transform: translateY(0%);
 }
 
