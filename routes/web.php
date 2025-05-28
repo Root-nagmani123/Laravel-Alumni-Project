@@ -224,4 +224,8 @@ Route::get('/user_login', function () {
             return view('user.feed');
         })->name('user_feed');
 
+        Route::get('/user_feed1', function () {
+            return view('user.feed1');
+        })->name('user_feed1');
+
 require __DIR__.'/auth.php';
