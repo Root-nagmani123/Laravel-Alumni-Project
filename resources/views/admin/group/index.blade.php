@@ -41,7 +41,7 @@
                         </div>
                         <div class="col-6">
                             <div class="float-end gap-2">
-                                <a href="{{ route('group.create') }}" class="btn btn-primary btn-sm">+ Add Group</a>
+                                <a href="{{ route('group.create') }}" class="btn btn-primary">+ Add Group</a>
                             </div>
                         </div>
                     </div>
