@@ -91,11 +91,11 @@
                                         </div>
                                     </td>
                                 </tr>
-                             @empty
-                                <tr>
-                                    <td colspan="5" class="text-center">No topics found.</td>
-                                </tr>
-                                @endforelse
+                            @empty
+<tr>
+    <td colspan="6" class="text-center">No topics found.</td>
+</tr>
+@endforelse
                             </tbody>
                         </table>
 
