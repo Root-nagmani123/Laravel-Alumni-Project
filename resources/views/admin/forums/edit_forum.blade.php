@@ -33,7 +33,7 @@
         <div class="card-body">
             <h4 class="card-title mb-3">Edit Forum</h4>
             <hr>
-            
+
 
             <form method="POST" action="{{ route('forums.forum.update', $forum->id) }}">
                 @csrf
@@ -43,11 +43,11 @@
                     <div class="row" id="batch_fields">
                         <div class="col-sm-5">
                             <label for="Schoolname" class="form-label">Forum Name :</label>
-                            
+
                             <div class="mb-3">
                                 <input type="text" class="form-control" id="Forumname" name="forumname"
     value="{{ old('forumname', $forum->name) }}">
-                                    
+
                             </div>
                         </div>
                         <div class="col-sm-5">
@@ -61,7 +61,7 @@
     </div>
 </div>
 
-                        
+
                     </div>
                 </div>
                 <hr>
@@ -70,7 +70,7 @@
                     <i class="material-icons menu-icon">send</i>
                         Submit
                     </button>
-                    <a href="{{ route('forums.forum.index') }}" class="btn btn-secondary hstack gap-6 float-end me-2">
+                    <a href="{{ route('admin.forum.index') }}" class="btn btn-secondary hstack gap-6 float-end me-2">
                         <i class="material-icons menu-icon">arrow_back</i>
                         Back
                     </a>
