@@ -97,7 +97,7 @@
                                     aria-labelledby="viewTopicModalLabel{{ $topic->id }}" aria-hidden="true">
                                     <div class="modal-dialog modal-lg modal-dialog-scrollable">
                                         <div class="modal-content">
-                                            <form method="POST" action="{{ route('forums.topics.update', $topic->id) }}"
+                                            <form method="POST" action="{{-- route('forums.topics.update', $topic->id) --}}"
                                                 enctype="multipart/form-data">
                                                 @csrf
                                                 @method('PUT')
