@@ -51,7 +51,9 @@ class MemberController extends Controller
             'designation' => $request->designation,
             'batch' => $request->batch,
         ]);
-        return redirect()->route('members.index')->with('success', 'Member added successfully.');
+       return redirect()->route('members.index')->with('success', 'Member added successfully.');
+
+
     }
     public function edit(Member $member)
     {
@@ -86,12 +88,15 @@ class MemberController extends Controller
         $member->designation = $request->designation;
         $member->batch = $request->batch;
         $member->save();
-        return redirect()->route('members.index')->with('success', 'Member updated successfully.');
+       return redirect()->route('members.index')->with('success', 'Member updated successfully.');
+
     }
     public function destroy(Member $member)
     {
         $member->delete();
         return redirect()->route('members.index')->with('success', 'Member deleted successfully.');
+
+
     }
 
 
@@ -104,7 +109,9 @@ class MemberController extends Controller
         ]);
         // Import the data
         Excel::import(new MembersImport, $request->file('file'));
-        return redirect()->route('members.index')->with('success', 'Members uploaded successfully!');
+       return redirect()->route('members.index')->with('success', 'Members uploaded successfully!');
+
+
     }
     public function bulk_upload_form()
     {
@@ -119,6 +126,7 @@ class MemberController extends Controller
         $member->save();
 
         return response()->json(['message' => 'Status updated successfully.']);
+
     }
 
 

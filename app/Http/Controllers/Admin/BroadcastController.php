@@ -13,7 +13,7 @@ class BroadcastController extends Controller
     $broadcasts = Broadcast::orderBy('created_at', 'desc')->get(); // Fetch all broadcasts
     return view('admin.broadcasts.index', compact('broadcasts'));
 }
-    public function store(Request $request)
+    public function store28052025(Request $request)
 {
     // dd($request);
     // Validate request
@@ -43,15 +43,47 @@ class BroadcastController extends Controller
     ]);
 
     return redirect()->route('broadcasts.index')->with('success', 'Broadcast added successfully!');
-    
+
 }
+
+public function store(Request $request)
+{
+    // Validate request
+    $validated = $request->validate([
+        'title' => 'required|string|max:255',
+        'content' => 'required|string',
+        'images.*' => 'nullable|image|max:3072', // 3MB per file
+        'video_url' => 'nullable|url',
+    ]);
+
+    // Handle image upload (store first image only if multiple uploaded)
+    $imageUrl = null;
+    if ($request->hasFile('images')) {
+        $image = $request->file('images')[0];
+        $imageUrl = $image->store('uploads/broadcasts', 'public'); // returns relative path
+    }
+
+    // Save to DB
+    $broadcast = Broadcast::create([
+        'title' => $validated['title'],
+        'description' => $validated['content'],
+        'image_url' => $imageUrl, // just the path like "uploads/broadcasts/filename.png"
+        'video_url' => $validated['video_url'] ?? null,
+        'createdBy' => auth()->id() ?? null,
+        'is_deleted' => 0,
+        'deleted_on' => now(),
+    ]);
+
+    return redirect()->route('broadcasts.index')->with('success', 'Broadcast added successfully!');
+}
+
 public function toggleStatus(Request $request)
 {
     $broadcast = Broadcast::findOrFail($request->id);
     $broadcast->status = $request->status;
     $broadcast->save();
 
-    return response()->json(['message' => 'Broadcast status updated successfully.']);
+    return response()->json(['message' => 'Status updated successfully.']);
 }
 public function destroybroadcast(Broadcast $broadcast)
     {

@@ -143,7 +143,11 @@ Route::prefix('group')->name('group.')->group(function () {
 
 Route::get('add_topic/{id}', [GroupController::class, 'add_topic'])->name('add_topic');
 
-Route::post('save_topic/{id}', [GroupController::class, 'add_topic'])->name('save_topic');
+Route::post('save_topic/{id}', [GroupController::class, 'save_topic'])->name('save_topic');
+
+Route::put('topics/{id}/update', [ForumController::class, 'updateTopic'])->name('topics.update');
+Route::delete('topics/{id}', [ForumController::class, 'deleteTopic'])->name('topics.delete');
+
 
 });
 

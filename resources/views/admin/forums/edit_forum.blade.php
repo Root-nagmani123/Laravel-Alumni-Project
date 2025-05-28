@@ -68,11 +68,11 @@
                 <div class="mb-3">
                     <button class="btn btn-primary hstack gap-6 float-end" type="submit">
                     <i class="material-icons menu-icon">send</i>
-                        Submit
+                        Update
                     </button>
-                    <a href="{{ route('forums.forum.index') }}" class="btn btn-secondary hstack gap-6 float-end me-2">
+                    <a href="{{ route('forums.index') }}" class="btn btn-secondary hstack gap-6 float-end me-2">
                         <i class="material-icons menu-icon">arrow_back</i>
-                        Back
+                        Cancel
                     </a>
                 </div>
             </form>

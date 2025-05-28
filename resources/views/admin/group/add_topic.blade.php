@@ -44,7 +44,7 @@ $pageName
 
                         <form method="POST" action="{{ route('group.save_topic', ['id' => $id]) }}" enctype="multipart/form-data" id="AddMemberForm">
 
-    @csrf
+                            @csrf
                         <!-- Group Name -->
                         <div class="row mb-3">
                             <label for="groupname" class="col-sm-3 col-form-label">Group Name</label>
@@ -148,7 +148,7 @@ $pageName
                                 Submit
                             </button>
                             <a href="{{ route('group.index') }}" class="btn btn-secondary">
-                                Back
+                                Cancel
                             </a>
                         </div>
                     </form>

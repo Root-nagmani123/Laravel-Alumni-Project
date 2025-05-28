@@ -69,9 +69,13 @@
                                     <td><b>{{ $broadcast->title }}</b></td>
                                     <td>{{$broadcast->description}}</td>
                                     <td class="sorting_1">
+
+
                                         <div class="d-flex align-items-center gap-6">
                                             @if($broadcast->image_url)
-                                            <img src="{{ $broadcast->image_url }}" width="45" class="rounded-circle">
+                                          <img src="{{ asset('storage/' . $broadcast->image_url) }}" alt="Broadcast Image"  height="100" width="150">
+
+
                                             @else
                                             <img src="{{ asset('assets/images/default-avatar.png') }}" width="45"
                                                 class="rounded-circle">
@@ -183,35 +187,57 @@
 
 @endsection
 @section('scripts')
-<script>
-$(document).ready(function() {
-    @if(session('success'))
-    toastr.success("{{ session('success') }}");
-    @endif
 
-});
-// JS to update status via toggle
-$('.status-toggle').change(function() {
-    let status = $(this).prop('checked') ? 1 : 0;
-    let broadcastId = $(this).data('id');
-    $.ajax({
-        url: '{{ route("broadcasts.toggleStatus") }}',
-        type: 'POST',
-        data: {
-            _token: '{{ csrf_token() }}',
-            id: broadcastId,
-            status: status
-        },
-        success: function(response) {
-            const deleteBtn = $(`.delete-broadcast-btn[data-id="${broadcastId}"]`);
-            deleteBtn.attr('data-status', status);
-            toastr.success(response.message);
-        },
-        error: function(xhr) {
-            toastr.error('Failed to update status.');
+<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+<script>
+
+ //Toastr message
+    $(document).ready(function() {
+        @if (session('success'))
+            toastr.success("{{ session('success') }}");
+        @endif
+
+    });
+
+    $(document).ready(function () {
+    // AJAX: Toggle member status with confirmation
+    $('.status-toggle').change(function (e) {
+        let checkbox = $(this);
+        let status = checkbox.prop('checked') ? 1 : 0;
+        let broadcastId = checkbox.data('id');
+
+        let confirmChange = confirm("Are you sure you want to " + (status ? "activate" : "deactivate") + "?");
+
+        if (!confirmChange) {
+            // Revert the checkbox state if cancelled
+            checkbox.prop('checked', !status);
+            return;
         }
+
+        $.ajax({
+            url: '{{ route("broadcasts.toggleStatus") }}',
+            type: 'POST',
+            data: {
+                _token: '{{ csrf_token() }}',
+                id: broadcastId,
+                status: status
+            },
+            success: function (response) {
+                toastr.success(response.message);
+            },
+            error: function () {
+                toastr.error('Failed to update status.');
+                // Optionally revert on failure
+                checkbox.prop('checked', !status);
+            }
+        });
     });
 });
+
 // Delete button handling
 document.addEventListener("DOMContentLoaded", function() {
     $('.delete-broadcast-btn').on('click', function() {

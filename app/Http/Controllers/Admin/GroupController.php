@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Topic;
 use App\Models\Member;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 class GroupController extends Controller
 {
     public function index()
@@ -129,8 +130,31 @@ class GroupController extends Controller
     {
         $pageName = 'Group';
         $group = Group::findOrFail($id);
-        $topics = Topic::where('group_id', $id)->with('creator')->get();
+        //$topics = Topic::where('group_id', $id)->with('created_by')->get();
+        $topics = Topic::where('group_id', $id)->with('created_by')->get();
 
         return view('admin.group.topics_list', compact('group', 'topics','pageName'));
     }
+
+    /*public function updateTopic(Request $request, $id) {
+    $topic = Topic::findOrFail($id);
+    $topic->update($request->all());
+    return back()->with('success', 'Topic updated.');
+    }*/
+
+    public function updateTopic(Request $request, $id) {
+    $topic = Topic::findOrFail($id);
+
+    $topic->title = $request->title;
+    $topic->description = $request->description;
+    $topic->status = $request->status;
+     $topic->save();
+
+    return redirect()->back()->with('success', 'Topic updated successfully!');
+    }
+
+    public function deleteTopic($id) {
+    Topic::destroy($id);
+    return back()->with('success', 'Topic deleted.');
+}
 }

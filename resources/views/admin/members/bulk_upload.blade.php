@@ -58,7 +58,7 @@
                                 Upload
                             </button>
                             <a href="{{ route('members.index') }}" class="btn btn-secondary">
-                                Back
+                                Cancel
                             </a>
                         </div>
                     </div>

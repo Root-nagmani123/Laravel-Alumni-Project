@@ -130,42 +130,51 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
-
 <script>
 //Toastr message
-    $(document).ready(function() {
+    /*$(document).ready(function() {
         @if (session('success'))
             toastr.success("{{ session('success') }}");
         @endif
 
-    });
+    }); */
 
     $(document).ready(function () {
-        // AJAX: Toggle member status
-        $('.status-toggle').change(function () {
-            let status = $(this).prop('checked') ? 1 : 0;
-            let eventId = $(this).data('id');
+    // AJAX: Toggle member status with confirmation
+    $('.status-toggle').change(function (e) {
+        let checkbox = $(this);
+        let status = checkbox.prop('checked') ? 1 : 0;
+        let eventId = checkbox.data('id');
 
-            $.ajax({
-                url: '{{ route("events.toggleStatus") }}',
-                type: 'POST',
-                data: {
-                    _token: '{{ csrf_token() }}',
-                    id: eventId,
-                    status: status
-                },
-                success: function (response) {
+        let confirmChange = confirm("Are you sure you want to " + (status ? "activate" : "deactivate") + "?");
 
-                    toastr.success(response.message);
-                },
-                error: function () {
-                    toastr.error('Failed to update status.');
-                }
-            });
+        if (!confirmChange) {
+            // Revert the checkbox state if cancelled
+            checkbox.prop('checked', !status);
+            return;
+        }
+
+        $.ajax({
+            url: '{{ route("events.toggleStatus") }}',
+            type: 'POST',
+            data: {
+                _token: '{{ csrf_token() }}',
+                id: eventId,
+                status: status
+            },
+            success: function (response) {
+                toastr.success(response.message);
+            },
+            error: function () {
+                toastr.error('Failed to update status.');
+                // Optionally revert on failure
+                checkbox.prop('checked', !status);
+            }
         });
     });
-    </script>
+});
 
+    </script>
 
 
 @endsection

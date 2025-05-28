@@ -75,7 +75,7 @@
                                     Save
                                 </button>
                                 <a href="{{ route('forums.index') }}" class="btn btn-secondary">
-                                    Back
+                                    Cancel
                                 </a>
                             </div>
                         </div>

@@ -137,16 +137,27 @@
 
 <script>
 //   Toastr message
-$(document).ready(function() {
+/*$(document).ready(function() {
     @if(session('success'))
     toastr.success("{{ session('success') }}");
     @endif
-
 });
+*/
+
 // AJAX to Update the status
-$('.status-toggle').change(function() {
-    let status = $(this).prop('checked') ? 1 : 0;
-    let forumId = $(this).data('id');
+$('.status-toggle').change(function () {
+    let checkbox = $(this);
+    let status = checkbox.prop('checked') ? 1 : 0;
+    let forumId = checkbox.data('id');
+
+    // Confirmation prompt
+    let confirmMessage = status ? "Are you sure you want to activate?" : "Are you sure you want to deactivate?";
+
+    if (!confirm(confirmMessage)) {
+        // Revert the checkbox if cancelled
+        checkbox.prop('checked', !status);
+        return;
+    }
 
     $.ajax({
         url: '{{ route("forums.toggleStatus") }}',
@@ -156,16 +167,19 @@ $('.status-toggle').change(function() {
             id: forumId,
             status: status
         },
-        success: function(response) {
+        success: function (response) {
             const deleteBtn = $(`.delete-forum-btn[data-id="${forumId}"]`);
             deleteBtn.attr('data-status', status);
             toastr.success(response.message);
         },
-        error: function(xhr) {
+        error: function (xhr) {
             toastr.error('Failed to update status.');
+            // Revert checkbox on failure
+            checkbox.prop('checked', !status);
         }
     });
 });
+
 document.addEventListener("DOMContentLoaded", function() {
     var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
     var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {

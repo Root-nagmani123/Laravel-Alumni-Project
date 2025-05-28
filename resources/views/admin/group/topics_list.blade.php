@@ -19,8 +19,10 @@
             @forelse ($topics as $topic)
                 <tr>
                     <td>{{ $topic->title }}</td>
-                    <td>
-                        <input type="checkbox"
+
+                    <td>{{ \Carbon\Carbon::parse($topic->created_date)->timezone('Asia/Kolkata')->format('l, d M Y, h:i A') }}</td>
+                     <td>
+                       <!-- <input type="checkbox"
                                class="status-toggle"
                                data-id="{{ $topic->id }}"
                                data-toggle="toggle"
@@ -28,9 +30,14 @@
                                data-off="Inactive"
                                data-onstyle="success"
                                data-offstyle="danger"
-                               {{ $topic->status == 1 ? 'checked' : '' }}>
+                               {{ $topic->status == 1 ? 'checked' : '' }}>-->
+                                  <div class="form-check form-switch d-inline-block">
+                                            <input class="form-check-input status-toggle" type="checkbox" role="switch"
+                                                data-table="group" data-column="active_inactive"  data-id="{{ $topic->id }}"
+                                                {{ $topic->status == 1 ? 'checked' : '' }}>
+                                        </div>
                     </td>
-                    <td>{{ \Carbon\Carbon::parse($topic->created_date)->timezone('Asia/Kolkata')->format('l, d M Y, h:i A') }}</td>
+
                     <td class="text-center">
                         <!-- Edit Button -->
                         <button class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#viewTopicModal{{ $topic->id }}">
@@ -66,10 +73,100 @@
 </div>
 @endsection
 
+
+
+
+{{--
 @section('scripts')
 @if(session('success'))
     <script>
         toastr.success("{{ session('success') }}");
     </script>
 @endif
+@endsection--}}
+
+
+@foreach ($topics as $topic)
+<div class="modal fade" id="viewTopicModal{{ $topic->id }}" tabindex="-1" aria-labelledby="editTopicLabel{{ $topic->id }}" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+       <form method="POST" action="{{ route('group.topics.update', ['id' => $topic->id]) }}" enctype="multipart/form-data">
+                @csrf
+                @method('PUT') <!-- Use PUT for updating -->
+
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editTopicModalLabel{{ $topic->id }}">Edit Topic</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <!-- REPLICATE YOUR ENTIRE FORM FIELDS HERE, JUST LIKE YOU SHARED -->
+
+                    <div class="row mb-3">
+                        <label class="col-sm-3 col-form-label">Group Name</label>
+                        <div class="col-sm-9">
+                            {{ $group->name }}
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <label class="col-sm-3 col-form-label">Title</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="title" class="form-control" value="{{ old('title', $topic->title) }}">
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <label class="col-sm-3 col-form-label">Description</label>
+                        <div class="col-sm-9">
+                            <textarea name="description" class="form-control" style="height: 100px">{{ old('description', $topic->description) }}</textarea>
+                        </div>
+                    </div>
+
+                   <div class="row mb-3">
+                        <label class="col-sm-3 col-form-label">Status<span class="required">*</span></label>
+                        <div class="col-sm-9">
+                            <select name="status" class="form-select" required>
+                                <option value="" disabled {{ old('status', $topic->status) === null ? 'selected' : '' }}>Select Status</option>
+                                <option value="1" {{ old('status', $topic->status) == '1' ? 'selected' : '' }}>Active</option>
+                                <option value="0" {{ old('status', $topic->status) == '0' ? 'selected' : '' }}>Inactive</option>
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Update</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+    </div>
+  </div>
+</div>
+@endforeach
+@section('scripts')
+<script>
+    document.querySelectorAll('.delete-topic-btn').forEach(button => {
+        button.addEventListener('click', function () {
+            const topicId = this.getAttribute('data-id');
+            if (confirm('Are you sure you want to delete?')) {
+                document.getElementById('delete-form-' + topicId).submit();
+            }
+        });
+    });
+</script>
+
+
+<script>
+//Toastr message
+    /*$(document).ready(function() {
+        @if (session('success'))
+            toastr.success("{{ session('success') }}");
+        @endif
+
+    }); */
+
+</script>
+
 @endsection

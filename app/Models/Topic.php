@@ -39,4 +39,8 @@ class Topic extends Model
         return $this->belongsTo(Member::class, 'created_by');
     }
 
+    public function created_by() {
+    return $this->belongsTo(User::class, 'created_by');
+}
+
 }

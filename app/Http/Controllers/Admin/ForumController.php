@@ -65,7 +65,11 @@ class ForumController extends Controller
         ]);
    // }
     // Redirect to the forum page
-    return redirect()->route('forums.index', $last_id)->with('success', 'Forum created successfully.');
+
+    //return redirect()->route('forums.index', $last_id)->with('success', 'Forum created successfully.');
+    return redirect()->route('forums.index')->with('success', 'forum added successfully.');
+
+
 }
     public function forumedit(Forum $forum)
     {
