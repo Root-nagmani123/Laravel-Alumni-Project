@@ -73,7 +73,7 @@
                                         </button>
 
                                         <form id="delete-form-{{ $topic->id }}"
-                                            action="{{-- route('forums.topics.delete', $topic->id) --}}" method="POST"
+                                            action="{{route('forums.topics.delete', $topic->id) }}" method="POST"
                                             style="display:inline;">
                                             @csrf
                                             @method('DELETE')
@@ -91,13 +91,15 @@
                                         </div>
                                     </td>
                                 </tr>
+                            </tbody>
+                        </table>
 
                                 <!-- Modal for Viewing/Editing Topic -->
                                 <div class="modal fade" id="viewTopicModal{{ $topic->id }}" tabindex="-1"
                                     aria-labelledby="viewTopicModalLabel{{ $topic->id }}" aria-hidden="true">
                                     <div class="modal-dialog modal-lg modal-dialog-scrollable">
                                         <div class="modal-content">
-                                            <form method="POST" action="{{-- route('forums.topics.update', $topic->id) --}}"
+                                            <form method="POST" action="{{ route('forums.topics.update', $topic->id)}}"
                                                 enctype="multipart/form-data">
                                                 @csrf
                                                 @method('PUT')
