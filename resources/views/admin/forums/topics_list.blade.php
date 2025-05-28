@@ -61,7 +61,7 @@
                                 <tr>
                                     <td>{{$loop -> iteration}}</td>
                                     <td>{{ $topic->title }}</td>
-                                   
+
                                     <td>{{ $topic->creator->name ?? 'Unknown' }}</td>
                                     <td>{{ \Carbon\Carbon::parse($topic->created_date)->timezone('Asia/Kolkata')->format('l, d M Y, h:i A') }}
                                     </td>
@@ -73,7 +73,7 @@
                                         </button>
 
                                         <form id="delete-form-{{ $topic->id }}"
-                                            action="{{ route('forums.topics.delete', $topic->id) }}" method="POST"
+                                            action="{{-- route('forums.topics.delete', $topic->id) --}}" method="POST"
                                             style="display:inline;">
                                             @csrf
                                             @method('DELETE')
