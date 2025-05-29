@@ -64,7 +64,7 @@
                         Update
                     </button>
                     <a href="{{ route('group.index') }}" class="btn btn-secondary">
-                        Back
+                        Cancel
                     </a>
                 </div>
             </form>

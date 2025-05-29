@@ -253,7 +253,21 @@ public function view_forum_topics($id)
 
     return view('admin.forums.topics_list', compact('forum', 'topics'));
 }
-public function update_topic(Request $request, $id)
+public function update_topic_2952025(Request $request, $id)
+{
+    $topic = ForumTopic::findOrFail($id);
+
+    $topic->update([
+        'title' => $request->input('title'),
+        'description' => $request->input('description'),
+        'video_caption' => $request->input('video_caption'),
+        'status' => $request->input('status'),
+    ]);
+
+    return back()->with('success', 'Topic updated successfully.');
+}
+
+public function updateTopic(Request $request, $id)
 {
     $topic = ForumTopic::findOrFail($id);
 

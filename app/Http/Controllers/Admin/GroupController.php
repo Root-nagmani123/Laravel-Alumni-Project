@@ -67,16 +67,7 @@ class GroupController extends Controller
         return response()->json(['message' => 'Status updated successfully.']);
     }
 
-     /*  public function add_topic($id)
-    {
-        $pageName = 'Topic add';
-        $group = Group::findOrFail($id);
-        //dd($group);
-        return view('admin.group.add_topic', compact('group','pageName'));
-    }
-    */
-
-   public function add_topic($id)
+    public function add_topic($id)
     {
         $group = Group::find($id);
         if (!$group) {
@@ -150,11 +141,23 @@ class GroupController extends Controller
     $topic->status = $request->status;
      $topic->save();
 
-    return redirect()->back()->with('success', 'Topic updated successfully!');
+   return redirect()->route('admin.group.topics_list', ['id' => $id])
+    ->with('success', 'Topic updated successfully.');
+
     }
 
     public function deleteTopic($id) {
     Topic::destroy($id);
     return back()->with('success', 'Topic deleted.');
-}
+ }
+
+  public function topicToggleStatus(Request $request)
+    {
+
+        $topic = Topic::findOrFail($request->id);
+        $topic->status = $request->status;
+        $topic->save();
+
+        return response()->json(['message' => 'Status updated successfully.']);
+    }
 }

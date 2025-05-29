@@ -90,7 +90,7 @@
 <div class="modal fade" id="viewTopicModal{{ $topic->id }}" tabindex="-1" aria-labelledby="editTopicLabel{{ $topic->id }}" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
-       <form method="POST" action="{{ route('group.topics.update', ['id' => $topic->id]) }}" enctype="multipart/form-data">
+       <form method="POST" action="{{ route('group.topics_update', ['id' => $topic->id]) }}" enctype="multipart/form-data">
                 @csrf
                 @method('PUT') <!-- Use PUT for updating -->
 
@@ -158,6 +158,11 @@
 </script>
 
 
+<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
 <script>
 //Toastr message
     /*$(document).ready(function() {
@@ -167,6 +172,41 @@
 
     }); */
 
-</script>
+    $(document).ready(function () {
+    // AJAX: Toggle member status with confirmation
+    $('.status-toggle').change(function (e) {
+        let checkbox = $(this);
+        let status = checkbox.prop('checked') ? 1 : 0;
+        let topicId = checkbox.data('id');
+
+        let confirmChange = confirm("Are you sure you want to " + (status ? "activate" : "deactivate") + "?");
+
+        if (!confirmChange) {
+            // Revert the checkbox state if cancelled
+            checkbox.prop('checked', !status);
+            return;
+        }
+
+        $.ajax({
+            url: '{{ route("group.topicToggleStatus") }}',
+            type: 'POST',
+            data: {
+                _token: '{{ csrf_token() }}',
+                id: topicId,
+                status: status
+            },
+            success: function (response) {
+                toastr.success(response.message);
+            },
+            error: function () {
+                toastr.error('Failed to update status.');
+                // Optionally revert on failure
+                checkbox.prop('checked', !status);
+            }
+        });
+    });
+});
+
+    </script>
 
 @endsection
