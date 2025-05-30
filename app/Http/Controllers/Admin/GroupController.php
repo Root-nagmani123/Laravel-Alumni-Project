@@ -51,10 +51,21 @@ class GroupController extends Controller
         $group->update($request->all());
         return redirect()->route('group.index')->with('success', 'Group updated successfully.');
     }
-    public function destroy(Group $group)
+    /*public function destroy(Group $group)
     {
         $group->delete();
         return redirect()->route('group.index')->with('success', 'Group deleted successfully.');
+    }*/
+      public function destroy(Group $group)
+    {
+        if ($group->status == 1) {
+            return redirect()->route('group.index')
+                            ->with('error', 'Cannot delete an active Group. Please deactivate it first.');
+        }
+
+        $group->delete();
+        return redirect()->route('group.index')
+                        ->with('success', 'Group deleted successfully.');
     }
 
      public function toggleStatus(Request $request)

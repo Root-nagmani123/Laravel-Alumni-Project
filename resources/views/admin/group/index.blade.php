@@ -30,6 +30,11 @@
     @if(session('success'))
     <div class="alert alert-success">{{ session('success') }}</div>
     @endif
+       @if (session('error'))
+       <div class="alert alert-danger" style="color:white;">
+         {{ session('error') }}
+       </div>
+    @endif
     <div class="datatables">
         <!-- start Zero Configuration -->
         <div class="card">
@@ -86,12 +91,20 @@
                                     <td>
                                         <a href="{{ route('group.edit', $group->id) }}"
                                             class="btn btn-success btn-sm">Edit</a>
-                                       <form action="{{ route('group.destroy', $group->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete?');">
-    @csrf
-    @method('DELETE')
-    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-</form>
-                                    </td>
+                                <!--<form action="{{-- route('group.destroy', $group->id) --}}" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                  </form>-->
+                                       <form action="{{ route('group.destroy', $group->id) }}" method="POST" style="display:inline;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger text-white btn-sm"
+                                            onclick="return confirm('Are you sure you want to delete?')">
+                                        Delete
+                                    </button>
+                                    </form>
+                                </td>
                                 </tr>
                                 @endforeach
                             </tbody>

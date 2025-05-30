@@ -93,13 +93,13 @@
                                             <button type="submit" class="btn btn-danger text-white btn-sm" onclick="return confirm('Are you sure you want to delete?')">Delete</button>
                                         </form>-->
                                   <form action="{{ route('members.destroy', $member->id) }}" method="POST" style="display:inline;">
-    @csrf
-    @method('DELETE')
-    <button type="submit" class="btn btn-danger text-white btn-sm"
-            onclick="return confirm('Are you sure you want to delete?')">
-        Delete
-    </button>
-</form>
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger text-white btn-sm"
+                                            onclick="return confirm('Are you sure you want to delete?')">
+                                        Delete
+                                    </button>
+                                    </form>
                                     </td>
                                     <td>
                                         <div class="form-check form-switch d-inline-block">
