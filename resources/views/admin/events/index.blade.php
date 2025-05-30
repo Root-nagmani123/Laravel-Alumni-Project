@@ -155,7 +155,7 @@
         }
 
         $.ajax({
-            url: '{{ route("event.toggleStatus") }}',
+            url: '{{ route("events.toggleStatus") }}',
             type: 'POST',
             data: {
                 _token: '{{ csrf_token() }}',
