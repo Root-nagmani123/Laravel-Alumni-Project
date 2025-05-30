@@ -97,18 +97,17 @@ class MemberController extends Controller
         return redirect()->route('members.index')->with('success', 'Member deleted successfully.');
     }*/
 
-    public function destroy(Member $member)
-        {
-            if ($member->status == 1) {
-                return redirect()->route('members.index')
-                                ->with('error', 'Cannot delete an active member.');
-            }
+   public function destroy(Member $member)
+{
+    if ($member->status == 1) {
+        return redirect()->route('members.index')
+                         ->with('error', 'Cannot delete an active member. Please deactivate it first.');
+    }
 
-            $member->delete();
-            return redirect()->route('members.index')
-                            ->with('success', 'Member deleted successfully.');
-        }
-
+    $member->delete();
+    return redirect()->route('members.index')
+                     ->with('success', 'Member deleted successfully.');
+}
 
 
     //member bulk upload

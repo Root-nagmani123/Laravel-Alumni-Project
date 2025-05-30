@@ -27,13 +27,21 @@
             </div>
         </div>
     </div>
-@if(session('success'))
+                       @if(session('success'))
                         <div class="alert alert-success">{{ session('success') }}</div>
+                        @endif
+
+                         @if (session('error'))
+                        <div class="alert alert-danger" style="color:white;">
+                            {{ session('error') }}
+                        </div>
                         @endif
     <div class="datatables">
         <!-- start Zero Configuration -->
         <div class="card">
             <div class="card-body">
+
+
                 <div class="table-responsive">
                     <div class="row">
                         <div class="col-6">
@@ -49,6 +57,7 @@
                     </div>
                     <hr>
                     <div id="zero_config_wrapper" class="dataTables_wrapper">
+
 
 
                         <table id="zero_config"
@@ -84,17 +93,14 @@
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-danger text-white btn-sm" onclick="return confirm('Are you sure you want to delete?')">Delete</button>
                                         </form>-->
-                                        @if ($member->status != 1)
-                        <form action="{{ route('members.destroy', $member->id) }}" method="POST" style="display:inline;">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger text-white btn-sm"
-                                            onclick="return confirm('Are you sure you want to delete?')">Delete</button>
-                                    </form>
-                                @else
-                                    <button class="btn btn-secondary btn-sm" disabled>Active</button>
-                                @endif
-
+                                  <form action="{{ route('members.destroy', $member->id) }}" method="POST" style="display:inline;">
+    @csrf
+    @method('DELETE')
+    <button type="submit" class="btn btn-danger text-white btn-sm"
+            onclick="return confirm('Are you sure you want to delete?')">
+        Delete
+    </button>
+</form>
                                     </td>
                                     <td>
                                         <div class="form-check form-switch d-inline-block">
