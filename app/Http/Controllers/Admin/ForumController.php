@@ -106,32 +106,17 @@ class ForumController extends Controller
         return redirect()->route('forums.index')->with('success', 'Forum deleted successfully.');
     }
 
-
-    /*
-    public function bulk_upload_forums(Request $request)
-    {
-        $request->validate([
-            'file' => 'required|file|mimes:xlsx,xls,csv|max:3072',
-        ]);
-        Excel::import(new MembersImport, $request->file('file'));
-        return redirect()->route('members.index')->with('success', 'Members uploaded successfully!');
-    }
-    public function bulk_upload_form()
-    {
-        return view('admin.members.bulk_upload');
-    }
-    */
    public function add_member($id)
-{
+    {
     $forum = Forum::findOrFail($id);
 
     // Get all users
-    $userData = User::all();
+    $userData = Member::all();
 
     // Get assigned user_ids for this forum
     $assignedUsers = DB::table('forums_member')
                         ->where('forums_id', $id)
-                        ->pluck('user_id') // this gives you an array of user_ids
+                        ->pluck('user_id')
                         ->toArray();
 
     return view('admin.forums.add_member', [
@@ -140,7 +125,8 @@ class ForumController extends Controller
         'userData' => $userData,
         'assignedUsers' => $assignedUsers
     ]);
-}
+    }
+
 public function storeMembers(Request $request)
 {
     $request->validate([
