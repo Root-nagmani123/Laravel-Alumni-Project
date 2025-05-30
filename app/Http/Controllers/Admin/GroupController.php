@@ -122,8 +122,10 @@ class GroupController extends Controller
         'created_date' => now(),
     ]);
 
-    return redirect()->route('admin.group.topics_list', ['id' => $id])
-        ->with('success', 'Topic added successfully.');
+   // return redirect()->route('admin.group.topics_list', ['id' => $id])
+      //  ->with('success', 'Topic added successfully.');
+      return redirect()->route('group.index')
+                        ->with('success', 'Topic added successfully.');
 }
 
 
@@ -171,4 +173,6 @@ class GroupController extends Controller
 
         return response()->json(['message' => 'Status updated successfully.']);
     }
+
+
 }
