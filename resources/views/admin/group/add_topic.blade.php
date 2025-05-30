@@ -144,9 +144,9 @@ $pageName
                         </div>
                         <hr>
                         <div class="mb-3 gap-2 float-end">
-                            <button class="btn btn-primary" type="submit">
+                            <Save class="btn btn-primary" type="submit">
                                 Submit
-                            </button>
+                            </Save>
                             <a href="{{ route('group.index') }}" class="btn btn-secondary">
                                 Cancel
                             </a>
