@@ -78,12 +78,23 @@
                                     <td>
                                         <a href="{{route('members.edit', $member->id) }}"
                                             class="btn btn-success text-white btn-sm">Edit</a>
-                                        <form action="{{ route('members.destroy', $member->id) }}" method="POST"
+                                        <!--<form action="{{-- route('members.destroy', $member->id) --}}" method="POST"
                                             style="display:inline;">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-danger text-white btn-sm" onclick="return confirm('Are you sure you want to delete?')">Delete</button>
-                                        </form>
+                                        </form>-->
+                                        @if ($member->status != 1)
+                        <form action="{{ route('members.destroy', $member->id) }}" method="POST" style="display:inline;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger text-white btn-sm"
+                                            onclick="return confirm('Are you sure you want to delete?')">Delete</button>
+                                    </form>
+                                @else
+                                    <button class="btn btn-secondary btn-sm" disabled>Active</button>
+                                @endif
+
                                     </td>
                                     <td>
                                         <div class="form-check form-switch d-inline-block">
