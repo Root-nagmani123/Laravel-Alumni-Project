@@ -77,7 +77,7 @@
                     </button>
                     <a href="{{ route('broadcasts.index') }}" class="btn btn-secondary hstack gap-6 float-end me-2">
                         <i class="material-icons menu-icon">arrow_back</i>
-                        Back
+                        Cancel
                     </a>
                 </div>
             </form>

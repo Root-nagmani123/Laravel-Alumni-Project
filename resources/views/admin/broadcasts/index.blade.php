@@ -154,15 +154,26 @@
                         <textarea class="form-control" name="description" id="edit_description" required></textarea>
                     </div>
 
-                    <div class="mb-3">
+                    <!--<div class="mb-3">
                         <label class="form-label">Current Image</label><br>
                         <img id="current_image" src="" alt="No image" width="120" class="mb-2 rounded">
-                    </div>
+                    </div>-->
 
                     <div class="mb-3">
+                        <label for="image" class="form-label">Upload Image</label>
+                        <input type="file" class="form-control" id="ImageEdit" name="image" accept="image/*" required>
+                    </div>
+
+			        <div class="mb-3">
+						<label for="existingImage" class="form-label">Current Image</label>
+						<img id="existingImage" src="{{ asset('storage/' . $broadcast->image_url) }}" alt="Broadcast Image"  height="100" class="img-fluid" width="200">
+
+					</div>
+
+                    <!--<div class="mb-3">
                         <label for="edit_image" class="form-label">Update Image</label>
                         <input type="file" class="form-control" name="image" id="edit_image" accept="image/*">
-                    </div>
+                    </div>-->
 
                     <div class="mb-3">
                         <label for="edit_video_url" class="form-label">Video URL</label>
@@ -320,4 +331,29 @@ $(document).ready(function() {
 
 // Populate Update Modal Ends
 </script>
+
+<script>
+// for Edit functionality
+function readURL(input) {
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+
+        reader.onload = function(e) {
+            $('#existingImage').attr('src', e.target.result).show();
+        };
+
+        reader.readAsDataURL(input.files[0]); // Convert image to base64
+    }
+}
+
+$(document).ready(function() {
+    // Handle image preview on file select
+    $("#ImageEdit").change(function() {
+        readURL(this);
+    });
+});
+
+
+</script>
+
 @endsection
