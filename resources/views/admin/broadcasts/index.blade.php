@@ -107,7 +107,12 @@
                                                 method="POST" style="display:inline;">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="button" class="btn btn-danger btn-sm delete-broadcast-btn"
+                                                <!--<button type="button" class="btn btn-danger btn-sm delete-broadcast-btn"
+                                                    data-id="{{ $broadcast->id }}"
+                                                    data-status="{{ $broadcast->status }}">
+                                                    Delete
+                                                </button>-->
+                                                <button type="button" class="btn btn-danger btn-sm"
                                                     data-id="{{ $broadcast->id }}"
                                                     data-status="{{ $broadcast->status }}">
                                                     Delete
