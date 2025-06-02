@@ -109,23 +109,7 @@
                                                 data-status="{{ $broadcast->status }}">
                                                 Edit
                                             </a>
-                                            <!--<form id="delete-form-{{ $broadcast->id }}"
-                                                action="{{ route('broadcasts.broadcast.destroy', $broadcast->id) }}"
-                                                method="POST" style="display:inline;">
-                                                @csrf
-                                                @method('DELETE')
-                                                <!--<button type="button" class="btn btn-danger btn-sm delete-broadcast-btn"
-                                                    data-id="{{ $broadcast->id }}"
-                                                    data-status="{{ $broadcast->status }}">
-                                                    Delete
-                                                </button>-->
-                                                <button type="button" class="btn btn-danger btn-sm"
-                                                    data-id="{{ $broadcast->id }}"
-                                                    data-status="{{ $broadcast->status }}">
-                                                    Delete
-                                                </button>
-                                            </form>-->
-                                             <form action="{{ route('broadcasts.broadcast.destroy', $broadcast->id) }}" method="POST" style="display:inline;">
+                                            <form action="{{ route('broadcasts.broadcast.destroy', $broadcast->id) }}" method="POST" style="display:inline;">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-danger text-white btn-sm"
