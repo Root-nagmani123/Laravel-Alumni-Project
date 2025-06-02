@@ -28,7 +28,14 @@
             </div>
         </div>
     </div>
-
+  @if(session('success'))
+     <div class="alert alert-success">{{ session('success') }}</div>
+    @endif
+   @if (session('error'))
+       <div class="alert alert-danger" style="color:white;">
+         {{ session('error') }}
+       </div>
+    @endif
     <div class="datatables">
         <!-- start Zero Configuration -->
         <div class="card">
