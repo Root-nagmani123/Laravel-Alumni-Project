@@ -107,6 +107,8 @@ public function destroybroadcast(Broadcast $broadcast)
     if ($request->hasFile('image')) {
         $path = $request->file('image')->store('uploads/broadcasts', 'public');
         $broadcast->image_url = asset('storage/' . $path);
+        //echo $path;
+        //echo $broadcast;die;
     }
 
     $broadcast->title = $validated['title'];

@@ -73,14 +73,14 @@
 
                                         <div class="d-flex align-items-center gap-6">
                                             @if($broadcast->image_url)
-                                          <img src="{{ asset('storage/' . $broadcast->image_url) }}" alt="Broadcast Image"  height="100" width="150">
+                                          <img src="{{ asset($broadcast->image_url) }}" alt="Broadcast Image"  height="100" width="150">
 
 
                                             @else
                                             <img src="{{ asset('assets/images/default-avatar.png') }}" width="45"
                                                 class="rounded-circle">
                                             @endif
-                                            <h6 class="mb-0">{{ $broadcast->title }}</h6>
+                                           <!-- <h6 class="mb-0">{{ $broadcast->title }}</h6>-->
                                         </div>
                                     </td>
                                     <td>
