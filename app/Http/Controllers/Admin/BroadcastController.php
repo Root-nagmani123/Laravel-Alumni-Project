@@ -28,13 +28,17 @@ class BroadcastController extends Controller
     $imageUrl = null;
     if ($request->hasFile('images')) {
         $image = $request->file('images')[0];
-        $imageUrl = $image->store('uploads/broadcasts', 'public');
+        //$imageUrl = $image->store('uploads/broadcasts', 'public');
+         $path = $image->storeAs('uploads/broadcasts', $image, 'public');
+         $imageUrl = $path;
+
     }
 
     // Save to DB
     $broadcast = Broadcast::create([
         'title' => $validated['title'],
         'description' => $validated['content'],
+        //'image_url' => $imageUrl ? asset('storage/' . $imageUrl) : null,
         'image_url' => $imageUrl ? asset('storage/' . $imageUrl) : null,
         'video_url' => $validated['video_url'] ?? null,
         'createdBy' => auth()->id() ?? null,
@@ -87,6 +91,11 @@ public function toggleStatus(Request $request)
 }
 public function destroybroadcast(Broadcast $broadcast)
     {
+         if ($broadcast->status == 1) {
+            return redirect()->route('broadcasts.index')
+                            ->with('error', 'Cannot delete an active Broadcast. Please deactivate it first.');
+        }
+
         if ($broadcast->image_url && Storage::disk('public')->exists($broadcast->image_url))
         Storage::disk('public')->delete($broadcast->image_url);
         $broadcast->delete();

@@ -27,7 +27,14 @@
             </div>
         </div>
     </div>
-
+      @if(session('success'))
+     <div class="alert alert-success">{{ session('success') }}</div>
+    @endif
+   @if (session('error'))
+       <div class="alert alert-danger" style="color:white;">
+         {{ session('error') }}
+       </div>
+    @endif
     <div class="datatables">
         <!-- start Zero Configuration -->
         <div class="card">
@@ -73,7 +80,7 @@
 
                                         <div class="d-flex align-items-center gap-6">
                                             @if($broadcast->image_url)
-                                          <img src="{{ asset($broadcast->image_url) }}" alt="Broadcast Image"  height="100" width="150">
+                                          <img src="{{ asset('storage/' . $broadcast->image_url) }}" alt="Broadcast Image"  height="100" width="150">
 
 
                                             @else
@@ -102,7 +109,7 @@
                                                 data-status="{{ $broadcast->status }}">
                                                 Edit
                                             </a>
-                                            <form id="delete-form-{{ $broadcast->id }}"
+                                            <!--<form id="delete-form-{{ $broadcast->id }}"
                                                 action="{{ route('broadcasts.broadcast.destroy', $broadcast->id) }}"
                                                 method="POST" style="display:inline;">
                                                 @csrf
@@ -117,7 +124,15 @@
                                                     data-status="{{ $broadcast->status }}">
                                                     Delete
                                                 </button>
-                                            </form>
+                                            </form>-->
+                                             <form action="{{ route('broadcasts.broadcast.destroy', $broadcast->id) }}" method="POST" style="display:inline;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger text-white btn-sm"
+                                            onclick="return confirm('Are you sure you want to delete?')">
+                                        Delete
+                                    </button>
+                                    </form>
                                         </div>
                                     </td>
                                 </tr>
@@ -212,13 +227,13 @@
 <script>
 
  //Toastr message
-    $(document).ready(function() {
+   /* $(document).ready(function() {
         @if (session('success'))
             toastr.success("{{ session('success') }}");
         @endif
 
     });
-
+*/
     $(document).ready(function () {
     // AJAX: Toggle member status with confirmation
     $('.status-toggle').change(function (e) {
