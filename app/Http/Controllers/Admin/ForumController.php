@@ -153,12 +153,11 @@ public function storeMembers(Request $request)
             'created_at' => now(),
         ];
     }
-
+echo 'test';
     if (!empty($insertData)) {
         DB::table('forums_member')->insert($insertData);
     }
 
-    //return redirect()->route('forums.index')->with('success', 'Members updated.');
     return redirect()->route('forums.index')->with('success', 'Member created successfully.');
 }
 public function view_member($id)
