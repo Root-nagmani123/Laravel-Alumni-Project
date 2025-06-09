@@ -91,12 +91,23 @@ public function update(Request $request, Events $event)
 
 
 
-    public function destroy(Events $event)
+   /* public function destroy(Events $event)
     {
         $event->delete();
         return redirect()->route('admin.events.index')->with('success', 'Event deleted successfully.');
     }
+*/
+public function destroy(Events $event)
+    {
+        if ($event->status == 1) {
+            return redirect()->route('events.index')
+                            ->with('error', 'Cannot delete an active events. Please deactivate it first.');
+        }
 
+        $event->delete();
+        return redirect()->route('events.index')
+                        ->with('success', 'Event deleted successfully.');
+    }
 	 public function toggleStatus(Request $request)
     {
 

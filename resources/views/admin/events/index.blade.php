@@ -92,15 +92,14 @@
                                         <a href="{{ route('events.edit', $event->id) }}"
                                             class="btn btn-success text-white btn-sm">Edit</a>
 
-                                        <form action="{{ route('events.destroy', $event->id) }}" method="POST"
-                                            style="display:inline;">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger text-white btn-sm"
-                                                onclick="return confirm('Are you sure you want to delete?')">
-                                                Delete
-                                            </button>
-                                        </form>
+                                         <form action="{{ route('events.destroy', $event->id) }}" method="POST" style="display:inline;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger text-white btn-sm"
+                                            onclick="return confirm('Are you sure you want to delete?')">
+                                        Delete
+                                    </button>
+                                    </form>
                                         @else
                                         <a
                                             class="btn d-flex bg-primary-subtle w-100 d-block text-primary " href="{{ route('events.rsvp', $event->id) }}">
