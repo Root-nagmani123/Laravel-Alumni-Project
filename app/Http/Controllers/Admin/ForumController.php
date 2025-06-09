@@ -315,6 +315,11 @@ public function update_forum(Request $request, Forum $forum)
 }
 public function destroyforum(Forum $forum)
 {
+     if ($forum->status == 1) {
+            return redirect()->route('forums.index')
+                            ->with('error', 'Cannot delete an active forum. Please deactivate it first.');
+        }
+
     // Delete related members
     \DB::table('forums_member')->where('forums_id', $forum->id)->delete();
 

@@ -147,14 +147,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
 <script>
-//   Toastr message
-/*$(document).ready(function() {
-    @if(session('success'))
-    toastr.success("{{ session('success') }}");
-    @endif
-});
-*/
-
 // AJAX to Update the status
 $('.status-toggle').change(function () {
     let checkbox = $(this);
