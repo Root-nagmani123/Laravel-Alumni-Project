@@ -153,7 +153,7 @@ public function storeMembers(Request $request)
             'created_at' => now(),
         ];
     }
-echo 'test';die;
+echo 'test';die;dd
     if (!empty($insertData)) {
         DB::table('forums_member')->insert($insertData);
     }
