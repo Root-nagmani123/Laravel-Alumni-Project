@@ -115,7 +115,8 @@ public function destroybroadcast(Broadcast $broadcast)
     // Image upload
     if ($request->hasFile('image')) {
         $path = $request->file('image')->store('uploads/broadcasts', 'public');
-        $broadcast->image_url = asset('storage/' . $path);
+        //$broadcast->image_url = asset('storage/' . $path);
+        $broadcast->image_url = $path;
         //echo $path;
         //echo $broadcast;die;
     }

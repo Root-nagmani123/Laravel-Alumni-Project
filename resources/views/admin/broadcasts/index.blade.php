@@ -78,13 +78,16 @@
                                     <td class="sorting_1">
 
 
-                                       <div class="d-flex align-items-center gap-3">
-                                            @if(isset($broadcast) && $broadcast->image_url)
-                                                <img src="{{ asset('storage/' . $broadcast->image_url) }}" alt="Broadcast Image" height="100" width="150">
+                                        <div class="d-flex align-items-center gap-6">
+                                            @if($broadcast->image_url)
+                                          <img src="{{ asset('storage/' . $broadcast->image_url) }}" alt="Broadcast Image"  height="100" width="150">
+
+
                                             @else
-                                                <img src="{{ asset('assets/images/default-avatar.png') }}" width="100" height="100" class="rounded-circle" alt="No Image">
-                                                <span class="text-danger ms-2">No broadcast image available</span>
+                                            <img src="{{ asset('assets/images/default-avatar.png') }}" width="45"
+                                                class="rounded-circle">
                                             @endif
+                                           <!-- <h6 class="mb-0">{{ $broadcast->title }}</h6>-->
                                         </div>
                                     </td>
                                     <td>
@@ -101,7 +104,7 @@
                                             <a href="#" class="btn btn-success text-white btn-sm edit-broadcast-btn"
                                                 data-id="{{ $broadcast->id }}" data-title="{{ $broadcast->title }}"
                                                 data-description="{{ $broadcast->description }}"
-                                                data-image="{{$broadcast->image_url}}"
+                                                data-image="{{ asset('storage/' . $broadcast->image_url) }}"
                                                 data-video="{{$broadcast->video_url}}"
                                                 data-status="{{ $broadcast->status }}">
                                                 Edit
