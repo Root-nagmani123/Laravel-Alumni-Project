@@ -130,6 +130,7 @@ class ForumController extends Controller
 
 public function storeMembers(Request $request)
 {
+    dd($request->all());
     $request->validate([
         'forum_id' => 'required|exists:forums,id',
         'user_id' => 'required|array|min:1',
