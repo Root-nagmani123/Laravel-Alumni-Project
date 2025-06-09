@@ -130,6 +130,7 @@ class ForumController extends Controller
 
 public function storeMembers(Request $request)
 {
+
     dd($request->all());
     $request->validate([
         'forum_id' => 'required|exists:forums,id',
@@ -154,7 +155,7 @@ public function storeMembers(Request $request)
             'created_at' => now(),
         ];
     }
-print_r($request);die;
+
     if (!empty($insertData)) {
         DB::table('forums_member')->insert($insertData);
     }
