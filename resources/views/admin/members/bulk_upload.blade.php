@@ -38,7 +38,21 @@
             </div>
         </div>
     </div>
-
+@if(session()->has('failures'))
+    <div class="alert alert-danger">
+        <h4>Import Failures:</h4>
+        <ul>
+            @foreach(session('failures') as $failure)
+                <li>
+                    Row {{ $failure->row() }}:
+                    @foreach($failure->errors() as $error)
+                        {{ $error }}<br>
+                    @endforeach
+                </li>
+            @endforeach
+        </ul>
+    </div>
+@endif
     <div class="row">
         <div class="col-12">
             <!-- start Person Info -->

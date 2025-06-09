@@ -10,6 +10,9 @@ use App\Imports\MembersImport;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Models\Topic;
 
+use Maatwebsite\Excel\Validators\ValidationException;
+
+
 class MemberController extends Controller
 {
     public function index()
@@ -31,7 +34,7 @@ class MemberController extends Controller
             'mobile' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:members',
             'password' => 'required|string|min:8|confirmed',
-            'cadre' => 'required|string|max:255',
+            'cader' => 'required|string|max:255',
             'designation' => 'required|string|max:255',
             'batch' => 'required|integer',
         ]);
@@ -47,7 +50,7 @@ class MemberController extends Controller
             'mobile' => $request->mobile,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'cader' => $request->cadre,
+            'cader' => $request->cader,
             'designation' => $request->designation,
             'batch' => $request->batch,
         ]);
@@ -67,7 +70,7 @@ class MemberController extends Controller
             'mobile' => 'nullable|string|max:255',
             'email' => 'required|string|email|max:255|unique:members,email,' . $member->id,
             'password' => 'nullable|string|min:8|confirmed',
-            'cadre' => 'nullable|string|max:255',
+            'cader' => 'nullable|string|max:255',
             'designation' => 'nullable|string|max:255',
             'batch' => 'nullable|integer',
         ]);
@@ -84,7 +87,7 @@ class MemberController extends Controller
         if ($request->filled('password')) {
             $member->password = Hash::make($request->password);
         }
-        $member->cader = $request->cadre;
+        $member->cader = $request->cader;
         $member->designation = $request->designation;
         $member->batch = $request->batch;
         $member->save();
@@ -111,7 +114,7 @@ class MemberController extends Controller
 
 
     //member bulk upload
-    public function bulk_upload_members(Request $request)
+    public function bulk_upload_members_362025(Request $request)
     {
         // Validatin request
         $request->validate([
@@ -120,9 +123,23 @@ class MemberController extends Controller
         // Import the data
         Excel::import(new MembersImport, $request->file('file'));
        return redirect()->route('members.index')->with('success', 'Members uploaded successfully!');
-
-
     }
+
+   public function bulk_upload_members(Request $request)
+{
+    $request->validate([
+        'file' => 'required|file|mimes:xlsx,xls,csv|max:3072',
+    ]);
+
+    try {
+        Excel::import(new MembersImport, $request->file('file'));
+        return redirect()->route('members.index')->with('success', 'Members uploaded successfully!');
+    } catch (ValidationException $e) {
+        return back()->with(['failures' => $e->failures()]);
+    }
+}
+
+
     public function bulk_upload_form()
     {
         return view('admin.members.bulk_upload');

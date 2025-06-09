@@ -6,11 +6,12 @@ class Forum extends Model
 {
 
     use HasFactory;
-	protected $fillable = 
-			['name', 
+	protected $fillable =
+			['name',
 			'cat_id',
-			'status', 
-			'created_by'
+			'status',
+			'created_by',
+            'updated_at',
 			];
 
 

@@ -67,7 +67,7 @@ class ForumController extends Controller
     // Redirect to the forum page
 
     //return redirect()->route('forums.index', $last_id)->with('success', 'Forum created successfully.');
-    return redirect()->route('forums.index')->with('success', 'forum added successfully.');
+    return redirect()->route('forums.index')->with('success', 'Forum added successfully.');
 
 
 }
@@ -110,6 +110,7 @@ class ForumController extends Controller
     {
     $forum = Forum::findOrFail($id);
 
+   // echo '<pre>';print_r($forum);die;
     // Get all users
     $userData = Member::all();
 
@@ -136,6 +137,7 @@ public function storeMembers(Request $request)
 
     ]);
 
+    //print_r($request);die;
     $forumId = $request->input('forum_id');
     $userIds = $request->input('user_id', []); // defaults to empty array if nothing selected
 
@@ -148,6 +150,7 @@ public function storeMembers(Request $request)
             'forums_id' => $forumId,
             'user_id' => $userId,
             'status'  => 1,
+            'created_at' => now(),
         ];
     }
 
@@ -155,7 +158,8 @@ public function storeMembers(Request $request)
         DB::table('forums_member')->insert($insertData);
     }
 
-    return redirect()->route('forums.index')->with('success', 'Members updated.');
+    //return redirect()->route('forums.index')->with('success', 'Members updated.');
+    return redirect()->route('forums.index')->with('success', 'Member created successfully.');
 }
 public function view_member($id)
 {

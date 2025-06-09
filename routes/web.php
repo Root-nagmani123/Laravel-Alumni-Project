@@ -54,7 +54,8 @@ Route::prefix('member')->middleware('auth:member')->group(function () {
 		Route::get('dashboard', [DashboardController::class, 'index'])->name('member.dashboard');
 		Route::post('post/like', [DashboardController::class, 'like'])->name('member.post.like');
 		Route::post('post/comment', [DashboardController::class, 'comment'])->name('member.post.comment');
-		Route::post('rsvp/update', [DashboardController::class, 'updateRSVP'])->name('member.rsvp.update');
+
+
 });
 
 // Routes accessible *without* login (public)

@@ -96,9 +96,9 @@
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <label class="form-label">Cadre</label><span class="required">*</span>
-                                        <input type="text" name="cadre" id="cadre" class="form-control"
-                                            value="{{ old('cadre') }}">
-                                              @error('cadre')
+                                        <input type="text" name="cader" id="cader" class="form-control"
+                                            value="{{ old('cader') }}">
+                                              @error('cader')
                                         <div class="text-danger">{{ $message }}</div>
                                         @enderror
                                     </div>
