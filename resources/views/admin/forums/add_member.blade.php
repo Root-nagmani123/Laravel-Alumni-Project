@@ -43,7 +43,7 @@
         <div class="col-12">
             <!-- start Person Info -->
             <div class="card">
-                <form method="POST" action="{{ route('save_members') }}" enctype="multipart/form-data"
+                <form method="POST" action="{{ route('forums.save_members') }}" enctype="multipart/form-data"
                     id="AddMemberForm">
                     @csrf
                     <div class="card-body">
