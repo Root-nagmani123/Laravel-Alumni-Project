@@ -131,18 +131,20 @@ class ForumController extends Controller
 public function storeMembers(Request $request)
 {
 
-
     $request->validate([
         'forum_id' => 'required|exists:forums,id',
         'user_id' => 'required|array|min:1',
         'user_id.*' => 'exists:users,id',
 
     ]);
- dd($request->all());
+
     //print_r($request);die;
     $forumId = $request->input('forum_id');
     $userIds = $request->input('user_id', []); // defaults to empty array if nothing selected
+echo $forumId;
+echo $userIds;
 
+    dd($request->all());
     // Remove existing and insert new members
     DB::table('forums_member')->where('forums_id', $forumId)->delete();
 
