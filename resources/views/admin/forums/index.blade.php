@@ -118,7 +118,7 @@
 
                                             <div class="form-check form-switch d-inline-block">
                                             <input class="form-check-input status-toggle" type="checkbox" role="switch"
-                                                data-table="group" data-column="active_inactive"
+                                                data-table="forums" data-column="active_inactive"  data-id="{{ $forum->id }}"
                                                 {{ $forum->status == 1 ? 'checked' : '' }}>
                                         </div>
                                     </td>
@@ -141,6 +141,10 @@
 @endsection
 @section('scripts')
 
+<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
 <script>
 //   Toastr message
@@ -224,5 +228,8 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 });
+
+
+
 </script>
 @endsection
