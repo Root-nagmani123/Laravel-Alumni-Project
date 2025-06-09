@@ -141,10 +141,10 @@ public function storeMembers(Request $request)
     //print_r($request);die;
     $forumId = $request->input('forum_id');
     $userIds = $request->input('user_id', []); // defaults to empty array if nothing selected
-echo $forumId;
-echo $userIds;
+//echo $forumId;
+//echo $userIds;
 
-    dd($request->all());
+  //  dd($request->all());
     // Remove existing and insert new members
     DB::table('forums_member')->where('forums_id', $forumId)->delete();
 
