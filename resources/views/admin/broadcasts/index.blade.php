@@ -78,16 +78,13 @@
                                     <td class="sorting_1">
 
 
-                                        <div class="d-flex align-items-center gap-6">
-                                            @if($broadcast->image_url)
-                                          <img src="{{ asset('storage/' . $broadcast->image_url) }}" alt="Broadcast Image"  height="100" width="150">
-
-
+                                       <div class="d-flex align-items-center gap-3">
+                                            @if(isset($broadcast) && $broadcast->image_url)
+                                                <img src="{{ asset('storage/' . $broadcast->image_url) }}" alt="Broadcast Image" height="100" width="150">
                                             @else
-                                            <img src="{{ asset('assets/images/default-avatar.png') }}" width="45"
-                                                class="rounded-circle">
+                                                <img src="{{ asset('assets/images/default-avatar.png') }}" width="100" height="100" class="rounded-circle" alt="No Image">
+                                                <span class="text-danger ms-2">No broadcast image available</span>
                                             @endif
-                                           <!-- <h6 class="mb-0">{{ $broadcast->title }}</h6>-->
                                         </div>
                                     </td>
                                     <td>
