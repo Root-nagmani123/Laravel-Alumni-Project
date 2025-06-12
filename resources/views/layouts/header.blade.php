@@ -6,9 +6,9 @@
                         <img src="{{ asset('admin_assets/images/logos/lbsnaa_logo.jpg') }}" class="logo" alt="logo" style="width:50px;">
                     </a>
                <div>
-    <span class="logo-text">Alumni</span><br>
-    <small class="logo-text2">Lal Bahadur Shastri National Academy of Administration</small>
-</div>
+                    <span class="logo-text">Alumni</span><br>
+                    <small class="logo-text2">Lal Bahadur Shastri National Academy of Administration</small>
+                </div>
                     <ul class="navbar-nav feed flex-row gap-xl-20 gap-lg-10 gap-sm-7 gap-1 py-4 py-lg-0 m-lg-auto ms-auto ms-aut align-self-center">
                         <li>
                             <a href="{{ route('dashboard') }}" class="nav-icon home active" title="Home"><i class="mat-icon fs-xxl material-symbols-outlined mat-icon">home</i></a>
@@ -21,15 +21,7 @@
                         </li>
 
                     </ul>
-					<div class="switch-wrapper mt-4 d-flex gap-1 align-items-center">
-                                    <i class="mat-icon material-symbols-outlined sun icon"> light_mode </i>
-                                    <label class="switch">
-                                        <input type="checkbox" class="checkbox">
-                                        <span class="slider"></span>
-                                    </label>
-                                    <i class="mat-icon material-symbols-outlined moon icon"> dark_mode </i>
-                                    <span class="mdtxt ms-2">Dark mode</span>
-                   </div>
+
 
 					<div class="right-area position-relative d-flex gap-3 gap-xxl-6 align-items-center">
                         <div class="single-item d-none d-lg-block messages-area">
@@ -153,6 +145,15 @@
                         </div>
                     </div>
                 </nav>
+                <div class="switch-wrapper ms-4 mt-4 d-flex gap-1 align-items-center">
+                                    <i class="mat-icon material-symbols-outlined sun icon"> light_mode </i>
+                                    <label class="switch">
+                                        <input type="checkbox" class="checkbox">
+                                        <span class="slider"></span>
+                                    </label>
+                                    <i class="mat-icon material-symbols-outlined moon icon"> dark_mode </i>
+                                    <span class="mdtxt ms-2">Dark mode</span>
+                   </div>
             </div>
         </nav>
     </header>
