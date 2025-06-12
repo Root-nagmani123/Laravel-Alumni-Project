@@ -36,24 +36,8 @@ return [
     |
     */
 
-   /*  'guards' => [
-        'web' => [
-            'driver' => 'session',
-            'provider' => 'users',
-        ],
-    ], */
-	
-	/*   'guards' => [
-        'web' => [
-            'driver' => 'session',
-            'provider' => 'users',
-        ],
-      'admin' => [
-			'driver' => 'session',
-			'provider' => 'users',
-		],
-    ], */
-	
+
+
 	'guards' => [
     'web' => [
         'driver' => 'session',
@@ -64,14 +48,14 @@ return [
         'driver' => 'session',
         'provider' => 'admins', // Define provider
     ],
-    'member' => [
+     'user' => [
         'driver' => 'session',
         'provider' => 'members',
     ],
 ],
-	
-	
-	
+
+
+
 
     /*
     |--------------------------------------------------------------------------
@@ -104,9 +88,9 @@ return [
         'driver' => 'eloquent',
         'model' => App\Models\Member::class,
     ],
-		
-		
-		
+
+
+
 
 
         // 'users' => [

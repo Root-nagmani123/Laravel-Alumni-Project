@@ -63,30 +63,55 @@
                             </div>
                             <div class="form-sec">
                                 <div>
-                                    <form class="theme-form">
+                                    <form class="theme-form" method="POST" action="{{ route('user.login.submit') }}">
+                                        @csrf
                                         <div class="form-group">
                                             <label for="exampleInputEmail1">Email address</label>
-                                            <input type="email" class="form-control" id="exampleInputEmail1"
-                                                placeholder="Enter email">
+                                            
+                                            <input type="email"
+                                                            class="form-control @error('email') is-invalid @enderror"
+                                                            id="exampleInputEmail1" placeholder="Enter your email"
+                                                            name="email" value="{{ old('email') }}"> 
+                                                        @error('email')
+                                                        <div class="invalid-feedback">
+                                                            {{ $message }}
+                                                        </div>
+                                                        @enderror
+                                                        
                                             <i class="input-icon iw-20 ih-20" data-feather="user"></i>
                                         </div>
                                         <div class="form-group">
                                             <label for="exampleInputPassword1">Password</label>
-                                            <input type="password" class="form-control" id="exampleInputPassword1"
-                                                placeholder="Password">
-                                            <i class="input-icon iw-20 ih-20" data-feather="eye"></i>
+                                           <div class="position-relative">
+                                                            <input type="password"
+                                                                class="form-control @error('password') is-invalid @enderror"
+                                                                id="password" placeholder="Enter your password"
+                                                                name="password">
+                                                            <span toggle="#password"
+                                                                class="toggle-password position-absolute end-0 top-50 translate-middle-y me-3"
+                                                                style="cursor: pointer;">
+                                                                👁️
+                                                            </span>
+                                                        </div>
+                                                         @error('password')
+                                                        <div class="invalid-feedback">
+                                                            {{ $message }}
+                                                        </div>
+                                                        @enderror
+                                            
                                             <!-- <i class="input-icon" data-feather="eye-off" width="20" height="20"></i> -->
                                         </div>
                                         <div class="bottom-sec">
                                             <div class="form-check checkbox_animated">
                                                 <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                                                <label class="form-check-label" for="exampleCheck1">remember me</label>
+                                                <input type="checkbox" class="form-check-input" id="exampleCheck1" name="remember">
                                             </div>
-                                            <a href="#" class="ms-auto forget-password">forget
+                                            <a href="#" class="ms-auto forget-password">forgot
                                                 password?</a>
                                         </div>
                                         <div class="btn-section text-center">
-                                            <a href="#" class="btn btn-primary btn-lg">login</a>
+                                            <button type="submit" class="btn btn-primary btn-lg">Login</button>
+
                                         </div>
                                     </form>
                                 </div>
@@ -137,6 +162,20 @@
         inline: true,
         placement: 'absleft',
         pickerPosition: "top left ",
+    });
+    // JS to make password visible
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const togglePassword = document.querySelector('.toggle-password');
+        const passwordField = document.querySelector('#password');
+
+        togglePassword.addEventListener('click', function() {
+            const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordField.setAttribute('type', type);
+
+            // Optionally toggle icon appearance
+            this.textContent = type === 'password' ? '👁️' : '🙈';
+        });
     });
     </script>
 

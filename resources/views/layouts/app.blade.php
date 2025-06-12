@@ -1,35 +1,33 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="Circlehub">
+    <meta name="description" content="Circlehub HTML5 Template">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>@yield('title') {{ env('APP_TITLE_SUFFIX') }}</title>
+    <link rel="shortcut icon" href="{{asset('admin_assets/images/logos/favicon.ico')}}" type="image/x-icon">
+    <link rel="stylesheet" href="{{asset('feed_assets/css/style.css')}}">
+    <link rel="stylesheet" href="https://img1.digitallocker.gov.in/ux4g/UX4G-CDN-accessibility/css/accesibility-style-v2.1.css">                                                            
+</head>
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+<body>
 
-        <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-    </head>
-    <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100">
-            @include('layouts.navigation')
+    <!-- start preloader -->
+    <div class="preloader align-items-center justify-content-center">
+        <span class="loader"></span>
+    </div>
+    <!-- end preloader -->
 
-            <!-- Page Heading -->
-            @isset($header)
-                <header class="bg-white shadow">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                        {{ $header }}
-                    </div>
-                </header>
-            @endisset
+    <!-- Scroll To Top Start-->
+    <button class="scrollToTop d-none d-lg-block"><i class="mat-icon fas fa-angle-double-up"></i></button>
+    <!-- Scroll To Top End -->
 
-            <!-- Page Content -->
-            <main>
-                {{ $slot }}
-            </main>
-        </div>
-    </body>
+@include('layouts.header')
+    @yield('content')
+    @include('layouts.footer')
+@yield('scripts')
+</body>
 </html>

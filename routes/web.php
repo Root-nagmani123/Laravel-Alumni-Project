@@ -13,7 +13,12 @@ use App\Http\Controllers\Admin\BroadcastController;
 use App\Http\Controllers\Admin\EventsController;
 use App\Http\Controllers\DashboardController;
 
-use App\Http\Controllers\Member\AuthController;
+//use App\Http\Controllers\Member\AuthController;
+use App\Http\Controllers\User\AuthController;
+use App\Http\Controllers\User\FeedController;
+use App\Http\Controllers\User\PostController;
+use App\Http\Middleware\UserAuthMiddleware;
+
 
 
 Route::get('/clear/1', function () {
@@ -31,8 +36,40 @@ Route::get('/clear/1', function () {
 Route::get('/test-member', function () {
     return 'Member Route Working';
 });
-Route::get('/', function () {
+/*Route::get('/', function () {
     return view('welcome');
+});*/
+
+Route::redirect('/', '/user/login');
+Route::redirect('/login', '/user/login');
+
+
+Route::prefix('user')->name('user.')->group(function () {
+    Route::middleware('guest:user')->group(function () {
+        Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+        Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
+    });
+
+    Route::middleware(UserAuthMiddleware::class)->group(function () {
+        Route::get('/feed1', [FeedController::class, 'index'])->name('feed1');
+        Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+        Route::post('/user/posts/store', [PostController::class, 'store'])->name('posts.store');
+
+    });
+
+/*	 Route::get('/', function () {
+    return view('dashboard');
+})->name('dashboard');
+
+*/
+});
+
+Route::get('/admin', function () {
+    if (Auth::guard('admin')->check()) {
+        return redirect()->route('admin.dashboard');
+    }
+
+    return redirect()->route('admin.login');
 });
 
 Route::get('/dashboard', function () {
