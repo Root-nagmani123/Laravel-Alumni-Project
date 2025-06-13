@@ -7,7 +7,7 @@
                     </a>
                <div>
                     <span class="logo-text">Alumni</span><br>
-                    <small class="logo-text2">Lal Bahadur Shastri National Academy of Administration</small>
+                    <small class="logo-text">Lal Bahadur Shastri National Academy of Administration</small>
                 </div>
                     <ul class="navbar-nav feed flex-row gap-xl-20 gap-lg-10 gap-sm-7 gap-1 py-4 py-lg-0 m-lg-auto ms-auto ms-aut align-self-center">
                         <li>
@@ -152,7 +152,7 @@
                                         <span class="slider"></span>
                                     </label>
                                     <i class="mat-icon material-symbols-outlined moon icon"> dark_mode </i>
-                                    <span class="mdtxt ms-2">Dark mode</span>
+                                    <span class="mdtxt ms-2" style="display:none;">Dark mode</span>
                    </div>
             </div>
         </nav>
@@ -432,6 +432,4 @@
   font-size: 0.875rem;
   color: inherit;
 }
-
-
 </style>
