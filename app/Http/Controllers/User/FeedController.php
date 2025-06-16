@@ -11,8 +11,20 @@ class FeedController extends Controller
 {
     public function index()
     {
-        return view('user.feed1');
+
+		$posts = Post::with(['media', 'user'])->latest()->get();
+
+        return view('user.feed1', compact('posts'));
     }
+
+	/* //16-6-2025
+	public function index()
+	{
+		$posts = Post::with(['media', 'user'])->latest()->get();
+		return view('feed.index', compact('posts'));
+	} */
+
+
      public function store(Request $request)
     {
         $request->validate([

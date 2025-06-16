@@ -19,6 +19,11 @@ use App\Http\Controllers\User\FeedController;
 use App\Http\Controllers\User\PostController;
 use App\Http\Middleware\UserAuthMiddleware;
 
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Config;
+
+Route::resource('post', PostController::class);
+
 
 
 Route::get('/clear/1', function () {
@@ -31,6 +36,36 @@ Route::get('/clear/1', function () {
     return redirect()->back()->with('success', 'Cache cleared successfully');
 });
 
+
+/*Route::get('/db-check', function () {
+    return DB::select("SELECT DATABASE() as db");
+});
+*/
+
+/*Route::get('/db-check', function () {
+    $dbName = DB::select("SELECT DATABASE() AS db");
+    $user = DB::select("SELECT USER() AS user");
+    $host = DB::select("SELECT @@hostname AS host");
+
+    return [
+        'connected_database' => $dbName[0]->db,
+        'database_user' => $user[0]->user,
+        'db_host' => $host[0]->host,
+    ];
+}); */
+
+Route::get('/db-check', function () {
+    $dbName = DB::select("SELECT DATABASE() AS db");
+    $user = DB::select("SELECT USER() AS user");
+    $host = DB::select("SELECT @@hostname AS host");
+
+    return [
+        'connected_database' => $dbName[0]->db,
+        'database_user' => $user[0]->user,
+        'db_host' => $host[0]->host,
+
+    ];
+});
 
 
 Route::get('/test-member', function () {
@@ -50,12 +85,20 @@ Route::prefix('user')->name('user.')->group(function () {
         Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
     });
 
-    Route::middleware(UserAuthMiddleware::class)->group(function () {
+    /*Route::middleware(UserAuthMiddleware::class)->group(function () {
         Route::get('/feed1', [FeedController::class, 'index'])->name('feed1');
         Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
         Route::post('/user/posts/store', [PostController::class, 'store'])->name('posts.store');
 
-    });
+    });*/
+
+     Route::middleware(UserAuthMiddleware::class)->group(function () {
+        Route::get('/feed1', [FeedController::class, 'index'])->name('feed1');
+        Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+		Route::put('/post/update/{id}', [PostController::class, 'update'])->name('post.update');
+		Route::post('/post', [PostController::class, 'store'])->name('post.store');
+		Route::get('/feed', [FeedController::class, 'index'])->name('feed1');
+	});
 
 /*	 Route::get('/', function () {
     return view('dashboard');

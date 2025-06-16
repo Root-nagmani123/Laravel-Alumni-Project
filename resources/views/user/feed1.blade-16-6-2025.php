@@ -86,29 +86,6 @@
     }
 
 
-<!-- drop zone -->
-   .drop-area {
-        background-color: #f9f9f9;
-        cursor: pointer;
-        position: relative;
-        transition: background-color 0.3s;
-    }
-    .drop-area.dragover {
-        background-color: #e9ecef;
-        border-color: #007bff;
-    }
-    .drop-area img,
-    .drop-area video {
-        max-width: 100px;
-        max-height: 100px;
-        object-fit: cover;
-        border-radius: 6px;
-    }
-	  #preview img,
-    #preview video {
-        border-radius: 8px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
     </style>
 
 
@@ -246,55 +223,143 @@
             <span>Live</span>
         </li>
         <li class="d-flex gap-2" data-bs-toggle="modal" data-bs-target="#photoVideoMod">
-           <img src="{{asset('feed_assets/images/icon/vgallery.png')}}" class="max-un" alt="icon">
+            <img src="{{asset('feed_assets/images/icon/vgallery.png')}}" class="max-un" alt="icon">
             <span>Photo/Video</span>
-
-
         </li>
-
     </ul>
 </form>
 
                    </div>
                    <div class="post-item d-flex flex-column gap-5 gap-md-7" id="news-feed">
-				   @foreach($posts as $post)
-					<div class="post-single-box p-3 p-sm-5">
-						<div class="top-area pb-5">
-							<div class="profile-area d-center justify-content-between">
-								<div class="avatar-item d-flex gap-3 align-items-center">
-									@php
-    $member = $post->member;
-    $profileImage = $member && $member->profile_image
-        ? asset($member->profile_image)
-        : asset('feed_assets/images/avatar-1.png');
-@endphp
-
-<div class="avatar position-relative">
-    <img class="avatar-img max-un" src="{{ $profileImage }}" alt="avatar">
-</div>
-<div class="info-area">
-    <h6 class="m-0"><a href="#">{{ $member->name ?? 'Unknown' }}</a></h6>
-    <span class="mdtxt status">Active</span>
-</div>
-								</div>
-							</div>
-							<div class="py-4">
-								<p class="description">{{ $post->content }}</p>
-							</div>
-							@foreach($post->media as $media)
-								<div class="post-img mt-2">
-									@if($media->file_type === 'image')
-										<img src="{{ asset('storage/' . $media->file_path) }}" class="w-100" alt="Post Media">
-									@elseif($media->file_type === 'video')
-										<video class="w-100" controls>
-											<source src="{{ asset('storage/' . $media->file_path) }}" type="video/mp4">
-										</video>
-									@endif
-								</div>
-							@endforeach
-						</div>
-					</div>
-				@endforeach
+                       <div class="post-single-box p-3 p-sm-5">
+                           <div class="top-area pb-5">
+                               <div class="profile-area d-center justify-content-between">
+                                   <div class="avatar-item d-flex gap-3 align-items-center">
+                                       <div class="avatar position-relative">
+                                           <img class="avatar-img max-un" src="{{asset('feed_assets/images/avatar-1.png')}}"
+                                               alt="avatar">
+                                       </div>
+                                       <div class="info-area">
+                                           <h6 class="m-0"><a href="public-profile-post.html">Lori Cortez</a></h6>
+                                           <span class="mdtxt status">Active</span>
+                                       </div>
+                                   </div>
+                                   <div class="btn-group cus-dropdown">
+                                       <button type="button" class="dropdown-btn" data-bs-toggle="dropdown"
+                                           aria-expanded="false">
+                                           <i class="material-symbols-outlined fs-xxl m-0"> more_horiz </i>
+                                       </button>
+                                       <ul class="dropdown-menu p-4 pt-2">
+                                           <li>
+                                               <a class="droplist d-flex align-items-center gap-2" href="#">
+                                                   <i class="material-symbols-outlined mat-icon"> bookmark_add </i>
+                                                   <span>Saved Post</span>
+                                               </a>
+                                           </li>
+                                           <li>
+                                               <a class="droplist d-flex align-items-center gap-2" href="#">
+                                                   <i class="material-symbols-outlined mat-icon"> person_remove </i>
+                                                   <span>Unfollow</span>
+                                               </a>
+                                           </li>
+                                           <li>
+                                               <a class="droplist d-flex align-items-center gap-2" href="#">
+                                                   <i class="material-symbols-outlined mat-icon"> hide_source </i>
+                                                   <span>Hide Post</span>
+                                               </a>
+                                           </li>
+                                           <li>
+                                               <a class="droplist d-flex align-items-center gap-2" href="#">
+                                                   <i class="material-symbols-outlined mat-icon"> lock </i>
+                                                   <span>Block</span>
+                                               </a>
+                                           </li>
+                                           <li>
+                                               <a class="droplist d-flex align-items-center gap-2" href="#">
+                                                   <i class="material-symbols-outlined mat-icon"> flag </i>
+                                                   <span>Report Post</span>
+                                               </a>
+                                           </li>
+                                       </ul>
+                                   </div>
+                               </div>
+                               <div class="py-4">
+                                   <p class="description">I created Roughly plugin to sketch crafted hand-drawn elements
+                                       which can be used to any usage (diagrams/flows/decoration/etc)</p>
+                               </div>
+                               <div class="post-img">
+                                   <img src="{{asset('feed_assets/images/post-img-1.png')}}" class="w-100" alt="image">
+                               </div>
+                           </div>
+                           <div class="total-react-share pb-4 d-center gap-2 flex-wrap justify-content-between">
+                               <div class="friends-list d-flex gap-3 align-items-center text-center">
+                                   <ul class="d-flex align-items-center justify-content-center">
+                                       <li><img src="{{asset('feed_assets/images/avatar-2.png')}}" alt="image"></li>
+                                       <li><img src="{{asset('feed_assets/images/avatar-3.png')}}" alt="image"></li>
+                                       <li><img src="{{asset('feed_assets/images/avatar-4.png')}}" alt="image"></li>
+                                       <li><span class="mdtxt d-center">8+</span></li>
+                                   </ul>
+                               </div>
+                               <div class="react-list d-flex flex-wrap gap-6 align-items-center text-center">
+                                   <button class="mdtxt">4 Comments</button>
+                                   <button class="mdtxt">1 Shares</button>
+                               </div>
+                           </div>
+                           <div
+                               class="like-comment-share py-5 d-center flex-wrap gap-3 gap-md-0 justify-content-between">
+                               <button class="d-center gap-1 gap-sm-2 mdtxt">
+                                   <i class="material-symbols-outlined mat-icon"> favorite </i>
+                                   Like
+                               </button>
+                               <button class="d-center gap-1 gap-sm-2 mdtxt">
+                                   <i class="material-symbols-outlined mat-icon"> chat </i>
+                                   Comment
+                               </button>
+                               <button class="d-center gap-1 gap-sm-2 mdtxt">
+                                   <i class="material-symbols-outlined mat-icon"> share </i>
+                                   Share
+                               </button>
+                           </div>
+                           <form action="#">
+                               <div class="d-flex mt-5 gap-3">
+                                   <div class="profile-box d-none d-xxl-block">
+                                       <a href="#"><img src="{{asset('feed_assets/images/add-post-avatar.png')}}" class="max-un"
+                                               alt="icon"></a>
+                                   </div>
+                                   <div class="form-content input-area py-1 d-flex gap-2 align-items-center w-100">
+                                       <input placeholder="Write a comment..">
+                                       <!-- <div class="file-input d-flex gap-1 gap-md-2">
+                                           <div class="file-upload">
+                                               <label class="file">
+                                                   <input type="file">
+                                                   <span class="file-custom border-0 d-grid text-center">
+                                                       <span class="material-symbols-outlined mat-icon m-0 xxltxt">
+                                                           gif_box </span>
+                                                   </span>
+                                               </label>
+                                           </div>
+                                           <div class="file-upload">
+                                               <label class="file">
+                                                   <input type="file">
+                                                   <span class="file-custom border-0 d-grid text-center">
+                                                       <span class="material-symbols-outlined mat-icon m-0 xxltxt">
+                                                           perm_media </span>
+                                                   </span>
+                                               </label>
+                                           </div>
+                                           <span class="mood-area">
+                                               <span class="material-symbols-outlined mat-icon m-0 xxltxt"> mood </span>
+                                           </span>
+                                       </div> -->
+                                   </div>
+                                   <div class="btn-area d-flex">
+                                       <button class="cmn-btn px-2 px-sm-5 px-lg-6">
+                                           <i class="material-symbols-outlined mat-icon m-0 fs-xxl"> near_me </i>
+                                       </button>
+                                   </div>
+                               </div>
+                           </form>
+                       </div>
                        <div class="post-single-box p-3 p-sm-5">
                            <div class="top-area pb-5">
                                <div class="profile-area d-center justify-content-between">
@@ -1222,7 +1287,7 @@
                                        <div class="single-single">
                                            <div class="profile-pic d-flex gap-3 align-items-center">
                                                <div class="avatar">
-                                                   <img class="avatar-img max-un" src="{{ asset('feed_assets/images/avatar-4.png') }}"
+                                                   <img class="avatar-img max-un" src="feed_assets/images/avatar-4.png"
                                                        alt="avatar">
                                                </div>
                                                <div class="text-area">
@@ -1249,7 +1314,7 @@
                                            class="profile-area d-center position-relative align-items-center justify-content-between">
                                            <div class="avatar-item d-flex gap-3 align-items-center">
                                                <div class="avatar-item">
-                                                   <img class="avatar-img max-un" src="{{ asset('feed_assets/images/avatar-6.png') }}"
+                                                   <img class="avatar-img max-un" src="feed_assets/images/avatar-6.png"
                                                        alt="avatar">
                                                </div>
                                                <div class="info-area">
@@ -1271,7 +1336,7 @@
                                            class="profile-area d-center position-relative align-items-center justify-content-between">
                                            <div class="avatar-item d-flex gap-3 align-items-center">
                                                <div class="avatar-item">
-                                                   <img class="avatar-img max-un" src="{{ asset('feed_assets/images/avatar-7.png') }}"
+                                                   <img class="avatar-img max-un" src="feed_assets/images/avatar-7.png"
                                                        alt="avatar">
                                                </div>
                                                <div class="info-area">
@@ -1331,10 +1396,9 @@
 
 
  <!-- video popup start -->
-   <!--<form action="{{-- route('user.post.store') --}}" method="POST" enctype="multipart/form-data">-->
-  <form action="{{ route('post.store') }}" method="POST" enctype="multipart/form-data">
+   <!--<form action="{{ route('user.post.store') }}" method="POST" enctype="multipart/form-data">-->
+    <form id="mediaPostForm" method="POST" enctype="multipart/form-data">
     @csrf
-
     <div class="go-live-popup video-popup">
         <div class="container">
             <div class="row">
@@ -1357,27 +1421,16 @@
                                         </div>
                                         <textarea name="modalContent" cols="10" rows="2" placeholder="Write something to Lerio.."></textarea>
                                     </div>
-                                    <!--<div class="file-upload">
+                                    <div class="file-upload">
                                         <label>Upload attachment</label>
                                         <label class="file mt-1">
-											<input type="file" id="media" name="media[]" multiple>
-											<input type="hidden" id="post_id" name="post_id" value="">
+                                            <input type="file" name="media[]" multiple>
                                             <span class="file-custom pt-8 pb-8 d-grid text-center">
                                                 <i class="material-symbols-outlined mat-icon"> perm_media </i>
                                                 <span>Drag here or click to upload photo.</span>
                                             </span>
                                         </label>
-                                    </div>-->
-									<div class="file-upload">
-									<label>Upload attachment</label>
-									<div id="drop-area" class="drop-area mt-2 p-4 text-center border border-secondary rounded">
-										<i class="material-symbols-outlined mat-icon mb-2 d-block"> perm_media </i>
-										<span>Drag & Drop image/video here or click to browse.</span>
-										<input type="file" id="media" name="media[]" multiple class="d-none" accept="image/*,video/*">
-
-										<div id="preview" class="mt-3 d-flex flex-wrap gap-3"></div>
-									</div>
-								</div>
+                                    </div>
                                 </div>
                                 <div class="footer-area pt-5">
                                     <div class="btn-area d-flex justify-content-end gap-2">
@@ -1528,67 +1581,83 @@
 
            @section('scripts')
            <script>
-           /*  */
+        document.addEventListener("DOMContentLoaded", function () {
+            const modalEl = document.getElementById('photoVideoMod');
+            if (!modalEl) return;
 
-		 document.addEventListener("DOMContentLoaded", function () {
-    const dropArea = document.getElementById("drop-area");
-    const input = document.getElementById("media");
-    const preview = document.getElementById("preview");
+            modalEl.addEventListener('shown.bs.modal', function () {
+                $('#media').fileinput({
+                    theme: 'fa5',
+                    showUpload: false,
+                    showCaption: false,
+                    browseLabel: "Browse",
+                    browseOnZoneClick: true,
+                    dropZoneEnabled: true,
+                    allowedFileExtensions: ['jpg', 'jpeg', 'png', 'gif'],
+                    maxFileSize: 20480,
+                    maxFileCount: 10,
+                    overwriteInitial: false,
+                    showPreview: true,
+                    fileActionSettings: {
+                        showUpload: false,
+                        showZoom: true,
+                        showRemove: true
+                    },
+                    layoutTemplates: {
+                        footer: '<div class="file-thumbnail-footer"><div class="file-actions">{zoom} {remove}</div></div>'
+                    }
+                });
+            });
 
-    // Show preview
-    function showFiles(files) {
-        preview.innerHTML = ''; // Clear old previews
-        [...files].forEach(file => {
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                let mediaElement;
-                if (file.type.startsWith('image/')) {
-                    mediaElement = document.createElement('img');
-                    mediaElement.src = e.target.result;
-                    mediaElement.style.width = "100px";
-                    mediaElement.style.height = "100px";
-                    mediaElement.style.objectFit = "cover";
-                } else if (file.type.startsWith('video/')) {
-                    mediaElement = document.createElement('video');
-                    mediaElement.src = e.target.result;
-                    mediaElement.controls = true;
-                    mediaElement.style.width = "100px";
-                    mediaElement.style.height = "100px";
+            modalEl.addEventListener('hidden.bs.modal', function () {
+                const $media = $('#media');
+                if ($media.data('fileinput')) {
+                    $media.fileinput('destroy');
                 }
-                preview.appendChild(mediaElement);
-            };
-            reader.readAsDataURL(file);
+            });
+
+            $('#mediaPostForm').on('submit', function (e) {
+                e.preventDefault();
+
+                const formData = new FormData(this);
+                const postId = $('#post_id').val().trim();
+                const actionUrl = postId
+                    ? "{{ url('user/post/update') }}/" + postId
+                    : "{{ route('user.post.store') }}";
+
+                const $submitBtn = $(this).find('button[type="submit"]');
+                $submitBtn.prop('disabled', true).text('Posting...');
+
+                fetch(actionUrl, {
+                    method: 'POST',
+                    headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+                    body: formData
+                })
+                .then(res => res.json())
+                .then(data => {
+                    $submitBtn.prop('disabled', false).text('Post');
+                    if (data.success) {
+                        toastr.success(isUpdate ? 'Post updated!' : 'Post created!');
+                        $('#mediaPostForm')[0].reset();
+                        $('#media').fileinput('clear');
+                        bootstrap.Modal.getInstance(modalEl).hide();
+                    } else {
+                        toastr.error('Upload failed or validation error.');
+                    }
+                })
+                .catch(() => {
+                    $submitBtn.prop('disabled', false).text('Post');
+                    toastr.error('Something went wrong.');
+                });
+            });
         });
-    }
 
-    // Open file dialog on drop area click
-    dropArea.addEventListener("click", () => input.click());
+		// Toggle image zoom on click
+		$(document).on('click', '.file-preview-image', function () {
+			$('.file-preview-image').not(this).removeClass('zoomed'); // remove zoom from others
+			$(this).toggleClass('zoomed');
+		});
 
-    // Handle file selection from dialog
-    input.addEventListener("change", () => showFiles(input.files));
-
-    // Drag & drop support
-    ['dragenter', 'dragover'].forEach(evt =>
-        dropArea.addEventListener(evt, e => {
-            e.preventDefault();
-            dropArea.classList.add('border-primary');
-        })
-    );
-
-    ['dragleave', 'drop'].forEach(evt =>
-        dropArea.addEventListener(evt, e => {
-            e.preventDefault();
-            dropArea.classList.remove('border-primary');
-        })
-    );
-
-    dropArea.addEventListener("drop", e => {
-        const dt = e.dataTransfer;
-        const files = dt.files;
-        input.files = files;
-        showFiles(files);
-    });
-});
 
     </script>
 @endsection
