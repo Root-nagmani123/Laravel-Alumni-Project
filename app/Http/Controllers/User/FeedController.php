@@ -12,7 +12,11 @@ class FeedController extends Controller
     public function index()
     {
 
-		$posts = Post::with(['media', 'user'])->latest()->get();
+		//$posts = Post::with(['media', 'user'])->latest()->get();
+        //$posts = Post::with(['member', 'media', 'likes', 'comments'])->get();
+        $posts = Post::with(['member', 'media', 'likes', 'comments'])
+             ->orderBy('created_at', 'desc')
+             ->get();
 
         return view('user.feed1', compact('posts'));
     }

@@ -24,6 +24,9 @@ use Illuminate\Support\Facades\Config;
 
 Route::resource('post', PostController::class);
 
+use App\Http\Controllers\PublicProfileController;
+use App\Http\Controllers\User\CommentController;
+
 
 
 Route::get('/clear/1', function () {
@@ -98,7 +101,16 @@ Route::prefix('user')->name('user.')->group(function () {
 		Route::put('/post/update/{id}', [PostController::class, 'update'])->name('post.update');
 		Route::post('/post', [PostController::class, 'store'])->name('post.store');
 		Route::get('/feed', [FeedController::class, 'index'])->name('feed1');
-	});
+
+           Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
+
+        Route::post('/post/{id}/comment', [PostController::class, 'storeComment'])->name('post.comment');
+        //Route::post('/comment/{id}/reply', [CommentController::class, 'reply'])->name('comment.reply');
+
+
+
+    });
+Route::get('/profile/{id}', [PublicProfileController::class, 'show'])->name('public.profile');
 
 /*	 Route::get('/', function () {
     return view('dashboard');
