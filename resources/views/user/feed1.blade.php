@@ -317,7 +317,22 @@
             </ul>
         </div>
         <div class="react-list d-flex flex-wrap gap-6 align-items-center text-center">
-            <button class="mdtxt">{{ $post->comments?->count() ?? 0 }} Comments</button>
+            <!--<button class="mdtxt">{{ $post->comments?->count() ?? 0 }} Comments</button>-->
+           <!-- Button -->
+<button class="mdtxt" onclick="toggleComments({{ $post->id }})">
+    {{ $post->comments?->count() ?? 0 }} Comments
+</button>
+
+<!-- Comments container -->
+<div id="comments-{{ $post->id }}" class="comments-box" style="display: none; margin-top: 10px;">
+    @forelse ($post->comments as $comment)
+        <div class="comment-item mb-2">
+            <strong>{{ $comment->member->name ?? '' }}</strong> {{ $comment->comment }}
+        </div>
+    @empty
+        <p>No comments yet.</p>
+    @endforelse
+</div>
             <button class="mdtxt">{{ $post->shares ?? 0 }} Shares</button>
         </div>
     </div>
@@ -938,6 +953,8 @@
            Options</span></button><!-- accessibility panel end-->
            <!-- video popup start -->
 
+
+
            @section('scripts')
           <script>
            /*  */
@@ -1022,7 +1039,10 @@ function likePost(postId) {
     .catch(error => console.error('Error liking post:', error));
 }
 
-
+function toggleComments(postId) {
+        const box = document.getElementById('comments-' + postId);
+        box.style.display = box.style.display === 'none' ? 'block' : 'none';
+    }
 
 </script>
 @endsection
