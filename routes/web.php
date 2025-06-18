@@ -102,9 +102,12 @@ Route::prefix('user')->name('user.')->group(function () {
 		Route::post('/post', [PostController::class, 'store'])->name('post.store');
 		Route::get('/feed', [FeedController::class, 'index'])->name('feed1');
 
-           Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
+        Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
 
-        Route::post('/post/{id}/comment', [PostController::class, 'storeComment'])->name('post.comment');
+        Route::post('/like/{post}', [PostController::class, 'toggleLike'])->name('post.like');
+
+
+         Route::post('/post/{id}/comment', [PostController::class, 'storeComment'])->name('post.comment');
         //Route::post('/comment/{id}/reply', [CommentController::class, 'reply'])->name('comment.reply');
 
 

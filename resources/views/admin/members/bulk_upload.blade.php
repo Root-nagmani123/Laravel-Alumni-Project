@@ -38,17 +38,14 @@
             </div>
         </div>
     </div>
-@if(session()->has('failures'))
+@if ($errors->has('import_failures'))
     <div class="alert alert-danger">
-        <h4>Import Failures:</h4>
+        <h4>Import Errors:</h4>
         <ul>
-            @foreach(session('failures') as $failure)
-                <li>
-                    Row {{ $failure->row() }}:
-                    @foreach($failure->errors() as $error)
-                        {{ $error }}<br>
-                    @endforeach
-                </li>
+            @foreach ($errors->get('import_failures') as $failures)
+                @foreach ($failures as $failure)
+                    <li>Row {{ $failure['row'] }}: {{ implode(', ', $failure['errors']) }}</li>
+                @endforeach
             @endforeach
         </ul>
     </div>

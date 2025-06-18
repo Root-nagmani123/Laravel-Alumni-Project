@@ -54,7 +54,24 @@ public function store(Request $request)
     }
 
 
+public function toggleLike(Post $post)
+    {
+        $user = auth()->user();
 
+        if (!$user) {
+            return response()->json(['message' => 'Unauthorized'], 401);
+        }
+
+        $existingLike = $post->likes()->where('member_id', $user->id)->first();
+
+        if ($existingLike) {
+            $existingLike->delete();
+            return response()->json(['status' => 'unliked']);
+        } else {
+            $post->likes()->create(['member_id' => $user->id]);
+            return response()->json(['status' => 'liked']);
+        }
+    }
 
 
 }

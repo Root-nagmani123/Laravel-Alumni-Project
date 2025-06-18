@@ -63,4 +63,10 @@ class Post extends Model
 
 
 	//16-6-2025
+    //18-6-2025
+
+   /* public function likes()
+    {
+        return $this->hasMany(PostLike::class);
+    }*/
 }
