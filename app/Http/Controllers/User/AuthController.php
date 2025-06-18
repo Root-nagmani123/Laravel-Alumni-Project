@@ -28,7 +28,7 @@ class AuthController extends Controller
 //dd($request);
         if (Auth::guard('user')->attempt($credentials)) {
             $request->session()->regenerate();
-            return redirect()->intended('/user/feed1');
+            return redirect()->intended('/user/feed');
         }
 
         return back()->withErrors([

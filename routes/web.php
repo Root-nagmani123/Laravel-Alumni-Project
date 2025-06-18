@@ -28,34 +28,15 @@ use App\Http\Controllers\PublicProfileController;
 use App\Http\Controllers\User\CommentController;
 
 
-
 Route::get('/clear/1', function () {
-	Artisan::call('cache:clear');
-    Artisan::call('config:cache');
+    Artisan::call('cache:clear');
+     Artisan::call('config:cache');
     Artisan::call('optimize:clear');
     Artisan::call('view:clear');
     Artisan::call('route:clear');
-   // Artisan::call('storage:link');
     return redirect()->back()->with('success', 'Cache cleared successfully');
 });
 
-
-/*Route::get('/db-check', function () {
-    return DB::select("SELECT DATABASE() as db");
-});
-*/
-
-/*Route::get('/db-check', function () {
-    $dbName = DB::select("SELECT DATABASE() AS db");
-    $user = DB::select("SELECT USER() AS user");
-    $host = DB::select("SELECT @@hostname AS host");
-
-    return [
-        'connected_database' => $dbName[0]->db,
-        'database_user' => $user[0]->user,
-        'db_host' => $host[0]->host,
-    ];
-}); */
 
 Route::get('/db-check', function () {
     $dbName = DB::select("SELECT DATABASE() AS db");
@@ -70,10 +51,6 @@ Route::get('/db-check', function () {
     ];
 });
 
-
-Route::get('/test-member', function () {
-    return 'Member Route Working';
-});
 /*Route::get('/', function () {
     return view('welcome');
 });*/
@@ -88,38 +65,25 @@ Route::prefix('user')->name('user.')->group(function () {
         Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
     });
 
-    /*Route::middleware(UserAuthMiddleware::class)->group(function () {
-        Route::get('/feed1', [FeedController::class, 'index'])->name('feed1');
-        Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-        Route::post('/user/posts/store', [PostController::class, 'store'])->name('posts.store');
-
-    });*/
-
-     Route::middleware(UserAuthMiddleware::class)->group(function () {
-        Route::get('/feed1', [FeedController::class, 'index'])->name('feed1');
+      Route::middleware(UserAuthMiddleware::class)->group(function () {
+        Route::get('/feed', [FeedController::class, 'index'])->name('feed');
         Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 		Route::put('/post/update/{id}', [PostController::class, 'update'])->name('post.update');
 		Route::post('/post', [PostController::class, 'store'])->name('post.store');
-		Route::get('/feed', [FeedController::class, 'index'])->name('feed1');
+		//Route::get('/feed', [FeedController::class, 'index'])->name('feed1');
 
         Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
 
         Route::post('/like/{post}', [PostController::class, 'toggleLike'])->name('post.like');
 
-
          Route::post('/post/{id}/comment', [PostController::class, 'storeComment'])->name('post.comment');
         //Route::post('/comment/{id}/reply', [CommentController::class, 'reply'])->name('comment.reply');
-
 
 
     });
 Route::get('/profile/{id}', [PublicProfileController::class, 'show'])->name('public.profile');
 
-/*	 Route::get('/', function () {
-    return view('dashboard');
-})->name('dashboard');
 
-*/
 });
 
 Route::get('/admin', function () {
@@ -143,15 +107,16 @@ Route::prefix('member')->name('member.')->group(function () {
 		Route::get('/dashboard', function () {
 			return view('member.dashboard');
 		})->name('dashboard');
+
 		});
 });
 Route::prefix('member')->middleware('auth:member')->group(function () {
 		Route::get('dashboard', [DashboardController::class, 'index'])->name('member.dashboard');
-		Route::post('post/like', [DashboardController::class, 'like'])->name('member.post.like');
+		//Route::post('post/like', [DashboardController::class, 'like'])->name('member.post.like');
 		Route::post('post/comment', [DashboardController::class, 'comment'])->name('member.post.comment');
 
 
-});
+    });
 
 // Routes accessible *without* login (public)
 Route::prefix('admin')->controller(AdminController::class)->group(function () {

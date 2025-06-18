@@ -50,28 +50,27 @@ public function store(Request $request)
             }
         }
 
-       return redirect('/user/feed1')->with('success', 'Post created successfully.');
+       return redirect('/user/feed')->with('success', 'Post created successfully.');
     }
 
 
-public function toggleLike(Post $post)
-    {
-        $user = auth()->user();
+public function toggleLike(Post $post, Request $request)
+{
+    $user = auth('member')->user(); // Explicitly using the 'member' guard
 
-        if (!$user) {
-            return response()->json(['message' => 'Unauthorized'], 401);
-        }
-
-        $existingLike = $post->likes()->where('member_id', $user->id)->first();
-
-        if ($existingLike) {
-            $existingLike->delete();
-            return response()->json(['status' => 'unliked']);
-        } else {
-            $post->likes()->create(['member_id' => $user->id]);
-            return response()->json(['status' => 'liked']);
-        }
+    if (!$user) {
+        return response()->json(['message' => 'Unauthorized'], 401);
     }
 
+    $existingLike = $post->likes()->where('member_id', $user->id)->first();
+
+    if ($existingLike) {
+        $existingLike->delete();
+        return response()->json(['status' => 'unliked']);
+    } else {
+        $post->likes()->create(['member_id' => $user->id]);
+        return response()->json(['status' => 'liked']);
+    }
+}
 
 }

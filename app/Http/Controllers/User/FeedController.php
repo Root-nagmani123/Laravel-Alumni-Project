@@ -18,18 +18,10 @@ class FeedController extends Controller
              ->orderBy('created_at', 'desc')
              ->get();
 
-        return view('user.feed1', compact('posts'));
+        return view('user.feed', compact('posts'));
     }
 
-	/* //16-6-2025
-	public function index()
-	{
-		$posts = Post::with(['media', 'user'])->latest()->get();
-		return view('feed.index', compact('posts'));
-	} */
-
-
-     public function store(Request $request)
+    public function store(Request $request)
     {
         $request->validate([
             'content' => 'nullable|string|max:1000',
