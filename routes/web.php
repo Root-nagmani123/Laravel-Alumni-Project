@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AdminController;
 use Illuminate\Support\Facades\Artisan;
@@ -18,13 +17,13 @@ use App\Http\Controllers\User\AuthController;
 use App\Http\Controllers\User\FeedController;
 use App\Http\Controllers\User\PostController;
 use App\Http\Middleware\UserAuthMiddleware;
+use App\Http\Controllers\User\ProfileController;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Config;
 
 Route::resource('post', PostController::class);
 
-use App\Http\Controllers\PublicProfileController;
 use App\Http\Controllers\User\CommentController;
 
 
@@ -79,9 +78,12 @@ Route::prefix('user')->name('user.')->group(function () {
          Route::post('/post/{id}/comment', [PostController::class, 'storeComment'])->name('post.comment');
         //Route::post('/comment/{id}/reply', [CommentController::class, 'reply'])->name('comment.reply');
 
+        // Route::get('/profile/id/{id}', [ProfileController::class, 'showById'])->name('profile.byId');
+         Route::get('/profile/{id}', [ProfileController::class, 'showById'])->name('profile');
 
     });
-Route::get('/profile/{id}', [PublicProfileController::class, 'show'])->name('public.profile');
+
+
 
 
 });
@@ -233,7 +235,7 @@ Route::prefix('events')->name('events.')->group(function () {
 
 
 Route::middleware('auth')->group(function () {
-		Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+        Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
 		Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
 		Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });

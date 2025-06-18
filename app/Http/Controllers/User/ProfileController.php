@@ -1,19 +1,35 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\user;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+//use App\Models\User;
+use App\Models\member;
 
 class ProfileController extends Controller
 {
     /**
      * Display the user's profile form.
      */
+
+   public function showById(Request $request): View
+{
+    /*return view('profile', [
+        'user' => $request->user(),
+    ]);*/
+
+    $user = auth()->guard('user')->user();
+    //dd($user);
+    return view('profile', compact('user'));
+}
+
+
     public function edit(Request $request): View
     {
         return view('profile.edit', [

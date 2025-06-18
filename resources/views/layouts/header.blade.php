@@ -121,7 +121,13 @@
                                     </div>
                                 </div>
                                 <div class="view-profile my-2">
-                                    <a href="profile-post.html" class="mdtxt w-100 text-center py-2">View profile</a>
+                                  @if(Auth::guard('user')->check())
+                                    @php
+                                        $user = Auth::guard('user')->user();
+                                    @endphp
+                                    <a href="{{ route('user.profile', ['id' => $user->id]) }}" class="mdtxt w-100 text-center py-2">View profile</a>
+                                @endif
+
                                 </div>
                                 <ul>
                                     <li>
