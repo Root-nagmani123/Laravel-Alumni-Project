@@ -81,6 +81,15 @@ Route::prefix('user')->name('user.')->group(function () {
         // Route::get('/profile/id/{id}', [ProfileController::class, 'showById'])->name('profile.byId');
          Route::get('/profile/{id}', [ProfileController::class, 'showById'])->name('profile');
 
+         Route::put('/profile/update/{id}', [ProfileController::class, 'update'])->name('profile.update');
+
+        Route::put('/eduinfo/update/{id}', [ProfileController::class, 'updateEduinfo'])->name('profile.eduinfo');
+        Route::put('/proinfo/update/{id}', [ProfileController::class, 'updateProinfo'])->name('profile.proinfo');
+
+       // Route::get('/member/{id}/edit', [ProfileController::class, 'edit'])->name('member.edit');
+       // Route::put('/member/{id}', [ProfileController::class, 'update'])->name('member.update');
+
+
     });
 
 

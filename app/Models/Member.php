@@ -14,7 +14,13 @@ class Member extends Authenticatable
     protected $dates = ['deleted_at'];
 
     protected $fillable = [
-        'name', 'email', 'password', 'mobile', 'cader','designation','batch',
+        'name', 'email', 'password', 'mobile', 'cader',
+        'designation','batch','address','date_of_birth',
+        'place_of_birth','gender','marital_status',
+        'school_name','school_year','undergrad_college',
+        'undergrad_degree','undergrad_year','postgrad_college',
+        'postgrad_degree','postgrad_year','current_designation',
+        'current_department','current_location','previous_postings'
     ];
 
     protected $hidden = [
@@ -25,6 +31,31 @@ class Member extends Authenticatable
         {
             return $this->hasMany(Topic::class);
         }
+
+
+    public function profileTopic()
+    {
+    $userId = Auth::user()->id;
+
+    $topics = DB::table('posts as p')
+        ->select(
+            'p.id as post_id',
+            'p.video_link',
+            'p.description',
+            'm.id as member_id',
+            'm.name as member_name',
+            'pm.id as image_id',
+            'pm.name as image_name',
+            'p.created_at as created_date' // Assuming `created_date` is a timestamp column
+        )
+        ->leftJoin('members as m', 'p.created_by', '=', 'm.id') // Changed from `t.created_by` to `p.created_by`
+        ->leftJoin('post_media as pm', 'p.id', '=', 'pm.post_id')
+        ->where('m.id', $userId)
+        ->get();
+
+    return $topics;
+    }
+
 
 }
 
