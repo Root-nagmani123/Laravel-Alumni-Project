@@ -345,136 +345,135 @@
           Personal Information
         </button>
       </h2>
-      <div id="personalCollapse" class="accordion-collapse collapse show" aria-labelledby="personalHeading" data-bs-parent="#editAccordion" >
+      <div id="personalCollapse" class="accordion-collapse collapse {{ session('active_tab') == 'personal' ? 'show' : '' }}" aria-labelledby="personalHeading" data-bs-parent="#editAccordion" >
         <div class="accordion-body w-100">
-       
-												   
-			<form action="{{ route('user.profile.update', ['id' => $user->id]) }}" method="post" id="myForm" enctype="multipart/form-data">												
+   
+	<form action="{{ route('user.profile.update', ['id' => $user->id]) }}" method="post" id="myForm" enctype="multipart/form-data">												
 				@csrf
 				@method('PUT') 
 			
 					<div class="form-group">
-						<!-- Full Name -->
-						<div class="row mb-3">
-							<div class="col-3">
-								<label for="name">Full Name:</label>
-							</div>
-							<div class="col-9">
-								<input type="text" id="name" name="name"
-									   value="{{ old('name', $user->name) }}"
-										class="form-control">
-							</div>
-						</div>
+	<!-- Full Name -->
+	<div class="row mb-3">
+		<div class="col-3">
+			<label for="name">Full Name:</label>
+		</div>
+		<div class="col-9">
+			<input type="text" id="name" name="name"
+				value="{{ old('name', $user->name) }}"
+				class="form-control"
+				placeholder="Enter your full name">
+		</div>
+	</div>
 
-						<!-- Date of Birth -->
-						<div class="row mb-3">
-							<div class="col-3">
-								<label for="date_of_birth">Date of Birth:</label>
-							</div>
-							<div class="col-9">
-								<input type="date" id="date_of_birth" name="date_of_birth"
-									   value="{{ old('date_of_birth', \Carbon\Carbon::parse($user->date_of_birth)->format('Y-m-d')) }}"
-										class="form-control" placeholder="DD/MM/YYYY" >
-							</div>
-						</div>
+	<!-- Date of Birth -->
+	<div class="row mb-3">
+		<div class="col-3">
+			<label for="date_of_birth">Date of Birth:<span style="color: red">*</span></label>
+		</div>
+		<div class="col-9">
+			<input type="date" id="date_of_birth" name="date_of_birth"
+				value="{{ old('date_of_birth', \Carbon\Carbon::parse($user->date_of_birth)->format('Y-m-d')) }}"
+				class="form-control"
+				placeholder="DD/MM/YYYY">
+		</div>
+	</div>
 
-						<!-- Place of Birth -->
-						<div class="row mb-3">
-							<div class="col-3">
-								<label for="place_of_birth">Place of Birth:</label>
-							</div>
-							<div class="col-9">
-								<input type="text" id="place_of_birth" name="place_of_birth"
-									   value="{{ old('place_of_birth', $user->place_of_birth) }}"
-										class="form-control">
-							</div>
-						</div>
+	<!-- Place of Birth -->
+	<div class="row mb-3">
+		<div class="col-3">
+			<label for="place_of_birth">Place of Birth:<span style="color: red">*</span></label>
+		</div>
+		<div class="col-9">
+			<input type="text" id="place_of_birth" name="place_of_birth"
+				value="{{ old('place_of_birth', $user->place_of_birth) }}"
+				class="form-control"
+				placeholder="Enter place of birth">
+		</div>
+	</div>
 
-						<!-- Gender -->
-						<div class="row mb-3">
-							<div class="col-3">
-								<label for="gender">Gender:</label>
-							</div>
-							<div class="col-9">
-								<select id="gender" name="gender"  class="form-control">
-									<option value="" {{ old('gender', $user->gender) == '' ? 'selected' : '' }}></option>
-								   <option value="male" {{ strtolower(old('gender', $user->gender)) == 'male' ? 'selected' : '' }}>Male</option>
-									<option value="male" {{ strtolower(old('gender', $user->gender)) == 'female' ? 'selected' : '' }}>Female</option>
-								<option value="male" {{ strtolower(old('gender', $user->gender)) == 'Other' ? 'selected' : '' }}>Other</option>
-								  
-								</select>
-							</div>
-						</div>
+	<!-- Gender -->
+	<div class="row mb-3">
+		<div class="col-3">
+			<label for="gender">Gender:<span style="color: red">*</span></label>
+		</div>
+		<div class="col-9">
+			<select id="gender" name="gender" class="form-control">
+				<option value="" {{ old('gender', $user->gender) == '' ? 'selected' : '' }}>Select gender</option>
+				<option value="male" {{ strtolower(old('gender', $user->gender)) == 'male' ? 'selected' : '' }}>Male</option>
+				<option value="female" {{ strtolower(old('gender', $user->gender)) == 'female' ? 'selected' : '' }}>Female</option>
+				<option value="other" {{ strtolower(old('gender', $user->gender)) == 'other' ? 'selected' : '' }}>Other</option>
+			</select>
+		</div>
+	</div>
 
-						<!-- Phone Number -->
-						<div class="row mb-3">
-							<div class="col-3">
-								<label for="mobile">Phone Number:</label>
-							</div>
-							<div class="col-9">
-								<input type="tel" id="mobile" name="mobile"
-									   value="{{ old('mobile', $user->mobile) }}"
-									   required class="form-control">
-							</div>
-						</div>
+	<!-- Phone Number -->
+	<div class="row mb-3">
+		<div class="col-3">
+			<label for="mobile">Phone Number:</label>
+		</div>
+		<div class="col-9">
+			<input type="tel" id="mobile" name="mobile"
+				value="{{ old('mobile', $user->mobile) }}"
+				required class="form-control"
+				placeholder="Enter 10-digit mobile number">
+		</div>
+	</div>
 
-						<!-- Address -->
-						<div class="row mb-3">
-							<div class="col-3">
-								<label for="address">Residential Address:</label>
-							</div>
-							<div class="col-9">
-								<textarea id="address" name="address"  class="form-control">{{ old('address', $user->address) }}</textarea>
-							</div>
-						</div>
+	<!-- Address -->
+	<div class="row mb-3">
+		<div class="col-3">
+			<label for="address">Residential Address:<span style="color: red">*</span></label>
+		</div>
+		<div class="col-9">
+			<textarea id="address" name="address" class="form-control" placeholder="Enter full address">{{ old('address', $user->address) }}</textarea>
+		</div>
+	</div>
 
-						<!-- Marital Status -->
-						<div class="row mb-3">
-							<div class="col-3">
-								<label for="marital_status">Marital Status:</label>
-							</div>
-							<div class="col-9">
-								<select id="marital_status" name="marital_status" class="form-control">
-									<option value="" {{ old('marital_status', $user->marital_status) == '' ? 'selected' : '' }}></option>
-									<option value="single" {{ old('marital_status', $user->marital_status) == 'single' ? 'selected' : '' }}>Single</option>
-									<option value="married" {{ old('marital_status', $user->marital_status) == 'married' ? 'selected' : '' }}>Married</option>
-									<option value="divorced" {{ old('marital_status', $user->marital_status) == 'divorced' ? 'selected' : '' }}>Divorced</option>
-								</select>
-							</div>
-						</div>
+	<!-- Marital Status -->
+	<div class="row mb-3">
+		<div class="col-3">
+			<label for="marital_status">Marital Status:<span style="color: red">*</span></label>
+		</div>
+		<div class="col-9">
+			<select id="marital_status" name="marital_status" class="form-control">
+				<option value="" {{ old('marital_status', $user->marital_status) == '' ? 'selected' : '' }}>Select status</option>
+				<option value="single" {{ old('marital_status', $user->marital_status) == 'single' ? 'selected' : '' }}>Single</option>
+				<option value="married" {{ old('marital_status', $user->marital_status) == 'married' ? 'selected' : '' }}>Married</option>
+				<option value="divorced" {{ old('marital_status', $user->marital_status) == 'divorced' ? 'selected' : '' }}>Divorced</option>
+			</select>
+		</div>
+	</div>
 
-						<!-- Bio -->
-						<div class="row mb-3">
-							<div class="col-3">
-								<label for="bio">Bio:</label>
-							</div>
-							<div class="col-9">
-								<textarea id="bio" name="bio"  class="form-control">{{ old('bio', $user->bio) }}</textarea>
-							</div>
-						</div>
+	<!-- Bio -->
+	<div class="row mb-3">
+		<div class="col-3">
+			<label for="bio">Bio:<span style="color: red">*</span></label>
+		</div>
+		<div class="col-9">
+			<textarea id="bio" name="bio" class="form-control" placeholder="Write a short bio">{{ old('bio', $user->bio) }}</textarea>
+		</div>
+	</div>
 
-						<!-- Profile Picture -->
-						<div class="row mb-3">
-							<div class="col-3">
-								<label for="profile_pic">Profile Picture:</label>
-							</div>
-							<div class="col-9">
-							
-								<input type="file" id="ImageEdit" name="profile_pic" accept="image/*" class="form-control">
-								@if ($user->profile_pic)
-									<img src="{{ asset('assets/uploads/profile_pic/' . $user->profile_pic) }}" alt="Profile Picture" width="50">
-								@endif
-							</div>
-						</div>
-
-					</div>
+	<!-- Profile Picture -->
+	<div class="row mb-3">
+		<div class="col-3">
+			<label for="profile_pic">Profile Picture:</label>
+		</div>
+		<div class="col-9">
+			<input type="file" id="ImageEdit" name="profile_pic" accept="image/*" class="form-control">
+			@if ($user->profile_pic)
+				<img src="{{ asset('assets/uploads/profile_pic/' . $user->profile_pic) }}" alt="Profile Picture" width="50">
+			@endif
+		</div>
+	</div>
+</div>
 				
 
 				<button type="submit" class="btn btn-primary">Update</button>
 			</form>
 													
-                                             
-												
+         		
 												
                                             
         </div>
@@ -489,119 +488,118 @@
         </button>
       </h2>
       <div id="educationCollapse" class="accordion-collapse collapse" aria-labelledby="educationHeading" data-bs-parent="#editAccordion">
-        <!--<div class="accordion-body w-100">
-          <form class="w-100">
-            <div class="mb-3">
-              <label for="editDegree" class="form-label">Highest Qualification</label>
-              <input type="text" class="form-control" id="editDegree" placeholder="e.g. M.C.A, B.Tech">
-            </div>
-            <div class="mb-3">
-              <label for="editUniversity" class="form-label">University</label>
-              <input type="text" class="form-control" id="editUniversity" placeholder="University name">
-            </div>
-          </form>
-        </div>-->
-			<form action="{{ route('user.profile.eduinfo', ['id' => $user->id]) }}" method="post" id="myForm" enctype="multipart/form-data">												
-				@csrf
-				@method('PUT') <!-- Or 'POST' if you're not using PUT -->
+       
+			
 
 			<div class="accordion-body">
-				<!-- Educational Background -->
-				<div class="form-group py-3S">
-					<div class="row mb-3">
-						<div class="col-3">
-							<label for="school_name">Name of the School:</label>
-						</div>
-						<div class="col-9">
-							<input type="text" id="school_name" name="school_name"
-								 value="{{ old('school_name', $user->school_name) }}"
-								class="form-control">
-					
-						</div>
-					</div>
-					<div class="row mb-3">
-						<div class="col-3">
-							<label for="school_year">Year of Passing:</label>
-						</div>
-						<div class="col-9">
-							<input type="text" id="school_year" name="school_year"
-								 value="{{ old('school_year', $user->school_year) }}"
-								class="form-control">
-						</div>
-					</div>
-					<div class="row mb-3">
-						<div class="col-3">
-							<label for="undergrad_college">Undergraduate
-								College/University
-								Name:</label>
-						</div>
-						<div class="col-9">
-						
-								<input type="text" id="undergrad_college" name="undergrad_college"
-								 value="{{ old('undergrad_college', $user->undergrad_college) }}"
-								class="form-control">
-						</div>
-					</div>
-					<div class="row mb-3">
-						<div class="col-3">
-							<label for="undergrad_degree">Undergraduate Degree
-								Obtained:</label>
-						</div>
-						<div class="col-9">
-							
-						<input type="text" id="undergrad_degree" name="undergrad_degree"
-								 value="{{ old('undergrad_degree', $user->undergrad_degree) }}"
-								class="form-control">
-						</div>
-					</div>
-					<div class="row mb-3">
-						<div class="col-3">
-							<label for="undergrad_year">Year of Graduation:</label>
-						</div>
-						<div class="col-9">
-							
-								<input type="text" id="undergrad_year" name="undergrad_year"
-								 value="{{ old('undergrad_year', $user->undergrad_year) }}"
-								class="form-control">
-						</div>
-					</div>
-					<div class="row mb-3">
-						<div class="col-3">
-							<label for="postgrad_college">Postgraduate
-								College/University
-								Name:</label>
-						</div>
-						<div class="col-9">
-						<input type="text" id="postgrad_college" name="postgrad_college"
-								 value="{{ old('postgrad_college', $user->postgrad_college) }}"
-								class="form-control">
-						</div>
-					</div>
-					<div class="row mb-3">
-						<div class="col-3">
-							<label for="postgrad_degree">Postgraduate Degree
-								Obtained:</label>
-						</div>
-						<div class="col-9">
-						<input type="text" id="postgrad_degree" name="postgrad_degree"
-								 value="{{ old('postgrad_degree', $user->postgrad_degree) }}"
-								class="form-control">
-						</div>
-					</div>
-					<div class="row mb-3">
-						<div class="col-3">
-							<label for="postgrad_year">Year of Graduation:</label>
-						</div>
-						<div class="col-9">
-						<input type="text" id="postgrad_year" name="postgrad_year"
-								 value="{{ old('postgrad_year', $user->postgrad_year) }}"
-								class="form-control">
-						</div>
-					</div>
-				</div>
+			
+			<form action="{{ route('user.profile.eduinfo', ['id' => $user->id]) }}" method="post" id="myForm" enctype="multipart/form-data">												
+	@csrf
+	@method('PUT')
+
+	<!-- Educational Background -->
+	<div class="form-group py-3">
+		<div class="row mb-3">
+			<div class="col-3">
+				<label for="school_name">Name of the School:<span style="color: red">*</span></label>
 			</div>
-             	<button type="submit" class="btn btn-primary">Update</button>
-			</form>                            
+			<div class="col-9">
+				<input type="text" id="school_name" name="school_name"
+					value="{{ old('school_name', $user->school_name) }}"
+					placeholder="Enter your school name"
+					class="form-control">
+			</div>
+		</div>
+
+		<div class="row mb-3">
+			<div class="col-3">
+				<label for="school_year">Year of Passing:<span style="color: red">*</span></label>
+			</div>
+			<div class="col-9">
+				<input type="text" id="school_year" name="school_year"
+					value="{{ old('school_year', $user->school_year) }}"
+					placeholder="e.g., 2010"
+					class="form-control">
+			</div>
+		</div>
+
+		<div class="row mb-3">
+			<div class="col-3">
+				<label for="undergrad_college">Undergraduate College/University Name:<span style="color: red">*</span></label>
+			</div>
+			<div class="col-9">
+				<input type="text" id="undergrad_college" name="undergrad_college"
+					value="{{ old('undergrad_college', $user->undergrad_college) }}"
+					placeholder="Enter college/university name"
+					class="form-control">
+			</div>
+		</div>
+
+		<div class="row mb-3">
+			<div class="col-3">
+				<label for="undergrad_degree">Undergraduate Degree Obtained:<span style="color: red">*</span></label>
+			</div>
+			<div class="col-9">
+				<input type="text" id="undergrad_degree" name="undergrad_degree"
+					value="{{ old('undergrad_degree', $user->undergrad_degree) }}"
+					placeholder="e.g., B.Sc, B.Tech, B.A"
+					class="form-control">
+			</div>
+		</div>
+
+		<div class="row mb-3">
+			<div class="col-3">
+				<label for="undergrad_year">Year of Graduation:<span style="color: red">*</span></label>
+			</div>
+			<div class="col-9">
+				<input type="text" id="undergrad_year" name="undergrad_year"
+					value="{{ old('undergrad_year', $user->undergrad_year) }}"
+					placeholder="e.g., 2014"
+					class="form-control">
+			</div>
+		</div>
+
+		<div class="row mb-3">
+			<div class="col-3">
+				<label for="postgrad_college">Postgraduate College/University Name:<span style="color: red">*</span></label>
+			</div>
+			<div class="col-9">
+				<input type="text" id="postgrad_college" name="postgrad_college"
+					value="{{ old('postgrad_college', $user->postgrad_college) }}"
+					placeholder="Enter college/university name"
+					class="form-control">
+			</div>
+		</div>
+
+		<div class="row mb-3">
+			<div class="col-3">
+				<label for="postgrad_degree">Postgraduate Degree Obtained:<span style="color: red">*</span></label>
+			</div>
+			<div class="col-9">
+				<input type="text" id="postgrad_degree" name="postgrad_degree"
+					value="{{ old('postgrad_degree', $user->postgrad_degree) }}"
+					placeholder="e.g., M.Sc, M.Tech, MBA"
+					class="form-control">
+			</div>
+		</div>
+
+		<div class="row mb-3">
+			<div class="col-3">
+				<label for="postgrad_year">Year of Graduation:<span style="color: red">*</span></label>
+			</div>
+			<div class="col-9">
+				<input type="text" id="postgrad_year" name="postgrad_year"
+					value="{{ old('postgrad_year', $user->postgrad_year) }}"
+					placeholder="e.g., 2016"
+					class="form-control">
+			</div>
+		</div>
+	</div>
+
+	<button type="submit" class="btn btn-primary">Update</button>
+</form>
+			</div>
+                                        
 		
 		
       </div>
@@ -616,74 +614,63 @@
       </h2>
       <div id="professionalCollapse" class="accordion-collapse collapse" aria-labelledby="professionalHeading" data-bs-parent="#editAccordion">
         <div class="accordion-body w-100">
-          <!--<form class="w-100">
-            <div class="mb-3">
-              <label for="editCompany" class="form-label">Current Company</label>
-              <input type="text" class="form-control" id="editCompany" placeholder="Company name">
-            </div>
-            <div class="mb-3">
-              <label for="editPosition" class="form-label">Position</label>
-              <input type="text" class="form-control" id="editPosition" placeholder="Your job title">
-            </div>
-          </form>-->
-		  
-		  <form action="{{ route('user.profile.proinfo', ['id' => $user->id]) }}" method="post" id="myForm" enctype="multipart/form-data">												
-				@csrf
-				@method('PUT') 
-			
-					<div class="form-group">
-						
-						<div class="row mb-3">
-							<div class="col-3">
-								<label for="current_designation">Current Designation:</label>
-							</div>
-							<div class="col-9">
-								<input type="text" id="current_designation" name="current_designation"
-									   value="{{ old('current_designation', $user->current_designation) }}"
-										class="form-control">
-							</div>
-						</div>
+       
+	   <form action="{{ route('user.profile.proinfo', ['id' => $user->id]) }}" method="post" id="myForm" enctype="multipart/form-data">
+	@csrf
+	@method('PUT') 
 
-						
-						<div class="row mb-3">
-							<div class="col-3">
-								<label for="current_department">Current Department:</label>
-							</div>
-							<div class="col-9">
-								<input type="text" id="current_department" name="current_department"
-									   value="{{ old('current_department', $user->current_department) }}"
-										class="form-control">
-							</div>
-						</div>
+	<div class="form-group">
+		<div class="row mb-3">
+			<div class="col-3">
+				<label for="current_designation">Current Designation:<span style="color: red">*</span></label>
+			</div>
+			<div class="col-9">
+				<input type="text" id="current_designation" name="current_designation"
+					value="{{ old('current_designation', $user->current_designation) }}"
+					class="form-control"
+					placeholder="Enter your current designation">
+			</div>
+		</div>
 
-						
-						<div class="row mb-3">
-							<div class="col-3">
-								<label for="current_location">Current Location:</label>
-							</div>
-							<div class="col-9">
-								<input type="text" id="current_location" name="current_location"
-									   value="{{ old('current_location', $user->current_location) }}"
-										class="form-control">
-							</div>
-						</div>
-						<div class="row mb-3">
-							<div class="col-3">
-								<label for="previous_postings">Previous postings:</label>
-							</div>
-							<div class="col-9">
-								<input type="text" id="previous_postings" name="previous_postings"
-									   value="{{ old('previous_postings', $user->previous_postings) }}"
-										class="form-control">
-							</div>
-						</div>
-						
-					</div>
-				
+		<div class="row mb-3">
+			<div class="col-3">
+				<label for="current_department">Current Department:<span style="color: red">*</span></label>
+			</div>
+			<div class="col-9">
+				<input type="text" id="current_department" name="current_department"
+					value="{{ old('current_department', $user->current_department) }}"
+					class="form-control"
+					placeholder="Enter your current department">
+			</div>
+		</div>
 
-				<button type="submit" class="btn btn-primary">Update</button>
-			</form>
-						
+		<div class="row mb-3">
+			<div class="col-3">
+				<label for="current_location">Current Location:<span style="color: red">*</span></label>
+			</div>
+			<div class="col-9">
+				<input type="text" id="current_location" name="current_location"
+					value="{{ old('current_location', $user->current_location) }}"
+					class="form-control"
+					placeholder="Enter your current work location">
+			</div>
+		</div>
+
+		<div class="row mb-3">
+			<div class="col-3">
+				<label for="previous_postings">Previous Postings:<span style="color: red">*</span></label>
+			</div>
+			<div class="col-9">
+				<input type="text" id="previous_postings" name="previous_postings"
+					value="{{ old('previous_postings', $user->previous_postings) }}"
+					class="form-control"
+					placeholder="List previous postings (comma-separated)">
+			</div>
+		</div>
+	</div>
+
+	<button type="submit" class="btn btn-primary">Update</button>
+</form>	
 		  
 		  
 		  
@@ -718,7 +705,10 @@
  
        </div>
    </main>
+  
    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+   
+
 
 
 

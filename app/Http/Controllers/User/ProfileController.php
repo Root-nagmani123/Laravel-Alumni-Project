@@ -103,12 +103,9 @@ class ProfileController extends Controller
         }
 */
 
-public function update(Request $request, $id): RedirectResponse
+/*public function update(Request $request, $id): RedirectResponse
 {
-     /*echo $id;
-       dd($request);
-      exit; */
-    $request->validate([
+       $request->validate([
         'name' => 'required|string|max:255',
         'date_of_birth' => 'required|date',
         'place_of_birth' => 'required|string',
@@ -135,8 +132,42 @@ public function update(Request $request, $id): RedirectResponse
     $user->save();
 
     return redirect()->back()->with('success', 'Profile updated successfully.');
+    return redirect()->back()->with('active_tab', 'personal');
 }
+        */
 
+        public function update(Request $request, $id): RedirectResponse
+{
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'date_of_birth' => 'required|date',
+        'place_of_birth' => 'required|string',
+        'gender' => 'required|in:male,female,other',
+        'mobile' => 'required|digits:10',
+        'address' => 'required|string',
+        'bio' => 'required|string',
+        'marital_status' => 'required|in:single,married,divorced',
+    ]);
+
+    $user = member::findOrFail($id);
+
+    $user->fill($request->except(['profile_pic']));
+
+    // Handle profile picture upload
+    if ($request->hasFile('profile_pic')) {
+        $file = $request->file('profile_pic');
+        $filename = time() . '_' . $file->getClientOriginalName();
+        $file->move(public_path('assets/uploads/profile_pic'), $filename);
+        $user->profile_pic = $filename;
+    }
+
+    $user->save();
+
+    return redirect()->back()->with([
+        'success' => 'Profile updated successfully.',
+        'active_tab' => 'personal'
+    ]);
+}
 
     public function updateEduinfo(Request $request, $id): RedirectResponse
     {
