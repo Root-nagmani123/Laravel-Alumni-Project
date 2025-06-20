@@ -80,7 +80,7 @@
                        </div>
                        <div class="profile-pic d-flex gap-2 align-items-center">
                            <div class="avatar position-relative">
-     <img id="existingImage" src="{{ $user->profile_pic ? asset('assets/uploads/profile_pic/' . $user->profile_pic) : asset('feed_assets/images/avatar-1.png') }}" alt="Profile Image" style="width: 200px; height: 200px; object-fit: cover;"  class="rounded-circle">
+     <img id="existingImage" src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar-1.png') }}" alt="Profile Image" style="width: 200px; height: 200px; object-fit: cover;"  class="rounded-circle">
 					</div>
                            <div class="text-area">
 						@if(Auth::guard('user')->check())

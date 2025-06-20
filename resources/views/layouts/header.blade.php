@@ -2,7 +2,7 @@
         <nav class="navbar navbar-expand-lg p-0">
             <div class="container">
                 <nav class="navbar w-100 navbar-expand-lg justify-content-between">
-                    <a href="index.html" class="navbar-brand">
+                    <a href="{{ url('user/feed') }}" class="navbar-brand">
                         <img src="{{ asset('admin_assets/images/logos/lbsnaa_logo.jpg') }}" class="logo" alt="logo" style="width:50px;">
                     </a>
                <div>
@@ -11,7 +11,7 @@
                 </div>
                     <ul class="navbar-nav feed flex-row gap-xl-20 gap-lg-10 gap-sm-7 gap-1 py-4 py-lg-0 m-lg-auto ms-auto ms-aut align-self-center">
                         <li>
-                            <a href="{{ route('dashboard') }}" class="nav-icon home active" title="Home"><i class="mat-icon fs-xxl material-symbols-outlined mat-icon">home</i></a>
+                            <a href="{{ url('user/feed') }}" class="nav-icon home active" title="Home"><i class="mat-icon fs-xxl material-symbols-outlined mat-icon">home</i></a>
                         </li>
                         <li>
                             <a href="#news-feed" class="nav-icon feed" title="Resource Library"><i class="mat-icon fs-xxl material-symbols-outlined mat-icon">feed</i></a>

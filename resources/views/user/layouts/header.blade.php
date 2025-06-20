@@ -12,7 +12,7 @@
                     </div>
                     <ul class="navbar-nav feed flex-row gap-xl-20 gap-lg-10 gap-sm-7 gap-1 py-4 py-lg-0 m-lg-auto ms-auto ms-aut align-self-center">
                         <li>
-                            <a href="index-2.html" class="nav-icon home active" title="Home"><i class="mat-icon fs-xxl material-symbols-outlined mat-icon">home</i></a>
+                            <a href="{{route('http://127.0.0.1:8000/user/feed')}}" class="nav-icon home active" title="Home"><i class="mat-icon fs-xxl material-symbols-outlined mat-icon">home</i></a>
                         </li>
                         <li>
                             <a href="#news-feed" class="nav-icon feed" title="Resource Library"><i class="mat-icon fs-xxl material-symbols-outlined mat-icon">feed</i></a>
@@ -310,7 +310,7 @@
                             <button class="cmn-btn">Accept</button>
                             <button class="cmn-btn alt">Delete</button>
                         </div>
-                    </div>                             
+                    </div>
                     <div class="btn-area">
                         <a href="profile-notification.html">See all notification</a>
                     </div>

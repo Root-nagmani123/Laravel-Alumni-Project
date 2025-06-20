@@ -11,12 +11,16 @@ class FeedController extends Controller
 {
     public function index()
     {
-
+        $user = auth()->guard('user')->user();
+        $userId = $user->id;
 		//$posts = Post::with(['media', 'user'])->latest()->get();
         //$posts = Post::with(['member', 'media', 'likes', 'comments'])->get();
         $posts = Post::with(['member', 'media', 'likes', 'comments'])
              ->orderBy('created_at', 'desc')
+             ->where('member_id', $userId)
              ->get();
+
+            // echo '<pre>';print_r($posts); die;
 
         return view('user.feed', compact('posts'));
     }

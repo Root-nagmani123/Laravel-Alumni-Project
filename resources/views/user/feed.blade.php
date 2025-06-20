@@ -346,47 +346,7 @@
        </div>
    </main>
    <!-- Main Content end -->
- <!-- Modal for Adding Photo/Video Post -->
- <!--<div class="modal cmn-modal fade" id="photoVideoMod" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content p-5">
-                <div class="modal-header justify-content-center">
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                        <i class="material-symbols-outlined mat-icon xxltxt">close</i>
-                    </button>
-                </div>
-
-                <div class="top-content pb-3">
-                    <h5>Add Post Photo/Video</h5>
-                </div>
-
-                <form id="mediaPostForm" enctype="multipart/form-data">
-                    <input type="hidden" name="post_id" id="post_id" value="">
-
-                    <div class="mid-area">
-                        <div class="d-flex mb-4 gap-3 align-items-start">
-                            <div class="profile-box">
-                                <a href="#"><img src="{{asset('feed_assets/images/add-post-avatar.png')}}" class="max-un" alt="avatar"></a>
-                            </div>
-                            <textarea name="modalContent" id="modalContent" class="form-control" rows="2" placeholder="Write something.."></textarea>
-                        </div>
-
-                        <input id="media" name="media[]" type="file" class="file" multiple accept="image/*,video/*">
-                    </div>
-
-                    <div class="footer-area pt-4">
-                        <div class="btn-area d-flex justify-content-end gap-2">
-                            <button type="button" class="cmn-btn alt" data-bs-dismiss="modal">Cancel</button>
-                            <button type="submit" class="cmn-btn">Post</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>-->
-
-
- <!-- video popup start -->
+  <!-- video popup start -->
    <!--<form action="{{-- route('user.post.store') --}}" method="POST" enctype="multipart/form-data">-->
   <form action="{{ route('post.store') }}" method="POST" enctype="multipart/form-data">
     @csrf
@@ -409,27 +369,24 @@
                                 <div class="mid-area">
                                     <div class="d-flex mb-5 gap-3">
                                         <div class="profile-box">
-                                            <a href="#"><img src="{{ asset('feed_assets/images/add-post-avatar.png') }}" class="max-un" alt="avatar"></a>
+                                            <!--<a href="#"><img src="{{ asset('feed_assets/images/add-post-avatar.png') }}" class="max-un" alt="avatar"></a>-->
+                                           @foreach($posts as $post)
+    <img src="{{ $posts->profile_pic ? asset('assets/uploads/profile_pic/' . $post->profile_pic) : asset('feed_assets/images/avatar-1.png') }}" alt="avatar" class="max-un">
+@endforeach
+
                                         </div>
                                         <textarea name="modalContent" cols="10" rows="2" placeholder="Write something to Lerio.."></textarea>
                                     </div>
-                                    <!--<div class="file-upload">
-                                        <label>Upload attachment</label>
-                                        <label class="file mt-1">
-											<input type="file" id="media" name="media[]" multiple>
-											<input type="hidden" id="post_id" name="post_id" value="">
-                                            <span class="file-custom pt-8 pb-8 d-grid text-center">
-                                                <i class="material-symbols-outlined mat-icon"> perm_media </i>
-                                                <span>Drag here or click to upload photo.</span>
-                                            </span>
-                                        </label>
-                                    </div>-->
+
 									<div class="file-upload">
 									<label>Upload attachment</label>
 									<div id="drop-area" class="drop-area mt-2 p-4 text-center border border-secondary rounded">
 										<i class="material-symbols-outlined mat-icon mb-2 d-block"> perm_media </i>
 										<span>Drag & Drop image/video here or click to browse.</span>
-										<input type="file" id="media" name="media[]" multiple class="d-none" accept="image/*,video/*">
+										<!--<input type="file" id="media" name="media[]" multiple class="d-none" accept="image/*,video/*">-->
+                                        <input type="file" id="media" name="media[]" multiple class="d-none" accept="image/*">
+                                        <input class="form-control f-18 black mt-2" type="text" name="video_link"
+                                placeholder="Video Link .." />
 
 										<div id="preview" class="mt-3 d-flex flex-wrap gap-3"></div>
 									</div>
