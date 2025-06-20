@@ -80,15 +80,8 @@
                        </div>
                        <div class="profile-pic d-flex gap-2 align-items-center">
                            <div class="avatar position-relative">
-                              
-								    <!--<img id="existingImage" src="{{ Auth::guard('user')->user()->profile_pic ? asset('path_to_uploaded_images/' . Auth::guard('user')->user()->profile_pic) : asset('feed_assets/images/avatar-1.png') }}" alt="Profile Image" height="100" class="img-fluid avatar-img max-un" >-->
-									
-									<img id="existingImage" 
-     src="{{ $user->profile_pic ? asset('assets/uploads/profile_pic/' . $user->profile_pic) : asset('feed_assets/images/avatar-1.png') }}" 
-     alt="Profile Image" style="width: 200px; height: 200px; object-fit: cover;"  class="rounded-circle">
-
-									
-                           </div>
+     <img id="existingImage" src="{{ $user->profile_pic ? asset('assets/uploads/profile_pic/' . $user->profile_pic) : asset('feed_assets/images/avatar-1.png') }}" alt="Profile Image" style="width: 200px; height: 200px; object-fit: cover;"  class="rounded-circle">
+					</div>
                            <div class="text-area">
 						@if(Auth::guard('user')->check())
 						 <h6 class="m-0 mb-1">{{ Auth::guard('user')->user()->name }}!</h6>
@@ -141,70 +134,66 @@
   <div class="tab-pane fade show active" id="overview" role="tabpanel">
   <div class="tab-content pt-2">
     <div class="tab-pane fade profile-overview active show" id="profile-overview">
-  <!-- Success Message -->
-@if(session('success'))
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        {{ session('success') }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-@endif
 
-<!-- Error Messages -->
-@if ($errors->any())
-    <div class="alert alert-danger">
-        <ul class="mb-0">
+      <!-- Success Message -->
+      @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      @endif
+
+      <!-- Error Messages -->
+      @if ($errors->any())
+        <div class="alert alert-danger">
+          <ul class="mb-0">
             @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
+              <li>{{ $error }}</li>
             @endforeach
-        </ul>
+          </ul>
+        </div>
+      @endif
+
+      <h5 class="card-title mb-4 text-light">Profile Details</h5>
+
+      <div class="row text-light mb-2">
+        <div class="col-lg-3 col-md-4 fw-bold">Full Name:</div>
+        <div class="col-lg-9 col-md-8">{{ $user->name }}</div>
+      </div>
+
+      <div class="row text-light mb-2">
+        <div class="col-lg-3 col-md-4 fw-bold">Email:</div>
+        <div class="col-lg-9 col-md-8">{{ $user->email }}</div>
+      </div>
+
+      <div class="row text-light mb-2">
+        <div class="col-lg-3 col-md-4 fw-bold">Phone:</div>
+        <div class="col-lg-9 col-md-8">{{ $user->mobile }}</div>
+      </div>
+
+      <div class="row text-light mb-2">
+        <div class="col-lg-3 col-md-4 fw-bold">Cader:</div>
+        <div class="col-lg-9 col-md-8">{{ $user->cader }}</div>
+      </div>
+
+      <div class="row text-light mb-2">
+        <div class="col-lg-3 col-md-4 fw-bold">Designation:</div>
+        <div class="col-lg-9 col-md-8">&nbsp;&nbsp;{{ $user->designation }}</div>
+      </div>
+
+      <div class="row text-light mb-2">
+        <div class="col-lg-3 col-md-4 fw-bold">Batch:</div>
+        <div class="col-lg-9 col-md-8">{{ $user->batch }}</div>
+      </div>
+
+      <div class="row text-light mb-2">
+        <div class="col-lg-3 col-md-4 fw-bold">Address:</div>
+        <div class="col-lg-9 col-md-8">{{ $user->address }}</div>
+      </div>
+
     </div>
-@endif
-  <h5 class="card-title mb-4">Profile Details</h5>
-
- 	<div class="row">
-		<div class="col-lg-3 col-md-4"><strong>Full Name:</strong></div>
-		<div class="col-lg-9 col-md-8">{{ $user->name }}</div>
-		</div>
-
-		<div class="row">
-		<div class="col-lg-3 col-md-4"><strong>Email:</strong></div>
-		<div class="col-lg-9 col-md-8">{{ $user->email }}</div>
-		</div>
-		<div class="row">
-		<div class="col-lg-3 col-md-4"><strong>Phone:</strong></div>
-		<div class="col-lg-9 col-md-8">{{ $user->mobile }}</div>
-		</div>
-
-		<div class="row">
-		<div class="col-lg-3 col-md-4"><strong>Cader:</strong></div>
-		<div class="col-lg-9 col-md-8">{{ $user->cader }}</div>
-		</div>
-
-		<div class="row">
-		<div class="col-lg-3 col-md-4"><strong>Designation:</strong></div>
-		<div class="col-lg-9 col-md-8">&nbsp;&nbsp;{{ $user->designation }}</div>
-		</div>
-		<div class="row">
-		<div class="col-lg-3 col-md-4"><strong>Batch:</strong></div>
-		<div class="col-lg-9 col-md-8">{{ $user->batch }}</div>
-		</div>
-
-		<div class="row">
-		<div class="col-lg-3 col-md-4"><strong>Address:</strong></div>
-		<div class="col-lg-9 col-md-8">{{ $user->address }}</div>
-		</div>
-
- 
-
-</div>
   </div>
 </div>
-
-
-
-
-
-
 
 
 
@@ -331,6 +320,7 @@
   </div>
 
   <!-- Edit Profile Form -->
+  
  <div class="tab-pane fade" id="edit" role="tabpanel">
   <div class="accordion" id="editAccordion">
     
@@ -339,7 +329,7 @@
   <div class="accordion w-100" id="editAccordion">
 
     <!-- Personal Information -->
-    <div class="accordion-item w-100">
+    <div class="accordion-item w-100 ">
       <h2 class="accordion-header" id="personalHeading">
         <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#personalCollapse" aria-expanded="true" aria-controls="personalCollapse">
           Personal Information

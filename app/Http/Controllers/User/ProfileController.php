@@ -162,11 +162,12 @@ class ProfileController extends Controller
     }
 
     $user->save();
-
+     session(['theme' => 'dark']); // or 'light'
     return redirect()->back()->with([
         'success' => 'Profile updated successfully.',
         'active_tab' => 'personal'
     ]);
+
 }
 
     public function updateEduinfo(Request $request, $id): RedirectResponse
