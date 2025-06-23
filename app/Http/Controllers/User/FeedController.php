@@ -20,7 +20,7 @@ class FeedController extends Controller
 
             // echo '<pre>';print_r($posts); die;
 
-        return view('user.feed', compact('posts'));
+        return view('user.feed', compact('posts','user'));
     }
 
     public function store(Request $request)

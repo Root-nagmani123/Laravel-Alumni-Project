@@ -15,7 +15,14 @@
                            <div class="avatar position-relative">
 
 
-        <img id="existingImage" src="{{ $media['0']->profile_pic ? asset('storage/' . $posts->profile_pic) : asset('feed_assets/images/avatar-1.png') }}" alt="avatar"  class="avatar-img max-un">
+      @php
+    $profilePic = $user->profile_pic ?? null;
+@endphp
+
+<img id="existingImage"
+    src="{{ $profilePic ? asset('storage/' . $profilePic) : asset('feed_assets/images/avatar-1.png') }}"
+    alt="avatar"
+    class="avatar-img max-un" height="100" width="100">
 
 
                            </div>
