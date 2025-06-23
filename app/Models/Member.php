@@ -15,7 +15,7 @@ class Member extends Authenticatable
 
     protected $fillable = [
         'name', 'email', 'password', 'mobile', 'cader',
-        'designation','batch','address','date_of_birth',
+        'designation','batch','address','bio','profile_pic','date_of_birth',
         'place_of_birth','gender','marital_status',
         'school_name','school_year','undergrad_college',
         'undergrad_degree','undergrad_year','postgrad_college',

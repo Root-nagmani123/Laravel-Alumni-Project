@@ -9,6 +9,7 @@
                     <span class="logo-text">Alumni</span><br>
                     <small class="logo-text">Lal Bahadur Shastri National Academy of Administration</small>
                 </div>
+
                     <ul class="navbar-nav feed flex-row gap-xl-20 gap-lg-10 gap-sm-7 gap-1 py-4 py-lg-0 m-lg-auto ms-auto ms-aut align-self-center">
                         <li>
                             <a href="{{ url('user/feed') }}" class="nav-icon home active" title="Home"><i class="mat-icon fs-xxl material-symbols-outlined mat-icon">home</i></a>

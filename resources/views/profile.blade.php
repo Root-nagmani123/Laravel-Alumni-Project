@@ -4,7 +4,7 @@
 
    @section('content')
    <style>
-   
+
 /*--------------------------------------------------------------
 # Profie Page
 --------------------------------------------------------------*/
@@ -50,16 +50,16 @@
   max-width: 120px;
 }
 
-   
-   
-   
-   
+
+
+
+
    .label {
   font-weight: 600;
 }
    </style>
-   
-  
+
+
    <!-- Main Content start -->
    <i class="fa-light fa-face-awesome"></i>
    <main class="main-content profile">
@@ -87,27 +87,27 @@
 						 <h6 class="m-0 mb-1">{{ Auth::guard('user')->user()->name }}!</h6>
 						@endif
 					<p class="mdtxt">{{ Auth::guard('user')->user()->designation }} ({{ Auth::guard('user')->user()->batch }})</p>
-						
+
 
                            </div>
                        </div>
-                       
-                    
+
+
                    </div>
                </div>
-			   
-		
-              <div class="col-12 col-md-8 col-lg-8 col-xl-8 col-xxl-8 mt-0 mt-lg-10 mt-xl-0 d-flex flex-column gap-7 cus-z">
-           
 
-		   
+
+              <div class="col-12 col-md-8 col-lg-8 col-xl-8 col-xxl-8 mt-0 mt-lg-10 mt-xl-0 d-flex flex-column gap-7 cus-z">
+
+
+
                    <div class="post-item d-flex flex-column gap-5 gap-md-7" id="news-feed">
 				   <div class="post-single-box p-3 p-sm-5">
 				<div class="top-area pb-5">
 				<div class="profile-area d-center justify-content-between">
             <div class="avatar-item d-flex gap-3 align-items-center">
-                
-               
+
+
             <div class="info-area">
                  <ul class="nav nav-tabs mb-4" id="profileTab" role="tablist">
 		  <li class="nav-item" role="presentation">
@@ -130,7 +130,7 @@
 <!-- Tab Content -->
 <div class="tab-content" id="profileTabContent">
   <!-- Overview Form -->
-  
+
   <div class="tab-pane fade show active" id="overview" role="tabpanel">
   <div class="tab-content pt-2">
     <div class="tab-pane fade profile-overview active show" id="profile-overview">
@@ -187,7 +187,7 @@
 		<div class="col-lg-9 col-md-8">{{ $user->address }}</div>
 		</div>
 
- 
+
 
 </div>
   </div>
@@ -195,7 +195,7 @@
 
   <!-- Media Form -->
   <div class="tab-pane fade" id="media" role="tabpanel">
-  
+
 	 <!-- Tab Navigation -->
 <ul class="nav nav-tabs nav-tabs-bordered" id="mediaTabs" role="tablist">
     <li class="nav-item" role="presentation">
@@ -227,7 +227,7 @@
          id="photos"
          role="tabpanel"
          aria-labelledby="photos-tab">
-      
+
 
             <div class="row">
                @foreach($profile_topic as $post)
@@ -272,7 +272,7 @@
          id="video"
          role="tabpanel"
          aria-labelledby="video-tab">
-       
+
                     <div class="row">
                @foreach($profile_topic as $post)
 			@foreach($post->media as $media)
@@ -308,7 +308,7 @@
 
 
             </div>
-              
+
     </div>
 </div>
 
@@ -316,10 +316,10 @@
   </div>
 
   <!-- Edit Profile Form -->
-  
+
  <div class="tab-pane fade" id="edit" role="tabpanel">
   <div class="accordion" id="editAccordion">
-    
+
     <!-- Personal Information -->
    <div class="container-fluid p-0">
   <div class="accordion w-100" id="editAccordion">
@@ -333,11 +333,11 @@
       </h2>
       <div id="personalCollapse" class="accordion-collapse collapse {{ session('active_tab') == 'personal' ? 'show' : '' }}" aria-labelledby="personalHeading" data-bs-parent="#editAccordion" >
         <div class="accordion-body w-100">
-   
-	<form action="{{ route('user.profile.update', ['id' => $user->id]) }}" method="post" id="myForm" enctype="multipart/form-data">												
+
+	<form action="{{ route('user.profile.update', ['id' => $user->id]) }}" method="post" id="myForm" enctype="multipart/form-data">
 				@csrf
-				@method('PUT') 
-			
+				@method('PUT')
+
 					<div class="form-group">
 	<!-- Full Name -->
 	<div class="row mb-3">
@@ -448,20 +448,20 @@
 		</div>
 		<div class="col-9">
 			<input type="file" id="ImageEdit" name="profile_pic" accept="image/*" class="form-control">
-			@if ($user->profile_pic)
+			{{--@if ($user->profile_pic)
 				<img src="{{ asset('assets/uploads/profile_pic/' . $user->profile_pic) }}" alt="Profile Picture" width="50">
-			@endif
+			@endif--}}
 		</div>
 	</div>
 </div>
-				
+
 
 				<button type="submit" class="btn btn-primary">Update</button>
 			</form>
-													
-         		
-												
-                                            
+
+
+
+
         </div>
       </div>
     </div>
@@ -474,12 +474,12 @@
         </button>
       </h2>
       <div id="educationCollapse" class="accordion-collapse collapse" aria-labelledby="educationHeading" data-bs-parent="#editAccordion">
-       
-			
+
+
 
 			<div class="accordion-body">
-			
-			<form action="{{ route('user.profile.eduinfo', ['id' => $user->id]) }}" method="post" id="myForm" enctype="multipart/form-data">												
+
+			<form action="{{ route('user.profile.eduinfo', ['id' => $user->id]) }}" method="post" id="myForm" enctype="multipart/form-data">
 	@csrf
 	@method('PUT')
 
@@ -585,9 +585,9 @@
 	<button type="submit" class="btn btn-primary">Update</button>
 </form>
 			</div>
-                                        
-		
-		
+
+
+
       </div>
     </div>
 
@@ -600,10 +600,10 @@
       </h2>
       <div id="professionalCollapse" class="accordion-collapse collapse" aria-labelledby="professionalHeading" data-bs-parent="#editAccordion">
         <div class="accordion-body w-100">
-       
+
 	   <form action="{{ route('user.profile.proinfo', ['id' => $user->id]) }}" method="post" id="myForm" enctype="multipart/form-data">
 	@csrf
-	@method('PUT') 
+	@method('PUT')
 
 	<div class="form-group">
 		<div class="row mb-3">
@@ -656,10 +656,10 @@
 	</div>
 
 	<button type="submit" class="btn btn-primary">Update</button>
-</form>	
-		  
-		  
-		  
+</form>
+
+
+
         </div>
       </div>
     </div>
@@ -678,8 +678,8 @@
        </div>
 </div>
 
-   
-  
+
+
                  <!-- multiple images section -->
 
 
@@ -688,12 +688,12 @@
 
                    </div>
                </div>
- 
+
        </div>
    </main>
-  
+
    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-   
+
 
 
 
@@ -723,7 +723,7 @@ $(document).ready(function() {
 </script>
 
 
-	<script>	   
+	<script>
 	 /* document.addEventListener('DOMContentLoaded', function () {
         $('#myForm').on('submit', function (e) {
             e.preventDefault();
@@ -753,11 +753,11 @@ $(document).ready(function() {
         });
     });
   */
- 
+
 function goPrev()
 	{
 	window.history.back();
 	}
-</script>		   
-		   
+</script>
+
 @endsection

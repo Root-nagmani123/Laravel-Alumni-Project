@@ -15,7 +15,7 @@ class FeedController extends Controller
         $userId = $user->id;
 		 $posts = Post::with(['member', 'media', 'likes', 'comments'])
              ->orderBy('created_at', 'desc')
-             ->where('member_id', $userId)
+         //    ->where('member_id', $userId)
              ->get();
 
             // echo '<pre>';print_r($posts); die;
@@ -71,4 +71,30 @@ class FeedController extends Controller
         ]);
         // return redirect()->route('user.feed1')->with('success', 'Post added successfully.');
     }
+
+
+    public function search(Request $request)
+    {
+        $keyword = $request->input('keyword');
+
+        $results = Post::where('content', 'like', "%$keyword%")
+            ->with('member')
+            ->limit(10)
+            ->get();
+
+        if ($results->isEmpty()) {
+            return '<ul class="crowd_search_list"></ul>';
+        }
+
+        $html = '<ul class="crowd_search_list">';
+        foreach ($results as $result) {
+            $html .= '<li>' . e($result->content) . '</li>';
+        }
+        $html .= '</ul>';
+
+        return $html;
+    }
+
+
+
 }
