@@ -13,8 +13,11 @@
                        </div>
                        <div class="profile-pic d-flex gap-2 align-items-center">
                            <div class="avatar position-relative">
-                               <img class="avatar-img max-un" src="{{asset('feed_assets/images/avatar-1.png')}}"
-                                   alt="avatar">
+
+
+        <img id="existingImage" src="{{ $media['0']->profile_pic ? asset('storage/' . $posts->profile_pic) : asset('feed_assets/images/avatar-1.png') }}" alt="avatar"  class="avatar-img max-un">
+
+
                            </div>
                            <div class="text-area">
                                 	@if(Auth::guard('user')->check())

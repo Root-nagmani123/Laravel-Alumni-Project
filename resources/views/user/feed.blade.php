@@ -371,8 +371,9 @@
                                         <div class="profile-box">
                                             <!--<a href="#"><img src="{{ asset('feed_assets/images/add-post-avatar.png') }}" class="max-un" alt="avatar"></a>-->
                                            @foreach($posts as $post)
-    <img src="{{ $posts->profile_pic ? asset('assets/uploads/profile_pic/' . $post->profile_pic) : asset('feed_assets/images/avatar-1.png') }}" alt="avatar" class="max-un">
-@endforeach
+<img id="existingImage" src="{{ $post->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar-1.png') }}" alt="avatar"  class="max-un">
+
+    @endforeach
 
                                         </div>
                                         <textarea name="modalContent" cols="10" rows="2" placeholder="Write something to Lerio.."></textarea>
