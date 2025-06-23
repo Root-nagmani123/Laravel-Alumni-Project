@@ -14,6 +14,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
 
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
 </head>
 
 <body>

@@ -132,9 +132,9 @@
                                 </div>
                                 <ul>
                                     <li>
-                                        <a href="profile-edit.html" class="mdtxt">
+                                        <a href="{{ route('user.directory') }}" class="mdtxt">
                                             <i class="material-symbols-outlined mat-icon"> settings </i>
-                                            Settings & Privacy
+                                           Directory
                                         </a>
                                     </li>
                                     <li>

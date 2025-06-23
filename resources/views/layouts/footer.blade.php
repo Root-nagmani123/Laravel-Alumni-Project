@@ -13,7 +13,7 @@
 
 <!-- Toastr -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 <!-- Other plugins -->
 <script src="{{ asset('feed_assets/js/plugins/slick.js') }}"></script>
 <script src="{{ asset('feed_assets/js/plugins/jquery.nice-select.min.js') }}"></script>
