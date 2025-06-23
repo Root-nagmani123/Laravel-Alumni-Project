@@ -12,6 +12,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('member_id');
             $table->text('content')->nullable();
             $table->enum('media_type', ['live', 'photo_video', 'none'])->default('none');
+            $table->string('video_link')->nullable();
             $table->text('media_path')->nullable();
             $table->timestamps();
 

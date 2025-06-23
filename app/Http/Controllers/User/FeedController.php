@@ -15,7 +15,7 @@ class FeedController extends Controller
         $userId = $user->id;
 		 $posts = Post::with(['member', 'media', 'likes', 'comments'])
              ->orderBy('created_at', 'desc')
-             ->where('member_id', $userId)
+         //    ->where('member_id', $userId)
              ->get();
 
             // echo '<pre>';print_r($posts); die;

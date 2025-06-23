@@ -212,42 +212,65 @@
         </div>
 
         {{-- Media --}}
-        @php
+      @php
     $validMedia = $post->media->filter(function($media) {
         return file_exists(storage_path('app/public/' . $media->file_path));
     });
 
-    $imageMedia = $validMedia->where('file_type', 'image');
-    $videoMedia = $validMedia->where('file_type', 'video');
+    $imageMedia = $validMedia->where('file_type', 'image')->values(); // ensure 0-based indexing
+    $videoMedia = $validMedia->where('file_type', 'video')->values(); // <-- This line is important
+    $totalImages = $imageMedia->count();
 @endphp
 
-{{-- Display Images --}}
-@if($imageMedia->count() === 1)
-    {{-- Single Image Full Width --}}
+@if($totalImages === 1)
     <div class="post-img mt-2">
-        <img src="{{ asset('storage/' . $imageMedia->first()->file_path) }}" loading="lazy" class="w-100" alt="Post Image">
+        <img src="{{ asset('storage/' . $imageMedia[0]->file_path) }}" loading="lazy" class="w-100" alt="Post Image">
     </div>
-@elseif($imageMedia->count() > 1)
-    {{-- Multiple Images: Facebook-style Layout --}}
+@elseif($totalImages > 1)
     <div class="post-img d-flex justify-content-between flex-wrap gap-2 gap-lg-3 mt-2">
-        @foreach($imageMedia->chunk(2) as $chunk)
-            <div class="single {{ $chunk->count() > 1 ? 'd-grid gap-3' : '' }}">
-                @foreach($chunk as $media)
-                    <img src="{{ asset('storage/' . $media->file_path) }}" alt="Post Image" loading="lazy">
-                @endforeach
+        @foreach($imageMedia->take(4) as $index => $media)
+            <div class="position-relative" style="width: 48%;">
+                <img src="{{ asset('storage/' . $media->file_path) }}" alt="Post Image" loading="lazy" class="w-100">
+
+                @if($index === 3 && $totalImages > 4)
+                    <div
+                        class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center"
+                        style="background-color: rgba(0,0,0,0.6); color: white; font-size: 2rem; cursor: pointer;"
+                        data-bs-toggle="modal"
+                        data-bs-target="#moreImagesModal"
+                    >
+                        +{{ $totalImages - 4 }}
+                    </div>
+                @endif
             </div>
         @endforeach
     </div>
-@endif
 
+    {{-- Modal for additional images --}}
+    <div class="modal fade" id="moreImagesModal" tabindex="-1" aria-labelledby="moreImagesModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">More Images</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body d-flex flex-wrap gap-3">
+                    @foreach($imageMedia->slice(4) as $media)
+                        <img src="{{ asset('storage/' . $media->file_path) }}" alt="Extra Image" class="img-fluid" style="width: 48%;">
+                    @endforeach
+                </div>
+            </div>
+        </div>
+    </div>
+@endif
 {{-- Display Videos --}}
-@foreach($videoMedia as $media)
+{{--@foreach($videoMedia as $media)
     <div class="post-img mt-2">
         <video class="w-100" controls loading="lazy">
             <source src="{{ asset('storage/' . $media->file_path) }}" type="video/mp4">
         </video>
     </div>
-@endforeach
+@endforeach--}}
     </div>
 
     {{-- Reactions --}}
@@ -283,12 +306,24 @@
             <i class="material-symbols-outlined mat-icon"> favorite </i> Like
         </button>-->
   {{--@if(Auth::guard('user')->check())--}}
-   <button
+   <!--<button
     onclick="likePost({{ $post->id }})"
     id="like-btn-{{ $post->id }}"
     class="d-center gap-1 gap-sm-2 mdtxt">
     {{ auth('member')->check() && $post->likes->contains('member_id', auth('member')->id()) ? 'Unlike' : 'Like' }}
-</button>
+</button>-->
+<!--<button onclick="likePost({{ $post->id }})" id="like-btn-{{ $post->id }}">
+    Like
+</button>-->
+<form action="{{ route('user.post.like', $post->id) }}" method="POST" class="d-inline">
+    @csrf
+    <button type="submit" class="btn btn-sm {{ $post->likes->contains('member_id', auth('member')->id()) ? 'btn-danger' : 'btn-primary' }}">
+        {{ $post->likes->contains('member_id', auth('member')->id()) ? 'Unlike' : 'Like' }}
+    </button>
+    <span class="ms-2 text-muted">
+        {{ $post->likes->count() }} {{ Str::plural('Like', $post->likes->count()) }}
+    </span>
+</form>
 	{{--@endif--}}
 
 
@@ -391,16 +426,18 @@
 									<label>Upload attachment</label>
 									<div id="drop-area" class="drop-area mt-2 p-4 text-center border border-secondary rounded">
 										<i class="material-symbols-outlined mat-icon mb-2 d-block"> perm_media </i>
-										<span>Drag & Drop image/video here or click to browse.</span>
+										<span>Drag & Drop image here or click to browse.</span>
 										<!--<input type="file" id="media" name="media[]" multiple class="d-none" accept="image/*,video/*">-->
                                         <input type="file" id="media" name="media[]" multiple class="d-none" accept="image/*">
-                                        <input class="form-control f-18 black mt-2" type="text" name="video_link"
-                                placeholder="Video Link .." />
+
 
 										<div id="preview" class="mt-3 d-flex flex-wrap gap-3"></div>
 									</div>
+
 								</div>
                                 </div>
+                                 <input class="form-control f-18 black mt-2" type="text" name="video_link"
+                                placeholder="Video Link .." />
                                 <div class="footer-area pt-5">
                                     <div class="btn-area d-flex justify-content-end gap-2">
                                         <button type="button" class="cmn-btn alt" data-bs-dismiss="modal" aria-label="Close">Cancel</button>

@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="https://img1.digitallocker.gov.in/ux4g/UX4G-CDN-accessibility/css/accesibility-style-v2.1.css">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
+
 </head>
 
 <body>

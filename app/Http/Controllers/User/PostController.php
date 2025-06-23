@@ -14,13 +14,13 @@ use Illuminate\Support\Str; // added on 16-6-2025
 class PostController extends Controller
 {
 
-public function store(Request $request)
+public function store_chnagefor_video_link(Request $request)
     {
 
         $request->validate([
             'modalContent' => 'nullable|string|max:5000',
-           // 'media.*' => 'file|mimes:jpg,jpeg,png,gif,mp4,webm,mov|max:20480'
-           'media.*' => 'file|mimes:jpg,jpeg,png,gif,mp4,webm,mov|max:51200'
+           //'media.*' => 'file|mimes:jpg,jpeg,png,gif,mp4,webm,mov|max:51200'
+           'media.*' => 'file|mimes:jpg,jpeg,png,gif|max:51200'
         ]);
 
 
@@ -54,6 +54,95 @@ public function store(Request $request)
     }
 
 
+
+    public function store(Request $request)
+{
+    $request->validate([
+        'modalContent' => 'nullable|string|max:5000',
+        'media.*' => 'file|mimes:jpg,jpeg,png,gif,mp4,mov,avi|max:51200', // Adjust if needed
+        'video_link' => 'nullable|url|max:1000',
+    ]);
+
+    $mediaFiles = $request->file('media');
+    $videoLink = $request->video_link;
+
+    // Extract YouTube video ID if video_link is YouTube
+    $embedLink = null;
+    if ($videoLink && str_contains($videoLink, 'youtube.com')) {
+        parse_str(parse_url($videoLink, PHP_URL_QUERY), $query);
+        if (isset($query['v'])) {
+            $embedLink = 'https://www.youtube.com/embed/' . $query['v'];
+        }
+    } elseif ($videoLink && str_contains($videoLink, 'youtu.be')) {
+        $videoId = basename(parse_url($videoLink, PHP_URL_PATH));
+        $embedLink = 'https://www.youtube.com/embed/' . $videoId;
+    } else {
+        $embedLink = $videoLink; // fallback for other URLs (optional)
+    }
+
+    $post = new Post();
+    $post->member_id = auth()->guard('user')->id();  // Or 'member' guard if applicable
+    $post->content = $request->modalContent;
+    $post->media_type = $mediaFiles ? 'photo_video' : ($videoLink ? 'video_link' : 'none');
+    $post->video_link = $embedLink;
+    $post->save();
+
+    if ($mediaFiles) {
+        foreach ($mediaFiles as $file) {
+            $filename = uniqid() . '_' . $file->getClientOriginalName();
+            $path = $file->storeAs('posts/media', $filename, 'public');
+
+            $mime = $file->getMimeType();
+            $fileType = str_starts_with($mime, 'video') ? 'video' : 'image';
+
+            PostMedia::create([
+                'post_id' => $post->id,
+                'file_path' => $path,
+                'file_type' => $fileType,
+            ]);
+        }
+    }
+
+    return redirect('/user/feed')->with('success', 'Post created successfully.');
+}
+
+  public function store23062025(Request $request)
+{
+    $request->validate([
+        'modalContent' => 'nullable|string|max:5000',
+        'media.*' => 'file|mimes:jpg,jpeg,png,gif|max:51200',
+        'video_link' => 'nullable|url|max:1000'
+    ]);
+
+    $mediaFiles = $request->file('media');
+
+    $post = new Post();
+    $post->member_id = auth()->guard('user')->id();
+    $post->content = $request->modalContent;
+    $post->media_type = $mediaFiles ? 'photo_video' : ($request->video_link ? 'video_link' : 'none');
+    $post->video_link = $request->video_link; // Save video link in the DB (if column exists)
+    $post->save();
+
+    if ($mediaFiles) {
+        foreach ($mediaFiles as $file) {
+            $filename = uniqid() . '_' . $file->getClientOriginalName();
+            $path = $file->storeAs('posts/media', $filename, 'public');
+
+            $mime = $file->getMimeType();
+            $fileType = str_starts_with($mime, 'video') ? 'video' : 'image';
+
+            PostMedia::create([
+                'post_id' => $post->id,
+                'file_path' => $path,
+                'file_type' => $fileType,
+            ]);
+        }
+    }
+
+    return redirect('/user/feed')->with('success', 'Post created successfully.');
+}
+
+/*
 public function toggleLike(Post $post, Request $request)
 {
     $user = auth('member')->user(); // Explicitly using the 'member' guard
@@ -72,5 +161,25 @@ public function toggleLike(Post $post, Request $request)
         return response()->json(['status' => 'liked']);
     }
 }
+*/
 
+public function toggleLike(Post $post, Request $request)
+{
+    $user = auth('user')->user();
+
+    if (!$user) {
+        return redirect()->back()->withErrors('You must be logged in to like posts.');
+    }
+
+    $existingLike = $post->likes()->where('member_id', $user->id)->first();
+
+    if ($existingLike) {
+        $existingLike->delete();
+    } else {
+        $post->likes()->create(['member_id' => $user->id]);
+    }
+
+    //return redirect()->back();
+    return redirect()->back()->with('status', $existingLike ? 'Post unliked' : 'Post liked');
+}
 }
