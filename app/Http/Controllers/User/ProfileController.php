@@ -31,7 +31,7 @@ class ProfileController extends Controller
             $query->where('id', $userId);
         })
         ->get();
-        echo '<pre>';print_r($profile_topic); die;
+       // echo '<pre>';print_r($profile_topic); die;
 
 
     return view('profile', compact('user','profile_topic'));
