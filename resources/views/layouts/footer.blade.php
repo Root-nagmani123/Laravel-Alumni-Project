@@ -22,3 +22,4 @@
 <script src="{{ asset('feed_assets/js/plugins/wow.min.js') }}"></script>
 <script src="{{ asset('feed_assets/js/plugins/plugin.js') }}"></script>
 <script src="{{ asset('feed_assets/js/main.js') }}"></script>
+

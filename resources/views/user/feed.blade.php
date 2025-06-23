@@ -370,10 +370,18 @@
                                     <div class="d-flex mb-5 gap-3">
                                         <div class="profile-box">
                                             <!--<a href="#"><img src="{{ asset('feed_assets/images/add-post-avatar.png') }}" class="max-un" alt="avatar"></a>-->
-                                           @foreach($posts as $post)
-<img id="existingImage" src="{{ $post->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar-1.png') }}" alt="avatar"  class="max-un">
+                                          {{-- @foreach($posts as $post)
+    <img src="{{ $posts->profile_pic ? asset('assets/uploads/profile_pic/' . $post->profile_pic) : asset('feed_assets/images/avatar-1.png') }}" alt="avatar" class="max-un">
+@endforeach--}}
+ @php
+    $profilePic = $user->profile_pic ?? null;
+@endphp
 
-    @endforeach
+<img id="existingImage"
+    src="{{ $profilePic ? asset('storage/' . $profilePic) : asset('feed_assets/images/avatar-1.png') }}"
+    alt="avatar"
+    alt="avatar" class="max-un" height="50" width="50">
+
 
                                         </div>
                                         <textarea name="modalContent" cols="10" rows="2" placeholder="Write something to Lerio.."></textarea>

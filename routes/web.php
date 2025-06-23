@@ -89,6 +89,7 @@ Route::prefix('user')->name('user.')->group(function () {
        // Route::get('/member/{id}/edit', [ProfileController::class, 'edit'])->name('member.edit');
        // Route::put('/member/{id}', [ProfileController::class, 'update'])->name('member.update');
 
+       //Route::post('/feed/search', [FeedController::class, 'search'])->name('feed.search');
 
     });
 
