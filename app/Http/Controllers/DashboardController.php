@@ -84,4 +84,10 @@ class DashboardController extends Controller
         'userData'
     ));
 }
+public function directory(Request $request)
+{
+    $members = Member::where('status', 1)->get();
+    return view('directory', compact('members'));
+    
+}
 }
