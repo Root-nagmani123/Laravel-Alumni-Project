@@ -116,7 +116,7 @@
                     <span class="status-dot {{ $statusClass }}"></span>
                 </div>
                 <div class="info-area">
-                    <h6 class="m-0"><a href="#">{{ $member->name ?? 'Unknown' }}</a></h6>
+                    <h6 class="m-0"><a href="{{ route('user.profile', $member->id) }}">{{ $member->name ?? 'Unknown' }}</a></h6>
                     <span class="mdtxt status"> {{ $member->status == '1' ? 'Active' : 'Inactive' }}</span>
                 </div>
             </div>
@@ -190,6 +190,18 @@
 
 
 {{-- Display Videos --}}
+
+   @if ($post->media_type === 'video' && $post->video)
+        <div class="post-img mt-2">
+            <video class="w-100" controls loading="lazy">
+                <source src="{{ asset('storage/' . $media->file_path) }}" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+    @endif
+
+
+{{-- Embedded YouTube or video link --}}
 @if ($post->media_type === 'video_link' && $post->video_link)
     <div class="post-video mt-2">
         <iframe class="w-100" height="315" src="{{ $post->video_link }}" frameborder="0"
@@ -197,7 +209,6 @@
                 allowfullscreen loading="lazy"></iframe>
     </div>
 @endif
-
 
     </div>
 
