@@ -2,6 +2,10 @@
 <!-- jQuery -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" crossorigin="anonymous"></script>
 
+
+<!-- Bootstrap css -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
 <!-- Bootstrap Bundle -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -22,4 +26,17 @@
 <script src="{{ asset('feed_assets/js/plugins/wow.min.js') }}"></script>
 <script src="{{ asset('feed_assets/js/plugins/plugin.js') }}"></script>
 <script src="{{ asset('feed_assets/js/main.js') }}"></script>
+
+<!-- Glightbox CSS + JS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css">
+<script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
+
+
+<script>
+   document.addEventListener('DOMContentLoaded', function () {
+        const lightbox = GLightbox({
+            selector: '.glightbox'
+        });
+    });
+</script>
 

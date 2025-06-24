@@ -7,7 +7,16 @@
         <span class="material-icons">notifications</span>
         <div class="dropdown">
             <a href="#" class="d-flex align-items-center text-white dropdown-toggle" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                <img src="{{ asset('storage/profile_pictures/' . auth()->user()->profile_picture ?? 'default.png') }}" class="rounded-circle" height="35" width="35" alt="User">
+                <!--<img src="{{ asset('storage/profile_pictures/' . auth()->user()->profile_picture ?? 'default.png') }}" class="rounded-circle" height="35" width="35" alt="User">-->
+                @php
+    $profilePic = $user->profile_pic ?? null;
+@endphp
+
+<img id="existingImage"
+    src="{{ $profilePic ? asset('storage/' . $profilePic) : asset('feed_assets/images/default.png') }}"
+    class="rounded-circle" height="35" width="35" alt="User">
+
+
                 <span class="ms-2">{{ auth()->user()->name }}</span>
             </a>
             <ul class="dropdown-menu" aria-labelledby="userDropdown">

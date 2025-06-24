@@ -12,7 +12,6 @@ use App\Http\Controllers\Admin\BroadcastController;
 use App\Http\Controllers\Admin\EventsController;
 use App\Http\Controllers\DashboardController;
 
-//use App\Http\Controllers\Member\AuthController;
 use App\Http\Controllers\User\AuthController;
 use App\Http\Controllers\User\FeedController;
 use App\Http\Controllers\User\PostController;
@@ -50,13 +49,8 @@ Route::get('/db-check', function () {
     ];
 });
 
-/*Route::get('/', function () {
-    return view('welcome');
-});*/
-
 Route::redirect('/', '/user/login');
 Route::redirect('/login', '/user/login');
-
 
 Route::prefix('user')->name('user.')->group(function () {
     Route::middleware('guest:user')->group(function () {
@@ -69,16 +63,13 @@ Route::prefix('user')->name('user.')->group(function () {
         Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 		Route::put('/post/update/{id}', [PostController::class, 'update'])->name('post.update');
 		Route::post('/post', [PostController::class, 'store'])->name('post.store');
-		//Route::get('/feed', [FeedController::class, 'index'])->name('feed1');
-
-        Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
+		Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
 
         Route::post('/like/{post}', [PostController::class, 'toggleLike'])->name('post.like');
 
          Route::post('/post/{id}/comment', [PostController::class, 'storeComment'])->name('post.comment');
         //Route::post('/comment/{id}/reply', [CommentController::class, 'reply'])->name('comment.reply');
 
-        // Route::get('/profile/id/{id}', [ProfileController::class, 'showById'])->name('profile.byId');
          Route::get('/profile/{id}', [ProfileController::class, 'showById'])->name('profile');
 
          Route::put('/profile/update/{id}', [ProfileController::class, 'update'])->name('profile.update');
@@ -86,17 +77,11 @@ Route::prefix('user')->name('user.')->group(function () {
         Route::put('/eduinfo/update/{id}', [ProfileController::class, 'updateEduinfo'])->name('profile.eduinfo');
         Route::put('/proinfo/update/{id}', [ProfileController::class, 'updateProinfo'])->name('profile.proinfo');
 
-       // Route::get('/member/{id}/edit', [ProfileController::class, 'edit'])->name('member.edit');
-       // Route::put('/member/{id}', [ProfileController::class, 'update'])->name('member.update');
-
-		Route::get('directory', [DashboardController::class, 'directory'])->name('directory');
+        Route::get('directory', [DashboardController::class, 'directory'])->name('directory');
        //Route::post('/feed/search', [FeedController::class, 'search'])->name('feed.search');
 		Route::get('directory', [DashboardController::class, 'directory'])->name('directory');
 
     });
-
-
-
 
 });
 
@@ -126,10 +111,7 @@ Route::prefix('member')->name('member.')->group(function () {
 });
 Route::prefix('member')->middleware('auth:member')->group(function () {
 		Route::get('dashboard', [DashboardController::class, 'index'])->name('member.dashboard');
-		//Route::post('post/like', [DashboardController::class, 'like'])->name('member.post.like');
 		Route::post('post/comment', [DashboardController::class, 'comment'])->name('member.post.comment');
-
-
     });
 
 // Routes accessible *without* login (public)
@@ -202,7 +184,6 @@ Route::prefix('group')->name('group.')->group(function () {
 		Route::get('view_topic/{id}', [GroupController::class, 'view_topic'])->name('topic.view');
 		Route::get('add_topic/{id}', [GroupController::class, 'add_topic'])->name('add_topic');
 		Route::post('save_topic/{id}', [GroupController::class, 'save_topic'])->name('save_topic');
-		//Route::put('topics/{id}/update', [ForumController::class, 'updateTopic'])->name('topics.update');
 		Route::put('topics/{id}/update', [ForumController::class, 'updateTopic'])->name('topics_update');
         Route::delete('topics/{id}', [ForumController::class, 'deleteTopic'])->name('topics.delete');
         Route::post('topicToggleStatus', [GroupController::class, 'topicToggleStatus'])->name('topicToggleStatus');
