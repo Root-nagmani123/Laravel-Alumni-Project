@@ -3,8 +3,7 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" crossorigin="anonymous"></script>
 
 
-<!-- Bootstrap css -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
 
 <!-- Bootstrap Bundle -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -33,10 +32,25 @@
 
 
 <script>
-   document.addEventListener('DOMContentLoaded', function () {
+   /*document.addEventListener('DOMContentLoaded', function () {
         const lightbox = GLightbox({
             selector: '.glightbox'
         });
+    });*/
+
+    document.addEventListener('DOMContentLoaded', function () {
+    const lightbox = GLightbox({
+        selector: '.glightbox',
+        openEffect: 'zoom',
+        onSlideAfterLoad: function({ slide }) {
+            const img = slide.slideNode.querySelector('img');
+            if (img) {
+                img.style.maxWidth = '600px';
+                img.style.maxHeight = '400px';
+                img.style.objectFit = 'contain';
+            }
+        }
     });
+});
 </script>
 

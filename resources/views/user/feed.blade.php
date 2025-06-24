@@ -3,7 +3,35 @@
    @section('title', 'User Feed - Alumni | Lal Bahadur Shastri National Academy of Administration')
 
    @section('content')
+<style>
 
+   .avatar {
+    display: inline-block;
+    position: relative;
+}
+
+.status-dot {
+    position: absolute;
+    top: -4px;
+    left: -4px;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    border: 2px solid white;
+    z-index: 2;
+
+.status-dot.green {
+    background-color: #28a745; /* green */
+}
+
+.status-dot.orange {
+    background-color: #fd7e14; /* orange */
+}
+.rounded-circle {
+    border-radius: 50%;
+    object-fit: cover;
+}
+</style>
 
    <!-- Main Content start -->
    <i class="fa-light fa-face-awesome"></i>
@@ -73,17 +101,23 @@
             <div class="avatar-item d-flex gap-3 align-items-center">
                 @php
                     $member = $post->member;
-                    $profileImage = $member && $member->profile_image
-                        ? asset('storage/' . $member->profile_image)
+                    $profileImage = $member && $member->profile_pic
+                        ? asset('storage/' . $member->profile_pic)
                         : asset('feed_assets/images/avatar-1.png');
+
+                        $status = $member->status;
+                        $statusClass = $status == '1' ? 'green' : 'orange';
                 @endphp
 
-                <div class="avatar position-relative">
-                    <img class="avatar-img max-un" src="{{ $profileImage }}" alt="avatar">
+
+
+               <div class="avatar position-relative">
+    <img class="max-un rounded-circle" src="{{ $profileImage }}" alt="avatar" width="50" height="50">
+                    <span class="status-dot {{ $statusClass }}"></span>
                 </div>
                 <div class="info-area">
                     <h6 class="m-0"><a href="#">{{ $member->name ?? 'Unknown' }}</a></h6>
-                    <span class="mdtxt status">Active</span>
+                    <span class="mdtxt status"> {{ $member->status == '1' ? 'Active' : 'Inactive' }}</span>
                 </div>
             </div>
         </div>
@@ -145,7 +179,7 @@
                 <div class="modal-body d-flex flex-wrap gap-3">
                     @foreach($imageMedia->slice(4) as $media)
                         <a href="{{ asset('storage/' . $media->file_path) }}" class="glightbox" data-gallery="post-gallery">
-                            <img src="{{ asset('storage/' . $media->file_path) }}" alt="Extra Image" class="img-fluid" style="width: 48%;">
+                            <img src="{{ asset('storage/' . $media->file_path) }}" alt="Extra Image" class="img-fluid" style="width: 48%; object-fit: cover;">
                         </a>
                     @endforeach
                 </div>
@@ -154,7 +188,19 @@
     </div>
 @endif
 
+
+{{-- Display Videos --}}
+@if ($post->media_type === 'video_link' && $post->video_link)
+    <div class="post-video mt-2">
+        <iframe class="w-100" height="315" src="{{ $post->video_link }}" frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen loading="lazy"></iframe>
     </div>
+@endif
+
+
+    </div>
+
 
     {{-- Reactions --}}
     <div class="total-react-share pb-4 d-center gap-2 flex-wrap justify-content-between">
@@ -163,8 +209,8 @@
                 @foreach($post->likes->take(3) as $like)
                     @php
                         $avatar = $like->member && $like->member->avatar
-                            ? asset($like->member->avatar)
-                            : asset('feed_assets/images/avatar-default.png');
+                            ? asset($like->member->profile_pic)
+                            : asset('feed_assets/images/avatar-2.png');
                     @endphp
                     <li><img src="{{ $avatar }}" alt="image"></li>
                 @endforeach
@@ -175,9 +221,9 @@
         </div>
         <div class="react-list d-flex flex-wrap gap-6 align-items-center text-center">
 
-            <button class="mdtxt">
-                {{ $post->comments?->count() ?? 0 }} Comments
-            </button>
+            <button class="mdtxt" >
+            {{ $post->comments?->count() ?? 0 }} Comments
+        </button>
             <button class="mdtxt">{{ $post->shares ?? 0 }} Shares</button>
         </div>
     </div>
@@ -440,9 +486,7 @@
 
            @section('scripts')
           <script>
-           /*  */
-
-		 document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function () {
     const dropArea = document.getElementById("drop-area");
     const input = document.getElementById("media");
     const preview = document.getElementById("preview");
