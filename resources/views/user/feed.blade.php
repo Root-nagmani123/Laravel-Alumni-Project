@@ -3,7 +3,35 @@
    @section('title', 'User Feed - Alumni | Lal Bahadur Shastri National Academy of Administration')
 
    @section('content')
+<style>
 
+   .avatar {
+    display: inline-block;
+    position: relative;
+}
+
+.status-dot {
+    position: absolute;
+    top: -4px;
+    left: -4px;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    border: 2px solid white;
+    z-index: 2;
+
+.status-dot.green {
+    background-color: #28a745; /* green */
+}
+
+.status-dot.orange {
+    background-color: #fd7e14; /* orange */
+}
+.rounded-circle {
+    border-radius: 50%;
+    object-fit: cover;
+}
+</style>
 
    <!-- Main Content start -->
    <i class="fa-light fa-face-awesome"></i>
@@ -72,27 +100,27 @@
 
                    </div>
                    <div class="post-item d-flex flex-column gap-5 gap-md-7" id="news-feed">
-                       @foreach($posts as $post)
-                       <div class="post-single-box p-3 p-sm-5">
-                           <div class="top-area pb-5">
-                               <div class="profile-area d-center justify-content-between">
-                                   <div class="avatar-item d-flex gap-3 align-items-center">
-                                       @php
-                                       $member = $post->member;
-                                       $profileImage = $member && $member->profile_image
-                                       ? asset('storage/' . $member->profile_image)
-                                       : asset('feed_assets/images/avatar-1.png');
-                                       @endphp
+				   @foreach($posts as $post)
+<div class="post-single-box p-3 p-sm-5">
+    <div class="top-area pb-5">
+        <div class="profile-area d-center justify-content-between">
+            <div class="avatar-item d-flex gap-3 align-items-center">
+                @php
+                    $member = $post->member;
+                    $profileImage = $member && $member->profile_image
+                        ? asset('storage/' . $member->profile_image)
+                        : asset('feed_assets/images/avatar-1.png');
+                @endphp
 
-                                       <div class="avatar position-relative">
-                                           <img class="avatar-img max-un" src="{{ $profileImage }}" alt="avatar">
-                                       </div>
-                                       <div class="info-area">
-                                           <h6 class="m-0"><a href="#">{{ $member->name ?? 'Unknown' }}</a></h6>
-                                           <span class="mdtxt status">Active</span>
-                                       </div>
-                                   </div>
-                               </div>
+                <div class="avatar position-relative">
+                    <img class="avatar-img max-un" src="{{ $profileImage }}" alt="avatar">
+                </div>
+                <div class="info-area">
+                    <h6 class="m-0"><a href="#">{{ $member->name ?? 'Unknown' }}</a></h6>
+                    <span class="mdtxt status">Active</span>
+                </div>
+            </div>
+        </div>
 
                                <div class="py-4">
                                    <p class="description">{{ $post->content }}</p>
@@ -145,80 +173,75 @@
                                </div>
 
 
-                               {{-- Modal for additional images --}}
-                               <div class="modal fade" id="moreImagesModal" tabindex="-1"
-                                   aria-labelledby="moreImagesModalLabel" aria-hidden="true">
-                                   <div class="modal-dialog modal-lg modal-dialog-centered">
-                                       <div class="modal-content">
-                                           <div class="modal-header">
-                                               <h5 class="modal-title">More Images</h5>
-                                               <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                   aria-label="Close"></button>
-                                           </div>
-                                           <div class="modal-body d-flex flex-wrap gap-3">
-                                               @foreach($imageMedia->slice(4) as $media)
-                                               <a href="{{ asset('storage/' . $media->file_path) }}" class="glightbox"
-                                                   data-gallery="post-gallery">
-                                                   <img src="{{ asset('storage/' . $media->file_path) }}"
-                                                       alt="Extra Image" class="img-fluid" style="width: 48%;">
-                                               </a>
-                                               @endforeach
-                                           </div>
-                                       </div>
-                                   </div>
-                               </div>
-                               @endif
+    {{-- Modal for additional images --}}
+    <div class="modal fade" id="moreImagesModal" tabindex="-1" aria-labelledby="moreImagesModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">More Images</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body d-flex flex-wrap gap-3">
+                    @foreach($imageMedia->slice(4) as $media)
+                        <a href="{{ asset('storage/' . $media->file_path) }}" class="glightbox" data-gallery="post-gallery">
+                            <img src="{{ asset('storage/' . $media->file_path) }}" alt="Extra Image" class="img-fluid" style="width: 48%;">
+                        </a>
+                    @endforeach
+                </div>
+            </div>
+        </div>
+    </div>
+@endif
 
-                           </div>
+    </div>
 
-                           {{-- Reactions --}}
-                           <div class="total-react-share pb-4 d-center gap-2 flex-wrap justify-content-between">
-                               <div class="friends-list d-flex gap-3 align-items-center text-center">
-                                   <ul class="d-flex align-items-center justify-content-center">
-                                       @foreach($post->likes->take(3) as $like)
-                                       @php
-                                       $avatar = $like->member && $like->member->avatar
-                                       ? asset($like->member->avatar)
-                                       : asset('feed_assets/images/avatar-default.png');
-                                       @endphp
-                                       <li><img src="{{ $avatar }}" alt="image"></li>
-                                       @endforeach
-                                       @if($post->likes->count() > 3)
-                                       <li><span class="mdtxt d-center">{{ $post->likes->count() - 3 }}+</span></li>
-                                       @endif
-                                   </ul>
-                               </div>
-                               <div class="react-list d-flex flex-wrap gap-6 align-items-center text-center">
+    {{-- Reactions --}}
+    <div class="total-react-share pb-4 d-center gap-2 flex-wrap justify-content-between">
+        <div class="friends-list d-flex gap-3 align-items-center text-center">
+            <ul class="d-flex align-items-center justify-content-center">
+                @foreach($post->likes->take(3) as $like)
+                    @php
+                        $avatar = $like->member && $like->member->avatar
+                            ? asset($like->member->avatar)
+                            : asset('feed_assets/images/avatar-default.png');
+                    @endphp
+                    <li><img src="{{ $avatar }}" alt="image"></li>
+                @endforeach
+                @if($post->likes->count() > 3)
+                    <li><span class="mdtxt d-center">{{ $post->likes->count() - 3 }}+</span></li>
+                @endif
+            </ul>
+        </div>
+        <div class="react-list d-flex flex-wrap gap-6 align-items-center text-center">
 
-                                   <button class="mdtxt">
-                                       {{ $post->comments?->count() ?? 0 }} Comments
-                                   </button>
-                                   <button class="mdtxt">{{ $post->shares ?? 0 }} Shares</button>
-                               </div>
-                           </div>
+            <button class="mdtxt">
+                {{ $post->comments?->count() ?? 0 }} Comments
+            </button>
+            <button class="mdtxt">{{ $post->shares ?? 0 }} Shares</button>
+        </div>
+    </div>
 
                            {{-- Action Buttons --}}
                            <div
                                class="like-comment-share py-5 d-center flex-wrap gap-3 gap-md-0 justify-content-between">
 
-                               <form action="{{ route('user.post.like', $post->id) }}" method="POST" class="d-inline">
-                                   @csrf
-                                   <button type="submit"
-                                       class="btn btn-sm {{ $post->likes->contains('member_id', auth('member')->id()) ? 'btn-danger' : 'btn-primary' }}">
-                                       {{ $post->likes->contains('member_id', auth('member')->id()) ? 'Unlike' : 'Like' }}
-                                   </button>
-                                   <span class="ms-2 text-muted">
-                                       {{ $post->likes->count() }} {{ Str::plural('Like', $post->likes->count()) }}
-                                   </span>
-                               </form>
-                               {{--@endif--}}
-                               <button class="d-center gap-1 gap-sm-2 mdtxt" onclick="toggleComments({{ $post->id }})">
-                                   <i class="material-symbols-outlined mat-icon"> chat </i> Comment
-                               </button>
-                               <button class="d-center gap-1 gap-sm-2 mdtxt">
-                                   <i class="material-symbols-outlined mat-icon"> share </i> Share
-                               </button>
-                           </div>
+<form action="{{ route('user.post.like', $post->id) }}" method="POST" class="d-inline">
+    @csrf
+    <button type="submit" class="btn btn-sm {{ $post->likes->contains('member_id', auth('member')->id()) ? 'btn-danger' : 'btn-primary' }}">
+        {{ $post->likes->contains('member_id', auth('member')->id()) ? 'Unlike' : 'Like' }}
+    </button>
+    <span class="ms-2 text-muted">
+        {{ $post->likes->count() }} {{ Str::plural('Like', $post->likes->count()) }}
+    </span>
+</form>
+	{{--@endif--}}
+  <button class="d-center gap-1 gap-sm-2 mdtxt" onclick="toggleComments({{ $post->id }})">
+            <i class="material-symbols-outlined mat-icon"> chat </i> Comment
+        </button>
+        <button class="d-center gap-1 gap-sm-2 mdtxt" >
+            <i class="material-symbols-outlined mat-icon"> share </i> Share
+        </button>
+    </div>
 
                            <!-- Comments container -->
                            <div id="comments-{{ $post->id }}" class="comments-box"
@@ -463,11 +486,11 @@
 
 
 
-   @section('scripts')
-   <script>
-/*  */
+           @section('scripts')
+          <script>
+           /*  */
 
-document.addEventListener("DOMContentLoaded", function() {
+		 document.addEventListener("DOMContentLoaded", function () {
     const dropArea = document.getElementById("drop-area");
     const input = document.getElementById("media");
     const preview = document.getElementById("preview");

@@ -15,10 +15,10 @@ class FeedController extends Controller
         $userId = $user->id;
 		 $posts = Post::with(['member', 'media', 'likes', 'comments'])
              ->orderBy('created_at', 'desc')
-         //    ->where('member_id', $userId)
-             ->get();
+                 ->get();
 
-            // echo '<pre>';print_r($posts); die;
+           //dd($posts);
+          // dd($user);
 
         return view('user.feed', compact('posts','user'));
     }
@@ -67,9 +67,7 @@ class FeedController extends Controller
          return response()->json([
         'success' => true,
         'message' => 'Post added successfully.',
-        // 'html' => view('member.dashboard.partials.post', compact('post'))->render(),
-        ]);
-        // return redirect()->route('user.feed1')->with('success', 'Post added successfully.');
+           ]);
     }
 
 

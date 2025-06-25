@@ -83,10 +83,11 @@
      <img id="existingImage" src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar-1.png') }}" alt="Profile Image" style="width: 200px; height: 200px; object-fit: cover;"  class="rounded-circle">
 					</div>
                            <div class="text-area">
-						@if(Auth::guard('user')->check())
-						 <h6 class="m-0 mb-1">{{ Auth::guard('user')->user()->name }}!</h6>
-						@endif
-					<p class="mdtxt">{{ Auth::guard('user')->user()->designation }} ({{ Auth::guard('user')->user()->batch }})</p>
+
+						 <h6 class="m-0 mb-1">{{-- Auth::guard('user')->user()->name --}}
+                          {{ $user->name }}
+
+					<p class="mdtxt"> {{ $user->designation }} ({{ $user->batch }})</p>
 
 
                            </div>

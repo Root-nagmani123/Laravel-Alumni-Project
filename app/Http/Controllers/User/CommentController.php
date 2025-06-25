@@ -25,7 +25,7 @@ class CommentController extends Controller
             'post_id' => $request->post_id,
             //'member_id' => auth()->id(), // Ensure user is logged in
             'member_id' => auth()->id(),
-            'comment' => $request->comment,
+            'comment' =>  strip_tags($request->comment),
         ]);
 
         return back()->with('success', 'Comment added successfully!');
