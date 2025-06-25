@@ -244,11 +244,17 @@
 
 <form action="{{ route('user.post.like', $post->id) }}" method="POST" class="d-inline">
     @csrf
-    <button type="submit" class="btn btn-sm {{ $post->likes->contains('member_id', auth('member')->id()) ? 'btn-danger' : 'btn-primary' }}">
+    <!--<button type="submit" class="btn btn-sm {{ $post->likes->contains('member_id', auth('member')->id()) ? 'btn-danger' : 'btn-primary' }}">
         {{ $post->likes->contains('member_id', auth('member')->id()) ? 'Unlike' : 'Like' }}
-    </button>
+    </button>-->
+    <button type="submit" class="like-button border-0 bg-transparent p-0 m-0">
+    <i class="fa{{ $post->likes->contains('member_id', auth('member')->id()) ? 's' : 'r' }} fa-thumbs-up text-{{ $post->likes->contains('member_id', auth('member')->id()) ? 'primary' : 'secondary' }}"></i>
+    <span class="ms-1">
+        {{ $post->likes->contains('member_id', auth('member')->id()) ? 'Liked' : 'Like' }}
+    </span>
+</button>
     <span class="ms-2 text-muted">
-        {{ $post->likes->count() }} {{ Str::plural('Like', $post->likes->count()) }}
+        {{ $post->likes->count() }} {{-- Str::plural('Like', $post->likes->count()) --}}
     </span>
 </form>
 	{{--@endif--}}
