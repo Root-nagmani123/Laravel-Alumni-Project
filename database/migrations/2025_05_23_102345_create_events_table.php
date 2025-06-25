@@ -11,16 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('events', function (Blueprint $table) {
-    $table->id();
-    $table->string('title');
-    $table->text('description')->nullable();
-    $table->string('location')->nullable();
-    $table->dateTime('start_datetime')->nullable();
-    $table->dateTime('end_datetime')->nullable();
-    $table->unsignedBigInteger('created_by');
-    $table->timestamps();
-
+       Schema::create('events', function (Blueprint $table) {
+        $table->id();
+        $table->string('title');
+        $table->text('description')->nullable();
+        $table->string('location')->nullable();
+        $table->enum('venue', ['online', 'physical']);
+        $table->string('url')->nullable();
+        $table->dateTime('start_datetime');
+        $table->dateTime('end_datetime');
+        $table->string('image')->nullable(); // ← Add this
+        $table->timestamps();
+		
     $table->foreign('created_by')
                 ->references('id')->on('users')
                 ->onDelete('cascade');

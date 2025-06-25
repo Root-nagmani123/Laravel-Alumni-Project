@@ -32,7 +32,7 @@
         <div class="col-12">
             <!-- start Person Info -->
             <div class="card">
-                <form action="{{ route('events.store') }}" method="POST">
+                <form action="{{ route('events.store') }}" method="POST" enctype="multipart/form-data">
     @csrf
 
     @if(session('success'))
@@ -68,44 +68,44 @@
                 </div>
             </div>
 
-            <!-- Location (optional) -->
-            <div class="col-md-6">
-                <div class="mb-3">
-                    <label class="form-label">Location</label>
-                    <input type="text" name="location" class="form-control"
-                        value="{{ old('location') }}">
-                    @error('location')
-                        <div class="text-danger">{{ $message }}</div>
-                    @enderror
-                </div>
-            </div>
-
+          
             <!-- Venue -->
-            <div class="col-md-6">
-                <div class="mb-3">
-                    <label class="form-label">Venue <span class="required">*</span></label>
-                    <select name="venue" class="form-control">
-                        <option value="">Select Venue</option>
-                        <option value="online" {{ old('venue') == 'online' ? 'selected' : '' }}>Online</option>
-                        <option value="physical" {{ old('venue') == 'physical' ? 'selected' : '' }}>Physical</option>
-                    </select>
-                    @error('venue')
-                        <div class="text-danger">{{ $message }}</div>
-                    @enderror
-                </div>
-            </div>
+          <div class="col-md-6">
+				<div class="mb-3">
+					<label class="form-label">Venue <span class="required">*</span></label>
+					<select name="venue" id="venue" class="form-control">
+						<option value="">Select Venue</option>
+						<option value="online" {{ old('venue') == 'online' ? 'selected' : '' }}>Online</option>
+						<option value="physical" {{ old('venue') == 'physical' ? 'selected' : '' }}>Physical</option>
+					</select>
+					@error('venue')
+						<div class="text-danger">{{ $message }}</div>
+					@enderror
+				</div>
+			</div>
 
-            <!-- URL (optional) -->
-            <div class="col-md-6">
-                <div class="mb-3">
-                    <label class="form-label">Event URL</label>
-                    <input type="url" name="url" class="form-control"
-                        value="{{ old('url') }}">
-                    @error('url')
-                        <div class="text-danger">{{ $message }}</div>
-                    @enderror
-                </div>
-            </div>
+		<!-- Location -->
+			<div class="col-md-6" id="locationField" style="display: none;">
+				<div class="mb-3">
+					<label class="form-label">Location</label>
+					<input type="text" name="location" class="form-control" value="{{ old('location') }}">
+					@error('location')
+						<div class="text-danger">{{ $message }}</div>
+					@enderror
+				</div>
+			</div>
+
+			<!-- Event URL -->
+			<div class="col-md-6" id="urlField" style="display: none;">
+				<div class="mb-3">
+					<label class="form-label">Event URL</label>
+					<input type="url" name="url" class="form-control" value="{{ old('url') }}">
+					@error('url')
+						<div class="text-danger">{{ $message }}</div>
+					@enderror
+				</div>
+			</div>
+
 
             <!-- Start DateTime -->
             <div class="col-md-6">
@@ -130,7 +130,30 @@
                     @enderror
                 </div>
             </div>
+			
+					<!-- Image Upload -->
+<div class="col-md-6">
+    <div class="mb-3">
+        <label class="form-label">Event Image</label>
+        <input type="file" name="image" id="imageInput" class="form-control" accept="image/*">
+        <div class="mt-2">
+            <img id="imagePreview" src="#" alt="Preview" style="display:none; max-height:150px; border:1px solid #ccc; padding:5px;">
         </div>
+        @error('image')
+            <div class="text-danger">{{ $message }}</div>
+        @enderror
+    </div>
+</div>
+		
+        </div>
+		
+		
+
+		
+		
+		
+		
+		
 <hr>
         <!-- Submit and Back -->
         <div class="mb-3 gap-2 float-end">
@@ -146,6 +169,53 @@
     </div>
 </div>
 
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const venueSelect = document.getElementById('venue');
+    const locationField = document.getElementById('locationField');
+    const urlField = document.getElementById('urlField');
 
+    // Show/hide based on initial value
+    function toggleVenueFields(value) {
+        if (value === 'physical') {
+            locationField.style.display = 'block';
+            urlField.style.display = 'none';
+        } else if (value === 'online') {
+            locationField.style.display = 'none';
+            urlField.style.display = 'block';
+        } else {
+            locationField.style.display = 'none';
+            urlField.style.display = 'none';
+        }
+    }
+
+    // Initial check
+    toggleVenueFields(venueSelect.value);
+
+    // On change
+    venueSelect.addEventListener('change', function () {
+        toggleVenueFields(this.value);
+    });
+
+    // Image Preview
+    const imageInput = document.getElementById('imageInput');
+    const imagePreview = document.getElementById('imagePreview');
+
+    imageInput.addEventListener('change', function () {
+        const file = this.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                imagePreview.src = e.target.result;
+                imagePreview.style.display = 'block';
+            }
+            reader.readAsDataURL(file);
+        } else {
+            imagePreview.src = '';
+            imagePreview.style.display = 'none';
+        }
+    });
+});
+</script>
 @endsection
 

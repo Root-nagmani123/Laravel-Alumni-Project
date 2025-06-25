@@ -43,6 +43,9 @@ return new class extends Migration
             $table->string('current_location')->nullable();
             $table->text('previous_postings')->nullable();
           //  $table->boolean('is_deleted')->default(0);
+			if (!Schema::hasColumn('members', 'deleted_at')) {
+				$table->softDeletes();
+			}
             $table->timestamps(); // This will create `created_at` and `updated_at` columns
         });
     }

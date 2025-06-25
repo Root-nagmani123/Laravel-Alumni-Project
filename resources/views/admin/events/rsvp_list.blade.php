@@ -66,15 +66,11 @@
                             <tbody>
 							   @foreach ($rsvps as $rsvp)
 								<tr class="odd">
-									 <td>{{ $rsvp->user->name ?? 'N/A' }}</td>
-									<td>{{ $rsvp->event->title ?? 'N/A' }}</td>
+									 <td>{{ $rsvp->event_title ?? 'N/A' }}</td>
+									<td>{{ $rsvp->user_name ?? 'N/A' }}</td>
 									<td>{{ $rsvp->responded_at }}</td>
 									<td>
-										<div class="form-check form-switch d-inline-block">
-											<input class="form-check-input status-toggle" type="checkbox" role="switch"
-												   data-table="rsvp" data-column="active_inactive" data-id="{{ $rsvp->id }}"
-												   {{ $rsvp->status == 1 ? 'checked' : '' }}>
-										</div>
+										{{ $rsvp->status }}
 									</td>
 
 

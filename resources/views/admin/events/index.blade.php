@@ -39,8 +39,17 @@
                         <div class="col-6">
                             <h4 class="card-title">Events list</h4>
                         </div>
-                        <div class="col-6">
-                            <div class="float-end gap-2">
+						 <div class="col-3">
+
+                            <div class="float-end" style="margin-left:20px;">
+                                
+							<a href="{{ route('events.rsvp') }}" class="btn btn-primary">All RSVP</a>
+                            </div>
+
+                        </div>
+                        <div class="col-3">
+
+                            <div class="float-end">
                                 <a href="{{ route('events.create') }}" class="btn btn-primary">+ Add Events</a>
                             </div>
 
@@ -101,13 +110,16 @@
                                     </button>
                                     </form>
                                         @else
-                                        <a
+                                        
+                                            <span class="badge ms-auto text-bg-primary">Expired</span>
+                                        
+                                        @endif
+										 <a
                                             class="btn d-flex bg-primary-subtle w-100 d-block text-primary " href="{{ route('events.rsvp', $event->id) }}">
                                             RSVP
-                                            <span class="badge ms-auto text-bg-primary">Expired</span>
+                                          
                                         </a>
-                                        @endif
-
+										
 
                                     </td>
                                 </tr>
