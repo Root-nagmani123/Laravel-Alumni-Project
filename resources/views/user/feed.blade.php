@@ -637,16 +637,26 @@ function toggleComments(postId) {
         button.addEventListener('click', function () {
             const urlToCopy = this.getAttribute('data-url');
 
-            navigator.clipboard.writeText(urlToCopy)
-                .then(() => {
-                    alert('Profile link copied to clipboard!');
-                })
-                .catch(err => {
-                    console.error('Failed to copy: ', err);
-                });
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(urlToCopy)
+                    .then(() => {
+                        alert('Profile link copied to clipboard!');
+                    })
+                    .catch(err => {
+                        console.error('Clipboard API failed:', err);
+                    });
+            } else {
+                // Fallback method
+                const tempInput = document.createElement('input');
+                document.body.appendChild(tempInput);
+                tempInput.value = urlToCopy;
+                tempInput.select();
+                document.execCommand('copy');
+                document.body.removeChild(tempInput);
+                alert('Profile link copied (fallback method).');
+            }
         });
     });
 });
-
 </script>
 @endsection
