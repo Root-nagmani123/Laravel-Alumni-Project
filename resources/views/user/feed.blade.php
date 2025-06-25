@@ -1,4 +1,4 @@
-   @extends('user.layouts.master')
+   @extends('layouts.app')
 
    @section('title', 'User Feed - Alumni | Lal Bahadur Shastri National Academy of Administration')
 
