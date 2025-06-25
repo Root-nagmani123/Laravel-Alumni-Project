@@ -1,4 +1,4 @@
-   @extends('layouts.app')
+   @extends('user.layouts.master')
 
    @section('title', 'User Feed - Alumni | Lal Bahadur Shastri National Academy of Administration')
 
@@ -38,13 +38,14 @@
    <main class="main-content">
        <div class="container sidebar-toggler">
            <div class="row">
-            @include('partials.left-sidebar')
+               @include('partials.left-sidebar')
                <div class="col-xxl-6 col-xl-5 col-lg-8 mt-0 mt-lg-10 mt-xl-0 d-flex flex-column gap-7 cus-z">
                    <div class="story-carousel">
                        <div class="single-item">
                            <div class="single-slide">
                                <a href="#" class="position-relative d-center">
-                                   <img class="bg-img" src="{{asset('feed_assets/images/story-slider-owner.png')}}" alt="icon">
+                                   <img class="bg-img" src="{{asset('feed_assets/images/story-slider-owner.png')}}"
+                                       alt="icon">
                                    <div class="abs-area d-grid p-3 position-absolute bottom-0">
                                        <div class="icon-box m-auto d-center mb-3">
                                            <i class="material-symbols-outlined text-center mat-icon"> add </i>
@@ -57,7 +58,8 @@
                        <div class="single-item">
                            <div class="single-slide">
                                <div class="position-relative d-flex">
-                                   <img class="bg-img" src="{{asset('feed_assets/images/story-slider-1.png')}}" alt="image">
+                                   <img class="bg-img" src="{{asset('feed_assets/images/story-slider-1.png')}}"
+                                       alt="image">
                                    <a href="public-profile-post.html" class="abs-area p-3 position-absolute bottom-0">
                                        <img src="{{asset('feed_assets/images/avatar-1.png')}}" alt="image">
                                        <span class="mdtxt">Alen Lio</span>
@@ -68,29 +70,33 @@
                    </div>
                    <div class="share-post d-flex gap-3 gap-sm-5 p-3 p-sm-5">
                        <div class="profile-box">
-                           <a href="#"><img src="{{asset('feed_assets/images/add-post-avatar.png')}}" class="max-un" alt="icon"></a>
+                           <a href="#"><img src="{{asset('feed_assets/images/add-post-avatar.png')}}" class="max-un"
+                                   alt="icon"></a>
                        </div>
                        <form id="create-post-form" enctype="multipart/form-data" class="w-100 position-relative">
-    <textarea name="content" cols="10" rows="2" placeholder="Write something to Lerio.."></textarea>
-    <input type="file" name="media[]" multiple class="d-none" id="mediaInput"> <!-- Required -->
+                           <textarea name="content" cols="10" rows="2"
+                               placeholder="Write something to Lerio.."></textarea>
+                           <input type="file" name="media[]" multiple class="d-none" id="mediaInput"> <!-- Required -->
 
-    <div class="abs-area position-absolute d-none d-sm-block">
-        <i class="material-symbols-outlined mat-icon xxltxt"> sentiment_satisfied </i>
-    </div>
-    <ul class="d-flex text-end mt-3 gap-3">
-        <li class="d-flex gap-2" data-bs-toggle="modal" data-bs-target="#goLiveMod">
-            <img src="{{asset('feed_assets/images/icon/live-video.png')}}" class="max-un" alt="icon">
-            <span>Live</span>
-        </li>
-        <li class="d-flex gap-2" data-bs-toggle="modal" data-bs-target="#photoVideoMod">
-           <img src="{{asset('feed_assets/images/icon/vgallery.png')}}" class="max-un" alt="icon">
-            <span>Photo/Video</span>
+                           <div class="abs-area position-absolute d-none d-sm-block">
+                               <i class="material-symbols-outlined mat-icon xxltxt"> sentiment_satisfied </i>
+                           </div>
+                           <ul class="d-flex text-end mt-3 gap-3">
+                               <li class="d-flex gap-2" data-bs-toggle="modal" data-bs-target="#goLiveMod">
+                                   <img src="{{asset('feed_assets/images/icon/live-video.png')}}" class="max-un"
+                                       alt="icon">
+                                   <span>Live</span>
+                               </li>
+                               <li class="d-flex gap-2" data-bs-toggle="modal" data-bs-target="#photoVideoMod">
+                                   <img src="{{asset('feed_assets/images/icon/vgallery.png')}}" class="max-un"
+                                       alt="icon">
+                                   <span>Photo/Video</span>
 
 
-        </li>
+                               </li>
 
-    </ul>
-</form>
+                           </ul>
+                       </form>
 
                    </div>
                    <div class="post-item d-flex flex-column gap-5 gap-md-7" id="news-feed">
@@ -101,71 +107,70 @@
             <div class="avatar-item d-flex gap-3 align-items-center">
                 @php
                     $member = $post->member;
-                    $profileImage = $member && $member->profile_pic
-                        ? asset('storage/' . $member->profile_pic)
+                    $profileImage = $member && $member->profile_image
+                        ? asset('storage/' . $member->profile_image)
                         : asset('feed_assets/images/avatar-1.png');
-
-                        $status = $member->status;
-                        $statusClass = $status == '1' ? 'green' : 'orange';
                 @endphp
 
-
-
-               <div class="avatar position-relative">
-    <img class="max-un rounded-circle" src="{{ $profileImage }}" alt="avatar" width="50" height="50">
-                    <span class="status-dot {{ $statusClass }}"></span>
+                <div class="avatar position-relative">
+                    <img class="avatar-img max-un" src="{{ $profileImage }}" alt="avatar">
                 </div>
                 <div class="info-area">
-                    <h6 class="m-0"><a href="{{ route('user.profile', $member->id) }}">{{ $member->name ?? 'Unknown' }}</a></h6>
-                    <span class="mdtxt status"> {{ $member->status == '1' ? 'Active' : 'Inactive' }}</span>
+                    <h6 class="m-0"><a href="#">{{ $member->name ?? 'Unknown' }}</a></h6>
+                    <span class="mdtxt status">Active</span>
                 </div>
             </div>
         </div>
 
-        <div class="py-4">
-            <p class="description">{{ $post->content }}</p>
-        </div>
+                               <div class="py-4">
+                                   <p class="description">{{ $post->content }}</p>
+                               </div>
 
-        {{-- Media --}}
-      @php
-    $validMedia = $post->media->filter(function($media) {
-        return file_exists(storage_path('app/public/' . $media->file_path));
-    });
+                               {{-- Media --}}
+                               @php
+                               $validMedia = $post->media->filter(function($media) {
+                               return file_exists(storage_path('app/public/' . $media->file_path));
+                               });
 
-    $imageMedia = $validMedia->where('file_type', 'image')->values();
-    $totalImages = $imageMedia->count();
-@endphp
+                               $imageMedia = $validMedia->where('file_type', 'image')->values();
+                               $totalImages = $imageMedia->count();
+                               @endphp
 
-@if($totalImages === 1)
-    <div class="post-img mt-2">
-        <a href="{{ asset('storage/' . $imageMedia[0]->file_path) }}" class="glightbox" data-gallery="post-gallery-{{ $post->id }}">
-            <img src="{{ asset('storage/' . $imageMedia[0]->file_path) }}" loading="lazy" class="w-100" alt="Post Image">
-        </a>
-    </div>
-@elseif($totalImages > 1)
-    <div class="post-img d-flex justify-content-between flex-wrap gap-2 gap-lg-3 mt-2">
-        @foreach($imageMedia->take(4) as $index => $media)
-            <div class="position-relative" style="width: 48%;">
-                <a href="{{ asset('storage/' . $media->file_path) }}" class="glightbox" data-gallery="post-gallery-{{ $post->id }}">
-                    <img src="{{ asset('storage/' . $media->file_path) }}" alt="Post Image" loading="lazy" class="w-100">
-                </a>
-                @if($index === 3 && $totalImages > 4)
-                    {{-- Hidden extra images --}}
-                    @foreach($imageMedia->slice(4) as $extra)
-                        <a href="{{ asset('storage/' . $extra->file_path) }}" class="glightbox d-none" data-gallery="post-gallery-{{ $post->id }}"></a>
-                    @endforeach
+                               @if($totalImages === 1)
+                               <div class="post-img mt-2">
+                                   <a href="{{ asset('storage/' . $imageMedia[0]->file_path) }}" class="glightbox"
+                                       data-gallery="post-gallery-{{ $post->id }}">
+                                       <img src="{{ asset('storage/' . $imageMedia[0]->file_path) }}" loading="lazy"
+                                           class="w-100" alt="Post Image">
+                                   </a>
+                               </div>
+                               @elseif($totalImages > 1)
+                               <div class="post-img d-flex justify-content-between flex-wrap gap-2 gap-lg-3 mt-2">
+                                   @foreach($imageMedia->take(4) as $index => $media)
+                                   <div class="position-relative" style="width: 48%;">
+                                       <a href="{{ asset('storage/' . $media->file_path) }}" class="glightbox"
+                                           data-gallery="post-gallery-{{ $post->id }}">
+                                           <img src="{{ asset('storage/' . $media->file_path) }}" alt="Post Image"
+                                               loading="lazy" class="w-100">
+                                       </a>
+                                       @if($index === 3 && $totalImages > 4)
+                                       {{-- Hidden extra images --}}
+                                       @foreach($imageMedia->slice(4) as $extra)
+                                       <a href="{{ asset('storage/' . $extra->file_path) }}" class="glightbox d-none"
+                                           data-gallery="post-gallery-{{ $post->id }}"></a>
+                                       @endforeach
 
-                    {{-- Overlay link to trigger the rest of the images --}}
-                    <a href="{{ asset('storage/' . $imageMedia[4]->file_path) }}"
-                       class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center text-white glightbox"
-                       style="background-color: rgba(0,0,0,0.6); font-size: 2rem; cursor: pointer;"
-                       data-gallery="post-gallery-{{ $post->id }}">
-                        +{{ $totalImages - 4 }}
-                    </a>
-                @endif
-            </div>
-        @endforeach
-    </div>
+                                       {{-- Overlay link to trigger the rest of the images --}}
+                                       <a href="{{ asset('storage/' . $imageMedia[4]->file_path) }}"
+                                           class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center text-white glightbox"
+                                           style="background-color: rgba(0,0,0,0.6); font-size: 2rem; cursor: pointer;"
+                                           data-gallery="post-gallery-{{ $post->id }}">
+                                           +{{ $totalImages - 4 }}
+                                       </a>
+                                       @endif
+                                   </div>
+                                   @endforeach
+                               </div>
 
 
     {{-- Modal for additional images --}}
@@ -179,7 +184,7 @@
                 <div class="modal-body d-flex flex-wrap gap-3">
                     @foreach($imageMedia->slice(4) as $media)
                         <a href="{{ asset('storage/' . $media->file_path) }}" class="glightbox" data-gallery="post-gallery">
-                            <img src="{{ asset('storage/' . $media->file_path) }}" alt="Extra Image" class="img-fluid" style="width: 48%; object-fit: cover;">
+                            <img src="{{ asset('storage/' . $media->file_path) }}" alt="Extra Image" class="img-fluid" style="width: 48%;">
                         </a>
                     @endforeach
                 </div>
@@ -188,30 +193,7 @@
     </div>
 @endif
 
-
-{{-- Display Videos --}}
-
-   @if ($post->media_type === 'video' && $post->video)
-        <div class="post-img mt-2">
-            <video class="w-100" controls loading="lazy">
-                <source src="{{ asset('storage/' . $media->file_path) }}" type="video/mp4">
-                Your browser does not support the video tag.
-            </video>
-        </div>
-    @endif
-
-
-{{-- Embedded YouTube or video link --}}
-@if ($post->media_type === 'video_link' && $post->video_link)
-    <div class="post-video mt-2">
-        <iframe class="w-100" height="315" src="{{ $post->video_link }}" frameborder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowfullscreen loading="lazy"></iframe>
     </div>
-@endif
-
-    </div>
-
 
     {{-- Reactions --}}
     <div class="total-react-share pb-4 d-center gap-2 flex-wrap justify-content-between">
@@ -220,8 +202,8 @@
                 @foreach($post->likes->take(3) as $like)
                     @php
                         $avatar = $like->member && $like->member->avatar
-                            ? asset($like->member->profile_pic)
-                            : asset('feed_assets/images/avatar-2.png');
+                            ? asset($like->member->avatar)
+                            : asset('feed_assets/images/avatar-default.png');
                     @endphp
                     <li><img src="{{ $avatar }}" alt="image"></li>
                 @endforeach
@@ -232,29 +214,24 @@
         </div>
         <div class="react-list d-flex flex-wrap gap-6 align-items-center text-center">
 
-            <button class="mdtxt" >
-            {{ $post->comments?->count() ?? 0 }} Comments
-        </button>
+            <button class="mdtxt">
+                {{ $post->comments?->count() ?? 0 }} Comments
+            </button>
             <button class="mdtxt">{{ $post->shares ?? 0 }} Shares</button>
         </div>
     </div>
 
-    {{-- Action Buttons --}}
-    <div class="like-comment-share py-5 d-center flex-wrap gap-3 gap-md-0 justify-content-between">
+                           {{-- Action Buttons --}}
+                           <div
+                               class="like-comment-share py-5 d-center flex-wrap gap-3 gap-md-0 justify-content-between">
 
 <form action="{{ route('user.post.like', $post->id) }}" method="POST" class="d-inline">
     @csrf
-    <!--<button type="submit" class="btn btn-sm {{ $post->likes->contains('member_id', auth('member')->id()) ? 'btn-danger' : 'btn-primary' }}">
+    <button type="submit" class="btn btn-sm {{ $post->likes->contains('member_id', auth('member')->id()) ? 'btn-danger' : 'btn-primary' }}">
         {{ $post->likes->contains('member_id', auth('member')->id()) ? 'Unlike' : 'Like' }}
-    </button>-->
-    <button type="submit" class="like-button border-0 bg-transparent p-0 m-0">
-    <i class="fa{{ $post->likes->contains('member_id', auth('member')->id()) ? 's' : 'r' }} fa-thumbs-up text-{{ $post->likes->contains('member_id', auth('member')->id()) ? 'primary' : 'secondary' }}"></i>
-    <span class="ms-1">
-        {{ $post->likes->contains('member_id', auth('member')->id()) ? 'Liked' : 'Like' }}
-    </span>
-</button>
+    </button>
     <span class="ms-2 text-muted">
-        {{ $post->likes->count() }} {{-- Str::plural('Like', $post->likes->count()) --}}
+        {{ $post->likes->count() }} {{ Str::plural('Like', $post->likes->count()) }}
     </span>
 </form>
 	{{--@endif--}}
@@ -266,109 +243,116 @@
         </button>
     </div>
 
-<!-- Comments container -->
-<div id="comments-{{ $post->id }}" class="comments-box" style="display: none; margin-top: 10px;">
-    @forelse ($post->comments as $comment)
-        <div class="comment-item mb-2">
-            <strong>{{ $comment->member->name ?? '' }}</strong> {{ $comment->comment }}
-        </div>
-    @empty
-        <p>No comments yet.</p>
-    @endforelse
-</div>
+                           <!-- Comments container -->
+                           <div id="comments-{{ $post->id }}" class="comments-box"
+                               style="display: none; margin-top: 10px;">
+                               @forelse ($post->comments as $comment)
+                               <div class="comment-item mb-2">
+                                   <strong>{{ $comment->member->name ?? '' }}</strong> {{ $comment->comment }}
+                               </div>
+                               @empty
+                               <p>No comments yet.</p>
+                               @endforelse
+                           </div>
 
-    {{-- Comment Form --}}
-    <form action="{{ route('user.comments.store') }}" method="POST">
-        @csrf
-        <input type="hidden" name="post_id" value="{{ $post->id }}">
-        <div class="d-flex mt-5 gap-3">
-            <div class="profile-box d-none d-xxl-block">
-                <a href="#"><img src="{{ asset('feed_assets/images/add-post-avatar.png') }}" class="max-un" alt="icon"></a>
-            </div>
-            <div class="form-content input-area py-1 d-flex gap-2 align-items-center w-100">
-                <input name="comment" placeholder="Write a comment.." required>
-            </div>
-            <div class="btn-area d-flex">
-                <button class="cmn-btn px-2 px-sm-5 px-lg-6">
-                    <i class="material-symbols-outlined mat-icon m-0 fs-xxl"> near_me </i>
-                </button>
-            </div>
-        </div>
-    </form>
-</div>
-@endforeach
+                           {{-- Comment Form --}}
+                           <form action="{{ route('user.comments.store') }}" method="POST">
+                               @csrf
+                               <input type="hidden" name="post_id" value="{{ $post->id }}">
+                               <div class="d-flex mt-5 gap-3">
+                                   <div class="profile-box d-none d-xxl-block">
+                                       <a href="#"><img src="{{ asset('feed_assets/images/add-post-avatar.png') }}"
+                                               class="max-un" alt="icon"></a>
+                                   </div>
+                                   <div class="form-content input-area py-1 d-flex gap-2 align-items-center w-100">
+                                       <input name="comment" placeholder="Write a comment.." required>
+                                   </div>
+                                   <div class="btn-area d-flex">
+                                       <button class="cmn-btn px-2 px-sm-5 px-lg-6">
+                                           <i class="material-symbols-outlined mat-icon m-0 fs-xxl"> near_me </i>
+                                       </button>
+                                   </div>
+                               </div>
+                           </form>
+                       </div>
+                       @endforeach
 
-           </div>
+                   </div>
                </div>
-  @include('partials.right-sidebar')
+               @include('partials.right-sidebar')
            </div>
        </div>
    </main>
    <!-- Main Content end -->
-  <!-- video popup start -->
-  <form action="{{ route('post.store') }}" method="POST" enctype="multipart/form-data">
-    @csrf
+   <!-- video popup start -->
+   <form action="{{ route('post.store') }}" method="POST" enctype="multipart/form-data">
+       @csrf
 
-    <div class="go-live-popup video-popup">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8">
-                    <div class="modal cmn-modal fade" id="photoVideoMod">
-                        <div class="modal-dialog modal-dialog-centered">
-                            <div class="modal-content p-5">
-                                <div class="modal-header justify-content-center">
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                                        <i class="material-symbols-outlined mat-icon xxltxt"> close </i>
-                                    </button>
-                                </div>
-                                <div class="top-content pb-5">
-                                    <h5>Add post photo</h5>
-                                </div>
-                                <div class="mid-area">
-                                    <div class="d-flex mb-5 gap-3">
-                                        <div class="profile-box">
+       <div class="go-live-popup video-popup">
+           <div class="container">
+               <div class="row">
+                   <div class="col-lg-8">
+                       <div class="modal cmn-modal fade" id="photoVideoMod">
+                           <div class="modal-dialog modal-dialog-centered">
+                               <div class="modal-content p-5">
+                                   <div class="modal-header justify-content-center">
+                                       <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                           aria-label="Close">
+                                           <i class="material-symbols-outlined mat-icon xxltxt"> close </i>
+                                       </button>
+                                   </div>
+                                   <div class="top-content pb-5">
+                                       <h5>Add post photo</h5>
+                                   </div>
+                                   <div class="mid-area">
+                                       <div class="d-flex mb-5 gap-3">
+                                           <div class="profile-box">
 
- @php
-    $profilePic = $user->profile_pic ?? null;
-@endphp
+                                               @php
+                                               $profilePic = $user->profile_pic ?? null;
+                                               @endphp
 
-<img id="existingImage"
-    src="{{ $profilePic ? asset('storage/' . $profilePic) : asset('feed_assets/images/avatar-1.png') }}"
-    alt="avatar"
-    alt="avatar" class="max-un" height="50" width="50">
+                                               <img id="existingImage"
+                                                   src="{{ $profilePic ? asset('storage/' . $profilePic) : asset('feed_assets/images/avatar-1.png') }}"
+                                                   alt="avatar" alt="avatar" class="max-un" height="50" width="50">
+                                           </div>
+                                           <textarea name="modalContent" cols="10" rows="2"
+                                               placeholder="Write something to Lerio.."></textarea>
+                                       </div>
+                                       <div class="file-upload">
+                                           <label>Upload attachment</label>
+                                           <div id="drop-area"
+                                               class="drop-area mt-2 p-4 text-center border border-secondary rounded">
+                                               <i class="material-symbols-outlined mat-icon mb-2 d-block"> perm_media
+                                               </i>
+                                               <span>Drag & Drop image here or click to browse.</span>
+                                               <input type="file" id="media" name="media[]" multiple class="d-none"
+                                                   accept="image/*">
+                                               <div id="preview" class="mt-3 d-flex flex-wrap gap-3"></div>
+                                           </div>
+
+                                       </div>
+                                   </div>
+                                   <input class="form-control f-18 black mt-2" type="text" name="video_link"
+                                       placeholder="Video Link .." />
+                                   <div class="footer-area pt-5">
+                                       <div class="btn-area d-flex justify-content-end gap-2">
+                                           <button type="button" class="cmn-btn alt" data-bs-dismiss="modal"
+                                               aria-label="Close">Cancel</button>
+                                           <button type="submit" class="cmn-btn">Post</button>
+                                       </div>
+                                   </div>
+                               </div>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+           </div>
        </div>
-  <textarea name="modalContent" cols="10" rows="2" placeholder="Write something to Lerio.."></textarea>
-                                    </div>
-<div class="file-upload">
-<label>Upload attachment</label>
-<div id="drop-area" class="drop-area mt-2 p-4 text-center border border-secondary rounded">
-<i class="material-symbols-outlined mat-icon mb-2 d-block"> perm_media </i>
-<span>Drag & Drop image here or click to browse.</span>
- <input type="file" id="media" name="media[]" multiple class="d-none" accept="image/*">
-<div id="preview" class="mt-3 d-flex flex-wrap gap-3"></div>
-</div>
-
-        </div>
-        </div>
-                                 <input class="form-control f-18 black mt-2" type="text" name="video_link"
-                                placeholder="Video Link .." />
-                                <div class="footer-area pt-5">
-                                    <div class="btn-area d-flex justify-content-end gap-2">
-                                        <button type="button" class="cmn-btn alt" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
-                                        <button type="submit" class="cmn-btn">Post</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</form>
+   </form>
    <!-- video popup end -->
 
- <!-- Modal (must be outside container) -->
+   <!-- Modal (must be outside container) -->
 
    <!-- Go Live Popup end -->
 
@@ -495,15 +479,18 @@
    </div>
    <button id="uw-widget-custom-trigger" class="uw-widget-custom-trigger" aria-label="Accessibility Widget"
        data-uw-trigger="true" aria-haspopup="dialog" style="background-color: #af2910;"><img
-           src="data:image/svg+xml,%0A%3Csvg width='32' height='32' viewBox='0 0 32 32' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cg clip-path='url(%23clip0_1_1506)'%3E%3Cpath d='M16 7C15.3078 7 14.6311 6.79473 14.0555 6.41015C13.4799 6.02556 13.0313 5.47894 12.7664 4.83939C12.5015 4.19985 12.4322 3.49612 12.5673 2.81719C12.7023 2.13825 13.0356 1.51461 13.5251 1.02513C14.0146 0.535644 14.6383 0.202301 15.3172 0.0672531C15.9961 -0.0677952 16.6999 0.00151652 17.3394 0.266423C17.9789 0.53133 18.5256 0.979934 18.9101 1.55551C19.2947 2.13108 19.5 2.80777 19.5 3.5C19.499 4.42796 19.1299 5.31762 18.4738 5.97378C17.8176 6.62994 16.928 6.99901 16 7Z' fill='white'/%3E%3Cpath d='M27 7.05L26.9719 7.0575L26.9456 7.06563C26.8831 7.08313 26.8206 7.10188 26.7581 7.12125C25.595 7.4625 19.95 9.05375 15.9731 9.05375C12.2775 9.05375 7.14313 7.67875 5.50063 7.21188C5.33716 7.14867 5.17022 7.09483 5.00063 7.05063C3.81313 6.73813 3.00063 7.94438 3.00063 9.04688C3.00063 10.1388 3.98188 10.6588 4.9725 11.0319V11.0494L10.9238 12.9081C11.5319 13.1413 11.6944 13.3794 11.7738 13.5856C12.0319 14.2475 11.8256 15.5581 11.7525 16.0156L11.39 18.8281L9.37813 29.84C9.37188 29.87 9.36625 29.9006 9.36125 29.9319L9.34688 30.0112C9.20188 31.0206 9.94313 32 11.3469 32C12.5719 32 13.1125 31.1544 13.3469 30.0037C13.5813 28.8531 15.0969 20.1556 15.9719 20.1556C16.8469 20.1556 18.6494 30.0037 18.6494 30.0037C18.8838 31.1544 19.4244 32 20.6494 32C22.0569 32 22.7981 31.0162 22.6494 30.0037C22.6363 29.9175 22.6206 29.8325 22.6019 29.75L20.5625 18.8294L20.2006 16.0169C19.9387 14.3788 20.1494 13.8375 20.2206 13.7106C20.2225 13.7076 20.2242 13.7045 20.2256 13.7013C20.2931 13.5763 20.6006 13.2963 21.3181 13.0269L26.8981 11.0763C26.9324 11.0671 26.9662 11.0563 26.9994 11.0438C27.9994 10.6688 28.9994 10.15 28.9994 9.04813C28.9994 7.94625 28.1875 6.73813 27 7.05Z' fill='white'/%3E%3C/g%3E%3Cdefs%3E%3CclipPath id='clip0_1_1506'%3E%3Crect width='32' height='32' fill='white'/%3E%3C/clipPath%3E%3C/defs%3E%3C/svg%3E%0A"><span class="text-white">Accessibility
+           src="data:image/svg+xml,%0A%3Csvg width='32' height='32' viewBox='0 0 32 32' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cg clip-path='url(%23clip0_1_1506)'%3E%3Cpath d='M16 7C15.3078 7 14.6311 6.79473 14.0555 6.41015C13.4799 6.02556 13.0313 5.47894 12.7664 4.83939C12.5015 4.19985 12.4322 3.49612 12.5673 2.81719C12.7023 2.13825 13.0356 1.51461 13.5251 1.02513C14.0146 0.535644 14.6383 0.202301 15.3172 0.0672531C15.9961 -0.0677952 16.6999 0.00151652 17.3394 0.266423C17.9789 0.53133 18.5256 0.979934 18.9101 1.55551C19.2947 2.13108 19.5 2.80777 19.5 3.5C19.499 4.42796 19.1299 5.31762 18.4738 5.97378C17.8176 6.62994 16.928 6.99901 16 7Z' fill='white'/%3E%3Cpath d='M27 7.05L26.9719 7.0575L26.9456 7.06563C26.8831 7.08313 26.8206 7.10188 26.7581 7.12125C25.595 7.4625 19.95 9.05375 15.9731 9.05375C12.2775 9.05375 7.14313 7.67875 5.50063 7.21188C5.33716 7.14867 5.17022 7.09483 5.00063 7.05063C3.81313 6.73813 3.00063 7.94438 3.00063 9.04688C3.00063 10.1388 3.98188 10.6588 4.9725 11.0319V11.0494L10.9238 12.9081C11.5319 13.1413 11.6944 13.3794 11.7738 13.5856C12.0319 14.2475 11.8256 15.5581 11.7525 16.0156L11.39 18.8281L9.37813 29.84C9.37188 29.87 9.36625 29.9006 9.36125 29.9319L9.34688 30.0112C9.20188 31.0206 9.94313 32 11.3469 32C12.5719 32 13.1125 31.1544 13.3469 30.0037C13.5813 28.8531 15.0969 20.1556 15.9719 20.1556C16.8469 20.1556 18.6494 30.0037 18.6494 30.0037C18.8838 31.1544 19.4244 32 20.6494 32C22.0569 32 22.7981 31.0162 22.6494 30.0037C22.6363 29.9175 22.6206 29.8325 22.6019 29.75L20.5625 18.8294L20.2006 16.0169C19.9387 14.3788 20.1494 13.8375 20.2206 13.7106C20.2225 13.7076 20.2242 13.7045 20.2256 13.7013C20.2931 13.5763 20.6006 13.2963 21.3181 13.0269L26.8981 11.0763C26.9324 11.0671 26.9662 11.0563 26.9994 11.0438C27.9994 10.6688 28.9994 10.15 28.9994 9.04813C28.9994 7.94625 28.1875 6.73813 27 7.05Z' fill='white'/%3E%3C/g%3E%3Cdefs%3E%3CclipPath id='clip0_1_1506'%3E%3Crect width='32' height='32' fill='white'/%3E%3C/clipPath%3E%3C/defs%3E%3C/svg%3E%0A"><span
+           class="text-white">Accessibility
            Options</span></button><!-- accessibility panel end-->
-           <!-- video popup start -->
+   <!-- video popup start -->
 
 
 
            @section('scripts')
           <script>
-    document.addEventListener("DOMContentLoaded", function () {
+           /*  */
+
+		 document.addEventListener("DOMContentLoaded", function () {
     const dropArea = document.getElementById("drop-area");
     const input = document.getElementById("media");
     const preview = document.getElementById("preview");
@@ -513,7 +500,7 @@
         preview.innerHTML = ''; // Clear old previews
         [...files].forEach(file => {
             const reader = new FileReader();
-            reader.onload = function (e) {
+            reader.onload = function(e) {
                 let mediaElement;
                 if (file.type.startsWith('image/')) {
                     mediaElement = document.createElement('img');
@@ -567,7 +554,7 @@
 
 
 // Like post
- function likePost(postId) {
+function likePost(postId) {
     const csrfMeta = document.querySelector('meta[name="csrf-token"]');
     if (!csrfMeta) {
         alert("CSRF token not found");
@@ -577,36 +564,32 @@
     const csrfToken = csrfMeta.getAttribute('content');
 
     fetch(`${location.origin}/like/${postId}`, {
-        method: 'POST',
-        headers: {
-            'X-CSRF-TOKEN': csrfToken,
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({})
-    })
-    .then(response => {
-        if (!response.ok) throw new Error('Network response was not OK');
-        return response.json();
-    })
-    .then(data => {
-        const btn = document.getElementById(`like-btn-${postId}`);
-        if (btn) {
-            btn.innerText = data.status === 'liked' ? 'Unlike' : 'Like';
-        }
-    })
-    .catch(error => {
-        console.error('Error liking/unliking post:', error);
-        alert("Failed to process like/unlike. Please try again.");
-    });
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': csrfToken,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({})
+        })
+        .then(response => {
+            if (!response.ok) throw new Error('Network response was not OK');
+            return response.json();
+        })
+        .then(data => {
+            const btn = document.getElementById(`like-btn-${postId}`);
+            if (btn) {
+                btn.innerText = data.status === 'liked' ? 'Unlike' : 'Like';
+            }
+        })
+        .catch(error => {
+            console.error('Error liking/unliking post:', error);
+            alert("Failed to process like/unlike. Please try again.");
+        });
 }
 
 function toggleComments(postId) {
-        const box = document.getElementById('comments-' + postId);
-        box.style.display = box.style.display === 'none' ? 'block' : 'none';
-    }
-
-
-
-
-</script>
-@endsection
+    const box = document.getElementById('comments-' + postId);
+    box.style.display = box.style.display === 'none' ? 'block' : 'none';
+}
+   </script>
+   @endsection

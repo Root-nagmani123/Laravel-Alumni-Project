@@ -12,7 +12,7 @@
                     </div>
                     <ul class="navbar-nav feed flex-row gap-xl-20 gap-lg-10 gap-sm-7 gap-1 py-4 py-lg-0 m-lg-auto ms-auto ms-aut align-self-center">
                         <li>
-                            <a href="{{route('http://127.0.0.1:8000/user/feed')}}" class="nav-icon home active" title="Home"><i class="mat-icon fs-xxl material-symbols-outlined mat-icon">home</i></a>
+                            <a href="{{route('user.feed')}}" class="nav-icon home active" title="Home"><i class="mat-icon fs-xxl material-symbols-outlined mat-icon">home</i></a>
                         </li>
                         <li>
                             <a href="#news-feed" class="nav-icon feed" title="Resource Library"><i class="mat-icon fs-xxl material-symbols-outlined mat-icon">feed</i></a>
@@ -29,26 +29,9 @@
                                     <span class="abs-area position-absolute d-center mdtxt">4</span>
                                 </div>
                             </div>
-                            <div class="main-area p-5 messages-content">
+                            <!-- <div class="main-area p-5 messages-content">
                                 <h5 class="mb-8">Messages</h5>
-                                <div class="single-box p-0 mb-7">
-                                    <a href="profile-chat.html" class="d-flex gap-2 align-items-center">
-                                        <div class="avatar">
-                                            <img class="avatar-img max-un" src="{{asset('feed_assets/images/avatar-7.png')}}" alt="avatar">
-                                        </div>
-                                        <div class="text-area">
-                                            <div class="title-area position-relative d-inline-flex align-items-center">
-                                                <h6 class="m-0 d-inline-flex">Piter Maio</h6>
-                                                <span class="abs-area position-absolute d-center mdtxt">3</span>
-                                            </div>
-                                            <p class="mdtxt sms">Amet minim mollit non....</p>
-                                        </div>
-                                    </a>
-                                </div>
-                                <div class="btn-area">
-                                    <a href="profile-chat.html">See all inbox</a>
-                                </div>
-                            </div>
+                            </div> -->
                         </div>
                         <div class="single-item d-none d-lg-block messages-area notification-area">
                             <div class="notification-btn cmn-head position-relative">
@@ -57,46 +40,8 @@
                                     <span class="abs-area position-absolute d-center mdtxt">3</span>
                                 </div>
                             </div>
-                            <div class="main-area p-5 notification-content">
-                                <h5 class="mb-8">Notification</h5>
-                                <div class="single-box p-0 mb-7">
-                                    <a href="profile-notification.html" class="d-flex justify-content-between align-items-center">
-                                        <div class="left-item position-relative d-inline-flex gap-3">
-                                            <div class="avatar position-relative d-inline-flex">
-                                                <img class="avatar-img max-un" src="{{asset('feed_assets/images/avatar-1.png')}}" alt="avatar">
-                                                <img class="abs-item position-absolute max-un" src="{{asset('feed_assets/images/icon/speech-bubble.png')}}" alt="icon">
-                                            </div>
-                                            <div class="text-area">
-                                                <h6 class="m-0 mb-1">Piter Maio</h6>
-                                                <p class="mdtxt">Comment on your post</p>
-                                            </div>
-                                        </div>
-                                        <div class="time-remaining">
-                                            <p class="mdtxt">Just now</p>
-                                        </div>
-                                    </a>
-                                </div>
-                                <div class="single-box p-0 mb-7">
-                                    <a href="profile-notification.html" class="d-flex justify-content-between align-items-center">
-                                        <div class="left-item position-relative d-inline-flex gap-3">
-                                            <div class="avatar position-relative d-inline-flex">
-                                                <img class="avatar-img max-un" src="{{asset('feed_assets/images/avatar-2.png')}}" alt="avatar">
-                                                <img class="abs-item position-absolute max-un" src="{{asset('feed_assets/images/icon/emoji-love.png')}}" alt="icon">
-                                            </div>
-                                            <div class="text-area">
-                                                <h6 class="m-0 mb-1">Kathryn Murphy</h6>
-                                                <p class="mdtxt">Like your photo</p>
-                                            </div>
-                                        </div>
-                                        <div class="time-remaining">
-                                            <p class="mdtxt">2min</p>
-                                        </div>
-                                    </a>
-                                </div>
-                                <div class="btn-area">
-                                    <a href="profile-notification.html">See all notification</a>
-                                </div>
-                            </div>
+                            <!-- <div class="main-area p-5 notification-content">
+                            </div> -->
                         </div>
                         <div class="single-item d-none d-lg-block profile-area position-relative">
                             <div class="profile-pic d-flex align-items-center">
@@ -121,27 +66,21 @@
                                 </div>
                                 <ul>
                                     <li>
-                                        <a href="profile-edit.html" class="mdtxt">
+                                        <a href="{{route('user.directory')}}" class="mdtxt">
                                             <i class="material-symbols-outlined mat-icon"> settings </i>
-                                            Settings & Privacy
+                                            Directory
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="#" class="mdtxt">
-                                            <i class="material-symbols-outlined mat-icon"> power_settings_new </i>
-                                            Sign Out
-                                        </a>
+                                      <form action="{{ route('user.logout') }}" method="POST" style="display: inline;" >
+										@csrf
+										<button type="submit" class="mdtxt" style="background: none; border: none; cursor: pointer;" >
+											<i class="material-symbols-outlined mat-icon">power_settings_new</i>
+											Sign Out
+										</button>
+									</form>
                                     </li>
                                 </ul>
-                                <div class="switch-wrapper mt-4 d-flex gap-1 align-items-center">
-                                    <i class="mat-icon material-symbols-outlined sun icon"> light_mode </i>
-                                    <label class="switch">
-                                        <input type="checkbox" class="checkbox">
-                                        <span class="slider"></span>
-                                    </label>
-                                    <i class="mat-icon material-symbols-outlined moon icon"> dark_mode </i>
-                                    <span class="mdtxt ms-2">Dark mode</span>
-                                </div>
                             </div>
                         </div>
                     </div>
