@@ -67,7 +67,7 @@ Route::prefix('user')->name('user.')->group(function () {
 
         Route::post('/like/{post}', [PostController::class, 'toggleLike'])->name('post.like');
 
-         Route::post('/post/{id}/comment', [PostController::class, 'storeComment'])->name('post.comment');
+         //Route::post('/post/{id}/comment', [PostController::class, 'storeComment'])->name('post.comment');
         //Route::post('/comment/{id}/reply', [CommentController::class, 'reply'])->name('comment.reply');
 
          Route::get('/profile/{id}', [ProfileController::class, 'showById'])->name('profile');

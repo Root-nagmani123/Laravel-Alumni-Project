@@ -163,8 +163,8 @@ public function toggleLike(Post $post, Request $request)
 }
 */
 
-public function toggleLike(Post $post, Request $request)
-{
+    public function toggleLike_old25062025(Post $post, Request $request)
+    {
     $user = auth('user')->user();
 
     if (!$user) {
@@ -181,5 +181,50 @@ public function toggleLike(Post $post, Request $request)
 
     //return redirect()->back();
     return redirect()->back()->with('status', $existingLike ? 'Post unliked' : 'Post liked');
+    }
+
+    public function toggleLike_25june329pm(Post $post, Request $request)
+{
+    $user = auth('user')->user(); // or auth('member')->user() based on your guard
+
+    if (!$user) {
+        return redirect()->back()->withErrors('You must be logged in to like posts.');
+    }
+
+    $existingLike = $post->likes()->where('member_id', $user->id)->first();
+
+    if ($existingLike) {
+        $existingLike->delete(); // Unlike
+    } else {
+        $post->likes()->create(['member_id' => $user->id]); // Like
+    }
+
+    return redirect()->back()->with('status', $existingLike ? 'Post unliked' : 'Post liked');
 }
+
+
+public function toggleLike(Post $post, Request $request)
+{
+    $user = auth('user')->user(); // or auth('member')->user()
+
+    if (!$user) {
+        return response()->json(['error' => 'Unauthorized'], 401);
+    }
+
+    $existingLike = $post->likes()->where('member_id', $user->id)->first();
+
+    if ($existingLike) {
+        $existingLike->delete();
+    } else {
+        $post->likes()->create(['member_id' => $user->id]);
+    }
+
+    if ($request->ajax()) {
+        // Return only the updated like section
+        return view('partials.like-button', compact('post'))->render();
+    }
+
+    return redirect()->back()->with('status', $existingLike ? 'Post unliked' : 'Post liked');
+}
+
 }

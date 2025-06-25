@@ -16,6 +16,8 @@
                                            Our Member
                                        </h6>
                                    </div>
+
+                                     @foreach($member as $memberd)
                                    <div class="d-grid gap-6">
                                        <div class="single-single">
                                            <div class="profile-pic d-flex gap-3 align-items-center">
@@ -35,6 +37,7 @@
                                        </div>
                                        <hr>
                                    </div>
+                                     @endforeach
                                </div>
                                <div class="sidebar-area p-5">
                                    <div class="mb-4">

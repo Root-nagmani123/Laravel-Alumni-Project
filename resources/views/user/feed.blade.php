@@ -116,7 +116,7 @@
                     <img class="avatar-img max-un" src="{{ $profileImage }}" alt="avatar">
                 </div>
                 <div class="info-area">
-                    <h6 class="m-0"><a href="#">{{ $member->name ?? 'Unknown' }}</a></h6>
+                    <h6 class="m-0"><a href="{{ url('/user/profile/' . $member->id) }}">{{ $member->name ?? 'Unknown' }}</a></h6>
                     <span class="mdtxt status">Active</span>
                 </div>
             </div>
@@ -194,6 +194,14 @@
 @endif
 
     </div>
+{{-- Display Videos --}}
+@if ($post->media_type === 'video_link' && $post->video_link)
+    <div class="post-video mt-2">
+        <iframe class="w-100" height="315" src="{{ $post->video_link }}" frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen loading="lazy"></iframe>
+    </div>
+@endif
 
     {{-- Reactions --}}
     <div class="total-react-share pb-4 d-center gap-2 flex-wrap justify-content-between">
@@ -225,35 +233,68 @@
                            <div
                                class="like-comment-share py-5 d-center flex-wrap gap-3 gap-md-0 justify-content-between">
 
-<form action="{{ route('user.post.like', $post->id) }}" method="POST" class="d-inline">
-    @csrf
-    <button type="submit" class="btn btn-sm {{ $post->likes->contains('member_id', auth('member')->id()) ? 'btn-danger' : 'btn-primary' }}">
-        {{ $post->likes->contains('member_id', auth('member')->id()) ? 'Unlike' : 'Like' }}
-    </button>
-    <span class="ms-2 text-muted">
-        {{ $post->likes->count() }} {{ Str::plural('Like', $post->likes->count()) }}
-    </span>
-</form>
+ @php
+    $likeUsers = $post->likes->pluck('member.name')->filter()->join(', ');
+@endphp
+
+
+<div id="like-section-{{ $post->id }}">
+    <form
+        action="{{ route('user.post.like', $post->id) }}"
+        method="POST"
+        class="like-form d-inline"
+        data-post-id="{{ $post->id }}"
+    >
+        @csrf
+        <button type="submit"
+            class="btn btn-sm {{ $post->likes->contains('member_id', auth('user')->id()) ? 'btn-primary' : 'btn-primary' }}"
+            title="{{ $likeUsers ?: 'No likes yet' }}">
+            {{ $post->likes->contains('member_id', auth('user')->id()) ? 'Unlike' : 'Like' }}
+        </button>
+        <span class="ms-2 text-muted">
+            {{ $post->likes->count() }} {{ Str::plural('Like', $post->likes->count()) }}
+        </span>
+    </form>
+</div>
 	{{--@endif--}}
   <button class="d-center gap-1 gap-sm-2 mdtxt" onclick="toggleComments({{ $post->id }})">
             <i class="material-symbols-outlined mat-icon"> chat </i> Comment
         </button>
-        <button class="d-center gap-1 gap-sm-2 mdtxt" >
+        <!--<button class="d-center gap-1 gap-sm-2 mdtxt" >
             <i class="material-symbols-outlined mat-icon"> share </i> Share
-        </button>
+        </button>-->
+      <button
+  class="copy-url-btn d-center gap-1 gap-sm-2 mdtxt"
+  data-url="{{ url('/user/profile/' . $member->id) }}">
+  <i class="material-symbols-outlined mat-icon">share</i> Share
+</button>
     </div>
 
                            <!-- Comments container -->
-                           <div id="comments-{{ $post->id }}" class="comments-box"
-                               style="display: none; margin-top: 10px;">
-                               @forelse ($post->comments as $comment)
-                               <div class="comment-item mb-2">
-                                   <strong>{{ $comment->member->name ?? '' }}</strong> {{ $comment->comment }}
-                               </div>
-                               @empty
-                               <p>No comments yet.</p>
-                               @endforelse
-                           </div>
+         <div id="comments-{{ $post->id }}" class="comments-box" style="display: none; margin-top: 10px;">
+        @forelse ($post->comments as $comment)
+        <div class="comment-item mb-3 d-flex align-items-start">
+<img src="{{ $comment->member && $comment->member->profile_pic
+              ? asset('storage/' . $comment->member->profile_pic)
+              : asset('feed_assets/images/avatar-1.png') }}"
+     alt="Profile Picture"
+     class="rounded-circle me-2"
+     width="40"
+     height="40">
+
+
+
+            <div>
+                <strong>{{ $comment->member->name ?? 'Anonymous' }}</strong><br>
+                  <small class="text-muted">{{ $comment->created_at->diffForHumans() }}</small>
+              <br>
+                {{ $comment->comment }}
+            </div>
+        </div>
+    @empty
+        <p class="text-muted">No comments yet.</p>
+    @endforelse
+</div>
 
                            {{-- Comment Form --}}
                            <form action="{{ route('user.comments.store') }}" method="POST">
@@ -554,42 +595,58 @@
 
 
 // Like post
-function likePost(postId) {
-    const csrfMeta = document.querySelector('meta[name="csrf-token"]');
-    if (!csrfMeta) {
-        alert("CSRF token not found");
-        return;
-    }
+function bindLikeForms() {
+    document.querySelectorAll('.like-form').forEach(form => {
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            const postId = form.dataset.postId;
+            const formData = new FormData(form);
 
-    const csrfToken = csrfMeta.getAttribute('content');
-
-    fetch(`${location.origin}/like/${postId}`, {
-            method: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': csrfToken,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({})
-        })
-        .then(response => {
-            if (!response.ok) throw new Error('Network response was not OK');
-            return response.json();
-        })
-        .then(data => {
-            const btn = document.getElementById(`like-btn-${postId}`);
-            if (btn) {
-                btn.innerText = data.status === 'liked' ? 'Unlike' : 'Like';
-            }
-        })
-        .catch(error => {
-            console.error('Error liking/unliking post:', error);
-            alert("Failed to process like/unlike. Please try again.");
+            fetch(form.action, {
+                method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRF-TOKEN': formData.get('_token')
+                },
+                body: formData
+            })
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('like-section-' + postId).innerHTML = html;
+                // 👇 re-bind like button inside the new HTML
+                bindLikeForms();
+            });
         });
+    });
 }
+
+// Initial bind when DOM is ready
+document.addEventListener('DOMContentLoaded', bindLikeForms);
+
 
 function toggleComments(postId) {
-    const box = document.getElementById('comments-' + postId);
-    box.style.display = box.style.display === 'none' ? 'block' : 'none';
-}
-   </script>
-   @endsection
+        const box = document.getElementById('comments-' + postId);
+        box.style.display = box.style.display === 'none' ? 'block' : 'none';
+    }
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+    const buttons = document.querySelectorAll('.copy-url-btn');
+
+    buttons.forEach(button => {
+        button.addEventListener('click', function () {
+            const urlToCopy = this.getAttribute('data-url');
+
+            navigator.clipboard.writeText(urlToCopy)
+                .then(() => {
+                    alert('Profile link copied to clipboard!');
+                })
+                .catch(err => {
+                    console.error('Failed to copy: ', err);
+                });
+        });
+    });
+});
+
+</script>
+@endsection

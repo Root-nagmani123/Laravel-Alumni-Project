@@ -24,7 +24,8 @@ class CommentController extends Controller
         Comment::create([
             'post_id' => $request->post_id,
             //'member_id' => auth()->id(), // Ensure user is logged in
-            'member_id' => auth()->id(),
+            //'member_id' => auth()->id(),
+            'member_id' => auth()->guard('user')->id(),
             'comment' =>  strip_tags($request->comment),
         ]);
 
