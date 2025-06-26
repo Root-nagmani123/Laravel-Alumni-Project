@@ -260,17 +260,13 @@
   <button class="d-center gap-1 gap-sm-2 mdtxt" onclick="toggleComments({{ $post->id }})">
             <i class="material-symbols-outlined mat-icon"> chat </i> Comment
         </button>
-        <!--<button class="d-center gap-1 gap-sm-2 mdtxt" >
-            <i class="material-symbols-outlined mat-icon"> share </i> Share
-        </button>-->
-      <button
+ <button
   class="copy-url-btn d-center gap-1 gap-sm-2 mdtxt"
   data-url="{{ url('/user/profile/' . $member->id) }}">
   <i class="material-symbols-outlined mat-icon">share</i> Share
 </button>
     </div>
-
-                           <!-- Comments container -->
+        <!-- Comments container -->
          <div id="comments-{{ $post->id }}" class="comments-box" style="display: none; margin-top: 10px;">
         @foreach ($post->comments as $comment)
 <div class="comment-item mb-3 d-flex align-items-start" data-comment-id="{{ $comment->id }}">

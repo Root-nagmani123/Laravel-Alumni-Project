@@ -13,9 +13,12 @@ class FeedController extends Controller
     {
         $user = auth()->guard('user')->user();
         $userId = $user->id;
-		 $posts = Post::with(['member', 'media', 'likes', 'comments'])
+		/*$posts = Post::with(['member', 'media', 'likes', 'comments'])
              ->orderBy('created_at', 'desc')
-                 ->get();
+                 ->get();*/
+         $posts = Post::with(['member', 'media', 'likes', 'comments.member'])
+        ->orderBy('created_at', 'desc')
+        ->get();
 
            //dd($posts);
           // dd($user);
