@@ -134,19 +134,7 @@ class EventsController extends Controller
         return response()->json(['message' => 'Status updated successfully.']);
     }
 
-		/*public function rsvp($id = null)
-		{
-
-			$rsvps = Rsvp::where('event_id', $id)->get();
-
-			return view('admin.events.rsvp_list', [
-				'rsvps' => $rsvps,
-				'page' => 'RSVP Event',
-				'pageName' => 'RSVP Event',
-				'main_content' => 'event_rsvp_list',
-			]);
-		}
-            */
+		
     public function rsvp($id = null)
     {
        	 $rsvps = EventRsvp::getAllRsvps($id);

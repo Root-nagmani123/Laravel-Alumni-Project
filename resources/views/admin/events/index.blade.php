@@ -42,16 +42,16 @@
 						 <div class="col-6">
 
                             <div class="float-end gap-2" style="margin-left:20px;">
-                                
+
 							<a href="{{ route('events.rsvp') }}" class="btn btn-primary">All RSVP</a>
                             </div>
-							
+
                             <div class="float-end">
                                 <a href="{{ route('events.create') }}" class="btn btn-primary">+ Add Events</a>
                             </div>
 
                         </div>
-                       
+
                     </div>
                     <hr>
                     <div id="zero_config_wrapper" class="dataTables_wrapper">
@@ -90,7 +90,7 @@
                                     </td>
 
                                     @php
-                                    $event_datetime = \Carbon\Carbon::parse($event->start_datetime);
+                                    $event_datetime = \Carbon\Carbon::parse($event->end_datetime);
                                     $current_datetime = \Carbon\Carbon::now();
                                     @endphp
 
@@ -108,16 +108,16 @@
                                     </button>
                                     </form>
                                         @else
-                                        
+
                                             <span class="badge ms-auto text-bg-primary">Expired</span>
-                                        
+
                                         @endif
 										 <a
                                             class="btn d-flex bg-primary-subtle w-100 d-block text-primary " href="{{ route('events.rsvp', $event->id) }}">
                                             RSVP
-                                          
+
                                         </a>
-										
+
 
                                     </td>
                                 </tr>
