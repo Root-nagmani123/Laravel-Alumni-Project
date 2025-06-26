@@ -65,6 +65,9 @@ Route::prefix('user')->name('user.')->group(function () {
 		Route::post('/post', [PostController::class, 'store'])->name('post.store');
 		Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
 
+        Route::put('/comments/{id}', [CommentController::class, 'update'])->name('comments.update');
+
+
         Route::post('/like/{post}', [PostController::class, 'toggleLike'])->name('post.like');
 
          //Route::post('/post/{id}/comment', [PostController::class, 'storeComment'])->name('post.comment');

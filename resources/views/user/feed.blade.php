@@ -272,32 +272,28 @@
 
                            <!-- Comments container -->
          <div id="comments-{{ $post->id }}" class="comments-box" style="display: none; margin-top: 10px;">
-        @forelse ($post->comments as $comment)
-        <div class="comment-item mb-3 d-flex align-items-start">
-<img src="{{ $comment->member && $comment->member->profile_pic
-              ? asset('storage/' . $comment->member->profile_pic)
-              : asset('feed_assets/images/avatar-1.png') }}"
-     alt="Profile Picture"
-     class="rounded-circle me-2"
-     width="40"
-     height="40">
+        @foreach ($post->comments as $comment)
+<div class="comment-item mb-3 d-flex align-items-start" data-comment-id="{{ $comment->id }}">
+    <img src="{{ $comment->member && $comment->member->profile_pic ? asset('storage/' . $comment->member->profile_pic) : asset('feed_assets/images/avatar-1.png') }}"
+        alt="Profile Picture" class="rounded-circle me-2" width="40" height="40">
+    <div class="comment-content">
+        <strong>{{ $comment->member->name ?? 'Anonymous' }}</strong><br>
+        <small class="text-muted">{{ $comment->created_at->diffForHumans() }}</small><br>
 
-
-
-            <div>
-                <strong>{{ $comment->member->name ?? 'Anonymous' }}</strong><br>
-                  <small class="text-muted">{{ $comment->created_at->diffForHumans() }}</small>
-              <br>
-                {{ $comment->comment }}
-            </div>
+        <div class="comment-text" id="comment-text-{{ $comment->id }}">
+            {{ $comment->comment }}
         </div>
-    @empty
-        <p class="text-muted">No comments yet.</p>
-    @endforelse
+
+        @if(auth()->guard('user')->id() === $comment->member_id)
+        <button class="btn btn-sm btn-link p-0 text-primary edit-comment-btn" data-comment-id="{{ $comment->id }}" data-comment="{{ $comment->comment }}">Edit</button>
+        @endif
+    </div>
+</div>
+@endforeach
 </div>
 
                            {{-- Comment Form --}}
-                           <form action="{{ route('user.comments.store') }}" method="POST">
+                           <!--<form action="{{-- route('user.comments.store') --}}" method="POST">
                                @csrf
                                <input type="hidden" name="post_id" value="{{ $post->id }}">
                                <div class="d-flex mt-5 gap-3">
@@ -314,7 +310,28 @@
                                        </button>
                                    </div>
                                </div>
-                           </form>
+                           </form>-->
+
+                           <form id="commentForm-{{ $post->id }}" action="{{ route('user.comments.store') }}" method="POST" class="comment-form" data-post-id="{{ $post->id }}">
+    @csrf
+    <input type="hidden" name="post_id" value="{{ $post->id }}">
+    <div class="d-flex mt-5 gap-3">
+        <div class="profile-box d-none d-xxl-block">
+            <a href="#"><img src="{{ asset('feed_assets/images/add-post-avatar.png') }}"
+                    class="max-un" alt="icon"></a>
+        </div>
+        <div class="form-content input-area py-1 d-flex gap-2 align-items-center w-100">
+            <input name="comment" id="commentInput-{{ $post->id }}" placeholder="Write a comment.." required>
+        </div>
+        <div class="btn-area d-flex">
+            <button type="submit" class="cmn-btn px-2 px-sm-5 px-lg-6">
+                <i class="material-symbols-outlined mat-icon m-0 fs-xxl"> near_me </i>
+            </button>
+        </div>
+    </div>
+</form>
+
+
                        </div>
                        @endforeach
 
@@ -628,6 +645,112 @@ function toggleComments(postId) {
         const box = document.getElementById('comments-' + postId);
         box.style.display = box.style.display === 'none' ? 'block' : 'none';
     }
+
+
+/*document.querySelectorAll('.comment-form').forEach(form => {
+        form.addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const postId = form.dataset.postId;
+            const formData = new FormData(form);
+
+            try {
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': form.querySelector('input[name="_token"]').value,
+                        'Accept': 'application/json'
+                    },
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    alert(errorData.message || 'Validation failed');
+                    return;
+                }
+
+                const data = await response.json();
+
+                // Clear input
+                document.getElementById('commentInput-' + postId).value = '';
+
+                // Build comment HTML
+                const newComment = document.createElement('div');
+                newComment.classList.add('comment-item', 'mb-3', 'd-flex', 'align-items-start');
+                newComment.innerHTML = `
+                    <img src="${data.profile_pic}" alt="Profile Picture" class="rounded-circle me-2" width="40" height="40">
+                    <div>
+                        <strong>${data.member_name}</strong><br>
+                        <small class="text-muted">${data.created_at}</small><br>
+                        ${data.comment}
+                    </div>
+                `;
+
+                // Prepend to comment list
+                const commentList = document.getElementById('comments-' + postId);
+                commentList.prepend(newComment);
+
+                // Show the comments section if hidden
+                commentList.style.display = 'block';
+
+            } catch (err) {
+                console.error('Error posting comment:', err);
+                alert('An error occurred while posting your comment.');
+            }
+        });
+    });
+*/
+
+
+document.addEventListener('DOMContentLoaded', () => {
+
+    document.querySelectorAll('.edit-comment-btn').forEach(button => {
+        button.addEventListener('click', function () {
+            const commentId = this.dataset.commentId;
+            const commentText = this.dataset.comment;
+            const commentDiv = document.getElementById(`comment-text-${commentId}`);
+
+            // Replace text with input
+            commentDiv.innerHTML = `
+                <input type="text" id="edit-input-${commentId}" class="form-control form-control-sm mb-1" value="${commentText}">
+                <button class="btn btn-sm btn-success" onclick="saveEditedComment(${commentId})">Save</button>
+                <button class="btn btn-sm btn-secondary" onclick="cancelEdit(${commentId}, '${commentText.replace(/'/g, "\\'")}')">Cancel</button>
+            `;
+        });
+    });
+});
+
+function cancelEdit(id, originalText) {
+    document.getElementById(`comment-text-${id}`).innerHTML = originalText;
+}
+
+function saveEditedComment(id) {
+    const newComment = document.getElementById(`edit-input-${id}`).value;
+
+    fetch(`comments/${id}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify({ comment: newComment })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            document.getElementById(`comment-text-${id}`).innerHTML = newComment;
+        } else {
+            alert(data.message || 'Failed to update comment');
+        }
+    })
+    .catch(err => {
+        console.error('Edit failed', err);
+        alert('An error occurred while editing the comment.');
+    });
+}
+
 
 
     document.addEventListener('DOMContentLoaded', function () {
