@@ -71,6 +71,8 @@ Route::prefix('user')->name('user.')->group(function () {
 
 
         Route::post('/like/{post}', [PostController::class, 'toggleLike'])->name('post.like');
+		Route::post('/user/post/{id}/like', [PostController::class, 'toggleLike'])->name('user.post.like');
+		Route::post('/post/{id}/comment', [PostController::class, 'storeComment'])->name('post.comment');
 
          //Route::post('/post/{id}/comment', [PostController::class, 'storeComment'])->name('post.comment');
         //Route::post('/comment/{id}/reply', [CommentController::class, 'reply'])->name('comment.reply');
@@ -78,6 +80,7 @@ Route::prefix('user')->name('user.')->group(function () {
          Route::get('/profile/{id}', [ProfileController::class, 'showById'])->name('profile');
 
          Route::put('/profile/update/{id}', [ProfileController::class, 'update'])->name('profile.update');
+		 
 
         Route::put('/eduinfo/update/{id}', [ProfileController::class, 'updateEduinfo'])->name('profile.eduinfo');
         Route::put('/proinfo/update/{id}', [ProfileController::class, 'updateProinfo'])->name('profile.proinfo');

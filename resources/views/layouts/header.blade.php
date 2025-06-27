@@ -1,442 +1,168 @@
-<header class="header-section header-menu">
-        <nav class="navbar navbar-expand-lg p-0">
-            <div class="container">
-                <nav class="navbar w-100 navbar-expand-lg justify-content-between">
-                    <a href="{{ url('user/feed') }}" class="navbar-brand">
-                        <img src="{{ asset('admin_assets/images/logos/lbsnaa_logo.jpg') }}" class="logo" alt="logo" style="width:50px;">
-                    </a>
-               <div>
-                    <span class="logo-text">Alumni</span><br>
-                    <small class="logo-text">Lal Bahadur Shastri National Academy of Administration</small>
-                </div>
+<!-- =======================
+Header START -->
+<header class="navbar-light fixed-top header-static bg-mode">
 
-                    <ul class="navbar-nav feed flex-row gap-xl-20 gap-lg-10 gap-sm-7 gap-1 py-4 py-lg-0 m-lg-auto ms-auto ms-aut align-self-center">
-                        <li>
-                            <a href="{{ url('user/feed') }}" class="nav-icon home active" title="Home"><i class="mat-icon fs-xxl material-symbols-outlined mat-icon">home</i></a>
-                        </li>
-                        <li>
-                            <a href="#news-feed" class="nav-icon feed" title="Resource Library"><i class="mat-icon fs-xxl material-symbols-outlined mat-icon">feed</i></a>
-                        </li>
-                        <li>
-                            <a href="group.html" class="nav-icon" title="Group"><i class="mat-icon fs-xxl material-symbols-outlined mat-icon">group</i></a>
-                        </li>
+	<!-- Logo Nav START -->
+	<nav class="navbar navbar-expand-lg">
+		<div class="container">
+			<!-- Logo START -->
+			<a class="navbar-brand" href="#" style="display: flex; gap: 0.2rem;">
+				<img class="light-mode-item navbar-brand-item" src="{{ asset('admin_assets/images/logos/lbsnaa.svg') }}" alt="logo">
+			</a>
+			<!-- Logo END -->
 
-                    </ul>
+			<!-- Responsive navbar toggler -->
+			<button class="navbar-toggler ms-auto icon-md btn btn-light p-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-animation">
+					<span></span>
+					<span></span>
+					<span></span>
+				</span>
+			</button>
 
+			<!-- Main navbar START -->
+			<div class="collapse navbar-collapse" id="navbarCollapse">
 
-					<div class="right-area position-relative d-flex gap-3 gap-xxl-6 align-items-center">
-                        <div class="single-item d-none d-lg-block messages-area">
-                            <div class="messages-btn cmn-head">
-                                <div class="icon-area d-center position-relative">
-                                    <i class="material-symbols-outlined mat-icon">mail</i>
-                                    <!-- <span class="abs-area position-absolute d-center mdtxt">4</span> -->
-                                </div>
-                            </div>
-                            <!-- <div class="main-area p-5 messages-content">
-                                <h5 class="mb-8">Messages</h5>
-                                <div class="single-box p-0 mb-7">
-                                    <a href="profile-chat.html" class="d-flex gap-2 align-items-center">
-                                        <div class="avatar">
-                                            <img class="avatar-img max-un" src="{{asset('feed_assets/images/avatar-7.png')}}" alt="avatar">
-                                        </div>
-                                        <div class="text-area">
-                                            <div class="title-area position-relative d-inline-flex align-items-center">
-                                                <h6 class="m-0 d-inline-flex">Piter Maio</h6>
-                                                <span class="abs-area position-absolute d-center mdtxt">3</span>
-                                            </div>
-                                            <p class="mdtxt sms">Amet minim mollit non....</p>
-                                        </div>
-                                    </a>
-                                </div>
-                                <div class="btn-area">
-                                    <a href="profile-chat.html">See all inbox</a>
-                                </div>
-                            </div> -->
-                        </div>
-                        <div class="single-item d-none d-lg-block messages-area notification-area">
-                            <div class="notification-btn cmn-head position-relative">
-                                <div class="icon-area d-center position-relative">
-                                    <i class="material-symbols-outlined mat-icon">notifications</i>
-                                    <!-- <span class="abs-area position-absolute d-center mdtxt">3</span> -->
-                                </div>
-                            </div>
-                            <!-- <div class="main-area p-5 notification-content">
-                                <h5 class="mb-8">Notification</h5>
-                                <div class="single-box p-0 mb-7">
-                                    <a href="profile-notification.html" class="d-flex justify-content-between align-items-center">
-                                        <div class="left-item position-relative d-inline-flex gap-3">
-                                            <div class="avatar position-relative d-inline-flex">
-                                                <img class="avatar-img max-un" src="{{asset('feed_assets/images/avatar-1.png')}}" alt="avatar">
-                                                <img class="abs-item position-absolute max-un" src="{{asset('feed_assets/images/icon/speech-bubble.png')}}" alt="icon">
-                                            </div>
-                                            <div class="text-area">
-                                                <h6 class="m-0 mb-1">Piter Maio</h6>
-                                                <p class="mdtxt">Comment on your post</p>
-                                            </div>
-                                        </div>
-                                        <div class="time-remaining">
-                                            <p class="mdtxt">Just now</p>
-                                        </div>
-                                    </a>
-                                </div>
-                                <div class="single-box p-0 mb-7">
-                                    <a href="profile-notification.html" class="d-flex justify-content-between align-items-center">
-                                        <div class="left-item position-relative d-inline-flex gap-3">
-                                            <div class="avatar position-relative d-inline-flex">
-                                                <img class="avatar-img max-un" src="{{asset('feed_assets/images/avatar-2.png')}}" alt="avatar">
-                                                <img class="abs-item position-absolute max-un" src="{{asset('feed_assets/images/icon/emoji-love.png')}}" alt="icon">
-                                            </div>
-                                            <div class="text-area">
-                                                <h6 class="m-0 mb-1">Kathryn Murphy</h6>
-                                                <p class="mdtxt">Like your photo</p>
-                                            </div>
-                                        </div>
-                                        <div class="time-remaining">
-                                            <p class="mdtxt">2min</p>
-                                        </div>
-                                    </a>
-                                </div>
-                                <div class="btn-area">
-                                    <a href="profile-notification.html">See all notification</a>
-                                </div>
-                            </div> -->
-                        </div>
-                        <div class="single-item d-none d-lg-block profile-area position-relative">
-                            <div class="profile-pic d-flex align-items-center">
-                                <span class="avatar cmn-head active-status">
-                                    <img class="avatar-img max-un" src="{{asset('feed_assets/images/avatar-1.png')}}" alt="avatar">
-                                </span>
-                            </div>
-                            <div class="main-area p-5 profile-content">
-                                <div class="head-area">
-                                    <div class="d-flex gap-3 align-items-center">
-                                        <div class="avatar-item">
-                                            <img class="avatar-img max-un" src="{{asset('feed_assets/images/avatar-1.png')}}" alt="avatar">
-                                        </div>
-                                        <div class="text-area">
-												@if(Auth::guard('user')->check())
-												 <h6 class="m-0 mb-1">Welcome, {{ Auth::guard('user')->user()->name }}!</h6>
-												@endif
-                                            <p class="mdtxt">{{ Auth::guard('user')->user()->designation }}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="view-profile my-2">
-                                  @if(Auth::guard('user')->check())
+				<!-- Nav Search START -->
+				<div class="nav mt-3 mt-lg-0 flex-nowrap align-items-center px-4 px-lg-0">
+					<div class="nav-item w-100">
+						<form class="rounded position-relative" style="margin-top:6px;">
+							<input class="form-control ps-5 bg-light" type="search" placeholder="Search..." aria-label="Search">
+							<button class="btn bg-transparent px-2 py-0 position-absolute top-50 start-0 translate-middle-y" type="submit"><i class="bi bi-search fs-5"> </i></button>
+						</form>
+					</div>
+				</div>
+				<!-- Nav Search END -->
+
+				<ul class="navbar-nav navbar-nav-scroll justify-content-center flex-grow-1 pe-3 flex-nowrap gap-4">
+					
+					<li class="nav-item d-flex gap-2 align-items-center active">
+						<a class="nav-link bg-light icon-md btn btn-light p-0 active" href="{{ url('user/feed') }}">
+						<i class="bi bi-house-door-fill"></i> 
+					</a>
+					Feed
+					</li>
+                    <li class="nav-item d-flex gap-2 align-items-center">
+						<a class="nav-link bg-light icon-md btn btn-light p-0" href="#">
+						<i class="bi bi-file-earmark-text-fill"></i> 
+					</a>Library
+					</li>
+                    <li class="nav-item d-flex gap-2 align-items-center">
+						<a class="nav-link bg-light icon-md btn btn-light p-0" href="#">
+						<i class="bi bi-person-lines-fill"></i> 
+					</a>Groups
+					</li>
+				
+				</ul>
+			</div>
+			<!-- Main navbar END -->
+
+			<!-- Nav right START -->
+			<ul class="nav flex-nowrap align-items-center ms-sm-3 list-unstyled">
+				<!-- <li class="nav-item ms-2">
+					<a class="nav-link bg-light icon-md btn btn-light p-0" href="#">
+						<i class="bi bi-chat-left-text-fill fs-6"> </i>
+					</a>
+				</li>
+				<li class="nav-item ms-2">
+					<a class="nav-link bg-light icon-md btn btn-light p-0" href="settings.html">
+						<i class="bi bi-gear-fill fs-6"> </i>
+					</a>
+				</li> -->
+				<li class="nav-item dropdown ms-2">
+					<a class="nav-link bg-light icon-md btn btn-light p-0" href="#" id="notifDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+						<span class="badge-notif animation-blink"></span>
+						<i class="bi bi-bell-fill fs-6"> </i>
+					</a>
+					<div class="dropdown-menu dropdown-animation dropdown-menu-end dropdown-menu-size-md p-0 shadow-lg border-0" aria-labelledby="notifDropdown">
+						<div class="card">
+							<div class="card-header d-flex justify-content-between align-items-center">
+								<h6 class="m-0">Notifications <span class="badge bg-danger bg-opacity-10 text-danger ms-2">4 new</span></h6>
+								<a class="small" href="#">Clear all</a>
+							</div>
+							<div class="card-body p-0">
+								<ul class="list-group list-group-flush list-unstyled p-2">
+									<!-- Notif item -->
+									<li>
+										<a href="#" class="list-group-item list-group-item-action rounded d-flex border-0 mb-1 p-3">
+											<div class="avatar text-center d-none d-sm-inline-block">
+												<div class="avatar-img rounded-circle bg-success"><span class="text-white position-absolute top-50 start-50 translate-middle fw-bold">WB</span></div>
+											</div>
+											<div class="ms-sm-3">
+												<div class="d-flex">
+													<p class="small mb-2">Webestica has 15 like and 1 new activity</p>
+													<p class="small ms-3">1hr</p>
+												</div>
+											</div>
+										</a>
+									</li>
+								</ul>
+							</div>
+							<div class="card-footer text-center">
+								<a href="#" class="btn btn-sm btn-primary-soft">See all incoming activity</a>
+							</div>
+						</div>
+					</div>
+				</li>
+				<!-- Notification dropdown END -->
+
+				<li class="nav-item ms-2 dropdown">
+					<a class="nav-link btn icon-md p-0" href="#" id="profileDropdown" role="button" data-bs-auto-close="outside" data-bs-display="static" data-bs-toggle="dropdown" aria-expanded="false">
+						<img class="avatar-img rounded-2" src="{{asset('feed_assets/images/avatar/07.jpg')}}" alt="">
+					</a>
+					<ul class="dropdown-menu dropdown-animation dropdown-menu-end pt-3 small me-md-n3" aria-labelledby="profileDropdown">
+						<!-- Profile info -->
+						<li class="px-3">
+							<div class="d-flex align-items-center position-relative">
+								<!-- Avatar -->
+								<div class="avatar me-3">
+									<img class="avatar-img rounded-circle" src="{{asset('feed_assets/images/avatar/07.jpg')}}" alt="avatar">
+								</div>
+								<div>
+                                    @if(Auth::guard('user')->check())
+									<a class="h6 stretched-link" href="#">{{ Auth::guard('user')->user()->name }}</a>
+                                    @endif
+									<p class="small m-0">{{ Auth::guard('user')->user()->designation }}</p>
+								</div>
+							</div>
+                             @if(Auth::guard('user')->check())
                                     @php
                                         $user = Auth::guard('user')->user();
                                     @endphp
-                                    <a href="{{ route('user.profile', ['id' => $user->id]) }}" class="mdtxt w-100 text-center py-2">View profile</a>
+                                    <a href="{{ route('user.profile', ['id' => $user->id]) }}" class="dropdown-item btn btn-primary-soft btn-sm my-2 text-center">View profile</a>
                                 @endif
-
-                                </div>
-                                <ul>
-                                    <li>
-                                        <a href="{{ route('user.directory') }}" class="mdtxt">
-                                            <i class="material-symbols-outlined mat-icon"> settings </i>
-                                           Directory
-                                        </a>
-                                    </li>
-                                    <li>
-                                      <form action="{{ route('user.logout') }}" method="POST" style="display: inline;" >
+						</li>
+						<!-- Links -->
+						<li><a class="dropdown-item" href="{{ route('user.directory') }}"><i class="bi bi-gear fa-fw me-2"></i>Directory</a></li>
+						<!-- <li> 
+							<a class="dropdown-item" href="https://support.webestica.com/" target="_blank">
+								<i class="fa-fw bi bi-life-preserver me-2"></i>Support
+							</a> 
+						</li>
+						<li> 
+							<a class="dropdown-item" href="docs/index.html" target="_blank">
+								<i class="fa-fw bi bi-card-text me-2"></i>Documentation
+							</a> 
+						</li> -->
+						<li class="dropdown-divider"></li>
+						<li>
+                         <form action="{{ route('user.logout') }}" method="POST" style="display: inline;" >
 										@csrf
-										<button type="submit" class="mdtxt" style="background: none; border: none; cursor: pointer;" >
-											<i class="material-symbols-outlined mat-icon">power_settings_new</i>
+										<button type="submit" class="bg-danger-soft-hover btn-sm btn d-flex align-items-center text-danger w-100">
+											<i class="bi bi-power fa-fw me-2"></i>
 											Sign Out
 										</button>
-									</form>
-                                    </li>
-                                </ul>
-
-                            </div>
-                        </div>
-                    </div>
-                </nav>
-                <div class="switch-wrapper ms-4 mt-4 d-flex gap-1 align-items-center">
-                                    <i class="mat-icon material-symbols-outlined sun icon"> light_mode </i>
-                                    <label class="switch">
-                                        <input type="checkbox" class="checkbox">
-                                        <span class="slider"></span>
-                                    </label>
-                                    <i class="mat-icon material-symbols-outlined moon icon"> dark_mode </i>
-                                    <span class="mdtxt ms-2" style="display:none;">Dark mode</span>
-                   </div>
-            </div>
-        </nav>
-    </header>
-    <!-- header-section end -->
-       <!-- Bottom Menu start -->
-    <div class="header-menu py-3 header-menu d-block d-lg-none position-fixed bottom-0 w-100 cus-z">
-        <div class="right-area position-relative d-flex justify-content-around gap-3 gap-xxl-6 align-items-center">
-            <div class="single-item messages-area">
-                <div class="messages-btn cmn-head">
-                    <div class="icon-area d-center position-relative">
-                        <i class="material-symbols-outlined mat-icon">mail</i>
-                        <span class="abs-area position-absolute d-center mdtxt">4</span>
-                    </div>
-                </div>
-                <div class="main-area p-5 messages-content">
-                    <h5 class="mb-8">Messages</h5>
-                    <div class="single-box p-0 mb-7">
-                        <a href="profile-chat.html" class="d-flex gap-2 align-items-center">
-                            <div class="avatar">
-                                <img class="avatar-img max-un" src="{{asset('feed_assets/images/avatar-7.png')}}" alt="avatar">
-                            </div>
-                            <div class="text-area">
-                                <div class="title-area position-relative d-inline-flex align-items-center">
-                                    <h6 class="m-0 d-inline-flex">Piter Maio</h6>
-                                    <span class="abs-area position-absolute d-center mdtxt">3</span>
-                                </div>
-                                <p class="mdtxt sms">Amet minim mollit non....</p>
-                            </div>
-                        </a>
-                    </div>
-                    <div  class="single-box p-0 mb-7">
-                        <a href="profile-chat.html" class="d-flex gap-2 align-items-center">
-                            <div class="avatar">
-                                <img class="avatar-img max-un" src="{{asset('feed_assets/images/avatar-1.png')}}" alt="avatar">
-                            </div>
-                            <div class="text-area">
-                                <h6 class="m-0 mb-1">Annette Black</h6>
-                                <p class="mdtxt">You: consequat sunt</p>
-                            </div>
-                        </a>
-                    </div>
-                    <div  class="single-box p-0 mb-7">
-                        <a href="profile-chat.html" class="d-flex gap-2 align-items-center">
-                            <div class="avatar">
-                                <img class="avatar-img max-un" src="{{asset('feed_assets/images/avatar-2.png')}}" alt="avatar">
-                            </div>
-                            <div class="text-area">
-                                <h6 class="m-0 mb-1">Ralph Edwards</h6>
-                                <p class="mdtxt sms">Amet minim mollit non....</p>
-                            </div>
-                        </a>
-                    </div>
-                    <div  class="single-box p-0 mb-7">
-                        <a href="profile-chat.html" class="d-flex gap-2 align-items-center">
-                            <div class="avatar">
-                                <img class="avatar-img max-un" src="{{asset('feed_assets/images/avatar-3.png')}}" alt="avatar">
-                            </div>
-                            <div class="text-area">
-                                <h6 class="m-0 mb-1">Darrell Steward</h6>
-                                <p class="mdtxt">You: consequat sunt</p>
-                            </div>
-                        </a>
-                    </div>
-                    <div  class="single-box p-0 mb-7">
-                        <a href="profile-chat.html" class="d-flex gap-2 align-items-center">
-                            <div class="avatar">
-                                <img class="avatar-img max-un" src="{{asset('feed_assets/images/avatar-4.png')}}" alt="avatar">
-                            </div>
-                            <div class="text-area">
-                                <h6 class="m-0 mb-1">Wade Warren</h6>
-                                <p class="mdtxt">You: consequat sunt</p>
-                            </div>
-                        </a>
-                    </div>
-                    <div  class="single-box p-0 mb-7">
-                        <a href="profile-chat.html" class="d-flex gap-2 align-items-center">
-                            <div class="avatar">
-                                <img class="avatar-img max-un" src="{{asset('feed_assets/images/avatar-5.png')}}" alt="avatar">
-                            </div>
-                            <div class="text-area">
-                                <h6 class="m-0 mb-1">Kathryn Murphy</h6>
-                                <p class="mdtxt">You: consequat sunt</p>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="single-box p-0 mb-7">
-                        <a href="profile-chat.html" class="d-flex gap-2 align-items-center">
-                            <div class="avatar">
-                                <img class="avatar-img max-un" src="{{asset('feed_assets/images/avatar-6.png')}}" alt="avatar">
-                            </div>
-                            <div class="text-area">
-                                <h6 class="m-0 mb-1">Jacob Jones</h6>
-                                <p class="mdtxt">You: consequat sunt</p>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="btn-area">
-                        <a href="profile-chat.html">See all inbox</a>
-                    </div>
-                </div>
-            </div>
-            <div class="single-item messages-area notification-area">
-                <div class="notification-btn cmn-head position-relative">
-                    <div class="icon-area d-center position-relative">
-                        <i class="material-symbols-outlined mat-icon">notifications</i>
-                        <span class="abs-area position-absolute d-center mdtxt">3</span>
-                    </div>
-                </div>
-                <div class="main-area p-5 notification-content">
-                    <h5 class="mb-8">Notification</h5>
-                    <div class="single-box p-0 mb-7">
-                        <a href="profile-notification.html" class="d-flex justify-content-between align-items-center">
-                            <div class="left-item position-relative d-inline-flex gap-3">
-                                <div class="avatar position-relative d-inline-flex">
-                                    <img class="avatar-img max-un" src="{{asset('feed_assets/images/avatar-1.png')}}" alt="avatar">
-                                    <img class="abs-item position-absolute max-un" src="{{asset('feed_assets/images/icon/speech-bubble.png')}}" alt="icon">
-                                </div>
-                                <div class="text-area">
-                                    <h6 class="m-0 mb-1">Piter Maio</h6>
-                                    <p class="mdtxt">Comment on your post</p>
-                                </div>
-                            </div>
-                            <div class="time-remaining">
-                                <p class="mdtxt">Just now</p>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="single-box p-0 mb-7">
-                        <a href="profile-notification.html" class="d-flex justify-content-between align-items-center">
-                            <div class="left-item position-relative d-inline-flex gap-3">
-                                <div class="avatar position-relative d-inline-flex">
-                                    <img class="avatar-img max-un" src="{{asset('feed_assets/images/avatar-2.png')}}" alt="avatar">
-                                    <img class="abs-item position-absolute max-un" src="{{asset('feed_assets/images/icon/emoji-love.png')}}" alt="icon">
-                                </div>
-                                <div class="text-area">
-                                    <h6 class="m-0 mb-1">Kathryn Murphy</h6>
-                                    <p class="mdtxt">Like your photo</p>
-                                </div>
-                            </div>
-                            <div class="time-remaining">
-                                <p class="mdtxt">2min</p>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="single-box p-0 mb-7">
-                        <a href="profile-notification.html" class="d-flex justify-content-between align-items-center">
-                            <div class="left-item position-relative d-inline-flex gap-3">
-                                <div class="avatar position-relative d-inline-flex">
-                                    <img class="avatar-img max-un" src="{{asset('feed_assets/images/avatar-3.png')}}" alt="avatar">
-                                    <img class="abs-item position-absolute max-un" src="{{asset('feed_assets/images/icon/emoji-love.png')}}" alt="icon">
-                                </div>
-                                <div class="text-area">
-                                    <h6 class="m-0 mb-1">Jacob Jones</h6>
-                                    <p class="mdtxt">Sent you a request</p>
-                                </div>
-                            </div>
-                            <div class="time-remaining">
-                                <p class="mdtxt">1hr</p>
-                            </div>
-                        </a>
-                        <div class="d-flex gap-3 mt-4">
-                            <button class="cmn-btn">Accept</button>
-                            <button class="cmn-btn alt">Delete</button>
-                        </div>
-                    </div>
-                    <div class="btn-area">
-                        <a href="profile-notification.html">See all notification</a>
-                    </div>
-                </div>
-            </div>
-            <div class="single-item profile-area position-relative">
-                <div class="profile-pic d-flex align-items-center">
-                    <span class="avatar cmn-head active-status">
-                        <img class="avatar-img max-un" src="{{asset('feed_assets/images/avatar-1.png')}}" alt="avatar">
-                    </span>
-                </div>
-                <div class="main-area p-5 profile-content">
-                    <div class="head-area">
-                        <div class="d-flex gap-3 align-items-center">
-                            <div class="avatar-item">
-                                <img class="avatar-img max-un" src="{{asset('feed_assets/images/avatar-1.png')}}" alt="avatar">
-                            </div>
-                            <div class="text-area">
-                                <h6 class="m-0 mb-1">Lori Ferguson</h6>
-                                <p class="mdtxt">Web Developer</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="view-profile my-2">
-                        <a href="profile-post.html" class="mdtxt w-100 text-center py-2">View profile</a>
-                    </div>
-                    <ul>
-                        <li>
-                            <a href="profile-edit.html" class="mdtxt">
-                                <i class="material-symbols-outlined mat-icon"> settings </i>
-                                Settings & Privacy
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" class="mdtxt">
-                                <i class="material-symbols-outlined mat-icon"> power_settings_new </i>
-                                Sign Out
-                            </a>
-                        </li>
-                    </ul>
-                    <div class="switch-wrapper">
-				  <i class="mat-icon material-symbols-outlined sun icon">light_mode</i>
-				  <label class="switch">
-					<input type="checkbox" class="checkbox">
-					<span class="slider"></span>
-				  </label>
-				  <i class="mat-icon material-symbols-outlined moon icon">dark_mode</i>
-				  <span class="mdtxt ms-2">Dark mode</span>
-				</div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Bottom Menu end -->
-
-<style>
-.switch-wrapper {
-  display: inline-flex;         /* horizontal layout */
-  align-items: center;          /* vertical centering */
-  gap: 0.5rem;                  /* space between items */
-  font-size: 1rem;              /* base font size */
-  user-select: none;            /* prevents text selection when toggling */
-}
-
-/* Make the sun & moon icons a consistent size */
-.switch-wrapper .icon {
-  font-size: 1.5rem;            /* adjust as needed */
-  line-height: 1;
-}
-
-/* Tweak the switch dimensions */
-.switch {
-  position: relative;
-  width: 2.5rem;                /* ~40px */
-  height: 1.25rem;              /* ~20px */
-  display: inline-block;
-}
-.switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-.switch .slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background-color: #ccc;
-  border-radius: 1.25rem;
-  transition: background-color .2s;
-}
-.switch .slider::before {
-  content: "";
-  position: absolute;
-  height: 1rem;                /* ~16px */
-  width: 1rem;
-  left: 0.125rem;              /* ~2px */
-  bottom: 0.125rem;
-  background-color: white;
-  border-radius: 50%;
-  transition: transform .2s;
-}
-.switch input:checked + .slider {
-  background-color: #666;
-}
-.switch input:checked + .slider::before {
-  transform: translateX(1.25rem); /* width - knob size = 1.25rem */
-}
-
-/* Optional: spacing for the label text */
-.switch-wrapper .mdtxt {
-  font-size: 0.875rem;
-  color: inherit;
-}
-</style>
+									</form>    
+						<li> <hr class="dropdown-divider"></li>
+					</ul>
+				</li>
+				<!-- Profile START -->
+				
+			</ul>
+			<!-- Nav right END -->
+		</div>
+	</nav>
+	<!-- Logo Nav END -->
+</header>
+<!-- =======================
+Header END -->

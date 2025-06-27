@@ -1,56 +1,29 @@
-<!-- Footer Partial -->
-<!-- jQuery -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js" crossorigin="anonymous"></script>
+<!-- =======================
+JS libraries, plugins and custom scripts -->
 
+<!-- Bootstrap JS -->
+<script src="{{asset('feed_assets/vendor/bootstrap/dist/js/bootstrap.bundle.min.js')}}"></script>
 
+<!-- Vendors -->
+<script src="{{asset('feed_assets/vendor/tiny-slider/dist/tiny-slider.js')}}"></script>
+<script src="{{asset('feed_assets/vendor/OverlayScrollbars-master/js/OverlayScrollbars.min.js')}}"></script>
+<script src="{{asset('feed_assets/vendor/choices.js/public/assets/scripts/choices.min.js')}}"></script>
+<script src="{{asset('feed_assets/vendor/glightbox-master/dist/js/glightbox.min.js')}}"></script>
+<script src="{{asset('feed_assets/vendor/flatpickr/dist/flatpickr.min.js')}}"></script>
+<script src="{{asset('feed_assets/vendor/plyr/plyr.js')}}"></script>
+<script src="{{asset('feed_assets/vendor/dropzone/dist/min/dropzone.min.js')}}"></script>
+<script src="{{asset('feed_assets/vendor/zuck.js/dist/zuck.min.js')}}"></script>
+<script src="{{asset('feed_assets/js/zuck-stories.js')}}"></script>
 
+<!-- Theme Functions -->
+<script src="{{asset('assets/js/functions.js')}}"></script>
 
-<!-- Bootstrap Bundle -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
-<!-- Bootstrap Fileinput -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/5.5.4/js/fileinput.min.js"></script>
-
-<!-- Theme: FA5 -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap-fileinput@5.5.4/themes/fa5/theme.min.js"></script>
-
-<!-- Toastr -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
-<!-- Other plugins -->
-<script src="{{ asset('feed_assets/js/plugins/slick.js') }}"></script>
-<script src="{{ asset('feed_assets/js/plugins/jquery.nice-select.min.js') }}"></script>
-<script src="{{ asset('feed_assets/js/plugins/plyr.js') }}"></script>
-<script src="{{ asset('feed_assets/js/plugins/apexcharts.js') }}"></script>
-<script src="{{ asset('feed_assets/js/plugins/wow.min.js') }}"></script>
-<script src="{{ asset('feed_assets/js/plugins/plugin.js') }}"></script>
-<script src="{{ asset('feed_assets/js/main.js') }}"></script>
-
-<!-- Glightbox CSS + JS -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css">
-<script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
-
-
+<!-- Accessibility JS -->
+<script src="https://img1.digitallocker.gov.in/ux4g/UX4G-CDN-accessibility/js/weights-v1.js"></script>
 <script>
-   /*document.addEventListener('DOMContentLoaded', function () {
-        const lightbox = GLightbox({
-            selector: '.glightbox'
-        });
-    });*/
-
-    document.addEventListener('DOMContentLoaded', function () {
-    const lightbox = GLightbox({
-        selector: '.glightbox',
-        openEffect: 'zoom',
-        onSlideAfterLoad: function({ slide }) {
-            const img = slide.slideNode.querySelector('img');
-            if (img) {
-                img.style.maxWidth = '600px';
-                img.style.maxHeight = '400px';
-                img.style.objectFit = 'contain';
-            }
-        }
-    });
+document.getElementById('uw-widget-custom-trigger2').addEventListener('click', function() {
+    openMain();
 });
 </script>
-
+<link rel="stylesheet"
+    href="https://img1.digitallocker.gov.in/ux4g/UX4G-CDN-accessibility/css/accesibility-style-v2.1.css">

@@ -156,7 +156,51 @@ class FeedController extends Controller
 
         return $html;
     }
+    public function toggleLike($id)
+{
+    $post = Post::findOrFail($id);
+    $userId = auth('user')->id();
 
+    // Toggle like
+    $existingLike = $post->likes()->where('member_id', $userId)->first();
+    if ($existingLike) {
+        $existingLike->delete();
+    } else {
+        $post->likes()->create(['member_id' => $userId]);
+    }
 
+    // Refresh likes
+    $post->load('likes.member'); // Make sure to eager load
+
+    $likeCount = $post->likes->count();
+    $likeUsers = $post->likes->pluck('member.name')->filter()->values();
+
+    return response()->json([
+        'success' => true,
+        'count' => $likeCount,
+        'users' => $likeUsers,
+    ]);
+}
+ public function storeComment(Request $request, $id)
+    {
+        $request->validate([
+            'comment' => 'required|string|max:1000',
+        ]);
+
+        $post = Post::findOrFail($id);
+        $userId = auth('user')->id();
+
+        $comment = $post->comments()->create([
+            'member_id' => $userId,
+            'content' => $request->comment,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Comment added successfully.',
+            'comment' => $comment,
+        ]);
+    }
 
 }
+

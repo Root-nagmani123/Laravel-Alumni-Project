@@ -1,83 +1,149 @@
- <div class="col-xxl-3 col-xl-4 col-lg-4 col-6 mt-5 mt-xl-0">
-                   <div class="cus-overflow cus-scrollbar sidebar-head">
-                       <div class="d-flex justify-content-end">
-                           <div class="d-block d-xl-none me-4">
-                               <button class="button toggler-btn mb-4 mb-lg-0 d-flex align-items-center gap-2">
-                                   <span>My List</span>
-                                   <i class="material-symbols-outlined mat-icon"> tune </i>
-                               </button>
-                           </div>
-                       </div>
-                       <div class="cus-scrollbar side-wrapper">
-                           <div class="sidebar-wrapper d-flex flex-column gap-6">
-                               
-                               <div class="sidebar-area p-5">
-                                   <div class="mb-4">
-                                       <h6 class="d-inline-flex">
-                                           Forums
-                                       </h6>
-                                   </div>
-                                   @foreach($forums as $forum)
-                                    <div class="d-flex flex-column gap-6 mb-4">
-                                        <div class="profile-area d-center position-relative align-items-center justify-content-between">
-                                            <div class="avatar-item d-flex gap-3 align-items-center">
-                                                <div class="avatar-item">
-                                                    <img class="avatar-img max-un" 
-                                                        src="{{ asset('storage/uploads/images/' . $forum->images) }}" 
-                                                        alt="Forum Image" 
-                                                        style="width: 80px; height: 80px; object-fit: cover;">
-                                                </div>
-                                                <div class="info-area">
-                                                    <h6 class="m-0">
-                                                        <a href="#" class="mdtxt">{{ $forum->name }}</a>
-                                                    </h6>
-                                                    <small class="text-muted">Topic: {{ $forum->topic_name }}</small>
-                                                        <small class="text-muted d-block">{{ \Carbon\Carbon::parse($forum->created_date)->format('d M, Y') }}</small>
+<!-- Right sidebar START -->
+			<div class="col-lg-3 right-sidebar">
+				<div class="row g-4">
+					<!-- Card follow START -->
+					<div class="col-sm-6 col-lg-12">
+						<div class="card">
+							<!-- Card header START -->
+							<div class="card-header pb-0 border-0">
+								<h5 class="card-title mb-0">Who to follow</h5>
+							</div>
+							<!-- Card header END -->
+							<!-- Card body START -->
+							<div class="card-body">
+								<!-- Connection item START -->
+								<div class="hstack gap-2 mb-3">
+									<!-- Avatar -->
+									<div class="avatar">
+										<a href="#!"><img class="avatar-img rounded-circle" src="assets/images/avatar/04.jpg" alt=""></a>
+									</div>
+									<!-- Title -->
+									<div class="overflow-hidden">
+										<a class="h6 mb-0" href="#!">Judy Nguyen </a>
+										<p class="mb-0 small text-truncate">News anchor</p>
+									</div>
+									<!-- Button -->
+									<a class="btn btn-primary-soft rounded-circle icon-md ms-auto" href="#"><i class="fa-solid fa-plus"> </i></a>
+								</div>
+								<!-- Connection item END -->
+								<!-- Connection item START -->
+									<div class="hstack gap-2 mb-3">
+										<!-- Avatar -->
+										<div class="avatar avatar-story">
+											<a href="#!"> <img class="avatar-img rounded-circle" src="assets/images/avatar/05.jpg" alt=""> </a>
+										</div>
+										<!-- Title -->
+										<div class="overflow-hidden">
+											<a class="h6 mb-0" href="#!">Amanda Reed </a>
+											<p class="mb-0 small text-truncate">Web Developer</p>
+										</div>
+										<!-- Button -->
+										<a class="btn btn-primary-soft rounded-circle icon-md ms-auto" href="#"><i class="fa-solid fa-plus"> </i></a>
+								</div>
+								<!-- Connection item END -->
 
-                                                </div>
-                                            </div>
-                                        </div>
+								<!-- Connection item START -->
+								<div class="hstack gap-2 mb-3">
+									<!-- Avatar -->
+									<div class="avatar">
+										<a href="#"> <img class="avatar-img rounded-circle" src="assets/images/avatar/11.jpg" alt=""> </a>
+									</div>
+									<!-- Title -->
+									<div class="overflow-hidden">
+										<a class="h6 mb-0" href="#!">Billy Vasquez </a>
+										<p class="mb-0 small text-truncate">News anchor</p>
+									</div>
+									<!-- Button -->
+									<a class="btn btn-primary rounded-circle icon-md ms-auto" href="#"><i class="bi bi-person-check-fill"> </i></a>
+								</div>
+								<!-- Connection item END -->
+								
+								<!-- Connection item START -->
+								<div class="hstack gap-2 mb-3">
+									<!-- Avatar -->
+									<div class="avatar">
+										<a href="#"> <img class="avatar-img rounded-circle" src="assets/images/avatar/01.jpg" alt=""> </a>
+									</div>
+									<!-- Title -->
+									<div class="overflow-hidden">
+										<a class="h6 mb-0" href="#!">Lori Ferguson </a>
+										<p class="mb-0 small text-truncate">Web Developer at Webestica</p>
+									</div>
+									<!-- Button -->
+									<a class="btn btn-primary-soft rounded-circle icon-md ms-auto" href="#"><i class="fa-solid fa-plus"> </i></a>
+								</div>
+								<!-- Connection item END -->
 
-                                        <div class="description-area ps-5">
-                                            <p>{{ $forum->description }}</p>
-                                        </div>
-                                    </div>
-                                    @endforeach
+								<!-- Connection item START -->
+								<div class="hstack gap-2 mb-3">
+									<!-- Avatar -->
+									<div class="avatar">
+										<a href="#"> <img class="avatar-img rounded-circle" src="assets/images/avatar/placeholder.jpg" alt=""> </a>
+									</div>
+									<!-- Title -->
+									<div class="overflow-hidden">
+										<a class="h6 mb-0" href="#!">Carolyn Ortiz </a>
+										<p class="mb-0 small text-truncate">News anchor</p>
+									</div>
+									<!-- Button -->
+									<a class="btn btn-primary-soft rounded-circle icon-md ms-auto" href="#"><i class="fa-solid fa-plus"> </i></a>
+								</div>
+								<!-- Connection item END -->
 
-                               </div>
-                              <div class="sidebar-area p-5">
-                                    <div class="mb-4">
-                                        <h6 class="d-inline-flex">
-                                            Latest Events
-                                        </h6>
-                                    </div>
-                                    <div class="d-flex flex-column gap-6">
+								<!-- View more button -->
+								<div class="d-grid mt-3">
+									<a class="btn btn-sm btn-primary-soft" href="#!">View more</a>
+								</div>
+							</div>
+							<!-- Card body END -->
+						</div>
+					</div>
+					<!-- Card follow START -->
 
-                                        @foreach($events as $event)
-                                            <div class="profile-area d-center position-relative align-items-center justify-content-between">
-                                                <div class="avatar-item d-flex gap-3 align-items-center">
-                                                    <div class="avatar-item">
-                                                        <img class="avatar-img max-un"
-                                                            src="{{ $event->image ? asset('storage/events/' . $event->image) : asset('feed_assets/images/avatar-7.png') }}"
-                                                            alt="Event">
-                                                    </div>
-                                                    <div class="info-area">
-                                                        <h6 class="m-0">
-                                                            <a href="{{ $event->url ?? '#' }}" class="mdtxt" >
-                                                                {{ \Illuminate\Support\Str::limit($event->title, 20) }}
-                                                            </a>
-                                                        </h6>
-                                                        <small class="text-muted d-block">{{ \Carbon\Carbon::parse($event->end_datetime)->format('d M, Y') }}</small>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        @endforeach
-
-                                    </div>
-                                  
-                                </div>
-
-                           </div>
-                       </div>
-                   </div>
-               </div>
+					<!-- Card News START -->
+					<div class="col-sm-6 col-lg-12">
+						<div class="card">
+							<!-- Card header START -->
+							<div class="card-header pb-0 border-0">
+								<h5 class="card-title mb-0">Today’s news</h5>
+							</div>
+							<!-- Card header END -->
+							<!-- Card body START -->
+							<div class="card-body">
+								<!-- News item -->
+								<div class="mb-3">
+									<h6 class="mb-0"><a href="blog-details.html">Ten questions you should answer truthfully</a></h6>
+									<small>2hr</small>
+								</div>
+								<!-- News item -->
+								<div class="mb-3">
+									<h6 class="mb-0"><a href="blog-details.html">Five unbelievable facts about money</a></h6>
+									<small>3hr</small>
+								</div>
+								<!-- News item -->
+								<div class="mb-3">
+									<h6 class="mb-0"><a href="blog-details.html">Best Pinterest Boards for learning about business</a></h6>
+									<small>4hr</small>
+								</div>
+								<!-- News item -->
+								<div class="mb-3">
+									<h6 class="mb-0"><a href="blog-details.html">Skills that you can learn from business</a></h6>
+									<small>6hr</small>
+								</div>
+								<!-- Load more comments -->
+								<a href="#!" role="button" class="btn btn-link btn-link-loader btn-sm text-secondary d-flex align-items-center" data-bs-toggle="button" aria-pressed="true">
+									<div class="spinner-dots me-2">
+										<span class="spinner-dot"></span>
+										<span class="spinner-dot"></span>
+										<span class="spinner-dot"></span>
+									</div>
+									View all latest news
+								</a>
+							</div>
+							<!-- Card body END -->
+						</div>
+					</div>
+					<!-- Card News END -->
+				</div>
+			</div>
+			<!-- Right sidebar END -->
