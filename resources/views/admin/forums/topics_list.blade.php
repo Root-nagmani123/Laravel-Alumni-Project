@@ -92,14 +92,13 @@
                                     </td>
                                 </tr>
                             @empty
-<tr>
-    <td colspan="6" class="text-center">No topics found.</td>
-</tr>
+
 @endforelse
                             </tbody>
                         </table>
 
                                 <!-- Modal for Viewing/Editing Topic -->
+                                  @foreach ($topics as $topic)
                                 <div class="modal fade" id="viewTopicModal{{ $topic->id }}" tabindex="-1"
                                     aria-labelledby="viewTopicModalLabel{{ $topic->id }}" aria-hidden="true">
                                     <div class="modal-dialog modal-lg modal-dialog-scrollable">
@@ -216,6 +215,7 @@
                                         </div>
                                     </div>
                                 </div>
+                                @endforeach
 
 
 

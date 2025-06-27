@@ -28,7 +28,14 @@
             </div>
         </div>
     </div>
-
+    @if(session('success'))
+    <div class="alert alert-success">{{ session('success') }}</div>
+    @endif
+    @if (session('error'))
+    <div class="alert alert-danger" style="color:white;">
+        {{ session('error') }}
+    </div>
+    @endif
     <div class="datatables">
         <!-- start Zero Configuration -->
         <div class="card">
@@ -48,26 +55,43 @@
                             aria-describedby="zero_config_info">
                             <thead>
                                 <!-- start row -->
-                               <tr>
+                                <tr>
                                     <th scope="col">#</th>
                                     <th scope="col">Member Name</th>
                                     <th scope="col">Status</th>
+                                    <th scope="col">Action</th>
                                 </tr>
                                 <!-- end row -->
                             </thead>
                             <tbody>
-                                 @if(count($users) > 0)
-                               @foreach($users as $user)
-                                    <tr>
-                                        <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $user->name ?? 'N/A' }}</td>
-                                        <td>{{ $user->status == 1 ? 'Active' : 'Inactive' }}</td>
-                                    </tr>
+                                @if(count($users) > 0)
+                                @foreach($users as $user)
+                                <tr>
+                                    <td>{{ $loop->iteration }}</td>
+                                    <td>{{ $user->name ?? 'N/A' }}</td>
+                                    <td>
+                                        <div class="form-check form-switch d-inline-block">
+                                            <input name="status-toggle" class="form-check-input status-toggle"
+                                                type="checkbox" role="switch" data-table="forums_member"
+                                                data-column="status" data-id="{{ $user->id }}"
+                                                {{ $user->status == 1 ? 'checked' : '' }}>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <form action="{{ route('forums.member.delete') }}" method="POST"
+                                            style="display:inline;">
+                                            @csrf
+                                            <input type="hidden" name="id" value="{{ $user->id }}">
+                                            <input type="hidden" name="forum_id" value="{{ $user->forums_id }}">
+                                            <input type="hidden" name="user_id" value="{{ $user->user_id }}">
+                                            <button type="submit" class="btn btn-danger btn-sm delete-forum-btn"
+                                                onclick="return confirm('Are you sure?')" @if($user->status == 1) disabled @endif>Delete</button>
+                                        </form>
+                                    </td>
+                                </tr>
                                 @endforeach
                                 @else
-                                    <tr>
-                                        <td colspan="3" class="text-center">No member is added to this forum.</td>
-                                    </tr>
+
                                 @endif
                             </tbody>
                         </table>
@@ -80,22 +104,49 @@
         <!-- end Zero Configuration -->
     </div>
 </div>
-
+@endsection
 @section('scripts')
+<!-- Toastr CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+
+<!-- Toastr JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+@if(session('success'))
 <script>
-    $(document).ready(function() {
-        // Initialize DataTable for sorting, pagination, and search functionality
-        $('.datatable').DataTable({
-            "paging": true,
-            "lengthChange": true, // Show "records per page"
-            "searching": true,
-            "ordering": true,
-            "info": true,
-            "autoWidth": false,
-            "responsive": true
-        });
+toastr.success("{{ session('success') }}");
+</script>
+@endif
+
+<script>
+$('.status-toggle').change(function() {
+    let checkbox = $(this);
+    let status = checkbox.prop('checked') ? 1 : 0;
+    let memberId = checkbox.data('id');
+ let row = $(this).closest('tr');
+    $.ajax({
+        url: '{{ route("forums.membertoggleStatus") }}',
+        type: 'POST',
+        data: {
+            _token: '{{ csrf_token() }}',
+            id: memberId,
+            status: status
+        },
+        success: function(response) {
+             if (status === 1) {
+                    row.find('.delete-btn').attr('disabled', true);
+                } else {
+                    row.find('.delete-btn').removeAttr('disabled');
+                }
+            toastr.success(response.message); // ✅ show success message
+            setTimeout(function() {
+                 window.location.reload(); // ✅ reload the page to reflect changes
+            }, 1000);
+        },
+        error: function(xhr) {
+            toastr.error('Failed to update status.');
+        }
     });
+});
 </script>
 @endsection
-@endsection
-

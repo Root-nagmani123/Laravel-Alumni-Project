@@ -75,19 +75,25 @@
                            </li>
                        </ul>
                        <div class="your-shortcuts">
-                           <h6>Broadcasts</h6>
-                           <ul>
-                               <li class="d-flex align-items-center gap-3">
-                                   <a href="public-profile-post.html">
-                                       <img src="{{asset('feed_assets/images/shortcuts-1.png')}}" alt="icon">
+                            <h6>Broadcasts</h6>
 
-                                   </a>
-                                   <div>
-                                       <span>Circlehub (Admin)</span><br>
-                                       <small>Game Community</small>
-                                   </div>
-                               </li>
-                           </ul>
-                       </div>
+                            <ul>
+                                @foreach($broadcast as $item)
+                                    <li class="d-flex align-items-center gap-3 mb-2">
+                                        <a href="#">
+                                            <img 
+    src="{{ $item->image_url ? asset('storage/' . $item->image_url) : asset('feed_assets/images/avatar-7.png') }}" 
+    alt="broadcast image" 
+    style="width: 40px; height: 40px; object-fit: cover;">
+ </a>
+                                        <div>
+                                            <span>{{ $item->title }}</span><br>
+                                            <small>{{ $item->description }}</small>
+                                        </div>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
+
                    </div>
                </div>

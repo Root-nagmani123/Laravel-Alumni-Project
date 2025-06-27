@@ -87,6 +87,9 @@ class DashboardController extends Controller
 public function directory(Request $request)
 {
     $members = Member::where('status', 1)->get();
+
+
+    // print_r($members);die;
     return view('directory', compact('members'));
     
 }
