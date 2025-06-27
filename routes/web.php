@@ -84,7 +84,6 @@ Route::prefix('user')->name('user.')->group(function () {
 
         Route::get('directory', [DashboardController::class, 'directory'])->name('directory');
        //Route::post('/feed/search', [FeedController::class, 'search'])->name('feed.search');
-		Route::get('directory', [DashboardController::class, 'directory'])->name('directory');
 
     });
 
@@ -160,7 +159,9 @@ Route::prefix('forums')->name('forums.')->group(function () {
 		Route::put('/update-forum/{forum}', [ForumController::class, 'update_forum'])->name('forum.update');
 		Route::delete('/forums/{forum}', [ForumController::class, 'destroyforum'])->name('forum.destroy');
 		Route::post('/forums/toggle-status', [ForumController::class, 'toggleStatus'])->name('toggleStatus');
+		Route::post('/forums/member-toggle-status', [ForumController::class, 'membertoggleStatus'])->name('membertoggleStatus');
 		Route::post('/forums/topic/toggle-status', [ForumController::class, 'TopictoggleStatus'])->name('TopictoggleStatus');
+		Route::post('/member/delete', [ForumController::class, 'member_delete_forum'])->name('member.delete');
 });
 
 

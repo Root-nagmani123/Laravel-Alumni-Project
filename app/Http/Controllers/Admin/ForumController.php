@@ -15,7 +15,9 @@ class ForumController extends Controller
 {
     public function index()
     {
-        $forums = Forum::all(); // Corrected to use Forum model (not Forums)
+        $forums = Forum::all(); 
+        // print_r($forums);die;
+            // Corrected to use Forum model (not Forums)
         return view('admin.forums.index', compact('forums'));
     }
     public function create()
@@ -130,11 +132,10 @@ class ForumController extends Controller
 
 public function storeMembers(Request $request)
 {
-
     $request->validate([
         'forum_id' => 'required|exists:forums,id',
         'user_id' => 'required|array|min:1',
-        'user_id.*' => 'exists:users,id',
+        'user_id.*' => 'exists:members,id',
 
     ]);
 
@@ -144,7 +145,7 @@ public function storeMembers(Request $request)
 //echo $forumId;
 //echo $userIds;
 
-  //  dd($request->all());
+  
     // Remove existing and insert new members
     DB::table('forums_member')->where('forums_id', $forumId)->delete();
 
@@ -157,6 +158,7 @@ public function storeMembers(Request $request)
             'created_at' => now(),
         ];
     }
+ 
 
     if (!empty($insertData)) {
         DB::table('forums_member')->insert($insertData);
@@ -170,9 +172,9 @@ public function view_member($id)
 
     // Get all users related to the forum, along with their status
     $users = DB::table('forums_member')
-        ->join('users', 'forums_member.user_id', '=', 'users.id')
+        ->join('members', 'forums_member.user_id', '=', 'members.id')
         ->where('forums_member.forums_id', $id)
-        ->select('users.name', 'forums_member.status', 'forums_member.user_id', 'forums_member.id') // Include forums_member.id for toggling status
+        ->select('members.name', 'forums_member.status', 'forums_member.user_id', 'forums_member.id','forums_member.forums_id') // Include forums_member.id for toggling status
         ->get();
 
     return view('admin.forums.member_list', [
@@ -243,7 +245,8 @@ public function view_forum_topics($id)
 {
     $forum = Forum::findOrFail($id);
     $topics = ForumTopic::where('forum_id', $id)->with('creator')->get();
-
+// print_r($topics);
+// print_r($forum);die;
     return view('admin.forums.topics_list', compact('forum', 'topics'));
 }
 public function update_topic_2952025(Request $request, $id)
@@ -356,6 +359,49 @@ public function TopictoggleStatus(Request $request)
     $topic->save();
 
     return response()->json(['message' => 'Topic status updated successfully.']);
+}
+function member_delete_forum(Request $request)
+{
+    $forumId = $request->input('forum_id');
+    $userId = $request->input('user_id');
+    $id = $request->input('id');
+
+    // Check if the forum exists
+    $forum = Forum::find($forumId);
+    if (!$forum) {
+        return redirect()->back()->with('error', 'Forum not found.');
+    }
+
+    // Delete the member from the forum
+DB::table('forums_member')
+        ->where('forums_id', $forumId)
+        ->where('user_id', $userId)
+        ->where('id', $id)
+        ->delete();
+    
+    return redirect()->back()->with('success', 'Member removed from forum successfully.');
+    
+}
+public function membertoggleStatus(Request $request)
+{
+    $id = $request->input('id'); // Assuming you are sending 'id' of forums_member row
+
+    $member = DB::table('forums_member')->where('id', $id)->first();
+
+    if (!$member) {
+        return response()->json(['message' => 'Member not found.'], 404);
+    }
+
+    $newStatus = $member->status == 1 ? 0 : 1;
+
+    DB::table('forums_member')
+        ->where('id', $id)
+        ->update(['status' => $newStatus]);
+
+    return response()->json([
+        'message' => 'Member status updated successfully.',
+        'new_status' => $newStatus
+    ]);
 }
 
 

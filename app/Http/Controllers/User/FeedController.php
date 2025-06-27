@@ -5,6 +5,7 @@ namespace App\Http\Controllers\user;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use App\Models\Post;
 
 class FeedController extends Controller
@@ -22,8 +23,68 @@ class FeedController extends Controller
 
            //dd($posts);
           // dd($user);
+           $broadcast = DB::table('broadcasts')
+                ->where('status',1)
+            ->orderBy('broadcasts.id', 'desc')
+            ->get();
+          $events = DB::table('events')
+        ->where('status', 1)
+        ->where('end_datetime', '>', now())
+        ->orderBy('id', 'desc')
+        ->get();
+// print_r($events);die;
+       
+    // RSVP Events by status
+    $accept_events = DB::table('events')
+        ->join('event_rsvp', 'events.id', '=', 'event_rsvp.event_id')
+        ->where('event_rsvp.user_id', $userId)
+        ->where('event_rsvp.status', 'accept')
+        ->where('events.status', 1)
+        ->where('events.end_datetime', '>', now())
+        ->select('events.*')
+        ->orderBy('events.id', 'desc')
+        ->get();
 
-        return view('user.feed', compact('posts','user'));
+    $maybe_events = DB::table('events')
+        ->join('event_rsvp', 'events.id', '=', 'event_rsvp.event_id')
+        ->where('event_rsvp.user_id', $userId)
+        ->where('event_rsvp.status', 'maybe')
+        ->where('events.status', 1)
+        ->where('events.end_datetime', '>', now())
+        ->select('events.*')
+        ->orderBy('events.id', 'desc')
+        ->get();
+
+    $decline_events = DB::table('events')
+        ->join('event_rsvp', 'events.id', '=', 'event_rsvp.event_id')
+        ->where('event_rsvp.user_id', $userId)
+        ->where('event_rsvp.status', 'decline')
+        ->where('events.status', 1)
+        ->where('events.end_datetime', '>', now())
+        ->select('events.*')
+        ->orderBy('events.id', 'desc')
+        ->get();
+
+        $forums = DB::table('forums as f')
+            ->join('forum_topics as ft', 'ft.forum_id', '=', 'f.id')
+            ->join('forums_member as fm', 'fm.forums_id', '=', 'f.id')
+            ->select('f.id', 'f.name','ft.id as topic_id', 'ft.title as topic_name', 'ft.description','ft.images','ft.created_date')
+            ->where('fm.user_id', $userId)
+            ->get();
+        // print_r($forums);die;
+
+
+
+    return view('user.feed', compact(
+        'posts',
+        'user',
+        'broadcast',
+        'events',
+        'accept_events',
+        'maybe_events',
+        'decline_events',
+        'forums'
+    ));
     }
 
     public function store(Request $request)

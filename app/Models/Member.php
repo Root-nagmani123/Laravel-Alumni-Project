@@ -8,10 +8,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Member extends Authenticatable
 {
     use Notifiable;
-    use SoftDeletes;
+    // use SoftDeletes;
 
     protected $table = 'members';
-    protected $dates = ['deleted_at'];
+    // protected $dates = ['deleted_at'];
 
     protected $fillable = [
         'name', 'email', 'password', 'mobile', 'cader',
@@ -23,9 +23,9 @@ class Member extends Authenticatable
         'current_department','current_location','previous_postings'
     ];
 
-    protected $hidden = [
-        'password', 'remember_token',
-    ];
+    // protected $hidden = [
+    //     'password', 'remember_token',
+    // ];
 
     public function topics()
         {
