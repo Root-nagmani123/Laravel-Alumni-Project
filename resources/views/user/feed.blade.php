@@ -75,7 +75,7 @@
                        </div>
                        <form id="create-post-form" enctype="multipart/form-data" class="w-100 position-relative">
                            <textarea name="content" cols="10" rows="2"
-                               placeholder="Write something to Lerio.."></textarea>
+                               placeholder="Write something to Lerio.." ></textarea>
                            <input type="file" name="media[]" multiple class="d-none" id="mediaInput"> <!-- Required -->
 
                            <div class="abs-area position-absolute d-none d-sm-block">
@@ -117,7 +117,7 @@
                 </div>
                 <div class="info-area">
                     <h6 class="m-0"><a href="{{ url('/user/profile/' . $member->id) }}">{{ $member->name ?? 'Unknown' }}</a></h6>
-                    <span class="mdtxt status">Active</span>
+                    <span class="mdtxt status">{{ $post->created_at->diffForHumans() }}</span>
                 </div>
             </div>
         </div>
@@ -230,8 +230,8 @@
     </div>
 
                            {{-- Action Buttons --}}
-                           <div
-                               class="like-comment-share py-5 d-center flex-wrap gap-3 gap-md-0 justify-content-between">
+ <div
+  class="like-comment-share py-5 d-center flex-wrap gap-3 gap-md-0 justify-content-between">
 
  @php
     $likeUsers = $post->likes->pluck('member.name')->filter()->join(', ');
@@ -712,6 +712,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <input type="text" id="edit-input-${commentId}" class="form-control form-control-sm mb-1" value="${commentText}">
                 <button class="btn btn-sm btn-success" onclick="saveEditedComment(${commentId})">Save</button>
                 <button class="btn btn-sm btn-secondary" onclick="cancelEdit(${commentId}, '${commentText.replace(/'/g, "\\'")}')">Cancel</button>
+                 <button class="btn btn-sm btn-danger" onclick="deleteComment(${commentId})">Delete</button>
             `;
         });
     });
@@ -747,7 +748,39 @@ function saveEditedComment(id) {
     });
 }
 
+function deleteComment(commentId) {
+    if (!confirm('Are you sure you want to delete this comment?')) return;
 
+    fetch(`{{ url('user/comments') }}/${commentId}`, {
+        method: 'DELETE',
+       /* headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+            'X-Requested-With': 'XMLHttpRequest',
+            'Accept': 'application/json'
+        }*/
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            'Accept': 'application/json'
+        },
+    })
+    .then(response => {
+        if (!response.ok) throw new Error('Network response was not OK');
+        return response.json();
+    })
+    .then(data => {
+        if (data.success) {
+            const commentElement = document.querySelector(`[data-comment-id="${commentId}"]`);
+            if (commentElement) commentElement.remove();
+        } else {
+            alert(data.error || 'Failed to delete comment.');
+        }
+    })
+    .catch(error => {
+        console.error('Error deleting comment:', error);
+        alert('An error occurred while deleting the comment.');
+    });
+}
 
     document.addEventListener('DOMContentLoaded', function () {
     const buttons = document.querySelectorAll('.copy-url-btn');
