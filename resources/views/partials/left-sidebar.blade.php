@@ -148,6 +148,7 @@
             <!-- Card body START -->
             <div class="card-body">
                 <!-- Connection item START -->
+                 @if(isset($forums) && count($forums) > 0)
 				 @foreach($forums as $forum)
                 <div class="hstack gap-2 mb-3">
                     <!-- Avatar -->
@@ -164,6 +165,9 @@
 
                 </div>
 				@endforeach
+                	@else
+										<p>No forums to display.</p>
+									@endif
                 <!-- Connection item END -->
 
                 <!-- View more button -->
