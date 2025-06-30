@@ -98,7 +98,7 @@
                     <!-- Avatar -->
                     <div class="avatar">
                         <a href="#!"><img class="avatar-img rounded-circle"
-                                src="{{ $event->image ? asset('storage/events/' . $event->image) : asset('feed_assets/images/avatar-7.png') }}"
+                                src="{{ isset($event->image) && $event->image ? asset('storage/events/' . $event->image) : asset('feed_assets/images/avatar/07.jpg') }}"
                                 alt=""></a>
                     </div>
                     <!-- Title -->
@@ -109,13 +109,22 @@
                             {{ \Carbon\Carbon::parse($event->end_datetime)->format('d M, Y') }}</p>
                     </div>
                     <!-- Button -->
-                    <a class="btn btn-primary-soft rounded-circle icon-md ms-auto" href="#"><i class="fa-solid fa-plus">
-                        </i></a>
+						<div class="dropdown ms-auto">
+								<a href="#" class="text-secondary btn btn-secondary-soft-hover py-1 px-2" id="cardFeedAction" data-bs-toggle="dropdown" aria-expanded="false">
+									<i class="bi bi-three-dots"></i>
+								</a>
+								<!-- Card feed action dropdown menu -->
+								<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="cardFeedAction" style="">
+									<li><a class="dropdown-item" href="#"> <i class="bi bi-check2-circle fa-fw pe-2"></i>Interested</a></li>
+									<li><a class="dropdown-item" href="#"> <i class="bi bi-x-circle fa-fw pe-2"></i>Not interested</a></li>
+									<li><a class="dropdown-item" href="#"> <i class="bi bi-dash-circle fa-fw pe-2"></i>Maybe</a></li>
+								</ul>
+							</div>
                 </div>
 
                 @endforeach
                 <div class="d-grid mt-3">
-                    <a class="btn btn-sm btn-primary-soft" href="#!">View more</a>
+                    <a class="btn btn-sm btn-primary-soft" href="{{ url('user/events') }}">View more</a>
                 </div>
                 @else
                 <p>No events found</p>
@@ -133,98 +142,28 @@
         <div class="card mt-4">
             <!-- Card header START -->
             <div class="card-header pb-0 border-0">
-                <h5 class="card-title mb-0">Latest Events</h5>
+                <h5 class="card-title mb-0">Forums</h5>
             </div>
             <!-- Card header END -->
             <!-- Card body START -->
             <div class="card-body">
                 <!-- Connection item START -->
+				 @foreach($forums as $forum)
                 <div class="hstack gap-2 mb-3">
                     <!-- Avatar -->
                     <div class="avatar">
-                        <a href="#!"><img class="avatar-img rounded-circle" src="assets/images/avatar/04.jpg"
+                        <a href="#!"><img class="avatar-img rounded-circle" src="{{ asset('storage/uploads/images/' . $forum->images) }}"
                                 alt=""></a>
                     </div>
                     <!-- Title -->
                     <div class="overflow-hidden">
-                        <a class="h6 mb-0" href="#!">Judy Nguyen </a>
-                        <p class="mb-0 small text-truncate">News anchor</p>
+                        <a class="h6 mb-0" href="#!">{{ $forum->name }} </a>
+                        <p class="mb-0 small text-truncate">Topic: {{ $forum->topic_name }}</p>
+						<small class="text-muted">{{ \Carbon\Carbon::parse($forum->created_date)->format('d M, Y') }}</small>
                     </div>
-                    <!-- Button -->
-                    <a class="btn btn-primary-soft rounded-circle icon-md ms-auto" href="#"><i class="fa-solid fa-plus">
-                        </i></a>
-                </div>
-                <!-- Connection item END -->
-                <!-- Connection item START -->
-                <div class="hstack gap-2 mb-3">
-                    <!-- Avatar -->
-                    <div class="avatar avatar-story">
-                        <a href="#!"> <img class="avatar-img rounded-circle" src="assets/images/avatar/05.jpg" alt="">
-                        </a>
-                    </div>
-                    <!-- Title -->
-                    <div class="overflow-hidden">
-                        <a class="h6 mb-0" href="#!">Amanda Reed </a>
-                        <p class="mb-0 small text-truncate">Web Developer</p>
-                    </div>
-                    <!-- Button -->
-                    <a class="btn btn-primary-soft rounded-circle icon-md ms-auto" href="#"><i class="fa-solid fa-plus">
-                        </i></a>
-                </div>
-                <!-- Connection item END -->
 
-                <!-- Connection item START -->
-                <div class="hstack gap-2 mb-3">
-                    <!-- Avatar -->
-                    <div class="avatar">
-                        <a href="#"> <img class="avatar-img rounded-circle" src="assets/images/avatar/11.jpg" alt="">
-                        </a>
-                    </div>
-                    <!-- Title -->
-                    <div class="overflow-hidden">
-                        <a class="h6 mb-0" href="#!">Billy Vasquez </a>
-                        <p class="mb-0 small text-truncate">News anchor</p>
-                    </div>
-                    <!-- Button -->
-                    <a class="btn btn-primary rounded-circle icon-md ms-auto" href="#"><i
-                            class="bi bi-person-check-fill"> </i></a>
                 </div>
-                <!-- Connection item END -->
-
-                <!-- Connection item START -->
-                <div class="hstack gap-2 mb-3">
-                    <!-- Avatar -->
-                    <div class="avatar">
-                        <a href="#"> <img class="avatar-img rounded-circle" src="assets/images/avatar/01.jpg" alt="">
-                        </a>
-                    </div>
-                    <!-- Title -->
-                    <div class="overflow-hidden">
-                        <a class="h6 mb-0" href="#!">Lori Ferguson </a>
-                        <p class="mb-0 small text-truncate">Web Developer at Webestica</p>
-                    </div>
-                    <!-- Button -->
-                    <a class="btn btn-primary-soft rounded-circle icon-md ms-auto" href="#"><i class="fa-solid fa-plus">
-                        </i></a>
-                </div>
-                <!-- Connection item END -->
-
-                <!-- Connection item START -->
-                <div class="hstack gap-2 mb-3">
-                    <!-- Avatar -->
-                    <div class="avatar">
-                        <a href="#"> <img class="avatar-img rounded-circle" src="assets/images/avatar/placeholder.jpg"
-                                alt=""> </a>
-                    </div>
-                    <!-- Title -->
-                    <div class="overflow-hidden">
-                        <a class="h6 mb-0" href="#!">Carolyn Ortiz </a>
-                        <p class="mb-0 small text-truncate">News anchor</p>
-                    </div>
-                    <!-- Button -->
-                    <a class="btn btn-primary-soft rounded-circle icon-md ms-auto" href="#"><i class="fa-solid fa-plus">
-                        </i></a>
-                </div>
+				@endforeach
                 <!-- Connection item END -->
 
                 <!-- View more button -->

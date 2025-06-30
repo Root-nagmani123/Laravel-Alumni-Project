@@ -24,17 +24,22 @@ class ProfileController extends Controller
    public function showById(Request $request, $id): View
 {
     $user = auth()->guard('user')->user();
-     $userId = $user->id;
+    $userId = $user->id;
 
-    $profile_topic = Post::with(['media', 'member'])
-        ->whereHas('member', function ($query) use ($userId) {
-            $query->where('id', $userId);
-        })
+    // $profile_topic = Post::with(['media', 'member'])
+    //     ->whereHas('member', function ($query) use ($userId) {
+    //         $query->where('id', $userId);
+    //     })
+    //     ->get();
+
+        $posts = Post::with(['member', 'media', 'likes', 'comments.member'])
+        ->orderBy('created_at', 'desc')
+        ->where('member_id', $userId)
         ->get();
        // echo '<pre>';print_r($profile_topic); die;
 
 
-    return view('profile', compact('user','profile_topic'));
+    return view('profile', compact('user','posts'));
 }
 
 

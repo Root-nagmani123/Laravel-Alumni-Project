@@ -14801,6 +14801,7 @@ textarea.form-control-lg {
 }
 .nav .nav-item .nav-link.active {
   color: var(--bs-primary);
+  border-bottom: 2px solid var(--bs-primary);
 }
 
 .nav-pills .nav-link {

@@ -14,6 +14,8 @@ JS libraries, plugins and custom scripts -->
 <script src="{{asset('feed_assets/vendor/dropzone/dist/min/dropzone.min.js')}}"></script>
 <script src="{{asset('feed_assets/vendor/zuck.js/dist/zuck.min.js')}}"></script>
 <script src="{{asset('feed_assets/js/zuck-stories.js')}}"></script>
+<!-- Vendors -->
+<script src="{{asset('feed_assets/vendor/dropzone/dist/dropzone.js')}}"></script>
 
 <!-- Theme Functions -->
 <script src="{{asset('assets/js/functions.js')}}"></script>

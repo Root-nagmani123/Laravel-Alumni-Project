@@ -254,3 +254,9 @@ Route::get('/user_login', function () {
         })->name('user_feed1');
 
 require __DIR__.'/auth.php';
+
+// events page
+
+Route::get('/user/events', function () {
+	return view('user.events');
+})->name('events');
