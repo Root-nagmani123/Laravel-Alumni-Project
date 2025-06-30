@@ -61,7 +61,7 @@
                                     <th>Content</th>
                                     <th>created At</th>
                                     <th>Action</th>
-                                    <th>Status</th>
+                                    <!--<th>Status</th>-->
 
                                 </tr>
                                 <!-- end row -->
@@ -85,13 +85,13 @@
                                         <button type="submit" class="btn btn-danger text-white btn-sm" onclick="return confirm('Are you sure you want to delete?')">Delete</button>
                                     </form>
                                     </td>
-                                    <td>
+                                    <!--<td>
                                         <div class="form-check form-switch d-inline-block">
                          <input class="form-check-input status-toggle" type="checkbox"
-                 data-id="{{ $post->id }}"
-                         {{ $post->status == 1 ? 'checked' : '' }}>
+                 data-id="{{-- $post->id --}}"
+                         {{-- $post->status == 1 ? 'checked' : '' --}}>
                                         </div>
-                                    </td>
+                                    </td>-->
 
                                 @endforeach
 
