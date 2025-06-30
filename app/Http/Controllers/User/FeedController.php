@@ -7,19 +7,18 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\Post;
+use App\Models\Story;
 
 class FeedController extends Controller
 {
-    public function index()
+    public function index_old()
     {
         $user = auth()->guard('user')->user();
         $userId = $user->id;
-		/*$posts = Post::with(['member', 'media', 'likes', 'comments'])
-             ->orderBy('created_at', 'desc')
-                 ->get();*/
-         $posts = Post::with(['member', 'media', 'likes', 'comments.member'])
+	    $posts = Post::with(['member', 'media', 'likes', 'comments.member'])
         ->orderBy('created_at', 'desc')
         ->get();
+
 
            //dd($posts);
           // dd($user);
@@ -33,7 +32,7 @@ class FeedController extends Controller
         ->orderBy('id', 'desc')
         ->get();
 // print_r($events);die;
-       
+
     // RSVP Events by status
     $accept_events = DB::table('events')
         ->join('event_rsvp', 'events.id', '=', 'event_rsvp.event_id')
@@ -74,7 +73,6 @@ class FeedController extends Controller
         // print_r($forums);die;
 
 
-
     return view('user.feed', compact(
         'posts',
         'user',
@@ -85,6 +83,29 @@ class FeedController extends Controller
         'decline_events',
         'forums'
     ));
+
+   return view('user.feed', compact('posts','user'));
+    }
+
+    public function index()
+    {
+        $user = auth()->guard('user')->user(); // Get logged-in user
+        $userId = $user->id;
+
+        // Fetch posts with related models
+        $posts = Post::with([
+            'member',         // User who created the post
+            'media',          // Media associated with the post
+            'likes',          // Likes on the post
+            'comments.member' // Users who commented
+        ])
+        ->orderBy('created_at', 'desc')
+        ->get();
+
+        // Fetch stories with the related user (make sure the Story model has user() relation)
+        $stories = Story::with('user')->latest()->get();
+
+        return view('user.feed', compact('posts', 'user', 'stories'));
     }
 
     public function store(Request $request)

@@ -56,43 +56,47 @@
                             <thead>
                                 <!-- start row -->
                                 <tr>
-                                    <th>S.No.</th>
                                     <th>Name</th>
                                     <th>Email</th>
-                                    <th>Mobile</th>
+                                    <th>Content</th>
+                                    <th>created At</th>
                                     <th>Action</th>
                                     <th>Status</th>
+
                                 </tr>
                                 <!-- end row -->
                             </thead>
                             <tbody>
-                               {{-- @foreach($users as $user) --}}
-                                <tr class="odd">
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
 
-                                    <td>
-                                        <a href="{{--route('socialwall.edit', $user->id) --}}"
-                                            class="btn btn-success text-white btn-sm">Edit</a>
-                                        <form action="{{--route('socialwall.destroy', $user->id) --}}" method="POST"
-                                            style="display:inline;">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger text-white btn-sm" onclick="return confirm('Are you sure you want to delete?')">Delete</button>
-                                        </form>
+                              @foreach($posts as $post)
+                                <tr class="odd">
+                                   <td>{{ $post->member->name ?? 'N/A' }}</td>
+                                    <td>{{ $post->member->email ?? 'N/A' }}</td>
+                                    <td>{{ $post->content }}</td>
+                                    <td>{{ $post->created_at }}</td>
+
+                                   <td>
+
+                                    <!--<a href="{{ route('socialwall.edit', $post->id) }}" class="btn btn-success text-white btn-sm">Edit</a>-->
+
+                                    <form action="{{ route('socialwall.destroy', $post->id) }}" method="POST" style="display:inline;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger text-white btn-sm" onclick="return confirm('Are you sure you want to delete?')">Delete</button>
+                                    </form>
                                     </td>
                                     <td>
                                         <div class="form-check form-switch d-inline-block">
-                                            <input class="form-check-input status-toggle" type="checkbox" role="switch"
-                                                data-table="members" data-column="active_inactive"  data-id="{{-- $user->id --}}"
-                                                {{-- $user->status == 1 ? 'checked' : '' --}}>
+                         <input class="form-check-input status-toggle" type="checkbox"
+                 data-id="{{ $post->id }}"
+                         {{ $post->status == 1 ? 'checked' : '' }}>
                                         </div>
                                     </td>
-                                </tr>
-                                {{-- @endforeach --}}
-                            </tbody>
+
+                                @endforeach
+
+
+                                     </tbody>
                         </table>
 
 

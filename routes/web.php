@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\GroupController;
 use App\Http\Controllers\Admin\ForumController;
 use App\Http\Controllers\Admin\BroadcastController;
 use App\Http\Controllers\Admin\EventsController;
+use App\Http\Controllers\Admin\SocialWallController;
 use App\Http\Controllers\DashboardController;
 
 use App\Http\Controllers\User\AuthController;
@@ -24,6 +25,7 @@ use Illuminate\Support\Facades\Config;
 Route::resource('post', PostController::class);
 
 use App\Http\Controllers\User\CommentController;
+
 
 
 Route::get('/clear/1', function () {
@@ -68,25 +70,24 @@ Route::prefix('user')->name('user.')->group(function () {
         Route::put('/comments/{id}', [CommentController::class, 'update'])->name('comments.update');
         Route::delete('/comments/{id}', [CommentController::class, 'destroy'])->name('comments.destroy');
 
-
-
         Route::post('/like/{post}', [PostController::class, 'toggleLike'])->name('post.like');
-		Route::post('/user/post/{id}/like', [PostController::class, 'toggleLike'])->name('user.post.like');
-		Route::post('/post/{id}/comment', [PostController::class, 'storeComment'])->name('post.comment');
 
          //Route::post('/post/{id}/comment', [PostController::class, 'storeComment'])->name('post.comment');
         //Route::post('/comment/{id}/reply', [CommentController::class, 'reply'])->name('comment.reply');
 
+
+
          Route::get('/profile/{id}', [ProfileController::class, 'showById'])->name('profile');
 
          Route::put('/profile/update/{id}', [ProfileController::class, 'update'])->name('profile.update');
-		 
 
         Route::put('/eduinfo/update/{id}', [ProfileController::class, 'updateEduinfo'])->name('profile.eduinfo');
         Route::put('/proinfo/update/{id}', [ProfileController::class, 'updateProinfo'])->name('profile.proinfo');
 
         Route::get('directory', [DashboardController::class, 'directory'])->name('directory');
        //Route::post('/feed/search', [FeedController::class, 'search'])->name('feed.search');
+
+
 
     });
 
@@ -133,13 +134,21 @@ Route::prefix('admin')->controller(AdminController::class)->group(function () {
 Route::prefix('admin')->middleware('auth:admin')->controller(AdminController::class)->group(function () {
 		Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 		Route::post('/admin/logout', 'logout')->name('admin.logout'); // logout
-		Route::prefix('socialwall')->name('socialwall.')->group(function () {
+
+
+    /*Route::prefix('socialwall')->name('socialwall.')->group(function () {
 		Route::get('/', function () {
 			return view('admin.socialwall.index');
 		})->name('index');
+	});*/
 
-
-	});
+Route::prefix('socialwall')->name('socialwall.')->group(function () {
+    Route::get('/', [SocialWallController::class, 'index'])->name('index');
+     Route::get('/edit/{post}', [SocialWallController::class, 'edit'])->name('edit');
+    Route::put('/update/{post}', [SocialWallController::class, 'update'])->name('update');
+    Route::delete('/destroy/{post}', [SocialWallController::class, 'destroy'])->name('destroy');
+    Route::post('/toggle-status', [SocialWallController::class, 'toggleStatus'])->name('toggleStatus');
+});
 
 
 Route::prefix('forums')->name('forums.')->group(function () {
@@ -254,9 +263,3 @@ Route::get('/user_login', function () {
         })->name('user_feed1');
 
 require __DIR__.'/auth.php';
-
-// events page
-
-Route::get('/user/events', function () {
-	return view('user.events');
-})->name('events');
