@@ -2,8 +2,10 @@
 namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Group;
+use App\Models\GroupMember;
 use App\Models\User;
 use App\Models\Topic;
+use App\Models\Admin\Admin;
 use App\Models\Member;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,11 +18,17 @@ class GroupController extends Controller
     }
     public function create()
     {
+
+        $admins = Admin::select('*')->get();
+        $members = Member::select('*')->get();
+
+        $mentors = $admins->merge($members);
+
         $users = Member::all();
 
-        return view('admin.group.create', compact('users'));
+        return view('admin.group.create', compact('mentors','users'));
     }
-    public function store(Request $request)
+    public function store_1012025(Request $request)
     {
         //Array ( [name] => Dhananjay [mentor_id] => 1 [user_id] => Array ( [0] => 4 [1] => 5 ) [status] => 1 )
          $request->validate([
@@ -34,6 +42,37 @@ class GroupController extends Controller
        Group::create($request->all());
         return redirect()->route('group.index')->with('success', 'Group created successfully.');
     }
+
+    public function store(Request $request)
+    {
+     $request->validate([
+        'name' => 'required|string|max:255',
+        'mentor_id' => 'required|integer',
+        'user_id' => 'required|array',
+        'status' => 'nullable|integer',
+    ]);
+
+    // Create the group
+    $group = Group::create([
+        'name' => $request->input('name'),
+        'state_id' => $request->input('state_id'),
+        'status' => $request->input('status'),
+        'created_by' => $request->input('created_by'),
+        'member_type' => $request->input('member_type'),
+    ]);
+
+    // Create the group member
+    GroupMember::create([
+        'group_id' => $group->id,
+        'member_id' => $request->input('mentor_id'),
+        'mentor' => $request->input('mentor_id'),
+        'mentiee' => json_encode($request->input('user_id')),
+        'status' => $request->input('status'),
+    ]);
+
+    return redirect()->route('group.index')->with('success', 'Group created successfully.');
+    }
+
     public function edit(Group $group)
     {
         return view('admin.group.edit', compact('group'));
@@ -51,22 +90,18 @@ class GroupController extends Controller
         $group->update($request->all());
         return redirect()->route('group.index')->with('success', 'Group updated successfully.');
     }
-    /*public function destroy(Group $group)
-    {
-        $group->delete();
-        return redirect()->route('group.index')->with('success', 'Group deleted successfully.');
-    }*/
-      public function destroy(Group $group)
-    {
-        if ($group->status == 1) {
-            return redirect()->route('group.index')
-                            ->with('error', 'Cannot delete an active Group. Please deactivate it first.');
-        }
 
-        $group->delete();
-        return redirect()->route('group.index')
-                        ->with('success', 'Group deleted successfully.');
-    }
+      public function destroy(Group $group)
+        {
+            if ($group->status == 1) {
+                return redirect()->route('group.index')
+                                ->with('error', 'Cannot delete an active Group. Please deactivate it first.');
+            }
+
+            $group->delete();
+            return redirect()->route('group.index')
+                            ->with('success', 'Group deleted successfully.');
+        }
 
      public function toggleStatus(Request $request)
     {
@@ -88,6 +123,7 @@ class GroupController extends Controller
         return view('admin.group.add_topic', compact('group', 'id'));
     }
 
+
     public function save_topic(Request $request, $id)
 {
     $request->validate([
@@ -108,12 +144,14 @@ class GroupController extends Controller
         parse_str(parse_url($request->video_link, PHP_URL_QUERY), $query);
         $embedLink = isset($query['v']) ? "https://www.youtube.com/embed/" . $query['v'] : '';
     }
-
+//dd($request);
     Topic::create([
         'title' => $request->title,
         'description' => $request->description,
         'images' => $imageFile,
         'files' => $docFile,
+        'video' => $embedLink,
+        'live_video' => $embedLink,
         'video_link' => $embedLink,
         'video_caption' => $request->video_caption,
         'status' => $request->status,
@@ -134,29 +172,21 @@ class GroupController extends Controller
     {
         $pageName = 'Group';
         $group = Group::findOrFail($id);
-        //$topics = Topic::where('group_id', $id)->with('created_by')->get();
         $topics = Topic::where('group_id', $id)->with('created_by')->get();
 
         return view('admin.group.topics_list', compact('group', 'topics','pageName'));
     }
 
-    /*public function updateTopic(Request $request, $id) {
-    $topic = Topic::findOrFail($id);
-    $topic->update($request->all());
-    return back()->with('success', 'Topic updated.');
-    }*/
+   public function updateTopic(Request $request, $id) {
+        $topic = Topic::findOrFail($id);
 
-    public function updateTopic(Request $request, $id) {
-    $topic = Topic::findOrFail($id);
+        $topic->title = $request->title;
+        $topic->description = $request->description;
+        $topic->status = $request->status;
+        $topic->save();
+        return back()->with('success', 'Topic added successfully.');
 
-    $topic->title = $request->title;
-    $topic->description = $request->description;
-    $topic->status = $request->status;
-     $topic->save();
-
-   return redirect()->route('admin.group.topics_list', ['id' => $id])
-    ->with('success', 'Topic updated successfully.');
-
+    //return redirect()->route('group.topics_list')->with('success', 'Topic added successfully.');
     }
 
     public function deleteTopic($id) {

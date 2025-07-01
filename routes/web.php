@@ -205,8 +205,8 @@ Route::prefix('group')->name('group.')->group(function () {
 		Route::get('view_topic/{id}', [GroupController::class, 'view_topic'])->name('topic.view');
 		Route::get('add_topic/{id}', [GroupController::class, 'add_topic'])->name('add_topic');
 		Route::post('save_topic/{id}', [GroupController::class, 'save_topic'])->name('save_topic');
-		Route::put('topics/{id}/update', [ForumController::class, 'updateTopic'])->name('topics_update');
-        Route::delete('topics/{id}', [ForumController::class, 'deleteTopic'])->name('topics.delete');
+        Route::put('topics/{id}/update', [GroupController::class, 'updateTopic'])->name('topics_update');
+        Route::delete('topics/{id}', [GroupController::class, 'deleteTopic'])->name('topics.delete');
         Route::post('topicToggleStatus', [GroupController::class, 'topicToggleStatus'])->name('topicToggleStatus');
 
     });

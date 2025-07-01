@@ -46,7 +46,7 @@
 
                         <!-- Delete Form -->
                         <form id="delete-form-{{ $topic->id }}"
-                              action="{{ route('forums.topics.delete', $topic->id) }}"
+                              action="{{ route('group.topics.delete', $topic->id) }}"
                               method="POST"
                               style="display:inline;">
                             @csrf

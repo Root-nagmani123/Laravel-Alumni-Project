@@ -6,12 +6,16 @@ class Group extends Model
 {
 
     use HasFactory;
-    protected $fillable = [
+   /*  protected $fillable = [
         'name',
         'state_id',
         'status',
         'created_by',
         'created_at',
         'createdFrom',
+    ]; */
+	protected $fillable = [
+         'name', 'state_id', 'status', 'created_by', 'member_type'
     ];
+	
 }
