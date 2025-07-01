@@ -54,8 +54,7 @@
                         <span class="d-block">Drag & Drop image here or click to browse.</span>
                         <input type="file"
                                id="media"
-                               name="media[]"
-                               multiple
+                               name="media[]" multiple
                                class="d-none"
                                accept="image/*">
                         <div id="preview" class="mt-3 d-flex flex-wrap gap-3"></div>
@@ -503,5 +502,31 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+
    </script>
+<script>
+document.getElementById("drop-area").addEventListener("click", function () {
+    document.getElementById("media").click();
+});
+
+document.getElementById("media").addEventListener("change", function (e) {
+    const preview = document.getElementById("preview");
+    preview.innerHTML = "";
+
+    for (let file of e.target.files) {
+        const reader = new FileReader();
+        reader.onload = function (event) {
+            const img = document.createElement("img");
+            img.src = event.target.result;
+            img.style.width = "100px";
+            img.style.height = "100px";
+            img.classList.add("rounded", "border");
+            preview.appendChild(img);
+        };
+        reader.readAsDataURL(file);
+    }
+});
+</script>
+
+
    @endsection

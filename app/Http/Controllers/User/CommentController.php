@@ -33,37 +33,65 @@ class CommentController extends Controller
 
 
 
-    public function update(Request $request, $id)
+//     public function update(Request $request, $id)
+// {
+//     $request->validate([
+//         'comment' => 'required|string|max:1000',
+//     ]);
+
+//     $comment = Comment::findOrFail($id);
+
+//     // Ensure user owns the comment
+//     if ($comment->member_id !== auth()->guard('user')->id()) {
+//         return response()->json(['message' => 'Unauthorized'], 403);
+//     }
+
+//     $comment->comment = strip_tags($request->comment);
+//     $comment->save();
+
+//     return response()->json(['success' => true, 'message' => 'Comment updated']);
+//  }
+
+//   public function destroy($id)
+// {
+//     $comment = Comment::findOrFail($id);
+
+//     if ($comment->member_id !== auth()->guard('user')->id()) {
+//         return response()->json(['error' => 'Unauthorized'], 403);
+//     }
+
+//     $comment->delete();
+
+//     return response()->json(['success' => true]);
+// }
+public function update(Request $request, Comment $comment)
 {
-    $request->validate([
+    $this->validate($request, [
         'comment' => 'required|string|max:1000',
     ]);
 
-    $comment = Comment::findOrFail($id);
-
-    // Ensure user owns the comment
-    if ($comment->member_id !== auth()->guard('user')->id()) {
-        return response()->json(['message' => 'Unauthorized'], 403);
+    if ($comment->member_id !== auth('user')->id()) {
+        abort(403);
     }
 
-    $comment->comment = strip_tags($request->comment);
-    $comment->save();
+    $comment->update([
+        'comment' => $request->comment
+    ]);
 
-    return response()->json(['success' => true, 'message' => 'Comment updated']);
- }
+    return redirect()->back()->with('success', 'Comment updated successfully.');
+}
 
-  public function destroy($id)
+public function destroy(Comment $comment)
 {
-    $comment = Comment::findOrFail($id);
-
-    if ($comment->member_id !== auth()->guard('user')->id()) {
-        return response()->json(['error' => 'Unauthorized'], 403);
+    if ($comment->member_id !== auth('user')->id()) {
+        abort(403);
     }
 
     $comment->delete();
 
     return response()->json(['success' => true]);
 }
+
 
 }
 

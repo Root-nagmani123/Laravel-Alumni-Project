@@ -98,8 +98,29 @@
             });
 
             $imageMedia = $validMedia->where('file_type', 'image')->values();
+            $videoMedia = $validMedia->where('file_type', 'video')->values();
+
             $totalImages = $imageMedia->count();
+            $totalVideos = $videoMedia->count();
             @endphp
+            @if($post->video_link)
+            {{-- Embedded YouTube Video --}}
+            <div class="ratio ratio-16x9 mt-2">
+                <iframe width="560" height="315" src="{{ $post->video_link }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            </div>
+            @elseif($totalVideos > 0)
+            {{-- Uploaded Video Files --}}
+            <div class="post-video mt-2">
+                @foreach($videoMedia as $video)
+                <video controls class="w-100 rounded mb-2" preload="metadata">
+                    <source src="{{ asset('storage/' . $video->file_path) }}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                @endforeach
+            </div>
+            @endif
+
+            {{-- Image Display (your current logic) --}}
 
             @if($totalImages === 1)
             <div class="post-img mt-2">
@@ -160,14 +181,19 @@
 
 
                 <li class="nav-item">
-                    <a class="nav-link" href="#!"> <i class="bi bi-chat-fill pe-1"></i>Comments
-                        ({{ $post->comments?->count() ?? 0 }})</a>
+                    <a class="nav-link" href="#!">
+                        <i class="bi bi-chat-fill pe-1"></i>Comments
+                        <span
+                            class="comment-count">{{ $post->comments->count() ? '(' . $post->comments->count() . ')' : '' }}</span>
+                    </a>
+
                 </li>
                 <!-- Card share action START -->
                 <li class="nav-item dropdown ms-sm-auto">
                     <a class="nav-link mb-0" href="#" id="cardShareAction" data-bs-toggle="dropdown"
                         aria-expanded="false">
-                        <i class="bi bi-reply-fill flip-horizontal ps-1"></i> Share ({{ $post->shares ?? 0 }})
+                        <i class="bi bi-reply-fill flip-horizontal ps-1"></i> Share
+                        {{ $post->shares ? '('.$post->shares->count().')' : '' }}
                     </a>
                     <!-- Card share action dropdown menu -->
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="cardShareAction">
@@ -212,7 +238,7 @@
             <ul class="comment-wrap list-unstyled">
                 <!-- Comment item START -->
                 @foreach ($post->comments as $comment)
-                <li class="comment-item mb-3">
+                <li class="comment-item mb-3" id="comment-{{ $comment->id }}">
                     <div class="d-flex position-relative">
                         <!-- Avatar -->
                         <div class="avatar avatar-xs">
@@ -279,41 +305,123 @@
     <!-- Load more button END -->
     <!-- Card feed END -->
 </div>
+<!-- Edit Comment Modal -->
+<div class="modal fade" id="editCommentModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <form method="POST">
+            @csrf
+            @method('PUT')
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Comment</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <textarea name="comment" class="form-control" rows="3"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Update</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
 
 @section('scripts')
 <script>
+$(document).on('click', '.like-button', function() {
+
+    const $btn = $(this);
+    const url = $btn.data('url');
 
 
-    $(document).on('click', '.like-button', function () {
+    $.ajax({
+        url: url,
+        type: 'POST',
+        data: {
+            _token: $('meta[name="csrf-token"]').attr('content')
+        },
+        success: function(response) {
+            console.table(response);
+            // Toggle class
+            $btn.toggleClass('active text-primary');
+            if (response.like_count != 0) {
+                $btn.find('.like-count').html('(' + response.like_count + ')');
+            } else {
+                $btn.find('.like-count').html('');
+            }
+            $btn.attr('data-bs-title', response.tooltip_html).tooltip('dispose').tooltip();
+        },
+        error: function(xhr) {
+            console.error(xhr.responseText);
+        }
+    });
 
-        const $btn = $(this);
-        const url = $btn.data('url');
+});
+$(document).on('click', '.edit-comment-btn', function() {
+    const commentId = $(this).data('comment-id');
+    const commentText = $(this).data('comment');
 
+    $('#editCommentModal textarea[name="comment"]').val(commentText);
+    $('#editCommentModal form').attr('action', `/user/comments/${commentId}`);
+    $('#editCommentModal').modal('show');
+});
+$('#editCommentModal form').on('submit', function(e) {
+    e.preventDefault();
+    const url = $(this).attr('action');
+    const comment = $(this).find('textarea[name="comment"]').val();
 
+    $.ajax({
+        url: url,
+        type: 'PUT',
+        data: {
+            _token: $('meta[name="csrf-token"]').attr('content'),
+            comment: comment
+        },
+        success: function(response) {
+            $('#editCommentModal').modal('hide');
+            // optionally reload comment list or update DOM
+        },
+        error: function() {
+            alert('Error updating comment.');
+        }
+    });
+});
+$(document).on('click', '.delete-comment-btn', function() {
+    const commentId = $(this).data('comment-id');
+
+    if (confirm('Are you sure you want to delete this comment?')) {
         $.ajax({
-            url: url,
-            type: 'POST',
+            url: `/user/comments/${commentId}`,
+            type: 'DELETE',
             data: {
                 _token: $('meta[name="csrf-token"]').attr('content')
             },
-            success: function (response) {
-                console.table(response);
-                // Toggle class
-                $btn.toggleClass('active text-primary');
-                if(response.like_count != 0) {
-                    $btn.find('.like-count').html('('+response.like_count+')');
-                }
-                else {
-                    $btn.find('.like-count').html('');
-                }
-            $btn.attr('data-bs-title', response.tooltip_html).tooltip('dispose').tooltip();
+            success: function() {
+                $(`#comment-${commentId}`).fadeOut(300, function() {
+                    $(this).remove();
+
+                    // Update comment count
+                    const $postCard = $(this).closest('.card');
+                    const $countSpan = $postCard.find('.comment-count');
+                    let countText = $countSpan.text().replace(/[()]/g, '');
+                    let count = parseInt(countText) || 0;
+
+                    count = count - 1;
+                    if (count > 0) {
+                        $countSpan.text('(' + count + ')');
+                    } else {
+                        $countSpan.text('');
+                    }
+                });
             },
-            error: function (xhr) {
-                console.error(xhr.responseText);
+            error: function() {
+                alert('Failed to delete comment.');
             }
         });
-
-    });
+    }
+});
 </script>
 
 @endsection
