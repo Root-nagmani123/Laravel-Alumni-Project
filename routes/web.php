@@ -139,21 +139,15 @@ Route::prefix('admin')->controller(AdminController::class)->group(function () {
 Route::prefix('admin')->middleware('auth:admin')->controller(AdminController::class)->group(function () {
 		Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 		Route::post('/admin/logout', 'logout')->name('admin.logout'); // logout
+		// Route::prefix('socialwall')->name('socialwall.')->group(function () {
+		// Route::get('/', function () {
+		// 	return view('admin.socialwall.index');
+		// })->name('index');
 
 
-    /*Route::prefix('socialwall')->name('socialwall.')->group(function () {
-		Route::get('/', function () {
-			return view('admin.socialwall.index');
-		})->name('index');
-	});*/
+	// });
+		Route::get('socialwall', [AdminController::class, 'socialwall'])->name('socialwall.index');
 
-Route::prefix('socialwall')->name('socialwall.')->group(function () {
-    Route::get('/', [SocialWallController::class, 'index'])->name('index');
-     Route::get('/edit/{post}', [SocialWallController::class, 'edit'])->name('edit');
-    Route::put('/update/{post}', [SocialWallController::class, 'update'])->name('update');
-    Route::delete('/destroy/{post}', [SocialWallController::class, 'destroy'])->name('destroy');
-    Route::post('/toggle-status', [SocialWallController::class, 'toggleStatus'])->name('toggleStatus');
-});
 
 
 Route::prefix('forums')->name('forums.')->group(function () {

@@ -46,62 +46,76 @@
 
                         </div>
                     </div>
-                    <hr>
-                    <div id="zero_config_wrapper" class="dataTables_wrapper">
+                   @php use Illuminate\Support\Str; @endphp
 
+<div class="col-md-8 col-xl-6 middle-wrapper offset-md-3">
+    @foreach($groupedPosts as $post)
+    <div class="row"> 
+        <div class="col-md-12 grid-margin">
+            <div class="card rounded" id="feed-{{ $post['post_id'] }}">
+                <div class="card-header">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="d-flex align-items-center">
+                            <div class="col-md-6 me-1">
+                        @php
+                            $profilePic = !empty($first->member_profile_pic) && file_exists(public_path('uploads/member/' . $first->member_profile_pic))
+                                ? asset('uploads/member/' . $first->member_profile_pic)
+                                : asset('feed_assets/images/avatar-7.png');
+                        @endphp
 
-                        <table id="zero_config"
-                            class="table table-striped table-bordered text-nowrap align-middle dataTable"
-                            aria-describedby="zero_config_info">
-                            <thead>
-                                <!-- start row -->
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Email</th>
-                                    <th>Content</th>
-                                    <th>created At</th>
-                                    <th>Action</th>
-                                    <!--<th>Status</th>-->
+                        <img class="img-xs img-fluid rounded-circle" src="{{ $profilePic }}" alt="Profile Picture">
+        
+                        </div> 
+                            <div class="col-md-12">
+                                <div class="ms-2">
+                                    <p class="mb-0">By. {{ $post['member_name'] }}</p>
+                                    <p class="tx-11 text-muted">{{ \Carbon\Carbon::parse($post['created_at'])->format('d-M-Y') }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="delete-icon">
+                            <a href="#" data-feed-id="{{ $post['post_id'] }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete this Feed" onclick="delete_feed_model({{ $post['post_id'] }})">
+                               delete
+                                <i class="bi bi-trash3-fill"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div> 
 
-                                </tr>
-                                <!-- end row -->
-                            </thead>
-                            <tbody>
+                <div class="card-body">
+                    @if(!empty($post['content']))
+                        <p class="mb-3 tx-14">{{ $post['content'] }}</p>
+                    @endif
 
-                              @foreach($posts as $post)
-                                <tr class="odd">
-                                   <td>{{ $post->member->name ?? 'N/A' }}</td>
-                                    <td>{{ $post->member->email ?? 'N/A' }}</td>
-                                    <td>{{ $post->content }}</td>
-                                    <td>{{ $post->created_at }}</td>
+                    @if($post['media']->isNotEmpty())
+                        <div class="row">
+                            @foreach($post['media'] as $media)
+                                <div class="col-md-4 mb-3">
+                                    @if(Str::startsWith($media['file_type'], 'image'))
+                                        <img src="{{ asset('storage/' . $media['file_path']) }}" class="img-fluid rounded" />
+                                    @else
+                                        <a href="{{ asset('storage/' . $media['file_path']) }}" target="_blank">View File</a>
+                                    @endif
+                                </div>
+                            @endforeach
+                        </div>
+                    @endif
+                </div>
 
-                                   <td>
-
-                                    <!--<a href="{{ route('socialwall.edit', $post->id) }}" class="btn btn-success text-white btn-sm">Edit</a>-->
-
-                                    <form action="{{ route('socialwall.destroy', $post->id) }}" method="POST" style="display:inline;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger text-white btn-sm" onclick="return confirm('Are you sure you want to delete?')">Delete</button>
-                                    </form>
-                                    </td>
-                                    <!--<td>
-                                        <div class="form-check form-switch d-inline-block">
-                         <input class="form-check-input status-toggle" type="checkbox"
-                 data-id="{{-- $post->id --}}"
-                         {{-- $post->status == 1 ? 'checked' : '' --}}>
-                                        </div>
-                                    </td>-->
-
-                                @endforeach
-
-
-                                     </tbody>
-                        </table>
-
-
+                <div class="card-footer"> 
+                    <div class="d-flex post-actions">
+                        <a href="#" id="Commentbox" class="d-flex align-items-center text-muted mr-4">
+                            <i class="bi bi-arrow-right"></i>
+                            <p class="d-none d-md-block ms-2 mb-1">Read more...</p>
+                        </a>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+    @endforeach
+</div>
+
             </div>
         </div>
         <!-- end Zero Configuration -->

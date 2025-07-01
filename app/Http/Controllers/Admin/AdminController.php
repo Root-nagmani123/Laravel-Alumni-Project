@@ -92,6 +92,44 @@ public function loginAuth(Request $request)
         return redirect('http://127.0.0.1:8000/admin/login');*/
 
     }
+    public function socialwall(){
+    $rawPosts = DB::table('posts')
+    ->join('members', 'posts.member_id', '=', 'members.id')
+    ->leftJoin('post_media', 'posts.id', '=', 'post_media.post_id')
+    ->select(
+        'posts.id as post_id',
+        'posts.content',
+        'posts.media_type',
+        'posts.created_at as post_created_at',
+        'post_media.file_path',
+        'post_media.file_type',
+        'members.name as member_name',
+        'members.profile_pic as member_profile_pic'
+    )
+    ->orderBy('posts.created_at', 'desc')
+    ->get();
+$groupedPosts = $rawPosts->groupBy('post_id')->map(function ($group) {
+    $first = $group->first();
+    return [
+        'post_id' => $first->post_id,
+        'member_name' => $first->member_name,
+        'member_profile_pic' => $first->member_profile_pic,
+        'content' => $first->content,
+        'media_type' => $first->media_type,
+        'created_at' => $first->post_created_at,
+        'media' => $group->map(function ($item) {
+            return [
+                'file_path' => $item->file_path,
+                'file_type' => $item->file_type
+            ];
+        })->filter(fn($media) => !empty($media['file_path']))->values()
+    ];
+})->values();
+
+// print_r($groupedPosts);die;
+        return view('admin.socialwall.index',compact('groupedPosts'));
+        
+    }
 
 
 }
