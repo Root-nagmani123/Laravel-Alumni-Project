@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\AdminController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 
+
 use App\Http\Controllers\Admin\MemberController;
 use App\Http\Controllers\Admin\GroupController;
 use App\Http\Controllers\Admin\ForumController;
@@ -70,7 +71,11 @@ Route::prefix('user')->name('user.')->group(function () {
         Route::put('/comments/{id}', [CommentController::class, 'update'])->name('comments.update');
         Route::delete('/comments/{id}', [CommentController::class, 'destroy'])->name('comments.destroy');
 
-        Route::post('/like/{post}', [PostController::class, 'toggleLike'])->name('post.like');
+        // Route::post('/like/{post}', [PostController::class, 'toggleLike'])->name('post.like');
+		// Route::post('/user/posts/{post}/like', [PostController::class, 'toggleLike']);
+		// Route::post('/user/post/{post}/like', [PostController::class, 'toggleLike'])->name('user.post.like');
+		// Route::post('/user/post/{post}/like', [PostController::class, 'toggleLike'])->name('user.post.like');
+		Route::post('/post/{post}/like', [PostController::class, 'toggleLike'])->name('post.like');
 
          //Route::post('/post/{id}/comment', [PostController::class, 'storeComment'])->name('post.comment');
         //Route::post('/comment/{id}/reply', [CommentController::class, 'reply'])->name('comment.reply');

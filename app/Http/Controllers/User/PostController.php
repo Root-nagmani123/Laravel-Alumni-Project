@@ -7,8 +7,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Post;
 
+
 use App\Models\PostMedia;
 use Illuminate\Support\Str; // added on 16-6-2025
+
 
 
 class PostController extends Controller
@@ -142,26 +144,27 @@ public function store_chnagefor_video_link(Request $request)
     return redirect('/user/feed')->with('success', 'Post created successfully.');
 }
 
-/*
-public function toggleLike(Post $post, Request $request)
+
+public function toggleLike(Post $post)
 {
-    $user = auth('member')->user(); // Explicitly using the 'member' guard
+    $user = auth('user')->user();
 
-    if (!$user) {
-        return response()->json(['message' => 'Unauthorized'], 401);
-    }
-
-    $existingLike = $post->likes()->where('member_id', $user->id)->first();
-
-    if ($existingLike) {
-        $existingLike->delete();
-        return response()->json(['status' => 'unliked']);
+    // Toggle like
+    $liked = $post->likes()->where('member_id', $user->id)->exists();
+    if ($liked) {
+        $post->likes()->where('member_id', $user->id)->delete();
     } else {
         $post->likes()->create(['member_id' => $user->id]);
-        return response()->json(['status' => 'liked']);
     }
+
+    $likeUsersTooltip = $post->likes()->with('member')->get()->pluck('member.name')->implode('<br>');
+
+    return response()->json([
+        'like_count' => $post->likes()->count(),
+        'tooltip_html' => $likeUsersTooltip ?: 'No likes yet',
+    ]);
 }
-*/
+
 
     public function toggleLike_old25062025(Post $post, Request $request)
     {
@@ -202,29 +205,25 @@ public function toggleLike(Post $post, Request $request)
     return redirect()->back()->with('status', $existingLike ? 'Post unliked' : 'Post liked');
 }
 
-
-public function toggleLike(Post $post, Request $request)
+public function storePostComment(Request $request, $id)
 {
-    $user = auth('user')->user(); // or auth('member')->user()
+    $request->validate([
+        'comment' => 'required|string|max:1000',
+    ]);
 
-    if (!$user) {
-        return response()->json(['error' => 'Unauthorized'], 401);
-    }
+    $post = Post::findOrFail($id);
+    $userId = auth('user')->id();
 
-    $existingLike = $post->likes()->where('member_id', $user->id)->first();
+    $comment = $post->comments()->create([
+        'member_id' => $userId,
+        'content' => $request->comment,
+    ]);
 
-    if ($existingLike) {
-        $existingLike->delete();
-    } else {
-        $post->likes()->create(['member_id' => $user->id]);
-    }
-
-    if ($request->ajax()) {
-        // Return only the updated like section
-        return view('partials.like-button', compact('post'))->render();
-    }
-
-    return redirect()->back()->with('status', $existingLike ? 'Post unliked' : 'Post liked');
-}
+    return response()->json([
+        'success' => true,
+        'message' => 'Comment added successfully.',
+        'comment' => $comment,
+    ]);
 
 }
+};

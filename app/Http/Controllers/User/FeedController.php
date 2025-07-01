@@ -177,31 +177,45 @@ class FeedController extends Controller
 
         return $html;
     }
-    public function toggleLike($id)
+    public function toggleLike(Post $post)
 {
-    $post = Post::findOrFail($id);
-    $userId = auth('user')->id();
+    $user = auth('user')->user();
+    $liked = $post->likes()->where('member_id', $user->id)->exists();
 
-    // Toggle like
-    $existingLike = $post->likes()->where('member_id', $userId)->first();
-    if ($existingLike) {
-        $existingLike->delete();
+    if ($liked) {
+        $post->likes()->where('member_id', $user->id)->delete();
     } else {
-        $post->likes()->create(['member_id' => $userId]);
+        $post->likes()->create(['member_id' => $user->id]);
     }
 
-    // Refresh likes
-    $post->load('likes.member'); // Make sure to eager load
-
-    $likeCount = $post->likes->count();
-    $likeUsers = $post->likes->pluck('member.name')->filter()->values();
+    $likeUsersTooltip = $post->likes()->with('member')->get()->pluck('member.name')->implode('<br>');
 
     return response()->json([
-        'success' => true,
-        'count' => $likeCount,
-        'users' => $likeUsers,
+        'like_count' => $post->likes()->count(),
+        'tooltip_html' => $likeUsersTooltip ?: 'No likes yet',
     ]);
 }
+    public function storePostComment(Request $request, $id)
+    {
+        $request->validate([
+            'comment' => 'required|string|max:1000',
+        ]);
+
+        $post = Post::findOrFail($id);
+        $userId = auth('user')->id();
+
+        $comment = $post->comments()->create([
+            'member_id' => $userId,
+            'content' => $request->comment,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Comment added successfully.',
+            'comment' => $comment,
+        ]);
+    }
+
  public function storeComment(Request $request, $id)
     {
         $request->validate([
@@ -220,6 +234,36 @@ class FeedController extends Controller
             'success' => true,
             'message' => 'Comment added successfully.',
             'comment' => $comment,
+        ]);
+    }
+    public function deleteComment($id)
+    {
+        $comment = Comment::findOrFail($id);
+        $userId = auth('user')->id();
+
+        if ($comment->member_id !== $userId) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        $comment->delete();
+
+        return response()->json(['success' => true, 'message' => 'Comment deleted successfully.']);
+    }
+    public function replyToComment(Request $request, $id)
+    {
+        $request->validate([
+            'reply' => 'required|string|max:1000',
+        ]);
+        $comment = Comment::findOrFail($id);
+        $userId = auth('user')->id();
+        $reply = $comment->replies()->create([
+            'member_id' => $userId,
+            'content' => $request->reply,
+        ]);
+        return response()->json([
+            'success' => true,
+            'message' => 'Reply added successfully.',
+            'reply' => $reply,
         ]);
     }
 

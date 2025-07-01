@@ -3,6 +3,7 @@ JS libraries, plugins and custom scripts -->
 
 <!-- Bootstrap JS -->
 <script src="{{asset('feed_assets/vendor/bootstrap/dist/js/bootstrap.bundle.min.js')}}"></script>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
 <!-- Vendors -->
 <script src="{{asset('feed_assets/vendor/tiny-slider/dist/tiny-slider.js')}}"></script>

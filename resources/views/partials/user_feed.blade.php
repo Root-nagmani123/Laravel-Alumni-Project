@@ -37,7 +37,8 @@
         <ul class="nav nav-pills nav-stack small fw-normal">
             <li class="nav-item">
                 <a class="nav-link bg-light py-1 px-2 mb-0" href="#!" data-bs-toggle="modal"
-                    data-bs-target="#feedActionPhoto"> <i class="bi bi-image-fill text-success pe-2"></i>Photos/Videos</a>
+                    data-bs-target="#feedActionPhoto"> <i
+                        class="bi bi-image-fill text-success pe-2"></i>Photos/Videos</a>
             </li>
             <!-- <li class="nav-item">
                 <a class="nav-link bg-light py-1 px-2 mb-0" href="#!" data-bs-toggle="modal"
@@ -147,12 +148,11 @@
                 <li class="nav-item">
                     <a href="javascript:void(0);"
                         class="nav-link like-button {{ $hasLiked ? 'active text-primary' : '' }}"
-                        data-post-id="{{ $post->id }}" data-bs-toggle="tooltip" data-bs-html="true"
-                        data-bs-placement="top" data-bs-custom-class="tooltip-text-start"
-                        data-bs-title="{{ $likeUsersTooltip ?: 'No likes yet' }}" data-bs-container="body">
-
+                        data-url="{{ route('user.post.like', $post->id) }}" data-post-id="{{ $post->id }}"
+                        data-bs-toggle="tooltip" data-bs-html="true"
+                        data-bs-title="{{ $likeUsersTooltip ?: 'No likes yet' }}">
                         <i class="bi bi-hand-thumbs-up-fill pe-1"></i>
-                        <span class="like-label">Liked</span>
+                        <span class="like-label">Like</span>
                         (<span class="like-count">{{ $post->likes->count() }}</span>)
                     </a>
                 </li>
@@ -280,47 +280,35 @@
     <!-- Card feed END -->
 </div>
 
+@section('scripts')
 <script>
-document.addEventListener("DOMContentLoaded", function () {
-    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-    // Initialize tooltips
-    document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => {
-        new bootstrap.Tooltip(el);
-    });
 
-    // Handle like toggle
-    document.querySelectorAll('.like-button').forEach(button => {
-        button.addEventListener('click', function () {
-            const postId = this.dataset.postId;
-            const url = `/user/post/${postId}/like`;
+    $(document).on('click', '.like-button', function () {
 
-            fetch(url, {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': csrfToken,
-                    'Accept': 'application/json'
-                },
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    // Update like count
-                    const countSpan = this.querySelector('.like-count');
-                    countSpan.textContent = data.count;
+        const $btn = $(this);
+        const url = $btn.data('url');
 
-                    // Update tooltip content
-                    this.setAttribute('data-bs-title', data.users.join('<br>'));
-                    bootstrap.Tooltip.getInstance(this)?.dispose();
-                    new bootstrap.Tooltip(this);
 
-                    // Toggle class
-                    this.classList.toggle('active');
-                    this.classList.toggle('text-primary');
-                }
-            })
-            .catch(console.error);
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: {
+                _token: $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function (response) {
+                console.table(response);
+                // Toggle class
+                $btn.toggleClass('active text-primary');
+                $btn.find('.like-count').html(response.like_count);
+            $btn.attr('data-bs-title', response.tooltip_html).tooltip('dispose').tooltip();
+            },
+            error: function (xhr) {
+                console.error(xhr.responseText);
+            }
         });
+
     });
-});
 </script>
+
+@endsection
