@@ -153,7 +153,7 @@
                         data-bs-title="{{ $likeUsersTooltip ?: 'No likes yet' }}">
                         <i class="bi bi-hand-thumbs-up-fill pe-1"></i>
                         <span class="like-label">Like</span>
-                        (<span class="like-count">{{ $post->likes->count() }}</span>)
+                        <span class="like-count">{{ $post->likes->count() ? '('.$post->likes->count().')' : '' }}</span>
                     </a>
                 </li>
 
@@ -300,7 +300,12 @@
                 console.table(response);
                 // Toggle class
                 $btn.toggleClass('active text-primary');
-                $btn.find('.like-count').html(response.like_count);
+                if(response.like_count != 0) {
+                    $btn.find('.like-count').html('('+response.like_count+')');
+                }
+                else {
+                    $btn.find('.like-count').html('');
+                }
             $btn.attr('data-bs-title', response.tooltip_html).tooltip('dispose').tooltip();
             },
             error: function (xhr) {
