@@ -130,13 +130,15 @@ Route::prefix('admin')->controller(AdminController::class)->group(function () {
 Route::prefix('admin')->middleware('auth:admin')->controller(AdminController::class)->group(function () {
 		Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 		Route::post('/admin/logout', 'logout')->name('admin.logout'); // logout
-		Route::prefix('socialwall')->name('socialwall.')->group(function () {
-		Route::get('/', function () {
-			return view('admin.socialwall.index');
-		})->name('index');
+		// Route::prefix('socialwall')->name('socialwall.')->group(function () {
+		// Route::get('/', function () {
+		// 	return view('admin.socialwall.index');
+		// })->name('index');
 
 
-	});
+	// });
+		Route::get('socialwall', [AdminController::class, 'socialwall'])->name('socialwall.index');
+
 
 
 Route::prefix('forums')->name('forums.')->group(function () {
