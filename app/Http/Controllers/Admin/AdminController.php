@@ -130,6 +130,34 @@ $groupedPosts = $rawPosts->groupBy('post_id')->map(function ($group) {
         return view('admin.socialwall.index',compact('groupedPosts'));
         
     }
+  public function socialwall_delete($id)
+{
+    // Step 1: Get post
+    $post = DB::table('posts')->where('id', $id)->first();
+
+    if (!$post) {
+        return response()->json(['message' => 'Post not found'], 404);
+    }
+
+    // Step 2: Delete media files (optional: physical file also)
+    $mediaItems = DB::table('post_media')->where('post_id', $id)->get();
+    foreach ($mediaItems as $media) {
+        $path = storage_path('app/public/' . $media->file_path);
+        if (file_exists($path)) {
+            unlink($path); // delete physical file
+        }
+    }
+
+    // Step 3: Delete media from table
+    DB::table('post_media')->where('post_id', $id)->delete();
+
+    // Step 4: Delete post
+    DB::table('posts')->where('id', $id)->delete();
+
+    return response()->json(['message' => 'Post deleted successfully']);
+}
+
+
 
 
 }
