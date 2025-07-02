@@ -147,6 +147,7 @@ Route::prefix('admin')->middleware('auth:admin')->controller(AdminController::cl
 
 	// });
 		Route::get('socialwall', [AdminController::class, 'socialwall'])->name('socialwall.index');
+		Route::delete('delete-socialwall/{id}', [AdminController::class, 'socialwall_delete'])->name('socialwall.delete');
 
 
 
