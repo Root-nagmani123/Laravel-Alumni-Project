@@ -58,10 +58,12 @@
                         <div class="d-flex align-items-center">
                             <div class="col-md-6 me-1">
                         @php
-                            $profilePic = !empty($first->member_profile_pic) && file_exists(public_path('uploads/member/' . $first->member_profile_pic))
-                                ? asset('uploads/member/' . $first->member_profile_pic)
-                                : asset('feed_assets/images/avatar-7.png');
-                        @endphp
+    $profilePath = public_path('storage/' . $post['member_profile_pic']);
+    $profilePic = !empty( $post['member_profile_pic']) && file_exists($profilePath)
+        ? asset('storage/' .  $post['member_profile_pic'])
+        : asset('feed_assets/images/avatar-7.png');
+@endphp
+
 
                         <img class="img-xs img-fluid rounded-circle" src="{{ $profilePic }}" alt="Profile Picture">
         
@@ -74,7 +76,7 @@
                             </div>
                         </div>
                         <div class="delete-icon">
-                            <a href="#" data-feed-id="{{ $post['post_id'] }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete this Feed" onclick="delete_feed_model({{ $post['post_id'] }})">
+                            <a href="#" data-feed-id="{{ $post['post_id'] }}"  onclick="delete_feed_model({{ $post['post_id'] }})" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete this Feed" onclick="delete_feed_model({{ $post['post_id'] }})">
                                delete
                                 <i class="bi bi-trash3-fill"></i>
                             </a>
@@ -123,41 +125,41 @@
 </div>
 
 
+
+@endsection
+@section('scripts')
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
+
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
 <script>
 //Toastr message
     $(document).ready(function() {
         @if (session('success'))
             toastr.success("{{ session('success') }}");
         @endif
-
+ 
     });
-
-    $(document).ready(function () {
-        // AJAX: Toggle member status
-        $('.status-toggle').change(function () {
-            let status = $(this).prop('checked') ? 1 : 0;
-            let userId = $(this).data('id');
-
-            $.ajax({
-                url: '{{-- route("socialwall.toggleStatus") --}}',
-                type: 'POST',
-                data: {
-                    _token: '{{ csrf_token() }}',
-                    id: userId,
-                    status: status
-                },
-                success: function (response) {
-
-                    toastr.success(response.message);
-                },
-                error: function () {
-                    toastr.error('Failed to update status.');
-                }
-            });
+function delete_feed_model(postId) {
+    if (confirm('Are you sure you want to delete this post?')) {
+        $.ajax({
+            url: '/admin/delete-socialwall/' + postId,
+            type: 'DELETE',
+            data: {
+                _token: '{{ csrf_token() }}'
+            },
+            success: function(response) {
+                toastr.success(response.message);
+                $('#feed-' + postId).remove(); // UI se post remove karo
+            },
+            error: function(xhr) {
+                toastr.error('Failed to delete post.');
+            }
         });
-    });
-    </script>
-
+    }
+}
+</script>
 
 @endsection
