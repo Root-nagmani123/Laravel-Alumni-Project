@@ -99,7 +99,8 @@ $pageName
                         <div class="row mb-3">
                             <label for="videoLink" class="col-sm-3 col-form-label">Video Link</label>
                             <div class="col-sm-9">
-                                <input type="text" name="video_link" class="form-control" id="videoLink">
+                               <input type="text" name="video_link" class="form-control" id="videoLink">
+
                             </div>
                         </div>
 

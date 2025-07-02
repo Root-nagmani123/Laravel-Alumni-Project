@@ -55,12 +55,17 @@ public function loginAuth(Request $request)
     // Attempt login with remember
     if (Auth::guard('admin')->attempt($credentials, $remember)) {
         $admin = Auth::guard('admin')->user();
-
+        // Update last login time
+            $admin->last_login = now();
+            $admin->save();
         // Set session data
         session([
             'LoginName'  => $admin->name,
             'LoginID'    => $admin->id,
             'LoginEmail' => $admin->email,
+			'LoginPhone' => $admin->mobile,
+            'profile_pic' => $admin->profile_pic,
+            'last_login' => $admin->last_login,
             'isAdmin'    => $admin->isAdmin,
             'logged_in'  => true,
         ]);
@@ -128,7 +133,7 @@ $groupedPosts = $rawPosts->groupBy('post_id')->map(function ($group) {
 
 // print_r($groupedPosts);die;
         return view('admin.socialwall.index',compact('groupedPosts'));
-        
+
     }
   public function socialwall_delete($id)
 {
@@ -159,5 +164,10 @@ $groupedPosts = $rawPosts->groupBy('post_id')->map(function ($group) {
 
 
 
+	public function profile(){
+        $viewData['title'] = "admin profile";
+        return view('admin.profile.profile',$viewData);
+
+    }
 
 }

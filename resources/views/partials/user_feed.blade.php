@@ -201,7 +201,7 @@
                                 Message</a></li>
                         <li><a class="dropdown-item" href="#"> <i class="bi bi-bookmark-check fa-fw pe-2"></i>Bookmark
                             </a></li>
-                        <li><a class="dropdown-item" href="#"> <i class="bi bi-link fa-fw pe-2"></i>Copy link to
+                        <li><a class="dropdown-item" href="#"> <i class="bi bi-link fa-fw pe-2 "></i>Copy link to
                                 post</a></li>
                         <li><a class="dropdown-item" href="#"> <i class="bi bi-share fa-fw pe-2"></i>Share post via
                                 …</a></li>

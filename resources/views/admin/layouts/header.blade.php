@@ -52,8 +52,13 @@
                                 aria-labelledby="drop1">
                                 <div class="position-relative px-4 pt-3 pb-2">
                                     <div class="d-flex align-items-center mb-3 pb-3 border-bottom gap-6">
-                                        <img src="{{asset('admin_assets/images/profile/user-1.jpg')}}" class="rounded-circle" width="56"
-                                            height="56" alt="matdash-img">
+                                        <!--<img src="{{asset('admin_assets/images/profile/user-1.jpg')}}" class="rounded-circle" width="56"
+                                            height="56" alt="matdash-img">-->
+                                            <img class="rounded-circle me-2"
+                                        src="{{ session('admin_profile_pic')  && session('admin_profile_pic')
+                                                ? asset('storage/' . session('admin_profile_pic') )
+                                                : asset('admin_assets/images/profile/user-1.jpg') }}"
+                                        alt="Profile Picture" height="56" width="56">
                                         <div>
                                             <h5 class="mb-0 fs-12"> Welcome : {{{ session('LoginName') }}} <span
                                                     class="text-success fs-11">Pro</span>
@@ -64,7 +69,7 @@
                                         </div>
                                     </div>
                                     <div class="message-body">
-                                        <a href="page-user-profile.html" class="p-2 dropdown-item h6 rounded-1">
+                                        <a href="{{route('admin.profile') }}" class="p-2 dropdown-item h6 rounded-1">
                                             My Profile
                                         </a>
                                        <a href="page-account-settings.html" class="p-2 dropdown-item h6 rounded-1">
@@ -91,6 +96,6 @@
         <!-- End Vertical Layout Header -->
         <!-- ---------------------------------- -->
     </div>
-  
+
 </header>
 <!--  Header End -->

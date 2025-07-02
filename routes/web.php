@@ -71,20 +71,11 @@ Route::prefix('user')->name('user.')->group(function () {
         Route::put('/comments/{id}', [CommentController::class, 'update'])->name('comments.update');
         Route::delete('/comments/{id}', [CommentController::class, 'destroy'])->name('comments.destroy');
 
-        // Route::post('/like/{post}', [PostController::class, 'toggleLike'])->name('post.like');
-		// Route::post('/user/posts/{post}/like', [PostController::class, 'toggleLike']);
-		// Route::post('/user/post/{post}/like', [PostController::class, 'toggleLike'])->name('user.post.like');
-		// Route::post('/user/post/{post}/like', [PostController::class, 'toggleLike'])->name('user.post.like');
+
 		Route::post('/post/{post}/like', [PostController::class, 'toggleLike'])->name('post.like');
 		Route::post('/user/comments', [CommentController::class, 'store'])->name('user.comments.store');
 		Route::put('/user/comments/{id}', [CommentController::class, 'update'])->name('user.comments.update');
 		Route::delete('/user/comments/{id}', [CommentController::class, 'destroy'])->name('user.comments.destroy');
-
-
-         //Route::post('/post/{id}/comment', [PostController::class, 'storeComment'])->name('post.comment');
-        //Route::post('/comment/{id}/reply', [CommentController::class, 'reply'])->name('comment.reply');
-
-
 
          Route::get('/profile/{id}', [ProfileController::class, 'showById'])->name('profile');
 
@@ -119,6 +110,7 @@ Route::prefix('member')->name('member.')->group(function () {
 		Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
 		Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
+
 		Route::middleware('auth:member')->group(function () {
 		Route::get('/dashboard', function () {
 			return view('member.dashboard');
@@ -142,7 +134,7 @@ Route::prefix('admin')->controller(AdminController::class)->group(function () {
 // Routes accessible *only after login* using admin guard
 Route::prefix('admin')->middleware('auth:admin')->controller(AdminController::class)->group(function () {
 		Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
-		Route::post('/admin/logout', 'logout')->name('admin.logout'); // logout
+        Route::post('/admin/logout', 'logout')->name('admin.logout'); // logout
 		// Route::prefix('socialwall')->name('socialwall.')->group(function () {
 		// Route::get('/', function () {
 		// 	return view('admin.socialwall.index');
@@ -153,6 +145,7 @@ Route::prefix('admin')->middleware('auth:admin')->controller(AdminController::cl
 		Route::get('socialwall', [AdminController::class, 'socialwall'])->name('socialwall.index');
 		Route::delete('delete-socialwall/{id}', [AdminController::class, 'socialwall_delete'])->name('socialwall.delete');
 
+	Route::get('profile', [AdminController::class, 'profile'])->name('admin.profile');
 
 
 Route::prefix('forums')->name('forums.')->group(function () {

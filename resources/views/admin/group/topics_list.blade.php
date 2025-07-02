@@ -3,49 +3,60 @@
 @section('title', 'Group - Alumni | Lal Bahadur')
 
 @section('content')
-<div class="container">
+<div class="container-fluid px-3">
     <h2>Topics in: {{ $pageName }}</h2>
 
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Title</th>
-                <th>Status</th>
-                <th>Created Date</th>
-                <th class="text-center">Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @forelse ($topics as $topic)
-                <tr>
-                    <td>{{ $topic->title }}</td>
+    <div class="col-xl-12">
+    @php $i = 0; @endphp
 
-                    <td>{{ \Carbon\Carbon::parse($topic->created_date)->timezone('Asia/Kolkata')->format('l, d M Y, h:i A') }}</td>
-                     <td>
-                       <!-- <input type="checkbox"
-                               class="status-toggle"
-                               data-id="{{ $topic->id }}"
-                               data-toggle="toggle"
-                               data-on="Active"
-                               data-off="Inactive"
-                               data-onstyle="success"
-                               data-offstyle="danger"
-                               {{ $topic->status == 1 ? 'checked' : '' }}>-->
-                                  <div class="form-check form-switch d-inline-block">
-                                            <input class="form-check-input status-toggle" type="checkbox" role="switch"
-                                                data-table="group" data-column="active_inactive"  data-id="{{ $topic->id }}"
-                                                {{ $topic->status == 1 ? 'checked' : '' }}>
-                                        </div>
-                    </td>
+    @forelse ($topics as $topic)
+        @php
+            $i++;
+            $creator = $topic->createdFrom == 1 ? 'Admin' : ($topic->createdFrom == 2 ? 'Member' : 'Unknown');
+            $createdDate = \Carbon\Carbon::parse($topic->created_date)->timezone('Asia/Kolkata');
+            $timeDiff = $createdDate->diffForHumans();
+        @endphp
 
-                    <td class="text-center">
-                        <!-- Edit Button -->
-                        <button class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#viewTopicModal{{ $topic->id }}">
-                            View/Edit
-                        </button>
+        <!-- Middle wrapper start -->
 
-                        <!-- Delete Form -->
-                        <form id="delete-form-{{ $topic->id }}"
+            <div class="row">
+                <div class="col-md-12 grid-margin">
+                    <div class="card rounded">
+                        <div class="card-header">
+                 <div class="d-flex align-items-center justify-content-between">
+               <div class="d-flex align-items-center">
+                <div class="col-md-2 me-1">
+
+                <img class="img-xs img-fluid rounded-circle me-2"
+                 src="{{ $topic->member && $topic->member->profile_pic
+                        ? asset('storage/' . $topic->member->profile_pic)
+                        : asset('admin_assets/images/profile/user-1.png') }}"
+                 alt="User">
+
+                                </div>
+    <div class="col-md-9">
+    <div class="ms-2">
+        <h6 class="mb-1 fw-semibold text-primary">{{ $topic->title }}</h6>
+        <p class="mb-1 text-muted small">
+            <i class="bi bi-person-circle me-1"></i> By {{ $topic->member->name ?? 'Unknown' }}
+        </p>
+        <p class="mb-0 text-muted text-sm">
+            <i class="bi bi-clock me-1"></i>
+            {{ \Carbon\Carbon::parse($topic->created_date)->diffForHumans() }}
+        </p>
+    </div>
+</div>
+
+                                    <div class="col-md-1 text-end">
+
+                                        <!-- Edit button trigger modal -->
+                                        <a href="#" data-bs-toggle="modal" data-bs-target="#viewTopicModal{{ $topic->id }}" class="btn btn-sm btn-outline-primary me-2" title="Edit">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </a>
+
+
+                                        <!-- Delete form -->
+                                        <form id="delete-form-{{ $topic->id }}"
                               action="{{ route('group.topics.delete', $topic->id) }}"
                               method="POST"
                               style="display:inline;">
@@ -57,33 +68,47 @@
                                     data-status="{{ $topic->status }}">
                                 Delete
                             </button>
+
                         </form>
-                    </td>
-                </tr>
 
-                <!-- Include Modal Here (as you've written above) -->
+                                                                </div>
+                                                                </div>
+                            </div>
+                        </div>
 
-            @empty
-                <tr>
-                    <td colspan="5" class="text-center">No topics found.</td>
-                </tr>
-            @endforelse
-        </tbody>
-    </table>
+                        <div class="card-body">
+                            <p class="mb-3 tx-14">{{ $topic->description }}</p>
+                            @if(!empty($topic->images))
+                                <img class="img-fluid"
+                                     src="{{ asset('storage/' . $topic->images) }}"
+                                     alt="Topic Image" height="200" width="300">
+                            @endif
+                        </div>
+
+                        <div class="card-footer">
+                            <div class="d-flex post-actions">
+                                <a href="{{ url('group/topic_view/' . $topic->id) }}"
+                                   class="d-flex align-items-center text-muted mr-4">
+                                    <i class="bi bi-arrow-right"></i>
+                                    <p class="d-none d-md-block ms-2 mb-1">Read more...</p>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        <!-- repeater div -->
+        @empty
+
+        <div class="text-center">
+            <p>No topics found.</p>
+        </div>
+    @endforelse
 </div>
+
+
 @endsection
-
-
-
-
-{{--
-@section('scripts')
-@if(session('success'))
-    <script>
-        toastr.success("{{ session('success') }}");
-    </script>
-@endif
-@endsection--}}
 
 
 @foreach ($topics as $topic)
@@ -122,6 +147,21 @@
                             <textarea name="description" class="form-control" style="height: 100px">{{ old('description', $topic->description) }}</textarea>
                         </div>
                     </div>
+
+                   <div class="row mb-3">
+    <label class="col-sm-3 col-form-label">Image</label>
+    <div class="col-sm-9">
+        <!-- Existing image preview (if any) -->
+        @if ($topic->images)
+            <img id="imagePreview{{ $topic->id }}" src="{{ asset('storage/' . $topic->images) }}" alt="Topic Image" style="max-height: 100px; margin-bottom: 10px;">
+        @else
+            <img id="imagePreview{{ $topic->id }}" src="#" alt="Image Preview" style="display:none; max-height: 100px; margin-bottom: 10px;">
+        @endif
+
+                    <!-- Image input -->
+                    <input type="file" name="images" class="form-control" onchange="previewImage(event, {{ $topic->id }})">
+                </div>
+            </div>
 
                    <div class="row mb-3">
                         <label class="col-sm-3 col-form-label">Status<span class="required">*</span></label>
@@ -164,13 +204,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
 <script>
-//Toastr message
-    /*$(document).ready(function() {
-        @if (session('success'))
-            toastr.success("{{ session('success') }}");
-        @endif
-
-    }); */
 
     $(document).ready(function () {
     // AJAX: Toggle member status with confirmation
@@ -206,6 +239,23 @@
         });
     });
 });
+
+function previewImage(event, topicId) {
+        const input = event.target;
+        const reader = new FileReader();
+
+        reader.onload = function () {
+            const imgElement = document.getElementById('imagePreview' + topicId);
+            if (imgElement) {
+                imgElement.src = reader.result;
+                imgElement.style.display = 'block';
+            }
+        };
+
+        if (input.files && input.files[0]) {
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
 
     </script>
 

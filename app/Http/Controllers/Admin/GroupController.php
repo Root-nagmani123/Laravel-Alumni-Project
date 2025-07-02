@@ -9,6 +9,7 @@ use App\Models\Admin\Admin;
 use App\Models\Member;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 class GroupController extends Controller
 {
     public function index()
@@ -125,57 +126,72 @@ class GroupController extends Controller
 
 
     public function save_topic(Request $request, $id)
-{
-    $request->validate([
-        'title' => 'required|string|max:255',
-        'description' => 'nullable|string',
-        'video_link' => 'nullable|url',
-        'video_caption' => 'nullable|string',
-        'status' => 'required|integer',
-        'doc' => 'nullable|file|mimes:pdf,jpg,png,gif',
-        'topic_image' => 'nullable|file|mimes:jpg,png,gif',
-    ]);
+        {
 
-    $docFile = $request->hasFile('doc') ? $request->file('doc')->store('uploads', 'public') : null;
-    $imageFile = $request->hasFile('topic_image') ? $request->file('topic_image')->store('uploads', 'public') : null;
+            $request->validate([
+                'title' => 'required|string|max:255',
+                'description' => 'nullable|string',
+                'video_link' => 'nullable|url',
+                'video_caption' => 'nullable|string',
+                'status' => 'required|integer',
+                'doc' => 'nullable|file|mimes:pdf,jpg,png,gif',
+                'topic_image' => 'nullable|file|mimes:jpg,png,gif',
+            ]);
 
-    $embedLink = '';
-    if ($request->video_link) {
-        parse_str(parse_url($request->video_link, PHP_URL_QUERY), $query);
-        $embedLink = isset($query['v']) ? "https://www.youtube.com/embed/" . $query['v'] : '';
-    }
-//dd($request);
-    Topic::create([
-        'title' => $request->title,
-        'description' => $request->description,
-        'images' => $imageFile,
-        'files' => $docFile,
-        'video' => $embedLink,
-        'live_video' => $embedLink,
-        'video_link' => $embedLink,
-        'video_caption' => $request->video_caption,
-        'status' => $request->status,
-        'group_id' => $id,
-        'created_by' => Auth::id(),
-        'created_date' => now(),
-    ]);
+          /*  $docFile = $request->hasFile('doc') ? $request->file('doc')->store('uploads', 'public') : null;
+            $imageFile = $request->hasFile('topic_image') ? $request->file('topic_image')->store('uploads', 'public') : null;
+            $videoFile = $request->hasFile('video') ? $request->file('video')->store('uploads', 'public') : null;*/
 
-   // return redirect()->route('admin.group.topics_list', ['id' => $id])
-      //  ->with('success', 'Topic added successfully.');
-      return redirect()->route('group.index')
-                        ->with('success', 'Topic added successfully.');
-}
+            $docFile = $request->hasFile('doc')
+            ? $request->file('doc')->store('uploads/doc', 'public')
+            : null;
+
+            $imageFile = $request->hasFile('topic_image')
+            ? $request->file('topic_image')->store('uploads/topics', 'public')
+            : null;
+
+             $videoFile = $request->hasFile('video')
+            ? $request->file('video')->store('uploads/video', 'public')
+            : null;
+
+            $embedLink = '';
+            if ($request->video_link) {
+                parse_str(parse_url($request->video_link, PHP_URL_QUERY), $query);
+                $embedLink = isset($query['v']) ? "https://www.youtube.com/embed/" . $query['v'] : '';
+            }
+
+
+
+            Topic::create([
+                'title' => $request->title,
+                'description' => $request->description,
+                'images' => $imageFile,
+                'files' => $docFile,
+                'video' => $videoFile,
+                'video_link' => $embedLink,
+                'live_video' => $request->live_video,
+                'video_caption' => $request->video_caption,
+                'status' => $request->status,
+                'group_id' => $id,
+                'created_by' => Auth::id(),
+                'created_date' => now(),
+            ]);
+
+        // return redirect()->route('admin.group.topics_list', ['id' => $id])
+            //  ->with('success', 'Topic added successfully.');
+            return redirect()->route('group.index')
+                                ->with('success', 'Topic added successfully.');
+        }
 
 
 
     public function view_topic($id)
-    {
-        $pageName = 'Group';
-        $group = Group::findOrFail($id);
-        $topics = Topic::where('group_id', $id)->with('created_by')->get();
-
-        return view('admin.group.topics_list', compact('group', 'topics','pageName'));
-    }
+        {
+            $pageName = 'Group';
+            $group = Group::findOrFail($id);
+            $topics = Topic::where('group_id', $id)->with('member')->get();
+            return view('admin.group.topics_list', compact('group', 'topics','pageName'));
+        }
 
    public function updateTopic(Request $request, $id) {
         $topic = Topic::findOrFail($id);
@@ -183,7 +199,19 @@ class GroupController extends Controller
         $topic->title = $request->title;
         $topic->description = $request->description;
         $topic->status = $request->status;
-        $topic->save();
+
+         if ($request->hasFile('images')) {
+        // Delete old image if exists
+        if ($topic->image && File::exists(public_path('uploads/topics/' . $topic->images))) {
+            File::delete(public_path('uploads/topics/' . $topic->images));
+        }
+
+        $images = $request->file('images');
+        $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+        $images->move(public_path('uploads/topics'), $imageName);
+        $topic->images = $imageName;
+    }
+       $topic->save();
         return back()->with('success', 'Topic added successfully.');
 
     //return redirect()->route('group.topics_list')->with('success', 'Topic added successfully.');
