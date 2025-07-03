@@ -87,7 +87,9 @@ Route::prefix('user')->name('user.')->group(function () {
         Route::get('directory', [DashboardController::class, 'directory'])->name('directory');
        //Route::post('/feed/search', [FeedController::class, 'search'])->name('feed.search');
 
-
+	   Route::post('/event-rsvp', [DashboardController::class, 'submitRsvp'])->name('event.rsvp');
+	   Route::get('/all-events', [DashboardController::class, 'allevents'])->name('allevents');
+	
 
     });
 
@@ -258,5 +260,6 @@ Route::get('/user_login', function () {
         Route::get('/user_feed1', function () {
             return view('user.feed1');
         })->name('user_feed1');
+
 
 require __DIR__.'/auth.php';
