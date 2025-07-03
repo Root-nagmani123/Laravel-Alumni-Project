@@ -53,11 +53,13 @@
 							<!-- Card body START -->
 							<div class="card-body">
 								<!-- News item -->
-								@if(isset($broadcast))
+								@if((isset($broadcast)) && ($broadcast->count() > 0))
+									@foreach($broadcast as $index => $broadcast)
 									<div class="mb-3">
 										<h6 class="mb-0"><a href="blog-details.html">{{ $broadcast->title }}</a></h6>
 										<small>{{ $broadcast->description }}</small>
 									</div>
+									@endforeach
 								@else
 									<div class="mb-3">
 										<p class="mb-0 text-muted">No broadcasts available</p>
