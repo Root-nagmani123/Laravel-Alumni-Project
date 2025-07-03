@@ -94,37 +94,43 @@
 
                 @if(!empty($events))
                 @foreach($events as $event)
-                <div class="hstack gap-2 mb-3">
-                    <!-- Avatar -->
-                    <div class="avatar">
-                        <a href="#!"><img class="avatar-img rounded-circle"
-                                src="{{ isset($event->image) && $event->image ? asset('storage/events/' . $event->image) : asset('feed_assets/images/avatar/07.jpg') }}"
-                                alt=""></a>
-                    </div>
-                    <!-- Title -->
-                    <div class="overflow-hidden">
-                        <a class="h6 mb-0" href="{{ $event->url ?? '#' }}">
-                            {{ \Illuminate\Support\Str::limit($event->title, 20) }}</a>
-                        <p class="mb-0 small text-truncate">
-                            {{ \Carbon\Carbon::parse($event->end_datetime)->format('d M, Y') }}</p>
-                    </div>
-                    <!-- Button -->
-						<div class="dropdown ms-auto">
-								<a href="#" class="text-secondary btn btn-secondary-soft-hover py-1 px-2" id="cardFeedAction" data-bs-toggle="dropdown" aria-expanded="false">
-									<i class="bi bi-three-dots"></i>
-								</a>
-								<!-- Card feed action dropdown menu -->
-								<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="cardFeedAction" style="">
-									<li><a class="dropdown-item" href="#"> <i class="bi bi-check2-circle fa-fw pe-2"></i>Interested</a></li>
-									<li><a class="dropdown-item" href="#"> <i class="bi bi-x-circle fa-fw pe-2"></i>Not interested</a></li>
-									<li><a class="dropdown-item" href="#"> <i class="bi bi-dash-circle fa-fw pe-2"></i>Maybe</a></li>
-								</ul>
-							</div>
-                </div>
+    <div class="hstack gap-2 mb-3" id="event-{{ $event->id }}">
+        <!-- Avatar -->
+        <div class="avatar">
+            <a href="#!"><img class="avatar-img rounded-circle"
+                src="{{ isset($event->image) && $event->image ? asset('storage/events/' . $event->image) : asset('feed_assets/images/avatar/07.jpg') }}"
+                alt=""></a>
+        </div>
 
-                @endforeach
+        <!-- Title -->
+        <div class="overflow-hidden">
+            <a class="h6 mb-0" href="{{ $event->url ?? '#' }}">
+                {{ \Illuminate\Support\Str::limit($event->title, 20) }}</a>
+            <p class="mb-0 small text-truncate">
+                {{ \Carbon\Carbon::parse($event->end_datetime)->format('d M, Y') }}</p>
+        </div>
+
+        <!-- RSVP Dropdown -->
+        <div class="dropdown ms-auto">
+            <a href="#" class="text-secondary btn btn-secondary-soft-hover py-1 px-2" id="cardFeedAction" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-three-dots"></i>
+            </a>
+
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="cardFeedAction">
+    <li><a class="dropdown-item rsvp-option" href="#" data-event-id="{{ $event->id }}" data-status="1">
+        <i class="bi bi-check2-circle fa-fw pe-2"></i>Interested</a></li>
+    <li><a class="dropdown-item rsvp-option" href="#" data-event-id="{{ $event->id }}" data-status="2">
+        <i class="bi bi-x-circle fa-fw pe-2"></i>Not interested</a></li>
+    <li><a class="dropdown-item rsvp-option" href="#" data-event-id="{{ $event->id }}" data-status="3">
+        <i class="bi bi-dash-circle fa-fw pe-2"></i>Maybe</a></li>
+</ul>
+
+        </div>
+    </div>
+@endforeach
+
                 <div class="d-grid mt-3">
-                    <a class="btn btn-sm btn-primary-soft" href="{{ url('user/events') }}">View more</a>
+                    <a class="btn btn-sm btn-primary-soft" href="{{ route('user.allevents') }}">View more</a>
                 </div>
                 @else
                 <p>No events found</p>
@@ -180,3 +186,37 @@
         </div>
     </div>
 </div>
+
+<!-- jQuery and SweetAlert2 -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+    // Attach click handler using event delegation
+    $(document).on('click', '.rsvp-option', function(e) {
+        e.preventDefault();
+        
+        let eventId = $(this).data('event-id');
+        let status = $(this).data('status');
+
+        $.ajax({
+            url: "{{ route('user.event.rsvp') }}", // Laravel route
+            method: 'POST',
+            data: {
+                _token: '{{ csrf_token() }}',
+                event_id: eventId,
+                rsvp_status: status
+            },
+            success: function(response) {
+                Swal.fire('Success', response.message, 'success');
+                window.location.reload(); // Reload the page to reflect changes
+            },
+            error: function(xhr) {
+                Swal.fire('Error', 'Something went wrong!', 'error');
+            }
+        });
+    });
+});
+</script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!-- Card News END -->
+

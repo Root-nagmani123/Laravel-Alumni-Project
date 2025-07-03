@@ -24,6 +24,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\DB;
 use App\Models\DashboardModel;
 use App\Models\Forum;
 use App\Models\Member;
@@ -92,5 +93,67 @@ public function directory(Request $request)
     // print_r($members);die;
     return view('directory', compact('members'));
     
+}
+    public function submitRsvp(Request $request)
+{
+    $request->validate([
+        'event_id' => 'required|integer|exists:events,id',
+        'rsvp_status' => 'required|in:1,2,3',
+    ]);
+
+    // Assuming authenticated user
+    $user = auth()->guard('user')->user();
+    $userId = $user->id;
+    // Save or update RSVP
+    DB::table('event_rsvp')->updateOrInsert(
+        ['event_id' => $request->event_id, 'user_id' => $userId],
+        ['status' => $request->rsvp_status, 'responded_at' => now()]
+    );
+
+    return response()->json(['message' => 'RSVP updated successfully!']);
+}
+    public function allevents(Request $request)
+{
+    $user = auth()->guard('user')->user(); // Get logged-in user
+        $userId = $user->id;
+        $events = DB::table('events')
+        ->where('status', 1)
+        ->where('end_datetime', '>', now())
+        ->orderBy('id', 'desc')
+        ->get();
+// print_r($events);die;
+
+    // RSVP Events by status
+    $accept_events = DB::table('events')
+        ->join('event_rsvp', 'events.id', '=', 'event_rsvp.event_id')
+        ->where('event_rsvp.user_id', $userId)
+        ->where('event_rsvp.status', '1')
+        ->where('events.status', 1)
+        ->where('events.end_datetime', '>', now())
+        ->select('events.*')
+        ->orderBy('events.id', 'desc')
+        ->get();
+
+    $maybe_events = DB::table('events')
+        ->join('event_rsvp', 'events.id', '=', 'event_rsvp.event_id')
+        ->where('event_rsvp.user_id', $userId)
+        ->where('event_rsvp.status', '2')
+        ->where('events.status', 1)
+        ->where('events.end_datetime', '>', now())
+        ->select('events.*')
+        ->orderBy('events.id', 'desc')
+        ->get();
+
+    $decline_events = DB::table('events')
+        ->join('event_rsvp', 'events.id', '=', 'event_rsvp.event_id')
+        ->where('event_rsvp.user_id', $userId)
+        ->where('event_rsvp.status', '3')
+        ->where('events.status', 1)
+        ->where('events.end_datetime', '>', now())
+        ->select('events.*')
+        ->orderBy('events.id', 'desc')
+        ->get();
+    return view('user.events',compact('events', 'accept_events', 'maybe_events', 'decline_events'));
+
 }
 }
