@@ -52,9 +52,7 @@
                          class="drop-area p-4 text-center border border-secondary rounded">
                         <i class="bi bi-images fs-1 mb-2 d-block"></i>
                         <span class="d-block">Drag & Drop image here or click to browse.</span>
-                        <input type="file"
-                               id="media"
-                               name="media[]" multiple
+                        <input type="file" name="media[]" multiple
                                class="d-none"
                                accept="image/*">
                         <div id="preview" class="mt-3 d-flex flex-wrap gap-3"></div>

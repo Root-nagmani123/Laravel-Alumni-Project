@@ -35,9 +35,47 @@
                            </div>
                            <!-- Button -->
                            <div class="d-flex mt-3 justify-content-center ms-sm-auto">
-                               <button class="btn btn-danger-soft me-2" type="button"> <i
-                                       class="bi bi-pencil-fill pe-1"></i> Edit profile </button>
+                               <button class="btn btn-danger-soft me-2" type="button" data-bs-toggle="modal"
+                                   data-bs-target="#editProfileModal">
+                                   <i class="bi bi-pencil-fill pe-1"></i> Edit profile
+                               </button>
                            </div>
+                           <div class="modal fade" id="editProfileModal" tabindex="-1"
+                               aria-labelledby="editProfileModalLabel" aria-hidden="true">
+                               <div class="modal-dialog modal-dialog-centered">
+                                   @if(auth()->check())
+                                   <form method="POST" action="{{ route('user.profile.update', auth()->user()->id) }}">
+                                       @csrf
+                                       @method('PUT')
+                                       <div class="modal-content">
+                                           <div class="modal-header">
+                                               <h5 class="modal-title" id="editProfileModalLabel">Edit Profile</h5>
+                                               <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                   aria-label="Close"></button>
+                                           </div>
+                                           <div class="modal-body">
+                                               <!-- Example Profile Fields -->
+                                               <div class="mb-3">
+                                                   <label for="name" class="form-label">Full Name</label>
+                                                   <input type="text" name="name" class="form-control"
+                                                       value="{{ auth()->user()->name }}" required>
+                                               </div>
+                                               <div class="mb-3">
+                                                   <label for="email" class="form-label">Email address</label>
+                                                   <input type="email" name="email" class="form-control"
+                                                       value="{{ auth()->user()->email }}" required>
+                                               </div>
+                                               <!-- Add more fields as needed -->
+                                           </div>
+                                           <div class="modal-footer">
+                                               <button type="submit" class="btn btn-primary">Save changes</button>
+                                           </div>
+                                       </div>
+                                   </form>
+                                   @endif
+                               </div>
+                           </div>
+
                        </div>
                        <!-- List profile -->
                        <ul class="list-inline mb-0 text-center text-sm-start mt-3 mt-sm-0">
@@ -816,7 +854,7 @@
                                        </div>
                                    </div>
                                    <!-- Add Video END -->
-									@if(!empty($post) && !empty($post->media))
+                                   @if(!empty($post) && !empty($post->media))
                                    @foreach($post->media as $media)
                                    @if($media->file_type === 'video')
                                    @php
@@ -961,6 +999,10 @@
 
        </div> <!-- Row END -->
    </div>
+   <!-- Edit Profile Modal -->
+
+
+
    @endsection
    <script>
 // for Edit functionality
