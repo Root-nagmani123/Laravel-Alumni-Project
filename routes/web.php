@@ -66,6 +66,8 @@ Route::prefix('user')->name('user.')->group(function () {
         Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 		Route::put('/post/update/{id}', [PostController::class, 'update'])->name('post.update');
 		Route::post('/post', [PostController::class, 'store'])->name('post.store');
+		Route::post('/post/store', [PostController::class, 'store'])->name('post.store');
+
 		Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
 
         Route::put('/comments/{id}', [CommentController::class, 'update'])->name('comments.update');
@@ -76,6 +78,10 @@ Route::prefix('user')->name('user.')->group(function () {
 		Route::post('/user/comments', [CommentController::class, 'store'])->name('user.comments.store');
 		Route::put('/user/comments/{id}', [CommentController::class, 'update'])->name('user.comments.update');
 		Route::delete('/user/comments/{id}', [CommentController::class, 'destroy'])->name('user.comments.destroy');
+		Route::middleware('auth')->group(function () {
+    Route::put('/user/profile/update', [UserController::class, 'update'])->name('user.profile.update');
+    // other protected routes
+});
 
          Route::get('/profile/{id}', [ProfileController::class, 'showById'])->name('profile');
 
@@ -260,6 +266,5 @@ Route::get('/user_login', function () {
         Route::get('/user_feed1', function () {
             return view('user.feed1');
         })->name('user_feed1');
-
 
 require __DIR__.'/auth.php';

@@ -61,39 +61,31 @@ public function store_chnagefor_video_link(Request $request)
 {
     $request->validate([
         'modalContent' => 'nullable|string',
-        'media' => 'nullable',
-        'media.*' => 'image|max:5120',
-        'video' => 'nullable|url',
+        'media.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        'video_link' => 'nullable|url',
     ]);
 
-    $mediaFiles = $request->file('media');
+    $post = new Post();
+    $post->member_id = auth()->id();  // or $request->user()->id if passed in
+    $post->content = $request->modalContent;
+    $post->video_link = $request->video_link;
 
-    $post = Post::create([
-        'member_id' => auth('user')->id(),
-        'content' => $request->modalContent,
-        'video_link' => $request->video,
-        'media_type' => $request->hasFile('media') && $request->video
-            ? 'image_video'
-            : ($request->hasFile('media') ? 'image' : ($request->video ? 'video' : null)),
-    ]);
-
-    if ($mediaFiles) {
-        foreach ($mediaFiles as $file) {
-            $filename = uniqid() . '_' . $file->getClientOriginalName();
-            $path = $file->storeAs('posts/media', $filename, 'public');
-
-            PostMedia::create([
-                'post_id' => $post->id,
-                'file_path' => $path,
-                'file_type' => 'image',
-            ]);
+    // Set media type
+    if ($request->hasFile('media')) {
+        foreach ($request->file('media') as $file) {
+            $filename = $file->store('posts', 'public');
+            // Assuming you store media in another table
+            $post->media_type = 'image';
+            $post->media_path = $filename;  // or you save this in separate `post_media` table
         }
+    } else if ($request->video_link) {
+        $post->media_type = 'video_link';
     }
 
-    return redirect()->back()->with('success', 'Post created successfully.');
+    $post->save();
+
+    return redirect()->back()->with('success', 'Post created successfully!');
 }
-
-
 
   public function store23062025(Request $request)
 {
