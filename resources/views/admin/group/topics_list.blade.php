@@ -12,8 +12,8 @@
     @forelse ($topics as $topic)
         @php
             $i++;
-            $creator = $topic->createdFrom == 1 ? 'Admin' : ($topic->createdFrom == 2 ? 'Member' : 'Unknown');
-            $createdDate = \Carbon\Carbon::parse($topic->created_date)->timezone('Asia/Kolkata');
+            $creator = $topic->member_type == 1 ? 'Admin' : ($topic->member_type == 2 ? 'Member' : 'Unknown');
+            $createdDate = \Carbon\Carbon::parse($topic->created_at)->timezone('Asia/Kolkata');
             $timeDiff = $createdDate->diffForHumans();
         @endphp
 
@@ -36,13 +36,13 @@
                                 </div>
     <div class="col-md-9">
     <div class="ms-2">
-        <h6 class="mb-1 fw-semibold text-primary">{{ $topic->title }}</h6>
+        <!-- <h6 class="mb-1 fw-semibold text-primary">{{ $topic->content }}</h6> -->
         <p class="mb-1 text-muted small">
             <i class="bi bi-person-circle me-1"></i> By {{ $topic->member->name ?? 'Unknown' }}
         </p>
         <p class="mb-0 text-muted text-sm">
             <i class="bi bi-clock me-1"></i>
-            {{ \Carbon\Carbon::parse($topic->created_date)->diffForHumans() }}
+            {{ \Carbon\Carbon::parse($topic->created_at)->diffForHumans() }}
         </p>
     </div>
 </div>
@@ -50,9 +50,9 @@
                                     <div class="col-md-1 text-end">
 
                                         <!-- Edit button trigger modal -->
-                                        <a href="#" data-bs-toggle="modal" data-bs-target="#viewTopicModal{{ $topic->id }}" class="btn btn-sm btn-outline-primary me-2" title="Edit">
+                                        <!-- <a href="#" data-bs-toggle="modal" data-bs-target="#viewTopicModal{{ $topic->id }}" class="btn btn-sm btn-outline-primary me-2" title="Edit">
                                             <i class="bi bi-pencil-square"></i>
-                                        </a>
+                                        </a> -->
 
 
                                         <!-- Delete form -->
@@ -77,15 +77,74 @@
                         </div>
 
                         <div class="card-body">
-                            <p class="mb-3 tx-14">{{ $topic->description }}</p>
-                            @if(!empty($topic->images))
-                                <img class="img-fluid"
-                                     src="{{ asset('storage/' . $topic->images) }}"
-                                     alt="Topic Image" height="200" width="300">
-                            @endif
+                            <p class="mb-3 tx-14">{{ $topic->content }}</p>
+                             @php
+            $validMedia = $topic->media->filter(function($media) {
+            return file_exists(storage_path('app/public/' . $media->file_path));
+            });
+
+            $imageMedia = $validMedia->where('file_type', 'image')->values();
+            $videoMedia = $validMedia->where('file_type', 'video')->values();
+
+            $totalImages = $imageMedia->count();
+            $totalVideos = $videoMedia->count();
+            @endphp
+                             @if($topic->video_link)
+            {{-- Embedded YouTube Video --}}
+            <div class="ratio ratio-16x9 mt-2">
+                <iframe width="560" height="315" src="{{ $topic->video_link }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            </div>
+            @elseif($totalVideos > 0)
+            {{-- Uploaded Video Files --}}
+            <div class="post-video mt-2">
+                @foreach($videoMedia as $video)
+                <video controls class="w-100 rounded mb-2" preload="metadata">
+                    <source src="{{ asset('storage/' . $video->file_path) }}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                @endforeach
+            </div>
+            @endif
+            @if($totalImages === 1)
+            <div class="post-img mt-2">
+                <a href="{{ asset('storage/' . $imageMedia[0]->file_path) }}" class="glightbox"
+                    data-gallery="post-gallery-{{ $topic->id }}">
+                    <img src="{{ asset('storage/' . $imageMedia[0]->file_path) }}" loading="lazy" class="w-100"
+                        alt="Post Image">
+                </a>
+            </div>
+            @elseif($totalImages > 1)
+            <div class="post-img d-flex justify-content-between flex-wrap gap-2 gap-lg-3 mt-2">
+                @foreach($imageMedia->take(4) as $index => $media)
+                <div class="position-relative" style="width: 48%;">
+                    <a href="{{ asset('storage/' . $media->file_path) }}" class="glightbox"
+                        data-gallery="post-gallery-{{ $post->id }}">
+                        <img src="{{ asset('storage/' . $media->file_path) }}" alt="Post Image" loading="lazy"
+                            class="w-100">
+                    </a>
+                    @if($index === 3 && $totalImages > 4)
+                    {{-- Hidden extra images --}}
+                    @foreach($imageMedia->slice(4) as $extra)
+                    <a href="{{ asset('storage/' . $extra->file_path) }}" class="glightbox d-none"
+                        data-gallery="post-gallery-{{ $post->id }}"></a>
+                    @endforeach
+
+                    {{-- Overlay link to trigger the rest of the images --}}
+                    <a href="{{ asset('storage/' . $imageMedia[4]->file_path) }}"
+                        class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center text-white glightbox"
+                        style="background-color: rgba(0,0,0,0.6); font-size: 2rem; cursor: pointer;"
+                        data-gallery="post-gallery-{{ $post->id }}">
+                        +{{ $totalImages - 4 }}
+                    </a>
+                    @endif
+                </div>
+
+                @endforeach
+            </div>
+            @endif
                         </div>
 
-                        <div class="card-footer">
+                        <!-- <div class="card-footer">
                             <div class="d-flex post-actions">
                                 <a href="{{ url('group/topic_view/' . $topic->id) }}"
                                    class="d-flex align-items-center text-muted mr-4">
@@ -93,7 +152,7 @@
                                     <p class="d-none d-md-block ms-2 mb-1">Read more...</p>
                                 </a>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>
