@@ -37,5 +37,9 @@ class Topic extends Model
     public function created_by() {
     return $this->belongsTo(User::class, 'created_by');
 }
+public function group()
+{
+    return $this->belongsTo(Group::class, 'group_id');
+}
 
 }

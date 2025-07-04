@@ -15,7 +15,7 @@
 
 
    <!-- Modal create Feed photo START -->
-   <div class="modal fade" id="feedActionPhoto" tabindex="-1" aria-labelledby="feedActionPhotoLabel" aria-hidden="true">
+<div class="modal fade" id="feedActionPhoto" tabindex="-1" aria-labelledby="feedActionPhotoLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <form class="modal-content" action="{{ route('post.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
@@ -73,6 +73,65 @@
         </form>
     </div>
 </div>
+
+<div class="modal fade" id="groupActionpost" tabindex="-1" aria-labelledby="groupActionpostLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <form class="modal-content" action="{{ route('user.group.post')}}" method="POST" enctype="multipart/form-data">
+            @csrf
+
+            <!-- Modal header -->
+            <div class="modal-header">
+                <h5 class="modal-title" id="groupActionpostLabel">Add Group post in <span class="group_name"></span></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                <div class="d-flex mb-3">
+                    <!-- User avatar -->
+                    <div class="avatar avatar-xs me-2">
+                        @php
+                            $profilePic = $user->profile_pic ?? null;
+                        @endphp
+                        <img class="avatar-img rounded-circle"
+                             src="{{ $profilePic ? asset('storage/' . $profilePic) : asset('feed_assets/images/avatar/03.jpg') }}"
+                             alt="User Avatar">
+                    </div>
+                    <!-- Post textarea -->
+                     <input type="hidden" name="group_id" class="group_id">
+                    <textarea class="form-control pe-4 fs-3 lh-1 border-0"
+                              name="modalContent"
+                              rows="2"
+                              placeholder="Share your thoughts..."></textarea>
+                </div>
+
+                <!-- File upload -->
+                <div class="mb-3">
+                    <label class="form-label">Upload attachment</label>
+                    <div id="drop-area"
+                         class="drop-area p-4 text-center border border-secondary rounded">
+                        <i class="bi bi-images fs-1 mb-2 d-block"></i>
+                        <span class="d-block">Drag & Drop image here or click to browse.</span>
+                        <input type="file"
+                               id="media"
+                               name="media[]" multiple
+                               class=""
+                               accept="image/*">
+                        <div id="preview" class="mt-3 d-flex flex-wrap gap-3"></div>
+                    </div>
+                </div>
+
+                <!-- Optional video link -->
+                <input class="form-control mt-2" type="text" name="video_link" placeholder="Video Link (optional)" />
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger-soft" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-success-soft">Post</button>
+            </div>
+        </form>
+    </div>
    <!-- Modal create Feed photo END -->
 
    <!-- Modal create Feed video START -->
@@ -526,6 +585,7 @@ document.getElementById("media").addEventListener("change", function (e) {
         reader.readAsDataURL(file);
     }
 });
+
 </script>
 
 

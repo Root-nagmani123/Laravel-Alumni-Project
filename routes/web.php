@@ -66,6 +66,9 @@ Route::prefix('user')->name('user.')->group(function () {
         Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 		Route::put('/post/update/{id}', [PostController::class, 'update'])->name('post.update');
 		Route::post('/post', [PostController::class, 'store'])->name('post.store');
+		
+		Route::post('/group-post', [PostController::class, 'group_post_store'])->name('group.post');
+
 		Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
 
         Route::put('/comments/{id}', [CommentController::class, 'update'])->name('comments.update');

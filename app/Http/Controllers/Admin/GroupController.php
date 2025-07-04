@@ -10,6 +10,8 @@ use App\Models\Member;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
+use App\Models\Post;
+use App\Models\PostMedia;
 class GroupController extends Controller
 {
     public function index()
@@ -123,9 +125,9 @@ class GroupController extends Controller
 
         return view('admin.group.add_topic', compact('group', 'id'));
     }
+ 
 
-
-    public function save_topic(Request $request, $id)
+    public function save_topic_bkp(Request $request, $id)
         {
 
             $request->validate([
@@ -182,6 +184,61 @@ class GroupController extends Controller
             return redirect()->route('group.index')
                                 ->with('success', 'Topic added successfully.');
         }
+        public function save_topic(Request $request, $group_id)
+{
+    $request->validate([
+         'description' => 'nullable|string',
+        'video_link' => 'nullable|url',
+        'video_caption' => 'nullable|string',
+        'status' => 'required|integer',
+        'doc' => 'nullable|file|mimes:pdf,jpg,png,gif',
+        'topic_image' => 'nullable|file|mimes:jpg,png,gif',
+        'video' => 'nullable|file|mimes:mp4,mov,avi,wmv|max:102400'
+    ]);
+
+  
+    $imageFile = $request->hasFile('topic_image')
+        ? $request->file('topic_image')->store('uploads/topics', 'public')
+        : null;
+
+   
+    // Youtube embed link generate
+    $embedLink = '';
+    if ($request->video_link) {
+        parse_str(parse_url($request->video_link, PHP_URL_QUERY), $query);
+        $embedLink = isset($query['v']) ? "https://www.youtube.com/embed/" . $query['v'] : $request->video_link;
+    }
+
+    $media_type = null;
+    if ($imageFile && $embedLink) {
+        $media_type = 'photo_video';
+    } elseif ($imageFile) {
+        $media_type = 'photo_video';
+    } elseif ($embedLink) {
+        $media_type = 'photo_video';
+    }
+
+    // ✅ Save post (in posts table)
+    $post = Post::create([
+        'group_id'    => $group_id,
+        'member_id'   => Auth::id(), // Or auth('user')->id() depending on your guard
+        'content'     => $request->description,
+        'media_type'  => $media_type,
+        'video_link'  => $embedLink,
+    ]);
+
+    // ✅ Save image as PostMedia if exists
+    if ($imageFile) {
+        PostMedia::create([
+            'post_id'   => $post->id,
+            'file_path' => $imageFile,
+            'file_type' => 'image',
+        ]);
+    }
+
+
+    return redirect()->route('group.index')->with('success', 'Group post (topic) added successfully.');
+}
 
 
 

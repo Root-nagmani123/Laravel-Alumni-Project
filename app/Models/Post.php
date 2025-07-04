@@ -18,6 +18,8 @@ class Post extends Model
         'content',
         'media_type',
         'media_path',
+        'group_id',
+        'video_link',
     ];
 
     // Optional: set default attributes
@@ -61,6 +63,10 @@ class Post extends Model
         //return $this->hasMany(Comment::class);
          return $this->hasMany(Comment::class)->orderBy('created_at', 'desc');
     }
+  public function group()
+{
+    return $this->belongsTo(Group::class, 'group_id');
+}
 
 
 	//16-6-2025

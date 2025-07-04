@@ -65,24 +65,56 @@
             <div class="d-flex align-items-center justify-content-between">
                 <div class="d-flex align-items-center">
                     <!-- Avatar -->
-                    @php
-                    $member = $post->member;
-                    $profileImage = $member && $member->profile_image
-                    ? asset('storage/' . $member->profile_image)
-                    : asset('feed_assets/images/avatar/07.jpg');
-                    @endphp
-                    <div class="avatar avatar-story me-2">
-                        <a href="#!"> <img class="avatar-img rounded-circle" src="{{ $profileImage }}" alt=""> </a>
-                    </div>
-                    <!-- Info -->
-                    <div>
-                        <div class="nav nav-divider">
-                            <h6 class="nav-item card-title mb-0"> <a href="{{ url('/user/profile/' . $member->id) }}">
-                                    {{ $member->name ?? 'Unknown' }} </a></h6>
-                            <span class="nav-item small"> {{ $post->created_at->diffForHumans() }}</span>
-                        </div>
-                        <p class="mb-0 small">{{ $member->designation ?? 'Unknown' }}</p>
-                    </div>
+                  @php
+    $profileImage = '';
+    $displayName = '';
+    $designation = '';
+    $profileLink = '#';
+
+    if ($post->type === 'group_post') {
+        // Group post ke liye
+        $profileImage = $post->group_image 
+            ? asset('storage/' . $post->group_image) 
+            : asset('feed_assets/images/avatar/07.jpg'); // fallback image
+
+        $displayName = $post->group_name ?? 'Unknown Group';
+        $designation = 'Group Post';
+
+        // Optional: if you have a group detail page
+        $profileLink = url('/group/' . ($post->group_id ?? 0));
+    } else {
+        // Member/user post
+        $member = $post->member ?? null;
+
+        $profileImage = $member && $member->profile_image
+            ? asset('storage/' . $member->profile_image)
+            : asset('feed_assets/images/avatar/07.jpg');
+
+        $displayName = $member->name ?? 'Unknown';
+        $designation = $member->designation ?? 'Unknown';
+        $profileLink = url('/user/profile/' . ($member->id ?? 0));
+    }
+@endphp
+
+<div class="avatar avatar-story me-2">
+    <a href="{{ $profileLink }}">
+        <img class="avatar-img rounded-circle" src="{{ $profileImage }}" alt="">
+    </a>
+</div>
+
+<!-- Info -->
+<div>
+    <div class="nav nav-divider">
+        <h6 class="nav-item card-title mb-0">
+            <a href="{{ $profileLink }}">{{ $displayName }}</a>
+        </h6>
+        <span class="nav-item small">
+            {{ \Carbon\Carbon::parse($post->created_at)->diffForHumans() }}
+        </span>
+    </div>
+    <p class="mb-0 small">{{ $designation }}</p>
+</div>
+
                 </div>
 
             </div>
