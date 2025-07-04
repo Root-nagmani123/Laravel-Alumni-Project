@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\Post;
 use App\Models\Story;
+use App\Models\Topic;
 
 class FeedController extends Controller
 {
@@ -93,14 +94,17 @@ class FeedController extends Controller
         $userId = $user->id;
 
         // Fetch posts with related models
-        $posts = Post::with([
-            'member',         // User who created the post
-            'media',          // Media associated with the post
-            'likes',          // Likes on the post
-            'comments.member' // Users who commented
-        ])
-        ->orderBy('created_at', 'desc')
-        ->get();
+        // $posts = Post::with([
+        //     'member',         // User who created the post
+        //     'media',          // Media associated with the post
+        //     'likes',          // Likes on the post
+        //     'comments.member' // Users who commented
+        // ])
+        // ->orderBy('created_at', 'desc')
+        // ->get();
+    //      $posts = Post::with(['member', 'media', 'likes', 'comments.member'])
+    // ->select('*', DB::raw("'post' as type"))
+    // ->get();
 
 
         // Fetch stories with the related user (make sure the Story model has user() relation)
@@ -110,52 +114,70 @@ class FeedController extends Controller
                 ->where('status',1)
             ->orderBy('broadcasts.id', 'desc')
             ->get();
+            
           $events = DB::table('events')
         ->where('status', 1)
         ->where('end_datetime', '>', now())
         ->orderBy('id', 'desc')
         ->get();
-// print_r($events);die;
 
-    // RSVP Events by status
-    $accept_events = DB::table('events')
-        ->join('event_rsvp', 'events.id', '=', 'event_rsvp.event_id')
-        ->where('event_rsvp.user_id', $userId)
-        ->where('event_rsvp.status', 'accept')
-        ->where('events.status', 1)
-        ->where('events.end_datetime', '>', now())
-        ->select('events.*')
-        ->orderBy('events.id', 'desc')
-        ->get();
+   
+        $forums = DB::table('forums as f')
+            ->join('forum_topics as ft', 'ft.forum_id', '=', 'f.id')
+            ->join('forums_member as fm', 'fm.forums_id', '=', 'f.id')
+            ->select('f.id', 'f.name','ft.id as topic_id', 'ft.title as topic_name', 'ft.description','ft.images','ft.created_date')
+            ->where('fm.user_id', $userId)
+            ->get();
 
-    $maybe_events = DB::table('events')
-        ->join('event_rsvp', 'events.id', '=', 'event_rsvp.event_id')
-        ->where('event_rsvp.user_id', $userId)
-        ->where('event_rsvp.status', 'maybe')
-        ->where('events.status', 1)
-        ->where('events.end_datetime', '>', now())
-        ->select('events.*')
-        ->orderBy('events.id', 'desc')
-        ->get();
 
-    $decline_events = DB::table('events')
-        ->join('event_rsvp', 'events.id', '=', 'event_rsvp.event_id')
-        ->where('event_rsvp.user_id', $userId)
-        ->where('event_rsvp.status', 'decline')
-        ->where('events.status', 1)
-        ->where('events.end_datetime', '>', now())
-        ->select('events.*')
-        ->orderBy('events.id', 'desc')
-        ->get();
-$forums = DB::table('forums as f')
-    ->join('forum_topics as ft', 'ft.forum_id', '=', 'f.id')
-    ->join('forums_member as fm', 'fm.forums_id', '=', 'f.id')
-    ->select('f.id', 'f.name','ft.id as topic_id', 'ft.title as topic_name', 'ft.description','ft.images','ft.created_date')
-    ->where('fm.user_id', $userId)
+
+    $groupIds = DB::table('group_member')
+    ->where('status', 1)
+    ->where(function ($query) use ($userId) {
+        $query->where('mentor', $userId)
+              ->orWhereRaw("JSON_CONTAINS(mentiee, '\"$userId\"')");
+    })
+    ->pluck('group_id');
+
+    $groupNames = DB::table('groups')
+    ->whereIn('id', $groupIds)
+    ->select('id', 'name')
+    ->distinct()
     ->get();
+  
+ $posts = Post::with(['member', 'media', 'likes', 'comments.member', 'group'])
+    ->where(function ($query) use ($groupIds) {
+        $query->whereNull('group_id') // normal post bhi chahiye
+              ->orWhereIn('group_id', $groupIds); // ya phir allowed group_id
+    })
+    ->orderBy('created_at', 'desc')
+    ->get()
+    ->map(function ($post) {
+        return (object)[
+            'id' => $post->id,
+            'content' => $post->content,
+            'created_at' => $post->created_at,
+            'type' => $post->group_id ? 'group_post' : 'post',
+            'group_loaded' => $post->relationLoaded('group') ? 'yes' : 'no',
+            'group_name' => $post->group->name ?? 'No Group',
+            'member' => $post->member,
+            'media' => $post->media,
+            'likes' => $post->likes,
+            'comments' => $post->comments,
+            'video_link' => $post->video_link,
+            'shares' => $post->shares,
+            'group_image' => '',
+        ];
+    });
+    
+
+// dd($posts);
 
 
-        return view('user.feed', compact('posts', 'user', 'stories', 'broadcast','events', 'accept_events', 'maybe_events', 'decline_events','forums'));
+// dd($posts);
+// // Debug
+// print_r($merged);die;
+        return view('user.feed', compact('posts', 'user', 'stories', 'broadcast','events', 'forums', 'groupNames'));
     }
 
     public function store(Request $request)

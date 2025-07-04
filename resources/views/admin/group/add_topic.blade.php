@@ -53,16 +53,7 @@ $pageName
                             </div>
                         </div>
 
-                        <!-- Title -->
-                        <div class="row mb-3">
-                            <label for="inputText" class="col-sm-3 col-form-label">Title<span
-                                    class="required">*</span></label>
-                            <div class="col-sm-9">
-                                <input type="text" name="title" class="form-control" value="{{ old('title') }}">
-                            </div>
-                        </div>
-
-                        <!-- Description -->
+                     
                         <div class="row mb-3">
                             <label for="inputPassword" class="col-sm-3 col-form-label">Description<span
                                     class="required">*</span></label>
@@ -80,13 +71,7 @@ $pageName
                             </div>
                         </div>
 
-                          <div class="row mb-3">
-                            <label for="video" class="col-sm-3 col-form-label">Video</label>
-                            <div class="col-sm-9">
-                                <input class="form-control" name="video" type="file" id="video">
-                            </div>
-                        </div>
-
+                       
                         <!-- Photo Caption -->
                         <div class="row mb-3 d-none" id="photoCaptionRow">
                             <label for="inputText" class="col-sm-3 col-form-label">Photo Caption</label>
@@ -104,30 +89,7 @@ $pageName
                             </div>
                         </div>
 
-                         <!-- Video Link -->
-                        <div class="row mb-3">
-                            <label for="live_video" class="col-sm-3 col-form-label">Live Video</label>
-                            <div class="col-sm-9">
-                                <input type="text" name="live_video" class="form-control" id="live_video">
-                            </div>
-                        </div>
-
-                        <!-- Video Caption -->
-                        <div class="row mb-3 d-none" id="videoCaptionRow">
-                            <label for="inputText" class="col-sm-3 col-form-label">Video Caption</label>
-                            <div class="col-sm-9">
-                                <input type="text" name="video_caption" class="form-control">
-                            </div>
-                        </div>
-
-                        <!-- Document (PDF) -->
-                        <div class="row mb-3">
-                            <label for="inputNumber" class="col-sm-3 col-form-label">Document <small>(PDF
-                                    Only)</small></label>
-                            <div class="col-sm-9">
-                                <input class="form-control" type="file" id="formFile" name="doc">
-                            </div>
-                        </div>
+                      
 
                         <!-- Status -->
                         <div class="row mb-3">
