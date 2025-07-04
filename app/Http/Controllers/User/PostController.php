@@ -123,43 +123,6 @@ public function group_post_store(Request $request)
 
     return redirect()->back()->with('success', 'Group Post created successfully.');
 }
-
-public function group_post_store(Request $request)
-{
-    $request->validate([
-        'group_id' => 'required|integer|exists:groups,id',
-        'modalContent' => 'nullable|string',
-        'media' => 'nullable',
-        'media.*' => 'image|max:5120', // 5MB max per file
-        'video' => 'nullable|url',
-    ]);
-    $mediaFiles = $request->file('media');
-
-    $post = Post::create([
-        'group_id' => $request->group_id,
-        'member_id' => auth('user')->id(),
-        'content' => $request->modalContent,
-        'video_link' => $request->video_link,
-        'media_type' => $request->hasFile('media') && $request->video
-            ? 'photo_video'
-            : ($request->hasFile('media') ? 'photo_video' : ($request->video ? 'photo_video' : null)),
-    ]);
-
-    if ($mediaFiles) {
-        foreach ($mediaFiles as $file) {
-            $filename = uniqid() . '_' . $file->getClientOriginalName();
-            $path = $file->storeAs('posts/media', $filename, 'public');
-
-            PostMedia::create([
-                'post_id' => $post->id,
-                'file_path' => $path,
-                'file_type' => 'image',
-            ]);
-        }
-    }
-
-    return redirect()->back()->with('success', 'Group Post created successfully.');
-}
    
 
   public function store23062025(Request $request)
