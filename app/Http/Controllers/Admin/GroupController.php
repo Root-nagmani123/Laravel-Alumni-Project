@@ -246,12 +246,14 @@ class GroupController extends Controller
         {
             $pageName = 'Group';
             $group = Group::findOrFail($id);
-            $topics = Topic::where('group_id', $id)->with('member')->get();
+            $topics = Post::where('group_id', $id)->with('member', 'media')->get();
+            // print_r($topics);die;
+
             return view('admin.group.topics_list', compact('group', 'topics','pageName'));
         }
 
    public function updateTopic(Request $request, $id) {
-        $topic = Topic::findOrFail($id);
+        $topic = Post::findOrFail($id);
 
         $topic->title = $request->title;
         $topic->description = $request->description;
@@ -275,8 +277,30 @@ class GroupController extends Controller
     }
 
     public function deleteTopic($id) {
-    Topic::destroy($id);
+    // post::destroy($id);
     return back()->with('success', 'Topic deleted.');
+     $post = DB::table('posts')->where('id', $id)->first();
+
+    if (!$post) {
+        return response()->json(['message' => 'Post not found'], 404);
+    }
+
+    // Step 2: Delete media files (optional: physical file also)
+    $mediaItems = DB::table('post_media')->where('post_id', $id)->get();
+    foreach ($mediaItems as $media) {
+        $path = storage_path('app/public/' . $media->file_path);
+        if (file_exists($path)) {
+            unlink($path); // delete physical file
+        }
+    }
+
+    // Step 3: Delete media from table
+    DB::table('post_media')->where('post_id', $id)->delete();
+
+    // Step 4: Delete post
+    DB::table('posts')->where('id', $id)->delete();
+
+     return back()->with('success', 'Group Post deleted successfully.');
  }
 
   public function topicToggleStatus(Request $request)
