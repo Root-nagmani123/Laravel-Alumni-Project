@@ -3,6 +3,7 @@
 @section('title', 'Directory - Alumni | Lal Bahadur Shastri National Academy of Administration')
 
 @section('content')
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
 
 <main class="main-content">
     <div class="container">
@@ -100,6 +101,8 @@
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
+<!-- Bootstrap Bundle (with Popper) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-7qAoOXltbVP82dhxHAUje59V5r2YsVfBafyUDxEdApLPmcdhBPg1DKg1ERo0BZlK" crossorigin="anonymous"></script>
 
 <!-- Filter Logic -->
 <script>
@@ -115,3 +118,4 @@
         });
     });
 </script>
+@endsection
