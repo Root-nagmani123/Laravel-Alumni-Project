@@ -80,6 +80,7 @@ public function store_chnagefor_video_link(Request $request)
     $embedLink = 'https://www.youtube.com/embed/' . $videoId;
 }
 
+
     // Set media type
     if ($request->hasFile('media')) {
         foreach ($request->file('media') as $file) {

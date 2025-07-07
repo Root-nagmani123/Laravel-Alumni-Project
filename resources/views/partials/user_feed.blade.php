@@ -3,16 +3,16 @@
 
     <!-- Story START -->
     <div class="d-flex gap-2 mb-n3">
-      <div class="position-relative" id="openAddStoryModal">
-  <div class="card border border-2 border-dashed h-150px px-4 px-sm-5 shadow-none d-flex align-items-center justify-content-center text-center">
-    <div>
-      <a class="stretched-link btn btn-light rounded-circle icon-md" href="#!">
-        <i class="fa-solid fa-plus"></i>
-      </a>
-      <h6 class="mt-2 mb-0 small">Post a Story</h6>
-    </div>
-  </div>
-</div>
+        <div class="position-relative">
+            <div
+                class="card border border-2 border-dashed h-150px px-4 px-sm-5 shadow-none d-flex align-items-center justify-content-center text-center">
+                <div>
+                    <a class="stretched-link btn btn-light rounded-circle icon-md" href="#!"><i
+                            class="fa-solid fa-plus"></i></a>
+                    <h6 class="mt-2 mb-0 small">Post a Story</h6>
+                </div>
+            </div>
+        </div>
 
         <!-- Stories -->
         <div id="stories" class="storiesWrapper stories-square stories user-icon carousel scroll-enable"></div>
@@ -228,31 +228,17 @@
                     </a>
                     <!-- Card share action dropdown menu -->
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="cardShareAction">
-                       <li>
-                    <a href="#" class="dropdown-item send-direct-message-btn" data-user-id="{{ $member->id }}">
-                        <i class="bi bi-envelope fa-fw pe-2"></i>Send via Direct Message
-                    </a>
-                    </li>
+                        <li><a class="dropdown-item" href="#"> <i class="bi bi-envelope fa-fw pe-2"></i>Send via Direct
+                                Message</a></li>
 
-                        <li>
-                            <a
-                                class="dropdown-item copy-url-btn"
-                                href="#"
-                                data-url="{{ url('/user/profile/' . $member->id) }}">
-                                <i class="bi bi-link fa-fw pe-2"></i>Copy link to post
-                            </a>
-                            </li>
+                        <li><a class="dropdown-item" href="#"> <i class="bi bi-link fa-fw pe-2"></i>Copy link to
+                                post</a></li>
 
                         <li>
                             <hr class="dropdown-divider">
                         </li>
-                         <li>
-                            <a class="dropdown-item share-to-feed-btn"
-                            href="#"
-                            data-post-id="{{ $post->id ?? '' }}">
-                            <i class="bi bi-pencil-square fa-fw pe-2"></i>Share to News Feed
-                            </a>
-                        </li>
+                        <li><a class="dropdown-item" href="#"> <i class="bi bi-pencil-square fa-fw pe-2"></i>Share to
+                                News Feed</a></li>
                     </ul>
                 </li>
                 <!-- Card share action END -->
@@ -280,8 +266,7 @@
             </div>
             <ul class="comment-wrap list-unstyled">
                 <!-- Comment item START -->
-                {{--@foreach ($post->comments as $comment)--}}
-                @foreach ($post->comments->take(2) as $comment)
+                @foreach ($post->comments as $comment)
                 <li class="comment-item mb-3" id="comment-{{ $comment->id }}">
                     <div class="d-flex position-relative">
                         <!-- Avatar -->
@@ -318,8 +303,8 @@
             </ul>
             <!-- Card body END -->
             <!-- Card footer START -->
-            <!--<div class="card-footer border-0 pt-0">
-
+            <div class="card-footer border-0 pt-0">
+                <!-- Load more comments -->
                 <a href="#!" role="button"
                     class="btn btn-link btn-link-loader btn-sm text-secondary d-flex align-items-center"
                     data-bs-toggle="button" aria-pressed="true">
@@ -330,20 +315,7 @@
                     </div>
                     Load more comments
                 </a>
-            </div>-->
-            @if ($post->comments->count() > 2)
-    <div class="card-footer border-0 pt-0">
-        <a href="#!" class="btn btn-link btn-sm text-secondary load-more-comments"
-           data-post-id="{{ $post->id }}" data-offset="2">
-            <div class="spinner-dots me-2 d-none" id="spinner-{{ $post->id }}">
-                <span class="spinner-dot"></span>
-                <span class="spinner-dot"></span>
-                <span class="spinner-dot"></span>
             </div>
-            Load more comments
-        </a>
-    </div>
-@endif
             <!-- Card footer END -->
         </div>
         <!-- Card feed item END -->
@@ -364,82 +336,26 @@
 </div>
 <!-- Edit Comment Modal -->
 <div class="modal fade" id="editCommentModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog">
-    <form method="POST" action="{{-- route('user.comments.update') --}}">
-      @csrf
-      @method('PUT')
-      <input type="hidden" name="comment_id" id="editCommentId">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Edit Comment</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body">
-          <textarea name="comment" id="editCommentText" class="form-control" rows="3"></textarea>
-        </div>
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-primary">Update</button>
-        </div>
-      </div>
-    </form>
-  </div>
-</div>
-
-
-<!-- Add Story Modal -->
-<div class="modal fade" id="addStoryModal" tabindex="-1" aria-labelledby="addStoryModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <form action="{{ route('user.stories.store') }}" method="POST" enctype="multipart/form-data">
-        @csrf
-        <div class="modal-header">
-          <h5 class="modal-title" id="addStoryModalLabel">Add New Story</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          @if(session('success'))
-              <div class="alert alert-success">{{ session('success') }}</div>
-          @endif
-          @error('story_image')
-              <div class="alert alert-danger">{{ $message }}</div>
-          @enderror
-          <div class="mb-3">
-            <label for="story_image" class="form-label">Select Story Image</label>
-            <input type="file" class="form-control" name="story_image" required>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-primary">Upload Story</button>
-        </div>
-      </form>
+    <div class="modal-dialog">
+        <form method="POST">
+            @csrf
+            @method('PUT')
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Comment</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <textarea name="comment" class="form-control" rows="3"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Update</button>
+                </div>
+            </div>
+        </form>
     </div>
-  </div>
 </div>
-<!-- Add Story Modal -->
 
-
-<!-- Direct Message Modal -->
-<div class="modal fade" id="directMessageModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog">
-    <form method="POST" action="{{-- route('messages.send') --}}">
-      @csrf
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Send Direct Message</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body">
-          <input type="hidden" name="user_id" id="messageUserId">
-          <textarea name="message" class="form-control" rows="3" placeholder="Write your message..." required></textarea>
-        </div>
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-primary">Send</button>
-        </div>
-      </div>
-    </form>
-  </div>
-</div>
-<!-- Direct Message Modal end -->
 
 @section('scripts')
 <script>
@@ -472,8 +388,35 @@ $(document).on('click', '.like-button', function() {
     });
 
 });
+$(document).on('click', '.edit-comment-btn', function() {
+    const commentId = $(this).data('comment-id');
+    const commentText = $(this).data('comment');
 
+    $('#editCommentModal textarea[name="comment"]').val(commentText);
+    $('#editCommentModal form').attr('action', `/user/comments/${commentId}`);
+    $('#editCommentModal').modal('show');
+});
+$('#editCommentModal form').on('submit', function(e) {
+    e.preventDefault();
+    const url = $(this).attr('action');
+    const comment = $(this).find('textarea[name="comment"]').val();
 
+    $.ajax({
+        url: url,
+        type: 'PUT',
+        data: {
+            _token: $('meta[name="csrf-token"]').attr('content'),
+            comment: comment
+        },
+        success: function(response) {
+            $('#editCommentModal').modal('hide');
+            // optionally reload comment list or update DOM
+        },
+        error: function() {
+            alert('Error updating comment.');
+        }
+    });
+});
 $(document).on('click', '.delete-comment-btn', function() {
     const commentId = $(this).data('comment-id');
 
@@ -508,229 +451,6 @@ $(document).on('click', '.delete-comment-btn', function() {
         });
     }
 });
-
-
-//add storis modal
-document.getElementById('openAddStoryModal').addEventListener('click', function () {
-    var myModal = new bootstrap.Modal(document.getElementById('addStoryModal'));
-    myModal.show();
-});
-// end storie modal
-
-
-
-
- document.addEventListener("DOMContentLoaded", function () {
-    document.querySelectorAll('.copy-url-btn').forEach(function (el) {
-        el.addEventListener('click', function (e) {
-            e.preventDefault();
-            const url = el.getAttribute('data-url');
-
-            // Copy to clipboard
-            navigator.clipboard.writeText(url).then(() => {
-                alert('Link copied to clipboard!');
-            }).catch(err => {
-                console.error('Failed to copy: ', err);
-            });
-        });
-    });
-});
-
-
-
- // Send via Direct Message
-     document.querySelectorAll('.send-direct-message-btn').forEach(function (btn) {
-        btn.addEventListener('click', function (e) {
-            e.preventDefault();
-            const userId = this.getAttribute('data-user-id');
-            document.getElementById('messageUserId').value = userId;
-
-            // Show modal
-            let modal = new bootstrap.Modal(document.getElementById('directMessageModal'));
-            modal.show();
-        });
-    });
-
-    // Share to News Feed
-    document.querySelectorAll('.share-to-feed-btn').forEach(function (el) {
-        el.addEventListener('click', function (e) {
-            e.preventDefault();
-            const postId = el.getAttribute('data-post-id');
-            // Trigger share modal or prefill content logic here
-            alert('Open share-to-feed modal for post ID: ' + postId);
-        });
-    });
-
-
-
-
-    document.addEventListener("DOMContentLoaded", function () {
-    let currentTime = Math.floor(Date.now() / 1000); // current time in seconds
-
-    let storiesData = [
-        @foreach($stories as $story)
-        {
-            id: "{{ $story->id }}",
-            photo: "{{ asset($story->user->profile_pic ? 'storage/' . $story->user->profile_pic : 'feed_assets/images/avatar/08.jpg') }}",
-            name: "{{ $story->user->name }}",
-            link: "#",
-            lastUpdated: {{ \Carbon\Carbon::parse($story->created_at)->timestamp }},
-            items: [
-                {
-                    id: "story-{{ $story->id }}",
-                    type: "photo",
-                    length: 5,
-                    src: "{{ asset('storage/' . $story->story_image) }}",
-                    preview: "{{ asset('storage/' . $story->story_image) }}",
-                    link: "#",
-                    linkText: "View",
-                    time: {{ \Carbon\Carbon::parse($story->created_at)->timestamp }}
-                }
-            ]
-        },
-        @endforeach
-    ];
-
-    // Filter out stories older than 24 hours (86400 seconds)
-    let filteredStories = storiesData.filter(story => {
-        return currentTime - story.lastUpdated <= 86400; // 24 * 60 * 60
-    });
-
-    initZuckStories(filteredStories);
-});
-
-
-
-
-
-document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('.edit-comment-btn').forEach(button => {
-        button.addEventListener('click', function () {
-            const commentId = this.dataset.commentId;
-            const commentText = this.dataset.comment;
-            const commentDiv = document.getElementById(`comment-text-${commentId}`);
-
-            // Replace text with input
-            commentDiv.innerHTML = `
-                <input type="text" id="edit-input-${commentId}" class="form-control form-control-sm mb-1" value="${commentText}">
-                <button class="btn btn-sm btn-success" onclick="saveEditedComment(${commentId})">Update</button>
-               <button class="btn btn-sm btn-danger" onclick="deleteComment(${commentId})">Delete</button>
-            `;
-        });
-    });
-});
-
-function cancelEdit(id, originalText) {
-    document.getElementById(`comment-text-${id}`).innerHTML = originalText;
-}
-
-function saveEditedComment(id) {
-    const newComment = document.getElementById(`edit-input-${id}`).value;
-
-    fetch(`/user/comments/${id}`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-            'Accept': 'application/json'
-        },
-        body: JSON.stringify({ comment: newComment })
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.success) {
-            document.getElementById(`comment-text-${id}`).innerHTML = newComment;
-        } else {
-            alert(data.message || 'Failed to update comment');
-        }
-    })
-    .catch(err => {
-        console.error('Edit failed', err);
-        alert('An error occurred while editing the comment.');
-    });
-}
-
-function deleteComment(commentId) {
-    if (!confirm('Are you sure you want to delete this comment?')) return;
-
-    fetch(`/user/comments/${commentId}`, {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-            'Accept': 'application/json'
-        },
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            document.getElementById(`comment-wrapper-${commentId}`).remove();
-        } else {
-            alert(data.error || 'Failed to delete comment.');
-        }
-    })
-    .catch(error => {
-        console.error('Error deleting comment:', error);
-        alert('An error occurred while deleting the comment.');
-    });
-}
-
-
-document.addEventListener('DOMContentLoaded', function () {
-    document.querySelectorAll('.load-more-comments').forEach(function (btn) {
-        btn.addEventListener('click', function (e) {
-            e.preventDefault();
-            const postId = btn.dataset.postId;
-            let offset = parseInt(btn.dataset.offset);
-            const spinner = document.getElementById('spinner-' + postId);
-            spinner.classList.remove('d-none');
-
-            fetch(`load-comments/${postId}?offset=${offset}`)
-                .then(res => res.json())
-                .then(data => {
-                    spinner.classList.add('d-none');
-
-                    if (data.comments.length === 0) {
-                        btn.remove(); // No more comments
-                        return;
-                    }
-
-                    let commentHtml = '';
-                    data.comments.forEach(comment => {
-                        commentHtml += `
-                            <li class="comment-item mb-3" id="comment-${comment.id}">
-                                <div class="d-flex position-relative">
-                                    <div class="avatar avatar-xs">
-                                        <a href="#!"><img class="avatar-img rounded-circle"
-                                            src="${comment.member && comment.member.profile_pic ? '/storage/' + comment.member.profile_pic : '/feed_assets/images/avatar/12.jpg'}"
-                                            alt=""></a>
-                                    </div>
-                                    <div class="ms-2 w-100">
-                                        <div class="bg-light rounded-start-top-0 p-3 rounded">
-                                            <div class="d-flex justify-content-between">
-                                                <h6 class="mb-1"><a href="#!">${comment.member?.name || 'Anonymous'}</a></h6>
-                                                <small class="ms-2">Just now</small>
-                                            </div>
-                                            <p class="small mb-0">${comment.comment}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>`;
-                    });
-
-                    btn.closest('.card-footer').insertAdjacentHTML('beforebegin', commentHtml);
-                    btn.dataset.offset = offset + data.comments.length;
-                })
-                .catch(err => {
-                    spinner.classList.add('d-none');
-                    console.error('Failed to load comments:', err);
-                });
-        });
-    });
-});
-
 </script>
-
-
 
 @endsection
