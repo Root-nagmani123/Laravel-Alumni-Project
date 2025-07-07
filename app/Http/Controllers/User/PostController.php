@@ -69,16 +69,7 @@ public function store_chnagefor_video_link(Request $request)
     //$post->member_id = auth()->id();  // or $request->user()->id if passed in
     $post->member_id = auth()->guard('user')->id();
     $post->content = $request->modalContent;
-    //$post->video_link = $request->video_link;
-    if ($videoLink && str_contains($videoLink, 'youtube.com')) {
-    parse_str(parse_url($videoLink, PHP_URL_QUERY), $query);
-    if (isset($query['v'])) {
-        $embedLink = 'https://www.youtube.com/embed/' . $query['v'];
-    }
-} elseif ($videoLink && str_contains($videoLink, 'youtu.be')) {
-    $videoId = basename(parse_url($videoLink, PHP_URL_PATH));
-    $embedLink = 'https://www.youtube.com/embed/' . $videoId;
-}
+    $post->video_link = $request->video_link;
 
 
     // Set media type
