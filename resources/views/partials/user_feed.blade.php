@@ -135,9 +135,14 @@
             $totalImages = $imageMedia->count();
             $totalVideos = $videoMedia->count();
             @endphp
-         @if($post->media_type === 'video_link')
+          @if($post->video_link)
     <div class="embed-responsive embed-responsive-16by9">
         <iframe class="embed-responsive-item" src="{{ $post->video_link }}" allowfullscreen></iframe>
+             @endphp
+          @if(!empty($post) && !empty($post->video_link))
+            {{-- Embedded YouTube Video --}}
+            <div class="ratio ratio-16x9 mt-2">
+                <iframe width="560" height="315" src="{{ $post->video_link }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
     </div>
             @elseif($totalVideos > 0)
             {{-- Uploaded Video Files --}}
