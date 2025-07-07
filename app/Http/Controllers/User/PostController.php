@@ -71,6 +71,7 @@ public function store_chnagefor_video_link(Request $request)
     $post->content = $request->modalContent;
     $post->video_link = $request->video_link;
 
+
     // Set media type
     if ($request->hasFile('media')) {
         foreach ($request->file('media') as $file) {
@@ -98,12 +99,15 @@ public function group_post_store(Request $request)
         'video' => 'nullable|url',
     ]);
     $mediaFiles = $request->file('media');
-
+ if ($request->video_link) {
+        parse_str(parse_url($request->video_link, PHP_URL_QUERY), $query);
+        $embedLink = isset($query['v']) ? "https://www.youtube.com/embed/" . $query['v'] : $request->video_link;
+    }
     $post = Post::create([
         'group_id' => $request->group_id,
         'member_id' => auth('user')->id(),
         'content' => $request->modalContent,
-        'video_link' => $request->video_link,
+        'video_link' => $embedLink ?? null, // Save video link if provided
         'media_type' => $request->hasFile('media') && $request->video
             ? 'photo_video'
             : ($request->hasFile('media') ? 'photo_video' : ($request->video ? 'photo_video' : null)),
