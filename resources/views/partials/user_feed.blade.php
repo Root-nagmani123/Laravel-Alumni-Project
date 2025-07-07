@@ -134,6 +134,10 @@
 
             $totalImages = $imageMedia->count();
             $totalVideos = $videoMedia->count();
+            @endphp
+          @if($post->video_link)
+    <div class="embed-responsive embed-responsive-16by9">
+        <iframe class="embed-responsive-item" src="{{ $post->video_link }}" allowfullscreen></iframe>
              @endphp
           @if(!empty($post) && !empty($post->video_link))
             {{-- Embedded YouTube Video --}}
