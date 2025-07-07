@@ -108,20 +108,21 @@ class FeedController extends Controller
 
 
         // Fetch stories with the related user (make sure the Story model has user() relation)
-        $stories = Story::with('user')->latest()->get();
+        //$stories = Story::with('user')->latest()->get();
+        $stories = Story::where('created_at', '>=', now()->subDay())->get();
 
          $broadcast = DB::table('broadcasts')
                 ->where('status',1)
             ->orderBy('broadcasts.id', 'desc')
             ->get();
-            
+
           $events = DB::table('events')
         ->where('status', 1)
         ->where('end_datetime', '>', now())
         ->orderBy('id', 'desc')
         ->get();
 
-   
+
         $forums = DB::table('forums as f')
             ->join('forum_topics as ft', 'ft.forum_id', '=', 'f.id')
             ->join('forums_member as fm', 'fm.forums_id', '=', 'f.id')
@@ -144,7 +145,7 @@ class FeedController extends Controller
     ->select('id', 'name')
     ->distinct()
     ->get();
-  
+
  $posts = Post::with(['member', 'media', 'likes', 'comments.member', 'group'])
     ->where(function ($query) use ($groupIds) {
         $query->whereNull('group_id') // normal post bhi chahiye
@@ -169,7 +170,7 @@ class FeedController extends Controller
             'group_image' => '',
         ];
     });
-    
+
 
 // dd($posts);
 

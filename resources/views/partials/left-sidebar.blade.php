@@ -32,9 +32,17 @@
                         <div class="text-center">
                             <!-- Avatar -->
                             <div class="avatar avatar-lg mt-n5 mb-3">
-                                <img class="avatar-img rounded border border-white border-3"
-                                    src="{{Auth::guard('user')->user()->profile_pic}}" alt="">
+                                  @php
+                            $profilePic = $user->profile_pic ?? null;
+                        @endphp
+                              <img id="existingImage"
+    src="{{ $profilePic ? asset('storage/' . $profilePic) : asset('feed_assets/images/default.png') }}"
+    class="rounded-circle" height="70" width="70" alt="User">
                             </div>
+
+
+
+
                             <!-- Info -->
                             @if(Auth::guard('user')->check())
                             <h5 class="mb-0"> <a href="#!"> {{ Auth::guard('user')->user()->name }} </a> </h5>
@@ -180,7 +188,7 @@
 									@endif
                 <!-- Connection item END -->
 
-                
+
             </div>
             <!-- Card body END -->
         </div>
@@ -194,7 +202,7 @@ $(document).ready(function() {
     // Attach click handler using event delegation
     $(document).on('click', '.rsvp-option', function(e) {
         e.preventDefault();
-        
+
         let eventId = $(this).data('event-id');
         let status = $(this).data('status');
 

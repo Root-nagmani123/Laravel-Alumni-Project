@@ -64,7 +64,7 @@ class CommentController extends Controller
 
 //     return response()->json(['success' => true]);
 // }
-public function update(Request $request, Comment $comment)
+public function update_222(Request $request, Comment $comment)
 {
     $this->validate($request, [
         'comment' => 'required|string|max:1000',
@@ -81,7 +81,7 @@ public function update(Request $request, Comment $comment)
     return redirect()->back()->with('success', 'Comment updated successfully.');
 }
 
-public function destroy(Comment $comment)
+public function destroy_old(Comment $comment)
 {
     if ($comment->member_id !== auth('user')->id()) {
         abort(403);
@@ -92,6 +92,67 @@ public function destroy(Comment $comment)
     return response()->json(['success' => true]);
 }
 
+
+
+    public function update(Request $request, $id)
+{
+    $request->validate([
+        'comment' => 'required|string|max:1000',
+    ]);
+
+    $comment = Comment::findOrFail($id);
+
+    // Ensure user owns the comment
+    if ($comment->member_id !== auth()->guard('user')->id()) {
+        return response()->json(['message' => 'Unauthorized'], 403);
+    }
+
+    $comment->comment = strip_tags($request->comment);
+    $comment->save();
+
+    return response()->json(['success' => true, 'message' => 'Comment updated']);
+ }
+
+  public function destroy_222($id)
+{
+    $comment = Comment::findOrFail($id);
+
+    if ($comment->member_id !== auth()->guard('user')->id()) {
+        return response()->json(['error' => 'Unauthorized'], 403);
+    }
+
+    $comment->delete();
+
+    return response()->json(['success' => true]);
+}
+
+public function destroy($id)
+{
+    $comment = Comment::findOrFail($id);
+
+    if ($comment->member_id !== auth()->guard('user')->id()) {
+        return response()->json(['success' => false, 'error' => 'Unauthorized'], 403);
+    }
+
+    $comment->delete();
+
+    return response()->json(['success' => true, 'message' => 'Comment deleted.']);
+}
+
+public function loadComments($postId)
+{
+    $offset = request('offset', 0);
+    $limit = 5; // or any number you want
+
+    $comments = Comment::with('member')
+        ->where('post_id', $postId)
+        ->latest()
+        ->skip($offset)
+        ->take($limit)
+        ->get();
+
+    return response()->json(['comments' => $comments]);
+}
 
 }
 

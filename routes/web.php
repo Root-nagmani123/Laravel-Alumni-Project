@@ -26,6 +26,8 @@ use Illuminate\Support\Facades\Config;
 Route::resource('post', PostController::class);
 
 use App\Http\Controllers\User\CommentController;
+use App\Http\Controllers\User\StoryController;
+
 
 
 
@@ -66,19 +68,21 @@ Route::prefix('user')->name('user.')->group(function () {
         Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 		Route::put('/post/update/{id}', [PostController::class, 'update'])->name('post.update');
 		Route::post('/post', [PostController::class, 'store'])->name('post.store');
-		
+
 		Route::post('/group-post', [PostController::class, 'group_post_store'])->name('group.post');
 
 		Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
 
         Route::put('/comments/{id}', [CommentController::class, 'update'])->name('comments.update');
         Route::delete('/comments/{id}', [CommentController::class, 'destroy'])->name('comments.destroy');
+        Route::get('/load-comments/{post}', [CommentController::class, 'loadComments'])->name('load.comments');
 
+         Route::post('/stories', [StoryController::class, 'store'])->name('stories.store');
 
 		Route::post('/post/{post}/like', [PostController::class, 'toggleLike'])->name('post.like');
-		Route::post('/user/comments', [CommentController::class, 'store'])->name('user.comments.store');
-		Route::put('/user/comments/{id}', [CommentController::class, 'update'])->name('user.comments.update');
-		Route::delete('/user/comments/{id}', [CommentController::class, 'destroy'])->name('user.comments.destroy');
+		//Route::post('/user/comments', [CommentController::class, 'store'])->name('user.comments.store');
+		//Route::put('/user/comments/{id}', [CommentController::class, 'update'])->name('user.comments.update');
+		//Route::delete('/user/comments/{id}', [CommentController::class, 'destroy'])->name('user.comments.destroy');
 		Route::middleware('auth')->group(function () {
     Route::put('/user/profile/update', [UserController::class, 'update'])->name('user.profile.update');
     // other protected routes
@@ -96,7 +100,7 @@ Route::prefix('user')->name('user.')->group(function () {
 
 	   Route::post('/event-rsvp', [DashboardController::class, 'submitRsvp'])->name('event.rsvp');
 	   Route::get('/all-events', [DashboardController::class, 'allevents'])->name('allevents');
-	
+
 
     });
 

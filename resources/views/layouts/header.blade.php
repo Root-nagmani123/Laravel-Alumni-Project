@@ -6,7 +6,7 @@ Header START -->
 	<nav class="navbar navbar-expand-lg">
 		<div class="container">
 			<!-- Logo START -->
-			<a class="navbar-brand" href="#" style="display: flex; gap: 0.2rem;">
+			<a class="navbar-brand" href="{{ url('user/feed') }}" style="display: flex; gap: 0.2rem;">
 				<img class="light-mode-item navbar-brand-item" src="{{ asset('admin_assets/images/logos/lbsnaa.svg') }}" alt="logo">
 			</a>
 			<!-- Logo END -->
@@ -35,24 +35,24 @@ Header START -->
 				<!-- Nav Search END -->
 
 				<ul class="navbar-nav navbar-nav-scroll justify-content-center flex-grow-1 pe-3 flex-nowrap gap-4">
-					
+
 					<li class="nav-item d-flex gap-2 align-items-center active">
 						<a class="nav-link bg-light icon-md btn btn-light p-0 active" href="{{ url('user/feed') }}">
-						<i class="bi bi-house-door-fill"></i> 
+						<i class="bi bi-house-door-fill"></i>
 					</a>
 					Feed
 					</li>
                     <li class="nav-item d-flex gap-2 align-items-center">
 						<a class="nav-link bg-light icon-md btn btn-light p-0" href="#">
-						<i class="bi bi-file-earmark-text-fill"></i> 
+						<i class="bi bi-file-earmark-text-fill"></i>
 					</a>Library
 					</li>
                     <li class="nav-item d-flex gap-2 align-items-center">
 						<a class="nav-link bg-light icon-md btn btn-light p-0" href="#">
-						<i class="bi bi-person-lines-fill"></i> 
+						<i class="bi bi-person-lines-fill"></i>
 					</a>Groups
 					</li>
-				
+
 				</ul>
 			</div>
 			<!-- Main navbar END -->
@@ -134,15 +134,15 @@ Header START -->
 						</li>
 						<!-- Links -->
 						<li><a class="dropdown-item" href="{{ route('user.directory') }}"><i class="bi bi-gear fa-fw me-2"></i>Directory</a></li>
-						<!-- <li> 
+						<!-- <li>
 							<a class="dropdown-item" href="https://support.webestica.com/" target="_blank">
 								<i class="fa-fw bi bi-life-preserver me-2"></i>Support
-							</a> 
+							</a>
 						</li>
-						<li> 
+						<li>
 							<a class="dropdown-item" href="docs/index.html" target="_blank">
 								<i class="fa-fw bi bi-card-text me-2"></i>Documentation
-							</a> 
+							</a>
 						</li> -->
 						<li class="dropdown-divider"></li>
 						<li>
@@ -152,12 +152,12 @@ Header START -->
 											<i class="bi bi-power fa-fw me-2"></i>
 											Sign Out
 										</button>
-									</form>    
+									</form>
 						<li> <hr class="dropdown-divider"></li>
 					</ul>
 				</li>
 				<!-- Profile START -->
-				
+
 			</ul>
 			<!-- Nav right END -->
 		</div>

@@ -49,7 +49,7 @@
                        <div id="drop-area" class="drop-area p-4 text-center border border-secondary rounded">
                            <i class="bi bi-images fs-1 mb-2 d-block"></i>
                            <span class="d-block">Drag & Drop image here or click to browse.</span>
-                           <input type="file" name="media[]" multiple class="d-none" accept="image/*">
+                           <input type="file" id="media" name="media[]" multiple class="d-none" accept="image/*">
                            <div id="preview" class="mt-3 d-flex flex-wrap gap-3"></div>
                        </div>
                    </div>
@@ -261,66 +261,65 @@
        <script>
        /*  */
 
-       document.addEventListener("DOMContentLoaded", function() {
-           const dropArea = document.getElementById("drop-area");
-           const input = document.getElementById("media");
-           const preview = document.getElementById("preview");
+       document.addEventListener("DOMContentLoaded", function () {
+    const dropArea = document.getElementById("drop-area");
+    const input = document.querySelector('input[name="media[]"]');
+    const preview = document.getElementById("preview");
 
-           // Show preview
-           function showFiles(files) {
-               preview.innerHTML = ''; // Clear old previews
-               [...files].forEach(file => {
-                   const reader = new FileReader();
-                   reader.onload = function(e) {
-                       let mediaElement;
-                       if (file.type.startsWith('image/')) {
-                           mediaElement = document.createElement('img');
-                           mediaElement.src = e.target.result;
-                           mediaElement.style.width = "100px";
-                           mediaElement.style.height = "100px";
-                           mediaElement.style.objectFit = "cover";
-                       } else if (file.type.startsWith('video/')) {
-                           mediaElement = document.createElement('video');
-                           mediaElement.src = e.target.result;
-                           mediaElement.controls = true;
-                           mediaElement.style.width = "100px";
-                           mediaElement.style.height = "100px";
-                       }
-                       preview.appendChild(mediaElement);
-                   };
-                   reader.readAsDataURL(file);
-               });
-           }
+    if (!dropArea || !input || !preview) {
+        console.warn('Essential elements not found in DOM.');
+        return;
+    }
 
-           // Open file dialog on drop area click
-           dropArea.addEventListener("click", () => input.click());
+    function showFiles(files) {
+        preview.innerHTML = '';
+        [...files].forEach(file => {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                let mediaElement;
+                if (file.type.startsWith('image/')) {
+                    mediaElement = document.createElement('img');
+                    mediaElement.src = e.target.result;
+                    mediaElement.style.width = "100px";
+                    mediaElement.style.height = "100px";
+                    mediaElement.style.objectFit = "cover";
+                } else if (file.type.startsWith('video/')) {
+                    mediaElement = document.createElement('video');
+                    mediaElement.src = e.target.result;
+                    mediaElement.controls = true;
+                    mediaElement.style.width = "100px";
+                    mediaElement.style.height = "100px";
+                }
+                preview.appendChild(mediaElement);
+            };
+            reader.readAsDataURL(file);
+        });
+    }
 
-           // Handle file selection from dialog
-           input.addEventListener("change", () => showFiles(input.files));
+    dropArea.addEventListener("click", () => input.click());
+    input.addEventListener("change", () => showFiles(input.files));
 
-           // Drag & drop support
-           ['dragenter', 'dragover'].forEach(evt =>
-               dropArea.addEventListener(evt, e => {
-                   e.preventDefault();
-                   dropArea.classList.add('border-primary');
-               })
-           );
+    ['dragenter', 'dragover'].forEach(evt =>
+        dropArea.addEventListener(evt, e => {
+            e.preventDefault();
+            dropArea.classList.add('border-primary');
+        })
+    );
 
-           ['dragleave', 'drop'].forEach(evt =>
-               dropArea.addEventListener(evt, e => {
-                   e.preventDefault();
-                   dropArea.classList.remove('border-primary');
-               })
-           );
+    ['dragleave', 'drop'].forEach(evt =>
+        dropArea.addEventListener(evt, e => {
+            e.preventDefault();
+            dropArea.classList.remove('border-primary');
+        })
+    );
 
-           dropArea.addEventListener("drop", e => {
-               const dt = e.dataTransfer;
-               const files = dt.files;
-               input.files = files;
-               showFiles(files);
-           });
-       });
-
+    dropArea.addEventListener("drop", e => {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        input.files = files;
+        showFiles(files);
+    });
+});
 
 
 
