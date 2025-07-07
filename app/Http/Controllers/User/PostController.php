@@ -66,7 +66,8 @@ public function store_chnagefor_video_link(Request $request)
     ]);
 
     $post = new Post();
-    $post->member_id = auth()->id();  // or $request->user()->id if passed in
+    //$post->member_id = auth()->id();  // or $request->user()->id if passed in
+    $post->member_id = auth()->guard('user')->id();
     $post->content = $request->modalContent;
     $post->video_link = $request->video_link;
 
@@ -126,7 +127,7 @@ public function group_post_store(Request $request)
 
     return redirect()->back()->with('success', 'Group Post created successfully.');
 }
-   
+
 
   public function store23062025(Request $request)
 {

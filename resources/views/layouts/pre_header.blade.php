@@ -13,7 +13,8 @@
 
 	<!-- Google Font -->
 	<link rel="preconnect" href="https://fonts.googleapis.com">
-	<link rel="stylesheet" href="css2?family=Inter:wght@300;400;500;600;700&display=swap">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+
 
 	<!-- Plugins CSS -->
 	<link rel="stylesheet" type="text/css" href="{{asset('feed_assets/vendor/font-awesome/css/all.min.css')}}">
@@ -35,7 +36,8 @@
 	<link rel="stylesheet" href="https://img1.digitallocker.gov.in/ux4g/UX4G-CDN-accessibility/css/accesibility-style-v2.1.css">
 
 	 <!-- Global site tag (gtag.js) - Google Analytics -->
-  <script async="" src="gtag/js?id=G-GMKQ4P9YMZ"></script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-GMKQ4P9YMZ"></script>
+
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
