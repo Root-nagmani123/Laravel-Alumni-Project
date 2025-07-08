@@ -14,6 +14,7 @@
 
 
 
+
    <!-- Modal create Feed photo START -->
    <div class="modal fade" id="feedActionPhoto" tabindex="-1" aria-labelledby="feedActionPhotoLabel" aria-hidden="true">
        <div class="modal-dialog modal-dialog-centered">
@@ -102,6 +103,7 @@
                    <div class="mb-3">
                        <label class="form-label">Upload attachment</label>
                        <div id="drop-area" class="drop-area p-4 text-center border border-secondary rounded">
+
                            <i class="bi bi-images fs-1 mb-2 d-block"></i>
                            <span class="d-block">Drag & Drop image here or click to browse.</span>
                            <input type="file" id="media" name="media[]" multiple class="d-none" accept="image/*">
@@ -257,22 +259,18 @@
 
 
 
-       @section('scripts')
+
        <script>
        /*  */
 
-       document.addEventListener("DOMContentLoaded", function () {
+        document.addEventListener("DOMContentLoaded", function () {
     const dropArea = document.getElementById("drop-area");
-    const input = document.querySelector('input[name="media[]"]');
+    const input = document.getElementById("media");
     const preview = document.getElementById("preview");
 
-    if (!dropArea || !input || !preview) {
-        console.warn('Essential elements not found in DOM.');
-        return;
-    }
-
+    // Show preview
     function showFiles(files) {
-        preview.innerHTML = '';
+        preview.innerHTML = ''; // Clear old previews
         [...files].forEach(file => {
             const reader = new FileReader();
             reader.onload = function (e) {
@@ -296,9 +294,13 @@
         });
     }
 
+    // Open file dialog on drop area click
     dropArea.addEventListener("click", () => input.click());
+
+    // Handle file selection from dialog
     input.addEventListener("change", () => showFiles(input.files));
 
+    // Drag & drop support
     ['dragenter', 'dragover'].forEach(evt =>
         dropArea.addEventListener(evt, e => {
             e.preventDefault();
@@ -320,6 +322,7 @@
         showFiles(files);
     });
 });
+
 
 
 
@@ -386,29 +389,6 @@
                    }
                });
            });
-       });
-       </script>
-       <script>
-       document.getElementById("drop-area").addEventListener("click", function() {
-           document.getElementById("media").click();
-       });
-
-       document.getElementById("media").addEventListener("change", function(e) {
-           const preview = document.getElementById("preview");
-           preview.innerHTML = "";
-
-           for (let file of e.target.files) {
-               const reader = new FileReader();
-               reader.onload = function(event) {
-                   const img = document.createElement("img");
-                   img.src = event.target.result;
-                   img.style.width = "100px";
-                   img.style.height = "100px";
-                   img.classList.add("rounded", "border");
-                   preview.appendChild(img);
-               };
-               reader.readAsDataURL(file);
-           }
        });
        </script>
 

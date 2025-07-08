@@ -9,7 +9,7 @@ use App\Models\Comment;
 
 class CommentController extends Controller
 {
-    public function store(Request $request)
+    public function store_8072025(Request $request)
     {
         $request->validate([
             'post_id' => 'required|exists:posts,id',
@@ -31,6 +31,29 @@ class CommentController extends Controller
 
     }
 
+    public function store(Request $request)
+{
+    $request->validate([
+        'post_id' => 'required|exists:posts,id',
+        'comment' => 'required|string|max:1000',
+    ]);
+
+    $comment = Comment::create([
+        'post_id' => $request->post_id,
+        'member_id' => auth()->guard('user')->id(),
+        'comment' => strip_tags($request->comment),
+    ]);
+
+    if ($request->ajax()) {
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Comment added successfully!',
+            'comment' => $comment
+        ]);
+    }
+
+    return back()->with('success', 'Comment added successfully!');
+}
 
 
 //     public function update(Request $request, $id)
