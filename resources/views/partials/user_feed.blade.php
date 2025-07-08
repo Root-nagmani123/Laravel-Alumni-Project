@@ -731,6 +731,11 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 
+ document.addEventListener("DOMContentLoaded", function () {
+        GLightbox({
+            selector: '.glightbox'
+        });
+    });
 
 </script>
 

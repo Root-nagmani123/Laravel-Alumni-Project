@@ -27,6 +27,7 @@ JS libraries, plugins and custom scripts -->
 document.getElementById('uw-widget-custom-trigger2').addEventListener('click', function() {
     openMain();
 });
+
 </script>
 <link rel="stylesheet"
     href="https://img1.digitallocker.gov.in/ux4g/UX4G-CDN-accessibility/css/accesibility-style-v2.1.css">
