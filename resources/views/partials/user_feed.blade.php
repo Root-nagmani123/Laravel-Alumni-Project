@@ -565,43 +565,6 @@ document.getElementById('openAddStoryModal').addEventListener('click', function 
 
 
 
-    document.addEventListener("DOMContentLoaded", function () {
-    let currentTime = Math.floor(Date.now() / 1000); // current time in seconds
-
-    let storiesData = [
-        @foreach($stories as $story)
-        {
-            id: "{{ $story->id }}",
-            photo: "{{ asset($story->user->profile_pic ? 'storage/' . $story->user->profile_pic : 'feed_assets/images/avatar/08.jpg') }}",
-            name: "{{ $story->user->name }}",
-            link: "#",
-            lastUpdated: {{ \Carbon\Carbon::parse($story->created_at)->timestamp }},
-            items: [
-                {
-                    id: "story-{{ $story->id }}",
-                    type: "photo",
-                    length: 5,
-                    src: "{{ asset('storage/' . $story->story_image) }}",
-                    preview: "{{ asset('storage/' . $story->story_image) }}",
-                    link: "#",
-                    linkText: "View",
-                    time: {{ \Carbon\Carbon::parse($story->created_at)->timestamp }}
-                }
-            ]
-        },
-        @endforeach
-    ];
-
-    // Filter out stories older than 24 hours (86400 seconds)
-    let filteredStories = storiesData.filter(story => {
-        return currentTime - story.lastUpdated <= 86400; // 24 * 60 * 60
-    });
-
-    initZuckStories(filteredStories);
-});
-
-
-
 
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -729,6 +692,45 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 });
+
+
+
+      document.addEventListener("DOMContentLoaded", function () {
+    let currentTime = Math.floor(Date.now() / 1000); // current time in seconds
+
+    let storiesData = [
+        @foreach($stories as $story)
+        {
+            id: "{{ $story->id }}",
+            photo: "{{ asset($story->user->profile_pic ? 'storage/' . $story->user->profile_pic : 'feed_assets/images/avatar/08.jpg') }}",
+            name: "{{ $story->user->name }}",
+            link: "#",
+            lastUpdated: {{ \Carbon\Carbon::parse($story->created_at)->timestamp }},
+            items: [
+                {
+                    id: "story-{{ $story->id }}",
+                    type: "photo",
+                    length: 5,
+                    src: "{{ asset('storage/' . $story->story_image) }}",
+                    preview: "{{ asset('storage/' . $story->story_image) }}",
+                    link: "#",
+                    linkText: "View",
+                    time: {{ \Carbon\Carbon::parse($story->created_at)->timestamp }}
+                }
+            ]
+        },
+        @endforeach
+    ];
+
+    // Filter out stories older than 24 hours (86400 seconds)
+    let filteredStories = storiesData.filter(story => {
+        return currentTime - story.lastUpdated <= 86400; // 24 * 60 * 60
+    });
+
+    initZuckStories(filteredStories);
+});
+
+
 
 </script>
 
