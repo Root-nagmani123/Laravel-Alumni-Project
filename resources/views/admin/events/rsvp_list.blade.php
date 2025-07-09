@@ -70,7 +70,16 @@
 									<td>{{ $rsvp->user_name ?? 'N/A' }}</td>
 									<td>{{ $rsvp->responded_at }}</td>
 									<td>
-										{{ $rsvp->status }}
+                                        @if($rsvp->status == 1)
+                                        <button class="btn btn-success btn-sm">Interested</button>
+                                        @elseif($rsvp->status == 2)
+                                        <button class="btn btn-danger btn-sm">Not Interested</button>
+                                        @elseif($rsvp->status == 3)
+                                        <button class="btn btn-warning btn-sm">Maybe</button>
+                                        @else
+                                        <button class="btn btn-secondary btn-sm">Unknown</button>
+                                        @endif
+                                         
 									</td>
 
 

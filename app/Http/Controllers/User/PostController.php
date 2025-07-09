@@ -79,7 +79,7 @@ public function store_chnagefor_video_link(Request $request)
             $post->media_path = $filename;  // or you save this in separate `post_media` table
         }
     } else if ($request->video_link) {
-        $post->media_type = 'video_link';
+        $post->media_type = 'photo_video';
     }
 
     $post->save();
