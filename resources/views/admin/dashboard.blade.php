@@ -59,7 +59,13 @@
                             <span class="text-dark-light">Topics</span>
                             <div class="hstack gap-6">
                                 <h5 class="mb-0 fs-7">{{ $total_topics }}</h5>
-                                <span class="fs-11 text-dark-light fw-semibold">-12%</span>
+                              @if (is_null($topicChangePercent))
+                            <span class="fs-11 fw-semibold text-muted">New</span>
+                        @else
+                            <span class="fs-11 fw-semibold {{ $topicChangePercent < 0 ? 'text-danger' : 'text-success' }}">
+                                {{ $topicChangePercent }}%
+                            </span>
+                        @endif
                             </div>
                         </div>
                     </div>
