@@ -107,9 +107,17 @@ class FeedController extends Controller
     // ->get();
 
 
-        // Fetch stories with the related user (make sure the Story model has user() relation)
+
         //$stories = Story::with('user')->latest()->get();
-        $stories = Story::where('created_at', '>=', now()->subDay())->get();
+        //$stories = Story::where('created_at', '>=', now()->subDay())->get();
+         $stories = Story::where('created_at', '>=', now()->subDay())
+                     ->with('user')
+                     ->get();
+
+         $storiesByMember = $stories->groupBy('member_id');
+
+
+        //echo '<pre>';print_r($stories);die;
 
          $broadcast = DB::table('broadcasts')
                 ->where('status',1)
@@ -178,7 +186,7 @@ class FeedController extends Controller
 // dd($posts);
 // // Debug
 // print_r($merged);die;
-        return view('user.feed', compact('posts', 'user', 'stories', 'broadcast','events', 'forums', 'groupNames'));
+        return view('user.feed', compact('posts', 'user', 'storiesByMember', 'broadcast','events', 'forums', 'groupNames'));
     }
 
     public function store(Request $request)

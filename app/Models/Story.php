@@ -15,4 +15,9 @@ class Story extends Model
     {
         return $this->belongsTo(Member::class, 'member_id');
     }
+
+    public function story_images()
+    {
+        return $this->hasMany(StoryImage::class);
+    }
 }

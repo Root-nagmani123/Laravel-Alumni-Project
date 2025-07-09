@@ -17,14 +17,19 @@ var timestamp = function() {
 // Update your story below
 function initZuckStories(storiesData) {
     new Zuck('stories', {
-        backNative: true,
-        skin: 'snapgram',
-        autoFullScreen: false,
-        avatars: true,
-        list: false,
-        cubeEffect: true,
-        localStorage: true,
+         backNative: false,
+		previousTap: true,
+		skin: "snapgram",
+		autoFullScreen: false,
+		avatars: true,        // show the circular avatar
+		list: false,
+		openEffect: true,
+		cubeEffect: true,
+		backButton: true,
+		localStorage: true,
         stories: storiesData
     });
+	
+	
 }
 ;

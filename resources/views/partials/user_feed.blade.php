@@ -695,18 +695,27 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
-      document.addEventListener("DOMContentLoaded", function () {
+     document.addEventListener("DOMContentLoaded", function () {
     let currentTime = Math.floor(Date.now() / 1000); // current time in seconds
 
     let storiesData = [
-        @foreach($stories as $story)
+        @foreach($storiesByMember as $memberId => $memberStories)
+            @php
+                $first = $memberStories->first();
+                $user = $first->user;
+                 $storyImage = $first->story_image ?? null;
+                $lastTimestamp = \Carbon\Carbon::parse($memberStories->max('created_at'))->timestamp;
+
+            @endphp
         {
-            id: "{{ $story->id }}",
-            photo: "{{ asset($story->user->profile_pic ? 'storage/' . $story->user->profile_pic : 'feed_assets/images/avatar/08.jpg') }}",
-            name: "{{ $story->user->name }}",
+            id: "member-{{ $memberId }}",
+            //photo: "{{ asset($user->profile_pic ? 'storage/' . $user->profile_pic : 'feed_assets/images/avatar/08.jpg') }}",
+           photo: "{{ asset($storyImage ? 'storage/' . $storyImage : 'feed_assets/images/avatar/08.jpg') }}",
+            name: "{{ addslashes($user->name) }}",
             link: "#",
-            lastUpdated: {{ \Carbon\Carbon::parse($story->created_at)->timestamp }},
+            lastUpdated: {{ $lastTimestamp }},
             items: [
+                @foreach($memberStories as $story)
                 {
                     id: "story-{{ $story->id }}",
                     type: "photo",
@@ -716,15 +725,16 @@ document.addEventListener('DOMContentLoaded', function () {
                     link: "#",
                     linkText: "View",
                     time: {{ \Carbon\Carbon::parse($story->created_at)->timestamp }}
-                }
+                }@if(!$loop->last),@endif
+                @endforeach
             ]
-        },
+        }@if(!$loop->last),@endif
         @endforeach
     ];
 
-    // Filter out stories older than 24 hours (86400 seconds)
+    // Filter stories created within the last 24 hours
     let filteredStories = storiesData.filter(story => {
-        return currentTime - story.lastUpdated <= 86400; // 24 * 60 * 60
+        return currentTime - story.lastUpdated <= 86400;
     });
 
     initZuckStories(filteredStories);
