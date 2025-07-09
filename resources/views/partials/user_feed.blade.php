@@ -389,23 +389,36 @@
 <div class="modal fade" id="addStoryModal" tabindex="-1" aria-labelledby="addStoryModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-      <form action="{{ route('user.stories.store') }}" method="POST" enctype="multipart/form-data">
+        @if(session('success'))
+  <div class="alert alert-success alert-dismissible fade show" role="alert">
+    {{ session('success') }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+@endif
+      <form action="{{ route('user.stories.store') }}" method="POST" enctype="multipart/form-data" id="storyForm">
         @csrf
         <div class="modal-header">
           <h5 class="modal-title" id="addStoryModalLabel">Add New Story</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          @if(session('success'))
-              <div class="alert alert-success">{{ session('success') }}</div>
-          @endif
-          @error('story_image')
+
+          @error('story_file')
               <div class="alert alert-danger">{{ $message }}</div>
           @enderror
+          <!--<div class="mb-3">
+            <label for="story_file" class="form-label">Select Story (Image, Video or PDF)</label>
+            <input type="file" class="form-control" name="story_file" id="story_file" accept=".jpg,.jpeg,.png,.mp4,.mov,.pdf" required>
+            <small class="text-muted d-block mt-2" id="fileInfo">Max 10MB. Allowed types: JPG, PNG, MP4, MOV, PDF.</small>
+            <div class="text-danger mt-2" id="fileError"></div>
+          </div>-->
           <div class="mb-3">
-            <label for="story_image" class="form-label">Select Story Image</label>
-            <input type="file" class="form-control" name="story_image" required>
+            <label for="story_file" class="form-label">Select Story (Image)</label>
+            <input type="file" class="form-control" name="story_file" id="story_file" accept=".jpg,.jpeg,.png,.mp4,.mov,.pdf" required>
+            <small class="text-muted d-block mt-2" id="fileInfo">Max 10MB. Allowed types: JPG, PNG.</small>
+            <div class="text-danger mt-2" id="fileError"></div>
           </div>
+
         </div>
         <div class="modal-footer">
           <button type="submit" class="btn btn-primary">Upload Story</button>
@@ -414,6 +427,7 @@
     </div>
   </div>
 </div>
+
 <!-- Add Story Modal -->
 
 
@@ -691,7 +705,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-
+/*
 
      document.addEventListener("DOMContentLoaded", function () {
     let currentTime = Math.floor(Date.now() / 1000); // current time in seconds
@@ -731,13 +745,60 @@ document.addEventListener('DOMContentLoaded', function () {
     ];
 
     // Filter stories created within the last 24 hours
-    let filteredStories = storiesData.filter(story => {
+   let filteredStories = storiesData.filter(story => {
         return currentTime - story.lastUpdated <= 86400;
     });
 
+
+
+
     initZuckStories(filteredStories);
 });
+*/
 
+document.addEventListener("DOMContentLoaded", function () {
+    let currentTime = Math.floor(Date.now() / 1000); // current time in seconds
+
+    let storiesData = [
+        @foreach($storiesByMember as $memberId => $memberStories)
+            @php
+                $first = $memberStories->first();
+                $user = $first->user;
+                $storyImage = $first->story_image ?? null;
+            @endphp
+        {
+            id: "member-{{ $memberId }}",
+            photo: "{{ asset($storyImage ? 'storage/' . $storyImage : 'feed_assets/images/avatar/08.jpg') }}",
+            name: "{{ addslashes($user->name) }}",
+            link: "#",
+            items: [
+                @foreach($memberStories as $story)
+                {
+                    id: "story-{{ $story->id }}",
+                    type: "photo",
+                    length: 5,
+                    src: "{{ asset('storage/' . $story->story_image) }}",
+                    preview: "{{ asset('storage/' . $story->story_image) }}",
+                    link: "#",
+                    linkText: "View",
+                    time: {{ \Carbon\Carbon::parse($story->created_at)->timestamp }}
+                }@if(!$loop->last),@endif
+                @endforeach
+            ]
+        }@if(!$loop->last),@endif
+        @endforeach
+    ];
+
+    // ✅ Filter stories and items that are still valid (not expired after 2 hours)
+    let filteredStories = storiesData
+        .map(story => {
+            story.items = story.items.filter(item => currentTime - item.time <= 7200);
+            return story;
+        })
+        .filter(story => story.items.length > 0); // remove users with all expired stories
+
+    initZuckStories(filteredStories);
+});
 
  document.addEventListener("DOMContentLoaded", function () {
         GLightbox({

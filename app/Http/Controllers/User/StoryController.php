@@ -17,16 +17,19 @@ class StoryController extends Controller
 	public function store(Request $request)
     {
         $request->validate([
-            'story_image' => 'required|image|mimes:jpg,png,jpeg|max:2048',
+            //'story_image' => 'required|image|mimes:jpg,png,jpeg|max:2048',
+            // 'story_file' => 'required|file|mimes:jpg,jpeg,png,mp4,mov,pdf|max:10240', // 10MB max
+             'story_file' => 'required|file|mimes:jpg,jpeg,png|max:10240', // 10MB max
         ]);
 
-        $path = $request->file('story_image')->store('stories', 'public');
-
+        $path = $request->file('story_file')->store('stories', 'public');
+//dd($request);
         Story::create([
             'member_id' => Auth::guard('user')->id(),
             'story_image' => $path,
         ]);
 
-        return redirect()->back()->with('success', 'Story added!');
+        return redirect()->back();
+        //return redirect()->route('/feed')->with('success', 'Story added!');
     }
 }
