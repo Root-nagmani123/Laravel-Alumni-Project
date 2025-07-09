@@ -17,7 +17,9 @@ class Events extends Model
     'end_datetime',
     'created_by',
     'online',
-    'url'
+    'url',
+    'venue',
+    'image',
 
 ];
 

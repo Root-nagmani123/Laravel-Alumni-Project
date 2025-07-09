@@ -134,7 +134,7 @@
                                             <div class="card h-100">
                                                 <div class="position-relative">
                                                     <img class="img-fluid rounded-top"
-                                                         src="{{ asset($event->image ?? 'feed_assets/images/events/default.jpg') }}" alt="">
+                                                         src="{{ isset($event->image) && $event->image ? asset('storage/' . $event->image) : asset('feed_assets/images/avatar/07.jpg') }}" alt="">
                                                   
                                                 </div>
                                                 <div class="card-body position-relative pt-0">
@@ -145,10 +145,18 @@
                                                         <i class="bi bi-calendar-check pe-1"></i>
                                                         {{ \Carbon\Carbon::parse($event->start_datetime)->format('D, M d, Y \a\t h:i A') }}
                                                     </p>
-                                                    <p class="small">
-                                                        <i class="bi bi-geo-alt pe-1"></i>
+                                                   <p class="small">
+                                                    <i class="bi bi-geo-alt pe-1"></i>
+                                                    @if(!empty($event->url))
+                                                        <a href="{{ $event->url }}" target="_blank">{{ $event->url }}</a>
+                                                    @elseif(!empty($event->location))
                                                         {{ $event->location }}
-                                                    </p>
+                                                    @else
+                                                        N/A
+                                                    @endif
+                                                </p>
+                                                <p>{{ $event->description }}</p>
+
                                                     <div class="d-flex mt-3 justify-content-between">
                                                         <div class="w-100">
                                                             <select class="form-select rsvp-select" data-event-id="{{ $event->id }}">
@@ -212,45 +220,7 @@
                             </div>
 
                             <!-- Not Interested Tab -->
-                            <div class="tab-pane fade" id="tab-3" role="tabpanel">
-                                <div class="row g-4">
-                                    @forelse($decline_events as $event)
-                                        <div class="col-sm-6 col-xl-4">
-                                            <div class="card h-100">
-                                                <div class="position-relative">
-                                                    <img class="img-fluid rounded-top"
-                                                         src="{{ asset($event->image ?? 'feed_assets/images/events/default.jpg') }}" alt="">
-                                                </div>
-                                                <div class="card-body position-relative pt-0">
-                                                    <h6 class="mt-3">
-                                                        <a href="">{{ $event->title }}</a>
-                                                    </h6>
-                                                    <p class="mb-0 small">
-                                                        <i class="bi bi-calendar-check pe-1"></i>
-                                                        {{ \Carbon\Carbon::parse($event->start_datetime)->format('D, M d, Y \a\t h:i A') }}
-                                                    </p>
-                                                    <p class="small">
-                                                        <i class="bi bi-geo-alt pe-1"></i>
-                                                        {{ $event->location }}
-                                                    </p>
-                                                    <div class="d-flex mt-3 justify-content-between">
-                                                        <div class="w-100">
-                                                            <button class="btn btn-sm btn-outline-danger d-block">
-                                                                <i class="bi bi-x-circle me-1"></i>
-                                                                Not Interested
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    @empty
-                                        <div class="col-12 text-center">
-                                            <p>No not interested events found.</p>
-                                        </div>
-                                    @endforelse
-                                </div>
-                            </div>
+                            
 
                             <!-- Maybe Tab -->
                             <div class="tab-pane fade" id="tab-4" role="tabpanel">
@@ -288,6 +258,45 @@
                                     @empty
                                         <div class="col-12 text-center">
                                             <p>No maybe events found.</p>
+                                        </div>
+                                    @endforelse
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="tab-3" role="tabpanel">
+                                <div class="row g-4">
+                                    @forelse($decline_events as $event)
+                                        <div class="col-sm-6 col-xl-4">
+                                            <div class="card h-100">
+                                                <div class="position-relative">
+                                                    <img class="img-fluid rounded-top"
+                                                         src="{{ asset($event->image ?? 'feed_assets/images/events/default.jpg') }}" alt="">
+                                                </div>
+                                                <div class="card-body position-relative pt-0">
+                                                    <h6 class="mt-3">
+                                                        <a href="">{{ $event->title }}</a>
+                                                    </h6>
+                                                    <p class="mb-0 small">
+                                                        <i class="bi bi-calendar-check pe-1"></i>
+                                                        {{ \Carbon\Carbon::parse($event->start_datetime)->format('D, M d, Y \a\t h:i A') }}
+                                                    </p>
+                                                    <p class="small">
+                                                        <i class="bi bi-geo-alt pe-1"></i>
+                                                        {{ $event->location }}
+                                                    </p>
+                                                    <div class="d-flex mt-3 justify-content-between">
+                                                        <div class="w-100">
+                                                            <button class="btn btn-sm btn-outline-danger d-block">
+                                                                <i class="bi bi-x-circle me-1"></i>
+                                                                Not Interested
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @empty
+                                        <div class="col-12 text-center">
+                                            <p>No not interested events found.</p>
                                         </div>
                                     @endforelse
                                 </div>

@@ -100,42 +100,45 @@
             <div class="card-body">
                 <!-- Connection item START -->
 
-                @if(!empty($events))
-                @foreach($events as $event)
-    <div class="hstack gap-2 mb-3" id="event-{{ $event->id }}">
-        <!-- Avatar -->
-        <div class="avatar">
-            <a href="#!"><img class="avatar-img rounded-circle"
-                src="{{ isset($event->image) && $event->image ? asset('storage/events/' . $event->image) : asset('feed_assets/images/avatar/07.jpg') }}"
-                alt=""></a>
-        </div>
+                @if(!empty($events) && count($events) > 0)
+                @foreach($events->take(4) as $event)
+                <div class="hstack gap-2 mb-3" id="event-{{ $event->id }}">
+                    <!-- Avatar -->
+                    <div class="avatar">
+                        <a href="#!"><img class="avatar-img rounded-circle"
+                                src="{{ isset($event->image) && $event->image ? asset('storage/' . $event->image) : asset('feed_assets/images/avatar/07.jpg') }}"
+                                alt=""></a>
+                    </div>
 
-        <!-- Title -->
-        <div class="overflow-hidden">
-            <a class="h6 mb-0" href="{{ $event->url ?? '#' }}">
-                {{ \Illuminate\Support\Str::limit($event->title, 20) }}</a>
-            <p class="mb-0 small text-truncate">
-                {{ \Carbon\Carbon::parse($event->end_datetime)->format('d M, Y') }}</p>
-        </div>
+                    <!-- Title -->
+                    <div class="overflow-hidden">
+                        <a class="h6 mb-0" href="{{ $event->url ?? '#' }}">
+                            {{ \Illuminate\Support\Str::limit($event->title, 20) }}</a>
+                        <p class="mb-0 small text-truncate">
+                            {{ \Carbon\Carbon::parse($event->start_datetime)->format('D, M d, Y \a\t h:i A') }}</p>
+                    </div>
 
-        <!-- RSVP Dropdown -->
-        <div class="dropdown ms-auto">
-            <a href="#" class="text-secondary btn btn-secondary-soft-hover py-1 px-2" id="cardFeedAction" data-bs-toggle="dropdown" aria-expanded="false">
-                <i class="bi bi-three-dots"></i>
-            </a>
+                    <!-- RSVP Dropdown -->
+                    <div class="dropdown ms-auto">
+                        <a href="#" class="text-secondary btn btn-secondary-soft-hover py-1 px-2" id="cardFeedAction"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-three-dots"></i>
+                        </a>
 
-            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="cardFeedAction">
-    <li><a class="dropdown-item rsvp-option" href="#" data-event-id="{{ $event->id }}" data-status="1">
-        <i class="bi bi-check2-circle fa-fw pe-2"></i>Interested</a></li>
-    <li><a class="dropdown-item rsvp-option" href="#" data-event-id="{{ $event->id }}" data-status="2">
-        <i class="bi bi-x-circle fa-fw pe-2"></i>Not interested</a></li>
-    <li><a class="dropdown-item rsvp-option" href="#" data-event-id="{{ $event->id }}" data-status="3">
-        <i class="bi bi-dash-circle fa-fw pe-2"></i>Maybe</a></li>
-</ul>
-
-        </div>
-    </div>
-@endforeach
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="cardFeedAction">
+                            <li><a class="dropdown-item rsvp-option" href="#" data-event-id="{{ $event->id }}"
+                                    data-status="1">
+                                    <i class="bi bi-check2-circle fa-fw pe-2"></i>Interested</a></li>
+                            <li><a class="dropdown-item rsvp-option" href="#" data-event-id="{{ $event->id }}"
+                                    data-status="2">
+                                    <i class="bi bi-x-circle fa-fw pe-2"></i>Not interested</a></li>
+                            <li><a class="dropdown-item rsvp-option" href="#" data-event-id="{{ $event->id }}"
+                                    data-status="3">
+                                    <i class="bi bi-dash-circle fa-fw pe-2"></i>Maybe</a></li>
+                        </ul>
+                    </div>
+                </div>
+                @endforeach
 
                 <div class="d-grid mt-3">
                     <a class="btn btn-sm btn-primary-soft" href="{{ route('user.allevents') }}">View more</a>
@@ -143,6 +146,7 @@
                 @else
                 <p>No events found</p>
                 @endif
+
                 <!-- Connection item END -->
 
                 <!-- View more button -->
@@ -162,19 +166,20 @@
             <!-- Card body START -->
             <div class="card-body">
                 <!-- Connection item START -->
-                 @if(isset($forums) && count($forums) > 0)
-				 @foreach($forums as $forum)
+                @if(isset($forums) && count($forums) > 0)
+                @foreach($forums as $forum)
                 <div class="hstack gap-2 mb-3">
                     <!-- Avatar -->
                     <div class="avatar">
-                        <a href="#!"><img class="avatar-img rounded-circle" src="{{ asset('storage/uploads/images/' . $forum->images) }}"
-                                alt=""></a>
+                        <a href="#!"><img class="avatar-img rounded-circle"
+                                src="{{ asset('storage/uploads/images/' . $forum->images) }}" alt=""></a>
                     </div>
                     <!-- Title -->
                     <div class="overflow-hidden">
                         <a class="h6 mb-0" href="#!">{{ $forum->name }} </a>
                         <p class="mb-0 small text-truncate">Topic: {{ $forum->topic_name }}</p>
-						<small class="text-muted">{{ \Carbon\Carbon::parse($forum->created_date)->format('d M, Y') }}</small>
+                        <small
+                            class="text-muted">{{ \Carbon\Carbon::parse($forum->created_date)->format('d M, Y') }}</small>
                     </div>
 
                 </div>
@@ -182,10 +187,10 @@
                 <div class="d-grid mt-3">
                     <a class="btn btn-sm btn-primary-soft" href="#!">View more</a>
                 </div>
-				@endforeach
-                	@else
-										<p>No forums to display.</p>
-									@endif
+                @endforeach
+                @else
+                <p>No forums to display.</p>
+                @endif
                 <!-- Connection item END -->
 
 
@@ -227,4 +232,3 @@ $(document).ready(function() {
 </script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <!-- Card News END -->
-

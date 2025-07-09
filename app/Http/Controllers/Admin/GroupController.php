@@ -21,14 +21,10 @@ class GroupController extends Controller
     }
     public function create()
     {
-
         $admins = Admin::select('*')->get();
         $members = Member::select('*')->get();
-
         $mentors = $admins->merge($members);
-
         $users = Member::all();
-
         return view('admin.group.create', compact('mentors','users'));
     }
     public function store_1012025(Request $request)
@@ -41,11 +37,9 @@ class GroupController extends Controller
             'created_by' => 'nullable|integer',
             'member_type' => 'nullable|integer',
         ]);
-
        Group::create($request->all());
         return redirect()->route('group.index')->with('success', 'Group created successfully.');
     }
-
     public function store(Request $request)
     {
      $request->validate([
@@ -54,7 +48,6 @@ class GroupController extends Controller
         'user_id' => 'required|array',
         'status' => 'nullable|integer',
     ]);
-
     // Create the group
     $group = Group::create([
         'name' => $request->input('name'),
@@ -63,7 +56,6 @@ class GroupController extends Controller
         'created_by' => $request->input('created_by'),
         'member_type' => $request->input('member_type'),
     ]);
-
     // Create the group member
     GroupMember::create([
         'group_id' => $group->id,
@@ -72,10 +64,8 @@ class GroupController extends Controller
         'mentiee' => json_encode($request->input('user_id')),
         'status' => $request->input('status'),
     ]);
-
     return redirect()->route('group.index')->with('success', 'Group created successfully.');
     }
-
     public function edit(Group $group)
     {
         return view('admin.group.edit', compact('group'));
@@ -100,7 +90,6 @@ class GroupController extends Controller
                 return redirect()->route('group.index')
                                 ->with('error', 'Cannot delete an active Group. Please deactivate it first.');
             }
-
             $group->delete();
             return redirect()->route('group.index')
                             ->with('success', 'Group deleted successfully.');
@@ -108,11 +97,9 @@ class GroupController extends Controller
 
      public function toggleStatus(Request $request)
     {
-
         $group = Group::findOrFail($request->id);
         $group->status = $request->status;
         $group->save();
-
         return response()->json(['message' => 'Status updated successfully.']);
     }
 
@@ -122,14 +109,10 @@ class GroupController extends Controller
         if (!$group) {
             abort(404, 'Group not found');
         }
-
         return view('admin.group.add_topic', compact('group', 'id'));
     }
- 
-
     public function save_topic_bkp(Request $request, $id)
         {
-
             $request->validate([
                 'title' => 'required|string|max:255',
                 'description' => 'nullable|string',
@@ -139,31 +122,23 @@ class GroupController extends Controller
                 'doc' => 'nullable|file|mimes:pdf,jpg,png,gif',
                 'topic_image' => 'nullable|file|mimes:jpg,png,gif',
             ]);
-
           /*  $docFile = $request->hasFile('doc') ? $request->file('doc')->store('uploads', 'public') : null;
             $imageFile = $request->hasFile('topic_image') ? $request->file('topic_image')->store('uploads', 'public') : null;
             $videoFile = $request->hasFile('video') ? $request->file('video')->store('uploads', 'public') : null;*/
-
             $docFile = $request->hasFile('doc')
             ? $request->file('doc')->store('uploads/doc', 'public')
             : null;
-
             $imageFile = $request->hasFile('topic_image')
             ? $request->file('topic_image')->store('uploads/topics', 'public')
             : null;
-
              $videoFile = $request->hasFile('video')
             ? $request->file('video')->store('uploads/video', 'public')
             : null;
-
             $embedLink = '';
             if ($request->video_link) {
                 parse_str(parse_url($request->video_link, PHP_URL_QUERY), $query);
                 $embedLink = isset($query['v']) ? "https://www.youtube.com/embed/" . $query['v'] : '';
             }
-
-
-
             Topic::create([
                 'title' => $request->title,
                 'description' => $request->description,
@@ -178,7 +153,6 @@ class GroupController extends Controller
                 'created_by' => Auth::id(),
                 'created_date' => now(),
             ]);
-
         // return redirect()->route('admin.group.topics_list', ['id' => $id])
             //  ->with('success', 'Topic added successfully.');
             return redirect()->route('group.index')
@@ -195,20 +169,15 @@ class GroupController extends Controller
         'topic_image' => 'nullable|file|mimes:jpg,png,gif',
         'video' => 'nullable|file|mimes:mp4,mov,avi,wmv|max:102400'
     ]);
-
-  
     $imageFile = $request->hasFile('topic_image')
         ? $request->file('topic_image')->store('uploads/topics', 'public')
         : null;
-
-   
     // Youtube embed link generate
     $embedLink = '';
     if ($request->video_link) {
         parse_str(parse_url($request->video_link, PHP_URL_QUERY), $query);
         $embedLink = isset($query['v']) ? "https://www.youtube.com/embed/" . $query['v'] : $request->video_link;
     }
-
     $media_type = null;
     if ($imageFile && $embedLink) {
         $media_type = 'photo_video';
@@ -217,7 +186,6 @@ class GroupController extends Controller
     } elseif ($embedLink) {
         $media_type = 'photo_video';
     }
-
     // ✅ Save post (in posts table)
     $post = Post::create([
         'group_id'    => $group_id,
@@ -226,7 +194,6 @@ class GroupController extends Controller
         'media_type'  => $media_type,
         'video_link'  => $embedLink,
     ]);
-
     // ✅ Save image as PostMedia if exists
     if ($imageFile) {
         PostMedia::create([
@@ -235,36 +202,26 @@ class GroupController extends Controller
             'file_type' => 'image',
         ]);
     }
-
-
     return redirect()->route('group.index')->with('success', 'Group post (topic) added successfully.');
 }
-
-
-
     public function view_topic($id)
         {
             $pageName = 'Group';
             $group = Group::findOrFail($id);
             $topics = Post::where('group_id', $id)->with('member', 'media')->get();
             // print_r($topics);die;
-
             return view('admin.group.topics_list', compact('group', 'topics','pageName'));
         }
-
    public function updateTopic(Request $request, $id) {
         $topic = Post::findOrFail($id);
-
         $topic->title = $request->title;
         $topic->description = $request->description;
         $topic->status = $request->status;
-
          if ($request->hasFile('images')) {
         // Delete old image if exists
         if ($topic->image && File::exists(public_path('uploads/topics/' . $topic->images))) {
             File::delete(public_path('uploads/topics/' . $topic->images));
         }
-
         $images = $request->file('images');
         $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
         $images->move(public_path('uploads/topics'), $imageName);
@@ -272,19 +229,15 @@ class GroupController extends Controller
     }
        $topic->save();
         return back()->with('success', 'Topic added successfully.');
-
     //return redirect()->route('group.topics_list')->with('success', 'Topic added successfully.');
     }
-
     public function deleteTopic($id) {
     // post::destroy($id);
     return back()->with('success', 'Topic deleted.');
      $post = DB::table('posts')->where('id', $id)->first();
-
     if (!$post) {
         return response()->json(['message' => 'Post not found'], 404);
     }
-
     // Step 2: Delete media files (optional: physical file also)
     $mediaItems = DB::table('post_media')->where('post_id', $id)->get();
     foreach ($mediaItems as $media) {
@@ -293,23 +246,17 @@ class GroupController extends Controller
             unlink($path); // delete physical file
         }
     }
-
     // Step 3: Delete media from table
     DB::table('post_media')->where('post_id', $id)->delete();
-
     // Step 4: Delete post
     DB::table('posts')->where('id', $id)->delete();
-
      return back()->with('success', 'Group Post deleted successfully.');
  }
-
   public function topicToggleStatus(Request $request)
     {
-
         $topic = Topic::findOrFail($request->id);
         $topic->status = $request->status;
         $topic->save();
-
         return response()->json(['message' => 'Status updated successfully.']);
     }
 

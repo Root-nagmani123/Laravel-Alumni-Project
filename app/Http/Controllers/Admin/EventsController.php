@@ -34,7 +34,8 @@ class EventsController extends Controller
 			'url'            => 'nullable|url|max:255',
 			'start_datetime' => 'required|date',
 			'end_datetime'   => 'required|date|after_or_equal:start_datetime',
-			'image'          => 'nullable|image|max:2048', // max 2MB
+			'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048', // max 2MB
+
 		]);
 
 		// Return back with errors if validation fails
@@ -53,17 +54,21 @@ class EventsController extends Controller
 		}
 
 		// Create the event
-		Events::create([
-			'title'          => $request->title,
-			'description'    => $request->description,
-			'location'       => $request->location,
-			'venue'          => $request->venue,
-			'url'            => $request->url,
-			'start_datetime' => $request->start_datetime,
-			'end_datetime'   => $request->end_datetime,
-			'image'          => $imagePath,
-			'created_by'     => Auth::id(),
-		]);
+	$location = $request->venue === 'physical' ? $request->location : null;
+$url      = $request->venue === 'online'   ? $request->url      : null;
+
+// Create the event
+Events::create([
+    'title'          => $request->title,
+    'description'    => $request->description,
+    'location'       => $location,
+    'venue'          => $request->venue,
+    'url'            => $url,
+    'start_datetime' => $request->start_datetime,
+    'end_datetime'   => $request->end_datetime,
+    'image'          => $imagePath,
+    'created_by'     => Auth::id(),
+]);
 
 		return redirect()->route('events.index')->with('success', 'Event added successfully!');
 	}
@@ -74,42 +79,51 @@ class EventsController extends Controller
 		}
 
 	public function update(Request $request, Events $event)
-		{
-			$validator = Validator::make($request->all(), [
-				'title'          => 'required|string|max:255',
-				'description'    => 'nullable|string',
-				'venue'          => 'required|in:online,physical',
-				'location'       => 'nullable|string|max:255',
-				'url'            => 'nullable|url|max:255',
-				'start_datetime' => 'required|date',
-				'end_datetime'   => 'nullable|date|after_or_equal:start_datetime',
-				'image'          => 'nullable|image|max:2048', // 2MB max
-			]);
+{
+   $validator = Validator::make($request->all(), [
+			'title'          => 'required|string|max:255',
+			'description'    => 'nullable|string',
+			'venue'          => 'required|in:online,physical',
+			'location'       => 'nullable|string|max:255',
+			'url'            => 'nullable|url|max:255',
+			'start_datetime' => 'required|date',
+			'end_datetime'   => 'required|date|after_or_equal:start_datetime',
+			'image'          => 'nullable|image|max:2048', // max 2MB
+		]);
 
-			if ($validator->fails()) {
-				return redirect()->back()
-					->withErrors($validator)
-					->withInput();
-			}
+    // Venue-wise values
+    $location = $request->venue === 'physical' ? $request->location : null;
+    $url      = $request->venue === 'online'   ? $request->url      : null;
 
-			$data = $validator->validated();
+    // Handle image file
+    $imageName = $event->image; // Default to existing image
 
-			// Check if a new image was uploaded
-			if ($request->hasFile('image')) {
-				// Delete old image if exists
-				if ($event->image && \Storage::disk('public')->exists($event->image)) {
-					\Storage::disk('public')->delete($event->image);
-				}
+    if ($request->hasFile('image')) {
+        // Delete old image
+        if ($event->image && file_exists(public_path('uploads/events/' . $event->image))) {
+            unlink(public_path('uploads/events/' . $event->image));
+        }
 
-				// Store new image
-				$imagePath = $request->file('image')->store('events', 'public');
-				$data['image'] = $imagePath;
-			}
+        // Upload new image
+        $image      = $request->file('image');
+        $imageName  = time() . '.' . $image->getClientOriginalExtension();
+        $image->move(public_path('uploads/events'), $imageName);
+    }
 
-			$event->update($data);
+    // Update event
+    $event->update([
+        'title'    => $request->title,
+        'venue'    => $request->venue,
+        'date'     => $request->date,
+        'time'     => $request->time,
+        'location' => $location,
+        'url'      => $url,
+        'image'    => $imageName,
+    ]);
 
-			return redirect('/admin/events')->with('success', 'Event updated successfully!');
-		}
+    return redirect()->route('events.index')->with('success', 'Event updated successfully.');
+}
+
 
 
 
