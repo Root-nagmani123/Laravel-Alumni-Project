@@ -92,7 +92,7 @@ class DashboardController extends Controller
             $change = (($currentCount - $previousCount) / $previousCount) * 100;
             $topicChangePercent = round($change, 2);
         } else {
-            $topicChangePercent = null; // or set a flag
+            $topicChangePercent = null; https://docs.google.com/spreadsheets/d/16pfJ7zrvsHkUC44GvVhXYLHPQfj-Wqvg/edit?gid=876064966#gid=876064966
         }
 
 
