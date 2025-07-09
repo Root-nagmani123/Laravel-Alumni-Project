@@ -27,6 +27,7 @@ Route::resource('post', PostController::class);
 
 use App\Http\Controllers\User\CommentController;
 use App\Http\Controllers\User\StoryController;
+use Carbon\Carbon;
 
 
 
@@ -38,6 +39,20 @@ Route::get('/clear/1', function () {
     Artisan::call('view:clear');
     Artisan::call('route:clear');
     return redirect()->back()->with('success', 'Cache cleared successfully');
+});
+
+Route::get('/check-time', function () {
+    // Set timezone to Asia/Kolkata for this request
+    date_default_timezone_set('Asia/Kolkata');
+
+    // Return current date & time and timezone
+    return [
+        'server_time'     => now()->toDateTimeString(),
+        'carbon_time'     => Carbon::now()->toDateTimeString(),
+        'php_time'        => date('Y-m-d H:i:s'),
+        'timezone_config' => config('app.timezone'),
+        'php_timezone'    => date_default_timezone_get(),
+    ];
 });
 
 
