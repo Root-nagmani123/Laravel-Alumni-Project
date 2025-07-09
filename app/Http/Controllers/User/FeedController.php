@@ -94,31 +94,12 @@ class FeedController extends Controller
         $userId = $user->id;
 
         // Fetch posts with related models
-        // $posts = Post::with([
-        //     'member',         // User who created the post
-        //     'media',          // Media associated with the post
-        //     'likes',          // Likes on the post
-        //     'comments.member' // Users who commented
-        // ])
-        // ->orderBy('created_at', 'desc')
-        // ->get();
-    //      $posts = Post::with(['member', 'media', 'likes', 'comments.member'])
-    // ->select('*', DB::raw("'post' as type"))
-    // ->get();
 
-
-
-        //$stories = Story::with('user')->latest()->get();
-        //$stories = Story::where('created_at', '>=', now()->subDay())->get();
          $stories = Story::where('created_at', '>=', now()->subDay())
                      ->with('user')
                      ->get();
 
          $storiesByMember = $stories->groupBy('member_id');
-
-
-        //echo '<pre>';print_r($stories);die;
-
          $broadcast = DB::table('broadcasts')
                 ->where('status',1)
             ->orderBy('broadcasts.id', 'desc')

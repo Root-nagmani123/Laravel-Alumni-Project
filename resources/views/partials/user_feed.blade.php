@@ -412,12 +412,13 @@
             <small class="text-muted d-block mt-2" id="fileInfo">Max 10MB. Allowed types: JPG, PNG, MP4, MOV, PDF.</small>
             <div class="text-danger mt-2" id="fileError"></div>
           </div>-->
-          <div class="mb-3">
-            <label for="story_file" class="form-label">Select Story (Image)</label>
-            <input type="file" class="form-control" name="story_file" id="story_file" accept=".jpg,.jpeg,.png,.mp4,.mov,.pdf" required>
-            <small class="text-muted d-block mt-2" id="fileInfo">Max 10MB. Allowed types: JPG, PNG.</small>
-            <div class="text-danger mt-2" id="fileError"></div>
-          </div>
+        <div class="mb-3">
+        <label for="story_file" class="form-label">Select Story (Image Only)</label>
+        <input type="file" class="form-control" name="story_file" id="story_file"
+                accept=".jpg,.jpeg,.png,.webp,.gif,.svg" required>
+        <small class="text-muted d-block mt-2" id="fileInfo">Max 10MB. Allowed types: JPG, PNG, WebP, GIF, SVG.</small>
+        <div class="text-danger mt-2" id="fileError"></div>
+        </div>
 
         </div>
         <div class="modal-footer">
@@ -759,13 +760,48 @@ document.addEventListener('DOMContentLoaded', function () {
 document.addEventListener("DOMContentLoaded", function () {
     let currentTime = Math.floor(Date.now() / 1000); // current time in seconds
 
+        @php
+            $myUserId = Auth::guard('user')->id();
+        @endphp
+
     let storiesData = [
-        @foreach($storiesByMember as $memberId => $memberStories)
-            @php
-                $first = $memberStories->first();
-                $user = $first->user;
-                $storyImage = $first->story_image ?? null;
-            @endphp
+    //First: MY stories
+    @if(isset($storiesByMember[$myUserId]))
+        @php
+            $myFirst = $storiesByMember[$myUserId]->first();
+            $myUser = $myFirst->user;
+            $myStoryImage = $myFirst->story_image ?? null;
+        @endphp
+        {
+            id: "member-{{ $myUserId }}",
+            photo: "{{ asset($myStoryImage ? 'storage/' . $myStoryImage : 'feed_assets/images/avatar/08.jpg') }}",
+            name: "{{ addslashes($myUser->name) }}",
+            link: "#",
+            items: [
+                @foreach($storiesByMember[$myUserId] as $story)
+                {
+                    id: "story-{{ $story->id }}",
+                    type: "photo",
+                    length: 5,
+                    src: "{{ asset('storage/' . $story->story_image) }}",
+                    preview: "{{ asset('storage/' . $story->story_image) }}",
+                    link: "#",
+                    linkText: "View",
+                    time: {{ \Carbon\Carbon::parse($story->created_at)->timestamp }}
+                }@if(!$loop->last),@endif
+                @endforeach
+            ]
+        },
+    @endif
+
+         //First: Other stories
+    @foreach($storiesByMember as $memberId => $memberStories)
+        @continue($memberId == $myUserId)
+        @php
+            $first = $memberStories->first();
+            $user = $first->user;
+            $storyImage = $first->story_image ?? null;
+        @endphp
         {
             id: "member-{{ $memberId }}",
             photo: "{{ asset($storyImage ? 'storage/' . $storyImage : 'feed_assets/images/avatar/08.jpg') }}",
@@ -786,8 +822,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 @endforeach
             ]
         }@if(!$loop->last),@endif
-        @endforeach
-    ];
+    @endforeach
+];
 
     // ✅ Filter stories and items that are still valid (not expired after 2 hours)
     let filteredStories = storiesData
