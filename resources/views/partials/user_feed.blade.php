@@ -236,10 +236,8 @@
                     </li>
 
                         <li>
-                            <a
-                                class="dropdown-item copy-url-btn"
-                                href="#"
-                                data-url="{{ url('/user/profile/' . $member->id) }}">
+<a class="dropdown-item copy-url-btn" href="javascript:void(0)"
+                                data-url="{{-- url('/user/profile/' . $member->id) --}}">
                                 <i class="bi bi-link fa-fw pe-2"></i>Copy link to post
                             </a>
                             </li>
