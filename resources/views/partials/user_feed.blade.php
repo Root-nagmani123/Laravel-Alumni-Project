@@ -230,7 +230,7 @@
                     <!-- Card share action dropdown menu -->
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="cardShareAction">
                        <li>
-                    <a href="#" class="dropdown-item send-direct-message-btn" data-user-id="{{ $member->id }}">
+                    <a href="#" class="dropdown-item send-direct-message-btn" data-user-id="{{-- $member->id --}}">
                         <i class="bi bi-envelope fa-fw pe-2"></i>Send via Direct Message
                     </a>
                     </li>
