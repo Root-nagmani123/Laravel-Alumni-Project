@@ -12,33 +12,61 @@
 @include('layouts.footer')
 @yield('scripts')
 <script>
-document.getElementById('story_file').addEventListener('change', function () {
-    const file = this.files[0];
-    //const allowedTypes = ['image/jpeg', 'image/png', 'application/pdf', 'video/mp4', 'video/quicktime'];
-     const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp', 'image/gif', 'image/svg+xml'];
-    const maxSize = 10 * 1024 * 1024; // 10 MB
-    const errorEl = document.getElementById('fileError');
+document.addEventListener('DOMContentLoaded', function () {
+    const fileInput = document.getElementById('story_file');
+    const fileError = document.getElementById('fileError');
+    const fileInfo = document.getElementById('fileInfo');
+    const form = document.getElementById('storyForm');
 
-    errorEl.innerText = '';
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp', 'image/gif', 'image/svg+xml'];
+    const maxSize = 10 * 1024 * 1024; // 10MB
 
-    if (!file) return;
+    fileInput.addEventListener('change', function () {
+        fileError.innerText = '';
+        fileInfo.innerText = 'Max 10MB. Allowed types: JPG, PNG, WebP, GIF, SVG.';
 
-    if (!allowedTypes.includes(file.type)) {
-        //errorEl.innerText = 'Invalid file type. Only JPG, PNG, MP4, MOV, and PDF are allowed.';
-        fileInfoEl.innerText = 'Max 10MB. Allowed types: JPG, PNG, WebP, GIF, SVG.';
-        this.value = ''; // Clear file input
-        return;
-    }
+        const file = this.files[0];
+        if (!file) return;
 
-    if (file.size > maxSize) {
-        errorEl.innerText = 'File is too large. Maximum size is 10MB.';
-        this.value = ''; // Clear file input
-        return;
-    }
+        if (!allowedTypes.includes(file.type)) {
+            fileError.innerText = 'Invalid file type. Allowed: JPG, PNG, WebP, GIF, SVG.';
+            this.value = ''; // Reset file input
+            return;
+        }
 
-    // Optional: Show file size/type
-    const info = `Selected file: ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB, ${file.type})`;
-    document.getElementById('fileInfo').innerText = info;
+        if (file.size > maxSize) {
+            fileError.innerText = 'File too large. Maximum size is 10MB.';
+            this.value = '';
+            return;
+        }
+
+        const info = `✅ Selected: ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB, ${file.type})`;
+        fileInfo.innerText = info;
+    });
+
+    // Prevent form submit if file is invalid
+    form.addEventListener('submit', function (e) {
+        const file = fileInput.files[0];
+        fileError.innerText = '';
+
+        if (!file) {
+            fileError.innerText = 'Please select a file.';
+            e.preventDefault();
+            return;
+        }
+
+        if (!allowedTypes.includes(file.type)) {
+            fileError.innerText = 'Invalid file type.';
+            e.preventDefault();
+            return;
+        }
+
+        if (file.size > maxSize) {
+            fileError.innerText = ' File too large.';
+            e.preventDefault();
+            return;
+        }
+    });
 });
 </script>
 </body>
