@@ -17,7 +17,7 @@ class AuthController extends Controller
 
 
 
-    public function login(Request $request)
+    public function login_807205(Request $request)
     {
 		//$name = Auth::guard('user')->user()->name;
 
@@ -36,6 +36,25 @@ class AuthController extends Controller
         ]);
     }
 
+    public function login(Request $request)
+{
+    $credentials = $request->validate([
+        'email' => 'required|email',
+        'password' => 'required',
+    ]);
+
+    // Add 'status' => 1 to only allow active users
+    $credentials['status'] = 1;
+
+    if (Auth::guard('user')->attempt($credentials)) {
+        $request->session()->regenerate();
+        return redirect()->intended('/user/feed');
+    }
+
+    return back()->withErrors([
+        'email' => 'The provided credentials do not match our records or your account is inactive.',
+    ]);
+}
 
 	/* public function logout()
     {
