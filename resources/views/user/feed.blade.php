@@ -4,7 +4,7 @@
 
    @section('content')
 
-   <div class="container" style="margin-top: 100px;">
+   <div class="container">
        <div class="row g-4">
            @include('partials.left-sidebar')
            @include('partials.user_feed')
