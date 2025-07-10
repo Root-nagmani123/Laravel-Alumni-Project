@@ -17,9 +17,9 @@ class StoryController extends Controller
 	public function store(Request $request)
     {
         $request->validate([
-            //'story_image' => 'required|image|mimes:jpg,png,jpeg|max:2048',
-            // 'story_file' => 'required|file|mimes:jpg,jpeg,png,mp4,mov,pdf|max:10240', // 10MB max
-             'story_file' => 'required|file|mimes:jpg,jpeg,png|max:10240', // 10MB max
+            'story_file' => 'required|file|mimes:jpg,jpeg,png,webp,gif,svg,mp4,mov,avi|max:10240', // 10MB
+
+             //'story_file' => 'required|file|mimes:jpg,jpeg,png|max:10240', // 10MB max
         ]);
 
         $path = $request->file('story_file')->store('stories', 'public');

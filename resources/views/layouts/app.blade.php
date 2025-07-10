@@ -18,12 +18,17 @@ document.addEventListener('DOMContentLoaded', function () {
     const fileInfo = document.getElementById('fileInfo');
     const form = document.getElementById('storyForm');
 
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp', 'image/gif', 'image/svg+xml'];
+    //const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp', 'image/gif', 'image/svg+xml'];
+    const allowedTypes = [
+    'image/jpeg', 'image/png', 'image/jpg', 'image/webp', 'image/gif', 'image/svg+xml',
+    'video/mp4', 'video/quicktime', 'video/x-msvideo' // mp4, mov, avi
+];
+
     const maxSize = 10 * 1024 * 1024; // 10MB
 
     fileInput.addEventListener('change', function () {
         fileError.innerText = '';
-        fileInfo.innerText = 'Max 10MB. Allowed types: JPG, PNG, WebP, GIF, SVG.';
+        fileInfo.innerText = 'Max 10MB. Allowed types: JPG, PNG, WebP, GIF, SVG, MP4, MOV.';
 
         const file = this.files[0];
         if (!file) return;

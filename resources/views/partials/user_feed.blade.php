@@ -420,12 +420,12 @@
             <small class="text-muted d-block mt-2" id="fileInfo">Max 10MB. Allowed types: JPG, PNG, MP4, MOV, PDF.</small>
             <div class="text-danger mt-2" id="fileError"></div>
           </div>-->
-        <div class="mb-3">
-        <label for="story_file" class="form-label">Select Story (Image Only)</label>
-        <input type="file" class="form-control" name="story_file" id="story_file"
-                accept=".jpg,.jpeg,.png,.webp,.gif,.svg" required>
-        <small class="text-muted d-block mt-2" id="fileInfo">Max 10MB. Allowed types: JPG, PNG, WebP, GIF, SVG.</small>
-        <div class="text-danger mt-2" id="fileError"></div>
+      <div class="mb-3">
+            <label for="story_file" class="form-label">Select Story (Image or Video)</label>
+            <input type="file" class="form-control" name="story_file" id="story_file"
+                accept=".jpg,.jpeg,.png,.webp,.gif,.svg,.mp4,.mov,.avi" required>
+            <small class="text-muted d-block mt-2" id="fileInfo">Max 10MB. Allowed types: JPG, PNG, WebP, GIF, SVG, MP4, MOV, AVI.</small>
+            <div class="text-danger mt-2" id="fileError"></div>
         </div>
 
         </div>
@@ -780,6 +780,13 @@ document.addEventListener("DOMContentLoaded", function () {
             $myUser = $myFirst->user;
             $myStoryImage = $myFirst->story_image ?? null;
         @endphp
+
+        @php
+    $isVideo = in_array(pathinfo($story->story_image, PATHINFO_EXTENSION), ['mp4', 'webm']);
+    $previewImage = $isVideo
+        ? 'storage/thumbnails/' . pathinfo($story->story_image, PATHINFO_FILENAME) . '.jpg'
+        : 'storage/' . $story->story_image;
+@endphp
         {
             id: "member-{{ $myUserId }}",
             photo: "{{ asset($myStoryImage ? 'storage/' . $myStoryImage : 'feed_assets/images/avatar/08.jpg') }}",
@@ -789,10 +796,13 @@ document.addEventListener("DOMContentLoaded", function () {
                 @foreach($storiesByMember[$myUserId] as $story)
                 {
                     id: "story-{{ $story->id }}",
-                    type: "photo",
-                    length: 5,
+                    //type: "photo",
+                    type: "{{ in_array(pathinfo($story->story_image, PATHINFO_EXTENSION), ['mp4', 'webm']) ? 'video' : 'photo' }}",
+                   // length: 5,
+                   length: {{ in_array(pathinfo($story->story_image, PATHINFO_EXTENSION), ['mp4', 'webm']) ? 15 : 5 }},
                     src: "{{ asset('storage/' . $story->story_image) }}",
-                    preview: "{{ asset('storage/' . $story->story_image) }}",
+                   // preview: "{{ asset('storage/' . $story->story_image) }}",
+                   preview: "{{ asset($previewImage) }}",
                     link: "#",
                     linkText: "View",
                     time: {{ \Carbon\Carbon::parse($story->created_at)->timestamp }}
@@ -802,7 +812,7 @@ document.addEventListener("DOMContentLoaded", function () {
         },
     @endif
 
-         //First: Other stories
+         //Second: Other stories
     @foreach($storiesByMember as $memberId => $memberStories)
         @continue($memberId == $myUserId)
         @php
@@ -810,6 +820,13 @@ document.addEventListener("DOMContentLoaded", function () {
             $user = $first->user;
             $storyImage = $first->story_image ?? null;
         @endphp
+
+@php
+    $isVideo = in_array(pathinfo($story->story_image, PATHINFO_EXTENSION), ['mp4', 'webm']);
+    $previewImage = $isVideo
+        ? 'storage/thumbnails/' . pathinfo($story->story_image, PATHINFO_FILENAME) . '.jpg'
+        : 'storage/' . $story->story_image;
+@endphp
         {
             id: "member-{{ $memberId }}",
             photo: "{{ asset($storyImage ? 'storage/' . $storyImage : 'feed_assets/images/avatar/08.jpg') }}",
@@ -819,10 +836,13 @@ document.addEventListener("DOMContentLoaded", function () {
                 @foreach($memberStories as $story)
                 {
                     id: "story-{{ $story->id }}",
-                    type: "photo",
-                    length: 5,
+                  //  type: "photo",
+                  //type: "{{ in_array(pathinfo($story->story_image, PATHINFO_EXTENSION), ['mp4', 'webm']) ? 'video' : 'photo' }}",
+                    //length: 5,
+                    length: {{ in_array(pathinfo($story->story_image, PATHINFO_EXTENSION), ['mp4', 'webm']) ? 15 : 5 }},
                     src: "{{ asset('storage/' . $story->story_image) }}",
-                    preview: "{{ asset('storage/' . $story->story_image) }}",
+                    //preview: "{{ asset('storage/' . $story->story_image) }}",
+                    preview: "{{ asset($previewImage) }}",
                     link: "#",
                     linkText: "View",
                     time: {{ \Carbon\Carbon::parse($story->created_at)->timestamp }}
@@ -833,7 +853,7 @@ document.addEventListener("DOMContentLoaded", function () {
     @endforeach
 ];
 
-    // ✅ Filter stories and items that are still valid (not expired after 2 hours)
+    // ✅g Filter stories and items that are still valid (not expired after 2 hours)
     let filteredStories = storiesData
         .map(story => {
             story.items = story.items.filter(item => currentTime - item.time <= 7200);
