@@ -1,5 +1,5 @@
 <!-- Main content START -->
-<div class="col-md-8 col-lg-6 vstack gap-4">
+<div class="col-md-8 col-lg-6 vstack gap-4" style="margin-top: 50px;">
 
     <!-- Story START -->
     <div class="d-flex gap-2 mb-n3">
@@ -299,15 +299,23 @@
                                 </div>
                                 <p class="small mb-0" id="comment-text-{{ $comment->id }}">{{ $comment->comment }}</p>
                             </div>
-                            @if(auth()->guard('user')->id() === $comment->member_id)
+                            <div class="row">
+                                <div class="col-6">
+                                    <a href="#!" class="text-secondary small me-2">Like</a>
+                                    <a href="#!" class="text-secondary small">Reply</a>
+                                </div>
+                                <div class="col-6 text-end">
+                                    @if(auth()->guard('user')->id() === $comment->member_id)
                             <button class="btn btn-sm btn-link p-0 text-primary edit-comment-btn"
                                 data-comment-id="{{ $comment->id }}" data-comment="{{ $comment->comment }}"
-                                type="button">Edit</button>
+                                type="button"><i class="bi bi-pencil-fill"></i></button>
                             @endif
                             @if(auth()->guard('user')->id() === $comment->member_id)
                             <button class="btn btn-sm btn-link p-0 text-danger delete-comment-btn"
-                                data-comment-id="{{ $comment->id }}" type="button">Delete</button>
+                                data-comment-id="{{ $comment->id }}" type="button"><i class="bi bi-trash-fill"></i></button>
                             @endif
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <!-- Comment item nested END -->

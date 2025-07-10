@@ -45,7 +45,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="mb-3">
-                                        <label class="form-label">Name</label><span class="required">*</span>
+                                        <label class="form-label">Name</label><span class="required text-danger text-danger" >*</span>
                                         <input type="text" name="name" id="name" class="form-control"
                                             value="{{ old('name') }}">
                                         @error('name')
@@ -55,7 +55,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="mb-3">
-                                        <label class="form-label">Mobile</label><span class="required">*</span>
+                                        <label class="form-label">Mobile</label><span class="required text-danger">*</span>
                                         <input type="text" name="mobile" id="mobile" class="form-control"
                                             value="{{ old('mobile') }}">
                                              @error('mobile')
@@ -65,7 +65,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="mb-3">
-                                        <label class="form-label">Email</label><span class="required">*</span>
+                                        <label class="form-label">Email</label><span class="required text-danger">*</span>
                                         <input type="text" name="email" id="email" class="form-control"
                                             value="{{ old('email') }}">
                                         @error('email')
@@ -75,7 +75,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="mb-3">
-                                        <label class="form-label">Password</label><span class="required">*</span>
+                                        <label class="form-label">Password</label><span class="required text-danger">*</span>
                                         <input type="password" name="password" id="password" class="form-control">
                                         @error('password')
                                         <div class="text-danger">{{ $message }}</div>
@@ -85,7 +85,7 @@
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <label class="form-label">Confirm Password:</label><span
-                                            class="required">*</span>
+                                            class="required text-danger">*</span>
                                         <input type="password" name="password_confirmation" id="confirm_password"
                                             class="form-control">
                                                @error('password_confirmation')
@@ -95,7 +95,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="mb-3">
-                                        <label class="form-label">Cadre</label><span class="required">*</span>
+                                        <label class="form-label">Cadre</label><span class="required text-danger">*</span>
                                         <input type="text" name="cader" id="cader" class="form-control"
                                             value="{{ old('cader') }}">
                                               @error('cader')
@@ -105,7 +105,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="mb-3">
-                                        <label class="form-label">Designation</label><span class="required">*</span>
+                                        <label class="form-label">Designation</label><span class="required text-danger">*</span>
                                         <input type="text" name="designation" id="designation" class="form-control"
                                             value="{{ old('designation') }}">
                                              @error('designation')
@@ -115,7 +115,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="mb-3">
-                                        <label class="form-label">Batch</label><span class="required">*</span>
+                                        <label class="form-label">Batch</label><span class="required text-danger">*</span>
                                         <input type="number" name="batch" id="batch" class="form-control"
                                             value="{{ old('batch') }}">
                                             @error('batch')
@@ -160,7 +160,7 @@
 
                         <div class="form-group mt-2">
                             <label for="file-upload" class="form-label">Upload Excel/CSV File:*</label>
-                            <input id="file-upload" type="file" name="file" accept=".xls,.xlsx,.csv" required />
+                            <input id="file-upload" type="file" name="file" accept=".xls,.xlsx,.csv" required text-danger />
                         </div>
                     </div>
             </div>

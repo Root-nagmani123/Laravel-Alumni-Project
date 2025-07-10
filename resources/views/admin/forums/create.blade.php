@@ -47,7 +47,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="mb-3">
-                                        <label class="form-label">Name</label><span class="required">*</span>
+                                        <label class="form-label">Name</label><span class="required text-danger ">*</span>
                                         <input type="text" name="name" id="name" class="form-control"
                                             value="{{ old('name') }}">
                                         <!-- @error('name')
@@ -61,7 +61,7 @@
                                     <div class="mb-3">
                                         <label class="form-label">Status</label>
                                         <select class="form-select" aria-label="Default select" name="status"
-                                            required="">
+                                            required text-danger="">
                                             <option selected="">Select Status</option>
                                             <option value="1">Active</option>
                                             <option value="0">InActive</option>

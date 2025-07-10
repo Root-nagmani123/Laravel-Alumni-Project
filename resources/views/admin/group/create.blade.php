@@ -38,7 +38,7 @@
                     </div>
                     <div class="col-6">
                         <div class="mb-3">
-                            <label class="form-label">Member Name (Multiple Mentees)*</label>
+                            <label class="form-label">Member Name (Multiple Mentees) <span class="text-danger">*</span></label>
                             <select name="user_id[]" class="form-control js-example-basic-multiple"  multiple="multiple" required>
 
                                 @foreach($users as $user)

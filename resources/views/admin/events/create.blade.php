@@ -48,7 +48,7 @@
                             <!-- Title -->
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label class="form-label">Title <span class="required">*</span></label>
+                                    <label class="form-label">Title <span class="required text-danger">*</span></label>
                                     <input type="text" name="title" class="form-control" value="{{ old('title') }}">
                                     @error('title')
                                     <div class="text-danger">{{ $message }}</div>
@@ -72,7 +72,7 @@
                             <!-- Venue -->
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label class="form-label">Venue <span class="required">*</span></label>
+                                    <label class="form-label">Venue <span class="required text-danger">*</span></label>
                                     <select name="venue" id="venue" class="form-control">
                                         <option value="">Select Venue</option>
                                         <option value="online" {{ old('venue') == 'online' ? 'selected' : '' }}>Online
@@ -113,7 +113,7 @@
                             <!-- Start DateTime -->
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label class="form-label">Start Date & Time <span class="required">*</span></label>
+                                    <label class="form-label">Start Date & Time <span class="required text-danger">*</span></label>
                                     <input type="datetime-local" name="start_datetime" id="start_datetime"
                                         class="form-control" value="{{ old('start_datetime') }}">
                                     @error('start_datetime')
@@ -124,7 +124,7 @@
 
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label class="form-label">End Date & Time <span class="required">*</span></label>
+                                    <label class="form-label">End Date & Time <span class="required text-danger">*</span></label>
                                     <input type="datetime-local" name="end_datetime" id="end_datetime"
                                         class="form-control" value="{{ old('end_datetime') }}">
                                     @error('end_datetime')
@@ -137,9 +137,9 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label class="form-label">Event Image</label>
-                                    <span>image type: jpg, jpeg, png</span>
                                     <input type="file" name="image" id="imageInput" class="form-control"
                                         accept="image/jpg, image/jpeg, image/png">
+                                        <small>image type: jpg, jpeg, png</small>
                                     <div class="mt-2">
                                         <img id="imagePreview" src="#" alt="Preview"
                                             style="display:none; max-height:150px; border:1px solid #ccc; padding:5px;">
