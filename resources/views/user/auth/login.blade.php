@@ -57,7 +57,7 @@
                                 <h2>Login</h2>
                             </div>
                             <div class="login-discription">
-                                <h3>Hello Everyone, Welcome Back</h3>
+                                <h3>Hello Everyone :)</h3>
                                 <h4>Welcome to LBSNAA Alumni, please login to your account.
                                 </h4>
                             </div>
@@ -110,7 +110,7 @@
                                                 password?</a>
                                         </div>
                                         <div class="btn-section text-center">
-                                            <button type="submit" class="btn btn-primary btn-lg">Login</button>
+                                            <button type="submit" class="btn btn-primary btn-lg w-100">Login</button>
 
                                         </div>
                                     </form>
