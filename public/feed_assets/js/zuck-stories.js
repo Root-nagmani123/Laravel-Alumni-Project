@@ -29,7 +29,4 @@ function initZuckStories(storiesData) {
 		localStorage: true,
         stories: storiesData
     });
-
-
-}
-;
+};
