@@ -68,12 +68,20 @@ class EventsController extends Controller
 		return redirect()->route('events.index')->with('success', 'Event added successfully!');
 	}
 
-    public function edit(Events $event)
+    /*public function edit(Events $event)
 		{
 			return view('admin.events.edit', compact('event'));
 		}
+            */
 
-	public function update(Request $request, Events $event)
+    public function edit($encodedId)
+    {
+        $id = base64_decode($encodedId);
+        $event = Events::findOrFail($id);
+        return view('admin.events.edit', compact('event'));
+    }
+
+	/*public function update(Request $request, Events $event)
 		{
 			$validator = Validator::make($request->all(), [
 				'title'          => 'required|string|max:255',
@@ -110,7 +118,44 @@ class EventsController extends Controller
 
 			return redirect('/admin/events')->with('success', 'Event updated successfully!');
 		}
+    */
 
+    public function update(Request $request, $encodedId)
+    {
+        $id = base64_decode($encodedId);
+        $event = Events::findOrFail($id);
+
+        $validator = Validator::make($request->all(), [
+            'title'          => 'required|string|max:255',
+            'description'    => 'nullable|string',
+            'venue'          => 'required|in:online,physical',
+            'location'       => 'nullable|string|max:255',
+            'url'            => 'nullable|url|max:255',
+            'start_datetime' => 'required|date',
+            'end_datetime'   => 'nullable|date|after_or_equal:start_datetime',
+            'image'          => 'nullable|image|max:2048',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        $data = $validator->validated();
+
+        if ($request->hasFile('image')) {
+            if ($event->image && \Storage::disk('public')->exists($event->image)) {
+                \Storage::disk('public')->delete($event->image);
+            }
+            $imagePath = $request->file('image')->store('events', 'public');
+            $data['image'] = $imagePath;
+        }
+
+        $event->update($data);
+
+        return redirect('/admin/events')->with('success', 'Event updated successfully!');
+    }
 
 
 	public function destroy(Events $event)
@@ -134,7 +179,7 @@ class EventsController extends Controller
         return response()->json(['message' => 'Status updated successfully.']);
     }
 
-		
+
     public function rsvp($id = null)
     {
        	 $rsvps = EventRsvp::getAllRsvps($id);

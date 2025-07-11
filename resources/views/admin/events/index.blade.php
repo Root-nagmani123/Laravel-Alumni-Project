@@ -95,9 +95,9 @@
                                     @endphp
 
                                     <td>
+									{{--url(route('events.edit'.base64_encode($event->id))--}}
                                         @if ($event_datetime > $current_datetime)
-                                        <a href="{{ route('events.edit', $event->id) }}"
-                                            class="btn btn-success text-white btn-sm">Edit</a>
+                                        <a href="{{ route('events.edit', base64_encode($event->id)) }}" class="btn btn-success text-white btn-sm">Edit</a>
 
                                          <form action="{{ route('events.destroy', $event->id) }}" method="POST" style="display:inline;">
                                     @csrf

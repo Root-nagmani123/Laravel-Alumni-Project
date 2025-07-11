@@ -31,7 +31,8 @@
     <div class="row">
         <div class="col-12">
             <div class="card">
-                <form action="{{ route('events.update', $event->id) }}" method="POST" enctype="multipart/form-data">
+                <!--<form action="{{ route('events.update', $event->id) }}" method="POST" enctype="multipart/form-data">-->
+				<form action="{{ route('events.update', base64_encode($event->id)) }}" method="POST" enctype="multipart/form-data">
     @csrf
     @method('PUT')
 
