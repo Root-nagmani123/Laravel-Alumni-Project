@@ -55,7 +55,7 @@ class EventsController extends Controller
 
 		// Create the event
 	$location = $request->venue === 'physical' ? $request->location : null;
-$url      = $request->venue === 'online'   ? $request->url      : null;
+    $url      = $request->venue === 'online'   ? $request->url      : null;
 
 // Create the event
 Events::create([
@@ -81,13 +81,22 @@ Events::create([
 
     public function edit($encodedId)
     {
-        $id = base64_decode($encodedId);
+        try {
+            $id = decrypt($encodedId);
         $event = Events::findOrFail($id);
+        if(!$event){
+            return redirect()->route('events.index')->with('error', 'Event not found!');
+        }
+        // $event->load('createdBy'
         return view('admin.events.edit', compact('event'));
+        } catch (\Throwable $th) {
+return redirect()->route('events.index')->with('error', 'Event not found!');return redirect()->route('events.index')->with('error', 'Event not found!');
+        }
+
     }
     public function update(Request $request, $encodedId)
     {
-        $id = base64_decode($encodedId);
+        $id = decrypt($encodedId);
         $event = Events::findOrFail($id);
 
         $validator = Validator::make($request->all(), [

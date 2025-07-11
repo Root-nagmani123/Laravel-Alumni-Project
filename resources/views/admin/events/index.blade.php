@@ -27,9 +27,7 @@
             </div>
         </div>
     </div>
-    @if(session('success'))
-    <div class="alert alert-success">{{ session('success') }}</div>
-    @endif
+    <x-session_message />
     <div class="datatables">
         <!-- start Zero Configuration -->
         <div class="card">
@@ -58,8 +56,8 @@
 
 
                         <table id="zero_config"
-                            class="table table-striped table-bordered text-nowrap align-middle dataTable"
-                            aria-describedby="zero_config_info">
+                            class="table table-striped table-bordered text-nowrap align-middle dataTable table-responsive"
+                            aria-describedby="zero_config_info" style="overflow-x: auto;">
                             <thead>
                                 <!-- start row -->
                                 <tr>
@@ -67,7 +65,8 @@
                                     <th class="col">Description</th>
                                     <th class="col">Start DateTime</th>
                                     <th class="col">End DateTime</th>
-                                    <th class="col">Location</th>
+                                    <th class="col">Venue</th>
+                                    <th class="col">Event Image</th>
                                     <th class="col">Status</th>
                                     <th class="col">Actions</th>
                                 </tr>
@@ -80,8 +79,20 @@
                                     <td>{{ $event->description }}</td>
                                     <td>{{ $event->start_datetime }}</td>
                                     <td>{{ $event->end_datetime }}</td>
-                                    <td>{{ $event->location }}</td>
                                     <td>
+                                        @if($event->venue === 'online')
+                                            <a href="{{ $event->url }}" target="_blank">{{ $event->url }}</a>
+                                        @elseif($event->venue === 'physical')
+                                            {{ $event->location }}
+                                        @else
+                                            N/A
+                                        @endif
+                                    </td>
+                                    <td>
+                                    <img class="avatar-img rounded-circle"
+                                    src="{{ $event->image && $event->image ? asset('storage/' . $event->image) : asset('feed_assets/images/avatar/12.jpg') }}"
+                                    alt="" height="70" width="70"><</td>
+                                     <td>
                                         <div class="form-check form-switch d-inline-block">
                                             <input class="form-check-input status-toggle" type="checkbox" role="switch"
                                                 data-table="events" data-column="active_inactive"
@@ -97,7 +108,7 @@
                                     <td>
 									{{--url(route('events.edit'.base64_encode($event->id))--}}
                                         @if ($event_datetime > $current_datetime)
-                                        <a href="{{ route('events.edit', base64_encode($event->id)) }}" class="btn btn-success text-white btn-sm">Edit</a>
+                                        <a href="{{ route('events.edit', encrypt($event->id)) }}" class="btn btn-success text-white btn-sm">Edit</a>
 
                                          <form action="{{ route('events.destroy', $event->id) }}" method="POST" style="display:inline;">
                                     @csrf
