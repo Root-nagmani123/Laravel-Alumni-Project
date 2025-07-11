@@ -31,7 +31,6 @@ use Carbon\Carbon;
 
 
 
-
 Route::get('/clear/1', function () {
     Artisan::call('cache:clear');
      Artisan::call('config:cache');
@@ -99,7 +98,7 @@ Route::prefix('user')->name('user.')->group(function () {
 		//Route::put('/user/comments/{id}', [CommentController::class, 'update'])->name('user.comments.update');
 		//Route::delete('/user/comments/{id}', [CommentController::class, 'destroy'])->name('user.comments.destroy');
 		Route::middleware('auth')->group(function () {
-    Route::put('/user/profile/update', [UserController::class, 'update'])->name('user.profile.update');
+    //Route::put('/user/profile/update', [UserController::class, 'update'])->name('user.profile.update');
     // other protected routes
 });
 
@@ -257,8 +256,10 @@ Route::prefix('events')->name('events.')->group(function () {
 		Route::get('/', [EventsController::class, 'index'])->name('index');
 		Route::get('/create', [EventsController::class, 'create'])->name('create');
 		Route::post('/', [EventsController::class, 'store'])->name('store');
-		Route::get('/{event}/edit', [EventsController::class, 'edit'])->name('edit');
-		Route::put('/{event}', [EventsController::class, 'update'])->name('update');
+		//Route::get('/{event}/edit/', [EventsController::class, 'edit'])->name('edit');
+		//Route::put('/{event}', [EventsController::class, 'update'])->name('update');
+        Route::get('/event/edit/{id}', [EventsController::class, 'edit'])->name('edit');
+        Route::put('/event/update/{id}', [EventsController::class, 'update'])->name('update');
 		Route::delete('/{event}', [EventsController::class, 'destroy'])->name('destroy');
 		Route::post('/toggle-status', [EventsController::class, 'toggleStatus'])->name('toggleStatus');
 

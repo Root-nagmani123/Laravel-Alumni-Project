@@ -73,58 +73,54 @@ Events::create([
 		return redirect()->route('events.index')->with('success', 'Event added successfully!');
 	}
 
-    public function edit(Events $event)
+    /*public function edit(Events $event)
 		{
 			return view('admin.events.edit', compact('event'));
 		}
+            */
 
-	public function update(Request $request, Events $event)
-{
-   $validator = Validator::make($request->all(), [
-			'title'          => 'required|string|max:255',
-			'description'    => 'nullable|string',
-			'venue'          => 'required|in:online,physical',
-			'location'       => 'nullable|string|max:255',
-			'url'            => 'nullable|url|max:255',
-			'start_datetime' => 'required|date',
-			'end_datetime'   => 'required|date|after_or_equal:start_datetime',
-			'image'          => 'nullable|image|max:2048', // max 2MB
-		]);
+    public function edit($encodedId)
+    {
+        $id = base64_decode($encodedId);
+        $event = Events::findOrFail($id);
+        return view('admin.events.edit', compact('event'));
+    }
+    public function update(Request $request, $encodedId)
+    {
+        $id = base64_decode($encodedId);
+        $event = Events::findOrFail($id);
 
-    // Venue-wise values
-    $location = $request->venue === 'physical' ? $request->location : null;
-    $url      = $request->venue === 'online'   ? $request->url      : null;
+        $validator = Validator::make($request->all(), [
+            'title'          => 'required|string|max:255',
+            'description'    => 'nullable|string',
+            'venue'          => 'required|in:online,physical',
+            'location'       => 'nullable|string|max:255',
+            'url'            => 'nullable|url|max:255',
+            'start_datetime' => 'required|date',
+            'end_datetime'   => 'nullable|date|after_or_equal:start_datetime',
+            'image'          => 'nullable|image|max:2048',
+        ]);
 
-    // Handle image file
-    $imageName = $event->image; // Default to existing image
-
-    if ($request->hasFile('image')) {
-        // Delete old image
-        if ($event->image && file_exists(public_path('uploads/events/' . $event->image))) {
-            unlink(public_path('uploads/events/' . $event->image));
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
         }
 
-        // Upload new image
-        $image      = $request->file('image');
-        $imageName  = time() . '.' . $image->getClientOriginalExtension();
-        $image->move(public_path('uploads/events'), $imageName);
+        $data = $validator->validated();
+
+        if ($request->hasFile('image')) {
+            if ($event->image && \Storage::disk('public')->exists($event->image)) {
+                \Storage::disk('public')->delete($event->image);
+            }
+            $imagePath = $request->file('image')->store('events', 'public');
+            $data['image'] = $imagePath;
+        }
+
+        $event->update($data);
+
+        return redirect('/admin/events')->with('success', 'Event updated successfully!');
     }
-
-    // Update event
-    $event->update([
-        'title'    => $request->title,
-        'venue'    => $request->venue,
-        'date'     => $request->date,
-        'time'     => $request->time,
-        'location' => $location,
-        'url'      => $url,
-        'image'    => $imageName,
-    ]);
-
-    return redirect()->route('events.index')->with('success', 'Event updated successfully.');
-}
-
-
 
 
 	public function destroy(Events $event)
@@ -148,7 +144,7 @@ Events::create([
         return response()->json(['message' => 'Status updated successfully.']);
     }
 
-		
+
     public function rsvp($id = null)
     {
        	 $rsvps = EventRsvp::getAllRsvps($id);
