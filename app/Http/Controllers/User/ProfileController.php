@@ -34,9 +34,9 @@ class ProfileController extends Controller
 
         $posts = Post::with(['member', 'media', 'likes', 'comments.member'])
         ->orderBy('created_at', 'desc')
-        ->where('member_id', $userId)
+        ->where('id', $userId)
         ->get();
-       // echo '<pre>';print_r($profile_topic); die;
+        //echo '<pre>';print_r($posts); die;
 
 
     return view('profile', compact('user','posts'));

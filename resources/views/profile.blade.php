@@ -35,46 +35,480 @@
                            </div>
                            <!-- Button -->
                            <div class="d-flex mt-3 justify-content-center ms-sm-auto">
-                               <button class="btn btn-danger-soft me-2" type="button" data-bs-toggle="modal"
+                               <!--<button class="btn btn-danger-soft me-2" type="button" data-bs-toggle="modal"
                                    data-bs-target="#editProfileModal">
                                    <i class="bi bi-pencil-fill pe-1"></i> Edit profile
-                               </button>
+                               </button>-->
+                               <button type="button" class="btn btn-danger-soft me-2" data-bs-toggle="modal" data-bs-target="#editProfileModal">
+                                 <i class="bi bi-pencil-fill pe-1"></i> Edit profile
+                                </button>
                            </div>
-                           <div class="modal fade" id="editProfileModal" tabindex="-1"
-                               aria-labelledby="editProfileModalLabel" aria-hidden="true">
-                               <div class="modal-dialog modal-dialog-centered">
-                                   @if(auth()->check())
-                                   <form method="POST" action="{{ route('user.profile.update', auth()->user()->id) }}">
-                                       @csrf
-                                       @method('PUT')
-                                       <div class="modal-content">
-                                           <div class="modal-header">
-                                               <h5 class="modal-title" id="editProfileModalLabel">Edit Profile</h5>
-                                               <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                   aria-label="Close"></button>
-                                           </div>
-                                           <div class="modal-body">
-                                               <!-- Example Profile Fields -->
-                                               <div class="mb-3">
-                                                   <label for="name" class="form-label">Full Name</label>
-                                                   <input type="text" name="name" class="form-control"
-                                                       value="{{ auth()->user()->name }}" required>
-                                               </div>
-                                               <div class="mb-3">
-                                                   <label for="email" class="form-label">Email address</label>
-                                                   <input type="email" name="email" class="form-control"
-                                                       value="{{ auth()->user()->email }}" required>
-                                               </div>
-                                               <!-- Add more fields as needed -->
-                                           </div>
-                                           <div class="modal-footer">
-                                               <button type="submit" class="btn btn-primary">Save changes</button>
-                                           </div>
-                                       </div>
-                                   </form>
-                                   @endif
-                               </div>
-                           </div>
+                           <!-- -->
+
+<div class="modal fade modal-xl" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editProfileModalLabel">Edit Profile</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+      <main class="main-content profile">
+       <div class="container sidebar-toggler">
+           <div class="row">
+<div class="col-12 col-sm-6 col-md-4 col-lg-4 col-xl-4 col-xxl-4">
+                   <div class="d-inline-block d-lg-none">
+                       <button class="button profile-active mb-4 mb-lg-0 d-flex align-items-center gap-2">
+                           <i class="material-symbols-outlined mat-icon"> tune </i>
+                           <span>My profile</span>
+                       </button>
+                   </div>
+                   <div class="profile-sidebar cus-scrollbar p-5">
+                       <div class="d-block d-lg-none position-absolute end-0 top-0">
+                           <button class="button profile-close">
+                               <i class="material-symbols-outlined mat-icon fs-xl"> close </i>
+                           </button>
+                       </div>
+
+
+
+                   </div>
+               </div>
+
+
+              <div class="col-12 col-md-8 col-lg-8 col-xl-8 col-xxl-8 mt-0 mt-lg-10 mt-xl-0 d-flex flex-column gap-7 cus-z">
+
+
+
+                   <div class="post-item d-flex flex-column gap-5 gap-md-7" id="news-feed">
+				   <div class="post-single-box p-3 p-sm-5">
+				<div class="top-area pb-5">
+				<div class="profile-area d-center justify-content-between">
+            <div class="avatar-item d-flex gap-3 align-items-center">
+
+
+            <div class="info-area">
+
+<ul class="nav nav-tabs mb-4" id="profileTab" role="tablist">
+		  <li class="nav-item" role="presentation">
+			<button class="nav-link" id="edit-tab" data-bs-toggle="tab" data-bs-target="#edit" type="button" role="tab">
+			  Edit Profile
+			</button>
+		  </li>
+		</ul>
+
+<!-- Tab Content -->
+<div class="tab-content" id="profileTabContent">
+  <!-- Overview Form -->
+
+  <div class="tab-pane fade show active" id="overview" role="tabpanel">
+  <div class="tab-content pt-2">
+    <div class="tab-pane fade profile-overview active show" id="profile-overview">
+  <!-- Success Message -->
+@if(session('success'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {{ session('success') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+@endif
+
+<!-- Error Messages -->
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul class="mb-0">
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
+</div>
+  </div>
+</div>
+<!-- Tab Content -->
+
+  </div>
+
+  <!-- Edit Profile Form -->
+
+ <div class="tab-pane fade" id="edit" role="tabpanel">
+  <div class="accordion" id="editAccordion">
+
+    <!-- Personal Information -->
+   <div class="container-fluid p-0">
+  <div class="accordion w-100" id="editAccordion">
+
+    <!-- Personal Information -->
+    <div class="accordion-item w-100 ">
+      <h2 class="accordion-header" id="personalHeading">
+        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#personalCollapse" aria-expanded="true" aria-controls="personalCollapse">
+          Personal Information
+        </button>
+      </h2>
+      <div id="personalCollapse" class="accordion-collapse collapse {{ session('active_tab') == 'personal' ? 'show' : '' }}" aria-labelledby="personalHeading" data-bs-parent="#editAccordion" >
+        <div class="accordion-body w-100">
+
+	<form action="{{ route('user.profile.update', ['id' => $user->id]) }}" method="post" id="myForm" enctype="multipart/form-data">
+				@csrf
+				@method('PUT')
+
+					<div class="form-group">
+	<!-- Full Name -->
+	<div class="row mb-3">
+		<div class="col-3">
+			<label for="name">Full Name:</label>
+		</div>
+		<div class="col-9">
+			<input type="text" id="name" name="name"
+				value="{{ old('name', $user->name) }}"
+				class="form-control"
+				placeholder="Enter your full name">
+		</div>
+	</div>
+
+	<!-- Date of Birth -->
+	<div class="row mb-3">
+		<div class="col-3">
+			<label for="date_of_birth">Date of Birth:<span style="color: red">*</span></label>
+		</div>
+		<div class="col-9">
+			<input type="date" id="date_of_birth" name="date_of_birth"
+				value="{{ old('date_of_birth', \Carbon\Carbon::parse($user->date_of_birth)->format('Y-m-d')) }}"
+				class="form-control"
+				placeholder="DD/MM/YYYY">
+		</div>
+	</div>
+
+	<!-- Place of Birth -->
+	<div class="row mb-3">
+		<div class="col-3">
+			<label for="place_of_birth">Place of Birth:<span style="color: red">*</span></label>
+		</div>
+		<div class="col-9">
+			<input type="text" id="place_of_birth" name="place_of_birth"
+				value="{{ old('place_of_birth', $user->place_of_birth) }}"
+				class="form-control"
+				placeholder="Enter place of birth">
+		</div>
+	</div>
+
+	<!-- Gender -->
+	<div class="row mb-3">
+		<div class="col-3">
+			<label for="gender">Gender:<span style="color: red">*</span></label>
+		</div>
+		<div class="col-9">
+			<select id="gender" name="gender" class="form-control">
+				<option value="" {{ old('gender', $user->gender) == '' ? 'selected' : '' }}>Select gender</option>
+				<option value="male" {{ strtolower(old('gender', $user->gender)) == 'male' ? 'selected' : '' }}>Male</option>
+				<option value="female" {{ strtolower(old('gender', $user->gender)) == 'female' ? 'selected' : '' }}>Female</option>
+				<option value="other" {{ strtolower(old('gender', $user->gender)) == 'other' ? 'selected' : '' }}>Other</option>
+			</select>
+		</div>
+	</div>
+
+	<!-- Phone Number -->
+	<div class="row mb-3">
+		<div class="col-3">
+			<label for="mobile">Phone Number:</label>
+		</div>
+		<div class="col-9">
+			<input type="tel" id="mobile" name="mobile"
+				value="{{ old('mobile', $user->mobile) }}"
+				required class="form-control"
+				placeholder="Enter 10-digit mobile number">
+		</div>
+	</div>
+
+	<!-- Address -->
+	<div class="row mb-3">
+		<div class="col-3">
+			<label for="address">Residential Address:<span style="color: red">*</span></label>
+		</div>
+		<div class="col-9">
+			<textarea id="address" name="address" class="form-control" placeholder="Enter full address">{{ old('address', $user->address) }}</textarea>
+		</div>
+	</div>
+
+	<!-- Marital Status -->
+	<div class="row mb-3">
+		<div class="col-3">
+			<label for="marital_status">Marital Status:<span style="color: red">*</span></label>
+		</div>
+		<div class="col-9">
+			<select id="marital_status" name="marital_status" class="form-control">
+				<option value="" {{ old('marital_status', $user->marital_status) == '' ? 'selected' : '' }}>Select status</option>
+				<option value="single" {{ old('marital_status', $user->marital_status) == 'single' ? 'selected' : '' }}>Single</option>
+				<option value="married" {{ old('marital_status', $user->marital_status) == 'married' ? 'selected' : '' }}>Married</option>
+				<option value="divorced" {{ old('marital_status', $user->marital_status) == 'divorced' ? 'selected' : '' }}>Divorced</option>
+			</select>
+		</div>
+	</div>
+
+	<!-- Bio -->
+	<div class="row mb-3">
+		<div class="col-3">
+			<label for="bio">Bio:<span style="color: red">*</span></label>
+		</div>
+		<div class="col-9">
+			<textarea id="bio" name="bio" class="form-control" placeholder="Write a short bio">{{ old('bio', $user->bio) }}</textarea>
+		</div>
+	</div>
+
+	<!-- Profile Picture -->
+	<div class="row mb-3">
+		<div class="col-3">
+			<label for="profile_pic">Profile Picture:</label>
+		</div>
+		<div class="col-9">
+			<input type="file" id="ImageEdit" name="profile_pic" accept="image/*" class="form-control">
+
+		</div>
+	</div>
+</div>
+
+
+				<button type="submit" class="btn btn-primary">Update</button>
+			</form>
+
+
+
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Educational Background -->
+    <div class="accordion-item w-100">
+      <h2 class="accordion-header" id="educationHeading">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#educationCollapse" aria-expanded="false" aria-controls="educationCollapse">
+          Educational Background
+        </button>
+      </h2>
+      <div id="educationCollapse" class="accordion-collapse collapse" aria-labelledby="educationHeading" data-bs-parent="#editAccordion">
+
+
+
+			<div class="accordion-body">
+
+			<form action="{{ route('user.profile.eduinfo', ['id' => $user->id]) }}" method="post" id="myForm" enctype="multipart/form-data">
+	@csrf
+	@method('PUT')
+
+	<!-- Educational Background -->
+	<div class="form-group py-3">
+		<div class="row mb-3">
+			<div class="col-3">
+				<label for="school_name">Name of the School:<span style="color: red">*</span></label>
+			</div>
+			<div class="col-9">
+				<input type="text" id="school_name" name="school_name"
+					value="{{ old('school_name', $user->school_name) }}"
+					placeholder="Enter your school name"
+					class="form-control">
+			</div>
+		</div>
+
+		<div class="row mb-3">
+			<div class="col-3">
+				<label for="school_year">Year of Passing:<span style="color: red">*</span></label>
+			</div>
+			<div class="col-9">
+				<input type="text" id="school_year" name="school_year"
+					value="{{ old('school_year', $user->school_year) }}"
+					placeholder="e.g., 2010"
+					class="form-control">
+			</div>
+		</div>
+
+		<div class="row mb-3">
+			<div class="col-3">
+				<label for="undergrad_college">Undergraduate College/University Name:<span style="color: red">*</span></label>
+			</div>
+			<div class="col-9">
+				<input type="text" id="undergrad_college" name="undergrad_college"
+					value="{{ old('undergrad_college', $user->undergrad_college) }}"
+					placeholder="Enter college/university name"
+					class="form-control">
+			</div>
+		</div>
+
+		<div class="row mb-3">
+			<div class="col-3">
+				<label for="undergrad_degree">Undergraduate Degree Obtained:<span style="color: red">*</span></label>
+			</div>
+			<div class="col-9">
+				<input type="text" id="undergrad_degree" name="undergrad_degree"
+					value="{{ old('undergrad_degree', $user->undergrad_degree) }}"
+					placeholder="e.g., B.Sc, B.Tech, B.A"
+					class="form-control">
+			</div>
+		</div>
+
+		<div class="row mb-3">
+			<div class="col-3">
+				<label for="undergrad_year">Year of Graduation:<span style="color: red">*</span></label>
+			</div>
+			<div class="col-9">
+				<input type="text" id="undergrad_year" name="undergrad_year"
+					value="{{ old('undergrad_year', $user->undergrad_year) }}"
+					placeholder="e.g., 2014"
+					class="form-control">
+			</div>
+		</div>
+
+		<div class="row mb-3">
+			<div class="col-3">
+				<label for="postgrad_college">Postgraduate College/University Name:<span style="color: red">*</span></label>
+			</div>
+			<div class="col-9">
+				<input type="text" id="postgrad_college" name="postgrad_college"
+					value="{{ old('postgrad_college', $user->postgrad_college) }}"
+					placeholder="Enter college/university name"
+					class="form-control">
+			</div>
+		</div>
+
+		<div class="row mb-3">
+			<div class="col-3">
+				<label for="postgrad_degree">Postgraduate Degree Obtained:<span style="color: red">*</span></label>
+			</div>
+			<div class="col-9">
+				<input type="text" id="postgrad_degree" name="postgrad_degree"
+					value="{{ old('postgrad_degree', $user->postgrad_degree) }}"
+					placeholder="e.g., M.Sc, M.Tech, MBA"
+					class="form-control">
+			</div>
+		</div>
+
+		<div class="row mb-3">
+			<div class="col-3">
+				<label for="postgrad_year">Year of Graduation:<span style="color: red">*</span></label>
+			</div>
+			<div class="col-9">
+				<input type="text" id="postgrad_year" name="postgrad_year"
+					value="{{ old('postgrad_year', $user->postgrad_year) }}"
+					placeholder="e.g., 2016"
+					class="form-control">
+			</div>
+		</div>
+	</div>
+
+	<button type="submit" class="btn btn-primary">Update</button>
+</form>
+			</div>
+
+
+
+      </div>
+    </div>
+
+    <!-- Professional Information -->
+    <div class="accordion-item w-100">
+      <h2 class="accordion-header" id="professionalHeading">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#professionalCollapse" aria-expanded="false" aria-controls="professionalCollapse">
+          Professional Information
+        </button>
+      </h2>
+      <div id="professionalCollapse" class="accordion-collapse collapse" aria-labelledby="professionalHeading" data-bs-parent="#editAccordion">
+        <div class="accordion-body w-100">
+
+	   <form action="{{ route('user.profile.proinfo', ['id' => $user->id]) }}" method="post" id="myForm" enctype="multipart/form-data">
+	@csrf
+	@method('PUT')
+
+	<div class="form-group">
+		<div class="row mb-3">
+			<div class="col-3">
+				<label for="current_designation">Current Designation:<span style="color: red">*</span></label>
+			</div>
+			<div class="col-9">
+				<input type="text" id="current_designation" name="current_designation"
+					value="{{ old('current_designation', $user->current_designation) }}"
+					class="form-control"
+					placeholder="Enter your current designation">
+			</div>
+		</div>
+
+		<div class="row mb-3">
+			<div class="col-3">
+				<label for="current_department">Current Department:<span style="color: red">*</span></label>
+			</div>
+			<div class="col-9">
+				<input type="text" id="current_department" name="current_department"
+					value="{{ old('current_department', $user->current_department) }}"
+					class="form-control"
+					placeholder="Enter your current department">
+			</div>
+		</div>
+
+		<div class="row mb-3">
+			<div class="col-3">
+				<label for="current_location">Current Location:<span style="color: red">*</span></label>
+			</div>
+			<div class="col-9">
+				<input type="text" id="current_location" name="current_location"
+					value="{{ old('current_location', $user->current_location) }}"
+					class="form-control"
+					placeholder="Enter your current work location">
+			</div>
+		</div>
+
+		<div class="row mb-3">
+			<div class="col-3">
+				<label for="previous_postings">Previous Postings:<span style="color: red">*</span></label>
+			</div>
+			<div class="col-9">
+				<input type="text" id="previous_postings" name="previous_postings"
+					value="{{ old('previous_postings', $user->previous_postings) }}"
+					class="form-control"
+					placeholder="List previous postings (comma-separated)">
+			</div>
+		</div>
+	</div>
+
+	<button type="submit" class="btn btn-primary">Update</button>
+</form>
+
+
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+  </div>
+</div>
+
+</div>
+                </div>
+            </div>
+        </div>
+
+       </div>
+</div>
+
+
+
+                 <!-- multiple images section -->
+
+
+
+                       <!-- multiple images section -->
+
+                   </div>
+               </div>
+
+       </div>
+   </main>
+      </div>
+    </div>
+  </div>
+</div>
+
 
                        </div>
                        <!-- List profile -->

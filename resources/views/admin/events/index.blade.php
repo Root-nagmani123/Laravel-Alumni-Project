@@ -52,12 +52,12 @@
 
                     </div>
                     <hr>
-                    <div id="zero_config_wrapper" class="dataTables_wrapper">
+                    <div id="zero_config_wrapper" class="dataTables_wrapper table-responsive"style="overflow-x: auto;">
 
 
                         <table id="zero_config"
-                            class="table table-striped table-bordered text-nowrap align-middle dataTable table-responsive"
-                            aria-describedby="zero_config_info" style="overflow-x: auto;">
+                            class="table table-striped table-bordered text-nowrap align-middle dataTable"
+                            aria-describedby="zero_config_info" >
                             <thead>
                                 <!-- start row -->
                                 <tr>
@@ -89,9 +89,10 @@
                                         @endif
                                     </td>
                                     <td>
+
                                     <img class="avatar-img rounded-circle"
                                     src="{{ $event->image && $event->image ? asset('storage/' . $event->image) : asset('feed_assets/images/avatar/12.jpg') }}"
-                                    alt="" height="70" width="70"><</td>
+                                    alt="" height="70" width="70"></td>
                                      <td>
                                         <div class="form-check form-switch d-inline-block">
                                             <input class="form-check-input status-toggle" type="checkbox" role="switch"
