@@ -864,6 +864,31 @@ document.addEventListener("DOMContentLoaded", function () {
     initZuckStories(filteredStories);
 });
 
+// delete stories
+function deleteStory(storyId) {
+        fetch(`{{ route('user.stories.destroy', ['id' => '__ID__']) }}`.replace('__ID__', storyId), {
+            method: 'DELETE',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                alert("Story deleted");
+                location.reload(); // Or re-render without reload
+            } else {
+                alert("Failed to delete story");
+            }
+        })
+        .catch(err => console.error("Error deleting story:", err));
+    }
+
+
+
+
+
  document.addEventListener("DOMContentLoaded", function () {
         GLightbox({
             selector: '.glightbox'

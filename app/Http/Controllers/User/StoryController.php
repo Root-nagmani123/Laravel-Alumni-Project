@@ -32,4 +32,23 @@ class StoryController extends Controller
         return redirect()->back();
         //return redirect()->route('/feed')->with('success', 'Story added!');
     }
+
+    public function destroy($id)
+    {
+        $story = Story::findOrFail($id);
+
+       // if ($story->user_id !== auth('user')->id()) {
+       if ($story->member_id !== Auth::guard('user')->id()) {
+            return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
+        }
+
+        // Optional: Delete file from storage
+       if ($story->story_image && \Storage::disk('public')->exists($story->story_image)) {
+                \Storage::disk('public')->delete($story->story_image);
+            }
+
+        $story->delete();
+
+        return response()->json(['success' => true]);
+    }
 }
