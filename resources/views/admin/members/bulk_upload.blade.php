@@ -38,7 +38,7 @@
             </div>
         </div>
     </div>
-@if ($errors->has('import_failures'))
+{{--@if ($errors->has('import_failures'))
     <div class="alert alert-danger">
         <h4>Import Errors:</h4>
         <ul>
@@ -49,7 +49,24 @@
             @endforeach
         </ul>
     </div>
+@endif --}}
+@if(session('failures'))
+    <div class="alert alert-danger">
+        <h4>Upload failed with the following errors:</h4>
+        @foreach(session('failures') as $failure)
+            <div class="mb-2">
+                <strong>Row {{ $failure['row'] }}:</strong>
+                <ul>
+                    @foreach($failure['errors'] as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endforeach
+    </div>
 @endif
+
+
     <div class="row">
         <div class="col-12">
             <!-- start Person Info -->
