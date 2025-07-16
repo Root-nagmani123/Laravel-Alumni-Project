@@ -128,6 +128,7 @@
             <div class="col-md-6">
                 <div class="mb-3">
                     <label class="form-label">Event Image</label>
+                    <span>image type: jpg, jpeg, png</span>
                     <input type="file" name="image" id="imageInput" class="form-control" accept="image/*">
                     <div class="mt-2">
                         <img id="imagePreview"
