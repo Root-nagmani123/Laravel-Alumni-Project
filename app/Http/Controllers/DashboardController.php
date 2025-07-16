@@ -155,6 +155,7 @@ class DashboardController extends Controller
         $event->rsvp_status = $rsvp ?? ''; // Agar user ne response nahi diya
         return $event;
     });
+    
 
         // RSVP Events by status
         $accept_events = DB::table('events')
