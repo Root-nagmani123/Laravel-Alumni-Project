@@ -83,6 +83,7 @@ class DashboardController extends Controller
         $total_user = $members->count();
         $total_forums = $forums->count();
         $total_topics = $topics->count();
+        $userData = $topics;
 
         // Compare
         $currentCount = $currentTopics->count();
@@ -104,7 +105,8 @@ class DashboardController extends Controller
             'total_user',
             'total_forums',
             'total_topics',
-            'topicChangePercent'
+            'topicChangePercent',
+             'userData'
         ));
     }
 
