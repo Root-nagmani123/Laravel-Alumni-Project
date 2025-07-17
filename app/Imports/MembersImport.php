@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Imports;
 
 use App\Models\Member;
@@ -24,14 +23,14 @@ class MembersImport implements ToCollection, WithHeadingRow
     public function collection(Collection $rows)
     {
         foreach ($rows as $index => $row) {
-            $row = array_change_key_case($row->toArray(), CASE_LOWER); // normalize headers
+            $row = array_change_key_case($row->toArray(), CASE_LOWER);
 
-            // ✅ Skip empty rows
+            //  Skip empty rows
             if (empty(array_filter($row))) {
                 continue;
             }
 
-            // ✅ Validate header once
+            //  Validate header once
             if (!$this->headerValidated) {
                 $headers = array_keys($row);
                 $missingHeaders = array_diff($this->requiredHeaders, $headers);
@@ -47,16 +46,15 @@ class MembersImport implements ToCollection, WithHeadingRow
 
             $rowNumber = $index + 2; // Row in Excel (starts at 2 due to heading)
 
-            // ✅ Validate data
+            // Validate data
             $validator = Validator::make($row, [
                 'name' => 'required|string|max:255',
                 'mobile' => ['required', 'integer', 'regex:/^[0-9]{10,20}$/'],
-                'email' => 'required|email|unique:members,email',
+                'email' => 'required|git|unique:members,email',
                 'password' => 'required|string|min:8',
                 'password_confirmation' => 'required|string|same:password',
                 'cader' => 'required|string|max:255',
                 'designation' => 'required|string|max:255',
-                //'batch' => 'required|integer',
                 'batch' => 'required|numeric',
 
             ], $this->validationMessages());
@@ -66,7 +64,7 @@ class MembersImport implements ToCollection, WithHeadingRow
                 continue;
             }
 
-            // ✅ Save member
+            // Save member
             Member::create([
                 'name' => $row['name'],
                 'mobile' => $row['mobile'],
@@ -78,7 +76,7 @@ class MembersImport implements ToCollection, WithHeadingRow
             ]);
         }
 
-        // ✅ Save failures to session if any
+        // Save failures to session if any
         if (!empty($this->failures)) {
             session()->flash('failures', $this->failures);
             \Log::error('Import Failures', $this->failures);

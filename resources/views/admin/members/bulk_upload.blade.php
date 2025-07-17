@@ -8,19 +8,7 @@
             <div class="col-12">
                 <div class="d-sm-flex align-items-center justify-space-between">
                     <h4 class="mb-4 mb-sm-0 card-title">Bulk Upload Members</h4>
-                   {{-- @if(session('success'))
-                    <div class="alert alert-success">{{ session('success') }}</div>
-                    @endif
-                    @if($errors->any())
-                    <div class="alert alert-danger">
-                        <ul>
-                            @foreach($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                    @endif--}}
-                    <nav aria-label="breadcrumb" class="ms-auto">
+                         <nav aria-label="breadcrumb" class="ms-auto">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item d-flex align-items-center">
                                 <a class="text-muted text-decoration-none d-flex" href="../main/index.html">
@@ -38,19 +26,7 @@
             </div>
         </div>
     </div>
-{{--@if ($errors->has('import_failures'))
-    <div class="alert alert-danger">
-        <h4>Import Errors:</h4>
-        <ul>
-            @foreach ($errors->get('import_failures') as $failures)
-                @foreach ($failures as $failure)
-                    <li>Row {{ $failure['row'] }}: {{ implode(', ', $failure['errors']) }}</li>
-                @endforeach
-            @endforeach
-        </ul>
-    </div>
-@endif --}}
-@if(session('failures'))
+    @if(session('failures'))
     <div class="alert alert-danger">
         <h4>Upload failed with the following errors:</h4>
         @foreach(session('failures') as $failure)
@@ -64,12 +40,10 @@
             </div>
         @endforeach
     </div>
-@endif
-
-
-    <div class="row">
+    @endif
+   <div class="row">
         <div class="col-12">
-            <!-- start Person Info -->
+
             <div class="card">
                 <form action="{{ route('members.bulk_upload') }}" method="POST" enctype="multipart/form-data">
                     @csrf
@@ -103,7 +77,7 @@
                     </div>
                 </form>
             </div>
-            <!-- end Person Info -->
+
         </div>
     </div>
 </div>
