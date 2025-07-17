@@ -109,7 +109,7 @@
 
                            <i class="bi bi-images fs-1 mb-2 d-block"></i>
                            <span class="d-block">Drag & Drop image here or click to browse.</span>
-                           <input type="file" id="media" name="media[]" multiple class="d-none" accept="image/*">
+                           <input type="file" id="media" name="media[]" multiple class="" accept="image/*">
                            <div id="preview" class="mt-3 d-flex flex-wrap gap-3"></div>
                        </div>
                    </div>

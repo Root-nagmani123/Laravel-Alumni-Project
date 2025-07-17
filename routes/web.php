@@ -92,6 +92,8 @@ Route::prefix('user')->name('user.')->group(function () {
         Route::get('/load-comments/{post}', [CommentController::class, 'loadComments'])->name('load.comments');
 
          Route::post('/stories', [StoryController::class, 'store'])->name('stories.store');
+         Route::delete('/delete-story/{id}', [StoryController::class, 'destroy'])->name('stories.destroy');
+
 
 		Route::post('/post/{post}/like', [PostController::class, 'toggleLike'])->name('post.like');
 		//Route::post('/user/comments', [CommentController::class, 'store'])->name('user.comments.store');

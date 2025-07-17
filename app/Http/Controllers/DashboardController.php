@@ -83,6 +83,7 @@ class DashboardController extends Controller
         $total_user = $members->count();
         $total_forums = $forums->count();
         $total_topics = $topics->count();
+        $userData = $topics;
 
         // Compare
         $currentCount = $currentTopics->count();
@@ -103,7 +104,8 @@ class DashboardController extends Controller
             'total_user',
             'total_forums',
             'total_topics',
-            'topicChangePercent'
+            'topicChangePercent',
+             'userData'
         ));
     }
 
@@ -136,12 +138,21 @@ class DashboardController extends Controller
     {
         $user = auth()->guard('user')->user(); // Get logged-in user
             $userId = $user->id;
-            $events = DB::table('events')
-            ->where('status', 1)
-            ->where('end_datetime', '>', now())
-            ->orderBy('id', 'desc')
-            ->get();
-    // print_r($events);die;
+           $events = DB::table('events')
+    ->where('status', 1)
+    ->where('end_datetime', '>', now())
+    ->orderBy('id', 'desc')
+    ->get()
+    ->map(function ($event) use ($userId) {
+        $rsvp = DB::table('event_rsvp')
+            ->where('event_id', $event->id)
+            ->where('user_id', $userId)
+            ->value('status'); // 1, 2, or 3
+
+        $event->rsvp_status = $rsvp ?? ''; // Agar user ne response nahi diya
+        return $event;
+    });
+    
 
         // RSVP Events by status
         $accept_events = DB::table('events')

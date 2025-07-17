@@ -6,12 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Post;
-
-
 use App\Models\PostMedia;
 use Illuminate\Support\Str; // added on 16-6-2025
-
-
 
 class PostController extends Controller
 {
@@ -223,7 +219,7 @@ public function toggleLike(Post $post)
         $post->likes()->create(['member_id' => $user->id]);
     }
 
-    //return redirect()->back();
+
     return redirect()->back()->with('status', $existingLike ? 'Post unliked' : 'Post liked');
     }
 

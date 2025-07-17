@@ -160,11 +160,12 @@
                                                     <div class="d-flex mt-3 justify-content-between">
                                                         <div class="w-100">
                                                             <select class="form-select rsvp-select" data-event-id="{{ $event->id }}">
-                                                                <option value="" selected>RSVP</option>
-                                                                <option value="1">Interested</option>
-                                                                <option value="2">Not Interested</option>
-                                                                <option value="3">Maybe</option>
+                                                                <option value="" {{ $event->rsvp_status == '' ? 'selected' : '' }}>RSVP</option>
+                                                                <option value="1" {{ $event->rsvp_status == 1 ? 'selected' : '' }}>Interested</option>
+                                                                <option value="2" {{ $event->rsvp_status == 2 ? 'selected' : '' }}>Not Interested</option>
+                                                                <option value="3" {{ $event->rsvp_status == 3 ? 'selected' : '' }}>Maybe</option>
                                                             </select>
+
                                                         </div>
                                                     </div>
                                                 </div>

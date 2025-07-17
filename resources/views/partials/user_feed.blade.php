@@ -694,7 +694,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                         <div class="bg-light rounded-start-top-0 p-3 rounded">
                                             <div class="d-flex justify-content-between">
                                                 <h6 class="mb-1"><a href="#!">${comment.member?.name || 'Anonymous'}</a></h6>
-                                                <small class="ms-2">Just now</small>
+                                                <small class="ms-2">{{ $comment->created_at->diffForHumans() }}</small>
                                             </div>
                                             <p class="small mb-0">${comment.comment}</p>
                                         </div>
@@ -863,6 +863,31 @@ document.addEventListener("DOMContentLoaded", function () {
 
     initZuckStories(filteredStories);
 });
+
+// delete stories
+function deleteStory(storyId) {
+        fetch(`{{ route('user.stories.destroy', ['id' => '__ID__']) }}`.replace('__ID__', storyId), {
+            method: 'DELETE',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                alert("Story deleted");
+                location.reload(); // Or re-render without reload
+            } else {
+                alert("Failed to delete story");
+            }
+        })
+        .catch(err => console.error("Error deleting story:", err));
+    }
+
+
+
+
 
  document.addEventListener("DOMContentLoaded", function () {
         GLightbox({

@@ -73,7 +73,7 @@
                 <!-- -------------------------------------------- -->
                 <!-- Projects -->
                 <!-- -------------------------------------------- -->
-                <div class="col-md-6">
+                <!--<div class="col-md-6">
                     <div class="card bg-danger-subtle overflow-hidden shadow-none">
                         <div class="card-body p-4">
                             <span class="text-dark-light">Replies</span>
@@ -84,7 +84,7 @@
                         </div>
 
                     </div>
-                </div>
+                </div>-->
             </div>
             <div class="row">
                 <div class="col-lg-12">
@@ -126,11 +126,11 @@
                 {{ $topic->title }} &nbsp;<small>Created by: <?= htmlentities($topic->member->name ?? 'Unknown') ?></small>
             </div>
         </li>
-    @endforeach
-@else
-    <p>No topics found.</p>
-@endif
-                                        </div>
+                @endforeach
+            @else
+                <p>No topics found.</p>
+            @endif
+                                                    </div>
                                     </div>
                                 </div>
                             </div>

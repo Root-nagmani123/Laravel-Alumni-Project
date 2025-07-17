@@ -10,6 +10,7 @@ use App\Models\Member;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\DB;
 use App\Models\Post;
 use App\Models\PostMedia;
 class GroupController extends Controller
@@ -232,8 +233,9 @@ class GroupController extends Controller
     //return redirect()->route('group.topics_list')->with('success', 'Topic added successfully.');
     }
     public function deleteTopic($id) {
+        // print_r($id);die;
     // post::destroy($id);
-    return back()->with('success', 'Topic deleted.');
+    // return back()->with('success', 'Topic deleted.');
      $post = DB::table('posts')->where('id', $id)->first();
     if (!$post) {
         return response()->json(['message' => 'Post not found'], 404);

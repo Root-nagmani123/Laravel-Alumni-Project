@@ -30,7 +30,7 @@
                 <img class="img-xs img-fluid rounded-circle me-2"
                  src="{{ $topic->member && $topic->member->profile_pic
                         ? asset('storage/' . $topic->member->profile_pic)
-                        : asset('admin_assets/images/profile/user-1.png') }}"
+                        : asset('feed_assets/images/avatar/07.jpg') }}"
                  alt="User">
 
                                 </div>
