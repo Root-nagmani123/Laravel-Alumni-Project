@@ -28,7 +28,7 @@
     </div>
     @if(session('failures'))
     <div class="alert alert-danger">
-        <h4>Upload failed with the following errors:</h4>
+        <h4>Upload failed errors:</h4>
         @foreach(session('failures') as $failure)
             <div class="mb-2">
                 <strong>Row {{ $failure['row'] }}:</strong>
