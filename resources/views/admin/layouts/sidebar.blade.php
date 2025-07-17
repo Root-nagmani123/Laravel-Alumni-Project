@@ -82,6 +82,18 @@
                         </li>
 
                         <li class="sidebar-item">
+                            <a class="sidebar-link" href="{{ route('admin.location.country') }}">
+                                <iconify-icon icon="solar:shield-user-line-duotone"></iconify-icon>
+                                <span class="icon-small"></span> Location
+                            </a>
+                            <ul class="sidebar-submenu">
+                                <li><a class="sidebar-link" href="{{ route('admin.location.country') }}">Country</a></li>
+                                <li><a class="sidebar-link" href="{{ route('admin.location.state') }}">State</a></li>
+                                <li><a class="sidebar-link" href="{{ route('admin.location.city') }}">Cities</a></li>
+                            </ul>
+                        </li>
+
+                        <li class="sidebar-item">
                             <form id="logout-form" action="{{ route('admin.logout') }}" method="POST"
                                 style="display: none;">
                                 @csrf
