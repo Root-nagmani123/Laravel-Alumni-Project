@@ -50,7 +50,7 @@ class MembersImport implements ToCollection, WithHeadingRow
             $validator = Validator::make($row, [
                 'name' => 'required|string|max:255',
                 'mobile' => ['required', 'integer', 'regex:/^[0-9]{10,20}$/'],
-                'email' => 'required|git|unique:members,email',
+                'email' => 'required|email|unique:members,email',
                 'password' => 'required|string|min:8',
                 'password_confirmation' => 'required|string|same:password',
                 'cader' => 'required|string|max:255',
