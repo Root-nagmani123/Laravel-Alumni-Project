@@ -58,7 +58,7 @@ $pageName = 'Add Forum Topic'; // Set the page name here
                         <!-- Title -->
                         <div class="row mb-3">
                             <label for="inputText" class="col-sm-3 col-form-label">Title<span
-                                    class="required">*</span></label>
+                                    class="required text-danger">*</span></label>
                             <div class="col-sm-9">
                                 <input type="text" name="title" class="form-control" value="{{ old('title') }}">
                             </div>
@@ -67,7 +67,7 @@ $pageName = 'Add Forum Topic'; // Set the page name here
                         <!-- Description -->
                         <div class="row mb-3">
                             <label for="inputPassword" class="col-sm-3 col-form-label">Description<span
-                                    class="required">*</span></label>
+                                    class="required text-danger">*</span></label>
                             <div class="col-sm-9">
                                 <textarea class="form-control" name="description"
                                     style="height: 100px">{{ old('description') }}</textarea>

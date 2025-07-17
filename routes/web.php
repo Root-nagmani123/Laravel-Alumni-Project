@@ -270,6 +270,8 @@ Route::prefix('events')->name('events.')->group(function () {
     });
 
 
+
+
 });
 
 
@@ -289,5 +291,8 @@ Route::get('/user_login', function () {
         Route::get('/user_feed1', function () {
             return view('user.feed1');
         })->name('user_feed1');
+			 Route::get('/user/broadcast', function () {
+            return view('user.broadcast');
+        })->name('user.broadcast');
 
 require __DIR__.'/auth.php';

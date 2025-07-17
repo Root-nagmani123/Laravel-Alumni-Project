@@ -74,7 +74,8 @@
                                 <tr>
                                     <td>{{ $index + 1 }}</td>
                                     <td><b>{{ $broadcast->title }}</b></td>
-                                    <td>{{$broadcast->description}}</td>
+                                    <td>{{ \Illuminate\Support\Str::limit($broadcast->description, 50) }}</td>
+
                                     <td class="sorting_1">
 
 

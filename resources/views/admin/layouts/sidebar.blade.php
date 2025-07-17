@@ -82,18 +82,11 @@
                         </li>
 
                         <li class="sidebar-item">
-                            <form id="logout-form" action="{{ route('admin.logout') }}" method="POST"
-                                style="display: none;">
-                                @csrf
-                            </form>
-                            <a class="sidebar-link" href="#"
-                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                            <a class="sidebar-link" href="{{ route('admin.profile') }}">
                                 <iconify-icon icon="solar:shield-user-line-duotone"></iconify-icon>
-                                <span class="hide-menu">Logout</span>
+                                <span class="icon-small"></span> View Profile
                             </a>
                         </li>
-
-                        <li><span class="sidebar-divider"></span></li>
                     </ul>
                 </nav>
             </div>
