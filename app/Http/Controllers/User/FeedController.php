@@ -119,8 +119,6 @@ class FeedController extends Controller
             ->where('fm.user_id', $userId)
             ->get();
 
-
-
     $groupIds = DB::table('group_member')
     ->where('status', 1)
     ->where(function ($query) use ($userId) {
@@ -135,7 +133,7 @@ class FeedController extends Controller
     ->distinct()
     ->get();
 
- $posts = Post::with(['member', 'media', 'likes', 'comments.member', 'group'])
+    $posts = Post::with(['member', 'media', 'likes', 'comments.member', 'group'])
     ->where(function ($query) use ($groupIds) {
         $query->whereNull('group_id') // normal post bhi chahiye
               ->orWhereIn('group_id', $groupIds); // ya phir allowed group_id
@@ -160,14 +158,7 @@ class FeedController extends Controller
         ];
     });
 
-
-// dd($posts);
-
-
-// dd($posts);
-// // Debug
-// print_r($merged);die;
-        return view('user.feed', compact('posts', 'user', 'storiesByMember', 'broadcast','events', 'forums', 'groupNames'));
+    return view('user.feed', compact('posts', 'user', 'storiesByMember', 'broadcast','events', 'forums', 'groupNames'));
     }
 
     public function store(Request $request)

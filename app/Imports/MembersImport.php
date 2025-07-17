@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Imports;
 
 use App\Models\Member;
@@ -24,15 +23,17 @@ class MembersImport implements ToCollection, WithHeadingRow
     public function collection(Collection $rows)
     {
         foreach ($rows as $index => $row) {
-            $row = $row->toArray();
-            dd($rows);
-            // ✅ Check headers only once, on the first row
+            $row = array_change_key_case($row->toArray(), CASE_LOWER);
+
+            //  Skip empty rows
+            if (empty(array_filter($row))) {
+                continue;
+            }
+
+            //  Validate header once
             if (!$this->headerValidated) {
                 $headers = array_keys($row);
-                $missingHeaders = array_diff(
-                    array_map('strtolower', $this->requiredHeaders),
-                    array_map('strtolower', $headers)
-                );
+                $missingHeaders = array_diff($this->requiredHeaders, $headers);
 
                 if (!empty($missingHeaders)) {
                     throw ValidationException::withMessages([
@@ -43,17 +44,19 @@ class MembersImport implements ToCollection, WithHeadingRow
                 $this->headerValidated = true;
             }
 
-            $rowNumber = $index + 2; // For Excel line number (after heading)
+            $rowNumber = $index + 2; // Row in Excel (starts at 2 due to heading)
 
+            // Validate data
             $validator = Validator::make($row, [
                 'name' => 'required|string|max:255',
-                'mobile' => 'required|string|max:20',
+                'mobile' => ['required', 'integer', 'regex:/^[0-9]{10,20}$/'],
                 'email' => 'required|email|unique:members,email',
                 'password' => 'required|string|min:8',
                 'password_confirmation' => 'required|string|same:password',
                 'cader' => 'required|string|max:255',
                 'designation' => 'required|string|max:255',
-                'batch' => 'required|integer',
+                'batch' => 'required|numeric',
+
             ], $this->validationMessages());
 
             if ($validator->fails()) {
@@ -61,6 +64,7 @@ class MembersImport implements ToCollection, WithHeadingRow
                 continue;
             }
 
+            // Save member
             Member::create([
                 'name' => $row['name'],
                 'mobile' => $row['mobile'],
@@ -68,11 +72,13 @@ class MembersImport implements ToCollection, WithHeadingRow
                 'password' => Hash::make($row['password']),
                 'cader' => $row['cader'],
                 'designation' => $row['designation'],
-                'batch' => $row['batch'],
+                'batch' => is_numeric($row['batch']) ? (int) $row['batch'] : $row['batch'],
             ]);
         }
 
+        // Save failures to session if any
         if (!empty($this->failures)) {
+            session()->flash('failures', $this->failures);
             \Log::error('Import Failures', $this->failures);
         }
     }
@@ -84,6 +90,7 @@ class MembersImport implements ToCollection, WithHeadingRow
             'email' => 'The :attribute must be a valid email address.',
             'unique' => 'The :attribute has already been taken.',
             'same' => 'The :attribute must match the password field.',
+            'regex' => 'The :attribute format is invalid.',
         ];
     }
 

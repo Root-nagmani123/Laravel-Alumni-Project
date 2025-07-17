@@ -43,7 +43,7 @@
                         <div class="row">
                             <div class="col-6">
                                 <div class="mb-3">
-                                    <label class="form-label">Name</label>
+                                    <label class="form-label">Name<span class="required text-danger text-danger" >*</span></label>
                                     <input type="text" name="name" class="form-control"
                                         value="{{ old('name', $member->name) }}">
                                     @error('name')
@@ -53,14 +53,14 @@
                             </div>
                             <div class="col-6">
                                 <div class="mb-3">
-                                    <label class="form-label">Mobile</label>
+                                    <label class="form-label">Mobile<span class="required text-danger text-danger" >*</span></label>
                                     <input type="text" name="mobile" class="form-control"
                                         value="{{ old('mobile', $member->mobile) }}">
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="mb-3">
-                                    <label class="form-label">Email</label>
+                                    <label class="form-label">Email<span class="required text-danger text-danger" >*</span></label>
                                     <input type="email" name="email" class="form-control"
                                         value="{{ old('email', $member->email) }}">
                                     @error('email')
@@ -85,21 +85,21 @@
                             </div>
                             <div class="col-6">
                                 <div class="mb-3">
-                                    <label class="form-label">Cadre</label>
-                                    <input type="text" name="cadre" class="form-control"
+                                    <label class="form-label">Cadre<span class="required text-danger text-danger" >*</span></label>
+                                    <input type="text" name="cader" class="form-control"
                                         value="{{ old('cadre', $member->cader) }}">
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="mb-3">
-                                    <label class="form-label">Designation</label>
+                                    <label class="form-label">Designation<span class="required text-danger text-danger" >*</span></label>
                                     <input type="text" name="designation" class="form-control"
                                         value="{{ old('designation', $member->designation) }}">
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="mb-3">
-                                    <label class="form-label">Batch</label>
+                                    <label class="form-label">Batch<span class="required text-danger text-danger" >*</span></label>
                                     <input type="number" name="batch" class="form-control"
                                         value="{{ old('batch', $member->batch) }}">
                                 </div>
@@ -115,7 +115,7 @@
                         </a>
                     </div>
                     </div>
-                    
+
                 </form>
             </div>
             <!-- end Person Info -->
