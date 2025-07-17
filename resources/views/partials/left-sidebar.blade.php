@@ -37,7 +37,7 @@
                         @endphp
                               <img id="existingImage"
     src="{{ $profilePic ? asset('storage/' . $profilePic) : asset('feed_assets/images/default.png') }}"
-    class="rounded-circle" height="70" width="70" alt="User">
+    class="rounded-circle" height="50" width="50" alt="User">
                             </div>
 
 
@@ -49,30 +49,6 @@
                             @endif
                             <small>{{ Auth::guard('user')->user()->designation }}</small>
                             <p class="mt-3">{{Auth::guard('user')->user()->bio}}</p>
-
-                            <!-- User stat START -->
-                            <div class="hstack gap-2 gap-xl-3 justify-content-center">
-                                <!-- User stat item -->
-                                <div>
-                                    <h6 class="mb-0">256</h6>
-                                    <small>Post</small>
-                                </div>
-                                <!-- Divider -->
-                                <div class="vr"></div>
-                                <!-- User stat item -->
-                                <div>
-                                    <h6 class="mb-0">2.5K</h6>
-                                    <small>Followers</small>
-                                </div>
-                                <!-- Divider -->
-                                <div class="vr"></div>
-                                <!-- User stat item -->
-                                <div>
-                                    <h6 class="mb-0">365</h6>
-                                    <small>Following</small>
-                                </div>
-                            </div>
-                            <!-- User stat END -->
                         </div>
                         <!-- Side Nav END -->
                     </div>

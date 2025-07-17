@@ -1112,20 +1112,6 @@
                                 </div>
                                 <!-- Joined on END -->
                             </div>
-                            <div class="col-sm-6 position-relative">
-                                <!-- Workplace on START -->
-                                <a class="btn btn-dashed rounded w-100" href="#!"> <i
-                                        class="bi bi-plus-circle-dotted me-1"></i>Add
-                                    a workplace</a>
-                                <!-- Workplace on END -->
-                            </div>
-                            <div class="col-sm-6 position-relative">
-                                <!-- Education on START -->
-                                <a class="btn btn-dashed rounded w-100" href="#!"> <i
-                                        class="bi bi-plus-circle-dotted me-1"></i>Add
-                                    a education</a>
-                                <!-- Education on END -->
-                            </div>
                         </div>
                     </div>
                     <!-- Card body END -->

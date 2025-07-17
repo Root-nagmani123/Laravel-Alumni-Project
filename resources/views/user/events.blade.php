@@ -134,7 +134,7 @@
                                             <div class="card h-100">
                                                 <div class="position-relative">
                                                     <img class="img-fluid rounded-top"
-                                                         src="{{ isset($event->image) && $event->image ? asset('storage/' . $event->image) : asset('feed_assets/images/avatar/07.jpg') }}" alt="">
+                                                         src="{{ isset($event->image) && $event->image ? asset('storage/' . $event->image) : asset('feed_assets/images/avatar/07.jpg') }}" alt="" style="height: 200px; object-fit: cover;width: 100%;">
                                                   
                                                 </div>
                                                 <div class="card-body position-relative pt-0">
@@ -155,8 +155,10 @@
                                                         N/A
                                                     @endif
                                                 </p>
-                                                <p>{{ $event->description }}</p>
+                                                <p>{{ \Illuminate\Support\Str::words($event->description, 20, '...') }}</p>
 
+                                                </div>
+                                                <div class="card-footer" style="border-top: 0;">
                                                     <div class="d-flex mt-3 justify-content-between">
                                                         <div class="w-100">
                                                             <select class="form-select rsvp-select" data-event-id="{{ $event->id }}">
