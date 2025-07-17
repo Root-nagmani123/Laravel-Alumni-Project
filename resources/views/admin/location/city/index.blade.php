@@ -51,10 +51,9 @@
                         </div>
                     </div>
                     <hr>
-                    <div id="zero_config_wrapper" class="dataTables_wrapper">
-                        <table id="zero_config"
-                            class="table table-striped table-bordered text-nowrap align-middle dataTable"
-                            aria-describedby="zero_config_info">
+                    <div class="dataTables">
+
+                            <table id="cityTable" class="table table-striped table-bordered text-nowrap align-middle">
                             <thead>
                                 <!-- start row -->
                                 <tr>
@@ -70,7 +69,7 @@
                             <tbody>
                                 @foreach($cities as $city)
                                 <tr class="odd">
-                                    <td>{{ $loop->iteration }}</td>
+                                    <td>{{ ($cities->currentPage() - 1) * $cities->perPage() + $loop->iteration }}</td>
                                     <td>{{ $city->name }}</td>
                                     <td>{{ $city->state->name ?? 'N/A' }}</td>
                                     <td>{{ $city->state->country->name ?? 'N/A' }}</td>
@@ -99,6 +98,9 @@
                                 @endforeach
                             </tbody>
                         </table>
+                        <div class="mt-3 d-flex justify-content-end">
+                          {{ $cities->links('pagination::bootstrap-5') }}
+                       </div>
                     </div>
                 </div>
             </div>
@@ -108,12 +110,23 @@
 </div>
 
 <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css"/>
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
 
 <script>
     $(document).ready(function () {
+        // Initialize DataTable with search enabled
+        $('#cityTable').DataTable({
+            paging: false, // Disable DataTables paging to use Laravel's pagination
+            searching: true,
+            ordering: true,
+            info: false // Hide DataTables info since Laravel handles pagination
+        });
+
         // AJAX: Toggle city status with confirmation
         $('.status-toggle').change(function (e) {
             let checkbox = $(this);

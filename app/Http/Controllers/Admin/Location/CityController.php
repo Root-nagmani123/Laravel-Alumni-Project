@@ -13,10 +13,10 @@ class CityController extends Controller
 {
     public function index()
     {
-        $cities = City::with(['state', 'state.country'])->get();
+        $cities = City::with(['state', 'state.country'])->paginate(10);
         return view('admin.location.city.index', compact('cities'));
     }
-
+    
     public function create()
     {
         $countries = Country::all();
