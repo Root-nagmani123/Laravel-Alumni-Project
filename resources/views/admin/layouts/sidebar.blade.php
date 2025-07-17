@@ -101,11 +101,9 @@
                             <a class="sidebar-link" href="#"
                                 onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                 <iconify-icon icon="solar:shield-user-line-duotone"></iconify-icon>
-                                <span class="hide-menu">Logout</span>
+                                <span class="icon-small"></span> View Profile
                             </a>
                         </li>
-
-                        <li><span class="sidebar-divider"></span></li>
                     </ul>
                 </nav>
             </div>

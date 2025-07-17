@@ -83,7 +83,7 @@
                                             </button>
                                         </form>
                                     </td>
-                                     <td>
+                                    <td>
                                         <div class="form-check form-switch d-inline-block">
                                             <input class="form-check-input status-toggle" type="checkbox" role="switch"
                                                 data-table="group" data-column="active_inactive"
@@ -91,131 +91,129 @@
                                         </div>
                                     </td>
                                 </tr>
-                            @empty
+                                @empty
 
-@endforelse
+                                @endforelse
                             </tbody>
                         </table>
 
-                                <!-- Modal for Viewing/Editing Topic -->
-                                  @foreach ($topics as $topic)
-                                <div class="modal fade" id="viewTopicModal{{ $topic->id }}" tabindex="-1"
-                                    aria-labelledby="viewTopicModalLabel{{ $topic->id }}" aria-hidden="true">
-                                    <div class="modal-dialog modal-lg modal-dialog-scrollable">
-                                        <div class="modal-content">
-                                            <form method="POST" action="{{ route('forums.topics.update', $topic->id)}}"
-                                                enctype="multipart/form-data">
-                                                @csrf
-                                                @method('PUT')
+                        <!-- Modal for Viewing/Editing Topic -->
+                        @foreach ($topics as $topic)
+                        <div class="modal fade" id="viewTopicModal{{ $topic->id }}" tabindex="-1"
+                            aria-labelledby="viewTopicModalLabel{{ $topic->id }}" aria-hidden="true">
+                            <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                                <div class="modal-content">
+                                    <form method="POST" action="{{ route('forums.topics.update', $topic->id) }}"
+                                        enctype="multipart/form-data">
+                                        @csrf
+                                        @method('PUT')
 
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title">Edit Topic:<b> {{ $topic->title }}</b></h5>
-                                                    <button type="button" class="btn-close"
-                                                        data-bs-dismiss="modal"></button>
-                                                </div>
-
-                                                <div class="modal-body">
-                                                    <!-- Title -->
-                                                    <div class="mb-3">
-                                                        <label>Title</label><span class="required">*</span>
-                                                        <input type="text" name="title" class="form-control"
-                                                            value="{{ $topic->title }}">
-                                                    </div>
-
-                                                    <!-- Description -->
-                                                    <div class="mb-3">
-                                                        <label>Description</label><span class="required">*</span>
-                                                        <textarea name="description" class="form-control"
-                                                            rows="3">{{ $topic->description }}</textarea>
-                                                    </div>
-
-                                                    <!-- Image -->
-                                                    <div class="mb-3">
-                                                        <label>Current Image</label><br>
-                                                        @if ($topic->images)
-                                                        <img src="{{ asset('storage/uploads/images/' . $topic->images) }}"
-                                                            class="img-fluid mb-2" style="max-height: 200px;">
-                                                        @endif
-                                                        <input type="file" name="images" accept="image/*"
-                                                            class="form-control">
-                                                    </div>
-
-                                                    <!-- Photo Caption -->
-                                                    <div class="mb-3">
-                                                        <label>Photo Caption</label>
-                                                        <input type="text" name="photo_caption" class="form-control"
-                                                            value="{{ $topic->photo_caption ?? '' }}">
-                                                    </div>
-
-                                                    <!-- PDF File -->
-                                                    <div class="mb-3">
-                                                        <label>Current PDF</label><br>
-                                                        @if ($topic->files)
-                                                        <a href="{{ asset('storage/uploads/docs/' . $topic->files) }}"
-                                                            target="_blank" rel="noopener noreferrer">View PDF</a><br>
-                                                        @endif
-                                                        <input type="file" name="doc" accept="application/pdf"
-                                                            class="form-control">
-                                                    </div>
-
-                                                    <!-- Video -->
-                                                    <div class="mb-3">
-                                                        <label>Current Video</label><br>
-                                                        @if ($topic->video)
-                                                        <video width="100%" controls class="mb-2">
-                                                            <source
-                                                                src="{{ asset('storage/uploads/videos/' . $topic->video) }}"
-                                                                type="video/mp4">
-                                                        </video>
-                                                        @endif
-                                                        <input type="file" name="video" accept="video/mp4"
-                                                            class="form-control">
-                                                    </div>
-
-                                                    <!-- Video Link -->
-                                                    <div class="mb-3">
-                                                        <label>Video Link (YouTube/Vimeo)</label>
-                                                        @if (!empty($topic->video_link))
-                                                        <a href="{{ $topic->video_link }}" target="_blank">View uploaded
-                                                            video</a>
-                                                        @else
-                                                        <span>No video uploaded</span>
-                                                        @endif
-                                                        <input type="url" name="video_link" class="form-control"
-                                                            value="{{ $topic->video_link }}">
-                                                    </div>
-
-                                                    <!-- Video Caption -->
-                                                    <div class="mb-3">
-                                                        <label>Video Caption</label>
-                                                        <input type="text" name="video_caption" class="form-control"
-                                                            value="{{ $topic->video_caption }}">
-                                                    </div>
-
-                                                    <!-- Status -->
-                                                    <div class="mb-3">
-                                                        <label>Status</label><span class="required">*</span>
-                                                        <select name="status" class="form-select">
-                                                            <option value="1"
-                                                                {{ $topic->status == 1 ? 'selected' : '' }}>Active
-                                                            </option>
-                                                            <option value="0"
-                                                                {{ $topic->status == 0 ? 'selected' : '' }}>Inactive
-                                                            </option>
-                                                        </select>
-                                                    </div>
-
-                                                    <div class="modal-footer">
-                                                        <button type="submit" class="btn btn-success">Save
-                                                            Changes</button>
-                                                        <button type="button" class="btn btn-secondary"
-                                                            data-bs-dismiss="modal">Close</button>
-                                                    </div>
-                                            </form>
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Edit Topic: <b>{{ $topic->title }}</b></h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                         </div>
-                                    </div>
+
+                                        <!-- Make sure this div is the one that overflows -->
+                                        <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
+                                            <!-- Your form fields (as you have already) -->
+                                            <!-- Title -->
+                                            <div class="mb-3">
+                                                <label>Title</label><span class="required">*</span>
+                                                <input type="text" name="title" class="form-control"
+                                                    value="{{ $topic->title }}">
+                                            </div>
+
+                                            <!-- Description -->
+                                            <div class="mb-3">
+                                                <label>Description</label><span class="required">*</span>
+                                                <textarea name="description" class="form-control"
+                                                    rows="3">{{ $topic->description }}</textarea>
+                                            </div>
+
+                                            <!-- Image -->
+                                            <div class="mb-3">
+                                                <label>Current Image</label><br>
+                                                @if ($topic->images)
+                                                <img src="{{ asset('storage/uploads/images/' . $topic->images) }}"
+                                                    class="img-fluid mb-2" style="max-height: 200px;">
+                                                @endif
+                                                <input type="file" name="images" accept="image/*" class="form-control">
+                                            </div>
+
+                                            <!-- Photo Caption -->
+                                            <div class="mb-3">
+                                                <label>Photo Caption</label>
+                                                <input type="text" name="photo_caption" class="form-control"
+                                                    value="{{ $topic->photo_caption ?? '' }}">
+                                            </div>
+
+                                            <!-- PDF File -->
+                                            <div class="mb-3">
+                                                <label>Current PDF</label><br>
+                                                @if ($topic->files)
+                                                <a href="{{ asset('storage/uploads/docs/' . $topic->files) }}"
+                                                    target="_blank" rel="noopener noreferrer">View PDF</a><br>
+                                                @endif
+                                                <input type="file" name="doc" accept="application/pdf"
+                                                    class="form-control">
+                                            </div>
+
+                                            <!-- Video -->
+                                            <div class="mb-3">
+                                                <label>Current Video</label><br>
+                                                @if ($topic->video)
+                                                <video width="100%" controls class="mb-2">
+                                                    <source src="{{ asset('storage/uploads/videos/' . $topic->video) }}"
+                                                        type="video/mp4">
+                                                </video>
+                                                @endif
+                                                <input type="file" name="video" accept="video/mp4" class="form-control">
+                                            </div>
+
+                                            <!-- Video Link -->
+                                            <div class="mb-3">
+                                                <label>Video Link (YouTube/Vimeo)</label>
+                                                @if (!empty($topic->video_link))
+                                                <a href="{{ $topic->video_link }}" target="_blank">View uploaded
+                                                    video</a>
+                                                @else
+                                                <span>No video uploaded</span>
+                                                @endif
+                                                <input type="url" name="video_link" class="form-control"
+                                                    value="{{ $topic->video_link }}">
+                                            </div>
+
+                                            <!-- Video Caption -->
+                                            <div class="mb-3">
+                                                <label>Video Caption</label>
+                                                <input type="text" name="video_caption" class="form-control"
+                                                    value="{{ $topic->video_caption }}">
+                                            </div>
+
+                                            <!-- Status -->
+                                            <div class="mb-3">
+                                                <label>Status</label><span class="required">*</span>
+                                                <select name="status" class="form-select">
+                                                    <option value="1" {{ $topic->status == 1 ? 'selected' : '' }}>Active
+                                                    </option>
+                                                    <option value="0" {{ $topic->status == 0 ? 'selected' : '' }}>
+                                                        Inactive
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="modal-footer">
+                                            <button type="submit" class="btn btn-success">Save Changes</button>
+                                            <button type="button" class="btn btn-secondary"
+                                                data-bs-dismiss="modal">Close</button>
+                                        </div>
+                                    </form>
                                 </div>
-                                @endforeach
+                            </div>
+                        </div>
+
+                        @endforeach
 
 
 

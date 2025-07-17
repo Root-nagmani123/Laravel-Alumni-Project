@@ -52,15 +52,24 @@
                 </div>
                 <!-- Card header END -->
                 <!-- Card body START -->
-                <div class="card-body">
+                <div class="card-body  overflow-auto" style="max-height: 500px;">
                     <!-- News item -->
                     @if((isset($broadcast)) && ($broadcast->count() > 0))
                     @foreach($broadcast as $index => $broadcast)
                     <div class="mb-3">
-                        <h6 class="mb-0"><a href="blog-details.html">{{ $broadcast->title }}</a></h6>
-                        <small>{{ $broadcast->description }}</small>
+                        
+                        <div class="d-flex align-items-center gap-2 mb-2">
+                            <div class="avatar avatar-xs text-center">
+                                <img class="avatar-img rounded-circle"
+                                    src="{{$broadcast->image_url}}" alt="">
+                            </div>
+                        </div>
+                        <h6 class="mb-0"><a href="{{route('user.broadcast', $broadcast->id)}}">{{ $broadcast->title }}</a></h6>
+                        <small>{{ \Illuminate\Support\Str::limit($broadcast->description, 50) }} <span><a href="{{route('user.broadcast', $broadcast->id)}}" class="text-danger">View more</a></span></small>
                     </div>
+                    <hr>
                     @endforeach
+                    <span class="divider"></span>
                     @else
                     <div class="mb-3">
                         <p class="mb-0 text-muted">No broadcasts available</p>

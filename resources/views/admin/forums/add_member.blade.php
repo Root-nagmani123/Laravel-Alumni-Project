@@ -60,7 +60,7 @@
                             </div>
                             <div class="col-6">
                                 <div class="mb-3">
-                                    <label class="form-label">Member Name (Multiple Members)*</label>
+                                    <label class="form-label">Member Name (Multiple Members) <span class="text-danger">*</span></label>
                                     <select name="user_id[]" class="form-select" multiple>
                                         @foreach($userData as $user)
                                         <option value="{{ $user->id }}"
