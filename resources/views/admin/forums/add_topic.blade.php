@@ -118,7 +118,7 @@ $pageName = 'Add Forum Topic'; // Set the page name here
                         <!-- Status -->
                         <div class="row mb-3">
                             <label for="inputEmail" class="col-sm-3 col-form-label">Status<span
-                                    class="required">*</span></label>
+                                    class="required text-danger">*</span></label>
                             <div class="col-sm-9">
                                 <select name="status" class="form-select">
                                     <option value="" disabled {{ old('status') === null ? 'selected' : '' }}>Select

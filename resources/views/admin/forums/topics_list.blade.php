@@ -118,14 +118,14 @@
                                             <!-- Your form fields (as you have already) -->
                                             <!-- Title -->
                                             <div class="mb-3">
-                                                <label>Title</label><span class="required">*</span>
+                                                <label>Title</label><span class="required text-danger">*</span>
                                                 <input type="text" name="title" class="form-control"
                                                     value="{{ $topic->title }}">
                                             </div>
 
                                             <!-- Description -->
                                             <div class="mb-3">
-                                                <label>Description</label><span class="required">*</span>
+                                                <label>Description</label><span class="required text-danger">*</span>
                                                 <textarea name="description" class="form-control"
                                                     rows="3">{{ $topic->description }}</textarea>
                                             </div>
