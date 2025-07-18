@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\AdminController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 
+use App\Http\Controllers\MapController;
 
 use App\Http\Controllers\Admin\MemberController;
 use App\Http\Controllers\Admin\GroupController;
@@ -325,3 +326,8 @@ Route::get('/user_login', function () {
         })->name('user_feed1');
 
 require __DIR__.'/auth.php';
+
+
+
+Route::get('/maps', [MapController::class, 'showMap'])->name('maps.index');
+Route::get('/mapshow', [MapController::class, 'Map'])->name('maps.show');
