@@ -29,9 +29,13 @@
                             <!-- Info -->
                             @if(Auth::guard('user')->check())
                             <h1 class="mb-0 h5">{{-- Auth::guard('user')->user()->name --}}
-                                {{ $user->name }} <i class="bi bi-patch-check-fill text-success small"></i></h1>
+                                {{ $user->name }}</h1>
                             @endif
-                            <p>250 Connections</p>
+                            <ul class="list-inline mb-0 text-center text-sm-start mt-3 mt-sm-0">
+                        <li class="list-inline-item"><i class="bi bi-file-person me-1"></i>
+                        </li>
+                        <li class="list-inline-item"><i class="bi bi-collection me-1"></i></li>
+                    </ul>
                         </div>
                         <!-- Button -->
                         <div class="d-flex mt-3 justify-content-center ms-sm-auto">
