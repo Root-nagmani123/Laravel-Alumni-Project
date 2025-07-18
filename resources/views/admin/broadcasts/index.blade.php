@@ -80,14 +80,12 @@
 
 
                                         <div class="d-flex align-items-center gap-6">
-                                            @if($broadcast->image_url)
-                                          <img src="{{ asset('storage/' . $broadcast->image_url) }}" alt="Broadcast Image"  height="100" width="150">
-
-
-                                            @else
-                                            <img src="{{ asset('assets/images/default-avatar.png') }}" width="45"
-                                                class="rounded-circle">
-                                            @endif
+                                        @if($broadcast->image_url)
+                                        <img src="{{ asset('storage/' . $broadcast->image_url) }}" alt="Broadcast Image"  height="100" width="150">
+                                        @else
+                                        <img src="{{ asset('assets/images/no-image.png') }}" width="45"
+                                        class="rounded-circle" data-bs-toggle="tooltip" data-bs-placement="top" title="No image available" alt="No image">
+                                        @endif
                                            <!-- <h6 class="mb-0">{{ $broadcast->title }}</h6>-->
                                         </div>
                                     </td>
@@ -102,7 +100,7 @@
                                     </td>
                                     <td>
                                         <div class="d-flex justify-content-start align-items-start gap-2">
-                                            <a href="#" class="btn btn-success text-white btn-sm edit-broadcast-btn"
+                                            <a href="javascript:void(0)" class="btn btn-success text-white btn-sm edit-broadcast-btn"
                                                 data-id="{{ $broadcast->id }}" data-title="{{ $broadcast->title }}"
                                                 data-description="{{ $broadcast->description }}"
                                                 data-image="{{ asset('storage/' . $broadcast->image_url) }}"
@@ -110,6 +108,14 @@
                                                 data-status="{{ $broadcast->status }}">
                                                 Edit
                                             </a>
+                                            <!-- <button class="btn btn-sm btn-primary edit-broadcast-btn"
+                                                data-id="{{ $broadcast->id }}"
+                                                data-title="{{ $broadcast->title }}"
+                                                data-description="{{ $broadcast->description }}"
+                                                data-image="{{ $broadcast->image_url }}"
+                                                data-video="{{ $broadcast->video_url }}">
+                                                Edit
+                                            </button>-->
                                             <form action="{{ route('broadcasts.broadcast.destroy', $broadcast->id) }}" method="POST" style="display:inline;">
                                     @csrf
                                     @method('DELETE')
@@ -168,12 +174,17 @@
                         <label for="image" class="form-label">Upload Image</label>
                         <input type="file" class="form-control" id="ImageEdit" name="image" accept="image/*" required>
                     </div>
+{{-- asset('storage/' . $broadcast->image_url) --}}
+			    <div class="mb-3">
+                <label class="form-label">Current Image</label>
+                <img id="current_image"
+                src="{{ asset('assets/images/no-image.png') }}"
+                alt="Current Image"
+                width="120"
+                class="mb-2 rounded"
+                onerror="this.onerror=null; this.src='{{ asset('assets/images/no-image.png') }}';">
+               </div>
 
-			        <div class="mb-3">
-						<label for="existingImage" class="form-label">Current Image</label>
-						<img id="existingImage" src="{{ asset('storage/' . $broadcast->image_url) }}" alt="Broadcast Image"  height="100" class="img-fluid" width="200">
-
-					</div>
 
                     <!--<div class="mb-3">
                         <label for="edit_image" class="form-label">Update Image</label>
@@ -211,14 +222,6 @@
 
 <script>
 
- //Toastr message
-   /* $(document).ready(function() {
-        @if (session('success'))
-            toastr.success("{{ session('success') }}");
-        @endif
-
-    });
-*/
     $(document).ready(function () {
     // AJAX: Toggle member status with confirmation
     $('.status-toggle').change(function (e) {
@@ -301,11 +304,19 @@ $(document).ready(function() {
         $('#edit_video_url').val(video);
 
         // Set current image
-        if (image) {
+      /*  if (image) {
             $('#current_image').attr('src', image).show();
         } else {
             $('#current_image').hide();
+        }*/
+
+        const noImage = "{{ asset('assets/images/no-image.png') }}";
+        if (image && image.trim() !== '') {
+            $('#current_image').attr('src', image).show();
+        } else {
+            $('#current_image').attr('src', noImage).show();
         }
+
         let videoHtml = '';
 
         if (video) {
