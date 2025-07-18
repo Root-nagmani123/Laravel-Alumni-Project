@@ -1,5 +1,5 @@
 <!-- Main content START -->
-<div class="col-md-8 col-lg-6 vstack gap-4" style="margin-top: 50px;">
+<div class="col-md-8 col-lg-6 vstack gap-4">
 
     <!-- Story START -->
     <div class="d-flex gap-2 mb-n3">
