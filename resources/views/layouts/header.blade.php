@@ -8,7 +8,7 @@ Header START -->
             <!-- Logo START -->
             <a class="navbar-brand" href="{{ url('user/feed') }}" style="display: flex; gap: 0.2rem;">
                 <img class="light-mode-item navbar-brand-item" src="{{ asset('admin_assets/images/logos/lbsnaa.svg') }}"
-                    alt="logo">
+                    alt="logo" style="height: 60px;">
             </a>
             <!-- Logo END -->
 
