@@ -36,8 +36,8 @@ Header START -->
 
 				<ul class="navbar-nav navbar-nav-scroll justify-content-center flex-grow-1 pe-3 flex-nowrap gap-4">
 
-					<li class="nav-item d-flex gap-2 align-items-center active">
-						<a class="nav-link bg-light icon-md btn btn-light p-0 active" href="{{ url('user/feed') }}">
+					<li class="nav-item d-flex gap-2 align-items-center">
+						<a class="nav-link bg-light icon-md btn btn-light p-0" href="{{ url('user/feed') }}">
 						<i class="bi bi-house-door-fill"></i>
 					</a>
 					Feed

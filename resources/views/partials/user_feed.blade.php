@@ -126,7 +126,17 @@
         <!-- Card header END -->
         <!-- Card body START -->
         <div class="card-body">
-            <p>{{ Str::words(strip_tags($post->content), 250, '...') }}</p>
+<div x-data="{ expanded: false }">
+    <p x-show="!expanded">
+        {{ Str::words(strip_tags($post->content), 50, '...') }}
+        <a href="#" @click.prevent="expanded = true" class="text-danger">Read more</a>
+    </p>
+
+    <p x-show="expanded" x-cloak>
+        {!! nl2br(e($post->content)) !!}
+        <a href="#" @click.prevent="expanded = false" class="text-danger">Show less</a>
+    </p>
+</div>
             <!-- Card img -->
             @php
             $validMedia = $post->media->filter(function($media) {

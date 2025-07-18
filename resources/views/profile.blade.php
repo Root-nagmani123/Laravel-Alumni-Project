@@ -543,33 +543,10 @@
             <!-- My profile END -->
             <div class="tab-content" id="profileTabContent" role="tabpanel" aria-labelledby="profileTab">
                 <div class="tab-pane fade show active" id="posts" role="tabpanel" aria-labelledby="posts-tab">
-                    <div class="card card-body mb-3">
-                        <div class="d-flex mb-3">
-                            <!-- Avatar -->
-                            <div class="avatar avatar-xs me-2">
-                                <a href="#"> <img class="avatar-img rounded-circle"
-                                        src="{{asset('feed_assets/images/avatar/03.jpg')}}" alt=""> </a>
-                            </div>
-                            <!-- Post input -->
-                            <form class="w-100">
-                                <textarea class="form-control pe-4 border-0" rows="2" data-autoresize=""
-                                    placeholder="Share your thoughts..."></textarea>
-                            </form>
-                        </div>
-                        <!-- Share feed toolbar START -->
-                        <ul class="nav nav-pills nav-stack small fw-normal">
-                            <li class="nav-item">
-                                <a class="nav-link bg-light py-1 px-2 mb-0" href="#!" data-bs-toggle="modal"
-                                    data-bs-target="#feedActionPhoto"> <i
-                                        class="bi bi-image-fill text-success pe-2"></i>Photos/Videos</a>
-                            </li>
-                        </ul>
-                        <!-- Share feed toolbar END -->
-                    </div>
-                    <!-- Share feed END -->
 
                     <!-- Card feed item START -->
                     @foreach($posts as $post)
+                    @if ($post->user_id === auth('user')->id())
                     <div class="card mb-3" id="post-{{ $post->id }}">
                         <!-- Card header START -->
                         <div class="card-header border-0 pb-0">
@@ -865,18 +842,8 @@
                         <!-- Card feed item END -->
 
                     </div>
+                    @endif
                     @endforeach
-                    <!-- Load more button START -->
-                    <a href="#!" role="button" class="btn btn-loader btn-primary-soft w-100" data-bs-toggle="button"
-                        aria-pressed="true">
-                        <span class="load-text"> Load more </span>
-                        <div class="load-icon">
-                            <div class="spinner-grow spinner-grow-sm" role="status">
-                                <span class="visually-hidden">Loading...</span>
-                            </div>
-                        </div>
-                    </a>
-                    <!-- Load more button END -->
                     <!-- Card feed END -->
                 </div>
                  <div class="tab-pane fade" id="about" role="tabpanel" aria-labelledby="about-tab">
@@ -1172,47 +1139,6 @@
                                 <li> <i class="bi bi-envelope fa-fw pe-1"></i> Email: <strong> {{ $user->email }}
                                     </strong> </li>
                             </ul>
-                        </div>
-                        <!-- Card body END -->
-                    </div>
-                </div>
-                <!-- Card END -->
-
-                <!-- Card START -->
-                <div class="col-md-6 col-lg-12">
-                    <div class="card">
-                        <!-- Card header START -->
-                        <div class="card-header d-sm-flex justify-content-between border-0">
-                            <h5 class="card-title">Photos</h5>
-                            <a class="btn btn-primary-soft btn-sm" href="#!"> See all photo</a>
-                        </div>
-                        <!-- Card header END -->
-                        <!-- Card body START -->
-                        <div class="card-body position-relative pt-0">
-                            <div class="row g-2">
-                                <!-- Photos item -->
-                                @if(!empty($post) && !empty($post->media))
-                                @foreach($post->media as $media)
-                                @if($media->file_type === 'image')
-                                @php
-                                $max_length = 50;
-                                $relativePath = 'storage/' . str_replace(['app/public/', 'public/'], '',
-                                $media->file_path);
-
-                                // Check existence of file in public path
-                                $file_path = public_path($relativePath);
-                                $image_url = file_exists($file_path) ? asset($relativePath) :
-                                asset('feed_assets/images/avatar-1.png');
-                                @endphp
-                                <div class="col-6">
-                                    <a href="{{ $image_url }}" data-gallery="image-popup" data-glightbox="">
-                                        <img class="rounded img-fluid" src="{{ $image_url }}" alt="">
-                                    </a>
-                                </div>
-                                @endif
-                                @endforeach
-                                @endif
-                            </div>
                         </div>
                         <!-- Card body END -->
                     </div>
