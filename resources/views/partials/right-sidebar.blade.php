@@ -2,7 +2,7 @@
 <div class="col-lg-3">
     <div class="row g-4">
         <!-- Card follow START -->
-        
+
         <!-- Card follow START -->
 
         <!-- Card News START -->
@@ -19,11 +19,16 @@
                     @if((isset($broadcast)) && ($broadcast->count() > 0))
                     @foreach($broadcast as $index => $broadcast)
                     <div class="mb-3">
-                        
+
                         <div class="d-flex align-items-center gap-2 mb-2">
                             <div class="avatar avatar-xs text-center">
+                                   @if($broadcast->image_url)
                                 <img class="avatar-img rounded-circle"
-                                    src="{{$broadcast->image_url}}" alt="">
+                                    src="{{ asset('storage/' . $broadcast->image_url) }}" alt="">
+                                      @else
+                                  <img src="{{ asset('assets/images/no-image.png') }}" width="45"
+                                        class="rounded-circle" data-bs-toggle="tooltip" data-bs-placement="top" title="No image available" alt="No image">
+                                    @endif
                             </div>
                         </div>
                         <h6 class="mb-0"><a href="{{route('user.broadcast', $broadcast->id)}}">{{ $broadcast->title }}</a></h6>
@@ -93,7 +98,7 @@
         modal.querySelector('.group_id').value = groupId;
             //console.log(groupName); // Debugging line to check group name
             const modalTitleSpan = modal.querySelector('.group_name');
-			
+
             if (modalTitleSpan) {
                 modalTitleSpan.textContent = groupName;
             }
