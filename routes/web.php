@@ -227,7 +227,8 @@ Route::prefix('forums')->name('forums.')->group(function () {
 		Route::get('/forums/{id}/topics', [ForumController::class, 'view_forum_topics'])->name('view_topic');
 		Route::get('/topics/{id}', [ForumController::class, 'show'])->name('topics.view');
 		Route::get('/topics/{id}/edit', [ForumController::class, 'edit'])->name('topics.edit');
-		Route::put('/topics/{id}', [ForumController::class, 'update_topic'])->name('topics.update');
+		//Route::put('/topics/{id}', [ForumController::class, 'update_topic'])->name('topics.update');
+        Route::put('/topics/{id}', [ForumController::class, 'update_topic'])->name('topics.update');
 		Route::delete('/topics/{id}', [ForumController::class, 'deleteTopic'])->name('topics.delete');
 		Route::get('/{forum}/edit', [ForumController::class, 'forumedit'])->name('forum.edit'); // Show edit form
 		Route::put('/update-forum/{forum}', [ForumController::class, 'update_forum'])->name('forum.update');
