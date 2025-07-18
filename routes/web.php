@@ -117,6 +117,7 @@ Route::prefix('user')->name('user.')->group(function () {
 	   Route::post('/event-rsvp', [DashboardController::class, 'submitRsvp'])->name('event.rsvp');
 	   Route::get('/all-events', [DashboardController::class, 'allevents'])->name('allevents');
       Route::get('/broadcast/{id}', [FeedController::class, 'broadcastDetails'])->name('broadcastDetails');
+      Route::get('/library', [LibraryController::class, 'index'])->name('library');
 
 
     });
@@ -329,5 +330,8 @@ Route::get('/user_login', function () {
 			 Route::get('/user/broadcast', function () {
             return view('user.broadcast');
         })->name('user.broadcast');
+         Route::get('/user/library', function () {
+            return view('user.library');
+        })->name('user.library');
 
 require __DIR__.'/auth.php';

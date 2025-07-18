@@ -43,7 +43,7 @@ Header START -->
 					Feed
 					</li>
                     <li class="nav-item d-flex gap-2 align-items-center">
-						<a class="nav-link bg-light icon-md btn btn-light p-0" href="#">
+						<a class="nav-link bg-light icon-md btn btn-light p-0" href="{{ url('user/library') }}">
 						<i class="bi bi-file-earmark-text-fill"></i>
 					</a>Library
 					</li>

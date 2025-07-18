@@ -1,7 +1,7 @@
 
 @extends('layouts.app')
 
-@section('title', 'Broadcast - Alumni | Lal Bahadur Shastri National Academy of Administration')
+@section('title', 'Library - Alumni | Lal Bahadur Shastri National Academy of Administration')
 
 @section('content')
  <div class="container">
@@ -96,22 +96,48 @@
                     </div>
                 </nav>
     </div>
-       <div class="col-8 vstack gap-4">
-           <div class="card card-body">
-               @if ($broadcast->image_url)
-                   <img class="rounded w-100 mb-3" src="{{ asset('storage/' . $broadcast->image_url) }}" alt="" style="height: 400px; object-fit: cover;">
-               @endif
-
-               @if ($broadcast->video_url)
-                   <video src="{{ $broadcast->video_url }}" controls class="w-100 mb-3 rounded" style="height: 400px; object-fit: cover;"></video>
-               @endif
-
-               <div class="mt-4">
-                   <h1 class="mb-2 h2">{{ $broadcast->title }}</h1>
-                   <p class="mt-4">{{ $broadcast->description }}</p>
-               </div>
-           </div>
-       </div>
+       <div class="col-lg-8">
+        <div class="bg-mode p-4">
+          <h1 class="h4 mb-4">Library</h1>
+          <!-- Blog item START -->
+          <div class="card bg-transparent border-0">
+            <div class="row g-3">
+              <div class="col-4">
+                <!-- Blog image -->
+                <img class="rounded" src="{{asset('feed_assets/images/post/4by3/03.jpg')}}" alt="">
+              </div>
+              <div class="col-8">
+                <!-- Blog caption -->
+                <h5><a href="blog-details.html" class="btn-link stretched-link text-reset fw-bold">Social guides the way in 2022 app performance report</a></h5>
+                <div class="d-none d-sm-inline-block">
+                  <p class="mb-2">Speedily say has suitable disposal add boy. On forth doubt miles of child. Exercise joy man children rejoiced.</p>
+                  <!-- BLog date -->
+                  <a class="small text-secondary" href="#!"> <i class="bi bi-calendar-date pe-1"></i> Jan 22, 2022</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Blog item END -->
+          <hr class="my-4">
+          <!-- Pagination -->
+          <div class="mt-4">
+            <nav aria-label="navigation">
+              <ul class="pagination pagination-light d-inline-block d-md-flex justify-content-center">
+                <li class="page-item disabled">
+                  <a class="page-link" href="#">Prev</a>
+                </li>
+                <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item disabled"><a class="page-link" href="#">...</a></li>
+                <li class="page-item"><a class="page-link" href="#">15</a></li>
+                <li class="page-item">
+                  <a class="page-link" href="#">Next</a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </div>
    </div>
 </div>
    @endsection
