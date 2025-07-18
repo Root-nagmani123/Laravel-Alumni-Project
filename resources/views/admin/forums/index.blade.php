@@ -102,7 +102,7 @@
                                     <td>
                                         <a href="{{route('forums.forum.edit', $forum->id) }}"
                                             class="btn btn-success btn-sm">Edit</a>
-                                        <form id="delete-form-{{ $forum->id }}"
+                                        <!--<form id="delete-form-{{ $forum->id }}"
                                             action="{{ route('forums.forum.destroy', $forum->id) }}" method="POST"
                                             style="display:inline;">
                                             @csrf
@@ -111,7 +111,15 @@
                                                 data-id="{{ $forum->id }}" data-status="{{ $forum->status }}">
                                                 Delete
                                             </button>
-                                        </form>
+                                        </form>-->
+                                         <form action="{{ route('forums.forum.destroy', $forum->id) }}" method="POST" style="display:inline;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger text-white btn-sm"
+                                            onclick="return confirm('Are you sure you want to delete?')">
+                                        Delete
+                                    </button>
+                                    </form>
 
                                     </td>
                                     <td>
@@ -190,7 +198,8 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 });
 // Sweet Alerts ho handle deleting
-document.addEventListener("DOMContentLoaded", function() {
+
+/*document.addEventListener("DOMContentLoaded", function() {
     $('.delete-forum-btn').on('click', function() {
         const forumId = $(this).data('id');
         const status = $(this).attr('data-status');
@@ -220,7 +229,7 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 });
-
+*/
 
 
 </script>
