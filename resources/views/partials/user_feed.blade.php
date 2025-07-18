@@ -126,17 +126,26 @@
         <!-- Card header END -->
         <!-- Card body START -->
         <div class="card-body">
-<div x-data="{ expanded: false }">
-    <p x-show="!expanded">
-        {{ Str::words(strip_tags($post->content), 50, '...') }}
-        <a href="#" @click.prevent="expanded = true" class="text-danger">Read more</a>
-    </p>
+@php
+    $fullContent = strip_tags($post->content);
+    $wordCount = str_word_count($fullContent);
+@endphp
 
-    <p x-show="expanded" x-cloak>
-        {!! nl2br(e($post->content)) !!}
-        <a href="#" @click.prevent="expanded = false" class="text-danger">Show less</a>
-    </p>
-</div>
+@if ($wordCount > 50)
+    <div x-data="{ expanded: false }">
+        <p x-show="!expanded">
+            {{ \Illuminate\Support\Str::words($fullContent, 50, '...') }}
+            <a href="#" @click.prevent="expanded = true">Read more</a>
+        </p>
+        <p x-show="expanded" x-cloak>
+            {!! nl2br(e($post->content)) !!}
+            <a href="#" @click.prevent="expanded = false">Show less</a>
+        </p>
+    </div>
+@else
+    <p>{!! nl2br(e($post->content)) !!}</p>
+@endif
+
             <!-- Card img -->
             @php
             $validMedia = $post->media->filter(function($media) {
