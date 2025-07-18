@@ -1,4 +1,4 @@
-<div class="col-lg-3 left-sidebar">
+<div class="col-lg-3">
 
     <!-- Advanced filter responsive toggler START -->
     <div class="d-flex align-items-center d-lg-none">
@@ -28,7 +28,7 @@
                         style="background-image:url({{asset('feed_assets/images/bg/01.jpg')}}); background-position: center; background-size: cover; background-repeat: no-repeat;">
                     </div>
                     <!-- Card body START -->
-                    <div class="card-body pt-0">
+                    <div class="card-body pt-0 pb-0">
                         <div class="text-center">
                             <!-- Avatar -->
                             <div class="avatar avatar-lg mt-n5 mb-3">
@@ -37,7 +37,7 @@
                         @endphp
                               <img id="existingImage"
     src="{{ $profilePic ? asset('storage/' . $profilePic) : asset('feed_assets/images/default.png') }}"
-    class="rounded-circle" height="50" width="50" alt="User">
+    class="rounded-circle avatar-img" height="50" width="50" alt="User">
                             </div>
 
 

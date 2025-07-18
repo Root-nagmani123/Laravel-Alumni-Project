@@ -525,12 +525,6 @@
                             </a>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <a class="nav-link" id="groups-tab" data-bs-toggle="tab" href="#groups" role="tab"
-                                aria-controls="groups" aria-selected="false">
-                                Groups
-                            </a>
-                        </li>
-                        <li class="nav-item" role="presentation">
                             <a class="nav-link" id="groups-tab" data-bs-toggle="tab" href="#media" role="tab"
                                 aria-controls="media" aria-selected="false">
                                 Media
@@ -547,7 +541,7 @@
                 </div>
             </div>
             <!-- My profile END -->
-            <div class="tab-content" id="profileTabContent" style="padding: 0px !important;">
+            <div class="tab-content" id="profileTabContent" role="tabpanel" aria-labelledby="profileTab">
                 <div class="tab-pane fade show active" id="posts" role="tabpanel" aria-labelledby="posts-tab">
                     <div class="card card-body mb-3">
                         <div class="d-flex mb-3">
@@ -853,20 +847,6 @@
                                 <!-- Comment item END -->
                             </ul>
                             <!-- Card body END -->
-                            <!-- Card footer START -->
-                            <!--<div class="card-footer border-0 pt-0">
-
-                                <a href="#!" role="button"
-                                    class="btn btn-link btn-link-loader btn-sm text-secondary d-flex align-items-center"
-                                    data-bs-toggle="button" aria-pressed="true">
-                                    <div class="spinner-dots me-2">
-                                        <span class="spinner-dot"></span>
-                                        <span class="spinner-dot"></span>
-                                        <span class="spinner-dot"></span>
-                                    </div>
-                                    Load more comments
-                                </a>
-                            </div>-->
                             @if ($post->comments->count() > 2)
                             <div class="card-footer border-0 pt-0">
                                 <a href="#!" class="btn btn-link btn-sm text-secondary load-more-comments"
@@ -899,31 +879,7 @@
                     <!-- Load more button END -->
                     <!-- Card feed END -->
                 </div>
-                <!-- Edit Comment Modal -->
-                <div class="modal fade" id="editCommentModal" tabindex="-1" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <form method="POST" action="{{-- route('user.comments.update') --}}">
-                            @csrf
-                            @method('PUT')
-                            <input type="hidden" name="comment_id" id="editCommentId">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title">Edit Comment</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <textarea name="comment" id="editCommentText" class="form-control"
-                                        rows="3"></textarea>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="submit" class="btn btn-primary">Update</button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-            <div class="tab-pane fade" id="about" role="tabpanel" aria-labelledby="about-tab">
+                 <div class="tab-pane fade" id="about" role="tabpanel" aria-labelledby="about-tab">
                 <div class="card">
                     <!-- Card header START -->
                     <div class="card-header border-0 pb-0">
@@ -935,20 +891,6 @@
                         <div class="rounded border px-3 py-2 mb-3">
                             <div class="d-flex align-items-center justify-content-between">
                                 <h6>Overview</h6>
-                                <div class="dropdown ms-auto">
-                                    <!-- Card share action menu -->
-                                    <a class="nav nav-link text-secondary mb-0" href="#" id="aboutAction"
-                                        data-bs-toggle="dropdown" aria-expanded="false">
-                                        <i class="bi bi-three-dots"></i>
-                                    </a>
-                                    <!-- Card share action dropdown menu -->
-                                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="aboutAction">
-                                        <li><a class="dropdown-item" href="#"> <i
-                                                    class="bi bi-pencil-square fa-fw pe-2"></i>Edit</a></li>
-                                        <li><a class="dropdown-item" href="#"> <i
-                                                    class="bi bi-trash fa-fw pe-2"></i>Delete</a></li>
-                                    </ul>
-                                </div>
                             </div>
                             <p>{{$user->bio}}</p>
                         </div>
@@ -961,21 +903,6 @@
                                         <i class="bi bi-calendar-date fa-fw me-2"></i> Born: <strong>
                                             {{ $user->date_of_birth }} </strong>
                                     </p>
-                                    <div class="dropdown ms-auto">
-                                        <!-- Card share action menu -->
-                                        <a class="nav nav-link text-secondary mb-0" href="#" id="aboutAction2"
-                                            data-bs-toggle="dropdown" aria-expanded="false">
-                                            <i class="bi bi-three-dots"></i>
-                                        </a>
-                                        <!-- Card share action dropdown menu -->
-                                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="aboutAction2">
-                                            <li><a class="dropdown-item" href="#"> <i
-                                                        class="bi bi-pencil-square fa-fw pe-2"></i>Edit</a></li>
-                                            <li><a class="dropdown-item" href="#"> <i
-                                                        class="bi bi-trash fa-fw pe-2"></i>Delete</a>
-                                            </li>
-                                        </ul>
-                                    </div>
                                 </div>
                                 <!-- Birthday END -->
                             </div>
@@ -987,21 +914,6 @@
                                         <i class="bi bi-heart fa-fw me-2"></i> Status: <strong>
                                             {{ $user->marital_status }} </strong>
                                     </p>
-                                    <div class="dropdown ms-auto">
-                                        <!-- Card share action menu -->
-                                        <a class="nav nav-link text-secondary mb-0" href="#" id="aboutAction3"
-                                            data-bs-toggle="dropdown" aria-expanded="false">
-                                            <i class="bi bi-three-dots"></i>
-                                        </a>
-                                        <!-- Card share action dropdown menu -->
-                                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="aboutAction3">
-                                            <li><a class="dropdown-item" href="#"> <i
-                                                        class="bi bi-pencil-square fa-fw pe-2"></i>Edit</a></li>
-                                            <li><a class="dropdown-item" href="#"> <i
-                                                        class="bi bi-trash fa-fw pe-2"></i>Delete</a>
-                                            </li>
-                                        </ul>
-                                    </div>
                                 </div>
                                 <!-- Status END -->
                             </div>
@@ -1014,21 +926,6 @@
                                             {{ $user->designation }}
                                         </strong>
                                     </p>
-                                    <div class="dropdown ms-auto">
-                                        <!-- Card share action menu -->
-                                        <a class="nav nav-link text-secondary mb-0" href="#" id="aboutAction4"
-                                            data-bs-toggle="dropdown" aria-expanded="false">
-                                            <i class="bi bi-three-dots"></i>
-                                        </a>
-                                        <!-- Card share action dropdown menu -->
-                                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="aboutAction4">
-                                            <li><a class="dropdown-item" href="#"> <i
-                                                        class="bi bi-pencil-square fa-fw pe-2"></i>Edit</a></li>
-                                            <li><a class="dropdown-item" href="#"> <i
-                                                        class="bi bi-trash fa-fw pe-2"></i>Delete</a>
-                                            </li>
-                                        </ul>
-                                    </div>
                                 </div>
                                 <!-- Designation END -->
                             </div>
@@ -1041,21 +938,6 @@
                                             {{ $user->current_location }}
                                         </strong>
                                     </p>
-                                    <div class="dropdown ms-auto">
-                                        <!-- Card share action menu -->
-                                        <a class="nav nav-link text-secondary mb-0" href="#" id="aboutAction5"
-                                            data-bs-toggle="dropdown" aria-expanded="false">
-                                            <i class="bi bi-three-dots"></i>
-                                        </a>
-                                        <!-- Card share action dropdown menu -->
-                                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="aboutAction5">
-                                            <li><a class="dropdown-item" href="#"> <i
-                                                        class="bi bi-pencil-square fa-fw pe-2"></i>Edit</a></li>
-                                            <li><a class="dropdown-item" href="#"> <i
-                                                        class="bi bi-trash fa-fw pe-2"></i>Delete</a>
-                                            </li>
-                                        </ul>
-                                    </div>
                                 </div>
                                 <!-- Lives END -->
                             </div>
@@ -1068,21 +950,6 @@
                                             {{$user->created_at->format('F j, Y')}}
                                         </strong>
                                     </p>
-                                    <div class="dropdown ms-auto">
-                                        <!-- Card share action menu -->
-                                        <a class="nav nav-link text-secondary mb-0" href="#" id="aboutAction6"
-                                            data-bs-toggle="dropdown" aria-expanded="false">
-                                            <i class="bi bi-three-dots"></i>
-                                        </a>
-                                        <!-- Card share action dropdown menu -->
-                                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="aboutAction6">
-                                            <li><a class="dropdown-item" href="#"> <i
-                                                        class="bi bi-pencil-square fa-fw pe-2"></i>Edit</a></li>
-                                            <li><a class="dropdown-item" href="#"> <i
-                                                        class="bi bi-trash fa-fw pe-2"></i>Delete</a>
-                                            </li>
-                                        </ul>
-                                    </div>
                                 </div>
                                 <!-- Joined on END -->
                             </div>
@@ -1094,21 +961,6 @@
                                         <i class="bi bi-envelope fa-fw me-2"></i> Email: <strong>
                                             {{ $user->email }} </strong>
                                     </p>
-                                    <div class="dropdown ms-auto">
-                                        <!-- Card share action menu -->
-                                        <a class="nav nav-link text-secondary mb-0" href="#" id="aboutAction7"
-                                            data-bs-toggle="dropdown" aria-expanded="false">
-                                            <i class="bi bi-three-dots"></i>
-                                        </a>
-                                        <!-- Card share action dropdown menu -->
-                                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="aboutAction7">
-                                            <li><a class="dropdown-item" href="#"> <i
-                                                        class="bi bi-pencil-square fa-fw pe-2"></i>Edit</a></li>
-                                            <li><a class="dropdown-item" href="#"> <i
-                                                        class="bi bi-trash fa-fw pe-2"></i>Delete</a>
-                                            </li>
-                                        </ul>
-                                    </div>
                                 </div>
                                 <!-- Joined on END -->
                             </div>
@@ -1116,9 +968,6 @@
                     </div>
                     <!-- Card body END -->
                 </div>
-            </div>
-            <div class="tab-pane fade" id="groups" role="tabpanel" aria-labelledby="groups-tab">
-                <p>Your Groups content here.</p>
             </div>
             <div class="tab-pane fade" id="media" role="tabpanel" aria-labelledby="media-tab">
                 <div class="card">
@@ -1270,6 +1119,30 @@
                     <div class="card-footer border-0 pt-0">
                     </div>
                     <!-- Card footer END -->
+                </div>
+            </div>
+                <!-- Edit Comment Modal -->
+                <div class="modal fade" id="editCommentModal" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <form method="POST" action="{{-- route('user.comments.update') --}}">
+                            @csrf
+                            @method('PUT')
+                            <input type="hidden" name="comment_id" id="editCommentId">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Edit Comment</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <textarea name="comment" id="editCommentText" class="form-control"
+                                        rows="3"></textarea>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-primary">Update</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>

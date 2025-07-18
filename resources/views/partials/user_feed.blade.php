@@ -96,10 +96,14 @@
     }
 @endphp
 
-<div class="avatar avatar-story me-2">
+<div class="avatar me-2">
     <a href="{{ $profileLink }}">
-        <img class="avatar-img rounded-circle" src="{{ $profileImage }}" alt="">
-    </a>
+<img 
+  class="avatar-img rounded-circle" 
+  src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar-1.png') }}" 
+  alt="Profile Picture">
+       
+</a>
 </div>
 
 <!-- Info -->
@@ -138,7 +142,7 @@
             @if($post->video_link)
             {{-- Embedded YouTube Video --}}
             <div class="ratio ratio-16x9 mt-2">
-                <iframe width="560" height="315" src="{{ $post->video_link }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                <iframe height="315" src="{{ $post->video_link }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
             </div>
             @elseif($totalVideos > 0)
             {{-- Uploaded Video Files --}}
@@ -158,8 +162,8 @@
             <div class="post-img mt-2">
                 <a href="{{ asset('storage/' . $imageMedia[0]->file_path) }}" class="glightbox"
                     data-gallery="post-gallery-{{ $post->id }}">
-                    <img src="{{ asset('storage/' . $imageMedia[0]->file_path) }}" loading="lazy" class="w-100"
-                        alt="Post Image">
+                    <img src="{{ asset('storage/' . $imageMedia[0]->file_path) }}" loading="lazy" class="w-100 rounded"
+                        alt="Post Image" style="width: 100%; height: 400px;object-fit: cover;">
                 </a>
             </div>
             @elseif($totalImages > 1)

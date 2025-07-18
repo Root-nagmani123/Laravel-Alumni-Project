@@ -38,12 +38,47 @@
                                      style="background-image:url({{asset('feed_assets/images/bg/01.jpg')}}); background-position: center; background-size: cover; background-repeat: no-repeat;">
                                 </div>
                                 <!-- Card body START -->
-                                <div class="card-body pt-0">
+                                <div class="card-body pt-0 pb-0">
                                     <div class="text-center">
                                         <!-- Avatar -->
+                                           @php
+    $profileImage = '';
+    $displayName = '';
+    $designation = '';
+    $profileLink = '#';
+
+    if  (Auth::guard('user')->check()) {
+        // Member/user post
+        $member = $post->member ?? null;
+
+        $profileImage = $member && $member->profile_image
+            ? asset('storage/' . $member->profile_image)
+            : asset('feed_assets/images/avatar/07.jpg');
+
+        $displayName = $member->name ?? 'Unknown';
+        $designation = $member->designation ?? 'Unknown';
+        $profileLink = url('/user/profile/' . ($member->id ?? 0));
+    }
+    else {
+        // Default user profile
+        $user = Auth::guard('user')->user();
+        $profileImage = $user->profile_pic
+            ? asset('storage/' . $user->profile_pic)
+            : asset('feed_assets/images/avatar-1.png');
+
+        $displayName = $user->name ?? 'Guest User';
+        $designation = $user->designation ?? 'Guest';
+        $profileLink = url('/user/profile/' . ($user->id ?? 0));
+    }
+    $user = Auth::guard('user')->user();
+    $profileImage = $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar-1.png');
+    $displayName = $user->name ?? 'Guest User';
+    $designation = $user->designation ?? 'Guest';
+    $profileLink = url('/user/profile/' . ($user->id ?? 0));    
+@endphp
                                         <div class="avatar avatar-lg mt-n5 mb-3">
-                                            <a href="#!"><img class="avatar-img rounded border border-white border-3"
-                                                                src="{{Auth::guard('user')->user()->profile_pic}}" alt=""></a>
+                                            <a href="#!"><img class="avatar-img rounded-circle"
+                                                                src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar-1.png') }}" alt=""></a>
                                         </div>
                                         <!-- Info -->
                                         @if(Auth::guard('user')->check())
@@ -51,30 +86,6 @@
                                         @endif
                                         <small>{{ Auth::guard('user')->user()->designation }}</small>
                                         <p class="mt-3">{{Auth::guard('user')->user()->bio}}</p>
-
-                                        <!-- User stat START -->
-                                        <div class="hstack gap-2 gap-xl-3 justify-content-center">
-                                            <!-- User stat item -->
-                                            <div>
-                                                <h6 class="mb-0">256</h6>
-                                                <small>Post</small>
-                                            </div>
-                                            <!-- Divider -->
-                                            <div class="vr"></div>
-                                            <!-- User stat item -->
-                                            <div>
-                                                <h6 class="mb-0">2.5K</h6>
-                                                <small>Followers</small>
-                                            </div>
-                                            <!-- Divider -->
-                                            <div class="vr"></div>
-                                            <!-- User stat item -->
-                                            <div>
-                                                <h6 class="mb-0">365</h6>
-                                                <small>Following</small>
-                                            </div>
-                                        </div>
-                                        <!-- User stat END -->
                                     </div>
                                 </div>
                                 <!-- Card body END -->
