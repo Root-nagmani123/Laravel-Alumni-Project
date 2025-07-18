@@ -56,7 +56,7 @@
 
 
                         <table id="zero_config"
-                            class="table table-striped table-bordered text-nowrap align-middle dataTable"
+                            class="table table-striped table-bordered align-middle dataTable"
                             aria-describedby="zero_config_info" >
                             <thead>
                                 <!-- start row -->

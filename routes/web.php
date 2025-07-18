@@ -117,6 +117,8 @@ Route::prefix('user')->name('user.')->group(function () {
 
 	   Route::post('/event-rsvp', [DashboardController::class, 'submitRsvp'])->name('event.rsvp');
 	   Route::get('/all-events', [DashboardController::class, 'allevents'])->name('allevents');
+      Route::get('/broadcast/{id}', [FeedController::class, 'broadcastDetails'])->name('broadcastDetails');
+      Route::get('/library', [LibraryController::class, 'index'])->name('library');
 
 
     });
@@ -178,7 +180,7 @@ Route::prefix('admin')->middleware('auth:admin')->controller(AdminController::cl
 	Route::get('profile', [AdminController::class, 'profile'])->name('admin.profile');
 
     // Location Routes
-    Route::prefix('location')->name('admin.location.')->group(function () {                 
+    Route::prefix('location')->name('admin.location.')->group(function () {
 
         // Country Routes
         Route::get('/country', [App\Http\Controllers\Admin\Location\CountryController::class, 'index'])->name('country');
@@ -305,6 +307,8 @@ Route::prefix('events')->name('events.')->group(function () {
     });
 
 
+
+
 });
 
 
@@ -324,6 +328,12 @@ Route::get('/user_login', function () {
         Route::get('/user_feed1', function () {
             return view('user.feed1');
         })->name('user_feed1');
+			 Route::get('/user/broadcast', function () {
+            return view('user.broadcast');
+        })->name('user.broadcast');
+         Route::get('/user/library', function () {
+            return view('user.library');
+        })->name('user.library');
 
 require __DIR__.'/auth.php';
 

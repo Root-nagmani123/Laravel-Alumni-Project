@@ -38,12 +38,47 @@
                                      style="background-image:url({{asset('feed_assets/images/bg/01.jpg')}}); background-position: center; background-size: cover; background-repeat: no-repeat;">
                                 </div>
                                 <!-- Card body START -->
-                                <div class="card-body pt-0">
+                                <div class="card-body pt-0 pb-0">
                                     <div class="text-center">
                                         <!-- Avatar -->
+                                           @php
+    $profileImage = '';
+    $displayName = '';
+    $designation = '';
+    $profileLink = '#';
+
+    if  (Auth::guard('user')->check()) {
+        // Member/user post
+        $member = $post->member ?? null;
+
+        $profileImage = $member && $member->profile_image
+            ? asset('storage/' . $member->profile_image)
+            : asset('feed_assets/images/avatar/07.jpg');
+
+        $displayName = $member->name ?? 'Unknown';
+        $designation = $member->designation ?? 'Unknown';
+        $profileLink = url('/user/profile/' . ($member->id ?? 0));
+    }
+    else {
+        // Default user profile
+        $user = Auth::guard('user')->user();
+        $profileImage = $user->profile_pic
+            ? asset('storage/' . $user->profile_pic)
+            : asset('feed_assets/images/avatar-1.png');
+
+        $displayName = $user->name ?? 'Guest User';
+        $designation = $user->designation ?? 'Guest';
+        $profileLink = url('/user/profile/' . ($user->id ?? 0));
+    }
+    $user = Auth::guard('user')->user();
+    $profileImage = $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar-1.png');
+    $displayName = $user->name ?? 'Guest User';
+    $designation = $user->designation ?? 'Guest';
+    $profileLink = url('/user/profile/' . ($user->id ?? 0));    
+@endphp
                                         <div class="avatar avatar-lg mt-n5 mb-3">
-                                            <a href="#!"><img class="avatar-img rounded border border-white border-3"
-                                                                src="{{Auth::guard('user')->user()->profile_pic}}" alt=""></a>
+                                            <a href="#!"><img class="avatar-img rounded-circle"
+                                                                src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar-1.png') }}" alt=""></a>
                                         </div>
                                         <!-- Info -->
                                         @if(Auth::guard('user')->check())
@@ -51,30 +86,6 @@
                                         @endif
                                         <small>{{ Auth::guard('user')->user()->designation }}</small>
                                         <p class="mt-3">{{Auth::guard('user')->user()->bio}}</p>
-
-                                        <!-- User stat START -->
-                                        <div class="hstack gap-2 gap-xl-3 justify-content-center">
-                                            <!-- User stat item -->
-                                            <div>
-                                                <h6 class="mb-0">256</h6>
-                                                <small>Post</small>
-                                            </div>
-                                            <!-- Divider -->
-                                            <div class="vr"></div>
-                                            <!-- User stat item -->
-                                            <div>
-                                                <h6 class="mb-0">2.5K</h6>
-                                                <small>Followers</small>
-                                            </div>
-                                            <!-- Divider -->
-                                            <div class="vr"></div>
-                                            <!-- User stat item -->
-                                            <div>
-                                                <h6 class="mb-0">365</h6>
-                                                <small>Following</small>
-                                            </div>
-                                        </div>
-                                        <!-- User stat END -->
                                     </div>
                                 </div>
                                 <!-- Card body END -->
@@ -109,7 +120,7 @@
                     <div class="card-body">
 
                         <!-- Tab nav line -->
-                        <ul class="nav nav-tabs nav-bottom-line justify-content-center justify-content-md-start" role="tablist">
+                        <ul class="nav nav-tabs nav-bottom-line justify-content-center justify-content-md-start mb-4" role="tablist">
                             <li class="nav-item" role="presentation">
                                 <a class="nav-link active" data-bs-toggle="tab" href="#tab-1" aria-selected="true" role="tab"> All </a>
                             </li>
@@ -134,7 +145,7 @@
                                             <div class="card h-100">
                                                 <div class="position-relative">
                                                     <img class="img-fluid rounded-top"
-                                                         src="{{ isset($event->image) && $event->image ? asset('storage/' . $event->image) : asset('feed_assets/images/avatar/07.jpg') }}" alt="">
+                                                         src="{{ isset($event->image) && $event->image ? asset('storage/' . $event->image) : asset('feed_assets/images/avatar/07.jpg') }}" alt="" style="height: 200px; object-fit: cover;width: 100%;">
                                                   
                                                 </div>
                                                 <div class="card-body position-relative pt-0">
@@ -155,8 +166,10 @@
                                                         N/A
                                                     @endif
                                                 </p>
-                                                <p>{{ $event->description }}</p>
+                                                <p>{{ \Illuminate\Support\Str::words($event->description, 20, '...') }}</p>
 
+                                                </div>
+                                                <div class="card-footer" style="border-top: 0;">
                                                     <div class="d-flex mt-3 justify-content-between">
                                                         <div class="w-100">
                                                             <select class="form-select rsvp-select" data-event-id="{{ $event->id }}">

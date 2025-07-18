@@ -36,21 +36,21 @@ Header START -->
 
 				<ul class="navbar-nav navbar-nav-scroll justify-content-center flex-grow-1 pe-3 flex-nowrap gap-4">
 
-					<li class="nav-item d-flex gap-2 align-items-center active">
-						<a class="nav-link bg-light icon-md btn btn-light p-0 active" href="{{ url('user/feed') }}">
+					<li class="nav-item d-flex gap-2 align-items-center">
+						<a class="nav-link bg-light icon-md btn btn-light p-0" href="{{ url('user/feed') }}">
 						<i class="bi bi-house-door-fill"></i>
 					</a>
 					Feed
 					</li>
                     <li class="nav-item d-flex gap-2 align-items-center">
-						<a class="nav-link bg-light icon-md btn btn-light p-0" href="#">
+						<a class="nav-link bg-light icon-md btn btn-light p-0" href="{{ url('user/library') }}">
 						<i class="bi bi-file-earmark-text-fill"></i>
 					</a>Library
 					</li>
                     <li class="nav-item d-flex gap-2 align-items-center">
-						<a class="nav-link bg-light icon-md btn btn-light p-0" href="#">
-						<i class="bi bi-person-lines-fill"></i>
-					</a>Groups
+						<a class="nav-link bg-light icon-md btn btn-light p-0" href="{{ url('user/all-events') }}">
+						<i class="bi bi-calendar-event-fill"></i>
+					</a>Events
 					</li>
 
 				</ul>
@@ -112,11 +112,46 @@ Header START -->
 					</a>
 					<ul class="dropdown-menu dropdown-animation dropdown-menu-end pt-3 small me-md-n3" aria-labelledby="profileDropdown">
 						<!-- Profile info -->
+						 @php
+    $profileImage = '';
+    $displayName = '';
+    $designation = '';
+    $profileLink = '#';
+
+    if  (Auth::guard('user')->check()) {
+        // Member/user post
+        $member = $post->member ?? null;
+
+        $profileImage = $member && $member->profile_image
+            ? asset('storage/' . $member->profile_image)
+            : asset('feed_assets/images/avatar/07.jpg');
+
+        $displayName = $member->name ?? 'Unknown';
+        $designation = $member->designation ?? 'Unknown';
+        $profileLink = url('/user/profile/' . ($member->id ?? 0));
+    }
+    else {
+        // Default user profile
+        $user = Auth::guard('user')->user();
+        $profileImage = $user->profile_pic
+            ? asset('storage/' . $user->profile_pic)
+            : asset('feed_assets/images/avatar-1.png');
+
+        $displayName = $user->name ?? 'Guest User';
+        $designation = $user->designation ?? 'Guest';
+        $profileLink = url('/user/profile/' . ($user->id ?? 0));
+    }
+    $user = Auth::guard('user')->user();
+    $profileImage = $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar-1.png');
+    $displayName = $user->name ?? 'Guest User';
+    $designation = $user->designation ?? 'Guest';
+    $profileLink = url('/user/profile/' . ($user->id ?? 0));    
+@endphp
 						<li class="px-3">
 							<div class="d-flex align-items-center position-relative">
 								<!-- Avatar -->
 								<div class="avatar me-3">
-									<img class="avatar-img rounded-circle" src="{{asset('feed_assets/images/avatar/07.jpg')}}" alt="avatar">
+									<img class="avatar-img rounded-circle" src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar-1.png') }}" alt="avatar">
 								</div>
 								<div>
                                     @if(Auth::guard('user')->check())
@@ -134,26 +169,16 @@ Header START -->
 						</li>
 						<!-- Links -->
 						<li><a class="dropdown-item" href="{{ route('user.directory') }}"><i class="bi bi-gear fa-fw me-2"></i>Directory</a></li>
-						<!-- <li>
-							<a class="dropdown-item" href="https://support.webestica.com/" target="_blank">
-								<i class="fa-fw bi bi-life-preserver me-2"></i>Support
-							</a>
-						</li>
-						<li>
-							<a class="dropdown-item" href="docs/index.html" target="_blank">
-								<i class="fa-fw bi bi-card-text me-2"></i>Documentation
-							</a>
-						</li> -->
 						<li class="dropdown-divider"></li>
 						<li>
                          <form action="{{ route('user.logout') }}" method="POST" style="display: inline;" >
 										@csrf
-										<button type="submit" class="bg-danger-soft-hover btn-sm btn d-flex align-items-center text-danger w-100">
+										<button type="submit" class="bg-danger-soft-hover btn-sm btn d-flex align-items-center w-100">
 											<i class="bi bi-power fa-fw me-2"></i>
 											Sign Out
 										</button>
 									</form>
-						<li> <hr class="dropdown-divider"></li>
+						</li>
 					</ul>
 				</li>
 				<!-- Profile START -->

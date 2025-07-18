@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Post;
 use App\Models\Story;
 use App\Models\Topic;
+use App\Models\Broadcast;
 
 class FeedController extends Controller
 {
@@ -318,6 +319,13 @@ class FeedController extends Controller
             'message' => 'Reply added successfully.',
             'reply' => $reply,
         ]);
+    }
+
+    public function broadcastDetails($id)
+    {
+        $broadcast = Broadcast::findOrFail($id);
+
+        return view('user.broadcast_details', compact('broadcast'));
     }
 
 }

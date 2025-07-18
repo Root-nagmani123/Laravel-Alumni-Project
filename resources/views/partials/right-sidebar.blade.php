@@ -2,45 +2,7 @@
 <div class="col-lg-3 right-sidebar">
     <div class="row g-4">
         <!-- Card follow START -->
-        <div class="col-sm-6 col-lg-12">
-            <div class="card">
-                <!-- Card header START -->
-                <div class="card-header pb-0 border-0">
-                    <h5 class="card-title mb-0">Our Member</h5>
-                </div>
-                <!-- Card header END -->
-                <!-- Card body START -->
-                <div class="card-body">
-                    @if(isset($members) && $members->count() > 0)
-                    @foreach($members as $index => $row)
-                    <!-- Connection item START -->
-                    <div class="hstack gap-2 mb-3">
-                        <!-- Avatar -->
-                        <div class="avatar">
-                            <a href="#!"><img class="avatar-img rounded-circle"
-                                    src="{{asset('feed_assets/images/avatar/04.jpg')}}" alt=""></a>
-                        </div>
-                        <!-- Title -->
-                        <div class="overflow-hidden">
-                            <a class="h6 mb-0" href="#!">{{ $row->name }}</a>
-                            <p class="mb-0 small text-truncate">News anchor <span>(Mah, 1995)</span></p>
-                        </div>
-                    </div>
-                    @endforeach
-                    <!-- View more button -->
-                    <div class="d-grid mt-3">
-                        <a class="btn btn-sm btn-primary-soft" href="{{route('user.directory')}}">View more</a>
-                    </div>
-                    <!-- Connection item END -->
-                    @else
-                    <p class="text-muted">No members available</p>
-                    @endif
 
-
-                </div>
-                <!-- Card body END -->
-            </div>
-        </div>
         <!-- Card follow START -->
 
         <!-- Card News START -->
@@ -52,15 +14,29 @@
                 </div>
                 <!-- Card header END -->
                 <!-- Card body START -->
-                <div class="card-body">
+                <div class="card-body  overflow-auto" style="max-height: 500px;">
                     <!-- News item -->
                     @if((isset($broadcast)) && ($broadcast->count() > 0))
                     @foreach($broadcast as $index => $broadcast)
                     <div class="mb-3">
-                        <h6 class="mb-0"><a href="blog-details.html">{{ $broadcast->title }}</a></h6>
-                        <small>{{ $broadcast->description }}</small>
+
+                        <div class="d-flex align-items-center gap-2 mb-2">
+                            <div class="avatar avatar-xs text-center">
+                                   @if($broadcast->image_url)
+                                <img class="avatar-img rounded-circle"
+                                    src="{{ asset('storage/' . $broadcast->image_url) }}" alt="">
+                                      @else
+                                  <img src="{{ asset('assets/images/no-image.png') }}" width="45"
+                                        class="rounded-circle" data-bs-toggle="tooltip" data-bs-placement="top" title="No image available" alt="No image">
+                                    @endif
+                            </div>
+                        </div>
+                        <h6 class="mb-0"><a href="{{ route('user.broadcastDetails', $broadcast->id) }}">{{ $broadcast->title }}</a></h6>
+                        <small>{{ \Illuminate\Support\Str::limit($broadcast->description, 50) }} <span><a href="{{ route('user.broadcastDetails', $broadcast->id) }}" class="text-danger">View more</a></span></small>
                     </div>
+                    <hr>
                     @endforeach
+                    <span class="divider"></span>
                     @else
                     <div class="mb-3">
                         <p class="mb-0 text-muted">No broadcasts available</p>
@@ -122,7 +98,7 @@
         modal.querySelector('.group_id').value = groupId;
             //console.log(groupName); // Debugging line to check group name
             const modalTitleSpan = modal.querySelector('.group_name');
-			
+
             if (modalTitleSpan) {
                 modalTitleSpan.textContent = groupName;
             }

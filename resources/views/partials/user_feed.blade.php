@@ -1,5 +1,5 @@
 <!-- Main content START -->
-<div class="col-md-8 col-lg-6 vstack gap-4" style="margin-top: 50px;">
+<div class="col-md-8 col-lg-6 vstack gap-4">
 
     <!-- Story START -->
     <div class="d-flex gap-2 mb-n3">
@@ -96,10 +96,14 @@
     }
 @endphp
 
-<div class="avatar avatar-story me-2">
+<div class="avatar me-2">
     <a href="{{ $profileLink }}">
-        <img class="avatar-img rounded-circle" src="{{ $profileImage }}" alt="">
-    </a>
+<img 
+  class="avatar-img rounded-circle" 
+  src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar-1.png') }}" 
+  alt="Profile Picture">
+       
+</a>
 </div>
 
 <!-- Info -->
@@ -115,14 +119,44 @@
     <p class="mb-0 small">{{ $designation }}</p>
 </div>
 
+
                 </div>
+                <div class="dropdown">
+								<a href="#" class="text-secondary btn btn-secondary-soft-hover py-1 px-2" id="cardFeedAction" data-bs-toggle="dropdown" aria-expanded="false">
+									<i class="bi bi-three-dots"></i>
+								</a>
+								<!-- Card feed action dropdown menu -->
+								<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="cardFeedAction" style="">
+									<li><a class="dropdown-item" href="#"> <i class="bi bi-pen fa-fw pe-2"></i>Edit post</a></li>
+									<li><a class="dropdown-item" href="#"> <i class="bi bi-trash fa-fw pe-2"></i>Delete post </a></li>
+								</ul>
+							</div>
 
             </div>
         </div>
         <!-- Card header END -->
         <!-- Card body START -->
         <div class="card-body">
-            <p>{{ $post->content }}</p>
+@php
+    $fullContent = strip_tags($post->content);
+    $wordCount = str_word_count($fullContent);
+@endphp
+
+@if ($wordCount > 50)
+    <div x-data="{ expanded: false }">
+        <p x-show="!expanded">
+            {{ \Illuminate\Support\Str::words($fullContent, 50, '...') }}
+            <a href="#" @click.prevent="expanded = true" class="text-danger">Read more</a>
+        </p>
+        <p x-show="expanded" x-cloak>
+            {!! nl2br(e($post->content)) !!}
+            <a href="#" @click.prevent="expanded = false" class="text-danger">Show less</a>
+        </p>
+    </div>
+@else
+    <p>{!! nl2br(e($post->content)) !!}</p>
+@endif
+
             <!-- Card img -->
             @php
             $validMedia = $post->media->filter(function($media) {
@@ -138,7 +172,7 @@
             @if($post->video_link)
             {{-- Embedded YouTube Video --}}
             <div class="ratio ratio-16x9 mt-2">
-                <iframe width="560" height="315" src="{{ $post->video_link }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                <iframe height="315" src="{{ $post->video_link }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
             </div>
             @elseif($totalVideos > 0)
             {{-- Uploaded Video Files --}}
@@ -158,8 +192,8 @@
             <div class="post-img mt-2">
                 <a href="{{ asset('storage/' . $imageMedia[0]->file_path) }}" class="glightbox"
                     data-gallery="post-gallery-{{ $post->id }}">
-                    <img src="{{ asset('storage/' . $imageMedia[0]->file_path) }}" loading="lazy" class="w-100"
-                        alt="Post Image">
+                    <img src="{{ asset('storage/' . $imageMedia[0]->file_path) }}" loading="lazy" class="w-100 rounded"
+                        alt="Post Image" style="width: 100%; height: 400px;object-fit: cover;">
                 </a>
             </div>
             @elseif($totalImages > 1)
@@ -229,11 +263,6 @@
                     </a>
                     <!-- Card share action dropdown menu -->
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="cardShareAction">
-                       <li>
-                    <a href="#" class="dropdown-item send-direct-message-btn" data-user-id="{{-- $member->id --}}">
-                        <i class="bi bi-envelope fa-fw pe-2"></i>Send via Direct Message
-                    </a>
-                    </li>
 
                         <li>
 <a class="dropdown-item copy-url-btn" href="javascript:void(0)"
@@ -241,17 +270,6 @@
                                 <i class="bi bi-link fa-fw pe-2"></i>Copy link to post
                             </a>
                             </li>
-
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
-                         <li>
-                            <a class="dropdown-item share-to-feed-btn"
-                            href="#"
-                            data-post-id="{{ $post->id ?? '' }}">
-                            <i class="bi bi-pencil-square fa-fw pe-2"></i>Share to News Feed
-                            </a>
-                        </li>
                     </ul>
                 </li>
                 <!-- Card share action END -->
@@ -358,14 +376,14 @@
     </div>
     @endforeach
     <!-- Load more button START -->
-    <a href="#!" role="button" class="btn btn-loader btn-primary-soft" data-bs-toggle="button" aria-pressed="true">
+    <!-- <a href="#!" role="button" class="btn btn-loader btn-primary-soft" data-bs-toggle="button" aria-pressed="true">
         <span class="load-text"> Load more </span>
         <div class="load-icon">
             <div class="spinner-grow spinner-grow-sm" role="status">
                 <span class="visually-hidden">Loading...</span>
             </div>
         </div>
-    </a>
+    </a> -->
     <!-- Load more button END -->
     <!-- Card feed END -->
 </div>

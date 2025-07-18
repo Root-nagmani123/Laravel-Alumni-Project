@@ -30,7 +30,8 @@ class CommentController extends Controller
         ]);
     }
 
-    return back()->with('success', 'Comment added successfully!');
+    return back();
+   // return back()->with('success', 'Commentss added successfully!');
     }
 
    public function update(Request $request, $id)
