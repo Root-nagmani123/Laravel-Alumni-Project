@@ -25,7 +25,7 @@
                 <div class="card overflow-hidden">
                     <!-- Cover image -->
                     <div class="h-50px"
-                        style="background-image:url({{asset('feed_assets/images/bg/01.jpg')}}); background-position: center; background-size: cover; background-repeat: no-repeat;">
+                        style="background-image:url({{asset('user_assets/images/login/login-bg.jpg')}}); background-position: center; background-size: cover; background-repeat: no-repeat;">
                     </div>
                     <!-- Card body START -->
                     <div class="card-body pt-0 pb-0">
