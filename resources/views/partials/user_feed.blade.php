@@ -126,7 +126,7 @@
         <!-- Card header END -->
         <!-- Card body START -->
         <div class="card-body">
-            <p>{{ $post->content }}</p>
+            <p>{{ Str::words(strip_tags($post->content), 250, '...') }}</p>
             <!-- Card img -->
             @php
             $validMedia = $post->media->filter(function($media) {

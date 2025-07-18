@@ -1,5 +1,5 @@
 <!-- Right sidebar START -->
-<div class="col-lg-3">
+<div class="col-lg-3 right-sidebar">
     <div class="row g-4">
         <!-- Card follow START -->
 

@@ -17891,8 +17891,8 @@ a.badge:hover {
 
 .left-sidebar {
  position: sticky; 
- top: 100px; 
- height: 100vh;
+ top: 80px; 
+ height: 90vh;
 }
 .left-sidebar:hover {
   overflow-y: auto;
@@ -17900,8 +17900,8 @@ a.badge:hover {
 }
 .right-sidebar {
  position: sticky; 
- top: 100px; 
- height: 100vh;
+ top: 80px; 
+ height: 90vh;
 }
 .right-sidebar:hover {
   overflow-y: auto;
