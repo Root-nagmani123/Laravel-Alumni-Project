@@ -99,6 +99,8 @@ Route::prefix('user')->name('user.')->group(function () {
 
 		Route::middleware('auth')->group(function () {
 
+});
+
          Route::get('/profile/{id}', [ProfileController::class, 'showById'])->name('profile');
 
          Route::put('/profile/update/{id}', [ProfileController::class, 'update'])->name('profile.update');
