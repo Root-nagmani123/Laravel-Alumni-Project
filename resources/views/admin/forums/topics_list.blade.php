@@ -273,7 +273,6 @@
         let checkbox = $(this);
         let status = checkbox.prop('checked') ? 1 : 0;
         let topicId = checkbox.data('id');
-        alert(topicId);
 
         let confirmChange = confirm("Are you sure you want to " + (status ? "activate" : "deactivate") + "?");
 
