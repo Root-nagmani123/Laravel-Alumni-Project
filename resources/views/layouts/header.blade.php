@@ -198,8 +198,7 @@ Header START -->
                           <li><a class="dropdown-item" href="#"><i class="bi bi-linkedin fa-fw me-2"></i>LinkedIn</a></li>
                           <li><a class="dropdown-item" href="#"><i class="bi bi-twitter fa-fw me-2"></i>Twitter</a></li>
                        </ul>
-					   <li>
-
+					</li>
 						<li class="dropdown-divider"></li>
 						<li>
                          <form action="{{ route('user.logout') }}" method="POST" style="display: inline;" >
