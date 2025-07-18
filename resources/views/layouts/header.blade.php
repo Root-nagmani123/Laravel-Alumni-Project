@@ -170,6 +170,19 @@ Header START -->
 						<!-- Links -->
 						<li><a class="dropdown-item" href="{{ route('user.directory') }}"><i class="bi bi-gear fa-fw me-2"></i>Directory</a></li>
 						<li class="dropdown-divider"></li>
+						<li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="socialDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-share fa-fw me-2"></i>Social Media
+                        </a>
+                       <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="socialDropdown">
+                          <li><a class="dropdown-item" href="#"><i class="bi bi-facebook fa-fw me-2"></i>Facebook</a></li>
+                          <li><a class="dropdown-item" href="#"><i class="bi bi-instagram fa-fw me-2"></i>Instagram</a></li>
+                          <li><a class="dropdown-item" href="#"><i class="bi bi-linkedin fa-fw me-2"></i>LinkedIn</a></li>
+                          <li><a class="dropdown-item" href="#"><i class="bi bi-twitter fa-fw me-2"></i>Twitter</a></li>
+                       </ul>
+					   <li>
+
+						<li class="dropdown-divider"></li>
 						<li>
                          <form action="{{ route('user.logout') }}" method="POST" style="display: inline;" >
 										@csrf
