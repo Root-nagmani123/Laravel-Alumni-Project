@@ -233,11 +233,6 @@
                     </a>
                     <!-- Card share action dropdown menu -->
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="cardShareAction">
-                       <li>
-                    <a href="#" class="dropdown-item send-direct-message-btn" data-user-id="{{-- $member->id --}}">
-                        <i class="bi bi-envelope fa-fw pe-2"></i>Send via Direct Message
-                    </a>
-                    </li>
 
                         <li>
 <a class="dropdown-item copy-url-btn" href="javascript:void(0)"
@@ -245,17 +240,6 @@
                                 <i class="bi bi-link fa-fw pe-2"></i>Copy link to post
                             </a>
                             </li>
-
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
-                         <li>
-                            <a class="dropdown-item share-to-feed-btn"
-                            href="#"
-                            data-post-id="{{ $post->id ?? '' }}">
-                            <i class="bi bi-pencil-square fa-fw pe-2"></i>Share to News Feed
-                            </a>
-                        </li>
                     </ul>
                 </li>
                 <!-- Card share action END -->
