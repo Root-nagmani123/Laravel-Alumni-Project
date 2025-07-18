@@ -120,7 +120,7 @@
                     <div class="card-body">
 
                         <!-- Tab nav line -->
-                        <ul class="nav nav-tabs nav-bottom-line justify-content-center justify-content-md-start" role="tablist">
+                        <ul class="nav nav-tabs nav-bottom-line justify-content-center justify-content-md-start mb-4" role="tablist">
                             <li class="nav-item" role="presentation">
                                 <a class="nav-link active" data-bs-toggle="tab" href="#tab-1" aria-selected="true" role="tab"> All </a>
                             </li>

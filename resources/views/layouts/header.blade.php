@@ -48,9 +48,9 @@ Header START -->
 					</a>Library
 					</li>
                     <li class="nav-item d-flex gap-2 align-items-center">
-						<a class="nav-link bg-light icon-md btn btn-light p-0" href="#">
-						<i class="bi bi-person-lines-fill"></i>
-					</a>Groups
+						<a class="nav-link bg-light icon-md btn btn-light p-0" href="{{ url('user/all-events') }}">
+						<i class="bi bi-calendar-event-fill"></i>
+					</a>Events
 					</li>
 
 				</ul>
