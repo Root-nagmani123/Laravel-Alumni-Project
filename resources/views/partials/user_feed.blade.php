@@ -135,11 +135,11 @@
     <div x-data="{ expanded: false }">
         <p x-show="!expanded">
             {{ \Illuminate\Support\Str::words($fullContent, 50, '...') }}
-            <a href="#" @click.prevent="expanded = true">Read more</a>
+            <a href="#" @click.prevent="expanded = true" class="text-danger">Read more</a>
         </p>
         <p x-show="expanded" x-cloak>
             {!! nl2br(e($post->content)) !!}
-            <a href="#" @click.prevent="expanded = false">Show less</a>
+            <a href="#" @click.prevent="expanded = false" class="text-danger">Show less</a>
         </p>
     </div>
 @else
