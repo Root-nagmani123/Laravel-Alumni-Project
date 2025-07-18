@@ -119,7 +119,18 @@
     <p class="mb-0 small">{{ $designation }}</p>
 </div>
 
+
                 </div>
+                <div class="dropdown">
+								<a href="#" class="text-secondary btn btn-secondary-soft-hover py-1 px-2" id="cardFeedAction" data-bs-toggle="dropdown" aria-expanded="false">
+									<i class="bi bi-three-dots"></i>
+								</a>
+								<!-- Card feed action dropdown menu -->
+								<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="cardFeedAction" style="">
+									<li><a class="dropdown-item" href="#"> <i class="bi bi-pen fa-fw pe-2"></i>Edit post</a></li>
+									<li><a class="dropdown-item" href="#"> <i class="bi bi-trash fa-fw pe-2"></i>Delete post </a></li>
+								</ul>
+							</div>
 
             </div>
         </div>
