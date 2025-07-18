@@ -31,8 +31,8 @@
                                     @endif
                             </div>
                         </div>
-                        <h6 class="mb-0"><a href="{{route('user.broadcast', $broadcast->id)}}">{{ $broadcast->title }}</a></h6>
-                        <small>{{ \Illuminate\Support\Str::limit($broadcast->description, 50) }} <span><a href="{{route('user.broadcast', $broadcast->id)}}" class="text-danger">View more</a></span></small>
+                        <h6 class="mb-0"><a href="{{ route('user.broadcastDetails', $broadcast->id) }}">{{ $broadcast->title }}</a></h6>
+                        <small>{{ \Illuminate\Support\Str::limit($broadcast->description, 50) }} <span><a href="{{ route('user.broadcastDetails', $broadcast->id) }}" class="text-danger">View more</a></span></small>
                     </div>
                     <hr>
                     @endforeach
