@@ -98,12 +98,11 @@
 
 <div class="avatar me-2">
     <a href="{{ $profileLink }}">
-<img 
-  class="avatar-img rounded-circle" 
-  src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar-1.png') }}" 
-  alt="Profile Picture">
-       
-</a>
+        <img 
+            class="avatar-img rounded-circle" 
+            src="{{ $profileImage }}" 
+            alt="Profile Picture">
+    </a>
 </div>
 
 <!-- Info -->
@@ -809,7 +808,7 @@ document.addEventListener("DOMContentLoaded", function () {
             id: "member-{{ $myUserId }}",
             photo: "{{ asset($myStoryImage ? 'storage/' . $myStoryImage : 'feed_assets/images/avatar/08.jpg') }}",
             name: "{{ addslashes($myUser->name) }}",
-            link: "#",
+            // link: "#", // REMOVE
             items: [
                 @foreach($storiesByMember[$myUserId] as $story)
                 {
@@ -821,8 +820,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     src: "{{ asset('storage/' . $story->story_image) }}",
                    // preview: "{{ asset('storage/' . $story->story_image) }}",
                    preview: "{{ asset($previewImage) }}",
-                    link: "#",
-                    linkText: "View",
+                    // link: "#", // REMOVE
+                    // linkText: "View", // REMOVE
                     time: {{ \Carbon\Carbon::parse($story->created_at)->timestamp }}
                 }@if(!$loop->last),@endif
                 @endforeach
@@ -849,7 +848,7 @@ document.addEventListener("DOMContentLoaded", function () {
             id: "member-{{ $memberId }}",
             photo: "{{ asset($storyImage ? 'storage/' . $storyImage : 'feed_assets/images/avatar/08.jpg') }}",
             name: "{{ addslashes($user->name) }}",
-            link: "#",
+            // link: "#", // REMOVE
             items: [
                 @foreach($memberStories as $story)
                 {
@@ -861,8 +860,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     src: "{{ asset('storage/' . $story->story_image) }}",
                     //preview: "{{ asset('storage/' . $story->story_image) }}",
                     preview: "{{ asset($previewImage) }}",
-                    link: "#",
-                    linkText: "View",
+                    // link: "#", // REMOVE
+                    // linkText: "View", // REMOVE
                     time: {{ \Carbon\Carbon::parse($story->created_at)->timestamp }}
                 }@if(!$loop->last),@endif
                 @endforeach
