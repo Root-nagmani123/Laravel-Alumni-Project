@@ -25,10 +25,10 @@
                 <div class="card overflow-hidden">
                     <!-- Cover image -->
                     <div class="h-50px"
-                        style="background-image:url({{asset('feed_assets/images/bg/01.jpg')}}); background-position: center; background-size: cover; background-repeat: no-repeat;">
+                        style="background-image:url({{asset('user_assets/images/login/login-bg.jpg')}}); background-position: center; background-size: cover; background-repeat: no-repeat;">
                     </div>
                     <!-- Card body START -->
-                    <div class="card-body pt-0 pb-0">
+                    <div class="card-body pt-0">
                         <div class="text-center">
                             <!-- Avatar -->
                             <div class="avatar avatar-lg mt-n5 mb-3">
@@ -48,7 +48,11 @@
                             <h5 class="mb-0"> <a href="#!"> {{ Auth::guard('user')->user()->name }} </a> </h5>
                             @endif
                             <small>{{ Auth::guard('user')->user()->designation }}</small>
-                            <p class="mt-3">{{Auth::guard('user')->user()->bio}}</p>
+                            <ul class="list-inline mb-0 text-center text-sm-start mt-3 mt-sm-0">
+                        <li class="list-inline-item"><i class="bi bi-briefcase me-1"></i> {{ $user->current_designation }}
+                        </li>
+                        <li class="list-inline-item"><i class="bi bi-backpack me-1"></i> {{ $user->batch }}</li>
+                    </ul>
                         </div>
                         <!-- Side Nav END -->
                     </div>

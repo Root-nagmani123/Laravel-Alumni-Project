@@ -5,8 +5,8 @@
 
 @section('content')
  <div class="container">
-   <div class="row g-4">
-    <div class="col-4">
+   <div class="row g-4 mt-2">
+    <div class="col-3">
         <!-- Advanced filter responsive toggler START -->
                 <div class="d-flex align-items-center d-lg-none">
                     <button class="border-0 bg-transparent" type="button" data-bs-toggle="offcanvas"
@@ -35,7 +35,7 @@
                                      style="background-image:url({{asset('feed_assets/images/bg/01.jpg')}}); background-position: center; background-size: cover; background-repeat: no-repeat;">
                                 </div>
                                 <!-- Card body START -->
-                                <div class="card-body pt-0 pb-0">
+                                <div class="card-body pt-0">
                                     <div class="text-center">
                                         <!-- Avatar -->
                                            @php
@@ -82,7 +82,11 @@
                                             <h5 class="mb-0"> <a href="#!">{{ Auth::guard('user')->user()->name }} </a> </h5>
                                         @endif
                                         <small>{{ Auth::guard('user')->user()->designation }}</small>
-                                        <p class="mt-3">{{Auth::guard('user')->user()->bio}}</p>
+                                        <ul class="list-inline mb-0 text-center text-sm-start mt-3 mt-sm-0">
+                        <li class="list-inline-item"><i class="bi bi-briefcase me-1"></i> {{ $user->current_designation }}
+                        </li>
+                        <li class="list-inline-item"><i class="bi bi-backpack me-1"></i> {{ $user->batch }}</li>
+                    </ul>
                                     </div>
                                 </div>
                                 <!-- Card body END -->
@@ -96,11 +100,11 @@
                     </div>
                 </nav>
     </div>
-       <div class="col-lg-8">
+       <div class="col-lg-9">
         <div class="bg-mode p-4">
           <h1 class="h4 mb-4">Library</h1>
           <!-- Blog item START -->
-          <div class="card bg-transparent border-0">
+          <div class="card bg-transparent border-0 rounded">
             <div class="row g-3">
               <div class="col-4">
                 <!-- Blog image -->
