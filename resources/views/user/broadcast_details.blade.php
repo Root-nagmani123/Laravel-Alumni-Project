@@ -102,6 +102,30 @@
     </div>
        <div class="col-9 vstack gap-4">
            <div class="card card-body">
+            <div class="mb-4">
+                   <h1 class="mb-2 h2">{{ $broadcast->title }}</h1>
+                   @php
+    $description = $broadcast->description;
+    $wordCount = str_word_count(strip_tags($description));
+@endphp
+
+@if ($wordCount > 50)
+    <div x-data="{ expanded: false }" class="mt-4">
+        <p x-show="!expanded">
+            {{ \Illuminate\Support\Str::words($description, 50, '...') }}
+            <a href="#" @click.prevent="expanded = true" class="text-danger">Read more</a>
+        </p>
+        <p x-show="expanded" x-cloak>
+            {!! nl2br(e($description)) !!}
+            <a href="#" @click.prevent="expanded = false" class="text-danger">Show less</a>
+        </p>
+    </div>
+@else
+    <p class="mt-4">{!! nl2br(e($description)) !!}</p>
+@endif
+
+                   
+               </div>
                @if ($broadcast->image_url)
                    <img class="rounded w-100 mb-3" src="{{ asset('storage/' . $broadcast->image_url) }}" alt="" style="height: 400px; object-fit: cover;">
                @endif
@@ -110,10 +134,7 @@
                    <video src="{{ $broadcast->video_url }}" controls class="w-100 mb-3 rounded" style="height: 400px; object-fit: cover;"></video>
                @endif
 
-               <div class="mt-4">
-                   <h1 class="mb-2 h2">{{ $broadcast->title }}</h1>
-                   <p class="mt-4">{{ $broadcast->description }}</p>
-               </div>
+               
            </div>
        </div>
    </div>
