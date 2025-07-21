@@ -296,5 +296,26 @@ public function storePostComment(Request $request, $id)
 
         return redirect()->back()->with('success', 'Comment deleted successfully.');
     }
+    public function edit($id)
+{
+    $post = Post::findOrFail($id);
+    return response()->json($post);
+}
+
+public function update(Request $request, $id)
+{
+    $post = Post::findOrFail($id);
+    $post->content = $request->content;
+    $post->save();
+
+    return response()->json(['message' => 'Updated']);
+}
+
+public function destroy($id)
+{
+    Post::destroy($id);
+    return response()->json(['message' => 'Deleted']);
+}
+
 };
 
