@@ -339,6 +339,9 @@ Route::get('/user_login', function () {
          Route::get('/user/library', function () {
             return view('user.library');
         })->name('user.library');
+        Route::get('/user/forum', function () {
+            return view('user.forum');
+        })->name('user.forum');
 
 require __DIR__.'/auth.php';
 

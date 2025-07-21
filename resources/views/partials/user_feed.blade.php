@@ -559,7 +559,6 @@ $(document).on('click', '.delete-comment-btn', function() {
     }
 });
 
-
 //add storis modal
 document.getElementById('openAddStoryModal').addEventListener('click', function () {
     var myModal = new bootstrap.Modal(document.getElementById('addStoryModal'));
