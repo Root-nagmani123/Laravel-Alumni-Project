@@ -175,55 +175,44 @@ Header START -->
                                     @if(Auth::guard('user')->check())
                                     <a class="h6 stretched-link" href="#">{{ Auth::guard('user')->user()->name }}</a>
                                     @endif
-                                    <p class="small m-0">{{ Auth::guard('user')->user()->designation }}</p>
-                                </div>
-                            </div>
-                            @if(Auth::guard('user')->check())
-                            @php
-                            $user = Auth::guard('user')->user();
-                            @endphp
-                            <a href="{{ route('user.profile', ['id' => $user->id]) }}"
-                                class="dropdown-item btn btn-primary-soft btn-sm my-2 text-center">View profile</a>
-                            @endif
-                        </li>
-                        <!-- Links -->
-                        <li><a class="dropdown-item" href="{{ route('user.directory') }}"><i
-                                    class="bi bi-gear-fill fa-fw me-2"></i>Directory</a></li>
-                        <li class="dropdown-submenu">
-                            <!-- Toggler item -->
-                            <a class="dropdown-item d-flex justify-content-between align-items-center"
-                                data-bs-toggle="collapse" href="#socialCollapse" role="button" aria-expanded="false"
-                                aria-controls="socialCollapse">
-                                <span><i class="bi bi-opencollective fa-fw me-2"></i>Social Media</span>
-                                <i class="bi bi-chevron-down small"></i>
-                            </a>
+									<p class="small m-0">{{ Auth::guard('user')->user()->designation }}</p>
+								</div>
+							</div>
+                             @if(Auth::guard('user')->check())
+                                    @php
+                                        $user = Auth::guard('user')->user();
+                                    @endphp
+                                    <a href="{{ route('user.profile', ['id' => $user->id]) }}" class="dropdown-item btn btn-primary-soft btn-sm my-2 text-center">View profile</a>
+                                @endif
+						</li>
+						<!-- Links -->
+						<li><a class="dropdown-item" href="{{ route('user.directory') }}"><i class="bi bi-gear fa-fw me-2"></i>Directory</a></li>
+						<li class="dropdown-divider"></li>
+						<li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="socialDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-share fa-fw me-2"></i>Social Media
+                        </a>
+                       <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="socialDropdown">
+                          <li><a class="dropdown-item" href="#"><i class="bi bi-facebook fa-fw me-2"></i>Facebook</a></li>
+                          <li><a class="dropdown-item" href="#"><i class="bi bi-instagram fa-fw me-2"></i>Instagram</a></li>
+                          <li><a class="dropdown-item" href="#"><i class="bi bi-linkedin fa-fw me-2"></i>LinkedIn</a></li>
+                          <li><a class="dropdown-item" href="#"><i class="bi bi-twitter fa-fw me-2"></i>Twitter</a></li>
+                       </ul>
+					   <li>
 
-                            <!-- Collapsible content -->
-                            <ul class="list-unstyled ps-4 collapse" id="socialCollapse">
-                                <li><a class="dropdown-item" href="https://www.facebook.com/profile.php?id=100064810655288" target="_blank"><i
-                                            class="bi bi-facebook me-2"></i>Facebook</a></li>
-                                <li><a class="dropdown-item" href="https://x.com/lbsnaa_official?lang=en" target="_blank"><i
-                                            class="bi bi-twitter-x me-2"></i>X (twitter)</a></li>
-                                <li><a class="dropdown-item" href="https://www.youtube.com/@lbsnaaofficial2107" target="_blank"><i
-                                            class="bi bi-youtube me-2"></i>YouTube</a></li>
-                                <li><a class="dropdown-item" href="https://www.linkedin.com/company/lal-bahadur-shastri-national-academy-of-administration-official/posts/?feedView=all" target="_blank"><i
-                                            class="bi bi-linkedin me-2"></i>LinkedIn</a></li>
-                            </ul>
-                        </li>
-                        <li class="dropdown-divider"></li>
-                        <li>
-                            <form action="{{ route('user.logout') }}" method="POST" style="display: inline;">
-                                @csrf
-                                <button type="submit"
-                                    class="bg-danger-soft-hover btn-sm btn d-flex align-items-center w-100">
-                                    <i class="bi bi-power fa-fw me-2"></i>
-                                    Sign Out
-                                </button>
-                            </form>
-                        </li>
-                    </ul>
-                </li>
-                <!-- Profile START -->
+						<li class="dropdown-divider"></li>
+						<li>
+                         <form action="{{ route('user.logout') }}" method="POST" style="display: inline;" >
+										@csrf
+										<button type="submit" class="bg-danger-soft-hover btn-sm btn d-flex align-items-center w-100">
+											<i class="bi bi-power fa-fw me-2"></i>
+											Sign Out
+										</button>
+									</form>
+						</li>
+					</ul>
+				</li>
+				<!-- Profile START -->
 
             </ul>
             <!-- Nav right END -->
