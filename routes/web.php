@@ -83,6 +83,10 @@ Route::prefix('user')->name('user.')->group(function () {
         Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 		Route::put('/post/update/{id}', [PostController::class, 'update'])->name('post.update');
 		Route::post('/post', [PostController::class, 'store'])->name('post.store');
+        Route::get('/posts/{id}/edit', [PostController::class, 'edit']);
+Route::put('/posts/{id}', [PostController::class, 'update']);
+Route::delete('/posts/{id}', [PostController::class, 'destroy']);
+
 
 		Route::post('/group-post', [PostController::class, 'group_post_store'])->name('group.post');
 
@@ -335,6 +339,9 @@ Route::get('/user_login', function () {
          Route::get('/user/library', function () {
             return view('user.library');
         })->name('user.library');
+        Route::get('/user/forum', function () {
+            return view('user.forum');
+        })->name('user.forum');
 
 require __DIR__.'/auth.php';
 

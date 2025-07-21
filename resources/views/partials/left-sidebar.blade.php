@@ -167,7 +167,7 @@
                 @endforeach
                 <!-- View more button -->
                 <div class="d-grid mt-3">
-                    <a class="btn btn-sm btn-primary-soft" href="#!">View more</a>
+                    <a class="btn btn-sm btn-primary-soft" href="{{ route('user.forum') }}">View more</a>
                 </div>
                 @else
                 <p>No forums to display.</p>
