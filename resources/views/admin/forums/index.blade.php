@@ -56,7 +56,7 @@
 
 
                         <table id="zero_config"
-                            class="table table-striped table-bordered text-nowrap align-middle dataTable"
+                            class="table table-striped table-bordered align-middle dataTable"
                             aria-describedby="zero_config_info">
                             <thead>
                                 <!-- start row -->
@@ -77,21 +77,26 @@
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $forum->name }}</td>
                                     <td>
-                                        <a class="btn btn-sm btn-primary"
-                                            href="{{ route('forums.add_member', ['id' => $forum->id]) }}"
-                                            data-bs-toggle="tooltip" data-bs-placement="top" title="Add Members">
-                                            <iconify-icon icon="solar:add-circle-bold"></iconify-icon>
-                                        </a>
-                                        &nbsp;
-                                        <a class="btn btn-sm btn-success"
-                                            href="{{ route('forums.view_member', ['id' => $forum->id]) }}"
-                                            data-bs-toggle="tooltip" data-bs-placement="top" title="View Members">
-                                            <iconify-icon icon="solar:eye-bold"></iconify-icon>
-                                        </a>
+    <div class="d-flex gap-2">
+        <a class="btn btn-sm btn-primary"
+            href="{{ route('forums.add_member', ['id' => $forum->id]) }}"
+            data-bs-toggle="tooltip" data-bs-placement="top" title="Add Members">
+            <i class="bi bi-plus"></i>
+        </a>
+        <a class="btn btn-sm btn-success"
+            href="{{ route('forums.view_member', ['id' => $forum->id]) }}"
+            data-bs-toggle="tooltip" data-bs-placement="top" title="View Members">
+            <i class="bi bi-eye"></i>
+        </a>
+    </div>
+</td>
+
+                                    <td>
+                                        <div class="d-flex gap-2">
+                                            <a class="btn btn-sm btn-primary" href="{{ route('forums.add_topic', ['id' => $forum->id]) }}" title="Add  Topic" data-bs-toggle="tooltip" data-bs-placement="top"> <i class="bi bi-plus"></i></a>
+                                        <a class="btn btn-sm btn-success" href="{{ route('forums.view_topic' , ['id' => $forum->id] )}}" title="View Topic" data-bs-toggle="tooltip" data-bs-placement="top"> <i class="bi bi-eye"></i></a>
+                                        </div>
                                     </td>
-                                    <td><a class="btn btn-sm btn-primary"
-                                            href="{{ route('forums.add_topic', ['id' => $forum->id]) }}" title="Add  Topic"> <iconify-icon icon="solar:add-circle-bold"></iconify-icon></a>&nbsp;<a class="btn btn-sm btn-success"
-                                            href="{{ route('forums.view_topic' , ['id' => $forum->id] )}}" title="View Topic"> <iconify-icon icon="solar:eye-bold"></iconify-icon></a></td>
                                     <td>{{ \Carbon\Carbon::parse($forum->created_at)->timezone('Asia/Kolkata')->format('l, d M Y, h:i A') }}
                                     </td>
 
@@ -100,18 +105,9 @@
                                         <input class="form-check-input status-toggle" type="checkbox" role="switch" data-table="forum" data-column="active_inactive" data-id="1" checked="">
                                     </td> -->
                                     <td>
-                                        <a href="{{route('forums.forum.edit', $forum->id) }}"
+                                        <div class="d-flex gap-2">
+                                            <a href="{{route('forums.forum.edit', $forum->id) }}"
                                             class="btn btn-success btn-sm">Edit</a>
-                                        <!--<form id="delete-form-{{ $forum->id }}"
-                                            action="{{ route('forums.forum.destroy', $forum->id) }}" method="POST"
-                                            style="display:inline;">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="button" class="btn btn-danger delete-forum-btn btn-sm"
-                                                data-id="{{ $forum->id }}" data-status="{{ $forum->status }}">
-                                                Delete
-                                            </button>
-                                        </form>-->
                                          <form action="{{ route('forums.forum.destroy', $forum->id) }}" method="POST" style="display:inline;">
                                     @csrf
                                     @method('DELETE')
@@ -120,7 +116,7 @@
                                         Delete
                                     </button>
                                     </form>
-
+                                        </div>
                                     </td>
                                     <td>
 

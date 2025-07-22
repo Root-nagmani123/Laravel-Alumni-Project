@@ -136,7 +136,7 @@
                             <!-- Image Upload -->
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label class="form-label">Event Image</label>
+                                    <label class="form-label">Event Image <span class="text-danger">*</span></label>
                                     <input type="file" name="image" id="imageInput" class="form-control"
                                         accept="image/jpg, image/jpeg, image/png">
                                         <small>image type: jpg, jpeg, png</small>
