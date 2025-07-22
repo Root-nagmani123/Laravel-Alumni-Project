@@ -119,7 +119,6 @@ class DashboardController extends Controller
     }
     public function submitRsvp(Request $request)
     {
-        return $request->all();
 
         $request->validate([
             'event_id' => 'required|integer|exists:events,id',
