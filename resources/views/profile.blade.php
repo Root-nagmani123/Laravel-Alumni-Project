@@ -17,6 +17,13 @@
                                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                         </div>
                                         @endif
+                                         @if(session('success'))
+                                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                            {{ session('success') }}
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                                aria-label="Close"></button>
+                                        </div>
+                                        @endif
 
         <!-- Main content START -->
         <div class="col-lg-8 vstack gap-4">
@@ -73,13 +80,6 @@
                                     </div>
                                     <div class="modal-body">
                                         <!-- Success Message -->
-                                        @if(session('success'))
-                                        <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                            {{ session('success') }}
-                                            <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                                aria-label="Close"></button>
-                                        </div>
-                                        @endif
 
                                         <!-- Nav tabs -->
                                         <ul class="nav nav-tabs mb-3" id="profileTabs" role="tablist">
