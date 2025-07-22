@@ -12,7 +12,7 @@ Header START -->
 
     <div class="d-flex flex-column lh-sm">
         <span class="h5 mb-0 fw-bold">Alumni</span>
-        <span style="font-size: 16px; font-weight: 500;color: #af2910;">Lal Bahadur Shastri National Academy of Administration</span>
+        <span style="font-size: 12px; font-weight: 500;color: #af2910;">Lal Bahadur Shastri <br>National Academy of Administration</span>
     </div>
 </a>
 
