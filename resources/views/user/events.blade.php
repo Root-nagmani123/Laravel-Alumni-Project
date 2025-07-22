@@ -95,7 +95,7 @@
                                 <!-- Card body END -->
                                 <!-- Card footer -->
                                 <div class="card-footer text-center py-2">
-                                    <a class="btn btn-link btn-sm" href="my-profile.html">View Profile </a>
+                                    <a class="btn btn-link btn-sm" href="{{ route('user.profile', ['id' => $user->id]) }}">View Profile </a>
                                 </div>
                             </div>
                             <!-- Card END -->
@@ -177,12 +177,11 @@
                                                     <div class="d-flex mt-3 justify-content-between">
                                                         <div class="w-100">
                                                             <select class="form-select rsvp-select" data-event-id="{{ $event->id }}">
-                                                                <option value="" {{ $event->rsvp_status == '' ? 'selected' : '' }}>RSVP</option>
-                                                                <option value="1" {{ $event->rsvp_status == 1 ? 'selected' : '' }}>Interested</option>
-                                                                <option value="2" {{ $event->rsvp_status == 2 ? 'selected' : '' }}>Not Interested</option>
-                                                                <option value="3" {{ $event->rsvp_status == 3 ? 'selected' : '' }}>Maybe</option>
+                                                                <option value="" {{ $event->rsvp_status === '' ? 'selected' : '' }}>RSVP</option>
+                                                                <option value="1" {{ $event->rsvp_status === 1 ? 'selected' : '' }}>Interested</option>
+                                                                <option value="2" {{ $event->rsvp_status === 2 ? 'selected' : '' }}>Not Interested</option>
+                                                                <option value="3" {{ $event->rsvp_status === 3 ? 'selected' : '' }}>Maybe</option>
                                                             </select>
-
                                                         </div>
                                                     </div>
                                                 </div>
@@ -331,6 +330,9 @@
 @endsection
 @section('scripts')
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    
 <script>
 $(document).ready(function() {
     // Attach click handler using event delegation
@@ -338,9 +340,13 @@ $(document).ready(function() {
         e.preventDefault();
         
         let eventId = $(this).data('event-id');
-        // Get the selected RSVP status
-
         let status = $(this).val();
+
+        if (!eventId || !status) {
+            Swal.fire('Warning', 'Please select a valid RSVP option.', 'warning');
+            return;
+        }
+
 
         $.ajax({
             url: "{{ route('user.event.rsvp') }}", // Laravel route
@@ -352,7 +358,8 @@ $(document).ready(function() {
             },
             success: function(response) {
                 Swal.fire('Success', response.message, 'success');
-                window.location.reload(); // Reload the page to reflect changes
+                setTimeout(() => location.reload(), 800);
+                //window.location.reload(); // Reload the page to reflect changes
             },
             error: function(xhr) {
                 Swal.fire('Error', 'Something went wrong!', 'error');
@@ -361,5 +368,5 @@ $(document).ready(function() {
     });
 });
 </script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 @endsection

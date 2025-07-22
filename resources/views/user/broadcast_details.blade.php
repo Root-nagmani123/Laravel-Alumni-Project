@@ -92,7 +92,7 @@
                                 <!-- Card body END -->
                                 <!-- Card footer -->
                                 <div class="card-footer text-center py-2">
-                                    <a class="btn btn-link btn-sm" href="my-profile.html">View Profile </a>
+                                    <a class="btn btn-link btn-sm" href="{{ route('user.profile', ['id' => $user->id]) }}">View Profile </a>
                                 </div>
                             </div>
                             <!-- Card END -->
@@ -127,7 +127,7 @@
                    
                </div>
                @if ($broadcast->image_url)
-                   <img class="rounded w-100 mb-3" src="{{ asset('storage/' . $broadcast->image_url) }}" alt="" style="height: 400px; object-fit: cover;">
+                   <img class="rounded w-100 mb-3" src="{{ asset('storage/' . $broadcast->image_url) }} ??" alt="" style="height: 400px; object-fit: cover;">
                @endif
 
                @if ($broadcast->video_url)

@@ -24,7 +24,7 @@
         <div class="d-flex mb-3">
             <!-- Avatar -->
             <div class="avatar avatar-xs me-2">
-                <a href="#"> <img class="avatar-img rounded-circle" src="{{asset('feed_assets/images/avatar/03.jpg')}}"
+                <a href="#"> <img class="avatar-img rounded-circle" src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar-1.png') }}"
                         alt=""> </a>
             </div>
             <!-- Post input -->

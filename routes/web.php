@@ -84,8 +84,8 @@ Route::prefix('user')->name('user.')->group(function () {
 		Route::put('/post/update/{id}', [PostController::class, 'update'])->name('post.update');
 		Route::post('/post', [PostController::class, 'store'])->name('post.store');
         Route::get('/posts/{id}/edit', [PostController::class, 'edit']);
-Route::put('/posts/{id}', [PostController::class, 'update']);
-Route::delete('/posts/{id}', [PostController::class, 'destroy']);
+  Route::put('/posts/{id}', [PostController::class, 'update']);
+  Route::delete('/posts/{id}', [PostController::class, 'destroy']);
 
 
 		Route::post('/group-post', [PostController::class, 'group_post_store'])->name('group.post');
@@ -107,7 +107,7 @@ Route::delete('/posts/{id}', [PostController::class, 'destroy']);
 		Route::middleware('auth')->group(function () {
     //Route::put('/user/profile/update', [UserController::class, 'update'])->name('user.profile.update');
     // other protected routes
-});
+  });
 
          Route::get('/profile/{id}', [ProfileController::class, 'showById'])->name('profile');
 

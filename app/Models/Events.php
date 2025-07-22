@@ -23,4 +23,6 @@ class Events extends Model
 
 ];
 
+
+
 }

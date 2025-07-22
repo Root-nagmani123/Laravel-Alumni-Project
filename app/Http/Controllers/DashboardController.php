@@ -119,10 +119,13 @@ class DashboardController extends Controller
     }
     public function submitRsvp(Request $request)
     {
+        return $request->all();
+
         $request->validate([
             'event_id' => 'required|integer|exists:events,id',
             'rsvp_status' => 'required|in:1,2,3',
         ]);
+
 
         // Assuming authenticated user
         $user = auth()->guard('user')->user();
@@ -185,6 +188,7 @@ class DashboardController extends Controller
             ->select('events.*')
             ->orderBy('events.id', 'desc')
             ->get();
+
         return view('user.events',compact('events', 'accept_events', 'maybe_events', 'decline_events'));
 
     }
