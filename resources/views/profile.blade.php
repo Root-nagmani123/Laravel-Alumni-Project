@@ -644,39 +644,43 @@
                         <div class="row g-3">
 
                             <!-- Photo item START -->
-                            @if(!empty($post) && !empty($post->media))
-                            @foreach($post->media as $media)
-                            @if($media->file_type === 'image')
-                            @php
-                            $max_length = 50;
-                            $relativePath = 'storage/' . str_replace(['app/public/', 'public/'], '',
-                            $media->file_path);
+                            @if(!empty($posts) && $posts->count())
+                                @foreach($posts as $post)
+                                    @if(!empty($post->media))
+                                        @foreach($post->media as $media)
+                                            @if($media->file_type === 'image')
+                                                @php
+                                                $max_length = 50;
+                                                $relativePath = 'storage/' . str_replace(['app/public/', 'public/'], '',
+                                                $media->file_path);
 
-                            // Check existence of file in public path
-                            $file_path = public_path($relativePath);
-                            $image_url = file_exists($file_path) ? asset($relativePath) :
-                            asset('feed_assets/images/avatar-1.png');
-                            @endphp
-                            <div class="col-sm-6 col-md-4 col-lg-3">
-                                <!-- Photo -->
-                                <a href="{{ $image_url }}" data-gallery="image-popup"
-                                    data-glightbox="description: .custom-desc2; descPosition: left;">
-                                    <img class="rounded img-fluid" src="{{ $image_url }}" alt="">
-                                </a>
-                                <!-- likes -->
-                                <ul class="nav nav-stack py-2 small">
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="#!"> <i
-                                                class="bi bi-heart-fill text-danger pe-1"></i>22k </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="#!"> <i class="bi bi-chat-left-text-fill pe-1"></i>3k
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                            @endif
-                            @endforeach
+                                                // Check existence of file in public path
+                                                $file_path = public_path($relativePath);
+                                                $image_url = file_exists($file_path) ? asset($relativePath) :
+                                                asset('feed_assets/images/avatar-1.png');
+                                                @endphp
+                                                <div class="col-sm-6 col-md-4 col-lg-3">
+                                                    <!-- Photo -->
+                                                    <a href="{{ $image_url }}" data-gallery="image-popup"
+                                                        data-glightbox="description: .custom-desc2; descPosition: left;">
+                                                        <img class="rounded img-fluid" src="{{ $image_url }}" alt="">
+                                                    </a>
+                                                    <!-- likes -->
+                                                    <ul class="nav nav-stack py-2 small">
+                                                        <li class="nav-item">
+                                                            <a class="nav-link" href="#!"> <i
+                                                                    class="bi bi-heart-fill text-danger pe-1"></i>22k </a>
+                                                        </li>
+                                                        <li class="nav-item">
+                                                            <a class="nav-link" href="#!"> <i class="bi bi-chat-left-text-fill pe-1"></i>3k
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            @endif
+                                        @endforeach
+                                    @endif
+                                @endforeach
                             @endif
                             <!-- Photo item END -->
                         </div>

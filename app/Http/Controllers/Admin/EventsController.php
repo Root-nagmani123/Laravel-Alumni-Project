@@ -34,8 +34,7 @@ class EventsController extends Controller
 			'url'            => 'nullable|url|max:255',
 			'start_datetime' => 'required|date',
 			'end_datetime'   => 'required|date|after_or_equal:start_datetime',
-			'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048', // max 2MB
-
+			'image' => 'required|image|mimes:jpg,jpeg,png|max:2048', // max 2MB
 		]);
 
 		// Return back with errors if validation fails
