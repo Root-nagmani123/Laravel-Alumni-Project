@@ -288,7 +288,7 @@
                 <!-- Avatar -->
                 <div class="avatar avatar-xs me-2">
                     <a href="#!"> <img class="avatar-img rounded-circle"
-                            src="" alt=""> </a>
+                            src="{{asset('storage/'.$user->profile_pic)}}" alt=""> </a>
                 </div>
                 <!-- Comment box  -->
                 <form class="nav nav-item w-100 position-relative" id="commentForm-{{ $post->id }}"
