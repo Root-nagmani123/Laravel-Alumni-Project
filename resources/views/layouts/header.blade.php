@@ -6,10 +6,16 @@ Header START -->
     <nav class="navbar navbar-expand-lg">
         <div class="container">
             <!-- Logo START -->
-            <a class="navbar-brand" href="{{ url('user/feed') }}" style="display: flex; gap: 0.2rem;">
-                <img class="light-mode-item navbar-brand-item" src="{{ asset('admin_assets/images/logos/lbsnaa.svg') }}"
-                    alt="logo" style="height: 60px;">
-            </a>
+            <a class="navbar-brand d-flex align-items-center gap-2" href="{{ url('user/feed') }}">
+    <img src="{{ asset('admin_assets/images/logos/lbsnaa_logo.jpg') }}" alt="LBSNAA Logo"
+         class="navbar-brand-item" style="height: 60px; object-fit: contain;">
+
+    <div class="d-flex flex-column lh-sm">
+        <span class="h5 mb-0 fw-bold" style="color: #af2910;">Alumni</span>
+        <span style="font-size: 16px; foont-weight: 500;">Lal Bahadur Shastri National Academy of Administration</span>
+    </div>
+</a>
+
             <!-- Logo END -->
 
             <!-- Responsive navbar toggler -->
@@ -25,20 +31,6 @@ Header START -->
 
             <!-- Main navbar START -->
             <div class="collapse navbar-collapse" id="navbarCollapse">
-
-                <!-- Nav Search START -->
-                <div class="nav mt-3 mt-lg-0 flex-nowrap align-items-center px-4 px-lg-0">
-                    <div class="nav-item w-100">
-                        <form class="rounded position-relative" style="margin-top:6px;">
-                            <input class="form-control ps-5 bg-light" type="search" placeholder="Search..."
-                                aria-label="Search">
-                            <button
-                                class="btn bg-transparent px-2 py-0 position-absolute top-50 start-0 translate-middle-y"
-                                type="submit"><i class="bi bi-search fs-5"> </i></button>
-                        </form>
-                    </div>
-                </div>
-                <!-- Nav Search END -->
 
                 <ul class="navbar-nav navbar-nav-scroll justify-content-center flex-grow-1 pe-3 flex-nowrap gap-4">
 
