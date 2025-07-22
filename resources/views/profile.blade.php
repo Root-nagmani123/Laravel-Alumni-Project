@@ -4,7 +4,19 @@
 
 @section('content')
 <div class="container">
-    <div class="row g-4">
+    
+    <div class="row g-4 py-4">
+         <!-- Error Messages -->
+                                        @if ($errors->any())
+                                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                            <ul class="mb-0">
+                                                @foreach ($errors->all() as $error)
+                                                <li>{{ $error }}</li>
+                                                @endforeach
+                                            </ul>
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                        </div>
+                                        @endif
 
         <!-- Main content START -->
         <div class="col-lg-8 vstack gap-4">
@@ -66,17 +78,6 @@
                                             {{ session('success') }}
                                             <button type="button" class="btn-close" data-bs-dismiss="alert"
                                                 aria-label="Close"></button>
-                                        </div>
-                                        @endif
-
-                                        <!-- Error Messages -->
-                                        @if ($errors->any())
-                                        <div class="alert alert-danger">
-                                            <ul class="mb-0">
-                                                @foreach ($errors->all() as $error)
-                                                <li>{{ $error }}</li>
-                                                @endforeach
-                                            </ul>
                                         </div>
                                         @endif
 
