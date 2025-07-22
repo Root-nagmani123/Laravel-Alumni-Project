@@ -71,7 +71,7 @@
     $profileImage = $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar-1.png');
     $displayName = $user->name ?? 'Guest User';
     $designation = $user->designation ?? 'Guest';
-    $profileLink = url('/user/profile/' . ($user->id ?? 0));    
+    $profileLink = url('/user/profile/' . ($user->id ?? 0));
 @endphp
                                         <div class="avatar avatar-lg mt-n5 mb-3">
                                             <a href="#!"><img class="avatar-img rounded-circle"
@@ -124,17 +124,27 @@
     <p class="mt-4">{!! nl2br(e($description)) !!}</p>
 @endif
 
-                   
+
                </div>
-               @if ($broadcast->image_url)
-                   <img class="rounded w-100 mb-3" src="{{ asset('storage/' . $broadcast->image_url) }} ??" alt="" style="height: 400px; object-fit: cover;">
-               @endif
+          @if ($broadcast->image_url)
+    <img class="rounded w-100 mb-3" src="{{ asset('storage/' . $broadcast->image_url) }}" alt="Broadcast Image" style="height: 400px; object-fit: cover;">
+@endif
 
-               @if ($broadcast->video_url)
-                   <video src="{{ $broadcast->video_url }}" controls class="w-100 mb-3 rounded" style="height: 400px; object-fit: cover;"></video>
-               @endif
+                        @if ($broadcast->video_url)
+    <div class="mb-3 rounded overflow-hidden" style="height: 400px;">
+        <iframe
+            width="100%"
+            height="100%"
+            src="https://www.youtube.com/embed/{{ \Illuminate\Support\Str::after($broadcast->video_url, 'v=') }}"
+            title="YouTube video player"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen>
+        </iframe>
+    </div>
+@endif
 
-               
+
            </div>
        </div>
    </div>
