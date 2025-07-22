@@ -642,18 +642,6 @@
                         <!-- Photos of you tab START -->
                         <div class="row g-3">
 
-                            <!-- Add photo START -->
-                            <div class="col-sm-6 col-md-4 col-lg-3">
-                                <div
-                                    class="border border-2 py-5 border-dashed h-100 rounded text-center d-flex align-items-center justify-content-center position-relative">
-                                    <a class="stretched-link" href="#!">
-                                        <i class="fa-solid fa-camera-retro fs-1"></i>
-                                        <h6 class="mt-2">Add photo</h6>
-                                    </a>
-                                </div>
-                            </div>
-                            <!-- Add photo END -->
-
                             <!-- Photo item START -->
                             @if(!empty($post) && !empty($post->media))
                             @foreach($post->media as $media)
@@ -708,18 +696,6 @@
                     <div class="card-body">
                         <!-- Video of you tab START -->
                         <div class="row g-3">
-
-                            <!-- Add Video START -->
-                            <div class="col-sm-6 col-md-4">
-                                <div
-                                    class="border border-2 py-5 border-dashed h-100 rounded text-center d-flex align-items-center justify-content-center position-relative">
-                                    <a class="stretched-link" href="#!">
-                                        <i class="fa-solid fa-camera-retro fs-1"></i>
-                                        <h6 class="mt-2">Add Video</h6>
-                                    </a>
-                                </div>
-                            </div>
-                            <!-- Add Video END -->
                             @if(!empty($post) && !empty($post->media))
                             @foreach($post->media as $media)
                             @if($media->file_type === 'video')
