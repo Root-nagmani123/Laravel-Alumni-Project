@@ -11,8 +11,8 @@ Header START -->
          class="navbar-brand-item" style="height: 60px; object-fit: contain;">
 
     <div class="d-flex flex-column lh-sm">
-        <span class="h5 mb-0 fw-bold" style="color: #af2910;">Alumni</span>
-        <span style="font-size: 16px; foont-weight: 500;">Lal Bahadur Shastri National Academy of Administration</span>
+        <span class="h5 mb-0 fw-bold">Alumni</span>
+        <span style="font-size: 12px; font-weight: 500;color: #af2910;">Lal Bahadur Shastri <br>National Academy of Administration</span>
     </div>
 </a>
 
