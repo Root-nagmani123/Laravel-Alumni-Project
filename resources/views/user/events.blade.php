@@ -5,7 +5,7 @@
 
 @section('content')
     <div class="container">
-        <div class="row g-4">
+        <div class="row g-4 py-4">
 
             <!-- Sidenav START -->
             <div class="col-lg-3">
@@ -41,46 +41,61 @@
                                 <div class="card-body pt-0">
                                     <div class="text-center">
                                         <!-- Avatar -->
+                                           @php
+    $profileImage = '';
+    $displayName = '';
+    $designation = '';
+    $profileLink = '#';
+
+    if  (Auth::guard('user')->check()) {
+        // Member/user post
+        $member = $post->member ?? null;
+
+        $profileImage = $member && $member->profile_image
+            ? asset('storage/' . $member->profile_image)
+            : asset('feed_assets/images/avatar/07.jpg');
+
+        $displayName = $member->name ?? 'Unknown';
+        $designation = $member->designation ?? 'Unknown';
+        $profileLink = url('/user/profile/' . ($member->id ?? 0));
+    }
+    else {
+        // Default user profile
+        $user = Auth::guard('user')->user();
+        $profileImage = $user->profile_pic
+            ? asset('storage/' . $user->profile_pic)
+            : asset('feed_assets/images/avatar-1.png');
+
+        $displayName = $user->name ?? 'Guest User';
+        $designation = $user->designation ?? 'Guest';
+        $profileLink = url('/user/profile/' . ($user->id ?? 0));
+    }
+    $user = Auth::guard('user')->user();
+    $profileImage = $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar-1.png');
+    $displayName = $user->name ?? 'Guest User';
+    $designation = $user->designation ?? 'Guest';
+    $profileLink = url('/user/profile/' . ($user->id ?? 0));    
+@endphp
                                         <div class="avatar avatar-lg mt-n5 mb-3">
-                                            <a href="#!"><img class="avatar-img rounded border border-white border-3"
-                                                                src="{{Auth::guard('user')->user()->profile_pic}}" alt=""></a>
+                                            <a href="#!"><img class="avatar-img rounded-circle"
+                                                                src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar-1.png') }}" alt=""></a>
                                         </div>
                                         <!-- Info -->
                                         @if(Auth::guard('user')->check())
                                             <h5 class="mb-0"> <a href="#!">{{ Auth::guard('user')->user()->name }} </a> </h5>
                                         @endif
                                         <small>{{ Auth::guard('user')->user()->designation }}</small>
-                                        <p class="mt-3">{{Auth::guard('user')->user()->bio}}</p>
-
-                                        <!-- User stat START -->
-                                        <div class="hstack gap-2 gap-xl-3 justify-content-center">
-                                            <!-- User stat item -->
-                                            <div>
-                                                <h6 class="mb-0">256</h6>
-                                                <small>Post</small>
-                                            </div>
-                                            <!-- Divider -->
-                                            <div class="vr"></div>
-                                            <!-- User stat item -->
-                                            <div>
-                                                <h6 class="mb-0">2.5K</h6>
-                                                <small>Followers</small>
-                                            </div>
-                                            <!-- Divider -->
-                                            <div class="vr"></div>
-                                            <!-- User stat item -->
-                                            <div>
-                                                <h6 class="mb-0">365</h6>
-                                                <small>Following</small>
-                                            </div>
-                                        </div>
-                                        <!-- User stat END -->
+                                        <ul class="list-inline mb-0 text-center text-sm-start mt-3 mt-sm-0">
+                        <li class="list-inline-item"><i class="bi bi-briefcase me-1"></i> {{ $user->current_designation }}
+                        </li>
+                        <li class="list-inline-item"><i class="bi bi-backpack me-1"></i> {{ $user->batch }}</li>
+                    </ul>
                                     </div>
                                 </div>
                                 <!-- Card body END -->
                                 <!-- Card footer -->
                                 <div class="card-footer text-center py-2">
-                                    <a class="btn btn-link btn-sm" href="my-profile.html">View Profile </a>
+                                    <a class="btn btn-link btn-sm" href="{{ route('user.profile', ['id' => $user->id]) }}">View Profile </a>
                                 </div>
                             </div>
                             <!-- Card END -->
@@ -109,7 +124,7 @@
                     <div class="card-body">
 
                         <!-- Tab nav line -->
-                        <ul class="nav nav-tabs nav-bottom-line justify-content-center justify-content-md-start" role="tablist">
+                        <ul class="nav nav-tabs nav-bottom-line justify-content-center justify-content-md-start mb-4" role="tablist">
                             <li class="nav-item" role="presentation">
                                 <a class="nav-link active" data-bs-toggle="tab" href="#tab-1" aria-selected="true" role="tab"> All </a>
                             </li>
@@ -134,7 +149,7 @@
                                             <div class="card h-100">
                                                 <div class="position-relative">
                                                     <img class="img-fluid rounded-top"
-                                                         src="{{ isset($event->image) && $event->image ? asset('storage/' . $event->image) : asset('feed_assets/images/avatar/07.jpg') }}" alt="">
+                                                         src="{{ isset($event->image) && $event->image ? asset('storage/' . $event->image) : asset('feed_assets/images/avatar/07.jpg') }}" alt="" style="height: 200px; object-fit: cover;width: 100%;">
                                                   
                                                 </div>
                                                 <div class="card-body position-relative pt-0">
@@ -155,17 +170,18 @@
                                                         N/A
                                                     @endif
                                                 </p>
-                                                <p>{{ $event->description }}</p>
+                                                <p>{{ \Illuminate\Support\Str::words($event->description, 20, '...') }}</p>
 
+                                                </div>
+                                                <div class="card-footer" style="border-top: 0;">
                                                     <div class="d-flex mt-3 justify-content-between">
                                                         <div class="w-100">
                                                             <select class="form-select rsvp-select" data-event-id="{{ $event->id }}">
-                                                                <option value="" {{ $event->rsvp_status == '' ? 'selected' : '' }}>RSVP</option>
-                                                                <option value="1" {{ $event->rsvp_status == 1 ? 'selected' : '' }}>Interested</option>
-                                                                <option value="2" {{ $event->rsvp_status == 2 ? 'selected' : '' }}>Not Interested</option>
-                                                                <option value="3" {{ $event->rsvp_status == 3 ? 'selected' : '' }}>Maybe</option>
+                                                                <option value="" {{ $event->rsvp_status === '' ? 'selected' : '' }}>RSVP</option>
+                                                                <option value="1" {{ $event->rsvp_status === 1 ? 'selected' : '' }}>Interested</option>
+                                                                <option value="2" {{ $event->rsvp_status === 2 ? 'selected' : '' }}>Not Interested</option>
+                                                                <option value="3" {{ $event->rsvp_status === 3 ? 'selected' : '' }}>Maybe</option>
                                                             </select>
-
                                                         </div>
                                                     </div>
                                                 </div>
@@ -314,6 +330,9 @@
 @endsection
 @section('scripts')
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    
 <script>
 $(document).ready(function() {
     // Attach click handler using event delegation
@@ -321,9 +340,13 @@ $(document).ready(function() {
         e.preventDefault();
         
         let eventId = $(this).data('event-id');
-        // Get the selected RSVP status
-
         let status = $(this).val();
+
+        if (!eventId || !status) {
+            Swal.fire('Warning', 'Please select a valid RSVP option.', 'warning');
+            return;
+        }
+
 
         $.ajax({
             url: "{{ route('user.event.rsvp') }}", // Laravel route
@@ -335,7 +358,8 @@ $(document).ready(function() {
             },
             success: function(response) {
                 Swal.fire('Success', response.message, 'success');
-                window.location.reload(); // Reload the page to reflect changes
+                setTimeout(() => location.reload(), 800);
+                //window.location.reload(); // Reload the page to reflect changes
             },
             error: function(xhr) {
                 Swal.fire('Error', 'Something went wrong!', 'error');
@@ -344,5 +368,5 @@ $(document).ready(function() {
     });
 });
 </script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 @endsection

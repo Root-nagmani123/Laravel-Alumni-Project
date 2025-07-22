@@ -24,6 +24,7 @@ class ProfileController extends Controller
    public function showById(Request $request, $id): View
 {
     $user = auth()->guard('user')->user();
+
     $userId = $user->id;
 
          $posts = Post::with(['member', 'media', 'likes', 'comments.member'])

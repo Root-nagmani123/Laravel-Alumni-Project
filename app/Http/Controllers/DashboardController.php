@@ -66,7 +66,8 @@ class DashboardController extends Controller
     public function index()
     {
         $members = Member::all();
-        $forums = Forum::all();
+        //$forums = Forum::all();
+        $forums = Forum::where('status', 1)->get();
 
         // topics created in the last 7 days
         $currentTopics = Topic::where('created_date', '>=', Carbon::now()->subDays(7))->get();
@@ -83,6 +84,7 @@ class DashboardController extends Controller
         $total_user = $members->count();
         $total_forums = $forums->count();
         $total_topics = $topics->count();
+        $userData = $topics;
 
         // Compare
         $currentCount = $currentTopics->count();
@@ -96,7 +98,6 @@ class DashboardController extends Controller
         }
 
 
-
         return view('admin.dashboard', compact(
             'members',
             'forums',
@@ -104,7 +105,8 @@ class DashboardController extends Controller
             'total_user',
             'total_forums',
             'total_topics',
-            'topicChangePercent'
+            'topicChangePercent',
+             'userData'
         ));
     }
 
@@ -117,10 +119,12 @@ class DashboardController extends Controller
     }
     public function submitRsvp(Request $request)
     {
+
         $request->validate([
             'event_id' => 'required|integer|exists:events,id',
             'rsvp_status' => 'required|in:1,2,3',
         ]);
+
 
         // Assuming authenticated user
         $user = auth()->guard('user')->user();
@@ -151,7 +155,6 @@ class DashboardController extends Controller
         $event->rsvp_status = $rsvp ?? ''; // Agar user ne response nahi diya
         return $event;
     });
-    
 
         // RSVP Events by status
         $accept_events = DB::table('events')
@@ -183,6 +186,7 @@ class DashboardController extends Controller
             ->select('events.*')
             ->orderBy('events.id', 'desc')
             ->get();
+
         return view('user.events',compact('events', 'accept_events', 'maybe_events', 'decline_events'));
 
     }

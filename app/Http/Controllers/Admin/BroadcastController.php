@@ -113,13 +113,21 @@ public function destroybroadcast(Broadcast $broadcast)
     ]);
 
     // Image upload
-    if ($request->hasFile('image')) {
-        $path = $request->file('image')->store('uploads/broadcasts', 'public');
-        //$broadcast->image_url = asset('storage/' . $path);
-        $broadcast->image_url = $path;
-        //echo $path;
-        //echo $broadcast;die;
-    }
+   if ($request->hasFile('image')) {
+    $file = $request->file('image');
+
+    // Sanitize filename
+    $originalName = $file->getClientOriginalName();
+    $safeName = preg_replace('/[^a-zA-Z0-9\._-]/', '', pathinfo($originalName, PATHINFO_FILENAME));
+    $extension = $file->getClientOriginalExtension();
+    $finalFileName = $safeName . '_' . time() . '.' . $extension;
+
+    // Store in desired location with custom filename
+    $path = $file->storeAs('uploads/broadcasts', $finalFileName, 'public');
+
+    // Save only relative path; use asset() when rendering
+    $broadcast->image_url = $path;
+}
 
     $broadcast->title = $validated['title'];
     $broadcast->description = $validated['description'];

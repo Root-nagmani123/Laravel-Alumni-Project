@@ -14853,7 +14853,6 @@ textarea.form-control-lg {
 }
 
 .tab-content {
-  padding: 25px 0;
   margin-bottom: 20px;
 }
 
@@ -15081,7 +15080,7 @@ textarea.form-control-lg {
   }
 }
 header {
-  height: 56px;
+  height: 80px;
 }
 
 .navbar-nav .nav-link {
@@ -17893,18 +17892,16 @@ a.badge:hover {
 .left-sidebar {
  position: sticky; 
  top: 100px; 
- height: 100vh;
+ height: 90vh;
 }
 .left-sidebar:hover {
   overflow-y: auto;
-  overflow-x: hidden;
 }
 .right-sidebar {
  position: sticky; 
  top: 100px; 
- height: 100vh;
+ height: 90vh;
 }
 .right-sidebar:hover {
   overflow-y: auto;
-  overflow-x: hidden;
 }

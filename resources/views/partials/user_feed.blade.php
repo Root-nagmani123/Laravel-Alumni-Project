@@ -1,5 +1,5 @@
 <!-- Main content START -->
-<div class="col-md-8 col-lg-6 vstack gap-4" style="margin-top: 50px;">
+<div class="col-md-8 col-lg-6 vstack gap-4" style="margin-top: 45px;">
 
     <!-- Story START -->
     <div class="d-flex gap-2 mb-n3">
@@ -24,13 +24,14 @@
         <div class="d-flex mb-3">
             <!-- Avatar -->
             <div class="avatar avatar-xs me-2">
-                <a href="#"> <img class="avatar-img rounded-circle" src="{{asset('feed_assets/images/avatar/03.jpg')}}"
+                <a href="#"> <img class="avatar-img rounded-circle" src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar-1.png') }}"
                         alt=""> </a>
             </div>
             <!-- Post input -->
             <form class="w-100">
                 <textarea class="form-control pe-4 border-0" rows="2" data-autoresize=""
-                    placeholder="Share your thoughts..."></textarea>
+                    placeholder="Share your thoughts..." data-bs-toggle="modal"
+                    data-bs-target="#feedActionPhoto"></textarea>
             </form>
         </div>
         <!-- Share feed toolbar START -->
@@ -86,8 +87,8 @@
         // Member/user post
         $member = $post->member ?? null;
 
-        $profileImage = $member && $member->profile_image
-            ? asset('storage/' . $member->profile_image)
+        $profileImage = $member && $member->profile_pic
+            ? asset('storage/' . $member->profile_pic)
             : asset('feed_assets/images/avatar/07.jpg');
 
         $displayName = $member->name ?? 'Unknown';
@@ -96,9 +97,12 @@
     }
 @endphp
 
-<div class="avatar avatar-story me-2">
+<div class="avatar me-2">
     <a href="{{ $profileLink }}">
-        <img class="avatar-img rounded-circle" src="{{ $profileImage }}" alt="">
+        <img 
+            class="avatar-img rounded-circle" 
+            src="{{ $profileImage }}" 
+            alt="Profile Picture">
     </a>
 </div>
 
@@ -106,7 +110,7 @@
 <div>
     <div class="nav nav-divider">
         <h6 class="nav-item card-title mb-0">
-            <a href="{{ $profileLink }}">{{ $displayName }}</a>
+            <a href="#!">{{ $displayName }}</a>
         </h6>
         <span class="nav-item small">
             {{ \Carbon\Carbon::parse($post->created_at)->diffForHumans() }}
@@ -115,14 +119,54 @@
     <p class="mb-0 small">{{ $designation }}</p>
 </div>
 
+
                 </div>
+                <div class="dropdown">
+								<a href="#" class="text-secondary btn btn-secondary-soft-hover py-1 px-2" id="cardFeedAction" data-bs-toggle="dropdown" aria-expanded="false">
+									<i class="bi bi-three-dots"></i>
+								</a>
+								<!-- Card feed action dropdown menu -->
+<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="cardFeedAction">
+	<li>
+		<a class="dropdown-item edit-post" href="#" data-id="{{ $post->id }}">
+			<i class="bi bi-pen fa-fw pe-2"></i>Edit post
+		</a>
+	</li>
+	<li>
+		<a class="dropdown-item delete-post" href="#" data-id="{{ $post->id }}">
+			<i class="bi bi-trash fa-fw pe-2"></i>Delete post
+		</a>
+	</li>
+</ul>
+
+
+							</div>
 
             </div>
         </div>
         <!-- Card header END -->
         <!-- Card body START -->
         <div class="card-body">
-            <p>{{ $post->content }}</p>
+@php
+    $fullContent = strip_tags($post->content);
+    $wordCount = str_word_count($fullContent);
+@endphp
+
+@if ($wordCount > 50)
+    <div x-data="{ expanded: false }">
+        <p x-show="!expanded">
+            {{ \Illuminate\Support\Str::words($fullContent, 50, '...') }}
+            <a href="#" @click.prevent="expanded = true" class="text-danger">Read more</a>
+        </p>
+        <p x-show="expanded" x-cloak>
+            {!! nl2br(e($post->content)) !!}
+            <a href="#" @click.prevent="expanded = false" class="text-danger">Show less</a>
+        </p>
+    </div>
+@else
+    <p>{!! nl2br(e($post->content)) !!}</p>
+@endif
+
             <!-- Card img -->
             @php
             $validMedia = $post->media->filter(function($media) {
@@ -138,7 +182,7 @@
             @if($post->video_link)
             {{-- Embedded YouTube Video --}}
             <div class="ratio ratio-16x9 mt-2">
-                <iframe width="560" height="315" src="{{ $post->video_link }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                <iframe height="315" src="{{ $post->video_link }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
             </div>
             @elseif($totalVideos > 0)
             {{-- Uploaded Video Files --}}
@@ -158,8 +202,8 @@
             <div class="post-img mt-2">
                 <a href="{{ asset('storage/' . $imageMedia[0]->file_path) }}" class="glightbox"
                     data-gallery="post-gallery-{{ $post->id }}">
-                    <img src="{{ asset('storage/' . $imageMedia[0]->file_path) }}" loading="lazy" class="w-100"
-                        alt="Post Image">
+                    <img src="{{ asset('storage/' . $imageMedia[0]->file_path) }}" loading="lazy" class="w-100 rounded"
+                        alt="Post Image" style="width: 100%; height: 400px;object-fit: cover;">
                 </a>
             </div>
             @elseif($totalImages > 1)
@@ -229,11 +273,6 @@
                     </a>
                     <!-- Card share action dropdown menu -->
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="cardShareAction">
-                       <li>
-                    <a href="#" class="dropdown-item send-direct-message-btn" data-user-id="{{-- $member->id --}}">
-                        <i class="bi bi-envelope fa-fw pe-2"></i>Send via Direct Message
-                    </a>
-                    </li>
 
                         <li>
 <a class="dropdown-item copy-url-btn" href="javascript:void(0)"
@@ -241,17 +280,6 @@
                                 <i class="bi bi-link fa-fw pe-2"></i>Copy link to post
                             </a>
                             </li>
-
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
-                         <li>
-                            <a class="dropdown-item share-to-feed-btn"
-                            href="#"
-                            data-post-id="{{ $post->id ?? '' }}">
-                            <i class="bi bi-pencil-square fa-fw pe-2"></i>Share to News Feed
-                            </a>
-                        </li>
                     </ul>
                 </li>
                 <!-- Card share action END -->
@@ -260,7 +288,7 @@
                 <!-- Avatar -->
                 <div class="avatar avatar-xs me-2">
                     <a href="#!"> <img class="avatar-img rounded-circle"
-                            src="{{asset('feed_assets/images/avatar/12.jpg')}}" alt=""> </a>
+                            src="{{asset('storage/'.$user->profile_pic)}}" alt=""> </a>
                 </div>
                 <!-- Comment box  -->
                 <form class="nav nav-item w-100 position-relative" id="commentForm-{{ $post->id }}"
@@ -350,7 +378,7 @@
             Load more comments
         </a>
     </div>
-@endif
+    @endif
             <!-- Card footer END -->
         </div>
         <!-- Card feed item END -->
@@ -358,14 +386,14 @@
     </div>
     @endforeach
     <!-- Load more button START -->
-    <a href="#!" role="button" class="btn btn-loader btn-primary-soft" data-bs-toggle="button" aria-pressed="true">
+    <!-- <a href="#!" role="button" class="btn btn-loader btn-primary-soft" data-bs-toggle="button" aria-pressed="true">
         <span class="load-text"> Load more </span>
         <div class="load-icon">
             <div class="spinner-grow spinner-grow-sm" role="status">
                 <span class="visually-hidden">Loading...</span>
             </div>
         </div>
-    </a>
+    </a> -->
     <!-- Load more button END -->
     <!-- Card feed END -->
 </div>
@@ -530,7 +558,6 @@ $(document).on('click', '.delete-comment-btn', function() {
         });
     }
 });
-
 
 //add storis modal
 document.getElementById('openAddStoryModal').addEventListener('click', function () {
@@ -791,7 +818,7 @@ document.addEventListener("DOMContentLoaded", function () {
             id: "member-{{ $myUserId }}",
             photo: "{{ asset($myStoryImage ? 'storage/' . $myStoryImage : 'feed_assets/images/avatar/08.jpg') }}",
             name: "{{ addslashes($myUser->name) }}",
-            link: "#",
+            // link: "#", // REMOVE
             items: [
                 @foreach($storiesByMember[$myUserId] as $story)
                 {
@@ -803,8 +830,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     src: "{{ asset('storage/' . $story->story_image) }}",
                    // preview: "{{ asset('storage/' . $story->story_image) }}",
                    preview: "{{ asset($previewImage) }}",
-                    link: "#",
-                    linkText: "View",
+                    // link: "#", // REMOVE
+                    // linkText: "View", // REMOVE
                     time: {{ \Carbon\Carbon::parse($story->created_at)->timestamp }}
                 }@if(!$loop->last),@endif
                 @endforeach
@@ -831,7 +858,7 @@ document.addEventListener("DOMContentLoaded", function () {
             id: "member-{{ $memberId }}",
             photo: "{{ asset($storyImage ? 'storage/' . $storyImage : 'feed_assets/images/avatar/08.jpg') }}",
             name: "{{ addslashes($user->name) }}",
-            link: "#",
+            // link: "#", // REMOVE
             items: [
                 @foreach($memberStories as $story)
                 {
@@ -843,8 +870,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     src: "{{ asset('storage/' . $story->story_image) }}",
                     //preview: "{{ asset('storage/' . $story->story_image) }}",
                     preview: "{{ asset($previewImage) }}",
-                    link: "#",
-                    linkText: "View",
+                    // link: "#", // REMOVE
+                    // linkText: "View", // REMOVE
                     time: {{ \Carbon\Carbon::parse($story->created_at)->timestamp }}
                 }@if(!$loop->last),@endif
                 @endforeach
@@ -896,6 +923,109 @@ function deleteStory(storyId) {
     });
 
 </script>
+
+<!-- edit and delete post -->
+<!-- Edit Post Modal -->
+<div class="modal fade" id="editPostModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <form id="editPostForm">
+      @csrf
+      @method('PUT')
+      <input type="hidden" id="editPostId" name="post_id">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Edit Post</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <textarea name="content" id="editPostContent" class="form-control" rows="4"></textarea>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Update Post</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- edit and delete post end -->
+
+<script>
+$(document).ready(function() {
+
+    // Edit Post
+    $('.edit-post').on('click', function(e) {
+        e.preventDefault();
+        const postId = $(this).data('id');
+
+        // Fetch post data via AJAX
+        $.ajax({
+            url: `/posts/${postId}/edit`,
+            type: 'GET',
+            success: function(response) {
+                // Populate modal fields
+                $('#editPostModal #editPostContent').val(response.content);
+                $('#editPostModal #editPostId').val(postId);
+                $('#editPostModal').modal('show');
+            },
+            error: function() {
+                alert('Error fetching post details.');
+            }
+        });
+    });
+
+    // Delete Post
+    $('.delete-post').on('click', function(e) {
+        e.preventDefault();
+        const postId = $(this).data('id');
+
+        if (confirm('Are you sure you want to delete this post?')) {
+            $.ajax({
+                url: `/posts/${postId}`,
+                type: 'DELETE',
+                data: {
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function() {
+                    alert('Post deleted successfully.');
+                    location.reload(); // or remove the post from DOM
+                },
+                error: function() {
+                    alert('Failed to delete the post.');
+                }
+            });
+        }
+    });
+
+});
+</script>
+
+<script>
+$('#editPostForm').on('submit', function(e) {
+    e.preventDefault();
+
+    const postId = $('#editPostId').val();
+    const content = $('#editPostContent').val();
+
+    $.ajax({
+        url: `/posts/${postId}`,
+        type: 'PUT',
+        data: {
+            _token: '{{ csrf_token() }}',
+            content: content
+        },
+        success: function() {
+            $('#editPostModal').modal('hide');
+            alert('Post updated successfully.');
+            location.reload(); // or update content in DOM
+        },
+        error: function() {
+            alert('Failed to update post.');
+        }
+    });
+});
+</script>
+
 
 
 

@@ -15,7 +15,7 @@ class ForumController extends Controller
 {
     public function index()
     {
-        $forums = Forum::all(); 
+        $forums = Forum::all();
         // print_r($forums);die;
             // Corrected to use Forum model (not Forums)
         return view('admin.forums.index', compact('forums'));
@@ -231,6 +231,19 @@ public function update_topic_2952025(Request $request, $id)
     return back()->with('success', 'Topic updated successfully.');
 }
 
+public function update_topic(Request $request, $id)
+{
+    $topic = ForumTopic::findOrFail($id);
+
+    $topic->update([
+        'title' => $request->input('title'),
+        'description' => $request->input('description'),
+        'video_caption' => $request->input('video_caption'),
+        'status' => $request->input('status'),
+    ]);
+
+    return back()->with('success', 'Topic updated successfully.');
+}
 public function updateTopic(Request $request, $id)
 {
     $topic = ForumTopic::findOrFail($id);
@@ -242,10 +255,18 @@ public function updateTopic(Request $request, $id)
     ]);
     return back()->with('success', 'Topic updated successfully.');
 }
+
 public function deleteTopic($id)
 {
     // Find the topic by ID
     $topic = ForumTopic::findOrFail($id);
+
+    // Check if the topic is active (status == 1)
+    if ($topic->status == 1) {
+        return redirect()->to('/admin/forums/forums/' . $topic->forum_id . '/topics')
+                        ->with('error', 'Cannot delete an active topic. Please deactivate it first.');
+    }
+
     // Delete associated files from storage (if they exist)
     if ($topic->images) {
         Storage::delete('public/uploads/images/' . $topic->images);
@@ -256,44 +277,15 @@ public function deleteTopic($id)
     if ($topic->video) {
         Storage::delete('public/uploads/videos/' . $topic->video);
     }
+
     // Delete the topic record
     $topic->delete();
-    // Redirect or return a response
-    return redirect()->route('forums.index')->with('success', 'Topic and associated files deleted successfully');
+
+    // ✅ Redirect back to the same forum’s topic list
+    return redirect()->to('/admin/forums/forums/' . $topic->forum_id . '/topics')
+                     ->with('success', 'Topic and associated files deleted successfully.');
 }
-public function update_forum(Request $request, Forum $forum)
-{
-    $request->validate([
-        'forumname' => 'required|string|max:255',
-        'forumstatus' => 'required|in:0,1',
-    ]);
-    $forum->update([
-        'name' => $request->forumname,
-        'status' => $request->forumstatus,
-    ]);
-    return redirect()->route('forums.index')->with('success', 'Forum updated successfully!');
-}
-public function destroyforum(Forum $forum)
-{
-     if ($forum->status == 1) {
-            return redirect()->route('forums.index')
-                            ->with('error', 'Cannot delete an active forum. Please deactivate it first.');
-        }
-    // Delete related members
-    \DB::table('forums_member')->where('forums_id', $forum->id)->delete();
-    // Delete related topics and their files
-    $topics = \App\Models\ForumTopic::where('forum_id', $forum->id)->get();
-    foreach ($topics as $topic) {
-        // If file path column exists, e.g., $topic->file
-        if ($topic->file && \Storage::exists($topic->file)) {
-            \Storage::delete($topic->file);
-        }
-        $topic->delete();
-    }
-    // Finally delete the forum
-    $forum->delete();
-    return redirect()->route('forums.index')->with('success', 'Forum and all associated data deleted successfully.');
-}
+
 public function toggleStatus(Request $request)
 {
     $forum = Forum::findOrFail($request->id);
@@ -324,7 +316,7 @@ DB::table('forums_member')
         ->where('user_id', $userId)
         ->where('id', $id)
         ->delete();
-    return redirect()->back()->with('success', 'Member removed from forum successfully.');  
+    return redirect()->back()->with('success', 'Member removed from forum successfully.');
 }
 public function membertoggleStatus(Request $request)
 {

@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\AdminController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 
+use App\Http\Controllers\MapController;
 
 use App\Http\Controllers\Admin\MemberController;
 use App\Http\Controllers\Admin\GroupController;
@@ -82,6 +83,10 @@ Route::prefix('user')->name('user.')->group(function () {
         Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 		Route::put('/post/update/{id}', [PostController::class, 'update'])->name('post.update');
 		Route::post('/post', [PostController::class, 'store'])->name('post.store');
+        Route::get('/posts/{id}/edit', [PostController::class, 'edit']);
+  Route::put('/posts/{id}', [PostController::class, 'update']);
+  Route::delete('/posts/{id}', [PostController::class, 'destroy']);
+
 
 		Route::post('/group-post', [PostController::class, 'group_post_store'])->name('group.post');
 
@@ -102,7 +107,7 @@ Route::prefix('user')->name('user.')->group(function () {
 		Route::middleware('auth')->group(function () {
     //Route::put('/user/profile/update', [UserController::class, 'update'])->name('user.profile.update');
     // other protected routes
-});
+  });
 
          Route::get('/profile/{id}', [ProfileController::class, 'showById'])->name('profile');
 
@@ -116,6 +121,8 @@ Route::prefix('user')->name('user.')->group(function () {
 
 	   Route::post('/event-rsvp', [DashboardController::class, 'submitRsvp'])->name('event.rsvp');
 	   Route::get('/all-events', [DashboardController::class, 'allevents'])->name('allevents');
+      Route::get('/broadcast/{id}', [FeedController::class, 'broadcastDetails'])->name('broadcastDetails');
+      Route::get('/library', [LibraryController::class, 'index'])->name('library');
 
 
     });
@@ -176,6 +183,40 @@ Route::prefix('admin')->middleware('auth:admin')->controller(AdminController::cl
 
 	Route::get('profile', [AdminController::class, 'profile'])->name('admin.profile');
 
+    // Location Routes
+    Route::prefix('location')->name('admin.location.')->group(function () {
+
+        // Country Routes
+        Route::get('/country', [App\Http\Controllers\Admin\Location\CountryController::class, 'index'])->name('country');
+        Route::get('/country/create', [App\Http\Controllers\Admin\Location\CountryController::class, 'create'])->name('country.create');
+        Route::post('/country/store', [App\Http\Controllers\Admin\Location\CountryController::class, 'store'])->name('country.store');
+        Route::get('/country/edit/{country}', [App\Http\Controllers\Admin\Location\CountryController::class, 'edit'])->name('country.edit');
+        Route::put('/country/update/{country}', [App\Http\Controllers\Admin\Location\CountryController::class, 'update'])->name('country.update');
+        Route::delete('/country/destroy/{country}', [App\Http\Controllers\Admin\Location\CountryController::class, 'destroy'])->name('country.destroy');
+        Route::post('/country/toggle-status/{country}', [App\Http\Controllers\Admin\Location\CountryController::class, 'toggleStatus'])->name('country.toggle-status');
+
+
+        // State Routes
+        Route::get('/state', [App\Http\Controllers\Admin\Location\StateController::class, 'index'])->name('state');
+        Route::get('/state/create', [App\Http\Controllers\Admin\Location\StateController::class, 'create'])->name('state.create');
+        Route::post('/state/store', [App\Http\Controllers\Admin\Location\StateController::class, 'store'])->name('state.store');
+        Route::get('/state/edit/{state}', [App\Http\Controllers\Admin\Location\StateController::class, 'edit'])->name('state.edit');
+        Route::put('/state/update/{state}', [App\Http\Controllers\Admin\Location\StateController::class, 'update'])->name('state.update');
+        Route::delete('/state/destroy/{state}', [App\Http\Controllers\Admin\Location\StateController::class, 'destroy'])->name('state.destroy');
+        Route::post('/state/toggle-status/{state}', [App\Http\Controllers\Admin\Location\StateController::class, 'toggleStatus'])->name('state.toggle-status');
+        Route::post('/get-states', [App\Http\Controllers\Admin\Location\StateController::class, 'getStatesByCountry'])->name('get-states');
+
+        // City Routes
+        Route::get('/city', [App\Http\Controllers\Admin\Location\CityController::class, 'index'])->name('city');
+        Route::get('/city/create', [App\Http\Controllers\Admin\Location\CityController::class, 'create'])->name('city.create');
+        Route::post('/city/store', [App\Http\Controllers\Admin\Location\CityController::class, 'store'])->name('city.store');
+        Route::get('/city/edit/{city}', [App\Http\Controllers\Admin\Location\CityController::class, 'edit'])->name('city.edit');
+        Route::put('/city/update/{city}', [App\Http\Controllers\Admin\Location\CityController::class, 'update'])->name('city.update');
+        Route::delete('/city/destroy/{city}', [App\Http\Controllers\Admin\Location\CityController::class, 'destroy'])->name('city.destroy');
+        Route::post('/city/toggle-status/{city}', [App\Http\Controllers\Admin\Location\CityController::class, 'toggleStatus'])->name('city.toggle-status');
+        Route::post('city/get-states', [App\Http\Controllers\Admin\Location\CityController::class, 'getStatesByCountry'])->name('city.get-states');
+
+    });
 
 Route::prefix('forums')->name('forums.')->group(function () {
 		Route::get('/', [ForumController::class, 'index'])->name('index'); // List all forums
@@ -191,7 +232,8 @@ Route::prefix('forums')->name('forums.')->group(function () {
 		Route::get('/forums/{id}/topics', [ForumController::class, 'view_forum_topics'])->name('view_topic');
 		Route::get('/topics/{id}', [ForumController::class, 'show'])->name('topics.view');
 		Route::get('/topics/{id}/edit', [ForumController::class, 'edit'])->name('topics.edit');
-		Route::put('/topics/{id}', [ForumController::class, 'update_topic'])->name('topics.update');
+		//Route::put('/topics/{id}', [ForumController::class, 'update_topic'])->name('topics.update');
+        Route::put('/topics/{id}', [ForumController::class, 'update_topic'])->name('topics.update');
 		Route::delete('/topics/{id}', [ForumController::class, 'deleteTopic'])->name('topics.delete');
 		Route::get('/{forum}/edit', [ForumController::class, 'forumedit'])->name('forum.edit'); // Show edit form
 		Route::put('/update-forum/{forum}', [ForumController::class, 'update_forum'])->name('forum.update');
@@ -270,6 +312,8 @@ Route::prefix('events')->name('events.')->group(function () {
     });
 
 
+
+
 });
 
 
@@ -289,5 +333,19 @@ Route::get('/user_login', function () {
         Route::get('/user_feed1', function () {
             return view('user.feed1');
         })->name('user_feed1');
+			 Route::get('/user/broadcast', function () {
+            return view('user.broadcast');
+        })->name('user.broadcast');
+         Route::get('/user/library', function () {
+            return view('user.library');
+        })->name('user.library');
+        Route::get('/user/forum', function () {
+            return view('user.forum');
+        })->name('user.forum');
 
 require __DIR__.'/auth.php';
+
+
+
+Route::get('/maps', [MapController::class, 'showMap'])->name('maps.index');
+Route::get('/mapshow', [MapController::class, 'Map'])->name('maps.show');

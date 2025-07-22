@@ -263,4 +263,59 @@ public function storePostComment(Request $request, $id)
     ]);
 
 }
+    public function deletePost($id)
+    {
+        $post = Post::findOrFail($id);
+        $userId = auth('user')->id();
+
+        if ($post->member_id !== $userId) {
+            return redirect()->back()->withErrors('You do not have permission to delete this post.');
+        }
+
+        // Delete associated media
+        foreach ($post->media as $media) {
+            Storage::disk('public')->delete($media->file_path);
+            $media->delete();
+        }
+
+        // Delete the post
+        $post->delete();
+
+        return redirect()->back()->with('success', 'Post deleted successfully.');
+    }
+    public function deletePostComment($id)
+    {
+        $comment = PostComment::findOrFail($id);
+        $userId = auth('user')->id();
+
+        if ($comment->member_id !== $userId) {
+            return redirect()->back()->withErrors('You do not have permission to delete this comment.');
+        }
+
+        $comment->delete();
+
+        return redirect()->back()->with('success', 'Comment deleted successfully.');
+    }
+    public function edit($id)
+{
+    $post = Post::findOrFail($id);
+    return response()->json($post);
+}
+
+public function update(Request $request, $id)
+{
+    $post = Post::findOrFail($id);
+    $post->content = $request->content;
+    $post->save();
+
+    return response()->json(['message' => 'Updated']);
+}
+
+public function destroy($id)
+{
+    Post::destroy($id);
+    return response()->json(['message' => 'Deleted']);
+}
+
 };
+

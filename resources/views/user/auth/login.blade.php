@@ -47,11 +47,23 @@
                     <div class="login-form">
                         <div>
                             <div class="logo-sec text-center">
-                                <a href="#!">
-                                    <img src="{{ asset('admin_assets/images/logos/logo.png') }}" alt="logo"
-                                        class="img-fluid blur-up lazyload">
+                                <a href="#!"
+                                    class="d-flex align-items-center gap-3 text-decoration-none justify-content-center flex-wrap">
+                                    <!-- Logo Image -->
+                                    <img src="{{ asset('admin_assets/images/logos/lbsnaa_logo.jpg') }}"
+                                        alt="LBSNAA Logo" style="height: 60px; object-fit: contain;">
+
+                                    <!-- Text Block -->
+                                    <div class="d-flex flex-column text-start">
+                                        <span class="mb-0"
+                                            style="color: #000000;font-weight: bold;font-size: 24px;">Alumni</span>
+                                        <span style="font-size: 16px; font-weight: 500;color: #af2910;">
+                                            Lal Bahadur Shastri National Academy of Administration
+                                        </span>
+                                    </div>
                                 </a>
                             </div>
+
                             <hr>
                             <div class="login-title">
                                 <h2>Login</h2>
@@ -67,50 +79,41 @@
                                         @csrf
                                         <div class="form-group">
                                             <label for="exampleInputEmail1">Email address</label>
-                                            
+
                                             <input type="email"
-                                                            class="form-control @error('email') is-invalid @enderror"
-                                                            id="exampleInputEmail1" placeholder="Enter your email"
-                                                            name="email" value="{{ old('email') }}"> 
-                                                        @error('email')
-                                                        <div class="invalid-feedback">
-                                                            {{ $message }}
-                                                        </div>
-                                                        @enderror
-                                                        
+                                                class="form-control @error('email') is-invalid @enderror"
+                                                id="exampleInputEmail1" placeholder="Enter your email" name="email"
+                                                value="{{ old('email') }}">
+                                            @error('email')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                            @enderror
+
                                             <i class="input-icon iw-20 ih-20" data-feather="user"></i>
                                         </div>
                                         <div class="form-group">
                                             <label for="exampleInputPassword1">Password</label>
-                                           <div class="position-relative">
-                                                            <input type="password"
-                                                                class="form-control @error('password') is-invalid @enderror"
-                                                                id="password" placeholder="Enter your password"
-                                                                name="password">
-                                                            <span toggle="#password"
-                                                                class="toggle-password position-absolute end-0 top-50 translate-middle-y me-3"
-                                                                style="cursor: pointer;">
-                                                                👁️
-                                                            </span>
-                                                        </div>
-                                                         @error('password')
-                                                        <div class="invalid-feedback">
-                                                            {{ $message }}
-                                                        </div>
-                                                        @enderror
-                                            
+                                            <div class="position-relative">
+                                                <input type="password"
+                                                    class="form-control @error('password') is-invalid @enderror"
+                                                    id="password" placeholder="Enter your password" name="password">
+                                                <span toggle="#password"
+                                                    class="toggle-password position-absolute end-0 top-50 translate-middle-y me-3"
+                                                    style="cursor: pointer;">
+                                                    👁️
+                                                </span>
+                                            </div>
+                                            @error('password')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                            @enderror
+
                                             <!-- <i class="input-icon" data-feather="eye-off" width="20" height="20"></i> -->
                                         </div>
-                                        <div class="bottom-sec">
-                                            <div class="form-check checkbox_animated">
-                                                <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                                                <input type="checkbox" class="form-check-input" id="exampleCheck1" name="remember">
-                                            </div>
-                                            <a href="#" class="ms-auto forget-password">forgot
-                                                password?</a>
-                                        </div>
                                         <div class="btn-section text-center">
-                                            <button type="submit" class="btn btn-primary btn-lg w-100">Login</button>
+                                            <button type="submit" class="btn btn-primary btn-lg w-100" style="background-color: #af2910; color: #fff; border-color: #af2910;">Login</button>
 
                                         </div>
                                     </form>
@@ -123,6 +126,8 @@
         </div>
     </section>
     <!-- login section end -->
+
+    
 
 
     <!-- latest jquery-->

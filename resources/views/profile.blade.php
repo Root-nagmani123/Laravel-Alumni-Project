@@ -1,1488 +1,942 @@
 @extends('layouts.app')
 
-   @section('title', 'User Profile - Alumni | Lal Bahadur Shastri National Academy of Administration')
+@section('title', 'User Profile - Alumni | Lal Bahadur Shastri National Academy of Administration')
 
-   @section('content')
-   <div class="container">
-       <div class="row g-4">
+@section('content')
+<div class="container">
+    
+    <div class="row g-4 py-4">
+         <!-- Error Messages -->
+                                        @if ($errors->any())
+                                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                            <ul class="mb-0">
+                                                @foreach ($errors->all() as $error)
+                                                <li>{{ $error }}</li>
+                                                @endforeach
+                                            </ul>
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                        </div>
+                                        @endif
+                                         @if(session('success'))
+                                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                            {{ session('success') }}
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                                aria-label="Close"></button>
+                                        </div>
+                                        @endif
 
-           <!-- Main content START -->
-           <div class="col-lg-8 vstack gap-4">
-               <!-- My profile START -->
-               <div class="card">
-                   <!-- Cover image -->
-                   <div class="h-200px rounded-top"
-                       style="background-image:url({{asset('feed_assets/images/bg/05.jpg')}}); background-position: center; background-size: cover; background-repeat: no-repeat;">
-                   </div>
-                   <!-- Card body START -->
-                   <div class="card-body py-0">
-                       <div class="d-sm-flex align-items-start text-center text-sm-start">
-                           <div>
-                               <!-- Avatar -->
-                               <div class="avatar avatar-xxl mt-n5 mb-3">
-                                   <img class="avatar-img rounded-circle border border-white border-3"
-                                       src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar-1.png') }}"
-                                       alt="">
-                               </div>
-                           </div>
-                           <div class="ms-sm-4 mt-sm-3">
-                               <!-- Info -->
-                               @if(Auth::guard('user')->check())
-                               <h1 class="mb-0 h5">{{-- Auth::guard('user')->user()->name --}}
-                                   {{ $user->name }} <i class="bi bi-patch-check-fill text-success small"></i></h1>
-                               @endif
-                               <p>250 Connections</p>
-                           </div>
-                           <!-- Button -->
-                           <div class="d-flex mt-3 justify-content-center ms-sm-auto">
-                               <!--<button class="btn btn-danger-soft me-2" type="button" data-bs-toggle="modal"
+        <!-- Main content START -->
+        <div class="col-lg-8 vstack gap-4">
+            <!-- My profile START -->
+            <div class="card">
+                <!-- Cover image -->
+                <div class="h-300px rounded-top"
+                    style="background-image:url({{asset('user_assets/images/login/login-bg.jpg')}}); background-position: center; background-size: cover; background-repeat: no-repeat;">
+                </div>
+                <!-- Card body START -->
+                <div class="card-body py-0">
+                    <div class="d-sm-flex align-items-start text-center text-sm-start">
+                        <div>
+                            <!-- Avatar -->
+                            <div class="avatar avatar-xxl mt-n5 mb-3">
+                                <img class="avatar-img rounded-circle border border-white border-3"
+                                    src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar-1.png') }}"
+                                    alt="">
+                            </div>
+                        </div>
+                        <div class="ms-sm-4 mt-sm-3">
+                            <!-- Info -->
+                            @if(Auth::guard('user')->check())
+                            <h1 class="mb-0 h5">{{-- Auth::guard('user')->user()->name --}}
+                                {{ $user->name }}</h1>
+                            @endif
+                            <ul class="list-inline mb-0 text-center text-sm-start mt-3 mt-sm-0">
+                        <li class="list-inline-item"><i class="bi bi-file-person me-1"></i>
+                        </li>
+                        <li class="list-inline-item"><i class="bi bi-collection me-1"></i></li>
+                    </ul>
+                        </div>
+                        <!-- Button -->
+                        <div class="d-flex mt-3 justify-content-center ms-sm-auto">
+                            <!--<button class="btn btn-danger-soft me-2" type="button" data-bs-toggle="modal"
                                    data-bs-target="#editProfileModal">
                                    <i class="bi bi-pencil-fill pe-1"></i> Edit profile
                                </button>-->
-                               <button type="button" class="btn btn-danger-soft me-2" data-bs-toggle="modal" data-bs-target="#editProfileModal">
-                                 <i class="bi bi-pencil-fill pe-1"></i> Edit profile
-                                </button>
-                           </div>
-                           <!-- -->
-
-<div class="modal fade modal-xl" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="editProfileModalLabel">Edit Profile</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-      <main class="main-content profile">
-       <div class="container sidebar-toggler">
-           <div class="row">
-<div class="col-12 col-sm-6 col-md-4 col-lg-4 col-xl-4 col-xxl-4">
-                   <div class="d-inline-block d-lg-none">
-                       <button class="button profile-active mb-4 mb-lg-0 d-flex align-items-center gap-2">
-                           <i class="material-symbols-outlined mat-icon"> tune </i>
-                           <span>My profile</span>
-                       </button>
-                   </div>
-                   <div class="profile-sidebar cus-scrollbar p-5">
-                       <div class="d-block d-lg-none position-absolute end-0 top-0">
-                           <button class="button profile-close">
-                               <i class="material-symbols-outlined mat-icon fs-xl"> close </i>
-                           </button>
-                       </div>
-
-
-
-                   </div>
-               </div>
-
-
-              <div class="col-12 col-md-8 col-lg-8 col-xl-8 col-xxl-8 mt-0 mt-lg-10 mt-xl-0 d-flex flex-column gap-7 cus-z">
-
-
-
-                   <div class="post-item d-flex flex-column gap-5 gap-md-7" id="news-feed">
-				   <div class="post-single-box p-3 p-sm-5">
-				<div class="top-area pb-5">
-				<div class="profile-area d-center justify-content-between">
-            <div class="avatar-item d-flex gap-3 align-items-center">
-
-
-            <div class="info-area">
-
-<ul class="nav nav-tabs mb-4" id="profileTab" role="tablist">
-		  <li class="nav-item" role="presentation">
-			<button class="nav-link" id="edit-tab" data-bs-toggle="tab" data-bs-target="#edit" type="button" role="tab">
-			  Edit Profile
-			</button>
-		  </li>
-		</ul>
-
-<!-- Tab Content -->
-<div class="tab-content" id="profileTabContent">
-  <!-- Overview Form -->
-
-  <div class="tab-pane fade show active" id="overview" role="tabpanel">
-  <div class="tab-content pt-2">
-    <div class="tab-pane fade profile-overview active show" id="profile-overview">
-  <!-- Success Message -->
-@if(session('success'))
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        {{ session('success') }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-@endif
-
-<!-- Error Messages -->
-@if ($errors->any())
-    <div class="alert alert-danger">
-        <ul class="mb-0">
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
-
-</div>
-  </div>
-</div>
-<!-- Tab Content -->
-
-  </div>
-
-  <!-- Edit Profile Form -->
-
- <div class="tab-pane fade" id="edit" role="tabpanel">
-  <div class="accordion" id="editAccordion">
-
-    <!-- Personal Information -->
-   <div class="container-fluid p-0">
-  <div class="accordion w-100" id="editAccordion">
-
-    <!-- Personal Information -->
-    <div class="accordion-item w-100 ">
-      <h2 class="accordion-header" id="personalHeading">
-        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#personalCollapse" aria-expanded="true" aria-controls="personalCollapse">
-          Personal Information
-        </button>
-      </h2>
-      <div id="personalCollapse" class="accordion-collapse collapse {{ session('active_tab') == 'personal' ? 'show' : '' }}" aria-labelledby="personalHeading" data-bs-parent="#editAccordion" >
-        <div class="accordion-body w-100">
-
-	<form action="{{ route('user.profile.update', ['id' => $user->id]) }}" method="post" id="myForm" enctype="multipart/form-data">
-				@csrf
-				@method('PUT')
-
-					<div class="form-group">
-	<!-- Full Name -->
-	<div class="row mb-3">
-		<div class="col-3">
-			<label for="name">Full Name:</label>
-		</div>
-		<div class="col-9">
-			<input type="text" id="name" name="name"
-				value="{{ old('name', $user->name) }}"
-				class="form-control"
-				placeholder="Enter your full name">
-		</div>
-	</div>
-
-	<!-- Date of Birth -->
-	<div class="row mb-3">
-		<div class="col-3">
-			<label for="date_of_birth">Date of Birth:<span style="color: red">*</span></label>
-		</div>
-		<div class="col-9">
-			<input type="date" id="date_of_birth" name="date_of_birth"
-				value="{{ old('date_of_birth', \Carbon\Carbon::parse($user->date_of_birth)->format('Y-m-d')) }}"
-				class="form-control"
-				placeholder="DD/MM/YYYY">
-		</div>
-	</div>
-
-	<!-- Place of Birth -->
-	<div class="row mb-3">
-		<div class="col-3">
-			<label for="place_of_birth">Place of Birth:<span style="color: red">*</span></label>
-		</div>
-		<div class="col-9">
-			<input type="text" id="place_of_birth" name="place_of_birth"
-				value="{{ old('place_of_birth', $user->place_of_birth) }}"
-				class="form-control"
-				placeholder="Enter place of birth">
-		</div>
-	</div>
-
-	<!-- Gender -->
-	<div class="row mb-3">
-		<div class="col-3">
-			<label for="gender">Gender:<span style="color: red">*</span></label>
-		</div>
-		<div class="col-9">
-			<select id="gender" name="gender" class="form-control">
-				<option value="" {{ old('gender', $user->gender) == '' ? 'selected' : '' }}>Select gender</option>
-				<option value="male" {{ strtolower(old('gender', $user->gender)) == 'male' ? 'selected' : '' }}>Male</option>
-				<option value="female" {{ strtolower(old('gender', $user->gender)) == 'female' ? 'selected' : '' }}>Female</option>
-				<option value="other" {{ strtolower(old('gender', $user->gender)) == 'other' ? 'selected' : '' }}>Other</option>
-			</select>
-		</div>
-	</div>
-
-	<!-- Phone Number -->
-	<div class="row mb-3">
-		<div class="col-3">
-			<label for="mobile">Phone Number:</label>
-		</div>
-		<div class="col-9">
-			<input type="tel" id="mobile" name="mobile"
-				value="{{ old('mobile', $user->mobile) }}"
-				required class="form-control"
-				placeholder="Enter 10-digit mobile number">
-		</div>
-	</div>
-
-	<!-- Address -->
-	<div class="row mb-3">
-		<div class="col-3">
-			<label for="address">Residential Address:<span style="color: red">*</span></label>
-		</div>
-		<div class="col-9">
-			<textarea id="address" name="address" class="form-control" placeholder="Enter full address">{{ old('address', $user->address) }}</textarea>
-		</div>
-	</div>
-
-	<!-- Marital Status -->
-	<div class="row mb-3">
-		<div class="col-3">
-			<label for="marital_status">Marital Status:<span style="color: red">*</span></label>
-		</div>
-		<div class="col-9">
-			<select id="marital_status" name="marital_status" class="form-control">
-				<option value="" {{ old('marital_status', $user->marital_status) == '' ? 'selected' : '' }}>Select status</option>
-				<option value="single" {{ old('marital_status', $user->marital_status) == 'single' ? 'selected' : '' }}>Single</option>
-				<option value="married" {{ old('marital_status', $user->marital_status) == 'married' ? 'selected' : '' }}>Married</option>
-				<option value="divorced" {{ old('marital_status', $user->marital_status) == 'divorced' ? 'selected' : '' }}>Divorced</option>
-			</select>
-		</div>
-	</div>
-
-	<!-- Bio -->
-	<div class="row mb-3">
-		<div class="col-3">
-			<label for="bio">Bio:<span style="color: red">*</span></label>
-		</div>
-		<div class="col-9">
-			<textarea id="bio" name="bio" class="form-control" placeholder="Write a short bio">{{ old('bio', $user->bio) }}</textarea>
-		</div>
-	</div>
-
-	<!-- Profile Picture -->
-	<div class="row mb-3">
-		<div class="col-3">
-			<label for="profile_pic">Profile Picture:</label>
-		</div>
-		<div class="col-9">
-			<input type="file" id="ImageEdit" name="profile_pic" accept="image/*" class="form-control">
-
-		</div>
-	</div>
-</div>
-
-
-				<button type="submit" class="btn btn-primary">Update</button>
-			</form>
-
-
-
-
-        </div>
-      </div>
-    </div>
-
-    <!-- Educational Background -->
-    <div class="accordion-item w-100">
-      <h2 class="accordion-header" id="educationHeading">
-        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#educationCollapse" aria-expanded="false" aria-controls="educationCollapse">
-          Educational Background
-        </button>
-      </h2>
-      <div id="educationCollapse" class="accordion-collapse collapse" aria-labelledby="educationHeading" data-bs-parent="#editAccordion">
-
-
-
-			<div class="accordion-body">
-
-			<form action="{{ route('user.profile.eduinfo', ['id' => $user->id]) }}" method="post" id="myForm" enctype="multipart/form-data">
-	@csrf
-	@method('PUT')
-
-	<!-- Educational Background -->
-	<div class="form-group py-3">
-		<div class="row mb-3">
-			<div class="col-3">
-				<label for="school_name">Name of the School:<span style="color: red">*</span></label>
-			</div>
-			<div class="col-9">
-				<input type="text" id="school_name" name="school_name"
-					value="{{ old('school_name', $user->school_name) }}"
-					placeholder="Enter your school name"
-					class="form-control">
-			</div>
-		</div>
-
-		<div class="row mb-3">
-			<div class="col-3">
-				<label for="school_year">Year of Passing:<span style="color: red">*</span></label>
-			</div>
-			<div class="col-9">
-				<input type="text" id="school_year" name="school_year"
-					value="{{ old('school_year', $user->school_year) }}"
-					placeholder="e.g., 2010"
-					class="form-control">
-			</div>
-		</div>
-
-		<div class="row mb-3">
-			<div class="col-3">
-				<label for="undergrad_college">Undergraduate College/University Name:<span style="color: red">*</span></label>
-			</div>
-			<div class="col-9">
-				<input type="text" id="undergrad_college" name="undergrad_college"
-					value="{{ old('undergrad_college', $user->undergrad_college) }}"
-					placeholder="Enter college/university name"
-					class="form-control">
-			</div>
-		</div>
-
-		<div class="row mb-3">
-			<div class="col-3">
-				<label for="undergrad_degree">Undergraduate Degree Obtained:<span style="color: red">*</span></label>
-			</div>
-			<div class="col-9">
-				<input type="text" id="undergrad_degree" name="undergrad_degree"
-					value="{{ old('undergrad_degree', $user->undergrad_degree) }}"
-					placeholder="e.g., B.Sc, B.Tech, B.A"
-					class="form-control">
-			</div>
-		</div>
-
-		<div class="row mb-3">
-			<div class="col-3">
-				<label for="undergrad_year">Year of Graduation:<span style="color: red">*</span></label>
-			</div>
-			<div class="col-9">
-				<input type="text" id="undergrad_year" name="undergrad_year"
-					value="{{ old('undergrad_year', $user->undergrad_year) }}"
-					placeholder="e.g., 2014"
-					class="form-control">
-			</div>
-		</div>
-
-		<div class="row mb-3">
-			<div class="col-3">
-				<label for="postgrad_college">Postgraduate College/University Name:<span style="color: red">*</span></label>
-			</div>
-			<div class="col-9">
-				<input type="text" id="postgrad_college" name="postgrad_college"
-					value="{{ old('postgrad_college', $user->postgrad_college) }}"
-					placeholder="Enter college/university name"
-					class="form-control">
-			</div>
-		</div>
-
-		<div class="row mb-3">
-			<div class="col-3">
-				<label for="postgrad_degree">Postgraduate Degree Obtained:<span style="color: red">*</span></label>
-			</div>
-			<div class="col-9">
-				<input type="text" id="postgrad_degree" name="postgrad_degree"
-					value="{{ old('postgrad_degree', $user->postgrad_degree) }}"
-					placeholder="e.g., M.Sc, M.Tech, MBA"
-					class="form-control">
-			</div>
-		</div>
-
-		<div class="row mb-3">
-			<div class="col-3">
-				<label for="postgrad_year">Year of Graduation:<span style="color: red">*</span></label>
-			</div>
-			<div class="col-9">
-				<input type="text" id="postgrad_year" name="postgrad_year"
-					value="{{ old('postgrad_year', $user->postgrad_year) }}"
-					placeholder="e.g., 2016"
-					class="form-control">
-			</div>
-		</div>
-	</div>
-
-	<button type="submit" class="btn btn-primary">Update</button>
-</form>
-			</div>
-
-
-
-      </div>
-    </div>
-
-    <!-- Professional Information -->
-    <div class="accordion-item w-100">
-      <h2 class="accordion-header" id="professionalHeading">
-        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#professionalCollapse" aria-expanded="false" aria-controls="professionalCollapse">
-          Professional Information
-        </button>
-      </h2>
-      <div id="professionalCollapse" class="accordion-collapse collapse" aria-labelledby="professionalHeading" data-bs-parent="#editAccordion">
-        <div class="accordion-body w-100">
-
-	   <form action="{{ route('user.profile.proinfo', ['id' => $user->id]) }}" method="post" id="myForm" enctype="multipart/form-data">
-	@csrf
-	@method('PUT')
-
-	<div class="form-group">
-		<div class="row mb-3">
-			<div class="col-3">
-				<label for="current_designation">Current Designation:<span style="color: red">*</span></label>
-			</div>
-			<div class="col-9">
-				<input type="text" id="current_designation" name="current_designation"
-					value="{{ old('current_designation', $user->current_designation) }}"
-					class="form-control"
-					placeholder="Enter your current designation">
-			</div>
-		</div>
-
-		<div class="row mb-3">
-			<div class="col-3">
-				<label for="current_department">Current Department:<span style="color: red">*</span></label>
-			</div>
-			<div class="col-9">
-				<input type="text" id="current_department" name="current_department"
-					value="{{ old('current_department', $user->current_department) }}"
-					class="form-control"
-					placeholder="Enter your current department">
-			</div>
-		</div>
-
-		<div class="row mb-3">
-			<div class="col-3">
-				<label for="current_location">Current Location:<span style="color: red">*</span></label>
-			</div>
-			<div class="col-9">
-				<input type="text" id="current_location" name="current_location"
-					value="{{ old('current_location', $user->current_location) }}"
-					class="form-control"
-					placeholder="Enter your current work location">
-			</div>
-		</div>
-
-		<div class="row mb-3">
-			<div class="col-3">
-				<label for="previous_postings">Previous Postings:<span style="color: red">*</span></label>
-			</div>
-			<div class="col-9">
-				<input type="text" id="previous_postings" name="previous_postings"
-					value="{{ old('previous_postings', $user->previous_postings) }}"
-					class="form-control"
-					placeholder="List previous postings (comma-separated)">
-			</div>
-		</div>
-	</div>
-
-	<button type="submit" class="btn btn-primary">Update</button>
-</form>
-
-
-
-        </div>
-      </div>
-    </div>
-
-  </div>
-</div>
-
-  </div>
-</div>
-
-</div>
+                            <button type="button" class="btn btn-danger-soft me-2" data-bs-toggle="modal"
+                                data-bs-target="#editProfileModal">
+                                <i class="bi bi-pencil-fill pe-1"></i> Edit profile
+                            </button>
+                        </div>
+                        <!-- modal for edit profile -->
+
+                        <div class="modal fade modal-xl" id="editProfileModal" tabindex="-1"
+                            aria-labelledby="editProfileModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="editProfileModalLabel">Edit Profile</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <!-- Success Message -->
+
+                                        <!-- Nav tabs -->
+                                        <ul class="nav nav-tabs mb-3" id="profileTabs" role="tablist">
+                                            <li class="nav-item" role="presentation">
+                                                <button class="nav-link active" id="personal-tab" data-bs-toggle="tab"
+                                                    data-bs-target="#personal" type="button" role="tab">Personal
+                                                    Information</button>
+                                            </li>
+                                            <li class="nav-item" role="presentation">
+                                                <button class="nav-link" id="education-tab" data-bs-toggle="tab"
+                                                    data-bs-target="#education" type="button" role="tab">Educational
+                                                    Background</button>
+                                            </li>
+                                            <li class="nav-item" role="presentation">
+                                                <button class="nav-link" id="professional-tab" data-bs-toggle="tab"
+                                                    data-bs-target="#professional" type="button" role="tab">Professional
+                                                    Information</button>
+                                            </li>
+                                        </ul>
+
+                                        <!-- Tab panes -->
+                                        <div class="tab-content" id="profileTabsContent">
+                                            <!-- Personal -->
+                                            <div class="tab-pane fade show active" id="personal" role="tabpanel">
+                                                <div class="p-3 border rounded bg-light">
+                                                    <!-- Personal Information form goes here -->
+                                                    <form
+                                                        action="{{ route('user.profile.update', ['id' => $user->id]) }}"
+                                                        method="post" id="myForm" enctype="multipart/form-data">
+                                                        @csrf
+                                                        @method('PUT')
+
+                                                        <div class="form-group">
+                                                            <!-- Full Name -->
+                                                            <div class="row mb-3">
+                                                                <div class="col-3">
+                                                                    <label for="name">Full
+                                                                        Name:</label>
+                                                                </div>
+                                                                <div class="col-9">
+                                                                    <input type="text" id="name" name="name"
+                                                                        value="{{ old('name', $user->name) }}"
+                                                                        class="form-control"
+                                                                        placeholder="Enter your full name">
+                                                                </div>
+                                                            </div>
+
+                                                            <!-- Date of Birth -->
+                                                            <div class="row mb-3">
+                                                                <div class="col-3">
+                                                                    <label for="date_of_birth">Date
+                                                                        of
+                                                                        Birth:<span style="color: red">*</span></label>
+                                                                </div>
+                                                                <div class="col-9">
+                                                                    <input type="date" id="date_of_birth"
+                                                                        name="date_of_birth"
+                                                                        value="{{ old('date_of_birth', \Carbon\Carbon::parse($user->date_of_birth)->format('Y-m-d')) }}"
+                                                                        class="form-control" placeholder="DD/MM/YYYY">
+                                                                </div>
+                                                            </div>
+
+                                                            <!-- Place of Birth -->
+                                                            <div class="row mb-3">
+                                                                <div class="col-3">
+                                                                    <label for="place_of_birth">Place
+                                                                        of
+                                                                        Birth:<span style="color: red">*</span></label>
+                                                                </div>
+                                                                <div class="col-9">
+                                                                    <input type="text" id="place_of_birth"
+                                                                        name="place_of_birth"
+                                                                        value="{{ old('place_of_birth', $user->place_of_birth) }}"
+                                                                        class="form-control"
+                                                                        placeholder="Enter place of birth">
+                                                                </div>
+                                                            </div>
+
+                                                            <!-- Gender -->
+                                                            <div class="row mb-3">
+                                                                <div class="col-3">
+                                                                    <label for="gender">Gender:<span
+                                                                            style="color: red">*</span></label>
+                                                                </div>
+                                                                <div class="col-9">
+                                                                    <select id="gender" name="gender"
+                                                                        class="form-control">
+                                                                        <option value=""
+                                                                            {{ old('gender', $user->gender) == '' ? 'selected' : '' }}>
+                                                                            Select
+                                                                            gender
+                                                                        </option>
+                                                                        <option value="male"
+                                                                            {{ strtolower(old('gender', $user->gender)) == 'male' ? 'selected' : '' }}>
+                                                                            Male
+                                                                        </option>
+                                                                        <option value="female"
+                                                                            {{ strtolower(old('gender', $user->gender)) == 'female' ? 'selected' : '' }}>
+                                                                            Female
+                                                                        </option>
+                                                                        <option value="other"
+                                                                            {{ strtolower(old('gender', $user->gender)) == 'other' ? 'selected' : '' }}>
+                                                                            Other
+                                                                        </option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+
+                                                            <!-- Phone Number -->
+                                                            <div class="row mb-3">
+                                                                <div class="col-3">
+                                                                    <label for="mobile">Phone
+                                                                        Number:</label>
+                                                                </div>
+                                                                <div class="col-9">
+                                                                    <input type="tel" id="mobile" name="mobile"
+                                                                        value="{{ old('mobile', $user->mobile) }}"
+                                                                        required class="form-control"
+                                                                        placeholder="Enter 10-digit mobile number">
+                                                                </div>
+                                                            </div>
+
+                                                            <!-- Address -->
+                                                            <div class="row mb-3">
+                                                                <div class="col-3">
+                                                                    <label for="address">Residential
+                                                                        Address:<span
+                                                                            style="color: red">*</span></label>
+                                                                </div>
+                                                                <div class="col-9">
+                                                                    <textarea id="address" name="address"
+                                                                        class="form-control"
+                                                                        placeholder="Enter full address">{{ old('address', $user->address) }}</textarea>
+                                                                </div>
+                                                            </div>
+
+                                                            <!-- Marital Status -->
+                                                            <div class="row mb-3">
+                                                                <div class="col-3">
+                                                                    <label for="marital_status">Marital
+                                                                        Status:<span style="color: red">*</span></label>
+                                                                </div>
+                                                                <div class="col-9">
+                                                                    <select id="marital_status" name="marital_status"
+                                                                        class="form-control">
+                                                                        <option value=""
+                                                                            {{ old('marital_status', $user->marital_status) == '' ? 'selected' : '' }}>
+                                                                            Select
+                                                                            status
+                                                                        </option>
+                                                                        <option value="single"
+                                                                            {{ old('marital_status', $user->marital_status) == 'single' ? 'selected' : '' }}>
+                                                                            Single
+                                                                        </option>
+                                                                        <option value="married"
+                                                                            {{ old('marital_status', $user->marital_status) == 'married' ? 'selected' : '' }}>
+                                                                            Married
+                                                                        </option>
+                                                                        <option value="divorced"
+                                                                            {{ old('marital_status', $user->marital_status) == 'divorced' ? 'selected' : '' }}>
+                                                                            Divorced
+                                                                        </option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+
+                                                            <!-- Bio -->
+                                                            <div class="row mb-3">
+                                                                <div class="col-3">
+                                                                    <label for="bio">Bio:<span
+                                                                            style="color: red">*</span></label>
+                                                                </div>
+                                                                <div class="col-9">
+                                                                    <textarea id="bio" name="bio" class="form-control"
+                                                                        placeholder="Write a short bio">{{ old('bio', $user->bio) }}</textarea>
+                                                                </div>
+                                                            </div>
+
+                                                            <!-- Profile Picture -->
+                                                            <div class="row mb-3">
+                                                                <div class="col-3">
+                                                                    <label for="profile_pic">Profile
+                                                                        Picture:</label>
+                                                                </div>
+                                                                <div class="col-9">
+                                                                    <input type="file" id="ImageEdit" name="profile_pic"
+                                                                        accept="image/*" class="form-control">
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+
+                                                        <button type="submit" class="btn btn-primary">Update</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+
+                                            <!-- Educational -->
+                                            <div class="tab-pane fade" id="education" role="tabpanel">
+                                                <div class="p-3 border rounded bg-light">
+                                                    <!-- Educational Background form goes here -->
+                                                    <form
+                                                        action="{{ route('user.profile.eduinfo', ['id' => $user->id]) }}"
+                                                        method="post" id="myForm" enctype="multipart/form-data">
+                                                        @csrf
+                                                        @method('PUT')
+
+                                                        <!-- Educational Background -->
+                                                        <div class="form-group py-3">
+                                                            <div class="row mb-3">
+                                                                <div class="col-3">
+                                                                    <label for="school_name">Name
+                                                                        of the
+                                                                        School:<span style="color: red">*</span></label>
+                                                                </div>
+                                                                <div class="col-9">
+                                                                    <input type="text" id="school_name"
+                                                                        name="school_name"
+                                                                        value="{{ old('school_name', $user->school_name) }}"
+                                                                        placeholder="Enter your school name"
+                                                                        class="form-control">
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="row mb-3">
+                                                                <div class="col-3">
+                                                                    <label for="school_year">Year
+                                                                        of
+                                                                        Passing:<span
+                                                                            style="color: red">*</span></label>
+                                                                </div>
+                                                                <div class="col-9">
+                                                                    <input type="text" id="school_year"
+                                                                        name="school_year"
+                                                                        value="{{ old('school_year', $user->school_year) }}"
+                                                                        placeholder="e.g., 2010" class="form-control">
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="row mb-3">
+                                                                <div class="col-3">
+                                                                    <label for="undergrad_college">Undergraduate
+                                                                        College/University
+                                                                        Name:<span style="color: red">*</span></label>
+                                                                </div>
+                                                                <div class="col-9">
+                                                                    <input type="text" id="undergrad_college"
+                                                                        name="undergrad_college"
+                                                                        value="{{ old('undergrad_college', $user->undergrad_college) }}"
+                                                                        placeholder="Enter college/university name"
+                                                                        class="form-control">
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="row mb-3">
+                                                                <div class="col-3">
+                                                                    <label for="undergrad_degree">Undergraduate
+                                                                        Degree
+                                                                        Obtained:<span
+                                                                            style="color: red">*</span></label>
+                                                                </div>
+                                                                <div class="col-9">
+                                                                    <input type="text" id="undergrad_degree"
+                                                                        name="undergrad_degree"
+                                                                        value="{{ old('undergrad_degree', $user->undergrad_degree) }}"
+                                                                        placeholder="e.g., B.Sc, B.Tech, B.A"
+                                                                        class="form-control">
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="row mb-3">
+                                                                <div class="col-3">
+                                                                    <label for="undergrad_year">Year
+                                                                        of
+                                                                        Graduation:<span
+                                                                            style="color: red">*</span></label>
+                                                                </div>
+                                                                <div class="col-9">
+                                                                    <input type="text" id="undergrad_year"
+                                                                        name="undergrad_year"
+                                                                        value="{{ old('undergrad_year', $user->undergrad_year) }}"
+                                                                        placeholder="e.g., 2014" class="form-control">
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="row mb-3">
+                                                                <div class="col-3">
+                                                                    <label for="postgrad_college">Postgraduate
+                                                                        College/University
+                                                                        Name:<span style="color: red">*</span></label>
+                                                                </div>
+                                                                <div class="col-9">
+                                                                    <input type="text" id="postgrad_college"
+                                                                        name="postgrad_college"
+                                                                        value="{{ old('postgrad_college', $user->postgrad_college) }}"
+                                                                        placeholder="Enter college/university name"
+                                                                        class="form-control">
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="row mb-3">
+                                                                <div class="col-3">
+                                                                    <label for="postgrad_degree">Postgraduate
+                                                                        Degree
+                                                                        Obtained:<span
+                                                                            style="color: red">*</span></label>
+                                                                </div>
+                                                                <div class="col-9">
+                                                                    <input type="text" id="postgrad_degree"
+                                                                        name="postgrad_degree"
+                                                                        value="{{ old('postgrad_degree', $user->postgrad_degree) }}"
+                                                                        placeholder="e.g., M.Sc, M.Tech, MBA"
+                                                                        class="form-control">
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="row mb-3">
+                                                                <div class="col-3">
+                                                                    <label for="postgrad_year">Year
+                                                                        of
+                                                                        Graduation:<span
+                                                                            style="color: red">*</span></label>
+                                                                </div>
+                                                                <div class="col-9">
+                                                                    <input type="text" id="postgrad_year"
+                                                                        name="postgrad_year"
+                                                                        value="{{ old('postgrad_year', $user->postgrad_year) }}"
+                                                                        placeholder="e.g., 2016" class="form-control">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <button type="submit" class="btn btn-primary">Update</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+
+                                            <!-- Professional -->
+                                            <div class="tab-pane fade" id="professional" role="tabpanel">
+                                                <div class="p-3 border rounded bg-light">
+                                                    <!-- Professional Information form goes here -->
+                                                    <form
+                                                        action="{{ route('user.profile.proinfo', ['id' => $user->id]) }}"
+                                                        method="post" id="myForm" enctype="multipart/form-data">
+                                                        @csrf
+                                                        @method('PUT')
+
+                                                        <div class="form-group">
+                                                            <div class="row mb-3">
+                                                                <div class="col-3">
+                                                                    <label for="current_designation">Current
+                                                                        Designation:<span
+                                                                            style="color: red">*</span></label>
+                                                                </div>
+                                                                <div class="col-9">
+                                                                    <input type="text" id="current_designation"
+                                                                        name="current_designation"
+                                                                        value="{{ old('current_designation', $user->current_designation) }}"
+                                                                        class="form-control"
+                                                                        placeholder="Enter your current designation">
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="row mb-3">
+                                                                <div class="col-3">
+                                                                    <label for="current_department">Current
+                                                                        Department:<span
+                                                                            style="color: red">*</span></label>
+                                                                </div>
+                                                                <div class="col-9">
+                                                                    <input type="text" id="current_department"
+                                                                        name="current_department"
+                                                                        value="{{ old('current_department', $user->current_department) }}"
+                                                                        class="form-control"
+                                                                        placeholder="Enter your current department">
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="row mb-3">
+                                                                <div class="col-3">
+                                                                    <label for="current_location">Current
+                                                                        Location:<span
+                                                                            style="color: red">*</span></label>
+                                                                </div>
+                                                                <div class="col-9">
+                                                                    <input type="text" id="current_location"
+                                                                        name="current_location"
+                                                                        value="{{ old('current_location', $user->current_location) }}"
+                                                                        class="form-control"
+                                                                        placeholder="Enter your current work location">
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="row mb-3">
+                                                                <div class="col-3">
+                                                                    <label for="previous_postings">Previous
+                                                                        Postings:<span
+                                                                            style="color: red">*</span></label>
+                                                                </div>
+                                                                <div class="col-9">
+                                                                    <input type="text" id="previous_postings"
+                                                                        name="previous_postings"
+                                                                        value="{{ old('previous_postings', $user->previous_postings) }}"
+                                                                        class="form-control"
+                                                                        placeholder="List previous postings (comma-separated)">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <button type="submit" class="btn btn-primary">Update</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <!-- List profile -->
+                    <ul class="list-inline mb-0 text-center text-sm-start mt-3 mt-sm-0">
+                        <li class="list-inline-item"><i class="bi bi-briefcase me-1"></i> {{ $user->current_designation }}
+                        </li>
+                        <li class="list-inline-item"><i class="bi bi-backpack me-1"></i> {{ $user->batch }}</li>
+                        <li class="list-inline-item"><i class="bi bi-calendar2-plus me-1"></i>
+                            {{ $user->created_at->format('F j, Y') }}</li>
+                        </li>
+                    </ul>
+                </div>
+                <!-- Card body END -->
+                <div class="card-footer mt-3 pt-2 pb-0">
+                    <!-- Nav profile pages -->
+                    <ul class="nav nav-tabs justify-content-center justify-content-md-start" id="profileTab"
+                        role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link active" id="about-tab" data-bs-toggle="tab" href="#about" role="tab"
+                                aria-controls="about" aria-selected="false">
+                                About
+                            </a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link" id="groups-tab" data-bs-toggle="tab" href="#media" role="tab"
+                                aria-controls="media" aria-selected="false">
+                                Media
+                            </a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link" id="groups-tab" data-bs-toggle="tab" href="#videos" role="tab"
+                                aria-controls="videos" aria-selected="false">
+                                Videos
+                            </a>
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+            <!-- My profile END -->
+            <div class="tab-content" id="profileTabContent" role="tabpanel" aria-labelledby="profileTab">
+                 <div class="tab-pane fade show active" id="about" role="tabpanel" aria-labelledby="about-tab">
+                <div class="card">
+                    <!-- Card header START -->
+                    <div class="card-header border-0 pb-0">
+                        <h5 class="card-title"> Profile Info</h5>
+                    </div>
+                    <!-- Card header END -->
+                    <!-- Card body START -->
+                    <div class="card-body">
+                        <div class="rounded border px-3 py-2 mb-3">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <h6>Overview</h6>
+                            </div>
+                            <p>{{$user->bio}}</p>
+                        </div>
+                        <div class="row g-4">
+                            <div class="col-sm-6">
+                                <!-- Birthday START -->
+                                <div class="d-flex align-items-center rounded border px-3 py-2">
+                                    <!-- Date -->
+                                    <p class="mb-0">
+                                        <i class="bi bi-calendar-date fa-fw me-2"></i> Born: <strong>
+                                            {{ $user->date_of_birth }} </strong>
+                                    </p>
+                                </div>
+                                <!-- Birthday END -->
+                            </div>
+                            <div class="col-sm-6">
+                                <!-- Status START -->
+                                <div class="d-flex align-items-center rounded border px-3 py-2">
+                                    <!-- Date -->
+                                    <p class="mb-0">
+                                        <i class="bi bi-heart fa-fw me-2"></i> Status: <strong>
+                                            {{ $user->marital_status }} </strong>
+                                    </p>
+                                </div>
+                                <!-- Status END -->
+                            </div>
+                            <div class="col-sm-6">
+                                <!-- Designation START -->
+                                <div class="d-flex align-items-center rounded border px-3 py-2">
+                                    <!-- Date -->
+                                    <p class="mb-0">
+                                        <i class="bi bi-briefcase fa-fw me-2"></i> <strong>
+                                            {{ $user->current_designation }}
+                                        </strong>
+                                    </p>
+                                </div>
+                                <!-- Designation END -->
+                            </div>
+                            <div class="col-sm-6">
+                                <!-- Lives START -->
+                                <div class="d-flex align-items-center rounded border px-3 py-2">
+                                    <!-- Date -->
+                                    <p class="mb-0">
+                                        <i class="bi bi-geo-alt fa-fw me-2"></i> Current Location: <strong>
+                                            {{ $user->current_location }}
+                                        </strong>
+                                    </p>
+                                </div>
+                                <!-- Lives END -->
+                            </div>
+                            <div class="col-sm-6">
+                                <!-- Joined on START -->
+                                <div class="d-flex align-items-center rounded border px-3 py-2">
+                                    <!-- Date -->
+                                    <p class="mb-0">
+                                        <i class="bi bi-geo-alt fa-fw me-2"></i> Joined on: <strong>
+                                            {{$user->created_at->format('F j, Y')}}
+                                        </strong>
+                                    </p>
+                                </div>
+                                <!-- Joined on END -->
+                            </div>
+                            <div class="col-sm-6">
+                                <!-- Joined on START -->
+                                <div class="d-flex align-items-center rounded border px-3 py-2">
+                                    <!-- Date -->
+                                    <p class="mb-0">
+                                        <i class="bi bi-envelope fa-fw me-2"></i> Email: <strong>
+                                            {{ $user->email }} </strong>
+                                    </p>
+                                </div>
+                                <!-- Joined on END -->
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Card body END -->
+                </div>
+            </div>
+            <div class="tab-pane fade" id="media" role="tabpanel" aria-labelledby="media-tab">
+                <div class="card">
+                    <!-- Card header START -->
+                    <div class="card-header d-sm-flex align-items-center justify-content-between border-0 pb-0">
+                        <h5 class="card-title">Photos</h5>
+                    </div>
+                    <!-- Card header END -->
+                    <!-- Card body START -->
+                    <div class="card-body">
+                        <!-- Photos of you tab START -->
+                        <div class="row g-3">
+
+                            <!-- Photo item START -->
+                            @if(!empty($posts) && $posts->count())
+                                @foreach($posts as $post)
+                                    @if(!empty($post->media))
+                                        @foreach($post->media as $media)
+                                            @if($media->file_type === 'image')
+                                                @php
+                                                $max_length = 50;
+                                                $relativePath = 'storage/' . str_replace(['app/public/', 'public/'], '',
+                                                $media->file_path);
+
+                                                // Check existence of file in public path
+                                                $file_path = public_path($relativePath);
+                                                $image_url = file_exists($file_path) ? asset($relativePath) :
+                                                asset('feed_assets/images/avatar-1.png');
+                                                @endphp
+                                                <div class="col-sm-6 col-md-4 col-lg-3">
+                                                    <!-- Photo -->
+                                                    <a href="{{ $image_url }}" data-gallery="image-popup"
+                                                        data-glightbox="description: .custom-desc2; descPosition: left;">
+                                                        <img class="rounded img-fluid" src="{{ $image_url }}" alt="">
+                                                    </a>
+                                                    <!-- likes -->
+                                                    <ul class="nav nav-stack py-2 small">
+                                                        <li class="nav-item">
+                                                            <a class="nav-link" href="#!"> <i
+                                                                    class="bi bi-heart-fill text-danger pe-1"></i>22k </a>
+                                                        </li>
+                                                        <li class="nav-item">
+                                                            <a class="nav-link" href="#!"> <i class="bi bi-chat-left-text-fill pe-1"></i>3k
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            @endif
+                                        @endforeach
+                                    @endif
+                                @endforeach
+                            @endif
+                            <!-- Photo item END -->
+                        </div>
+                        <!-- Photos of you tab END -->
+                    </div>
+                    <!-- Card body END -->
+                </div>
+            </div>
+            <div class="tab-pane fade" id="videos" role="tabpanel" aria-labelledby="videos-tab">
+                <div class="card">
+                    <!-- Card header START -->
+                    <div class="card-header border-0 pb-0">
+                        <h5 class="card-title">Videos</h5>
+                        <!-- Button modal -->
+                    </div>
+                    <!-- Card header END -->
+                    <!-- Card body START -->
+                    <div class="card-body">
+                        <!-- Video of you tab START -->
+                        <div class="row g-3">
+                            @if(!empty($post) && !empty($post->media))
+                            @foreach($post->media as $media)
+                            @if($media->file_type === 'video')
+                            @php
+                            $max_length = 50;
+                            $relativePath = 'storage/' . str_replace(['app/public/', 'public/'], '',
+                            $media->file_path);
+
+                            // Check existence of file in public path
+                            $file_path = public_path($relativePath);
+                            $image_url = file_exists($file_path) ? asset($relativePath) :
+                            asset('feed_assets/images/avatar-1.png');
+                            @endphp
+                            <div class="col-sm-6 col-md-4">
+                                <!-- Video START -->
+                                <div class="card p-0 shadow-none border-0 position-relative">
+                                    <!-- Video image -->
+                                    <div class="position-relative">
+                                        <img class="rounded" src="assets/images/albums/01.jpg" alt="">
+                                        <!-- Play icon -->
+                                        <div class="position-absolute top-0 end-0 p-3">
+                                            <a class="icon-md bg-danger text-white rounded-circle" data-glightbox=""
+                                                href="assets/images/videos/video-call.mp4"> <i
+                                                    class="bi bi-play-fill fs-5"> </i>
+                                            </a>
+                                        </div>
+                                        <!-- Duration -->
+                                        <div class="position-absolute bottom-0 start-0 p-3 d-flex w-100">
+                                            <span
+                                                class="bg-dark bg-opacity-50 px-2 rounded text-white small">02:20</span>
+                                        </div>
+                                    </div>
+                                    <!-- Video info -->
+                                    <div class="card-body px-0 pb-0 pt-2">
+                                        <ul class="nav nav-stack small">
+                                            <li class="nav-item">
+                                                <a class="nav-link" href="#!"> <i
+                                                        class="bi bi-heart-fill text-danger pe-1"></i>22k
+                                                </a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" href="#!"> <i
+                                                        class="bi bi-chat-left-text-fill pe-1"></i>3k </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <!-- Video END -->
+                            </div>
+                            @endif
+                            @endforeach
+                            @endif
+                        </div>
+                        <!-- Video of you tab END -->
+                    </div>
+                    <!-- Card body END -->
+                    <!-- Card footer START -->
+                    <div class="card-footer border-0 pt-0">
+                    </div>
+                    <!-- Card footer END -->
+                </div>
+            </div>
+                <!-- Edit Comment Modal -->
+                <div class="modal fade" id="editCommentModal" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <form method="POST" action="{{-- route('user.comments.update') --}}">
+                            @csrf
+                            @method('PUT')
+                            <input type="hidden" name="comment_id" id="editCommentId">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Edit Comment</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <textarea name="comment" id="editCommentText" class="form-control"
+                                        rows="3"></textarea>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-primary">Update</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
 
-       </div>
+        <!-- Right sidebar START -->
+        <div class="col-lg-4" style=" position: sticky; top: 80px; max-height: 100vh; overflow-y: auto;">
+
+            <div class="row g-4">
+
+                <!-- Card START -->
+                <div class="col-md-6 col-lg-12">
+                    <div class="card">
+                        <div class="card-header border-0 pb-0">
+                            <h5 class="card-title">About</h5>
+                            <!-- Button modal -->
+                        </div>
+                        <!-- Card body START -->
+                        <div class="card-body position-relative pt-0">
+                            <p>{{ $user->bio }}</p>
+                            <!-- Date time -->
+                            <ul class="list-unstyled mt-3 mb-0">
+                                <li class="mb-2"> <i class="bi bi-calendar-date fa-fw pe-1"></i> Born: <strong>
+                                        {{ $user->date_of_birth }} </strong> </li>
+                                <li class="mb-2"> <i class="bi bi-heart fa-fw pe-1"></i> Status: <strong>
+                                        {{ $user->marital_status }}
+                                    </strong> </li>
+                                <li> <i class="bi bi-envelope fa-fw pe-1"></i> Email: <strong> {{ $user->email }}
+                                    </strong> </li>
+                            </ul>
+                        </div>
+                        <!-- Card body END -->
+                    </div>
+                </div>
+                <!-- Card END -->
+            </div>
+
+        </div>
+        <!-- Right sidebar END -->
+
+    </div> <!-- Row END -->
 </div>
+<!-- Edit Profile Modal -->
 
+<div class="modal fade" id="feedActionPhoto" tabindex="-1" aria-labelledby="feedActionPhotoLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <form class="modal-content" action="{{ route('post.store') }}" method="POST" enctype="multipart/form-data">
+            @csrf
 
+            <!-- Modal header -->
+            <div class="modal-header">
+                <h5 class="modal-title" id="feedActionPhotoLabel">Add post photo</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
 
-                 <!-- multiple images section -->
+            <!-- Modal body -->
+            <div class="modal-body">
+                <div class="d-flex mb-3">
+                    <!-- User avatar -->
+                    <div class="avatar avatar-xs me-2">
+                        @php
+                        $profilePic = $user->profile_pic ?? null;
+                        @endphp
+                        <img class="avatar-img rounded-circle"
+                            src="{{ $profilePic ? asset('storage/' . $profilePic) : asset('feed_assets/images/avatar/03.jpg') }}"
+                            alt="User Avatar">
+                    </div>
+                    <!-- Post textarea -->
+                    <textarea class="form-control pe-4 fs-3 lh-1 border-0" name="modalContent" rows="2"
+                        placeholder="Share your thoughts..."></textarea>
+                </div>
 
+                <!-- File upload -->
+                <div class="mb-3">
+                    <label class="form-label">Upload attachment</label>
+                    <div id="drop-area" class="drop-area p-4 text-center border border-secondary rounded">
+                        <i class="bi bi-images fs-1 mb-2 d-block"></i>
+                        <span class="d-block">Drag & Drop image here or click to browse.</span>
+                        <input type="file" id="media" name="media[]" multiple class="d-none" accept="image/*">
+                        <div id="preview" class="mt-3 d-flex flex-wrap gap-3"></div>
+                    </div>
+                </div>
 
+                <!-- Optional video link -->
+                <input class="form-control mt-2" type="text" name="video_link" placeholder="Video Link (optional)" />
+            </div>
 
-                       <!-- multiple images section -->
-
-                   </div>
-               </div>
-
-       </div>
-   </main>
-      </div>
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger-soft" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-success-soft">Post</button>
+            </div>
+        </form>
     </div>
-  </div>
 </div>
 
+<div class="modal fade" id="groupActionpost" tabindex="-1" aria-labelledby="groupActionpostLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <form class="modal-content" action="{{ route('user.group.post')}}" method="POST" enctype="multipart/form-data">
+            @csrf
 
-                       </div>
-                       <!-- List profile -->
-                       <ul class="list-inline mb-0 text-center text-sm-start mt-3 mt-sm-0">
-                           <li class="list-inline-item"><i class="bi bi-briefcase me-1"></i> {{ $user->designation }}
-                           </li>
-                           <li class="list-inline-item"><i class="bi bi-backpack me-1"></i> {{ $user->batch }}</li>
-                           <li class="list-inline-item"><i class="bi bi-calendar2-plus me-1"></i>
-                               {{ $user->created_at->format('F j, Y') }}</li>
-                           </li>
-                       </ul>
-                   </div>
-                   <!-- Card body END -->
-                   <div class="card-footer mt-3 pt-2 pb-0">
-                       <!-- Nav profile pages -->
-                       <ul class="nav nav-tabs justify-content-center justify-content-md-start" id="profileTab"
-                           role="tablist">
-                           <li class="nav-item" role="presentation">
-                               <a class="nav-link active" id="posts-tab" data-bs-toggle="tab" href="#posts" role="tab"
-                                   aria-controls="posts" aria-selected="true">
-                                   Posts
-                               </a>
-                           </li>
-                           <li class="nav-item" role="presentation">
-                               <a class="nav-link" id="about-tab" data-bs-toggle="tab" href="#about" role="tab"
-                                   aria-controls="about" aria-selected="false">
-                                   About
-                               </a>
-                           </li>
-                           <li class="nav-item" role="presentation">
-                               <a class="nav-link" id="groups-tab" data-bs-toggle="tab" href="#groups" role="tab"
-                                   aria-controls="groups" aria-selected="false">
-                                   Groups
-                               </a>
-                           </li>
-                           <li class="nav-item" role="presentation">
-                               <a class="nav-link" id="groups-tab" data-bs-toggle="tab" href="#media" role="tab"
-                                   aria-controls="media" aria-selected="false">
-                                   Media
-                               </a>
-                           </li>
-                           <li class="nav-item" role="presentation">
-                               <a class="nav-link" id="groups-tab" data-bs-toggle="tab" href="#videos" role="tab"
-                                   aria-controls="videos" aria-selected="false">
-                                   Videos
-                               </a>
-                           </li>
-                       </ul>
+            <!-- Modal header -->
+            <div class="modal-header">
+                <h5 class="modal-title" id="groupActionpostLabel">Add Group post in <span class="group_name"></span>
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
 
-                   </div>
-               </div>
-               <!-- My profile END -->
-               <div class="tab-content" id="profileTabContent" style="padding: 0px !important;">
-                   <div class="tab-pane fade show active" id="posts" role="tabpanel" aria-labelledby="posts-tab">
-                       <div class="card card-body mb-3">
-                           <div class="d-flex mb-3">
-                               <!-- Avatar -->
-                               <div class="avatar avatar-xs me-2">
-                                   <a href="#"> <img class="avatar-img rounded-circle"
-                                           src="{{asset('feed_assets/images/avatar/03.jpg')}}" alt=""> </a>
-                               </div>
-                               <!-- Post input -->
-                               <form class="w-100">
-                                   <textarea class="form-control pe-4 border-0" rows="2" data-autoresize=""
-                                       placeholder="Share your thoughts..."></textarea>
-                               </form>
-                           </div>
-                           <!-- Share feed toolbar START -->
-                           <ul class="nav nav-pills nav-stack small fw-normal">
-                               <li class="nav-item">
-                                   <a class="nav-link bg-light py-1 px-2 mb-0" href="#!" data-bs-toggle="modal"
-                                       data-bs-target="#feedActionPhoto"> <i
-                                           class="bi bi-image-fill text-success pe-2"></i>Photos/Videos</a>
-                               </li>
-                           </ul>
-                           <!-- Share feed toolbar END -->
-                       </div>
-                       <!-- Share feed END -->
+            <!-- Modal body -->
+            <div class="modal-body">
+                <div class="d-flex mb-3">
+                    <!-- User avatar -->
+                    <div class="avatar avatar-xs me-2">
+                        @php
+                        $profilePic = $user->profile_pic ?? null;
+                        @endphp
+                        <img class="avatar-img rounded-circle"
+                            src="{{ $profilePic ? asset('storage/' . $profilePic) : asset('feed_assets/images/avatar/03.jpg') }}"
+                            alt="User Avatar">
+                    </div>
+                    <!-- Post textarea -->
+                    <input type="hidden" name="group_id" class="group_id">
+                    <textarea class="form-control pe-4 fs-3 lh-1 border-0" name="modalContent" rows="2"
+                        placeholder="Share your thoughts..."></textarea>
+                </div>
 
-                       <!-- Card feed item START -->
-                       @foreach($posts as $post)
-                       <div class="card mb-3" id="post-{{ $post->id }}">
-                           <!-- Card header START -->
-                           <div class="card-header border-0 pb-0">
-                               <div class="d-flex align-items-center justify-content-between">
-                                   <div class="d-flex align-items-center">
-                                       <!-- Avatar -->
-                                       @php
-                                       $profileImage = '';
-                                       $displayName = '';
-                                       $designation = '';
-                                       $profileLink = '#';
+                <!-- File upload -->
+                <div class="mb-3">
+                    <label class="form-label">Upload attachment</label>
+                    <div id="drop-area" class="drop-area p-4 text-center border border-secondary rounded">
 
-                                       if ($post->type === 'group_post') {
-                                       // Group post ke liye
-                                       $profileImage = $post->group_image
-                                       ? asset('storage/' . $post->group_image)
-                                       : asset('feed_assets/images/avatar/07.jpg'); // fallback image
+                        <i class="bi bi-images fs-1 mb-2 d-block"></i>
+                        <span class="d-block">Drag & Drop image here or click to browse.</span>
+                        <input type="file" id="media" name="media[]" multiple class="d-none" accept="image/*">
+                        <div id="preview" class="mt-3 d-flex flex-wrap gap-3"></div>
+                    </div>
+                </div>
+                <!-- Optional video link -->
+                <input class="form-control mt-2" type="text" name="video_link" placeholder="Video Link (optional)" />
+            </div>
 
-                                       $displayName = $post->group_name ?? 'Unknown Group';
-                                       $designation = 'Group Post';
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger-soft" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-success-soft">Post</button>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- Modal create Feed photo END -->
 
-                                       // Optional: if you have a group detail page
-                                       $profileLink = url('/group/' . ($post->group_id ?? 0));
-                                       } else {
-                                       // Member/user post
-                                       $member = $post->member ?? null;
-
-                                       $profileImage = $member && $member->profile_image
-                                       ? asset('storage/' . $member->profile_image)
-                                       : asset('feed_assets/images/avatar/07.jpg');
-
-                                       $displayName = $member->name ?? 'Unknown';
-                                       $designation = $member->designation ?? 'Unknown';
-                                       $profileLink = url('/user/profile/' . ($member->id ?? 0));
-                                       }
-                                       @endphp
-
-                                       <div class="avatar avatar-story me-2">
-                                           <a href="{{ $profileLink }}">
-                                               <img class="avatar-img rounded-circle" src="{{ $profileImage }}" alt="">
-                                           </a>
-                                       </div>
-
-                                       <!-- Info -->
-                                       <div>
-                                           <div class="nav nav-divider">
-                                               <h6 class="nav-item card-title mb-0">
-                                                   <a href="{{ $profileLink }}">{{ $displayName }}</a>
-                                               </h6>
-                                               <span class="nav-item small">
-                                                   {{ \Carbon\Carbon::parse($post->created_at)->diffForHumans() }}
-                                               </span>
-                                           </div>
-                                           <p class="mb-0 small">{{ $designation }}</p>
-                                       </div>
-
-                                   </div>
-
-                               </div>
-                           </div>
-                           <!-- Card header END -->
-                           <!-- Card body START -->
-                           <div class="card-body">
-                               <p>{{ $post->content }}</p>
-                               <!-- Card img -->
-                               @php
-                               $validMedia = $post->media->filter(function($media) {
-                               return file_exists(storage_path('app/public/' . $media->file_path));
-                               });
-
-                               $imageMedia = $validMedia->where('file_type', 'image')->values();
-                               $videoMedia = $validMedia->where('file_type', 'video')->values();
-
-                               $totalImages = $imageMedia->count();
-                               $totalVideos = $videoMedia->count();
-                               @endphp
-                               @if($post->video_link)
-                               {{-- Embedded YouTube Video --}}
-                               <div class="ratio ratio-16x9 mt-2">
-                                   <iframe width="560" height="315" src="{{ $post->video_link }}"
-                                       title="YouTube video player" frameborder="0"
-                                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                       referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-                               </div>
-                               @elseif($totalVideos > 0)
-                               {{-- Uploaded Video Files --}}
-                               <div class="post-video mt-2">
-                                   @foreach($videoMedia as $video)
-                                   <video controls class="w-100 rounded mb-2" preload="metadata">
-                                       <source src="{{ asset('storage/' . $video->file_path) }}" type="video/mp4">
-                                       Your browser does not support the video tag.
-                                   </video>
-                                   @endforeach
-                               </div>
-                               @endif
-
-                               {{-- Image Display (your current logic) --}}
-
-                               @if($totalImages === 1)
-                               <div class="post-img mt-2">
-                                   <a href="{{ asset('storage/' . $imageMedia[0]->file_path) }}" class="glightbox"
-                                       data-gallery="post-gallery-{{ $post->id }}">
-                                       <img src="{{ asset('storage/' . $imageMedia[0]->file_path) }}" loading="lazy"
-                                           class="w-100" alt="Post Image">
-                                   </a>
-                               </div>
-                               @elseif($totalImages > 1)
-                               <div class="post-img d-flex justify-content-between flex-wrap gap-2 gap-lg-3 mt-2">
-                                   @foreach($imageMedia->take(4) as $index => $media)
-                                   <div class="position-relative" style="width: 48%;">
-                                       <a href="{{ asset('storage/' . $media->file_path) }}" class="glightbox"
-                                           data-gallery="post-gallery-{{ $post->id }}">
-                                           <img src="{{ asset('storage/' . $media->file_path) }}" alt="Post Image"
-                                               loading="lazy" class="w-100">
-                                       </a>
-                                       @if($index === 3 && $totalImages > 4)
-                                       {{-- Hidden extra images --}}
-                                       @foreach($imageMedia->slice(4) as $extra)
-                                       <a href="{{ asset('storage/' . $extra->file_path) }}" class="glightbox d-none"
-                                           data-gallery="post-gallery-{{ $post->id }}"></a>
-                                       @endforeach
-
-                                       {{-- Overlay link to trigger the rest of the images --}}
-                                       <a href="{{ asset('storage/' . $imageMedia[4]->file_path) }}"
-                                           class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center text-white glightbox"
-                                           style="background-color: rgba(0,0,0,0.6); font-size: 2rem; cursor: pointer;"
-                                           data-gallery="post-gallery-{{ $post->id }}">
-                                           +{{ $totalImages - 4 }}
-                                       </a>
-                                       @endif
-                                   </div>
-
-                                   @endforeach
-                               </div>
-                               @endif
-                               <ul class="nav nav-stack py-3 small">
-                                   @php
-                                   $likeUserList = $post->likes->pluck('member.name')->filter();
-                                   $likeUsersTooltip = $likeUserList->implode('<br>');
-                                   $hasLiked = $post->likes->contains('member_id', auth('user')->id());
-                                   @endphp
-
-                                   <li class="nav-item">
-                                       <a href="javascript:void(0);"
-                                           class="nav-link like-button {{ $hasLiked ? 'active text-primary' : '' }}"
-                                           data-url="{{ route('user.post.like', $post->id) }}"
-                                           data-post-id="{{ $post->id }}" data-bs-toggle="tooltip" data-bs-html="true"
-                                           data-bs-title="{{ $likeUsersTooltip ?: 'No likes yet' }}">
-                                           <i class="bi bi-hand-thumbs-up-fill pe-1"></i>
-                                           <span class="like-label">Like</span>
-                                           <span
-                                               class="like-count">{{ $post->likes->count() ? '('.$post->likes->count().')' : '' }}</span>
-                                       </a>
-                                   </li>
-
-
-
-                                   <li class="nav-item">
-                                       <a class="nav-link" href="#!">
-                                           <i class="bi bi-chat-fill pe-1"></i>Comments
-                                           <span
-                                               class="comment-count">{{ $post->comments->count() ? '(' . $post->comments->count() . ')' : '' }}</span>
-                                       </a>
-
-                                   </li>
-                                   <!-- Card share action START -->
-                                   <li class="nav-item dropdown ms-sm-auto">
-                                       <a class="nav-link mb-0" href="#" id="cardShareAction" data-bs-toggle="dropdown"
-                                           aria-expanded="false">
-                                           <i class="bi bi-reply-fill flip-horizontal ps-1"></i> Share
-                                           {{ $post->shares ? '('.$post->shares->count().')' : '' }}
-                                       </a>
-                                       <!-- Card share action dropdown menu -->
-                                       <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="cardShareAction">
-                                           <li>
-                                               <a href="#" class="dropdown-item send-direct-message-btn"
-                                                   data-user-id="{{-- $member->id --}}">
-                                                   <i class="bi bi-envelope fa-fw pe-2"></i>Send via Direct Message
-                                               </a>
-                                           </li>
-
-                                           <li>
-                                               <a class="dropdown-item copy-url-btn" href="javascript:void(0)"
-                                                   data-url="{{-- url('/user/profile/' . $member->id) --}}">
-                                                   <i class="bi bi-link fa-fw pe-2"></i>Copy link to post
-                                               </a>
-                                           </li>
-
-                                           <li>
-                                               <hr class="dropdown-divider">
-                                           </li>
-                                           <li>
-                                               <a class="dropdown-item share-to-feed-btn" href="#"
-                                                   data-post-id="{{ $post->id ?? '' }}">
-                                                   <i class="bi bi-pencil-square fa-fw pe-2"></i>Share to News Feed
-                                               </a>
-                                           </li>
-                                       </ul>
-                                   </li>
-                                   <!-- Card share action END -->
-                               </ul>
-                               <div class="d-flex mb-3">
-                                   <!-- Avatar -->
-                                   <div class="avatar avatar-xs me-2">
-                                       <a href="#!"> <img class="avatar-img rounded-circle"
-                                               src="{{asset('feed_assets/images/avatar/12.jpg')}}" alt=""> </a>
-                                   </div>
-                                   <!-- Comment box  -->
-                                   <form class="nav nav-item w-100 position-relative" id="commentForm-{{ $post->id }}"
-                                       action="{{ route('user.comments.store') }}" method="POST"
-                                       data-post-id="{{ $post->id }}">
-                                       @csrf
-                                       <textarea name="comment" data-autoresize class="form-control pe-5 bg-light"
-                                           rows="1" placeholder="Add a comment..."
-                                           id="comments-{{ $post->id }}"></textarea>
-                                       <input type="hidden" name="post_id" value="{{ $post->id }}">
-                                       <button
-                                           class="nav-link bg-transparent px-3 position-absolute top-50 end-0 translate-middle-y border-0"
-                                           type="submit">
-                                           <i class="bi bi-send-fill"></i>
-                                       </button>
-                                   </form>
-
-                               </div>
-                               <ul class="comment-wrap list-unstyled">
-                                   <!-- Comment item START -->
-                                   {{--@foreach ($post->comments as $comment)--}}
-                                   @foreach ($post->comments->take(2) as $comment)
-                                   <li class="comment-item mb-3" id="comment-{{ $comment->id }}">
-                                       <div class="d-flex position-relative">
-                                           <!-- Avatar -->
-                                           <div class="avatar avatar-xs">
-                                               <a href="#!"><img class="avatar-img rounded-circle"
-                                                       src="{{ $comment->member && $comment->member->profile_pic ? asset('storage/' . $comment->member->profile_pic) : asset('feed_assets/images/avatar/12.jpg') }}"
-                                                       alt=""></a>
-                                           </div>
-                                           <div class="ms-2 w-100">
-                                               <!-- Comment by -->
-                                               <div class="bg-light rounded-start-top-0 p-3 rounded">
-                                                   <div class="d-flex justify-content-between">
-                                                       <h6 class="mb-1"> <a href="#!">
-                                                               {{ $comment->member->name ?? 'Anonymous' }} </a>
-                                                       </h6>
-                                                       <small
-                                                           class="ms-2">{{ $comment->created_at->diffForHumans() }}</small>
-                                                   </div>
-                                                   <p class="small mb-0" id="comment-text-{{ $comment->id }}">
-                                                       {{ $comment->comment }}</p>
-                                               </div>
-                                               <div class="row">
-                                                   <div class="col-6">
-                                                       <a href="#!" class="text-secondary small me-2">Like</a>
-                                                       <a href="#!" class="text-secondary small">Reply</a>
-                                                   </div>
-                                                   <div class="col-6 text-end">
-                                                       @if(auth()->guard('user')->id() === $comment->member_id)
-                                                       <button
-                                                           class="btn btn-sm btn-link p-0 text-primary edit-comment-btn"
-                                                           data-comment-id="{{ $comment->id }}"
-                                                           data-comment="{{ $comment->comment }}" type="button"><i
-                                                               class="bi bi-pencil-fill"></i></button>
-                                                       @endif
-                                                       @if(auth()->guard('user')->id() === $comment->member_id)
-                                                       <button
-                                                           class="btn btn-sm btn-link p-0 text-danger delete-comment-btn"
-                                                           data-comment-id="{{ $comment->id }}" type="button"><i
-                                                               class="bi bi-trash-fill"></i></button>
-                                                       @endif
-                                                   </div>
-                                               </div>
-                                           </div>
-                                       </div>
-                                       <!-- Comment item nested END -->
-                                   </li>
-                                   @endforeach
-                                   <!-- Comment item END -->
-                               </ul>
-                               <!-- Card body END -->
-                               <!-- Card footer START -->
-                               <!--<div class="card-footer border-0 pt-0">
-
-                                <a href="#!" role="button"
-                                    class="btn btn-link btn-link-loader btn-sm text-secondary d-flex align-items-center"
-                                    data-bs-toggle="button" aria-pressed="true">
-                                    <div class="spinner-dots me-2">
-                                        <span class="spinner-dot"></span>
-                                        <span class="spinner-dot"></span>
-                                        <span class="spinner-dot"></span>
-                                    </div>
-                                    Load more comments
-                                </a>
-                            </div>-->
-                               @if ($post->comments->count() > 2)
-                               <div class="card-footer border-0 pt-0">
-                                   <a href="#!" class="btn btn-link btn-sm text-secondary load-more-comments"
-                                       data-post-id="{{ $post->id }}" data-offset="2">
-                                       <div class="spinner-dots me-2 d-none" id="spinner-{{ $post->id }}">
-                                           <span class="spinner-dot"></span>
-                                           <span class="spinner-dot"></span>
-                                           <span class="spinner-dot"></span>
-                                       </div>
-                                       Load more comments
-                                   </a>
-                               </div>
-                               @endif
-                               <!-- Card footer END -->
-                           </div>
-                           <!-- Card feed item END -->
-
-                       </div>
-                       @endforeach
-                       <!-- Load more button START -->
-                       <a href="#!" role="button" class="btn btn-loader btn-primary-soft w-100" data-bs-toggle="button"
-                           aria-pressed="true">
-                           <span class="load-text"> Load more </span>
-                           <div class="load-icon">
-                               <div class="spinner-grow spinner-grow-sm" role="status">
-                                   <span class="visually-hidden">Loading...</span>
-                               </div>
-                           </div>
-                       </a>
-                       <!-- Load more button END -->
-                       <!-- Card feed END -->
-                   </div>
-                   <!-- Edit Comment Modal -->
-                   <div class="modal fade" id="editCommentModal" tabindex="-1" aria-hidden="true">
-                       <div class="modal-dialog">
-                           <form method="POST" action="{{-- route('user.comments.update') --}}">
-                               @csrf
-                               @method('PUT')
-                               <input type="hidden" name="comment_id" id="editCommentId">
-                               <div class="modal-content">
-                                   <div class="modal-header">
-                                       <h5 class="modal-title">Edit Comment</h5>
-                                       <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                   </div>
-                                   <div class="modal-body">
-                                       <textarea name="comment" id="editCommentText" class="form-control"
-                                           rows="3"></textarea>
-                                   </div>
-                                   <div class="modal-footer">
-                                       <button type="submit" class="btn btn-primary">Update</button>
-                                   </div>
-                               </div>
-                           </form>
-                       </div>
-                   </div>
-               </div>
-               <div class="tab-pane fade" id="about" role="tabpanel" aria-labelledby="about-tab">
-                   <div class="card">
-                       <!-- Card header START -->
-                       <div class="card-header border-0 pb-0">
-                           <h5 class="card-title"> Profile Info</h5>
-                       </div>
-                       <!-- Card header END -->
-                       <!-- Card body START -->
-                       <div class="card-body">
-                           <div class="rounded border px-3 py-2 mb-3">
-                               <div class="d-flex align-items-center justify-content-between">
-                                   <h6>Overview</h6>
-                                   <div class="dropdown ms-auto">
-                                       <!-- Card share action menu -->
-                                       <a class="nav nav-link text-secondary mb-0" href="#" id="aboutAction"
-                                           data-bs-toggle="dropdown" aria-expanded="false">
-                                           <i class="bi bi-three-dots"></i>
-                                       </a>
-                                       <!-- Card share action dropdown menu -->
-                                       <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="aboutAction">
-                                           <li><a class="dropdown-item" href="#"> <i
-                                                       class="bi bi-pencil-square fa-fw pe-2"></i>Edit</a></li>
-                                           <li><a class="dropdown-item" href="#"> <i
-                                                       class="bi bi-trash fa-fw pe-2"></i>Delete</a></li>
-                                       </ul>
-                                   </div>
-                               </div>
-                               <p>{{$user->bio}}</p>
-                           </div>
-                           <div class="row g-4">
-                               <div class="col-sm-6">
-                                   <!-- Birthday START -->
-                                   <div class="d-flex align-items-center rounded border px-3 py-2">
-                                       <!-- Date -->
-                                       <p class="mb-0">
-                                           <i class="bi bi-calendar-date fa-fw me-2"></i> Born: <strong>
-                                               {{ $user->date_of_birth }} </strong>
-                                       </p>
-                                       <div class="dropdown ms-auto">
-                                           <!-- Card share action menu -->
-                                           <a class="nav nav-link text-secondary mb-0" href="#" id="aboutAction2"
-                                               data-bs-toggle="dropdown" aria-expanded="false">
-                                               <i class="bi bi-three-dots"></i>
-                                           </a>
-                                           <!-- Card share action dropdown menu -->
-                                           <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="aboutAction2">
-                                               <li><a class="dropdown-item" href="#"> <i
-                                                           class="bi bi-pencil-square fa-fw pe-2"></i>Edit</a></li>
-                                               <li><a class="dropdown-item" href="#"> <i
-                                                           class="bi bi-trash fa-fw pe-2"></i>Delete</a></li>
-                                           </ul>
-                                       </div>
-                                   </div>
-                                   <!-- Birthday END -->
-                               </div>
-                               <div class="col-sm-6">
-                                   <!-- Status START -->
-                                   <div class="d-flex align-items-center rounded border px-3 py-2">
-                                       <!-- Date -->
-                                       <p class="mb-0">
-                                           <i class="bi bi-heart fa-fw me-2"></i> Status: <strong>
-                                               {{ $user->marital_status }} </strong>
-                                       </p>
-                                       <div class="dropdown ms-auto">
-                                           <!-- Card share action menu -->
-                                           <a class="nav nav-link text-secondary mb-0" href="#" id="aboutAction3"
-                                               data-bs-toggle="dropdown" aria-expanded="false">
-                                               <i class="bi bi-three-dots"></i>
-                                           </a>
-                                           <!-- Card share action dropdown menu -->
-                                           <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="aboutAction3">
-                                               <li><a class="dropdown-item" href="#"> <i
-                                                           class="bi bi-pencil-square fa-fw pe-2"></i>Edit</a></li>
-                                               <li><a class="dropdown-item" href="#"> <i
-                                                           class="bi bi-trash fa-fw pe-2"></i>Delete</a></li>
-                                           </ul>
-                                       </div>
-                                   </div>
-                                   <!-- Status END -->
-                               </div>
-                               <div class="col-sm-6">
-                                   <!-- Designation START -->
-                                   <div class="d-flex align-items-center rounded border px-3 py-2">
-                                       <!-- Date -->
-                                       <p class="mb-0">
-                                           <i class="bi bi-briefcase fa-fw me-2"></i> <strong>
-                                               {{ $user->designation }}
-                                           </strong>
-                                       </p>
-                                       <div class="dropdown ms-auto">
-                                           <!-- Card share action menu -->
-                                           <a class="nav nav-link text-secondary mb-0" href="#" id="aboutAction4"
-                                               data-bs-toggle="dropdown" aria-expanded="false">
-                                               <i class="bi bi-three-dots"></i>
-                                           </a>
-                                           <!-- Card share action dropdown menu -->
-                                           <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="aboutAction4">
-                                               <li><a class="dropdown-item" href="#"> <i
-                                                           class="bi bi-pencil-square fa-fw pe-2"></i>Edit</a></li>
-                                               <li><a class="dropdown-item" href="#"> <i
-                                                           class="bi bi-trash fa-fw pe-2"></i>Delete</a></li>
-                                           </ul>
-                                       </div>
-                                   </div>
-                                   <!-- Designation END -->
-                               </div>
-                               <div class="col-sm-6">
-                                   <!-- Lives START -->
-                                   <div class="d-flex align-items-center rounded border px-3 py-2">
-                                       <!-- Date -->
-                                       <p class="mb-0">
-                                           <i class="bi bi-geo-alt fa-fw me-2"></i> Lives in: <strong>
-                                               {{ $user->current_location }}
-                                           </strong>
-                                       </p>
-                                       <div class="dropdown ms-auto">
-                                           <!-- Card share action menu -->
-                                           <a class="nav nav-link text-secondary mb-0" href="#" id="aboutAction5"
-                                               data-bs-toggle="dropdown" aria-expanded="false">
-                                               <i class="bi bi-three-dots"></i>
-                                           </a>
-                                           <!-- Card share action dropdown menu -->
-                                           <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="aboutAction5">
-                                               <li><a class="dropdown-item" href="#"> <i
-                                                           class="bi bi-pencil-square fa-fw pe-2"></i>Edit</a></li>
-                                               <li><a class="dropdown-item" href="#"> <i
-                                                           class="bi bi-trash fa-fw pe-2"></i>Delete</a></li>
-                                           </ul>
-                                       </div>
-                                   </div>
-                                   <!-- Lives END -->
-                               </div>
-                               <div class="col-sm-6">
-                                   <!-- Joined on START -->
-                                   <div class="d-flex align-items-center rounded border px-3 py-2">
-                                       <!-- Date -->
-                                       <p class="mb-0">
-                                           <i class="bi bi-geo-alt fa-fw me-2"></i> Joined on: <strong>
-                                               {{$user->created_at->format('F j, Y')}}
-                                           </strong>
-                                       </p>
-                                       <div class="dropdown ms-auto">
-                                           <!-- Card share action menu -->
-                                           <a class="nav nav-link text-secondary mb-0" href="#" id="aboutAction6"
-                                               data-bs-toggle="dropdown" aria-expanded="false">
-                                               <i class="bi bi-three-dots"></i>
-                                           </a>
-                                           <!-- Card share action dropdown menu -->
-                                           <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="aboutAction6">
-                                               <li><a class="dropdown-item" href="#"> <i
-                                                           class="bi bi-pencil-square fa-fw pe-2"></i>Edit</a></li>
-                                               <li><a class="dropdown-item" href="#"> <i
-                                                           class="bi bi-trash fa-fw pe-2"></i>Delete</a></li>
-                                           </ul>
-                                       </div>
-                                   </div>
-                                   <!-- Joined on END -->
-                               </div>
-                               <div class="col-sm-6">
-                                   <!-- Joined on START -->
-                                   <div class="d-flex align-items-center rounded border px-3 py-2">
-                                       <!-- Date -->
-                                       <p class="mb-0">
-                                           <i class="bi bi-envelope fa-fw me-2"></i> Email: <strong>
-                                               {{ $user->email }} </strong>
-                                       </p>
-                                       <div class="dropdown ms-auto">
-                                           <!-- Card share action menu -->
-                                           <a class="nav nav-link text-secondary mb-0" href="#" id="aboutAction7"
-                                               data-bs-toggle="dropdown" aria-expanded="false">
-                                               <i class="bi bi-three-dots"></i>
-                                           </a>
-                                           <!-- Card share action dropdown menu -->
-                                           <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="aboutAction7">
-                                               <li><a class="dropdown-item" href="#"> <i
-                                                           class="bi bi-pencil-square fa-fw pe-2"></i>Edit</a></li>
-                                               <li><a class="dropdown-item" href="#"> <i
-                                                           class="bi bi-trash fa-fw pe-2"></i>Delete</a></li>
-                                           </ul>
-                                       </div>
-                                   </div>
-                                   <!-- Joined on END -->
-                               </div>
-                               <div class="col-sm-6 position-relative">
-                                   <!-- Workplace on START -->
-                                   <a class="btn btn-dashed rounded w-100" href="#!"> <i
-                                           class="bi bi-plus-circle-dotted me-1"></i>Add a workplace</a>
-                                   <!-- Workplace on END -->
-                               </div>
-                               <div class="col-sm-6 position-relative">
-                                   <!-- Education on START -->
-                                   <a class="btn btn-dashed rounded w-100" href="#!"> <i
-                                           class="bi bi-plus-circle-dotted me-1"></i>Add a education</a>
-                                   <!-- Education on END -->
-                               </div>
-                           </div>
-                       </div>
-                       <!-- Card body END -->
-                   </div>
-               </div>
-               <div class="tab-pane fade" id="groups" role="tabpanel" aria-labelledby="groups-tab">
-                   <p>Your Groups content here.</p>
-               </div>
-               <div class="tab-pane fade" id="media" role="tabpanel" aria-labelledby="media-tab">
-                   <div class="card">
-                       <!-- Card header START -->
-                       <div class="card-header d-sm-flex align-items-center justify-content-between border-0 pb-0">
-                           <h5 class="card-title">Photos</h5>
-                       </div>
-                       <!-- Card header END -->
-                       <!-- Card body START -->
-                       <div class="card-body">
-                           <!-- Photos of you tab START -->
-                           <div class="row g-3">
-
-                               <!-- Add photo START -->
-                               <div class="col-sm-6 col-md-4 col-lg-3">
-                                   <div
-                                       class="border border-2 py-5 border-dashed h-100 rounded text-center d-flex align-items-center justify-content-center position-relative">
-                                       <a class="stretched-link" href="#!">
-                                           <i class="fa-solid fa-camera-retro fs-1"></i>
-                                           <h6 class="mt-2">Add photo</h6>
-                                       </a>
-                                   </div>
-                               </div>
-                               <!-- Add photo END -->
-
-                               <!-- Photo item START -->
-                               @if(!empty($post) && !empty($post->media))
-                               @foreach($post->media as $media)
-                               @if($media->file_type === 'image')
-                               @php
-                               $max_length = 50;
-                               $relativePath = 'storage/' . str_replace(['app/public/', 'public/'], '',
-                               $media->file_path);
-
-                               // Check existence of file in public path
-                               $file_path = public_path($relativePath);
-                               $image_url = file_exists($file_path) ? asset($relativePath) :
-                               asset('feed_assets/images/avatar-1.png');
-                               @endphp
-                               <div class="col-sm-6 col-md-4 col-lg-3">
-                                   <!-- Photo -->
-                                   <a href="{{ $image_url }}" data-gallery="image-popup"
-                                       data-glightbox="description: .custom-desc2; descPosition: left;">
-                                       <img class="rounded img-fluid" src="{{ $image_url }}" alt="">
-                                   </a>
-                                   <!-- likes -->
-                                   <ul class="nav nav-stack py-2 small">
-                                       <li class="nav-item">
-                                           <a class="nav-link" href="#!"> <i
-                                                   class="bi bi-heart-fill text-danger pe-1"></i>22k </a>
-                                       </li>
-                                       <li class="nav-item">
-                                           <a class="nav-link" href="#!"> <i
-                                                   class="bi bi-chat-left-text-fill pe-1"></i>3k </a>
-                                       </li>
-                                   </ul>
-                               </div>
-                               @endif
-                               @endforeach
-                               @endif
-                               <!-- Photo item END -->
-                           </div>
-                           <!-- Photos of you tab END -->
-                       </div>
-                       <!-- Card body END -->
-                   </div>
-               </div>
-               <div class="tab-pane fade" id="videos" role="tabpanel" aria-labelledby="videos-tab">
-                   <div class="card">
-                       <!-- Card header START -->
-                       <div class="card-header border-0 pb-0">
-                           <h5 class="card-title">Videos</h5>
-                           <!-- Button modal -->
-                       </div>
-                       <!-- Card header END -->
-                       <!-- Card body START -->
-                       <div class="card-body">
-                           <!-- Video of you tab START -->
-                           <div class="row g-3">
-
-                               <!-- Add Video START -->
-                               <div class="col-sm-6 col-md-4">
-                                   <div
-                                       class="border border-2 py-5 border-dashed h-100 rounded text-center d-flex align-items-center justify-content-center position-relative">
-                                       <a class="stretched-link" href="#!">
-                                           <i class="fa-solid fa-camera-retro fs-1"></i>
-                                           <h6 class="mt-2">Add Video</h6>
-                                       </a>
-                                   </div>
-                               </div>
-                               <!-- Add Video END -->
-                               @if(!empty($post) && !empty($post->media))
-                               @foreach($post->media as $media)
-                               @if($media->file_type === 'video')
-                               @php
-                               $max_length = 50;
-                               $relativePath = 'storage/' . str_replace(['app/public/', 'public/'], '',
-                               $media->file_path);
-
-                               // Check existence of file in public path
-                               $file_path = public_path($relativePath);
-                               $image_url = file_exists($file_path) ? asset($relativePath) :
-                               asset('feed_assets/images/avatar-1.png');
-                               @endphp
-                               <div class="col-sm-6 col-md-4">
-                                   <!-- Video START -->
-                                   <div class="card p-0 shadow-none border-0 position-relative">
-                                       <!-- Video image -->
-                                       <div class="position-relative">
-                                           <img class="rounded" src="assets/images/albums/01.jpg" alt="">
-                                           <!-- Play icon -->
-                                           <div class="position-absolute top-0 end-0 p-3">
-                                               <a class="icon-md bg-danger text-white rounded-circle" data-glightbox=""
-                                                   href="assets/images/videos/video-call.mp4"> <i
-                                                       class="bi bi-play-fill fs-5"> </i> </a>
-                                           </div>
-                                           <!-- Duration -->
-                                           <div class="position-absolute bottom-0 start-0 p-3 d-flex w-100">
-                                               <span
-                                                   class="bg-dark bg-opacity-50 px-2 rounded text-white small">02:20</span>
-                                           </div>
-                                       </div>
-                                       <!-- Video info -->
-                                       <div class="card-body px-0 pb-0 pt-2">
-                                           <ul class="nav nav-stack small">
-                                               <li class="nav-item">
-                                                   <a class="nav-link" href="#!"> <i
-                                                           class="bi bi-heart-fill text-danger pe-1"></i>22k </a>
-                                               </li>
-                                               <li class="nav-item">
-                                                   <a class="nav-link" href="#!"> <i
-                                                           class="bi bi-chat-left-text-fill pe-1"></i>3k </a>
-                                               </li>
-                                           </ul>
-                                       </div>
-                                   </div>
-                                   <!-- Video END -->
-                               </div>
-                               @endif
-                               @endforeach
-                               @endif
-                           </div>
-                           <!-- Video of you tab END -->
-                       </div>
-                       <!-- Card body END -->
-                       <!-- Card footer START -->
-                       <div class="card-footer border-0 pt-0">
-                       </div>
-                       <!-- Card footer END -->
-                   </div>
-               </div>
-           </div>
-
-           <!-- Right sidebar START -->
-           <div class="col-lg-4" style=" position: sticky; top: 80px; max-height: 100vh; overflow-y: auto;">
-
-               <div class="row g-4">
-
-                   <!-- Card START -->
-                   <div class="col-md-6 col-lg-12">
-                       <div class="card">
-                           <div class="card-header border-0 pb-0">
-                               <h5 class="card-title">About</h5>
-                               <!-- Button modal -->
-                           </div>
-                           <!-- Card body START -->
-                           <div class="card-body position-relative pt-0">
-                               <p>{{ $user->bio }}</p>
-                               <!-- Date time -->
-                               <ul class="list-unstyled mt-3 mb-0">
-                                   <li class="mb-2"> <i class="bi bi-calendar-date fa-fw pe-1"></i> Born: <strong>
-                                           {{ $user->date_of_birth }} </strong> </li>
-                                   <li class="mb-2"> <i class="bi bi-heart fa-fw pe-1"></i> Status: <strong>
-                                           {{ $user->marital_status }}
-                                       </strong> </li>
-                                   <li> <i class="bi bi-envelope fa-fw pe-1"></i> Email: <strong> {{ $user->email }}
-                                       </strong> </li>
-                               </ul>
-                           </div>
-                           <!-- Card body END -->
-                       </div>
-                   </div>
-                   <!-- Card END -->
-
-                   <!-- Card START -->
-                   <div class="col-md-6 col-lg-12">
-                       <div class="card">
-                           <!-- Card header START -->
-                           <div class="card-header d-sm-flex justify-content-between border-0">
-                               <h5 class="card-title">Photos</h5>
-                               <a class="btn btn-primary-soft btn-sm" href="#!"> See all photo</a>
-                           </div>
-                           <!-- Card header END -->
-                           <!-- Card body START -->
-                           <div class="card-body position-relative pt-0">
-                               <div class="row g-2">
-                                   <!-- Photos item -->
-                                   @if(!empty($post) && !empty($post->media))
-                                   @foreach($post->media as $media)
-                                   @if($media->file_type === 'image')
-                                   @php
-                                   $max_length = 50;
-                                   $relativePath = 'storage/' . str_replace(['app/public/', 'public/'], '',
-                                   $media->file_path);
-
-                                   // Check existence of file in public path
-                                   $file_path = public_path($relativePath);
-                                   $image_url = file_exists($file_path) ? asset($relativePath) :
-                                   asset('feed_assets/images/avatar-1.png');
-                                   @endphp
-                                   <div class="col-6">
-                                       <a href="{{ $image_url }}" data-gallery="image-popup" data-glightbox="">
-                                           <img class="rounded img-fluid" src="{{ $image_url }}" alt="">
-                                       </a>
-                                   </div>
-                                   @endif
-                                   @endforeach
-                                   @endif
-                               </div>
-                           </div>
-                           <!-- Card body END -->
-                       </div>
-                   </div>
-                   <!-- Card END -->
-               </div>
-
-           </div>
-           <!-- Right sidebar END -->
-
-       </div> <!-- Row END -->
-   </div>
-   <!-- Edit Profile Modal -->
-
-   <div class="modal fade" id="feedActionPhoto" tabindex="-1" aria-labelledby="feedActionPhotoLabel" aria-hidden="true">
-       <div class="modal-dialog modal-dialog-centered">
-           <form class="modal-content" action="{{ route('post.store') }}" method="POST" enctype="multipart/form-data">
-               @csrf
-
-               <!-- Modal header -->
-               <div class="modal-header">
-                   <h5 class="modal-title" id="feedActionPhotoLabel">Add post photo</h5>
-                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-               </div>
-
-               <!-- Modal body -->
-               <div class="modal-body">
-                   <div class="d-flex mb-3">
-                       <!-- User avatar -->
-                       <div class="avatar avatar-xs me-2">
-                           @php
-                           $profilePic = $user->profile_pic ?? null;
-                           @endphp
-                           <img class="avatar-img rounded-circle"
-                               src="{{ $profilePic ? asset('storage/' . $profilePic) : asset('feed_assets/images/avatar/03.jpg') }}"
-                               alt="User Avatar">
-                       </div>
-                       <!-- Post textarea -->
-                       <textarea class="form-control pe-4 fs-3 lh-1 border-0" name="modalContent" rows="2"
-                           placeholder="Share your thoughts..."></textarea>
-                   </div>
-
-                   <!-- File upload -->
-                   <div class="mb-3">
-                       <label class="form-label">Upload attachment</label>
-                       <div id="drop-area" class="drop-area p-4 text-center border border-secondary rounded">
-                           <i class="bi bi-images fs-1 mb-2 d-block"></i>
-                           <span class="d-block">Drag & Drop image here or click to browse.</span>
-                           <input type="file" id="media" name="media[]" multiple class="d-none" accept="image/*">
-                           <div id="preview" class="mt-3 d-flex flex-wrap gap-3"></div>
-                       </div>
-                   </div>
-
-                   <!-- Optional video link -->
-                   <input class="form-control mt-2" type="text" name="video_link" placeholder="Video Link (optional)" />
-               </div>
-
-               <!-- Modal footer -->
-               <div class="modal-footer">
-                   <button type="button" class="btn btn-danger-soft" data-bs-dismiss="modal">Cancel</button>
-                   <button type="submit" class="btn btn-success-soft">Post</button>
-               </div>
-           </form>
-       </div>
-   </div>
-
-   <div class="modal fade" id="groupActionpost" tabindex="-1" aria-labelledby="groupActionpostLabel" aria-hidden="true">
-       <div class="modal-dialog modal-dialog-centered">
-           <form class="modal-content" action="{{ route('user.group.post')}}" method="POST"
-               enctype="multipart/form-data">
-               @csrf
-
-               <!-- Modal header -->
-               <div class="modal-header">
-                   <h5 class="modal-title" id="groupActionpostLabel">Add Group post in <span class="group_name"></span>
-                   </h5>
-                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-               </div>
-
-               <!-- Modal body -->
-               <div class="modal-body">
-                   <div class="d-flex mb-3">
-                       <!-- User avatar -->
-                       <div class="avatar avatar-xs me-2">
-                           @php
-                           $profilePic = $user->profile_pic ?? null;
-                           @endphp
-                           <img class="avatar-img rounded-circle"
-                               src="{{ $profilePic ? asset('storage/' . $profilePic) : asset('feed_assets/images/avatar/03.jpg') }}"
-                               alt="User Avatar">
-                       </div>
-                       <!-- Post textarea -->
-                       <input type="hidden" name="group_id" class="group_id">
-                       <textarea class="form-control pe-4 fs-3 lh-1 border-0" name="modalContent" rows="2"
-                           placeholder="Share your thoughts..."></textarea>
-                   </div>
-
-                   <!-- File upload -->
-                   <div class="mb-3">
-                       <label class="form-label">Upload attachment</label>
-                       <div id="drop-area" class="drop-area p-4 text-center border border-secondary rounded">
-
-                           <i class="bi bi-images fs-1 mb-2 d-block"></i>
-                           <span class="d-block">Drag & Drop image here or click to browse.</span>
-                           <input type="file" id="media" name="media[]" multiple class="d-none" accept="image/*">
-                           <div id="preview" class="mt-3 d-flex flex-wrap gap-3"></div>
-                       </div>
-                   </div>
-                   <!-- Optional video link -->
-                   <input class="form-control mt-2" type="text" name="video_link" placeholder="Video Link (optional)" />
-               </div>
-
-               <!-- Modal footer -->
-               <div class="modal-footer">
-                   <button type="button" class="btn btn-danger-soft" data-bs-dismiss="modal">Cancel</button>
-                   <button type="submit" class="btn btn-success-soft">Post</button>
-               </div>
-           </form>
-       </div>
-   </div>
-   <!-- Modal create Feed photo END -->
-
-   @endsection
-   <script>
+@endsection
+<script>
 // for Edit functionality
 function readURL(input) {
     if (input.files && input.files[0]) {
@@ -1502,45 +956,49 @@ $(document).ready(function() {
         readURL(this);
     });
 });
-   </script>
+</script>
 
 
-   <script>
-/* document.addEventListener('DOMContentLoaded', function () {
-        $('#myForm').on('submit', function (e) {
-            e.preventDefault();
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    $('#editProfileForm').on('submit', function (e) {
+        e.preventDefault(); // Prevent default form submission
 
-            var form = document.getElementById("myForm");
-            var formData = new FormData(form);
-            var token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-            var userId = "{{ $user->id }}";
+        var form = document.getElementById("editProfileForm");
+        var formData = new FormData(form);
+        var token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        var userId = "{{ $user->id }}";
 
-            $.ajax({
-                url: "/user/update/" + userId,
-                type: "POST",
-                headers: {
-                    'X-CSRF-TOKEN': token
-                },
-                data: formData,
-                contentType: false,
-                processData: false,
-                success: function (data) {
-                    alert("Updated successfully!");
-                },
-                error: function (xhr) {
-                    console.error(xhr.responseText);
-                    alert("Error occurred.");
-                }
-            });
+        $.ajax({
+            url: "/user/update/" + userId, // Adjust this URL to your route
+            type: "POST",
+            headers: {
+                'X-CSRF-TOKEN': token
+            },
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                // Show a success message inside the modal
+                $('#editProfileForm .alert-success').remove();
+                $('#editProfileForm').prepend('<div class="alert alert-success">Updated successfully!</div>');
+                // Do NOT close the modal here
+            },
+            error: function (xhr) {
+                // Show error message inside the modal
+                $('#editProfileForm .alert-danger').remove();
+                $('#editProfileForm').prepend('<div class="alert alert-danger">Error occurred.</div>');
+            }
         });
     });
+});
   */
 
 function goPrev() {
     window.history.back();
 }
-   </script>
-   <script>
+</script>
+<script>
 $(document).on('click', '.like-button', function() {
 
     const $btn = $(this);
@@ -1792,4 +1250,4 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
-   </script>
+</script>

@@ -25,7 +25,7 @@
                 <div class="card overflow-hidden">
                     <!-- Cover image -->
                     <div class="h-50px"
-                        style="background-image:url({{asset('feed_assets/images/bg/01.jpg')}}); background-position: center; background-size: cover; background-repeat: no-repeat;">
+                        style="background-image:url({{asset('user_assets/images/login/login-bg.jpg')}}); background-position: center; background-size: cover; background-repeat: no-repeat;">
                     </div>
                     <!-- Card body START -->
                     <div class="card-body pt-0">
@@ -37,7 +37,7 @@
                         @endphp
                               <img id="existingImage"
     src="{{ $profilePic ? asset('storage/' . $profilePic) : asset('feed_assets/images/default.png') }}"
-    class="rounded-circle" height="70" width="70" alt="User">
+    class="rounded-circle avatar-img" height="50" width="50" alt="User">
                             </div>
 
 
@@ -48,31 +48,11 @@
                             <h5 class="mb-0"> <a href="#!"> {{ Auth::guard('user')->user()->name }} </a> </h5>
                             @endif
                             <small>{{ Auth::guard('user')->user()->designation }}</small>
-                            <p class="mt-3">{{Auth::guard('user')->user()->bio}}</p>
-
-                            <!-- User stat START -->
-                            <div class="hstack gap-2 gap-xl-3 justify-content-center">
-                                <!-- User stat item -->
-                                <div>
-                                    <h6 class="mb-0">256</h6>
-                                    <small>Post</small>
-                                </div>
-                                <!-- Divider -->
-                                <div class="vr"></div>
-                                <!-- User stat item -->
-                                <div>
-                                    <h6 class="mb-0">2.5K</h6>
-                                    <small>Followers</small>
-                                </div>
-                                <!-- Divider -->
-                                <div class="vr"></div>
-                                <!-- User stat item -->
-                                <div>
-                                    <h6 class="mb-0">365</h6>
-                                    <small>Following</small>
-                                </div>
-                            </div>
-                            <!-- User stat END -->
+                            <ul class="list-inline mb-0 text-center text-sm-start mt-3 mt-sm-0">
+                        <li class="list-inline-item"><i class="bi bi-briefcase me-1"></i> {{ $user->current_designation }}
+                        </li>
+                        <li class="list-inline-item"><i class="bi bi-backpack me-1"></i> {{ $user->batch }}</li>
+                    </ul>
                         </div>
                         <!-- Side Nav END -->
                     </div>
@@ -183,11 +163,12 @@
                     </div>
 
                 </div>
+                
+                @endforeach
                 <!-- View more button -->
                 <div class="d-grid mt-3">
-                    <a class="btn btn-sm btn-primary-soft" href="#!">View more</a>
+                    <a class="btn btn-sm btn-primary-soft" href="{{ route('user.forum') }}">View more</a>
                 </div>
-                @endforeach
                 @else
                 <p>No forums to display.</p>
                 @endif

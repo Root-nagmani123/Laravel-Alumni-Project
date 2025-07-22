@@ -3,6 +3,45 @@
    @section('title', 'User Feed - Alumni | Lal Bahadur Shastri National Academy of Administration')
 
    @section('content')
+   <style>
+    .loading-text {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: 9999;
+        background-color: #af2910; /* LBSNAA maroon */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .animate {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: #fff;
+        text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+        animation: pulseText 1.2s ease-in-out infinite alternate;
+    }
+
+    @keyframes pulseText {
+        from {
+            transform: scale(1);
+            opacity: 0.7;
+        }
+        to {
+            transform: scale(1.1);
+            opacity: 1;
+        }
+    }
+</style>
+
+<!-- Loader -->
+<div class="loading-text" id="pageLoader">
+    <h1 class="animate">LBSNAA Alumni</h1>
+</div>
 
    <div class="container">
        <div class="row g-4">
@@ -43,7 +82,7 @@
                                alt="User Avatar">
                        </div>
                        <!-- Post textarea -->
-                       <textarea class="form-control pe-4 fs-3 lh-1 border-0" name="modalContent" rows="2"
+                       <textarea class="form-control pe-4 fs-3 lh-1 border-0" name="modalContent" rows="5"
                            placeholder="Share your thoughts..."></textarea>
                    </div>
 
@@ -90,7 +129,7 @@
                        <!-- User avatar -->
                        <div class="avatar avatar-xs me-2">
                            @php
-                           $profilePic = $user->profile_pic ?? null;
+                            $profilePic = $user->profile_pic ?? null;
                            @endphp
                            <img class="avatar-img rounded-circle"
                                src="{{ $profilePic ? asset('storage/' . $profilePic) : asset('feed_assets/images/avatar/03.jpg') }}"
@@ -395,6 +434,16 @@
        });
        </script>
 
+<script>
+    window.addEventListener('load', function () {
+        const loader = document.getElementById('pageLoader');
+        if (loader) {
+            loader.style.transition = 'opacity 0.6s ease';
+            loader.style.opacity = 0;
+            setTimeout(() => loader.style.display = 'none', 600);
+        }
+    });
+</script>
 
 
        @endsection
