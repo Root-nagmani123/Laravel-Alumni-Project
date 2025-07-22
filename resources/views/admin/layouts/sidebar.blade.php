@@ -40,7 +40,7 @@
                         </li>
 
                         <li class="sidebar-item">
-                            <a class="sidebar-link" href="{{ route('members.index') }}">
+                            <a class="sidebar-link" href="{{ route('members.index') }}" >
                                 <iconify-icon icon="solar:user-bold-duotone"></iconify-icon>
                                 <span class="icon-small"></span> Members
                             </a>

@@ -27,12 +27,12 @@
                                 <div class="mt-4 mt-sm-auto">
                                     <div class="row">
                                         <div class="col-6">
-                                            <span class="opacity-75">Total Member</span>
+                                            <span class="opacity-75"><a href="{{ route('members.index') }}" class="text-white">Total Member</a></span>
                                             <h4 class="mb-0 text-white mt-1 text-nowrap fs-13 fw-bolder">
                                                {{ $total_user }}</h4>
                                         </div>
                                         <div class="col-6 border-start border-light" style="--bs-border-opacity: .15;">
-                                            <span class="opacity-75">Forums</span>
+                                            <span class="opacity-75"><a href="{{ route('forums.index') }}" class="text-white">Forums</a></span>
                                             <h4 class="mb-0 text-white mt-1 text-nowrap fs-13 fw-bolder">
                                                 {{ $total_forums }}</h4>
                                         </div>
@@ -73,25 +73,16 @@
                 <!-- -------------------------------------------- -->
                 <!-- Projects -->
                 <!-- -------------------------------------------- -->
-                <!--<div class="col-md-6">
+                <div class="col-md-6">
                     <div class="card bg-danger-subtle overflow-hidden shadow-none">
                         <div class="card-body p-4">
-                            <span class="text-dark-light">Replies</span>
+                            <span class="text-dark-light">Broadcasts</span>
                             <div class="hstack gap-6">
-                                <h5 class="mb-0 fs-7">78,298</h5>
-                                <span class="fs-11 text-dark-light fw-semibold">+31.8%</span>
+                                <h5 class="mb-0 fs-7">0</h5>
+                                <span class="fs-11 fw-semibold text-muted">New</span>
                             </div>
                         </div>
 
-                    </div>
-                </div>-->
-            </div>
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="card">
-                        <div class="card-body">
-
-                        </div>
                     </div>
                 </div>
             </div>
