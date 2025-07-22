@@ -32,21 +32,6 @@
                                     @endif
 
                         </div>
-                         <div class="d-flex align-items-center gap-2 mb-2">
-                                 @if ($broadcast->video_url)
-                                <iframe
-            width="100%"
-            height="100%"
-            src="https://www.youtube.com/embed/{{ \Illuminate\Support\Str::after($broadcast->video_url, 'v=') }}"
-            title="YouTube video player"
-            frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen>
-        </iframe>
-                                    @endif
-
-                        </div>
-
                         <h6 class="mb-0"><a href="{{ route('user.broadcastDetails', $broadcast->id) }}">{{ $broadcast->title }}</a></h6>
                         <small>{{ \Illuminate\Support\Str::limit($broadcast->description, 50) }} <span><a href="{{ route('user.broadcastDetails', $broadcast->id) }}" class="text-danger">View more</a></span></small>
                     </div>

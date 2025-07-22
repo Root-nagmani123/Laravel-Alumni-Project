@@ -76,8 +76,8 @@
                                     <td>{{ $group->name }}</td>
                                     <!--<td class="text-center"><a class="btn btn-sm btn-primary" href="{{-- route('group.add_topic', ['id' => $group->id]) --}}"><i class="bi bi-plus"></i></a>&nbsp;<a class="btn btn-sm btn-success" href="{{ route('group.topic.view' , ['id' => $group->id] )}}"><i class="bi bi-eye"></i></a></td>-->
 
-                                     <td><a class="btn btn-sm btn-primary"
-                                            href="{{route('group.add_topic', ['id' => $group->id]) }}"> <iconify-icon icon="solar:add-circle-bold"></iconify-icon></a>&nbsp;<a class="btn btn-sm btn-success"
+                                     <td><a
+                                            href="{{route('group.add_topic', ['id' => $group->id]) }}"> <iconify-icon icon="solar:add-square-bold" style="color: green;"></iconify-icon></a>&nbsp;<a
                                             href="{{ route('group.topic.view' , ['id' => $group->id] )}}"> <iconify-icon icon="solar:eye-bold"></iconify-icon></a></td>
                                    <td>{{ \Carbon\Carbon::parse($group->created_at)->timezone('Asia/Kolkata')->format('l, d M Y, h:i A') }}</td>
                                     <td>

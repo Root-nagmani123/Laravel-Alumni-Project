@@ -5,7 +5,7 @@
 
 @section('content')
     <div class="container">
-        <div class="row g-4">
+        <div class="row g-4 py-4">
 
             <!-- Sidenav START -->
             <div class="col-lg-3">
