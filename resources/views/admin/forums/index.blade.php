@@ -105,18 +105,9 @@
                                         <input class="form-check-input status-toggle" type="checkbox" role="switch" data-table="forum" data-column="active_inactive" data-id="1" checked="">
                                     </td> -->
                                     <td>
-                                        <a href="{{route('forums.forum.edit', $forum->id) }}"
+                                        <div class="d-flex gap-2">
+                                            <a href="{{route('forums.forum.edit', $forum->id) }}"
                                             class="btn btn-success btn-sm">Edit</a>
-                                        <!--<form id="delete-form-{{ $forum->id }}"
-                                            action="{{ route('forums.forum.destroy', $forum->id) }}" method="POST"
-                                            style="display:inline;">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="button" class="btn btn-danger delete-forum-btn btn-sm"
-                                                data-id="{{ $forum->id }}" data-status="{{ $forum->status }}">
-                                                Delete
-                                            </button>
-                                        </form>-->
                                          <form action="{{ route('forums.forum.destroy', $forum->id) }}" method="POST" style="display:inline;">
                                     @csrf
                                     @method('DELETE')
@@ -125,7 +116,7 @@
                                         Delete
                                     </button>
                                     </form>
-
+                                        </div>
                                     </td>
                                     <td>
 
