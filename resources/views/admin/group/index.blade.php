@@ -54,7 +54,7 @@
                     <div id="zero_config_wrapper" class="dataTables_wrapper">
 
                         <table id="zero_config"
-                            class="table table-striped table-bordered text-nowrap align-middle dataTable"
+                            class="table table-striped table-bordered align-middle dataTable"
                             aria-describedby="zero_config_info">
                             <thead>
                                 <!-- start row -->
@@ -76,9 +76,12 @@
                                     <td>{{ $group->name }}</td>
                                     <!--<td class="text-center"><a class="btn btn-sm btn-primary" href="{{-- route('group.add_topic', ['id' => $group->id]) --}}"><i class="bi bi-plus"></i></a>&nbsp;<a class="btn btn-sm btn-success" href="{{ route('group.topic.view' , ['id' => $group->id] )}}"><i class="bi bi-eye"></i></a></td>-->
 
-                                     <td><a
-                                            href="{{route('group.add_topic', ['id' => $group->id]) }}"> <iconify-icon icon="solar:add-square-bold" style="color: green;"></iconify-icon></a>&nbsp;<a
-                                            href="{{ route('group.topic.view' , ['id' => $group->id] )}}"> <iconify-icon icon="solar:eye-bold"></iconify-icon></a></td>
+                                     <td>
+                                     <div>
+                                        <a href="{{route('group.add_topic', ['id' => $group->id]) }}" class="btn btn-sm btn-primary"><i class="bi bi-plus"></i></a>
+                                        <a href="{{ route('group.topic.view' , ['id' => $group->id] )}}" class="btn btn-sm btn-success"><i class="bi bi-eye"></i></a>
+                                     </div>
+                                     </td>
                                    <td>{{ \Carbon\Carbon::parse($group->created_at)->timezone('Asia/Kolkata')->format('l, d M Y, h:i A') }}</td>
                                     <td>
                                         <div class="form-check form-switch d-inline-block">

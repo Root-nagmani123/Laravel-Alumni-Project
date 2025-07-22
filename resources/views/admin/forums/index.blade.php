@@ -56,7 +56,7 @@
 
 
                         <table id="zero_config"
-                            class="table table-striped table-bordered text-nowrap align-middle dataTable"
+                            class="table table-striped table-bordered align-middle dataTable"
                             aria-describedby="zero_config_info">
                             <thead>
                                 <!-- start row -->
@@ -80,18 +80,19 @@
                                         <a class="btn btn-sm btn-primary"
                                             href="{{ route('forums.add_member', ['id' => $forum->id]) }}"
                                             data-bs-toggle="tooltip" data-bs-placement="top" title="Add Members">
-                                            <iconify-icon icon="solar:add-circle-bold"></iconify-icon>
+                                            <i class="bi bi-plus"></i>
                                         </a>
                                         &nbsp;
                                         <a class="btn btn-sm btn-success"
                                             href="{{ route('forums.view_member', ['id' => $forum->id]) }}"
                                             data-bs-toggle="tooltip" data-bs-placement="top" title="View Members">
-                                            <iconify-icon icon="solar:eye-bold"></iconify-icon>
+                                            <i class="bi bi-eye"></i>
                                         </a>
                                     </td>
-                                    <td><a class="btn btn-sm btn-primary"
-                                            href="{{ route('forums.add_topic', ['id' => $forum->id]) }}" title="Add  Topic"> <iconify-icon icon="solar:add-circle-bold"></iconify-icon></a>&nbsp;<a class="btn btn-sm btn-success"
-                                            href="{{ route('forums.view_topic' , ['id' => $forum->id] )}}" title="View Topic"> <iconify-icon icon="solar:eye-bold"></iconify-icon></a></td>
+                                    <td>
+                                        <a class="btn btn-sm btn-primary" href="{{ route('forums.add_topic', ['id' => $forum->id]) }}" title="Add  Topic"> <i class="bi bi-plus"></i></a>
+                                        <a class="btn btn-sm btn-success" href="{{ route('forums.view_topic' , ['id' => $forum->id] )}}" title="View Topic"> <i class="bi bi-eye"></i></a>
+                                    </td>
                                     <td>{{ \Carbon\Carbon::parse($forum->created_at)->timezone('Asia/Kolkata')->format('l, d M Y, h:i A') }}
                                     </td>
 
