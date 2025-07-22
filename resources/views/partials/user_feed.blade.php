@@ -99,20 +99,11 @@
 
 <div class="avatar me-2">
     <a href="{{ $profileLink }}">
-<<<<<<< Updated upstream
         <img 
             class="avatar-img rounded-circle" 
             src="{{ $profileImage }}" 
             alt="Profile Picture">
     </a>
-=======
-<img
-  class="avatar-img rounded-circle"
-  src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar-1.png') }}"
-  alt="Profile Picture">
-
-</a>
->>>>>>> Stashed changes
 </div>
 
 <!-- Info -->
