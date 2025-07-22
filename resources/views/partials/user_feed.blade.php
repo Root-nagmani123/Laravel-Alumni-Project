@@ -87,8 +87,8 @@
         // Member/user post
         $member = $post->member ?? null;
 
-        $profileImage = $member && $member->profile_image
-            ? asset('storage/' . $member->profile_image)
+        $profileImage = $member && $member->profile_pic
+            ? asset('storage/' . $member->profile_pic)
             : asset('feed_assets/images/avatar/07.jpg');
 
         $displayName = $member->name ?? 'Unknown';

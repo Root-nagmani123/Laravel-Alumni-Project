@@ -90,7 +90,7 @@
                        <!-- User avatar -->
                        <div class="avatar avatar-xs me-2">
                            @php
-                           $profilePic = $user->profile_pic ?? null;
+                            $profilePic = $user->profile_pic ?? null;
                            @endphp
                            <img class="avatar-img rounded-circle"
                                src="{{ $profilePic ? asset('storage/' . $profilePic) : asset('feed_assets/images/avatar/03.jpg') }}"
