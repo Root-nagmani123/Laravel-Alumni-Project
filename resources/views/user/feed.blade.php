@@ -43,7 +43,7 @@
                                alt="User Avatar">
                        </div>
                        <!-- Post textarea -->
-                       <textarea class="form-control pe-4 fs-3 lh-1 border-0" name="modalContent" rows="2"
+                       <textarea class="form-control pe-4 fs-3 lh-1 border-0" name="modalContent" rows="5"
                            placeholder="Share your thoughts..."></textarea>
                    </div>
 
