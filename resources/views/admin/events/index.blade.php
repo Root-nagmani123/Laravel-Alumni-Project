@@ -107,7 +107,8 @@
                                     @endphp
 
                                     <td>
-									{{--url(route('events.edit'.base64_encode($event->id))--}}
+									<div class="d-flex gap-2">
+                                        {{--url(route('events.edit'.base64_encode($event->id))--}}
                                         @if ($event_datetime > $current_datetime)
                                         <a href="{{ route('events.edit', encrypt($event->id)) }}" class="btn btn-success text-white btn-sm">Edit</a>
 
@@ -129,6 +130,7 @@
                                             RSVP
 
                                         </a>
+                                    </div>
 
 
                                     </td>

@@ -77,21 +77,25 @@
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $forum->name }}</td>
                                     <td>
-                                        <a class="btn btn-sm btn-primary"
-                                            href="{{ route('forums.add_member', ['id' => $forum->id]) }}"
-                                            data-bs-toggle="tooltip" data-bs-placement="top" title="Add Members">
-                                            <i class="bi bi-plus"></i>
-                                        </a>
-                                        &nbsp;
-                                        <a class="btn btn-sm btn-success"
-                                            href="{{ route('forums.view_member', ['id' => $forum->id]) }}"
-                                            data-bs-toggle="tooltip" data-bs-placement="top" title="View Members">
-                                            <i class="bi bi-eye"></i>
-                                        </a>
-                                    </td>
+    <div class="d-flex gap-2">
+        <a class="btn btn-sm btn-primary"
+            href="{{ route('forums.add_member', ['id' => $forum->id]) }}"
+            data-bs-toggle="tooltip" data-bs-placement="top" title="Add Members">
+            <i class="bi bi-plus"></i>
+        </a>
+        <a class="btn btn-sm btn-success"
+            href="{{ route('forums.view_member', ['id' => $forum->id]) }}"
+            data-bs-toggle="tooltip" data-bs-placement="top" title="View Members">
+            <i class="bi bi-eye"></i>
+        </a>
+    </div>
+</td>
+
                                     <td>
-                                        <a class="btn btn-sm btn-primary" href="{{ route('forums.add_topic', ['id' => $forum->id]) }}" title="Add  Topic"> <i class="bi bi-plus"></i></a>
-                                        <a class="btn btn-sm btn-success" href="{{ route('forums.view_topic' , ['id' => $forum->id] )}}" title="View Topic"> <i class="bi bi-eye"></i></a>
+                                        <div class="d-flex gap-2">
+                                            <a class="btn btn-sm btn-primary" href="{{ route('forums.add_topic', ['id' => $forum->id]) }}" title="Add  Topic" data-bs-toggle="tooltip" data-bs-placement="top"> <i class="bi bi-plus"></i></a>
+                                        <a class="btn btn-sm btn-success" href="{{ route('forums.view_topic' , ['id' => $forum->id] )}}" title="View Topic" data-bs-toggle="tooltip" data-bs-placement="top"> <i class="bi bi-eye"></i></a>
+                                        </div>
                                     </td>
                                     <td>{{ \Carbon\Carbon::parse($forum->created_at)->timezone('Asia/Kolkata')->format('l, d M Y, h:i A') }}
                                     </td>

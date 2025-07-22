@@ -77,9 +77,9 @@
                                     <!--<td class="text-center"><a class="btn btn-sm btn-primary" href="{{-- route('group.add_topic', ['id' => $group->id]) --}}"><i class="bi bi-plus"></i></a>&nbsp;<a class="btn btn-sm btn-success" href="{{ route('group.topic.view' , ['id' => $group->id] )}}"><i class="bi bi-eye"></i></a></td>-->
 
                                      <td>
-                                     <div>
-                                        <a href="{{route('group.add_topic', ['id' => $group->id]) }}" class="btn btn-sm btn-primary"><i class="bi bi-plus"></i></a>
-                                        <a href="{{ route('group.topic.view' , ['id' => $group->id] )}}" class="btn btn-sm btn-success"><i class="bi bi-eye"></i></a>
+                                     <div class="d-flex gap-2">
+                                        <a href="{{route('group.add_topic', ['id' => $group->id]) }}" class="btn btn-sm btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Add Group Topics"><i class="bi bi-plus"></i></a>
+                                        <a href="{{ route('group.topic.view' , ['id' => $group->id] )}}" class="btn btn-sm btn-success" data-bs-toggle="tooltip" data-bs-placement="top" title="View Group Topics"><i class="bi bi-eye"></i></a>
                                      </div>
                                      </td>
                                    <td>{{ \Carbon\Carbon::parse($group->created_at)->timezone('Asia/Kolkata')->format('l, d M Y, h:i A') }}</td>
