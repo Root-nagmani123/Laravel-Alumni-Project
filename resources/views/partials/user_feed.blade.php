@@ -378,7 +378,7 @@
             Load more comments
         </a>
     </div>
-@endif
+    @endif
             <!-- Card footer END -->
         </div>
         <!-- Card feed item END -->
