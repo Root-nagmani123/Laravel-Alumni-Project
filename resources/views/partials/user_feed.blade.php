@@ -110,8 +110,9 @@
 <div>
     <div class="nav nav-divider">
         <h6 class="nav-item card-title mb-0">
-            <a href="{{ $profileLink }}">{{ $displayName }}</a>
-        </h6>
+    <a href="{{ route('user.profile', ['id' => $user->id]) }}">{{ $user->name }}</a>
+</h6>
+
         <span class="nav-item small">
             {{ \Carbon\Carbon::parse($post->created_at)->diffForHumans() }}
         </span>
