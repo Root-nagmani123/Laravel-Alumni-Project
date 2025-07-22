@@ -29,7 +29,7 @@ class ProfileController extends Controller
 
          $posts = Post::with(['member', 'media', 'likes', 'comments.member'])
         ->orderBy('created_at', 'desc')
-        ->where('id', $userId)
+        ->where('member_id', $userId)
         ->get();
 
     return view('profile', compact('user','posts'));

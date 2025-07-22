@@ -666,7 +666,7 @@
                                                         <img class="rounded img-fluid" src="{{ $image_url }}" alt="">
                                                     </a>
                                                     <!-- likes -->
-                                                    <ul class="nav nav-stack py-2 small">
+                                                    <!-- <ul class="nav nav-stack py-2 small">
                                                         <li class="nav-item">
                                                             <a class="nav-link" href="#!"> <i
                                                                     class="bi bi-heart-fill text-danger pe-1"></i>22k </a>
@@ -675,7 +675,7 @@
                                                             <a class="nav-link" href="#!"> <i class="bi bi-chat-left-text-fill pe-1"></i>3k
                                                             </a>
                                                         </li>
-                                                    </ul>
+                                                    </ul> -->
                                                 </div>
                                             @endif
                                         @endforeach

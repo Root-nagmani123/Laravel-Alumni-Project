@@ -106,7 +106,7 @@ return redirect()->route('events.index')->with('error', 'Event not found!');retu
             'url'            => 'nullable|url|max:255',
             'start_datetime' => 'required|date',
             'end_datetime'   => 'nullable|date|after_or_equal:start_datetime',
-            'image'          => 'nullable|image|max:2048',
+            'image'          => 'required|image|max:2048',
         ]);
 
         if ($validator->fails()) {
