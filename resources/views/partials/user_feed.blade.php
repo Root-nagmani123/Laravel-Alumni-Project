@@ -99,11 +99,12 @@
 
 <div class="avatar me-2">
     <a href="{{ $profileLink }}">
-        <img 
-            class="avatar-img rounded-circle" 
-            src="{{ $profileImage }}" 
-            alt="Profile Picture">
-    </a>
+<img
+  class="avatar-img rounded-circle"
+  src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar-1.png') }}"
+  alt="Profile Picture">
+
+</a>
 </div>
 
 <!-- Info -->
@@ -196,7 +197,7 @@
             </div>
             @endif
 
-            {{-- Image Display (your current logic) --}}
+
 
             @if($totalImages === 1)
             <div class="post-img mt-2">
@@ -291,18 +292,30 @@
                             src="{{asset('storage/'.$user->profile_pic)}}" alt=""> </a>
                 </div>
                 <!-- Comment box  -->
-                <form class="nav nav-item w-100 position-relative" id="commentForm-{{ $post->id }}"
-                    action="{{ route('user.comments.store') }}" method="POST" data-post-id="{{ $post->id }}">
-                    @csrf
-                    <textarea name="comment" data-autoresize class="form-control pe-5 bg-light" rows="1"
-                        placeholder="Add a comment..." id="comments-{{ $post->id }}"></textarea>
-                    <input type="hidden" name="post_id" value="{{ $post->id }}">
-                    <button
-                        class="nav-link bg-transparent px-3 position-absolute top-50 end-0 translate-middle-y border-0"
-                        type="submit">
-                        <i class="bi bi-send-fill"></i>
-                    </button>
-                </form>
+
+
+                    <form class="commentForm nav nav-item w-100 position-relative"
+      id="commentForm-{{ $post->id }}"
+      action="{{ route('user.comments.store') }}"
+      method="POST"
+      data-post-id="{{ $post->id }}">
+
+    @csrf
+    <textarea name="comment" class="form-control pe-5 bg-light commentInput"
+              rows="1"
+              placeholder="Add a comment..."
+              id="comments-{{ $post->id }}"></textarea>
+
+    <input type="hidden" name="post_id" value="{{ $post->id }}">
+
+    <button class="nav-link bg-transparent px-3 position-absolute top-50 end-0 translate-middle-y border-0"
+            type="submit">
+        <i class="bi bi-send-fill"></i>
+    </button>
+
+    <div class="comment-error text-danger mt-1"></div>
+</form>
+
 
             </div>
             <ul class="comment-wrap list-unstyled">
@@ -1022,6 +1035,54 @@ $('#editPostForm').on('submit', function(e) {
         error: function() {
             alert('Failed to update post.');
         }
+    });
+});
+
+
+//add commment page refresh issue
+$(document).ready(function () {
+    $('.commentForm').on('submit', function (e) {
+        e.preventDefault();
+
+        let form = $(this);
+        let postId = form.data('post-id');
+        let textarea = form.find('.commentInput');
+        let errorDiv = form.find('.comment-error');
+        errorDiv.text('').removeClass('text-success text-danger'); // reset
+
+        if ($.trim(textarea.val()) === '') {
+            errorDiv.text('Comment is required.').addClass('text-danger');
+            textarea.focus();
+            return false;
+        }
+
+        let formData = form.serialize(); // serialize form data
+
+        $.ajax({
+            url: form.attr('action'),
+            method: 'POST',
+            data: formData,
+            success: function (response) {
+                if (response.status === 'success') {
+                    textarea.val(''); // clear input
+                    errorDiv.text('Comment added successfully!').removeClass('text-danger').addClass('text-success');
+
+                    // Auto-hide after 3 seconds
+                    setTimeout(function () {
+                        errorDiv.fadeOut('slow', function () {
+                            $(this).text('').show(); // reset content and make visible again
+                        });
+                    }, 3000);
+                }
+            },
+            error: function (xhr) {
+                if (xhr.responseJSON?.errors?.comment) {
+                    errorDiv.text(xhr.responseJSON.errors.comment[0]).addClass('text-danger');
+                } else {
+                    errorDiv.text('An error occurred.').addClass('text-danger');
+                }
+            }
+        });
     });
 });
 </script>
