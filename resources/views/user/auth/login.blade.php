@@ -56,8 +56,8 @@
                                     <!-- Text Block -->
                                     <div class="d-flex flex-column text-start">
                                         <span class="mb-0"
-                                            style="color: #af2910;font-weight: bold;font-size: 24px;">Alumni</span>
-                                        <span style="font-size: 16px; font-weight: 500;color: #000;">
+                                            style="color: #000000;font-weight: bold;font-size: 24px;">Alumni</span>
+                                        <span style="font-size: 16px; font-weight: 500;color: #af2910;">
                                             Lal Bahadur Shastri National Academy of Administration
                                         </span>
                                     </div>
