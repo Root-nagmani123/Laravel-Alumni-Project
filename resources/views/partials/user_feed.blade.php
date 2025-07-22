@@ -30,7 +30,8 @@
             <!-- Post input -->
             <form class="w-100">
                 <textarea class="form-control pe-4 border-0" rows="2" data-autoresize=""
-                    placeholder="Share your thoughts..."></textarea>
+                    placeholder="Share your thoughts..." data-bs-toggle="modal"
+                    data-bs-target="#feedActionPhoto"></textarea>
             </form>
         </div>
         <!-- Share feed toolbar START -->

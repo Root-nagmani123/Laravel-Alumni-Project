@@ -76,7 +76,7 @@
                                 @foreach ($events as $event)
                                 <tr class="odd">
                                     <td>{{ $event->title }}</td>
-                                    <td>{{ $event->description }}</td>
+                                    <td>{{ \Illuminate\Support\Str::words(strip_tags($event->description), 20, '...') }}</td>
                                     <td>{{ $event->start_datetime }}</td>
                                     <td>{{ $event->end_datetime }}</td>
                                     <td>
