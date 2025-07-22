@@ -585,7 +585,7 @@
                                     <!-- Date -->
                                     <p class="mb-0">
                                         <i class="bi bi-briefcase fa-fw me-2"></i> <strong>
-                                            {{ $user->designation }}
+                                            {{ $user->current_designation }}
                                         </strong>
                                     </p>
                                 </div>
@@ -596,7 +596,7 @@
                                 <div class="d-flex align-items-center rounded border px-3 py-2">
                                     <!-- Date -->
                                     <p class="mb-0">
-                                        <i class="bi bi-geo-alt fa-fw me-2"></i> Lives in: <strong>
+                                        <i class="bi bi-geo-alt fa-fw me-2"></i> Current Location: <strong>
                                             {{ $user->current_location }}
                                         </strong>
                                     </p>
@@ -956,34 +956,38 @@ $(document).ready(function() {
 
 
 <script>
-/* document.addEventListener('DOMContentLoaded', function () {
-        $('#myForm').on('submit', function (e) {
-            e.preventDefault();
+document.addEventListener('DOMContentLoaded', function () {
+    $('#editProfileForm').on('submit', function (e) {
+        e.preventDefault(); // Prevent default form submission
 
-            var form = document.getElementById("myForm");
-            var formData = new FormData(form);
-            var token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-            var userId = "{{ $user->id }}";
+        var form = document.getElementById("editProfileForm");
+        var formData = new FormData(form);
+        var token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        var userId = "{{ $user->id }}";
 
-            $.ajax({
-                url: "/user/update/" + userId,
-                type: "POST",
-                headers: {
-                    'X-CSRF-TOKEN': token
-                },
-                data: formData,
-                contentType: false,
-                processData: false,
-                success: function (data) {
-                    alert("Updated successfully!");
-                },
-                error: function (xhr) {
-                    console.error(xhr.responseText);
-                    alert("Error occurred.");
-                }
-            });
+        $.ajax({
+            url: "/user/update/" + userId, // Adjust this URL to your route
+            type: "POST",
+            headers: {
+                'X-CSRF-TOKEN': token
+            },
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                // Show a success message inside the modal
+                $('#editProfileForm .alert-success').remove();
+                $('#editProfileForm').prepend('<div class="alert alert-success">Updated successfully!</div>');
+                // Do NOT close the modal here
+            },
+            error: function (xhr) {
+                // Show error message inside the modal
+                $('#editProfileForm .alert-danger').remove();
+                $('#editProfileForm').prepend('<div class="alert alert-danger">Error occurred.</div>');
+            }
         });
     });
+});
   */
 
 function goPrev() {

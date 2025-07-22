@@ -156,7 +156,6 @@ class DashboardController extends Controller
         return $event;
     });
 
-
         // RSVP Events by status
         $accept_events = DB::table('events')
             ->join('event_rsvp', 'events.id', '=', 'event_rsvp.event_id')
