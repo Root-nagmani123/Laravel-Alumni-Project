@@ -663,8 +663,12 @@
                                                     <!-- Photo -->
                                                     <a href="{{ $image_url }}" data-gallery="image-popup"
                                                         data-glightbox="description: .custom-desc2; descPosition: left;">
-                                                        <img class="rounded img-fluid" src="{{ $image_url }}" alt="">
+                                                        <img class="rounded img-fluid" src="{{ $image_url }}" alt="" style="width: 200px; height: 200px; object-fit: cover;" />
                                                     </a>
+                                                    <div class="mt-2 text-center small text-muted">
+                                                        <span>{{ $post->member->name ?? $user->name }}</span><br>
+                                                        <span>{{ $post->created_at ? $post->created_at->format('F j, Y') : '' }}</span>
+                                                    </div>
                                                     <!-- likes -->
                                                     <!-- <ul class="nav nav-stack py-2 small">
                                                         <li class="nav-item">
@@ -699,8 +703,10 @@
                     <!-- Card header END -->
                     <!-- Card body START -->
                     <div class="card-body">
-                        <!-- Video of you tab START -->
-                        <div class="row g-3">
+
+                        <!-- Video old code START -->
+
+                        <!-- <div class="row g-3">
                             @if(!empty($post) && !empty($post->media))
                             @foreach($post->media as $media)
                             @if($media->file_type === 'video')
@@ -715,25 +721,20 @@
                             asset('feed_assets/images/avatar-1.png');
                             @endphp
                             <div class="col-sm-6 col-md-4">
-                                <!-- Video START -->
                                 <div class="card p-0 shadow-none border-0 position-relative">
-                                    <!-- Video image -->
                                     <div class="position-relative">
                                         <img class="rounded" src="assets/images/albums/01.jpg" alt="">
-                                        <!-- Play icon -->
                                         <div class="position-absolute top-0 end-0 p-3">
                                             <a class="icon-md bg-danger text-white rounded-circle" data-glightbox=""
                                                 href="assets/images/videos/video-call.mp4"> <i
                                                     class="bi bi-play-fill fs-5"> </i>
                                             </a>
                                         </div>
-                                        <!-- Duration -->
                                         <div class="position-absolute bottom-0 start-0 p-3 d-flex w-100">
                                             <span
                                                 class="bg-dark bg-opacity-50 px-2 rounded text-white small">02:20</span>
                                         </div>
                                     </div>
-                                    <!-- Video info -->
                                     <div class="card-body px-0 pb-0 pt-2">
                                         <ul class="nav nav-stack small">
                                             <li class="nav-item">
@@ -748,12 +749,39 @@
                                         </ul>
                                     </div>
                                 </div>
-                                <!-- Video END -->
                             </div>
                             @endif
                             @endforeach
                             @endif
-                        </div>
+                        </div> -->
+                       <!-- Video old code END -->
+
+                        <!-- Video new code START -->
+                        <div class="row g-3">
+    @if($posts->count())
+        @foreach($posts as $post)
+            {{-- Show YouTube Video if video_link exists --}}
+            @if(!empty($post->video_link))
+                <div class="col-sm-6 col-md-4 col-lg-3">
+                    <div class="ratio ratio-16x9 rounded overflow-hidden">
+                        <iframe class="w-100 h-100"
+                            src="{{ str_contains($post->video_link, 'embed') ? $post->video_link : str_replace('watch?v=', 'embed/', $post->video_link) }}"
+                            title="YouTube video"
+                            frameborder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowfullscreen>
+                        </iframe>
+                    </div>
+                    <div class="mt-2 text-center small text-muted">
+                        <span>{{ $post->member->name ?? $user->name }}</span><br>
+                        <span>{{ $post->created_at ? $post->created_at->format('F j, Y') : '' }}</span>
+                    </div>
+                </div>
+            @endif
+        @endforeach
+    @endif
+</div>
+
                         <!-- Video of you tab END -->
                     </div>
                     <!-- Card body END -->
