@@ -663,7 +663,8 @@
                                                     <!-- Photo -->
                                                     <a href="{{ $image_url }}" data-gallery="image-popup"
                                                         data-glightbox="description: .custom-desc2; descPosition: left;">
-                                                        <img class="rounded img-fluid" src="{{ $image_url }}" alt="">
+                                                        <img class="rounded img-fluid" src="{{ $image_url }}" alt="" 
+                                                            style="width: 100%; height: 200px; object-fit: cover;">
                                                     </a>
                                                     <!-- likes -->
                                                     <!-- <ul class="nav nav-stack py-2 small">
