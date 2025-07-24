@@ -663,7 +663,8 @@
                                                     <!-- Photo -->
                                                     <a href="{{ $image_url }}" data-gallery="image-popup"
                                                         data-glightbox="description: .custom-desc2; descPosition: left;">
-                                                        <img class="rounded img-fluid" src="{{ $image_url }}" alt="" style="width: 200px; height: 200px; object-fit: cover;" />
+                                                        <img class="rounded img-fluid" src="{{ $image_url }}" alt="" 
+                                                            style="width: 100%; height: 200px; object-fit: cover;">
                                                     </a>
                                                     <div class="mt-2 text-center small text-muted">
                                                         <span>{{ $post->member->name ?? $user->name }}</span><br>

@@ -11,4 +11,6 @@ class PostMedia extends Model
 	protected $fillable = ['post_id', 'file_path', 'file_type'];
 
     public $timestamps = true;
+
+
 }

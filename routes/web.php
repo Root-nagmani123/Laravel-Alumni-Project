@@ -24,6 +24,8 @@ use App\Http\Controllers\User\ProfileController;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Config;
 
+use App\Http\Controllers\Member\ChangePasswordController;
+
 Route::resource('post', PostController::class);
 
 use App\Http\Controllers\User\CommentController;
@@ -342,6 +344,9 @@ Route::get('/user_login', function () {
         Route::get('/user/forum', function () {
             return view('user.forum');
         })->name('user.forum');
+        // Route::get('/user/change_password', function () {
+        //     return view('user.change_password');
+        // })->name('user.change_password');
 
 require __DIR__.'/auth.php';
 
@@ -349,3 +354,9 @@ require __DIR__.'/auth.php';
 
 Route::get('/maps', [MapController::class, 'showMap'])->name('maps.index');
 Route::get('/mapshow', [MapController::class, 'Map'])->name('maps.show');
+
+// User Change Password
+Route::middleware(['auth:user'])->group(function () {
+    Route::get('/user/change-password', [ChangePasswordController::class, 'showForm'])->name('user.change-password.form');
+    Route::post('/user/change-password', [ChangePasswordController::class, 'changePassword'])->name('user.change-password');
+});
