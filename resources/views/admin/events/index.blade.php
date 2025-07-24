@@ -81,9 +81,9 @@
                                     <td>{{ $event->end_datetime }}</td>
                                     <td>
                                         @if($event->venue === 'online')
-                                            <a href="{{ $event->url }}" target="_blank">{{ $event->url }}</a>
+                                            Online : <a href="{{ $event->url }}" target="_blank">{{ $event->url }}</a>
                                         @elseif($event->venue === 'physical')
-                                            {{ $event->location }}
+                                          Physical:  {{ $event->location }}
                                         @else
                                             N/A
                                         @endif

@@ -172,7 +172,7 @@
 
                     <div class="mb-3">
                         <label for="image" class="form-label">Upload Image</label>
-                        <input type="file" class="form-control" id="ImageEdit" name="image" accept="image/*" required>
+                        <input type="file" class="form-control" id="ImageEdit" name="image" accept="image/*" >
                     </div>
 {{-- asset('storage/' . $broadcast->image_url) --}}
 			    <div class="mb-3">
