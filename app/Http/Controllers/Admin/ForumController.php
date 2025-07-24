@@ -1,11 +1,11 @@
 <?php
 namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
-use App\Models\Member; // defining Member model
-use App\Models\Forum; // defining Forum model
+use App\Models\Member;
+use App\Models\Forum;
 use App\Models\User;
-
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use App\Models\ForumTopic;
 use Illuminate\Http\Request;
 use DB;
@@ -14,65 +14,57 @@ use Illuminate\Support\Facades\Validator;
 class ForumController extends Controller
 {
     public function index()
-    {
-        $forums = Forum::all();
-        // print_r($forums);die;
-            // Corrected to use Forum model (not Forums)
-        return view('admin.forums.index', compact('forums'));
-    }
+        {
+            $forums = Forum::all();
+            return view('admin.forums.index', compact('forums'));
+        }
+
     public function create()
-    {
-        return view('admin.forums.create');
-    }
+        {
+            return view('admin.forums.create');
+        }
+
     public function store(Request $request)
-{
+        {
     $validator = Validator::make($request->all(), [
         'name' => 'required|string|max:255',
-       // 'cat_id' => 'nullable|integer',
-       // 'user_id' => 'required|array',
-        //'user_id.*' => 'integer|exists:users,id', // Validate each user_id
-    ]);
+      ]);
     // Check if validation fails
     if ($validator->fails()) {
         return redirect()->back()
             ->withErrors($validator)
             ->withInput();
-    }
-    // Prepare data to insert into the forums table
+        }
+    // insert into the forums table
     $input = [
         'name' => $request->input('name'),
-       // 'cat_id' => $request->input('cat_id'),
-        'status' => 1, // Default status
+         'status' => 1,
         'created_by' => auth()->user()->id,
     ];
-    // Insert into forums table
-    $last_id = Forum::create($input)->id; // Create forum and get the last inserted ID
-    //  insert into forums_member and notification
-    //foreach ($request->input('user_id') as $userId) {
-        // Insert into forums_member
-        DB::table('forums_member')->insert([
-            //'user_id' => $userId,
+    $last_id = Forum::create($input)->id;
+    // Insert into forums_member
+    DB::table('forums_member')->insert([
+
             'forums_id' => $last_id,
             'status' => 1,
         ]);
-        // Insert into notification
+    // Insert into notification
        DB::table('notification')->insert([
-           // 'show' => $userId,
-            'group_id' => $last_id,
-            'status' => 1,
-            'type' => 'forum',
-            'created_at' => now(), // Current timestamp
-            'message' => "<a href='" . url('home/profile/' . auth()->user()->id) . "'>" . auth()->user()->name . "</a> added you in Forum: <a href='" . url('home/forum/' . $last_id) . "'>" . $request->input('name') . "</a>",
+        'group_id' => $last_id,
+        'status' => 1,
+        'type' => 'forum',
+        'created_at' => now(),
+        'message' => "<a href='" . url('home/profile/' . auth()->user()->id) . "'>" . auth()->user()->name . "</a> added you in Forum: <a href='" . url('home/forum/' . $last_id) . "'>" . $request->input('name') . "</a>",
         ]);
    // }
     // Redirect to the forum page
-    //return redirect()->route('forums.index', $last_id)->with('success', 'Forum created successfully.');
     return redirect()->route('forums.index')->with('success', 'Forum added successfully.');
-}
-    public function forumedit(Forum $forum)
-    {
-        return view('admin.forums.edit_forum', compact('forum'));
     }
+
+    public function forumedit(Forum $forum)
+        {
+            return view('admin.forums.edit_forum', compact('forum'));
+        }
     public function update(Request $request, Forum $forum)
     {
         // Validate the incoming request
@@ -98,41 +90,40 @@ class ForumController extends Controller
         return redirect()->route('forums.index')->with('success', 'Forum updated successfully.');
     }
     public function destroy(Forum $forum)
-    {
-        $forum->delete();
-        return redirect()->route('forums.index')->with('success', 'Forum deleted successfully.');
-    }
+        {
+            $forum->delete();
+            return redirect()->route('forums.index')->with('success', 'Forum deleted successfully.');
+        }
    public function add_member($id)
-    {
-    $forum = Forum::findOrFail($id);
-   // echo '<pre>';print_r($forum);die;
-    // Get all users
-    $userData = Member::all();
-    // Get assigned user_ids for this forum
-    $assignedUsers = DB::table('forums_member')
-                        ->where('forums_id', $id)
-                        ->pluck('user_id')
-                        ->toArray();
-    return view('admin.forums.add_member', [
+        {
+        $forum = Forum::findOrFail($id);
+    // echo '<pre>';print_r($forum);die;
+        // Get all users
+        $userData = Member::all();
+        // Get assigned user_ids for this forum
+        $assignedUsers = DB::table('forums_member')
+                            ->where('forums_id', $id)
+                            ->pluck('user_id')
+                            ->toArray();
+        return view('admin.forums.add_member', [
         'forumName' => $forum->name,
         'forumId' => $forum->id,
         'userData' => $userData,
         'assignedUsers' => $assignedUsers
-    ]);
-    }
-public function storeMembers(Request $request)
-{
-    $request->validate([
+        ]);
+        }
+    public function storeMembers(Request $request)
+        {
+        $request->validate([
         'forum_id' => 'required|exists:forums,id',
         'user_id' => 'required|array|min:1',
         'user_id.*' => 'exists:members,id',
 
-    ]);
-    //print_r($request);die;
+        ]);
+
     $forumId = $request->input('forum_id');
-    $userIds = $request->input('user_id', []); // defaults to empty array if nothing selected
-//echo $forumId;
-//echo $userIds;
+    $userIds = $request->input('user_id', []);
+
     // Remove existing and insert new members
     DB::table('forums_member')->where('forums_id', $forumId)->delete();
     $insertData = [];
@@ -148,24 +139,25 @@ public function storeMembers(Request $request)
         DB::table('forums_member')->insert($insertData);
     }
     return redirect()->route('forums.index')->with('success', 'Member created successfully.');
-}
-public function view_member($id)
-{
-    $forum = Forum::findOrFail($id);
-    // Get all users related to the forum, along with their status
-    $users = DB::table('forums_member')
+    }
+
+    public function view_member($id)
+        {
+        $forum = Forum::findOrFail($id);
+        $users = DB::table('forums_member')
         ->join('members', 'forums_member.user_id', '=', 'members.id')
         ->where('forums_member.forums_id', $id)
         ->select('members.name', 'forums_member.status', 'forums_member.user_id', 'forums_member.id','forums_member.forums_id') // Include forums_member.id for toggling status
         ->get();
-    return view('admin.forums.member_list', [
+        return view('admin.forums.member_list', [
         'forumName' => $forum->name,
         'forumId' => $forum->id,
         'users' => $users,
     ]);
-}
-public function add_topic($id)
-{
+    }
+
+    public function add_topic($id)
+    {
     $forum = Forum::findOrFail($id);
     // Get all users
     $userData = User::all();
@@ -175,9 +167,9 @@ public function add_topic($id)
         'forumId' => $forum->id,
         'userData' => $userData,
     ]);
-}
-public function save_topic(Request $request)
-{
+    }
+    public function save_topic(Request $request)
+    {
     $request->validate([
         'title' => 'required',
         'description' => 'required',
@@ -191,77 +183,175 @@ public function save_topic(Request $request)
         'video_link' => $request->input('video_link'),
         'video_caption' => $request->input('video_caption'),
         'status' => $request->input('status'),
-        'forum_id' => $request->input('forum_id'), //pull from form
-        'created_by' => Auth::id(), // Use Laravel's Auth to get user ID
+        'forum_id' => $request->input('forum_id'),
+        'created_by' => Auth::id(),
         'created_date' => now(),
     ];
 
     // Handle file uploads (images, documents)
-    if ($request->hasFile('topic_image')) {
-        $imagePath = $request->file('topic_image')->store('uploads/images', 'public');
-        $data['images'] = basename($imagePath);
+        if ($request->hasFile('topic_image')) {
+            $imagePath = $request->file('topic_image')->store('uploads/images', 'public');
+            $data['images'] = basename($imagePath);
+        }
+
+        if ($request->hasFile('doc')) {
+            $docPath = $request->file('doc')->store('uploads/docs', 'public');
+            $data['files'] = basename($docPath);
+        }
+        // Save to DB
+        DB::table('forum_topics')->insert($data);
+        // Redirect or respond
+        return redirect()->route('forums.index')->with('success', 'Topic saved successfully!');
     }
 
-    if ($request->hasFile('doc')) {
+    public function view_forum_topics($id)
+    {
+        $forum = Forum::findOrFail($id);
+        $topics = ForumTopic::where('forum_id', $id)->with('creator')->get();
+        return view('admin.forums.topics_list', compact('forum', 'topics'));
+    }
+
+    public function update_topic_23072025(Request $request, $id)
+    {
+    $topic = ForumTopic::findOrFail($id);
+    $topic->update([
+        'title' => $request->input('title'),
+        'description' => $request->input('description'),
+        'video_caption' => $request->input('video_caption'),
+        'status' => $request->input('status'),
+    ]);
+
+    return back()->with('success', 'Topic updated successfully.');
+    }
+
+    public function update_topic_2372025(Request $request, $id)
+    {
+        $topic = ForumTopic::findOrFail($id);
+
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'images' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'doc' => 'nullable|mimes:pdf|max:10000',
+           // 'video' => 'nullable|mimes:mp4|max:51200',
+            'video_link' => 'nullable|url',
+            'image_caption' => 'nullable|string|max:255',
+            'video_caption' => 'nullable|string|max:255',
+            'status' => 'required|in:0,1',
+        ]);
+
+    /*if ($request->hasFile('images')) {
+        if ($topic->images) {
+            Storage::disk('public')->delete('uploads/images/' . $topic->images);
+        }
+
+        $imagePath = $request->file('images')->store('uploads/images', 'public');
+        $data['images'] = basename($imagePath);
+    }*/
+
+
+    if ($request->hasFile('images')) {
+        $image = $request->file('images');
+        $imageUrl = $image->store('uploads/topics', 'public');
+    }
+
+    // PDF upload
+    /*if ($request->hasFile('doc')) {
+        if ($topic->files) {
+            Storage::disk('public')->delete('uploads/docs/' . $topic->files);
+        }
+
         $docPath = $request->file('doc')->store('uploads/docs', 'public');
         $data['files'] = basename($docPath);
+    }*/
+
+
+      if ($request->hasFile('doc')) {
+        $image = $request->file('doc');
+        $docUrl = $image->store('uploads/topics', 'public');
     }
-    // Save to DB
-     DB::table('forum_topics')->insert($data);
-    // Redirect or respond
-    return redirect()->route('forums.index')->with('success', 'Topic saved successfully!');
-}
-public function view_forum_topics($id)
-{
-    $forum = Forum::findOrFail($id);
-    $topics = ForumTopic::where('forum_id', $id)->with('creator')->get();
-// print_r($topics);
-// print_r($forum);die;
-    return view('admin.forums.topics_list', compact('forum', 'topics'));
-}
-public function update_topic_2952025(Request $request, $id)
+
+    // Video upload
+   /* if ($request->hasFile('video')) {
+        if ($topic->video) {
+            Storage::disk('public')->delete('uploads/videos/' . $topic->video);
+        }
+
+        $videoPath = $request->file('video')->store('uploads/videos', 'public');
+        $data['video'] = basename($videoPath);
+    } */
+
+
+        $topic->title = $request->input('title');
+        $topic->description = $request->input('description');
+        $topic->images =  $imageUrl;
+        $topic->files =  $docUrl;
+        $topic->image_caption = $request->input('photo_caption');
+        $topic->video_caption = $request->input('video_caption');
+        $topic->video_link = $request->input('video_link');
+        $topic->status = $request->input('status');
+
+        $topic->save();
+
+        return back()->with('success', 'Topic updated successfully.');
+    }
+
+    public function update_topic(Request $request, $id)
 {
     $topic = ForumTopic::findOrFail($id);
-    $topic->update([
-        'title' => $request->input('title'),
-        'description' => $request->input('description'),
-        'video_caption' => $request->input('video_caption'),
-        'status' => $request->input('status'),
+
+    $request->validate([
+        'title' => 'required|string|max:255',
+        'description' => 'required|string',
+        'images' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        'doc' => 'nullable|mimes:pdf|max:10000',
+        'video_link' => 'nullable|url',
+        'image_caption' => 'nullable|string|max:255',
+        'video_caption' => 'nullable|string|max:255',
+        'status' => 'required|in:0,1',
     ]);
+
+    // Image upload
+    if ($request->hasFile('images')) {
+        if ($topic->images) {
+            Storage::disk('public')->delete($topic->images); // if path includes folders
+        }
+
+        $image = $request->file('images');
+        $imageUrl = $image->store('uploads/topics', 'public');
+        $topic->images = $imageUrl;
+    }
+
+    // PDF upload
+    if ($request->hasFile('doc')) {
+        if ($topic->files) {
+            Storage::disk('public')->delete($topic->files);
+        }
+
+        $doc = $request->file('doc');
+        $docUrl = $doc->store('uploads/topics', 'public');
+        $topic->files = $docUrl;
+    }
+
+    // Assign other fields
+    $topic->title = $request->input('title');
+    $topic->description = $request->input('description');
+    $topic->image_caption = $request->input('image_caption');
+    $topic->video_caption = $request->input('video_caption');
+    $topic->video_link = $request->input('video_link');
+    $topic->status = $request->input('status');
+
+    $topic->save();
+
     return back()->with('success', 'Topic updated successfully.');
 }
 
-public function update_topic(Request $request, $id)
-{
-    $topic = ForumTopic::findOrFail($id);
 
-    $topic->update([
-        'title' => $request->input('title'),
-        'description' => $request->input('description'),
-        'video_caption' => $request->input('video_caption'),
-        'status' => $request->input('status'),
-    ]);
-
-    return back()->with('success', 'Topic updated successfully.');
-}
-public function updateTopic(Request $request, $id)
-{
-    $topic = ForumTopic::findOrFail($id);
-    $topic->update([
-        'title' => $request->input('title'),
-        'description' => $request->input('description'),
-        'video_caption' => $request->input('video_caption'),
-        'status' => $request->input('status'),
-    ]);
-    return back()->with('success', 'Topic updated successfully.');
-}
-
-public function deleteTopic($id)
-{
+    public function deleteTopic($id)
+    {
     // Find the topic by ID
     $topic = ForumTopic::findOrFail($id);
-
-    // Check if the topic is active (status == 1)
+      // Check if the topic is active (status == 1)
     if ($topic->status == 1) {
         return redirect()->to('/admin/forums/forums/' . $topic->forum_id . '/topics')
                         ->with('error', 'Cannot delete an active topic. Please deactivate it first.');
@@ -284,6 +374,40 @@ public function deleteTopic($id)
     // ✅ Redirect back to the same forum’s topic list
     return redirect()->to('/admin/forums/forums/' . $topic->forum_id . '/topics')
                      ->with('success', 'Topic and associated files deleted successfully.');
+    }
+
+    public function update_forum(Request $request, Forum $forum)
+    {
+    $request->validate([
+        'forumname' => 'required|string|max:255',
+        'forumstatus' => 'required|in:0,1',
+    ]);
+    $forum->update([
+        'name' => $request->forumname,
+        'status' => $request->forumstatus,
+    ]);
+    return redirect()->route('forums.index')->with('success', 'Forum updated successfully!');
+}
+public function destroyforum(Forum $forum)
+{
+     if ($forum->status == 1) {
+            return redirect()->route('forums.index')
+                            ->with('error', 'Cannot delete an active forum. Please deactivate it first.');
+        }
+    // Delete related members
+    \DB::table('forums_member')->where('forums_id', $forum->id)->delete();
+    // Delete related topics and their files
+    $topics = \App\Models\ForumTopic::where('forum_id', $forum->id)->get();
+    foreach ($topics as $topic) {
+        // If file path column exists, e.g., $topic->file
+        if ($topic->file && \Storage::exists($topic->file)) {
+            \Storage::delete($topic->file);
+        }
+        $topic->delete();
+    }
+    // Finally delete the forum
+    $forum->delete();
+    return redirect()->route('forums.index')->with('success', 'Forum and all associated data deleted successfully.');
 }
 
 public function toggleStatus(Request $request)
