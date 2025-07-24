@@ -105,9 +105,9 @@
             </nav>
         </div>
         <div class="col-9 vstack gap-4">
-            <div class="card card-body rounded-3 text-center p-4 p-sm-5">
+            <div class="card card-body rounded-3 p-4 p-sm-5">
                 <!-- Title -->
-                <h5 class="mb-2 fw-bold text-start">Change your password?</h5>
+                <h5 class="mb-2 fw-bold text-center">Change your password?</h5>
                 @if(session('success'))
                         <div class="alert alert-success mt-3">{{ session('success') }}</div>
                     @endif
@@ -120,7 +120,7 @@
                     <!-- Old password -->
                     <div class="mb-3">
                         <label for="old_password" class="form-label">Old Password</label>
-                        <input class="form-control" type="password" name="old_password" id="old_password" required>
+                        <input class="form-control" type="password" name="old_password" id="old_password" required placeholder="Enter your old password"> 
                         @error('old_password')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
@@ -128,7 +128,7 @@
                     <!-- New password -->
                     <div class="mb-3">
                         <label for="new_password" class="form-label">New Password</label>
-                        <input class="form-control" type="password" name="new_password" id="new_password" required>
+                        <input class="form-control" type="password" name="new_password" id="new_password" required placeholder="Enter your new password">
                         @error('new_password')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
@@ -136,7 +136,7 @@
                     <!-- Confirm new password -->
                     <div class="mb-3">
                         <label for="new_password_confirmation" class="form-label">Confirm New Password</label>
-                        <input class="form-control" type="password" name="new_password_confirmation" id="new_password_confirmation" required>
+                        <input class="form-control" type="password" name="new_password_confirmation" id="new_password_confirmation" required placeholder="Confirm your new password">
                     </div>
                     <!-- Button -->
                     <div class="d-grid">
