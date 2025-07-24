@@ -57,16 +57,6 @@ Header START -->
 
             <!-- Nav right START -->
             <ul class="nav flex-nowrap align-items-center ms-sm-3 list-unstyled">
-                <!-- <li class="nav-item ms-2">
-					<a class="nav-link bg-light icon-md btn btn-light p-0" href="#">
-						<i class="bi bi-chat-left-text-fill fs-6"> </i>
-					</a>
-				</li>
-				<li class="nav-item ms-2">
-					<a class="nav-link bg-light icon-md btn btn-light p-0" href="settings.html">
-						<i class="bi bi-gear-fill fs-6"> </i>
-					</a>
-				</li> -->
                 <li class="nav-item dropdown ms-2">
                     <a class="nav-link bg-light icon-md btn btn-light p-0" href="#" id="notifDropdown" role="button"
                         data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
@@ -178,7 +168,7 @@ Header START -->
                                 @endif
 						</li>
 						<!-- Links -->
-						<li><a class="dropdown-item" href="{{ route('user.directory') }}"><i class="bi bi-gear fa-fw me-2"></i>Directory</a></li>
+						<li><a class="dropdown-item" href="{{ route('user.directory') }}"><i class="bi bi-gear-fill fa-fw me-2"></i>Directory</a></li>
 <!-- Dropdown with collapsible Social Media list -->
 <li class="dropdown-submenu">
   <!-- Toggler item -->
@@ -195,11 +185,12 @@ Header START -->
     <li><a class="dropdown-item" href="https://www.linkedin.com/company/lal-bahadur-shastri-national-academy-of-administration-official/posts/?feedView=all" target="_blank"><i class="bi bi-linkedin me-2"></i>LinkedIn</a></li>
   </ul>
 </li>
+<li><a class="dropdown-item" href="{{ route('user.change_password') }}"><i class="bi bi-file-earmark-bar-graph-fill fa-fw me-2"></i>Change Password</a></li>
 						<li>
                          <form action="{{ route('user.logout') }}" method="POST" style="display: inline;" >
 										@csrf
-										<button type="submit" class="bg-danger-soft-hover btn-sm btn d-flex align-items-center w-100">
-											<i class="bi bi-power fa-fw me-2"></i>
+										<button type="submit" class="dropdown-item d-flex align-items-center">
+                                            <i class="bi bi-x-circle-fill fa-fw me-2"></i>
 											Sign Out
 										</button>
 									</form>

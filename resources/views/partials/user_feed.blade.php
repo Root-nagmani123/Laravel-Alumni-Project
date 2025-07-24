@@ -126,15 +126,14 @@
 								<a href="#" class="text-secondary btn btn-secondary-soft-hover py-1 px-2" id="cardFeedAction" data-bs-toggle="dropdown" aria-expanded="false">
 									<i class="bi bi-three-dots"></i>
 								</a>
-								<!-- Card feed action dropdown menu -->
 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="cardFeedAction">
 	<li>
-		<a class="dropdown-item edit-post" href="#" data-id="{{ $post->id }}">
+		<a class="dropdown-item" href="#">
 			<i class="bi bi-pen fa-fw pe-2"></i>Edit post
 		</a>
 	</li>
 	<li>
-		<a class="dropdown-item delete-post" href="#" data-id="{{ $post->id }}">
+		<a class="dropdown-item " href="#">
 			<i class="bi bi-trash fa-fw pe-2"></i>Delete post
 		</a>
 	</li>
@@ -935,156 +934,6 @@ function deleteStory(storyId) {
         });
     });
 
-</script>
-
-<!-- edit and delete post -->
-<!-- Edit Post Modal -->
-<div class="modal fade" id="editPostModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog">
-    <form id="editPostForm">
-      @csrf
-      @method('PUT')
-      <input type="hidden" id="editPostId" name="post_id">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Edit Post</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body">
-          <textarea name="content" id="editPostContent" class="form-control" rows="4"></textarea>
-        </div>
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-primary">Update Post</button>
-        </div>
-      </div>
-    </form>
-  </div>
-</div>
-
-<!-- edit and delete post end -->
-
-<script>
-$(document).ready(function() {
-
-    // Edit Post
-    $('.edit-post').on('click', function(e) {
-        e.preventDefault();
-        const postId = $(this).data('id');
-
-        // Fetch post data via AJAX
-        $.ajax({
-            url: `/posts/${postId}/edit`,
-            type: 'GET',
-            success: function(response) {
-                // Populate modal fields
-                $('#editPostModal #editPostContent').val(response.content);
-                $('#editPostModal #editPostId').val(postId);
-                $('#editPostModal').modal('show');
-            },
-            error: function() {
-                alert('Error fetching post details.');
-            }
-        });
-    });
-
-    // Delete Post
-    $('.delete-post').on('click', function(e) {
-        e.preventDefault();
-        const postId = $(this).data('id');
-
-        if (confirm('Are you sure you want to delete this post?')) {
-            $.ajax({
-                url: `/posts/${postId}`,
-                type: 'DELETE',
-                data: {
-                    _token: '{{ csrf_token() }}'
-                },
-                success: function() {
-                    alert('Post deleted successfully.');
-                    location.reload(); // or remove the post from DOM
-                },
-                error: function() {
-                    alert('Failed to delete the post.');
-                }
-            });
-        }
-    });
-
-});
-</script>
-
-<script>
-$('#editPostForm').on('submit', function(e) {
-    e.preventDefault();
-
-    const postId = $('#editPostId').val();
-    const content = $('#editPostContent').val();
-
-    $.ajax({
-        url: `/posts/${postId}`,
-        type: 'PUT',
-        data: {
-            _token: '{{ csrf_token() }}',
-            content: content
-        },
-        success: function() {
-            $('#editPostModal').modal('hide');
-            alert('Post updated successfully.');
-            location.reload(); // or update content in DOM
-        },
-        error: function() {
-            alert('Failed to update post.');
-        }
-    });
-});
-
-
-//add commment page refresh issue
-$(document).ready(function () {
-    $('.commentForm').on('submit', function (e) {
-        e.preventDefault();
-
-        let form = $(this);
-        let postId = form.data('post-id');
-        let textarea = form.find('.commentInput');
-        let errorDiv = form.find('.comment-error');
-        errorDiv.text('').removeClass('text-success text-danger'); // reset
-
-        if ($.trim(textarea.val()) === '') {
-            errorDiv.text('Comment is required.').addClass('text-danger');
-            textarea.focus();
-            return false;
-        }
-
-        let formData = form.serialize(); // serialize form data
-
-        $.ajax({
-            url: form.attr('action'),
-            method: 'POST',
-            data: formData,
-            success: function (response) {
-                if (response.status === 'success') {
-                    textarea.val(''); // clear input
-                    errorDiv.text('Comment added successfully!').removeClass('text-danger').addClass('text-success');
-
-                    // Auto-hide after 3 seconds
-                    setTimeout(function () {
-                        errorDiv.fadeOut('slow', function () {
-                            $(this).text('').show(); // reset content and make visible again
-                        });
-                    }, 3000);
-                }
-            },
-            error: function (xhr) {
-                if (xhr.responseJSON?.errors?.comment) {
-                    errorDiv.text(xhr.responseJSON.errors.comment[0]).addClass('text-danger');
-                } else {
-                    errorDiv.text('An error occurred.').addClass('text-danger');
-                }
-            }
-        });
-    });
-});
 </script>
 
 

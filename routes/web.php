@@ -342,6 +342,9 @@ Route::get('/user_login', function () {
         Route::get('/user/forum', function () {
             return view('user.forum');
         })->name('user.forum');
+        Route::get('/user/change_password', function () {
+            return view('user.change_password');
+        })->name('user.change_password');
 
 require __DIR__.'/auth.php';
 
