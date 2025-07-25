@@ -91,12 +91,34 @@
     </div>
 </td>
 
-                                    <td>
-                                        <div class="d-flex gap-2">
-                                            <a class="btn btn-sm btn-primary" href="{{ route('forums.add_topic', ['id' => $forum->id]) }}" title="Add  Topic" data-bs-toggle="tooltip" data-bs-placement="top"> <i class="bi bi-plus"></i></a>
-                                        <a class="btn btn-sm btn-success" href="{{ route('forums.view_topic' , ['id' => $forum->id] )}}" title="View Topic" data-bs-toggle="tooltip" data-bs-placement="top"> <i class="bi bi-eye"></i></a>
-                                        </div>
-                                    </td>
+                       <td>
+                    <div class="d-flex gap-2">
+                        @if($forum->status == 1)
+                            <a class="btn btn-sm btn-primary"
+                                href="{{ route('forums.add_topic', ['id' => $forum->id]) }}"
+                                title="Add Topic"
+                                data-bs-toggle="tooltip"
+                                data-bs-placement="top">
+                                <i class="bi bi-plus"></i>
+                            </a>
+                            <a class="btn btn-sm btn-success"
+                                href="{{ route('forums.view_topic', ['id' => $forum->id]) }}"
+                                title="View Topic"
+                                data-bs-toggle="tooltip"
+                                data-bs-placement="top">
+                                <i class="bi bi-eye"></i>
+                            </a>
+                        @else
+                            <button class="btn btn-sm btn-primary" disabled title="Add Topic (Inactive)">
+                                <i class="bi bi-plus"></i>
+                            </button>
+                            <button class="btn btn-sm btn-success" disabled title="View Topic (Inactive)">
+                                <i class="bi bi-eye"></i>
+                            </button>
+                        @endif
+                    </div>
+                </td>
+
                                     <td>{{ \Carbon\Carbon::parse($forum->created_at)->timezone('Asia/Kolkata')->format('l, d M Y, h:i A') }}
                                     </td>
 
@@ -178,10 +200,11 @@ $('.status-toggle').change(function () {
             const deleteBtn = $(`.delete-forum-btn[data-id="${forumId}"]`);
             deleteBtn.attr('data-status', status);
             toastr.success(response.message);
+            location.reload();
+
         },
         error: function (xhr) {
             toastr.error('Failed to update status.');
-            // Revert checkbox on failure
             checkbox.prop('checked', !status);
         }
     });
