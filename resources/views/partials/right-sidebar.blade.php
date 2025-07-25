@@ -155,7 +155,11 @@
 <!-- Initialize Select2 inside the modal -->
 <script>
 $(document).ready(function() {
-    $('.form-select').select2(); // Initialize Select2
+    // Initialize Select2 with dropdownParent set to the modal
+    $('#memberNames').select2({
+        width: '100%',
+        dropdownParent: $('#groupModal') // important for Bootstrap modal
+    });
 });
 </script>
 
