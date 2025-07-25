@@ -55,7 +55,7 @@
                 <!-- Card header START -->
                 <div class="card-header d-sm-flex justify-content-between border-0">
                 <h5 class="card-title">Groups</h5>
-                <a class="btn btn-primary-soft btn-sm" href="#!" data-bs-toggle="modal" data-bs-target="#groupModal"> Create groups</a>
+                <a class="btn btn-primary-soft btn-sm" href="#!" data-bs-toggle="modal" data-bs-target="#groupModal"> Create Groups</a>
 
               </div>
                 <!-- Card header END -->
@@ -103,6 +103,11 @@
     </div>
 </div>
 
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Include Select2 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
 <!-- Group Modal -->
 <div class="modal fade" id="groupModal" tabindex="-1" aria-labelledby="groupModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -121,8 +126,11 @@
           
           <div class="mb-3">
             <label for="memberNames" class="form-label">Member Names</label>
-            <input type="text" class="form-control" id="memberNames" name="member_names" placeholder="Enter member names separated by commas" required>
-            <small class="text-muted">Example: John, Mary, Alex</small>
+            <select id="memberNames" name="member_names[]" class="form-control js-example-basic-multiple" multiple="multiple" required>
+              @foreach($members as $member)
+                <option value="{{ $member->id }}">{{ $member->name }}</option>
+              @endforeach
+            </select>
           </div>
         </div>
         
@@ -134,6 +142,24 @@
     </form>
   </div>
 </div>
+
+<!-- Include jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Include Bootstrap JS Bundle (includes Popper) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Include Select2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<!-- Initialize Select2 inside the modal -->
+<script>
+$(document).ready(function() {
+    $('.form-select').select2(); // Initialize Select2
+});
+</script>
+
+
 
 <script>
 	 document.addEventListener('DOMContentLoaded', function () {

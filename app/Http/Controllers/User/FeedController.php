@@ -10,6 +10,7 @@ use App\Models\Post;
 use App\Models\Story;
 use App\Models\Topic;
 use App\Models\Broadcast;
+use App\Models\Member;
 
 class FeedController extends Controller
 {
@@ -134,6 +135,8 @@ class FeedController extends Controller
     ->distinct()
     ->get();
 
+    $members = Member::all();
+
     $posts = Post::with(['member', 'media', 'likes', 'comments.member', 'group'])
     ->where(function ($query) use ($groupIds) {
         $query->whereNull('group_id') // normal post bhi chahiye
@@ -159,7 +162,7 @@ class FeedController extends Controller
         ];
     });
 
-    return view('user.feed', compact('posts', 'user', 'storiesByMember', 'broadcast','events', 'forums', 'groupNames'));
+    return view('user.feed', compact('posts', 'user', 'storiesByMember', 'broadcast','events', 'forums', 'groupNames', 'members'));
     }
 
     public function store(Request $request)
