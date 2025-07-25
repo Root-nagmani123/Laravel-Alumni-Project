@@ -164,15 +164,9 @@
                         <label for="edit_description" class="form-label">Description</label>
                         <textarea class="form-control" name="description" id="edit_description" required></textarea>
                     </div>
-
-                    <!--<div class="mb-3">
-                        <label class="form-label">Current Image</label><br>
-                        <img id="current_image" src="" alt="No image" width="120" class="mb-2 rounded">
-                    </div>-->
-
                     <div class="mb-3">
                         <label for="image" class="form-label">Upload Image</label>
-                        <input type="file" class="form-control" id="ImageEdit" name="image" accept="image/*" required>
+                        <input type="file" class="form-control" id="ImageEdit" name="image" accept="image/*" >
                     </div>
 {{-- asset('storage/' . $broadcast->image_url) --}}
 			    <div class="mb-3">

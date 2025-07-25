@@ -47,7 +47,7 @@
 @endif
 
 @if (session('error'))
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <div class="alert alert-danger alert-dismissible fade show text-white" role="alert">
         {{ session('error') }}
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
@@ -160,7 +160,7 @@
                                             <div class="mb-3">
                                                 <label>Current Image</label><br>
                                                 @if ($topic->images)
-                                                <img src="{{ asset('storage/uploads/images/' . $topic->images) }}"
+                                                <img src="{{ asset('storage/' . $topic->images) }}"
                                                     class="img-fluid mb-2" style="max-height: 200px;">
                                                 @endif
                                                 <input type="file" name="images" accept="image/*" class="form-control">
@@ -177,24 +177,16 @@
                                             <div class="mb-3">
                                                 <label>Current PDF</label><br>
                                                 @if ($topic->files)
-                                                <a href="{{ asset('storage/uploads/docs/' . $topic->files) }}"
+
+                                                <a href="{{ asset('storage/' . $topic->files) }}"
                                                     target="_blank" rel="noopener noreferrer">View PDF</a><br>
                                                 @endif
                                                 <input type="file" name="doc" accept="application/pdf"
                                                     class="form-control">
                                             </div>
 
-                                            <!-- Video -->
-                                            <div class="mb-3">
-                                                <label>Current Video</label><br>
-                                                @if ($topic->video)
-                                                <video width="100%" controls class="mb-2">
-                                                    <source src="{{ asset('storage/uploads/videos/' . $topic->video) }}"
-                                                        type="video/mp4">
-                                                </video>
-                                                @endif
-                                                <input type="file" name="video" accept="video/mp4" class="form-control">
-                                            </div>
+
+
 
                                             <!-- Video Link -->
                                             <div class="mb-3">

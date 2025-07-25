@@ -32,20 +32,6 @@
                                     @endif
 
                         </div>
-                         <div class="d-flex align-items-center gap-2 mb-2">
-                                 @if ($broadcast->video_url)
-                                <iframe
-            width="100%"
-            height="100%"
-            src="https://www.youtube.com/embed/{{ \Illuminate\Support\Str::after($broadcast->video_url, 'v=') }}"
-            title="YouTube video player"
-            frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen>
-        </iframe>
-                                    @endif
-
-                        </div>
 
                         <h6 class="mb-0"><a href="{{ route('user.broadcastDetails', $broadcast->id) }}">{{ $broadcast->title }}</a></h6>
                         <small>{{ \Illuminate\Support\Str::limit($broadcast->description, 50) }} <span><a href="{{ route('user.broadcastDetails', $broadcast->id) }}" class="text-danger">View more</a></span></small>
@@ -67,9 +53,11 @@
         <div class="col-sm-6 col-lg-12">
             <div class="card">
                 <!-- Card header START -->
-                <div class="card-header pb-0 border-0">
-                    <h5 class="card-title mb-0">Groups</h5>
-                </div>
+                <div class="card-header d-sm-flex justify-content-between border-0">
+                <h5 class="card-title">Groups</h5>
+                <a class="btn btn-primary-soft btn-sm" href="#!" data-bs-toggle="modal" data-bs-target="#groupModal"> Create groups</a>
+
+              </div>
                 <!-- Card header END -->
                 <!-- Card body START -->
                 <div class="card-body">
@@ -114,6 +102,39 @@
 </div> -->
     </div>
 </div>
+
+<!-- Group Modal -->
+<div class="modal fade" id="groupModal" tabindex="-1" aria-labelledby="groupModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <form id="groupForm">
+      <div class="modal-content">
+        <div class="modal-header bg-danger text-white">
+          <h5 class="modal-title text-white" id="groupModalLabel">Create Group</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="groupName" class="form-label">Group Name</label>
+            <input type="text" class="form-control" id="groupName" name="group_name" placeholder="Enter group name" required>
+          </div>
+          
+          <div class="mb-3">
+            <label for="memberNames" class="form-label">Member Names</label>
+            <input type="text" class="form-control" id="memberNames" name="member_names" placeholder="Enter member names separated by commas" required>
+            <small class="text-muted">Example: John, Mary, Alex</small>
+          </div>
+        </div>
+        
+        <div class="modal-footer">
+          <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary">Create Group</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
 <script>
 	 document.addEventListener('DOMContentLoaded', function () {
         const modal = document.getElementById('groupActionpost');

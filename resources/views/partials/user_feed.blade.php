@@ -99,12 +99,11 @@
 
 <div class="avatar me-2">
     <a href="{{ $profileLink }}">
-<img
-  class="avatar-img rounded-circle"
-  src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar-1.png') }}"
-  alt="Profile Picture">
-
-</a>
+        <img
+            class="avatar-img rounded-circle"
+            src="{{ $profileImage }}"
+            alt="Profile Picture">
+    </a>
 </div>
 
 <!-- Info -->
@@ -196,7 +195,7 @@
             </div>
             @endif
 
-
+            {{-- Image Display (your current logic) --}}
 
             @if($totalImages === 1)
             <div class="post-img mt-2">
@@ -291,30 +290,18 @@
                             src="{{asset('storage/'.$user->profile_pic)}}" alt=""> </a>
                 </div>
                 <!-- Comment box  -->
-
-
-                    <form class="commentForm nav nav-item w-100 position-relative"
-      id="commentForm-{{ $post->id }}"
-      action="{{ route('user.comments.store') }}"
-      method="POST"
-      data-post-id="{{ $post->id }}">
-
-    @csrf
-    <textarea name="comment" class="form-control pe-5 bg-light commentInput"
-              rows="1"
-              placeholder="Add a comment..."
-              id="comments-{{ $post->id }}"></textarea>
-
-    <input type="hidden" name="post_id" value="{{ $post->id }}">
-
-    <button class="nav-link bg-transparent px-3 position-absolute top-50 end-0 translate-middle-y border-0"
-            type="submit">
-        <i class="bi bi-send-fill"></i>
-    </button>
-
-    <div class="comment-error text-danger mt-1"></div>
-</form>
-
+                <form class="nav nav-item w-100 position-relative" id="commentForm-{{ $post->id }}"
+                    action="{{ route('user.comments.store') }}" method="POST" data-post-id="{{ $post->id }}">
+                    @csrf
+                    <textarea name="comment" data-autoresize class="form-control pe-5 bg-light" rows="1"
+                        placeholder="Add a comment..." id="comments-{{ $post->id }}"></textarea>
+                    <input type="hidden" name="post_id" value="{{ $post->id }}">
+                    <button
+                        class="nav-link bg-transparent px-3 position-absolute top-50 end-0 translate-middle-y border-0"
+                        type="submit">
+                        <i class="bi bi-send-fill"></i>
+                    </button>
+                </form>
 
             </div>
             <ul class="comment-wrap list-unstyled">
@@ -936,6 +923,155 @@ function deleteStory(storyId) {
 
 </script>
 
+<<<<<<< Updated upstream
+=======
+<!-- edit and delete post -->
+<!-- Edit Post Modal -->
+<div class="modal fade" id="editPostModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <form id="editPostForm">
+      @csrf
+      @method('PUT')
+      <input type="hidden" id="editPostId" name="post_id">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Edit Post</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <textarea name="content" id="editPostContent" class="form-control" rows="4"></textarea>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Update Post</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- edit and delete post end -->
+
+<script>
+$(document).ready(function() {
+
+    // Edit Post
+    $('.edit-post').on('click', function(e) {
+        e.preventDefault();
+        const postId = $(this).data('id');
+
+        // Fetch post data via AJAX
+        $.ajax({
+            url: `/posts/${postId}/edit`,
+            type: 'GET',
+            success: function(response) {
+                // Populate modal fields
+                $('#editPostModal #editPostContent').val(response.content);
+                $('#editPostModal #editPostId').val(postId);
+                $('#editPostModal').modal('show');
+            },
+            error: function() {
+                alert('Error fetching post details.');
+            }
+        });
+    });
+
+    // Delete Post
+    $('.delete-post').on('click', function(e) {
+        e.preventDefault();
+        const postId = $(this).data('id');
+
+        if (confirm('Are you sure you want to delete this post?')) {
+            $.ajax({
+                url: `/posts/${postId}`,
+                type: 'DELETE',
+                data: {
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function() {
+                    alert('Post deleted successfully.');
+                    location.reload(); // or remove the post from DOM
+                },
+                error: function() {
+                    alert('Failed to delete the post.');
+                }
+            });
+        }
+    });
+
+});
+</script>
+
+<script>
+$('#editPostForm').on('submit', function(e) {
+    e.preventDefault();
+
+    const postId = $('#editPostId').val();
+    const content = $('#editPostContent').val();
+
+    $.ajax({
+        url: `/posts/${postId}`,
+        type: 'PUT',
+        data: {
+            _token: '{{ csrf_token() }}',
+            content: content
+        },
+        success: function() {
+            $('#editPostModal').modal('hide');
+            alert('Post updated successfully.');
+            location.reload(); // or update content in DOM
+        },
+        error: function() {
+            alert('Failed to update post.');
+        }
+    });
+});
+
+
+$(document).ready(function () {
+    $('.commentForm').on('submit', function (e) {
+        e.preventDefault();
+
+        let form = $(this);
+        let postId = form.data('post-id');
+        let textarea = form.find('.commentInput');
+        let errorDiv = form.find('.comment-error');
+        errorDiv.text(''); // clear previous errors
+
+        if ($.trim(textarea.val()) === '') {
+            errorDiv.text('Comment is required.');
+            textarea.focus();
+            return false;
+        }
+
+        let formData = form.serialize(); // serialize form data
+
+        $.ajax({
+            url: form.attr('action'),
+            method: 'POST',
+            data: formData,
+            success: function (response) {
+                if (response.status === 'success') {
+                    textarea.val(''); // clear comment box
+                    errorDiv.removeClass('text-danger').addClass('text-success').text('Comment added successfully!');
+
+                    // Optionally append to comment list
+                    // $('#comment-list-' + postId).append(`<div><strong>You:</strong> ${response.comment.comment}</div>`);
+                }
+            },
+            error: function (xhr) {
+                if (xhr.responseJSON?.errors?.comment) {
+                    errorDiv.text(xhr.responseJSON.errors.comment[0]);
+                } else {
+                    errorDiv.text('An error occurred.');
+                }
+            }
+        });
+    });
+});
+
+</script>
+
+>>>>>>> Stashed changes
 
 
 
