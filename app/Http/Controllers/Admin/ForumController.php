@@ -39,8 +39,12 @@ class ForumController extends Controller
     $input = [
         'name' => $request->input('name'),
          'status' => 1,
-        'created_by' => auth()->user()->id,
+       // 'created_by' => auth()->user()->id,
+      //  'created_by' => Auth::guard('admin')->id(),
+        'created_by' => session('LoginID'),
+
     ];
+
     $last_id = Forum::create($input)->id;
     // Insert into forums_member
     DB::table('forums_member')->insert([
@@ -184,7 +188,8 @@ class ForumController extends Controller
         'video_caption' => $request->input('video_caption'),
         'status' => $request->input('status'),
         'forum_id' => $request->input('forum_id'),
-        'created_by' => Auth::id(),
+        //'created_by' => Auth::id(),
+         'created_by' => session('LoginID'),
         'created_date' => now(),
     ];
 
@@ -198,106 +203,29 @@ class ForumController extends Controller
             $docPath = $request->file('doc')->store('uploads/docs', 'public');
             $data['files'] = basename($docPath);
         }
-        // Save to DB
+
         DB::table('forum_topics')->insert($data);
-        // Redirect or respond
+
         return redirect()->route('forums.index')->with('success', 'Topic saved successfully!');
     }
 
     public function view_forum_topics($id)
     {
         $forum = Forum::findOrFail($id);
-        $topics = ForumTopic::where('forum_id', $id)->with('creator')->get();
+    /*    $topics = ForumTopic::where('forum_id', $id)->where('created_by', Auth::guard('admin')->id())
+        //->with('creator')
+        ->get();*/
+
+       $topics = ForumTopic::where('forum_id', $id)
+    ->where('created_by', session('LoginID'))
+    ->with('creator')
+    ->get();
+
         return view('admin.forums.topics_list', compact('forum', 'topics'));
     }
 
-    public function update_topic_23072025(Request $request, $id)
-    {
-    $topic = ForumTopic::findOrFail($id);
-    $topic->update([
-        'title' => $request->input('title'),
-        'description' => $request->input('description'),
-        'video_caption' => $request->input('video_caption'),
-        'status' => $request->input('status'),
-    ]);
-
-    return back()->with('success', 'Topic updated successfully.');
-    }
-
-    public function update_topic_2372025(Request $request, $id)
-    {
-        $topic = ForumTopic::findOrFail($id);
-
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'required|string',
-            'images' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'doc' => 'nullable|mimes:pdf|max:10000',
-           // 'video' => 'nullable|mimes:mp4|max:51200',
-            'video_link' => 'nullable|url',
-            'image_caption' => 'nullable|string|max:255',
-            'video_caption' => 'nullable|string|max:255',
-            'status' => 'required|in:0,1',
-        ]);
-
-    /*if ($request->hasFile('images')) {
-        if ($topic->images) {
-            Storage::disk('public')->delete('uploads/images/' . $topic->images);
-        }
-
-        $imagePath = $request->file('images')->store('uploads/images', 'public');
-        $data['images'] = basename($imagePath);
-    }*/
-
-
-    if ($request->hasFile('images')) {
-        $image = $request->file('images');
-        $imageUrl = $image->store('uploads/topics', 'public');
-    }
-
-    // PDF upload
-    /*if ($request->hasFile('doc')) {
-        if ($topic->files) {
-            Storage::disk('public')->delete('uploads/docs/' . $topic->files);
-        }
-
-        $docPath = $request->file('doc')->store('uploads/docs', 'public');
-        $data['files'] = basename($docPath);
-    }*/
-
-
-      if ($request->hasFile('doc')) {
-        $image = $request->file('doc');
-        $docUrl = $image->store('uploads/topics', 'public');
-    }
-
-    // Video upload
-   /* if ($request->hasFile('video')) {
-        if ($topic->video) {
-            Storage::disk('public')->delete('uploads/videos/' . $topic->video);
-        }
-
-        $videoPath = $request->file('video')->store('uploads/videos', 'public');
-        $data['video'] = basename($videoPath);
-    } */
-
-
-        $topic->title = $request->input('title');
-        $topic->description = $request->input('description');
-        $topic->images =  $imageUrl;
-        $topic->files =  $docUrl;
-        $topic->image_caption = $request->input('photo_caption');
-        $topic->video_caption = $request->input('video_caption');
-        $topic->video_link = $request->input('video_link');
-        $topic->status = $request->input('status');
-
-        $topic->save();
-
-        return back()->with('success', 'Topic updated successfully.');
-    }
-
     public function update_topic(Request $request, $id)
-{
+    {
     $topic = ForumTopic::findOrFail($id);
 
     $request->validate([
@@ -333,18 +261,18 @@ class ForumController extends Controller
         $topic->files = $docUrl;
     }
 
-    // Assign other fields
-    $topic->title = $request->input('title');
-    $topic->description = $request->input('description');
-    $topic->image_caption = $request->input('image_caption');
-    $topic->video_caption = $request->input('video_caption');
-    $topic->video_link = $request->input('video_link');
-    $topic->status = $request->input('status');
+        // Assign other fields
+        $topic->title = $request->input('title');
+        $topic->description = $request->input('description');
+        $topic->image_caption = $request->input('image_caption');
+        $topic->video_caption = $request->input('video_caption');
+        $topic->video_link = $request->input('video_link');
+        $topic->status = $request->input('status');
 
-    $topic->save();
+        $topic->save();
 
-    return back()->with('success', 'Topic updated successfully.');
-}
+        return back()->with('success', 'Topic updated successfully.');
+    }
 
 
     public function deleteTopic($id)
