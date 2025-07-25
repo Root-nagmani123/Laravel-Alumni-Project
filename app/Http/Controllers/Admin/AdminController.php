@@ -136,7 +136,7 @@ $groupedPosts = $rawPosts->groupBy('post_id')->map(function ($group) {
         return view('admin.socialwall.index',compact('groupedPosts'));
 
     }
-  
+
   public function socialwall_delete($id)
 {
     // Step 1: Get post
