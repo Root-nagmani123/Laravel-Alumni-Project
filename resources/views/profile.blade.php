@@ -667,7 +667,7 @@
                                                             style="width: 100%; height: 200px; object-fit: cover;">
                                                     </a>
                                                     <div class="mt-2 text-center small text-muted">
-                                                        <span>{{ $post->member->name ?? $user->name }}</span><br>
+                                                        <!-- <span>{{ $post->member->name ?? $user->name }}</span><br> -->
                                                         <span>{{ $post->created_at ? $post->created_at->format('F j, Y') : '' }}</span>
                                                     </div>
                                                     <!-- likes -->
@@ -774,7 +774,7 @@
                         </iframe>
                     </div>
                     <div class="mt-2 text-center small text-muted">
-                        <span>{{ $post->member->name ?? $user->name }}</span><br>
+                        <!-- <span>{{ $post->member->name ?? $user->name }}</span><br> -->
                         <span>{{ $post->created_at ? $post->created_at->format('F j, Y') : '' }}</span>
                     </div>
                 </div>
