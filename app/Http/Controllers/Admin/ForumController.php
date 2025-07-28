@@ -15,7 +15,8 @@ class ForumController extends Controller
 {
     public function index()
         {
-            $forums = Forum::all();
+            // $forums = Forum::all();
+            $forums = Forum::orderBy('id', 'desc')->get(); // newest first
             return view('admin.forums.index', compact('forums'));
         }
 

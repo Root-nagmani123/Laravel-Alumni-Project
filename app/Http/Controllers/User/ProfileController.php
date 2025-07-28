@@ -23,7 +23,8 @@ class ProfileController extends Controller
 
    public function showById(Request $request, $id): View
 {
-    $user = auth()->guard('user')->user();
+    //$user = auth()->guard('user')->user();
+    $user = Member::findOrFail($id);
 
     $userId = $user->id;
 

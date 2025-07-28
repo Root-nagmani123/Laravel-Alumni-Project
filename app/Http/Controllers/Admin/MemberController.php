@@ -15,7 +15,8 @@ class MemberController extends Controller
     public function index()
         {
         //$members = Member::whereNull('deleted_at')->get();
-            $members = Member::all();
+            //$members = Member::all();
+            $members = Member::orderBy('id', 'desc')->get(); // newest first
             return view('admin.members.index', compact('members'));
         }
 
