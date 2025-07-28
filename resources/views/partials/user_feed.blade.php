@@ -51,8 +51,8 @@
                         class="bi bi-calendar2-event-fill text-danger pe-2"></i>Event </a>
             </li> -->
             <!-- <li class="nav-item">
-							<a class="nav-link bg-light py-1 px-2 mb-0" href="#!" data-bs-toggle="modal" data-bs-target="#modalCreateFeed"> <i class="bi bi-emoji-smile-fill text-warning pe-2"></i>Feeling /Activity</a>
-						</li> -->
+                            <a class="nav-link bg-light py-1 px-2 mb-0" href="#!" data-bs-toggle="modal" data-bs-target="#modalCreateFeed"> <i class="bi bi-emoji-smile-fill text-warning pe-2"></i>Feeling /Activity</a>
+                        </li> -->
         </ul>
         <!-- Share feed toolbar END -->
     </div>
@@ -122,24 +122,24 @@
 
                 </div>
                 <div class="dropdown">
-								<a href="#" class="text-secondary btn btn-secondary-soft-hover py-1 px-2" id="cardFeedAction" data-bs-toggle="dropdown" aria-expanded="false">
-									<i class="bi bi-three-dots"></i>
-								</a>
+                                <a href="#" class="text-secondary btn btn-secondary-soft-hover py-1 px-2" id="cardFeedAction" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-three-dots"></i>
+                                </a>
 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="cardFeedAction">
-	<li>
-		<a class="dropdown-item" href="#">
-			<i class="bi bi-pen fa-fw pe-2"></i>Edit post
-		</a>
-	</li>
-	<li>
-		<a class="dropdown-item " href="#">
-			<i class="bi bi-trash fa-fw pe-2"></i>Delete post
-		</a>
-	</li>
+    <li>
+        <a class="dropdown-item" href="#">
+            <i class="bi bi-pen fa-fw pe-2"></i>Edit post
+        </a>
+    </li>
+    <li>
+        <a class="dropdown-item " href="#">
+            <i class="bi bi-trash fa-fw pe-2"></i>Delete post
+        </a>
+    </li>
 </ul>
 
 
-							</div>
+                            </div>
 
             </div>
         </div>
@@ -313,7 +313,7 @@
                         <!-- Avatar -->
                         <div class="avatar avatar-xs">
                             <a href="#!"><img class="avatar-img rounded-circle"
-                                    src="{{ $comment->member && $comment->member->profile_pic ? asset('storage/' . $comment->member->profile_pic) : asset('feed_assets/images/avatar/12.jpg') }}"
+                                   src="${comment.member && comment.member.profile_pic ? '/storage/' + comment.member.profile_pic : '/feed_assets/images/avatar/12.jpg'}"
                                     alt=""></a>
                         </div>
                         <div class="ms-2 w-100">
@@ -322,7 +322,7 @@
                                 <div class="d-flex justify-content-between">
                                     <h6 class="mb-1"> <a href="#!"> {{ $comment->member->name ?? 'Anonymous' }} </a>
                                     </h6>
-                                    <small class="ms-2">{{ $comment->created_at->diffForHumans() }}</small>
+                                    <small class="ms-2">${comment.created_at_human || comment.created_at || ''}</small>
                                 </div>
                                 <p class="small mb-0" id="comment-text-{{ $comment->id }}">{{ $comment->comment }}</p>
                             </div>
@@ -720,7 +720,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                         <div class="bg-light rounded-start-top-0 p-3 rounded">
                                             <div class="d-flex justify-content-between">
                                                 <h6 class="mb-1"><a href="#!">${comment.member?.name || 'Anonymous'}</a></h6>
-                                                <small class="ms-2">{{ $comment->created_at->diffForHumans() }}</small>
+                                                <small class="ms-2">${comment.created_at_human || comment.created_at || ''}</small>
                                             </div>
                                             <p class="small mb-0">${comment.comment}</p>
                                         </div>
@@ -923,155 +923,6 @@ function deleteStory(storyId) {
 
 </script>
 
-<<<<<<< Updated upstream
-=======
-<!-- edit and delete post -->
-<!-- Edit Post Modal -->
-<div class="modal fade" id="editPostModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog">
-    <form id="editPostForm">
-      @csrf
-      @method('PUT')
-      <input type="hidden" id="editPostId" name="post_id">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Edit Post</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body">
-          <textarea name="content" id="editPostContent" class="form-control" rows="4"></textarea>
-        </div>
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-primary">Update Post</button>
-        </div>
-      </div>
-    </form>
-  </div>
-</div>
-
-<!-- edit and delete post end -->
-
-<script>
-$(document).ready(function() {
-
-    // Edit Post
-    $('.edit-post').on('click', function(e) {
-        e.preventDefault();
-        const postId = $(this).data('id');
-
-        // Fetch post data via AJAX
-        $.ajax({
-            url: `/posts/${postId}/edit`,
-            type: 'GET',
-            success: function(response) {
-                // Populate modal fields
-                $('#editPostModal #editPostContent').val(response.content);
-                $('#editPostModal #editPostId').val(postId);
-                $('#editPostModal').modal('show');
-            },
-            error: function() {
-                alert('Error fetching post details.');
-            }
-        });
-    });
-
-    // Delete Post
-    $('.delete-post').on('click', function(e) {
-        e.preventDefault();
-        const postId = $(this).data('id');
-
-        if (confirm('Are you sure you want to delete this post?')) {
-            $.ajax({
-                url: `/posts/${postId}`,
-                type: 'DELETE',
-                data: {
-                    _token: '{{ csrf_token() }}'
-                },
-                success: function() {
-                    alert('Post deleted successfully.');
-                    location.reload(); // or remove the post from DOM
-                },
-                error: function() {
-                    alert('Failed to delete the post.');
-                }
-            });
-        }
-    });
-
-});
-</script>
-
-<script>
-$('#editPostForm').on('submit', function(e) {
-    e.preventDefault();
-
-    const postId = $('#editPostId').val();
-    const content = $('#editPostContent').val();
-
-    $.ajax({
-        url: `/posts/${postId}`,
-        type: 'PUT',
-        data: {
-            _token: '{{ csrf_token() }}',
-            content: content
-        },
-        success: function() {
-            $('#editPostModal').modal('hide');
-            alert('Post updated successfully.');
-            location.reload(); // or update content in DOM
-        },
-        error: function() {
-            alert('Failed to update post.');
-        }
-    });
-});
-
-
-$(document).ready(function () {
-    $('.commentForm').on('submit', function (e) {
-        e.preventDefault();
-
-        let form = $(this);
-        let postId = form.data('post-id');
-        let textarea = form.find('.commentInput');
-        let errorDiv = form.find('.comment-error');
-        errorDiv.text(''); // clear previous errors
-
-        if ($.trim(textarea.val()) === '') {
-            errorDiv.text('Comment is required.');
-            textarea.focus();
-            return false;
-        }
-
-        let formData = form.serialize(); // serialize form data
-
-        $.ajax({
-            url: form.attr('action'),
-            method: 'POST',
-            data: formData,
-            success: function (response) {
-                if (response.status === 'success') {
-                    textarea.val(''); // clear comment box
-                    errorDiv.removeClass('text-danger').addClass('text-success').text('Comment added successfully!');
-
-                    // Optionally append to comment list
-                    // $('#comment-list-' + postId).append(`<div><strong>You:</strong> ${response.comment.comment}</div>`);
-                }
-            },
-            error: function (xhr) {
-                if (xhr.responseJSON?.errors?.comment) {
-                    errorDiv.text(xhr.responseJSON.errors.comment[0]);
-                } else {
-                    errorDiv.text('An error occurred.');
-                }
-            }
-        });
-    });
-});
-
-</script>
-
->>>>>>> Stashed changes
 
 
 

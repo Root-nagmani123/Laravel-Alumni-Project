@@ -11,6 +11,7 @@ use App\Models\Story;
 use App\Models\Topic;
 use App\Models\Broadcast;
 use App\Models\Member;
+use App\Models\Group;
 
 class FeedController extends Controller
 {
@@ -340,12 +341,16 @@ class FeedController extends Controller
 
     public function getPostByGroup($group_id)
     {
-        $posts = Post::with('member')
+        // $posts = Post::with('member')
+         $posts = Post::with(['member', 'media'])
                     ->where('group_id', $group_id)
                     ->latest()
                     ->get();
+                    // print_r($posts);die;
+                  $group = Group::where('id', $group_id)->select('name')->firstOrFail();
+                //   print_r($group);die;
 
-        return view('user.grouppost_details', compact('posts'));
+        return view('user.grouppost_details', compact('posts', 'group'));
     }
 
 

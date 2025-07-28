@@ -374,7 +374,7 @@
                                                                 <div class="col-3">
                                                                     <label for="postgrad_college">Postgraduate
                                                                         College/University
-                                                                        Name:<span style="color: red">*</span></label>
+                                                                        Name:</label>
                                                                 </div>
                                                                 <div class="col-9">
                                                                     <input type="text" id="postgrad_college"
@@ -389,8 +389,7 @@
                                                                 <div class="col-3">
                                                                     <label for="postgrad_degree">Postgraduate
                                                                         Degree
-                                                                        Obtained:<span
-                                                                            style="color: red">*</span></label>
+                                                                        Obtained:</label>
                                                                 </div>
                                                                 <div class="col-9">
                                                                     <input type="text" id="postgrad_degree"
@@ -405,8 +404,7 @@
                                                                 <div class="col-3">
                                                                     <label for="postgrad_year">Year
                                                                         of
-                                                                        Graduation:<span
-                                                                            style="color: red">*</span></label>
+                                                                            Post Graduation:</label>
                                                                 </div>
                                                                 <div class="col-9">
                                                                     <input type="text" id="postgrad_year"
@@ -512,8 +510,7 @@
                                                         <div class="form-group">
                                                             <div class="row mb-3">
                                                                 <div class="col-3">
-                                                                    <label for="facebook">Facebook:<span
-                                                                            style="color: red">*</span></label>
+                                                                    <label for="facebook">Facebook:</label>
                                                                 </div>
                                                                 <div class="col-9">
                                                                     <input type="text" id="facebook"
@@ -526,8 +523,7 @@
 
                                                             <div class="row mb-3">
                                                                 <div class="col-3">
-                                                                    <label for="instagram">Instagram:<span
-                                                                            style="color: red">*</span></label>
+                                                                    <label for="instagram">Instagram:</label>
                                                                 </div>
                                                                 <div class="col-9">
                                                                     <input type="text" id="instagram"
@@ -540,8 +536,7 @@
 
                                                             <div class="row mb-3">
                                                                 <div class="col-3">
-                                                                    <label for="linkedin">LinkedIn:<span
-                                                                            style="color: red">*</span></label>
+                                                                    <label for="linkedin">LinkedIn:</label>
                                                                 </div>
                                                                 <div class="col-9">
                                                                     <input type="text" id="linkedin"
@@ -554,8 +549,7 @@
 
                                                             <div class="row mb-3">
                                                                 <div class="col-3">
-                                                                    <label for="twitter">X(Twitter):<span
-                                                                            style="color: red">*</span></label>
+                                                                    <label for="twitter">X(Twitter):</label>
                                                                 </div>
                                                                 <div class="col-9">
                                                                     <input type="text" id="twitter"
