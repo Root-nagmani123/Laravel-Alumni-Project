@@ -182,10 +182,10 @@ Header START -->
 
   <!-- Collapsible content -->
   <ul class="list-unstyled ps-4 collapse" id="socialCollapse">
-    <li><a class="dropdown-item" href="https://www.facebook.com/profile.php?id=100064810655288" target="_blank"><i class="bi bi-facebook me-2"></i>Facebook</a></li>
-    <li><a class="dropdown-item" href="https://x.com/lbsnaa_official?lang=en" target="_blank"><i class="bi bi-twitter-x me-2"></i>Twitter</a></li>
-    <li><a class="dropdown-item" href="https://www.youtube.com/@lbsnaaofficial2107" target="_blank"><i class="bi bi-youtube me-2"></i>YouTube</a></li>
-    <li><a class="dropdown-item" href="https://www.linkedin.com/company/lal-bahadur-shastri-national-academy-of-administration-official/posts/?feedView=all" target="_blank"><i class="bi bi-linkedin me-2"></i>LinkedIn</a></li>
+    <li><a class="dropdown-item" href="{{ $user->facebook }}" target="_blank"><i class="bi bi-facebook me-2"></i>Facebook</a></li>
+    <li><a class="dropdown-item" href="{{ $user->twitter }}" target="_blank"><i class="bi bi-twitter-x me-2"></i>Twitter</a></li>
+    <li><a class="dropdown-item" href="{{ $user->instagram }}" target="_blank"><i class="bi bi-instagram me-2"></i>Instagram</a></li>
+    <li><a class="dropdown-item" href="{{ $user->linkedin }}" target="_blank"><i class="bi bi-linkedin me-2"></i>LinkedIn</a></li>
   </ul>
 </li>
 <li><a class="dropdown-item" href="{{ route('user.change-password.form') }}"><i class="bi bi-file-earmark-bar-graph-fill fa-fw me-2"></i>Change Password</a></li>
