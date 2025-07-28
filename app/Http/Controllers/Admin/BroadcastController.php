@@ -6,11 +6,21 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Broadcast;
 use Illuminate\Support\Facades\Storage;
+use App\Services\NotificationService;
+use App\Models\Member;
 class BroadcastController extends Controller
 {
+    protected $notificationService;
+
+    public function __construct(NotificationService $notificationService)
+    {
+        $this->notificationService = $notificationService;
+    }
+
+
     public function index()
 {
-    $broadcasts = Broadcast::orderBy('created_at', 'desc')->get(); // Fetch all broadcasts
+    $broadcasts = Broadcast::orderBy('id', 'desc')->get(); // Fetch all broadcasts
     return view('admin.broadcasts.index', compact('broadcasts'));
 }
     public function store28052025(Request $request)
@@ -77,6 +87,16 @@ public function store(Request $request)
         'is_deleted' => 0,
         'deleted_on' => now(),
     ]);
+
+    //notification 
+    if($broadcast){
+
+       $notification = $this->notificationService->notifyAllMembers('broadcast', 'New broadcast has been added.', $broadcast->id, 'broadcast');
+       
+       if($notification){
+        Member::query()->update(['is_notification' => 0]);
+       }
+    }
 
     return redirect()->route('broadcasts.index')->with('success', 'Broadcast added successfully!');
 }

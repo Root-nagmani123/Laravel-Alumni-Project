@@ -24,7 +24,7 @@
         <div class="d-flex mb-3">
             <!-- Avatar -->
             <div class="avatar avatar-xs me-2">
-                <a href="#"> <img class="avatar-img rounded-circle" src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar-1.png') }}"
+                <a href="{{ route('user.profile', ['id' => $user->id]) }}"> <img class="avatar-img rounded-circle" src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar-1.png') }}"
                         alt=""> </a>
             </div>
             <!-- Post input -->
@@ -93,7 +93,7 @@
 
         $displayName = $member->name ?? 'Unknown';
         $designation = $member->designation ?? 'Unknown';
-        $profileLink = url('/user/profile/' . ($member->id ?? 0));
+        $profileLink = route('user.profile', ['id' => $member->id]);
     }
 @endphp
 
@@ -286,7 +286,7 @@
             <div class="d-flex mb-3">
                 <!-- Avatar -->
                 <div class="avatar avatar-xs me-2">
-                    <a href="#!"> <img class="avatar-img rounded-circle"
+                    <a href="{{ route('user.profile', ['id' => $user->id]) }}"> <img class="avatar-img rounded-circle"
                             src="{{asset('storage/'.$user->profile_pic)}}" alt=""> </a>
                 </div>
                 <!-- Comment box  -->
@@ -923,8 +923,6 @@ function deleteStory(storyId) {
 
 </script>
 
-<<<<<<< Updated upstream
-=======
 <!-- edit and delete post -->
 <!-- Edit Post Modal -->
 <div class="modal fade" id="editPostModal" tabindex="-1" aria-hidden="true">
@@ -1071,7 +1069,6 @@ $(document).ready(function () {
 
 </script>
 
->>>>>>> Stashed changes
 
 
 

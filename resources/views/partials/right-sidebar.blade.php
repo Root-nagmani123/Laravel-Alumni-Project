@@ -3,9 +3,6 @@
     <div class="row g-4">
         <!-- Card follow START -->
 
-
-        <!-- Card follow START -->
-
         <!-- Card News START -->
         <div class="col-sm-6 col-lg-12">
             <div class="card">
@@ -106,7 +103,8 @@
 <!-- Group Modal -->
 <div class="modal fade" id="groupModal" tabindex="-1" aria-labelledby="groupModalLabel" aria-hidden="true">
   <div class="modal-dialog">
-    <form id="groupForm">
+    <form id="groupForm" action="{{ route('group.store') }}" method="POST">
+      @csrf
       <div class="modal-content">
         <div class="modal-header bg-danger text-white">
           <h5 class="modal-title text-white" id="groupModalLabel">Create Group</h5>
