@@ -142,4 +142,24 @@ class ProfileController extends Controller
 
         return Redirect::to('/');
     }
+    public function updateSocial(Request $request, $id)
+    {
+        // print_r($request->all());
+        // dd($request->all());
+        $request->validate([
+            'facebook' => 'nullable|url|max:255',
+            'instagram' => 'nullable|url|max:255',
+            'linkedin' => 'nullable|url|max:255',
+            'twitter' => 'nullable|url|max:255',
+        ]);
+
+        $user = Member::findOrFail($id);
+        $user->facebook = $request->facebook;
+        $user->instagram = $request->instagram;
+        $user->linkedin = $request->linkedin;
+        $user->twitter = $request->twitter;
+        $user->save();
+
+        return redirect()->back()->with('success', 'Social media links updated successfully.');
+    }
 }
