@@ -97,7 +97,6 @@
         $displayName = $member->name ?? 'Unknown';
         $designation = $member->designation ?? 'Unknown';
         $profileLink = route('user.profile', ['id' => $member->id]);
-
     }
 @endphp
 
@@ -1078,5 +1077,8 @@ $(document).ready(function () {
 });
 
 </script>
+
+
+
 
 @endsection
