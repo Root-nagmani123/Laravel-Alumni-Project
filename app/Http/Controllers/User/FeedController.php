@@ -331,5 +331,23 @@ class FeedController extends Controller
         return view('user.broadcast_details', compact('broadcast'));
     }
 
+     public function groupPostDetails($id)
+    {
+        $grouppost_detail = Post::findOrFail($id);
+
+        return view('user.grouppost_details', compact('grouppost_detail'));
+    }
+
+    public function getPostByGroup($group_id)
+    {
+        $posts = Post::with('member')
+                    ->where('group_id', $group_id)
+                    ->latest()
+                    ->get();
+
+        return view('user.grouppost_details', compact('posts'));
+    }
+
+
 }
 

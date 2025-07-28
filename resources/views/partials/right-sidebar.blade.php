@@ -55,7 +55,7 @@
                 <!-- Card header START -->
                 <div class="card-header d-sm-flex justify-content-between border-0">
                 <h5 class="card-title">Groups</h5>
-                <a class="btn btn-primary-soft btn-sm" href="#!" data-bs-toggle="modal" data-bs-target="#groupModal"> Create groups</a>
+                <a class="btn btn-primary-soft btn-sm" href="" data-bs-toggle="modal" data-bs-target="#groupModal"> Create groups</a>
 
               </div>
                 <!-- Card header END -->
@@ -67,7 +67,7 @@
                     <div class="hstack gap-2 mb-3">
                         <!-- Title -->
                         <div class="overflow-hidden">
-                            <a class="mb-0" href="#!">{{ $recent->name}}</a>
+                            <a class="mb-0" href="{{ route('user.group-post', $recent->id) }}">{{ $recent->name}}</a>
                         </div>
                         <!-- Button -->
                         <a class="btn btn-primary-soft rounded-circle icon-md ms-auto open-group-post-modal" href="#"
@@ -112,13 +112,13 @@
           <h5 class="modal-title text-white" id="groupModalLabel">Create Group</h5>
           <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        
+
         <div class="modal-body">
           <div class="mb-3">
             <label for="groupName" class="form-label">Group Name</label>
             <input type="text" class="form-control" id="groupName" name="group_name" placeholder="Enter group name" required>
           </div>
-          
+
           <!-- Alpine.js (Make sure it's included in your layout or this page) -->
 <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 
@@ -183,7 +183,7 @@ function memberSelector() {
 }
 </script>
 
-        
+
         <div class="modal-footer">
           <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
           <button type="submit" class="btn btn-primary">Create Group</button>
@@ -214,4 +214,3 @@ function memberSelector() {
     });
 </script>
 <!-- Right sidebar END -->
- 
