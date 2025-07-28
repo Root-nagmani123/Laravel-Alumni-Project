@@ -11,9 +11,17 @@ use App\Models\Story;
 use App\Models\Topic;
 use App\Models\Broadcast;
 use App\Models\Member;
+use App\Services\NotificationService;
 
 class FeedController extends Controller
 {
+    protected $notificationService;
+
+    public function __construct(NotificationService $notificationService)
+    {
+        $this->notificationService = $notificationService;
+    }
+
     public function index_old()
     {
         $user = auth()->guard('user')->user();
@@ -286,6 +294,18 @@ class FeedController extends Controller
             'member_id' => $userId,
             'content' => $request->comment,
         ]);
+
+        // Notify the post owner (if not commenting on own post)
+        if ($post->member_id != $userId) {
+            $this->notificationService->notifyPostOwner(
+                $post->member_id,           // post owner
+                $userId,                // who commented
+                'comment',                // type
+                auth('user')->user()->name . ' commented on your post.', // message
+                $post->id,                // source_id
+                'post'                    // source_type
+            );
+        }
 
         return response()->json([
             'success' => true,
