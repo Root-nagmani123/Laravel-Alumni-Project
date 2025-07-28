@@ -119,24 +119,33 @@
                     @csrf
                     <!-- Old password -->
                     <div class="mb-3">
-                        <label for="old_password" class="form-label">Old Password</label>
-                        <input class="form-control" type="password" name="old_password" id="old_password" required placeholder="Enter your old password"> 
+                        <label for="old_password" class="form-label">Old Password <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <input class="form-control" type="password" name="old_password" id="old_password" required placeholder="Enter your old password">
+                            <button class="btn btn-outline-secondary toggle-password" type="button" data-target="#old_password"><i class="fa fa-eye"></i></button>
+                        </div>
                         @error('old_password')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
                     <!-- New password -->
                     <div class="mb-3">
-                        <label for="new_password" class="form-label">New Password</label>
-                        <input class="form-control" type="password" name="new_password" id="new_password" required placeholder="Enter your new password">
+                        <label for="new_password" class="form-label">New Password <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <input class="form-control" type="password" name="new_password" id="new_password" required placeholder="Enter your new password">
+                            <button class="btn btn-outline-secondary toggle-password" type="button" data-target="#new_password"><i class="fa fa-eye"></i></button>
+                        </div>
                         @error('new_password')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
                     <!-- Confirm new password -->
                     <div class="mb-3">
-                        <label for="new_password_confirmation" class="form-label">Confirm New Password</label>
-                        <input class="form-control" type="password" name="new_password_confirmation" id="new_password_confirmation" required placeholder="Confirm your new password">
+                        <label for="new_password_confirmation" class="form-label">Confirm New Password <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <input class="form-control" type="password" name="new_password_confirmation" id="new_password_confirmation" required placeholder="Confirm your new password">
+                            <button class="btn btn-outline-secondary toggle-password" type="button" data-target="#new_password_confirmation"><i class="fa fa-eye"></i></button>
+                        </div>
                     </div>
                     <!-- Button -->
                     <div class="d-grid">
@@ -149,4 +158,23 @@
         </div>
     </div>
 </div>
+@endsection
+
+@section('scripts')
+<script>
+    document.querySelectorAll('.toggle-password').forEach(function(button) {
+        button.addEventListener('click', function() {
+            var target = document.querySelector(this.getAttribute('data-target'));
+            if (target.type === 'password') {
+                target.type = 'text';
+                this.querySelector('i').classList.remove('fa-eye');
+                this.querySelector('i').classList.add('fa-eye-slash');
+            } else {
+                target.type = 'password';
+                this.querySelector('i').classList.remove('fa-eye-slash');
+                this.querySelector('i').classList.add('fa-eye');
+            }
+        });
+    });
+</script>
 @endsection

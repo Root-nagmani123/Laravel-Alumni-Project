@@ -72,9 +72,9 @@
                                         <a href="{{route('admin.profile') }}" class="p-2 dropdown-item h6 rounded-1">
                                             My Profile
                                         </a>
-                                       <a href="page-account-settings.html" class="p-2 dropdown-item h6 rounded-1">
+                                       <!-- <a href="page-account-settings.html" class="p-2 dropdown-item h6 rounded-1">
                                             Account Settings
-                                        </a>
+                                        </a> -->
                                         <form action="{{route('admin.logout')}}" method="POST">
                                             @csrf
                                             <button type="submit" class="p-2 dropdown-item h6 rounded-1">

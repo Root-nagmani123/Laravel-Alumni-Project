@@ -20,7 +20,7 @@ class BroadcastController extends Controller
 
     public function index()
 {
-    $broadcasts = Broadcast::orderBy('created_at', 'desc')->get(); // Fetch all broadcasts
+    $broadcasts = Broadcast::orderBy('id', 'desc')->get(); // Fetch all broadcasts
     return view('admin.broadcasts.index', compact('broadcasts'));
 }
     public function store28052025(Request $request)

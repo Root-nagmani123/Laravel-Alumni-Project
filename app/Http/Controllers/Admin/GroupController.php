@@ -17,7 +17,8 @@ class GroupController extends Controller
 {
     public function index()
     {
-        $groups = Group::all();
+        // $groups = Group::all();
+        $groups = Group::orderBy('id', 'desc')->get(); // newest first
         return view('admin.group.index', compact('groups'));
     }
 

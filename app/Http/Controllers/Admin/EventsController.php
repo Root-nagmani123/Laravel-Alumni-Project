@@ -23,7 +23,8 @@ class EventsController extends Controller
 
 		public function index()
 		{
-			$events = Events::orderBy('start_datetime', 'desc')->paginate(10);
+			// $events = Events::orderBy('start_datetime', 'desc')->paginate(10);
+			$events = Events::orderBy('id', 'desc')->paginate(10);
 			return view('admin.events.index', compact('events'));
 		}
 
