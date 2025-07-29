@@ -43,33 +43,6 @@ Route::get('/clear/1', function () {
     return redirect()->back()->with('success', 'Cache cleared successfully');
 });
 
-Route::get('/check-time', function () {
-    // Set timezone to Asia/Kolkata for this request
-    date_default_timezone_set('Asia/Kolkata');
-
-    // Return current date & time and timezone
-    return [
-        'server_time'     => now()->toDateTimeString(),
-        'carbon_time'     => Carbon::now()->toDateTimeString(),
-        'php_time'        => date('Y-m-d H:i:s'),
-        'timezone_config' => config('app.timezone'),
-        'php_timezone'    => date_default_timezone_get(),
-    ];
-});
-
-
-Route::get('/db-check', function () {
-    $dbName = DB::select("SELECT DATABASE() AS db");
-    $user = DB::select("SELECT USER() AS user");
-    $host = DB::select("SELECT @@hostname AS host");
-
-    return [
-        'connected_database' => $dbName[0]->db,
-        'database_user' => $user[0]->user,
-        'db_host' => $host[0]->host,
-
-    ];
-});
 
 Route::redirect('/', '/user/login');
 Route::redirect('/login', '/user/login');
