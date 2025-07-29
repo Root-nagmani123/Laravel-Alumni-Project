@@ -662,7 +662,7 @@
                                     <div class="d-flex align-items-center rounded border px-3 py-2">
                                         <!-- Date -->
                                         <p class="mb-0">
-                                            <i class="bi bi-briefcase fa-fw me-2"></i> <strong>
+                                            <i class="bi bi-briefcase fa-fw me-2"></i> Current Designation:<strong>
                                                 {{ $user->current_designation }}
                                             </strong>
                                         </p>
@@ -703,6 +703,42 @@
                                         </p>
                                     </div>
                                     <!-- Joined on END -->
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="d-flex align-items-center rounded border px-3 py-2">
+                                        <!-- Date -->
+                                        <p class="mb-0">
+                                            <i class="bi bi-envelope fa-fw me-2"></i> Year of Graduation: <strong>
+                                                {{ $user->undergrad_year }} </strong>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="d-flex align-items-center rounded border px-3 py-2">
+                                        <!-- Date -->
+                                        <p class="mb-0">
+                                            <i class="bi bi-envelope fa-fw me-2"></i> Year of Post Graduation: <strong>
+                                                {{ $user->postgrad_year }} </strong>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="d-flex align-items-center rounded border px-3 py-2">
+                                        <!-- Date -->
+                                        <p class="mb-0">
+                                            <i class="bi bi-envelope fa-fw me-2"></i> Current Department: <strong>
+                                                {{ $user->current_department }} </strong>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="d-flex align-items-center rounded border px-3 py-2">
+                                        <!-- Date -->
+                                        <p class="mb-0">
+                                            <i class="bi bi-envelope fa-fw me-2"></i> Previous Posting: <strong>
+                                                {{ $user->previous_postings }} </strong>
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
