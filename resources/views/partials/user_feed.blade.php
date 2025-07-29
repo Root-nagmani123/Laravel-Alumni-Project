@@ -74,15 +74,18 @@
 
     if ($post->type === 'group_post') {
         // Group post ke liye
-        $profileImage = $post->group_image
-            ? asset('storage/' . $post->group_image)
+        $profileImage = $post->member->profile_pic
+            ? asset('storage/' . $post->member->profile_pic)
             : asset('feed_assets/images/avatar/07.jpg'); // fallback image
 
         $displayName = $post->group_name ?? 'Unknown Group';
         $designation = 'Group Post';
+        $created_by = $post->member->name;
 
         // Optional: if you have a group detail page
-        $profileLink = url('/group/' . ($post->group_id ?? 0));
+        $profileLink =  route('user.profile', ['id' => $post->member->id]);
+       
+        $groupLink = route('user.group-post',['id' =>$post->group_id]);
     } else {
         // Member/user post
         $member = $post->member ?? null;
@@ -94,6 +97,7 @@
         $displayName = $member->name ?? 'Unknown';
         $designation = $member->designation ?? 'Unknown';
         $profileLink = route('user.profile', ['id' => $member->id]);
+
     }
 @endphp
 
@@ -110,13 +114,19 @@
 <div>
     <div class="nav nav-divider">
         <h6 class="nav-item card-title mb-0">
-            <a href="#!">{{ $displayName }}</a>
+            <a href="{{ $post->type === 'group_post' ? $groupLink : $profileLink }}">{{ $displayName }}</a>
         </h6>
-        <span class="nav-item small">
+       
+    </div>
+    <p class="mb-0 small">{{ $designation }}
+    @if($post->type === 'group_post')
+        | Group: dk
+    @endif
+</p>
+    <p class="mb-0 small"></p>
+    <span class="nav-item small">
             {{ \Carbon\Carbon::parse($post->created_at)->diffForHumans() }}
         </span>
-    </div>
-    <p class="mb-0 small">{{ $designation }}</p>
 </div>
 
 
