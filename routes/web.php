@@ -25,6 +25,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Config;
 
 use App\Http\Controllers\Member\ChangePasswordController;
+use App\Http\Controllers\Member\GroupController as MemberGroupController;
 
 Route::resource('post', PostController::class);
 
@@ -334,4 +335,13 @@ Route::get('/mapshow', [MapController::class, 'Map'])->name('maps.show');
 Route::middleware(['auth:user'])->group(function () {
     Route::get('/user/change-password', [ChangePasswordController::class, 'showForm'])->name('user.change-password.form');
     Route::post('/user/change-password', [ChangePasswordController::class, 'changePassword'])->name('user.change-password');
+
+    Route::prefix('member')->name('user.group.')->group(function () {
+        Route::get('/', [MemberGroupController::class, 'index'])->name('index');
+        Route::get('/create', [MemberGroupController::class, 'create'])->name('create');
+        Route::post('/', [MemberGroupController::class, 'store'])->name('store');
+        Route::get('/{group}/edit', [MemberGroupController::class, 'edit'])->name('edit');
+        Route::put('/{group}', [MemberGroupController::class, 'update'])->name('update');
+        Route::delete('/{group}', [MemberGroupController::class, 'destroy'])->name('destroy');
+    });
 });
