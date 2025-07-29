@@ -108,7 +108,7 @@
                 <h1 class="h4 mb-4">{{ $group->name }} : Group Posts</h1>
 
                 @forelse($posts as $post)
- @php
+        @php
             $validMedia = $post->media->filter(function($media) {
             return file_exists(storage_path('app/public/' . $media->file_path));
             });
@@ -160,7 +160,7 @@
             @endif
                             <!-- <img class="rounded w-100" src="{{ asset('feed_assets/images/post/4by3/03.jpg') }}"
                                 alt="Default Image"> -->
-                           
+
                         </div>
                         <div class="col-8">
 
@@ -168,7 +168,7 @@
                             <div class="d-none d-sm-inline-block">
                                <p class="mb-2">{{ \Illuminate\Support\Str::words(strip_tags($post->content), 50, '...') }}</p>
 
-                               
+
 
                                 @if($post->media_type == 'video' && $post->video_link)
                                 <div class="mb-2">

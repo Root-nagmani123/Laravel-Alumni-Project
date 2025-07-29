@@ -11,8 +11,10 @@ use App\Models\Story;
 use App\Models\Topic;
 use App\Models\Broadcast;
 use App\Models\Member;
+
 use App\Services\NotificationService;
 use App\Models\Group;
+
 
 class FeedController extends Controller
 {
@@ -23,90 +25,12 @@ class FeedController extends Controller
         $this->notificationService = $notificationService;
     }
 
-    public function index_old()
+   public function index()
     {
         $user = auth()->guard('user')->user();
         $userId = $user->id;
-	    $posts = Post::with(['member', 'media', 'likes', 'comments.member'])
-        ->orderBy('created_at', 'desc')
-        ->get();
-
-
-           //dd($posts);
-          // dd($user);
-           $broadcast = DB::table('broadcasts')
-                ->where('status',1)
-            ->orderBy('broadcasts.id', 'desc')
-            ->get();
-          $events = DB::table('events')
-        ->where('status', 1)
-        ->where('end_datetime', '>', now())
-        ->orderBy('id', 'desc')
-        ->get();
-// print_r($events);die;
-
-    // RSVP Events by status
-    $accept_events = DB::table('events')
-        ->join('event_rsvp', 'events.id', '=', 'event_rsvp.event_id')
-        ->where('event_rsvp.user_id', $userId)
-        ->where('event_rsvp.status', 'accept')
-        ->where('events.status', 1)
-        ->where('events.end_datetime', '>', now())
-        ->select('events.*')
-        ->orderBy('events.id', 'desc')
-        ->get();
-
-    $maybe_events = DB::table('events')
-        ->join('event_rsvp', 'events.id', '=', 'event_rsvp.event_id')
-        ->where('event_rsvp.user_id', $userId)
-        ->where('event_rsvp.status', 'maybe')
-        ->where('events.status', 1)
-        ->where('events.end_datetime', '>', now())
-        ->select('events.*')
-        ->orderBy('events.id', 'desc')
-        ->get();
-
-    $decline_events = DB::table('events')
-        ->join('event_rsvp', 'events.id', '=', 'event_rsvp.event_id')
-        ->where('event_rsvp.user_id', $userId)
-        ->where('event_rsvp.status', 'decline')
-        ->where('events.status', 1)
-        ->where('events.end_datetime', '>', now())
-        ->select('events.*')
-        ->orderBy('events.id', 'desc')
-        ->get();
-
-        $forums = DB::table('forums as f')
-            ->join('forum_topics as ft', 'ft.forum_id', '=', 'f.id')
-            ->join('forums_member as fm', 'fm.forums_id', '=', 'f.id')
-            ->select('f.id', 'f.name','ft.id as topic_id', 'ft.title as topic_name', 'ft.description','ft.images','ft.created_date')
-            ->where('fm.user_id', $userId)
-            ->get();
-        // print_r($forums);die;
-
-
-    return view('user.feed', compact(
-        'posts',
-        'user',
-        'broadcast',
-        'events',
-        'accept_events',
-        'maybe_events',
-        'decline_events',
-        'forums'
-    ));
-
-   return view('user.feed', compact('posts','user'));
-    }
-
-    public function index()
-    {
-        $user = auth()->guard('user')->user(); // Get logged-in user
-        $userId = $user->id;
-
         // Fetch posts with related models
-
-         $stories = Story::where('created_at', '>=', now()->subDay())
+        $stories = Story::where('created_at', '>=', now()->subDay())
                      ->with('user')
                      ->get();
 
@@ -121,7 +45,6 @@ class FeedController extends Controller
         ->where('end_datetime', '>', now())
         ->orderBy('id', 'desc')
         ->get();
-
 
         $forums = DB::table('forums as f')
             ->join('forum_topics as ft', 'ft.forum_id', '=', 'f.id')
@@ -222,11 +145,9 @@ class FeedController extends Controller
            ]);
     }
 
-
     public function search(Request $request)
     {
         $keyword = $request->input('keyword');
-
         $results = Post::where('content', 'like', "%$keyword%")
             ->with('member')
             ->limit(10)
@@ -360,7 +281,7 @@ class FeedController extends Controller
         return view('user.grouppost_details', compact('grouppost_detail'));
     }
 
-    public function getPostByGroup($group_id)
+    public function getPostByGroup_2872025($group_id)
     {
         // $posts = Post::with('member')
          $posts = Post::with(['member', 'media'])
@@ -370,6 +291,24 @@ class FeedController extends Controller
                     // print_r($posts);die;
                   $group = Group::where('id', $group_id)->select('name')->firstOrFail();
                 //   print_r($group);die;
+
+        return view('user.grouppost_details', compact('posts', 'group'));
+    }
+
+    public function getPostByGroup($group_id)
+    {
+        /*$posts = Post::with('member')
+                    ->where('group_id', $group_id)
+                    ->latest()
+                    ->get();
+                    */
+        $posts = Post::with(['member', 'media'])
+            ->where('group_id', $group_id)
+            ->latest()
+            ->get();
+
+
+        $group = Group::find($group_id); // Fetch the group by ID
 
         return view('user.grouppost_details', compact('posts', 'group'));
     }
