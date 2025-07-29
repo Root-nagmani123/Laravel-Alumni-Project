@@ -25,6 +25,7 @@
             <!-- Avatar -->
             <div class="avatar avatar-xs me-2">
                 <a href="{{ route('user.profile', ['id' => $user->id]) }}"> <img class="avatar-img rounded-circle" src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar-1.png') }}"
+                <a href="{{ route('user.profile', ['id' => $user->id]) }}"> <img class="avatar-img rounded-circle" src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar-1.png') }}"
                         alt=""> </a>
             </div>
             <!-- Post input -->
