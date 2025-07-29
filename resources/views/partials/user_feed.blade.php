@@ -322,7 +322,7 @@
                                 <div class="d-flex justify-content-between">
                                     <h6 class="mb-1"> <a href="#!"> {{ $comment->member->name ?? 'Anonymous' }} </a>
                                     </h6>
-                                    <small class="ms-2">${comment.created_at_human || comment.created_at || ''}</small>
+                                    <small class="ms-2">{{ $comment->created_at->diffForHumans() }}</small>
                                 </div>
                                 <p class="small mb-0" id="comment-text-{{ $comment->id }}">{{ $comment->comment }}</p>
                             </div>
@@ -1068,8 +1068,5 @@ $(document).ready(function () {
 });
 
 </script>
-
-
-
 
 @endsection
