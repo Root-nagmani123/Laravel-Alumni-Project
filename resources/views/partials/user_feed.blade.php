@@ -52,8 +52,8 @@
                         class="bi bi-calendar2-event-fill text-danger pe-2"></i>Event </a>
             </li> -->
             <!-- <li class="nav-item">
-							<a class="nav-link bg-light py-1 px-2 mb-0" href="#!" data-bs-toggle="modal" data-bs-target="#modalCreateFeed"> <i class="bi bi-emoji-smile-fill text-warning pe-2"></i>Feeling /Activity</a>
-						</li> -->
+                            <a class="nav-link bg-light py-1 px-2 mb-0" href="#!" data-bs-toggle="modal" data-bs-target="#modalCreateFeed"> <i class="bi bi-emoji-smile-fill text-warning pe-2"></i>Feeling /Activity</a>
+                        </li> -->
         </ul>
         <!-- Share feed toolbar END -->
     </div>
@@ -133,24 +133,24 @@
 
                 </div>
                 <div class="dropdown">
-								<a href="#" class="text-secondary btn btn-secondary-soft-hover py-1 px-2" id="cardFeedAction" data-bs-toggle="dropdown" aria-expanded="false">
-									<i class="bi bi-three-dots"></i>
-								</a>
+                                <a href="#" class="text-secondary btn btn-secondary-soft-hover py-1 px-2" id="cardFeedAction" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-three-dots"></i>
+                                </a>
 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="cardFeedAction">
-	<li>
-		<a class="dropdown-item" href="#">
-			<i class="bi bi-pen fa-fw pe-2"></i>Edit post
-		</a>
-	</li>
-	<li>
-		<a class="dropdown-item " href="#">
-			<i class="bi bi-trash fa-fw pe-2"></i>Delete post
-		</a>
-	</li>
+    <li>
+        <a class="dropdown-item" href="#">
+            <i class="bi bi-pen fa-fw pe-2"></i>Edit post
+        </a>
+    </li>
+    <li>
+        <a class="dropdown-item " href="#">
+            <i class="bi bi-trash fa-fw pe-2"></i>Delete post
+        </a>
+    </li>
 </ul>
 
 
-							</div>
+                            </div>
 
             </div>
         </div>
@@ -324,7 +324,7 @@
                         <!-- Avatar -->
                         <div class="avatar avatar-xs">
                             <a href="#!"><img class="avatar-img rounded-circle"
-                                    src="{{ $comment->member && $comment->member->profile_pic ? asset('storage/' . $comment->member->profile_pic) : asset('feed_assets/images/avatar/12.jpg') }}"
+                                   src="${comment.member && comment.member.profile_pic ? '/storage/' + comment.member.profile_pic : '/feed_assets/images/avatar/12.jpg'}"
                                     alt=""></a>
                         </div>
                         <div class="ms-2 w-100">
@@ -333,7 +333,7 @@
                                 <div class="d-flex justify-content-between">
                                     <h6 class="mb-1"> <a href="#!"> {{ $comment->member->name ?? 'Anonymous' }} </a>
                                     </h6>
-                                    <small class="ms-2">{{ $comment->created_at->diffForHumans() }}</small>
+                                    <small class="ms-2">${comment.created_at_human || comment.created_at || ''}</small>
                                 </div>
                                 <p class="small mb-0" id="comment-text-{{ $comment->id }}">{{ $comment->comment }}</p>
                             </div>
@@ -731,7 +731,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                         <div class="bg-light rounded-start-top-0 p-3 rounded">
                                             <div class="d-flex justify-content-between">
                                                 <h6 class="mb-1"><a href="#!">${comment.member?.name || 'Anonymous'}</a></h6>
-                                                <small class="ms-2">{{ $comment->created_at->diffForHumans() }}</small>
+                                                <small class="ms-2">${comment.created_at_human || comment.created_at || ''}</small>
                                             </div>
                                             <p class="small mb-0">${comment.comment}</p>
                                         </div>

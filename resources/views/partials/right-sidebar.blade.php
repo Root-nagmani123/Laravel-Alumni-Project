@@ -116,21 +116,72 @@
             <label for="groupName" class="form-label">Group Name</label>
             <input type="text" class="form-control" id="groupName" name="group_name" placeholder="Enter group name" required>
           </div>
-          
-          <div class="mb-3">
-            <label for="memberNames" class="form-label">Member Names</label>
-            <select class="form-control" id="memberNames" name="member_names[]" multiple required>
-                @if(isset($members) && $members->count() > 0)
-                 @foreach($members as $member)
-                  <option value="{{ $member->id }}">{{ $member->name }}</option>
-                 @endforeach
-                @else
-                  <option disabled>No members available</option>
-               @endif
-            </select>
-          </div>
-        </div>
-        
+
+          <!-- Alpine.js (Make sure it's included in your layout or this page) -->
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+
+<div x-data="memberSelector()" class="mb-3">
+    <label class="form-label">Member Names</label>
+
+    <!-- Input field for typing and selecting -->
+    <input type="text"
+           class="form-control"
+           placeholder="Type name and press Enter"
+           x-model="newMember"
+           list="membersList"
+           @keydown.enter.prevent="addMember">
+
+    <!-- Autocomplete list -->
+    <datalist id="membersList">
+        <template x-for="member in allMembers" :key="member.id">
+            <option :value="member.name"></option>
+        </template>
+    </datalist>
+
+    <!-- Selected tags -->
+    <div class="mt-2">
+        <template x-for="(member, index) in selectedMembers" :key="member.id">
+            <span class="badge bg-primary me-1 mb-1">
+                <span x-text="member.name"></span>
+                <button type="button"
+                        class="btn-close btn-close-white btn-sm ms-1"
+                        @click="removeMember(index)">
+                </button>
+                <input type="hidden" name="member_ids[]" :value="member.id">
+            </span>
+        </template>
+    </div>
+</div>
+
+<script>
+function memberSelector() {
+    return {
+        newMember: '',
+        selectedMembers: [],
+        allMembers: @json($members), // assuming each member has {id, name}
+
+        addMember() {
+            if (!this.newMember.trim()) return;
+
+            const match = this.allMembers.find(m =>
+                m.name.toLowerCase() === this.newMember.trim().toLowerCase()
+            );
+
+            if (match && !this.selectedMembers.some(m => m.id === match.id)) {
+                this.selectedMembers.push(match);
+            }
+
+            this.newMember = '';
+        },
+
+        removeMember(index) {
+            this.selectedMembers.splice(index, 1);
+        }
+    }
+}
+</script>
+
+
         <div class="modal-footer">
           <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
           <button type="submit" class="btn btn-primary">Create Group</button>
