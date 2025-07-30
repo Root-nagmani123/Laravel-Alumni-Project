@@ -92,6 +92,17 @@
                                         @enderror
                                     </div>
                                 </div>
+                                
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Service<span class="required text-danger text-danger" >*</span></label>
+                                        <input type="text" name="service" id="service" class="form-control"
+                                            value="{{ old('service') }}">
+                                              @error('service')
+                                        <div class="text-danger">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <label class="form-label">Cadre<span class="required text-danger text-danger" >*</span></label>

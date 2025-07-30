@@ -7,7 +7,7 @@
 
 <main class="main-content">
     <div class="container">
-        <div class="pagetitle">
+        <div class="pagetitle mt-3">
             <div class="row">
                 <div class="col-6">
                     <h5>{{ $pageName ?? 'Members List' }}</h5>
@@ -23,15 +23,27 @@
             </div>
         </div>
 
-        <section class="section">
+        <section class="section" style="padding-top: 0 !important; padding-bottom: 0 !important;">
             <div class="row">
                 <div class="col-lg-12">
-                    <div class="card mb-4 rounded p-3">
+                    <div class="card mb-4 rounded">
                         <div class="card-body">
 
                             <!-- Filters -->
                             <div class="row mb-3">
-                                <div class="col-md-6">
+                                 <div class="col-md-4">
+                                    <label for="serviceFilter" class="form-label">Filter by Service:</label>
+                                    <select id="serviceFilter" class="form-control">
+                                         <option value="">All</option>
+                                         @php
+                                         $services = $members->pluck('service')->unique()->filter();
+                                         @endphp
+                                         @foreach ($services as $service)
+                                         <option value="{{ $service }}">{{ $service }}</option>
+                                         @endforeach
+                                     </select>
+                                </div>
+                                <div class="col-md-4">
                                     <label for="cadreFilter" class="form-label">Filter by Cadre:</label>
                                     <select id="cadreFilter" class="form-control">
                                          <option value="">All</option>
@@ -43,7 +55,7 @@
                                          @endforeach
                                      </select>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <label for="batchFilter" class="form-label">Filter by Batch:</label>
                                     <select id="batchFilter" name="batch" class="form-control">
                                         <option value="">All</option>
@@ -68,6 +80,7 @@
                                             <th>Name</th>
                                             <th>Email Id</th>
                                             <th>Mobile No.</th>
+                                            <th>Service</th>
                                             <th>Cadre</th>
                                             <th>Batch</th>
                                         </tr>
@@ -79,6 +92,7 @@
                                                 <td>{{ $row->name }}</td>
                                                 <td>{{ $row->email }}</td>
                                                 <td>{{ $row->mobile }}</td>
+                                                <td>{{ $row->service }}</td>
                                                 <td>{{ $row->cader }}</td>
                                                 <td>{{ $row->batch }}</td>
                                             </tr>
@@ -108,14 +122,18 @@
 <script>
     $(document).ready(function () {
         var table = $('#memberTable').DataTable();
-
-        $('#cadreFilter').on('change', function () {
+        $('#serviceFilter').on('change', function () {
             table.column(4).search(this.value).draw();
         });
 
-        $('#batchFilter').on('change', function () {
+        $('#cadreFilter').on('change', function () {
             table.column(5).search(this.value).draw();
         });
+
+        $('#batchFilter').on('change', function () {
+            table.column(6).search(this.value).draw();
+        });
+        
     });
 </script>
 @endsection
