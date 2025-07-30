@@ -33,6 +33,7 @@ class MemberController extends Controller
             'mobile' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:members',
             'password' => 'required|string|min:8|confirmed',
+            'service' => 'required|string|max:255',
             'cader' => 'required|string|max:255',
             'designation' => 'required|string|max:255',
             'batch' => 'required|integer',
@@ -49,6 +50,7 @@ class MemberController extends Controller
             'mobile' => $request->mobile,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'service' => $request->service,
             'cader' => $request->cader,
             'designation' => $request->designation,
             'batch' => $request->batch,
@@ -70,6 +72,7 @@ class MemberController extends Controller
             'email' => 'required|string|email|max:255|unique:members,email,' . $member->id,
             'password' => 'nullable|string|min:8',
             'password_confirmation' => 'required_with:password|same:password',
+            'service' => 'required|string|max:255',
             'cader' => 'required|string|max:255',
             'designation' => 'required|string|max:255',
             'batch' => 'required|integer',
@@ -87,6 +90,7 @@ class MemberController extends Controller
         if ($request->filled('password')) {
             $member->password = Hash::make($request->password);
         }
+        $member->service = $request->service;
         $member->cader = $request->cader;
         $member->designation = $request->designation;
         $member->batch = $request->batch;
