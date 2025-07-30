@@ -17890,17 +17890,17 @@ a.badge:hover {
 
 
 .left-sidebar {
- position: sticky; 
- top: 100px; 
- height: 90vh;
+  position: sticky; 
+  top: 100px; 
+  height: 90vh;
 }
 .left-sidebar:hover {
   overflow-y: auto;
 }
 .right-sidebar {
- position: sticky; 
- top: 100px; 
- height: 90vh;
+  position: sticky; 
+  top: 100px; 
+  height: 85vh;
 }
 .right-sidebar:hover {
   overflow-y: auto;
