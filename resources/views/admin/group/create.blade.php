@@ -24,9 +24,7 @@
                     <div class="col-6">
                         <div class="mb-3">
                             <label class="form-label">Mentor Name</label>
-                            <!--<select id="" class="form-control" name="mentor_id" required="" tabindex="-1"
-                                aria-hidden="true">-->
-                            <select id="searchable-select" class="form-control " name="mentor_id"  required>
+                                 <select id="searchable-select" class="form-control " name="mentor_id"  required>
                                 <option value="" data-select2-id="select2-data-4-1ybl">Select Mentor</option>
                                 @foreach($mentors as $mentors)
                                 <option value="{{ $mentors->id }}">{{ $mentors->name }}</option>
@@ -38,7 +36,9 @@
                     <div class="col-6">
                         <div class="mb-3">
                             <label class="form-label">Member Name (Multiple Mentees) <span class="text-danger">*</span></label>
-                            <select name="user_id[]" class="form-control js-example-basic-multiple"  multiple="multiple" required>
+                          <select name="user_id[]" id="mentee-dropdown" class="form-control js-example-basic-multiple" multiple="multiple" required>
+
+                            <!-- <select name="user_id[]" class="form-control js-example-basic-multiple"  multiple="multiple" required> -->
                                 @foreach($users as $user)
                                 <option value="{{ $user->id }}">{{ $user->name }}</option>
                                 @endforeach
@@ -71,7 +71,8 @@
     </div>
     <!-- end Vertical Steps Example -->
 </div>
-
+@endsection
+@push('scripts')
 <script>
 $(document).ready(function() {
     $('.form-select').select2(); // Initialize Select2
@@ -92,5 +93,25 @@ $(document).ready(function() {
         }
     });
 });
+
+    $(document).ready(function () {
+        $('#searchable-select').on('change', function () {
+            let selectedMentorId = $(this).val();
+
+            $('#mentee-dropdown option').each(function () {
+                let menteeId = $(this).val();
+
+                if (menteeId === selectedMentorId) {
+                    $(this).prop('disabled', true).hide(); // Disable and hide mentor from mentee list
+                } else {
+                    $(this).prop('disabled', false).show(); // Show other options
+                }
+            });
+
+            // Optional: Refresh Select2 if you're using it
+            $('#mentee-dropdown').trigger('change.select2');
+        });
+    });
 </script>
-@endsection
+@endpush
+
