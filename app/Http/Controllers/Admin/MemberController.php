@@ -69,6 +69,7 @@ class MemberController extends Controller
             'mobile' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:members,email,' . $member->id,
             'password' => 'nullable|string|min:8|confirmed',
+            'password_confirmation' => 'nullable|string|min:8',
             'cader' => 'required|string|max:255',
             'designation' => 'required|string|max:255',
             'batch' => 'required|integer',
