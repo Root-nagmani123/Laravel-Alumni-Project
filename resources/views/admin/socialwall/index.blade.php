@@ -30,64 +30,105 @@
     @if(session('success'))
     <div class="alert alert-success">{{ session('success') }}</div>
     @endif
-     @php use Illuminate\Support\Str; @endphp
+    @php use Illuminate\Support\Str; @endphp
 
-                    @foreach($groupedPosts as $post)
-                    <div class="card rounded" id="feed-{{ $post['post_id'] }}">
-                                <div class="card-header">
-                                    <div class="d-flex align-items-center gap-6">
-                                        @php
-                                        $profilePath = public_path('storage/' .
-                                        $post['member_profile_pic']);
-                                        $profilePic = !empty( $post['member_profile_pic']) &&
-                                        file_exists($profilePath)
-                                        ? asset('storage/' . $post['member_profile_pic'])
-                                        : asset('feed_assets/images/avatar-7.png');
-                                        @endphp
+    @foreach($groupedPosts as $post)
+    <div class="card rounded" id="feed-{{ $post['post_id'] }}">
+        <div class="card-header">
+            <div class="d-flex align-items-center gap-6">
+                @php
+                $profilePath = public_path('storage/' .
+                $post['member_profile_pic']);
+                $profilePic = !empty( $post['member_profile_pic']) &&
+                file_exists($profilePath)
+                ? asset('storage/' . $post['member_profile_pic'])
+                : asset('feed_assets/images/avatar-7.png');
+                @endphp
 
-                                        <img src="{{ $profilePic }}" alt="prd1" width="48"
-                                            class="rounded">
-                                        <div>
-                                            <h6 class="mb-0">By
-                                                {{ $post['member_name'] }}</h6>
-                                            <span>{{ \Carbon\Carbon::parse($post['created_at'])->format('d-M-Y') }}</span>
-                                        </div>
-                                        <div class="d-flex ms-auto text-end">
-                                            
-                                                <a href="#" data-feed-id="{{ $post['post_id'] }}"
-                                                onclick="delete_feed_model({{ $post['post_id'] }})"
-                                                data-bs-toggle="tooltip" data-bs-placement="top"
-                                                title="Delete this Feed"
-                                                onclick="delete_feed_model({{ $post['post_id'] }})" class=" ms-2 btn btn-sm btn-danger">
-                                                Delete
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
+                <img src="{{ $profilePic }}" alt="prd1" width="48" class="rounded">
+                <div>
+                    <h6 class="mb-0">By
+                        {{ $post['member_name'] }}</h6>
+                    <span>{{ \Carbon\Carbon::parse($post['created_at'])->format('d-M-Y') }}</span>
+                </div>
+                <div class="d-flex ms-auto text-end">
 
-                                <div class="card-body">
-                                    @if(!empty($post['content']))
-                                    <p class="mb-3 tx-14">{{ $post['content'] }}</p>
-                                    @endif
+                    <a href="#" data-feed-id="{{ $post['post_id'] }}"
+                        onclick="delete_feed_model({{ $post['post_id'] }})" data-bs-toggle="tooltip"
+                        data-bs-placement="top" title="Delete this Feed"
+                        onclick="delete_feed_model({{ $post['post_id'] }})" class=" ms-2 btn btn-sm btn-danger">
+                        Delete
+                    </a>
+                </div>
+            </div>
+        </div>
 
-                                    @if($post['media']->isNotEmpty())
-                                    <div class="row">
-                                        @foreach($post['media'] as $media)
-                                        <div class="col-md-4 mb-3">
-                                            @if(Str::startsWith($media['file_type'], 'image'))
-                                            <img src="{{ asset('storage/' . $media['file_path']) }}"
-                                                class="img-fluid rounded" />
-                                            @else
-                                            <a href="{{ asset('storage/' . $media['file_path']) }}" target="_blank">View
-                                                File</a>
-                                            @endif
-                                        </div>
-                                        @endforeach
-                                    </div>
-                                    @endif
-                                </div>
+        <div class="card-body">
+            @if(!empty($post['content']))
+            <p class="mb-3 tx-14">{{ $post['content'] }}</p>
+            @endif
+
+            @if($post['media']->isNotEmpty())
+            <div class="row">
+                @foreach($post['media'] as $media)
+                <div class="col-md-2 mb-3">
+                    @if(Str::startsWith($media['file_type'], 'image'))
+                    <img src="{{ asset('storage/' . $media['file_path']) }}" class="img-fluid rounded"  style="width: 200px; object-fit: cover;height: 200px;"/>
+                    @else
+                    <a href="{{ asset('storage/' . $media['file_path']) }}" target="_blank">View
+                        File</a>
+                    @endif
+                </div>
+                @endforeach
+            </div>
+            @endif
+        </div>
+        <!-- Comments Section -->
+        <div class="card-footer border-top">
+            <div class="d-flex gap-2">
+                <h6>Likes (2)</h6>
+            <h6 class="mb-3">Comments (2)</h6>
+            </div>
+            <div class="d-flex mb-3">
+                <img src="https://i.pinimg.com/originals/00/28/c7/0028c71f6fe9fce5f87d117f5c5aeeee.jpg" alt="commenter" width="36" height="36" class="rounded me-2">
+                <div class="bg-light rounded p-2 w-100">
+                    <strong>Nibhash Mishra</strong>
+                    <span
+                        class="text-muted float-end" style="font-size:12px;">19th July, 2025</span>
+                    <p class="mb-1">Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis accusantium accusamus facilis dolorum dolore dolorem eaque, ea exercitationem praesentium mollitia. Necessitatibus, dignissimos reiciendis quasi temporibus ad autem repudiandae adipisci amet?</p>
+
+                    {{-- Replies --}}
+                    
+                    <div class="ms-4 border-start ps-3">
+                       
+                        <div class="d-flex mt-2">
+                            <img src="https://i.pinimg.com/originals/00/28/c7/0028c71f6fe9fce5f87d117f5c5aeeee.jpg" alt="replier" width="32"  height="32" class="rounded me-2">
+                            <div class="bg-white rounded p-2 w-100 border">
+                                <strong>Mayank Mishra</strong>
+                                <span
+                                    class="text-muted float-end" style="font-size:12px;">19th July, 2025</span>
+                                <p class="mb-0">Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis accusantium accusamus facilis dolorum dolore dolorem eaque, ea exercitationem praesentium mollitia. Necessitatibus, dignissimos reiciendis quasi temporibus ad autem repudiandae adipisci amet?</p>
                             </div>
-                    @endforeach
+                        </div>
+                    </div>
+                    <div class="ms-4 border-start ps-3">
+                       
+                        <div class="d-flex mt-2">
+                            <img src="https://i.pinimg.com/originals/00/28/c7/0028c71f6fe9fce5f87d117f5c5aeeee.jpg" alt="replier" width="32"  height="32" class="rounded me-2">
+                            <div class="bg-white rounded p-2 w-100 border">
+                                <strong>Mayank Mishra</strong>
+                                <span
+                                    class="text-muted float-end" style="font-size:12px;">19th July, 2025</span>
+                                <p class="mb-0">Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis accusantium accusamus facilis dolorum dolore dolorem eaque, ea exercitationem praesentium mollitia. Necessitatibus, dignissimos reiciendis quasi temporibus ad autem repudiandae adipisci amet?</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    @endforeach
 
 
 
