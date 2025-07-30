@@ -320,9 +320,12 @@ Route::get('/user_login', function () {
         Route::get('/user/forum', function () {
             return view('user.forum');
         })->name('user.forum');
-        // Route::get('/user/change_password', function () {
-        //     return view('user.change_password');
-        // })->name('user.change_password');
+        Route::get('/user/group', function () {
+            return view('user.groups');
+        })->name('user.groups');
+        Route::get('/user/mentor-mentee', function () {
+            return view('user.mentor_mentee');
+        })->name('user.mentor_mentee');
 
 require __DIR__.'/auth.php';
 
