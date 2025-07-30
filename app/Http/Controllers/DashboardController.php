@@ -29,6 +29,9 @@ use App\Models\DashboardModel;
 use App\Models\Forum;
 use App\Models\Member;
 use App\Models\Topic;
+use App\Models\Group;
+use App\Models\Events;
+use App\Models\Broadcast;
 use Carbon\Carbon;
 
 
@@ -68,6 +71,9 @@ class DashboardController extends Controller
         $members = Member::all();
         //$forums = Forum::all();
         $forums = Forum::where('status', 1)->get();
+        $groups = Group::where('status', 1)->get();
+        $events = Events::where('status', 1)->get();
+        $broadcasts = Broadcast::where('status', 1)->get();
 
         // topics created in the last 7 days
         $currentTopics = Topic::where('created_date', '>=', Carbon::now()->subDays(7))->get();
@@ -78,11 +84,13 @@ class DashboardController extends Controller
         ])->get();
 
 
-
         $topics = Topic::with('member')->get(); // all topics
 
         $total_user = $members->count();
         $total_forums = $forums->count();
+        $total_groups = $groups->count();
+        $total_events = $events->count();
+        $total_broadcasts = $broadcasts->count();
         $total_topics = $topics->count();
         $userData = $topics;
 
@@ -101,9 +109,15 @@ class DashboardController extends Controller
         return view('admin.dashboard', compact(
             'members',
             'forums',
+            'groups',
+            'events',
+            'broadcasts',
             'topics',
             'total_user',
             'total_forums',
+            'total_groups',
+            'total_events',
+            'total_broadcasts',
             'total_topics',
             'topicChangePercent',
              'userData'

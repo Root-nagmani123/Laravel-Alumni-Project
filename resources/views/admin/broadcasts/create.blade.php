@@ -54,10 +54,10 @@
                     </div>
 					 <div class="col-md-12">
                         <div class="mb-3">
-                            <label class="form-label" for="content">Image :</label>
-                           <div class="mb-3">
-                           <input id="file-upload" multiple="" data-max-file-size="3MB" data-max-files="10" type="file" name="images[]" accept="image/*" class="form-control">
-                           </div>
+                            <label class="form-label" for="content">Image<span class="text-danger">*</span>:</label>
+                            <div class="mb-3">
+                                <input id="file-upload" multiple data-max-file-size="3MB" data-max-files="10" type="file" name="images[]" accept="image/*" class="form-control" required>
+                            </div>
                         </div>
                     </div>
 					 <div class="col-md-12">

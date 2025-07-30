@@ -112,7 +112,7 @@
 
     $(document).ready(function () {
         // AJAX: Toggle Events status
-        $('.status-toggle').change(function () {
+        $(document).on('change', '.status-toggle', function () {
             let status = $(this).prop('checked') ? 1 : 0;
             let rsvpId = $(this).data('id');
 

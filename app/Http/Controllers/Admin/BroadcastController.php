@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Broadcast;
+use App\Models\Notification;
 use Illuminate\Support\Facades\Storage;
 use App\Services\NotificationService;
 use App\Models\Member;
@@ -30,7 +31,7 @@ class BroadcastController extends Controller
     $validated = $request->validate([
         'title' => 'required|string|max:255',
         'content' => 'required|string',
-        'images.*' => 'nullable|image|max:3072', // 3MB per file
+        'images.*' => 'required|image|max:3072', // 3MB per file
         'video_url' => 'nullable|url',
     ]);
 

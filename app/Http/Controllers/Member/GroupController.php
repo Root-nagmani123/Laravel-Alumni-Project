@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\GroupRequest;
 use App\Services\GroupService;
 use Illuminate\Http\RedirectResponse;
+use App\Models\Group;
 
 
 class GroupController extends Controller
@@ -40,7 +41,7 @@ class GroupController extends Controller
                 'group' => $group
             ]);
         }
-        return redirect()->route('member.groups.index')->with('success', 'Group created successfully.');
+        return redirect()->back()->with('success', 'Group created successfully.');
     }
 
     public function edit(Group $group)

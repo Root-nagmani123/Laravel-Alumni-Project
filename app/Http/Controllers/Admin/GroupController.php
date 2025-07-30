@@ -72,19 +72,37 @@ class GroupController extends Controller
     }
     public function edit(Group $group)
     {
-        return view('admin.group.edit', compact('group'));
+        $users = Member::all();
+        $group->load('groupMember');
+        return view('admin.group.edit', compact('group', 'users'));
     }
     public function update(Request $request, Group $group)
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'state_id' => 'nullable|integer',
+            'mentor_id' => 'required|integer',
+            'user_id' => 'required|array',
             'status' => 'nullable|integer',
-            'created_by' => 'nullable|integer',
-            'created_at' => 'nullable|date',
-            'member_type' => 'nullable|integer',
         ]);
-        $group->update($request->all());
+        
+        // Update the group
+        $group->update([
+            'name' => $request->input('name'),
+            'status' => $request->input('status'),
+        ]);
+        
+        // Update or create the group member
+        $groupMember = $group->groupMember;
+        if (!$groupMember) {
+            $groupMember = new GroupMember();
+            $groupMember->group_id = $group->id;
+        }
+        
+        $groupMember->mentor = $request->input('mentor_id');
+        $groupMember->mentiee = json_encode($request->input('user_id'));
+        $groupMember->status = $request->input('status');
+        $groupMember->save();
+        
         return redirect()->route('group.index')->with('success', 'Group updated successfully.');
     }
 
