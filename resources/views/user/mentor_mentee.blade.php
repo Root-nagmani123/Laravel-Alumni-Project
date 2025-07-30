@@ -134,7 +134,14 @@
                     <!-- Tab 1: Mentor Form -->
                     <div class="tab-pane fade show active" id="mentor" role="tabpanel">
                         <form>
-                            <div class="mb-3">
+                           <div class="mb-3">
+                                <label class="form-label">Year</label>
+                                <select class="form-select">
+                                    <option selected disabled>Select Year</option>
+                                    
+                                </select>
+                            </div>
+                             <div class="mb-3">
                                 <label class="form-label">Cadre</label>
                                 <select class="form-select">
                                     <option selected disabled>Select Cadre</option>
@@ -142,11 +149,12 @@
                                     <option value="IPS">IPS</option>
                                 </select>
                             </div>
-                            <div class="mb-3">
-                                <label class="form-label">Year</label>
+                             <div class="mb-3">
+                                <label class="form-label">Sector</label>
                                 <select class="form-select">
-                                    <option selected disabled>Select Year</option>
-                                    
+                                    <option selected disabled>Select Cadre</option>
+                                    <option value="IAS">IAS</option>
+                                    <option value="IPS">IPS</option>
                                 </select>
                             </div>
                             <div class="mb-3">
@@ -163,6 +171,13 @@
                     <div class="tab-pane fade" id="mentee" role="tabpanel">
                         <form>
                             <div class="mb-3">
+                                <label class="form-label">Year</label>
+                                <select class="form-select">
+                                    <option selected disabled>Select Year</option>
+                                    
+                                </select>
+                            </div>
+                             <div class="mb-3">
                                 <label class="form-label">Cadre</label>
                                 <select class="form-select">
                                     <option selected disabled>Select Cadre</option>
@@ -170,11 +185,12 @@
                                     <option value="IPS">IPS</option>
                                 </select>
                             </div>
-                            <div class="mb-3">
-                                <label class="form-label">Year</label>
+                             <div class="mb-3">
+                                <label class="form-label">Sector</label>
                                 <select class="form-select">
-                                    <option selected disabled>Select Year</option>
-                                    
+                                    <option selected disabled>Select Cadre</option>
+                                    <option value="IAS">IAS</option>
+                                    <option value="IPS">IPS</option>
                                 </select>
                             </div>
                             <div class="mb-3">
@@ -196,11 +212,13 @@
                                     <th>Name</th>
                                     <th>Cadre</th>
                                     <th>Year</th>
+                                    <th>Sector</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
+                                    <td></td>
                                     <td></td>
                                     <td></td>
                                     <td></td>
@@ -222,11 +240,13 @@
                                     <th>Name</th>
                                     <th>Cadre</th>
                                     <th>Year</th>
+                                    <th>Sector</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
+                                    <td></td>
                                     <td></td>
                                     <td></td>
                                     <td></td>

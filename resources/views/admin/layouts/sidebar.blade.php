@@ -80,6 +80,12 @@
                                 <span class="icon-small"></span> Events
                             </a>
                         </li>
+                         <li class="sidebar-item">
+                            <a class="sidebar-link" href="{{ route('admin.mentorship.index') }}">
+                                <iconify-icon icon="solar:document-bold-duotone"></iconify-icon>
+                                <span class="icon-small"></span> Mentorship Programme
+                            </a>
+                        </li>
                         <li class="sidebar-item">
                             <a class="sidebar-link has-arrow" href="javascript:void(0)" aria-expanded="false">
                                 <iconify-icon icon="solar:map-point-wave-bold-duotone"></iconify-icon>

@@ -353,6 +353,15 @@ Route::get('/user_login', function () {
         Route::get('/user/mentor-mentee', function () {
             return view('user.mentor_mentee');
         })->name('user.mentor_mentee');
+          Route::get('/admin/mentorship', function () {
+            return view('admin.mentorship.index');
+        })->name('admin.mentorship.index');
+        Route::get('/admin/mentorship/create', function () {
+            return view('admin.mentorship.create');
+        })->name('admin.mentorship.create');
+         Route::get('/admin/mentorship/edit', function () {
+            return view('admin.mentorship.edit');
+        })->name('admin.mentorship.edit');
 
 require __DIR__.'/auth.php';
 
