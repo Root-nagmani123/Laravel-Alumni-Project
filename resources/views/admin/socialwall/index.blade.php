@@ -65,7 +65,18 @@
 
         <div class="card-body">
             @if(!empty($post['content']))
-            <p class="mb-3 tx-14">{{ $post['content'] }}</p>
+            @php
+    $words = str_word_count(strip_tags($post['content']), 1);
+    $wordCount = count($words);
+    $contentPreview = implode(' ', array_slice($words, 0, 100));
+@endphp
+
+<p class="mb-3 tx-14">
+    {!! $wordCount > 100 ? '<span class="short-content" id="short-'.$post['post_id'].'">' . $contentPreview . '...</span>
+    <span class="full-content d-none" id="full-'.$post['post_id'].'">' . $post['content'] . '</span>
+    <a href="javascript:void(0);" class="text-primary read-toggle" data-post-id="'.$post['post_id'].'">Read more</a>' : $post['content'] !!}
+</p>
+
             @endif
 
             @if($post['media']->isNotEmpty())
@@ -168,5 +179,27 @@
         }
     }
     </script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.read-toggle').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                const postId = this.getAttribute('data-post-id');
+                const shortContent = document.getElementById('short-' + postId);
+                const fullContent = document.getElementById('full-' + postId);
+
+                if (fullContent.classList.contains('d-none')) {
+                    shortContent.classList.add('d-none');
+                    fullContent.classList.remove('d-none');
+                    this.textContent = 'Read less';
+                } else {
+                    shortContent.classList.remove('d-none');
+                    fullContent.classList.add('d-none');
+                    this.textContent = 'Read more';
+                }
+            });
+        });
+    });
+</script>
+
 
     @endsection
