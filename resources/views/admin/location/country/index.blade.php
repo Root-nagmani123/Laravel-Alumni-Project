@@ -113,7 +113,7 @@
 <script>
     $(document).ready(function () {
         // AJAX: Toggle country status with confirmation
-        $('.status-toggle').change(function (e) {
+        $(document).on('change', '.status-toggle', function (e) {
             let checkbox = $(this);
             let countryId = checkbox.data('id');
             let currentState = checkbox.prop('checked');

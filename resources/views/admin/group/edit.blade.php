@@ -5,29 +5,8 @@
 @section('content')
 
 <div class="container-fluid">
-    <div class="card card-body py-3">
-        <div class="row align-items-center">
-            <div class="col-12">
-                <div class="d-sm-flex align-items-center justify-space-between">
-                    <h4 class="mb-4 mb-sm-0 card-title">Edit Group</h4>
-                    <nav aria-label="breadcrumb" class="ms-auto">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item d-flex align-items-center">
-                                <a class="text-muted text-decoration-none d-flex" href="index.html">
-                                    <iconify-icon icon="solar:home-2-line-duotone" class="fs-6"></iconify-icon>
-                                </a>
-                            </li>
-                            <li class="breadcrumb-item" aria-current="page">
-                                <span class="badge fw-medium fs-2 bg-primary-subtle text-primary">
-                                    Group
-                                </span>
-                            </li>
-                        </ol>
-                    </nav>
-                </div>
-            </div>
-        </div>
-    </div>
+    <x-breadcrum title="Group" />
+    <x-session_message />
     <!-- start Vertical Steps Example -->
     <div class="card">
         <div class="card-body">
@@ -41,6 +20,44 @@
                         <div class="mb-3">
                             <label class="form-label">Name</label>
                             <input type="text" name="name" class="form-control" value="{{ $group->name }}" required>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="mb-3">
+                            <label class="form-label">Mentor Name</label>
+                            <select name="mentor_id" class="form-control" required>
+                                <option value="">Select Mentor</option>
+                                @foreach($users as $user)
+                                <option value="{{ $user->id }}" {{ $group->groupMember && $group->groupMember->mentor == $user->id ? 'selected' : '' }}>
+                                    {{ $user->name }}
+                                </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="mb-3">
+                            <label class="form-label">Member Name (Multiple Mentees)<span class="text-danger">*</span></label>
+                            <select name="user_id[]" class="form-control js-example-basic-multiple"  multiple="multiple" required>
+                                @php
+                                    $selectedMentees = [];
+                                    $currentMentor = null;
+                                    if ($group->groupMember && $group->groupMember->mentiee) {
+                                        $selectedMentees = json_decode($group->groupMember->mentiee, true);
+                                    }
+                                    if ($group->groupMember && $group->groupMember->mentor) {
+                                        $currentMentor = $group->groupMember->mentor;
+                                    }
+                                @endphp
+                                @foreach($users as $user)
+                                    @if($user->id != $currentMentor)
+                                    <option value="{{ $user->id }}" {{ in_array($user->id, $selectedMentees) ? 'selected' : '' }}>
+                                        {{ $user->name }}
+                                    </option>
+                                    @endif
+                                @endforeach
+                            </select>
+
                         </div>
                     </div>
                     <div class="col-6">
@@ -75,3 +92,25 @@
 
 
 @endsection
+
+<script>
+$(document).ready(function() {
+    $('.js-example-basic-multiple').select2(); // Initialize Select2 for multiple select
+    $('.form-select').select2(); // Initialize Select2 for single select
+    
+    // Filter out mentor from mentees dropdown
+    $('select[name="mentor_id"]').on('change', function() {
+        var selectedMentor = $(this).val();
+        var menteesSelect = $('.js-example-basic-multiple');
+        
+        // Reset mentees selection
+        menteesSelect.val(null).trigger('change');
+        
+        // Hide the mentor option from mentees dropdown
+        menteesSelect.find('option').show();
+        if (selectedMentor) {
+            menteesSelect.find('option[value="' + selectedMentor + '"]').hide();
+        }
+    });
+});
+</script>

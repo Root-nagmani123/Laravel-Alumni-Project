@@ -8,7 +8,7 @@
         <div class="row align-items-center">
             <div class="col-12">
                 <div class="d-sm-flex align-items-center justify-space-between">
-                    <h4 class="mb-4 mb-sm-0 card-title">Topics in: {{ $pageName }}</h4>
+                    <h4 class="mb-4 mb-sm-0 card-title">Topics in: {{ $group->name ?? '' }}</h4>
                     <nav aria-label="breadcrumb" class="ms-auto">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item d-flex align-items-center">
@@ -272,7 +272,7 @@
     <script>
     $(document).ready(function() {
         // AJAX: Toggle member status with confirmation
-        $('.status-toggle').change(function(e) {
+        $(document).on('change', '.status-toggle', function(e) {
             let checkbox = $(this);
             let status = checkbox.prop('checked') ? 1 : 0;
             let topicId = checkbox.data('id');

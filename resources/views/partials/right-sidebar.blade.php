@@ -103,7 +103,7 @@
 <!-- Group Modal -->
 <div class="modal fade" id="groupModal" tabindex="-1" aria-labelledby="groupModalLabel" aria-hidden="true">
   <div class="modal-dialog">
-    <form id="groupForm" action="{{ route('group.store') }}" method="POST">
+    <form id="groupForm" action="{{ route('user.group.store') }}" method="POST">
       @csrf
       <div class="modal-content">
         <div class="modal-header bg-danger text-white">
@@ -197,7 +197,9 @@ function memberSelector() {
         modal.addEventListener('show.bs.modal', function (event) {
             const button = event.relatedTarget;
             const groupName = button.getAttribute('data-group-name');
+            console.log(groupName);
            const groupId = button.getAttribute('data-group-id');
+           console.log(groupId);
 
 
         // Set hidden input value

@@ -18,4 +18,8 @@ class Group extends Model
          'name', 'state_id', 'status', 'created_by', 'member_type'
     ];
 	
+	public function groupMember()
+    {
+        return $this->hasOne(GroupMember::class);
+    }
 }

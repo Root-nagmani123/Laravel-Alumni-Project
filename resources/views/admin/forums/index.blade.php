@@ -174,7 +174,7 @@
 
 <script>
 // AJAX to Update the status
-$('.status-toggle').change(function () {
+$(document).on('change', '.status-toggle', function () {
     let checkbox = $(this);
     let status = checkbox.prop('checked') ? 1 : 0;
     let forumId = checkbox.data('id');
