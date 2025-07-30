@@ -264,7 +264,6 @@
                 </li>
 
 
-
                 <li class="nav-item">
                     <a class="nav-link" href="#!">
                         <i class="bi bi-chat-fill pe-1"></i>Comments
@@ -332,7 +331,7 @@
                                 <div class="d-flex justify-content-between">
                                     <h6 class="mb-1"> <a href="#!"> {{ $comment->member->name ?? 'Anonymous' }} </a>
                                     </h6>
-                                    <small class="ms-2">{{ $comment->created_at->diffForHumans() }}</small>
+                                    <small class="ms-2">{{$comment->created_at->diffForHumans()}}</small>
                                 </div>
                                 <p class="small mb-0" id="comment-text-{{ $comment->id }}">{{ $comment->comment }}</p>
                             </div>

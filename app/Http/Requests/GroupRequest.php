@@ -22,9 +22,9 @@ class GroupRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255',
-            'user_id' => 'required|array|min:1',
-            'user_id.*' => 'exists:members,id',
+            'group_name' => 'required|string|max:255',
+            'member_ids' => 'required|array|min:1',
+            'member_ids.*' => 'exists:members,id',
             'status' => 'nullable|in:0,1'
         ];
     }
@@ -32,9 +32,9 @@ class GroupRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'name.required' => ' Group Name is required.',
-            'user_id.required' => 'At least one user is required.',
-            'user_id.*.exists' => 'One or more selected users do not exist.',
+            'group_name.required' => 'Group Name is required.',
+            'member_ids.required' => 'At least one member is required.',
+            'member_ids.*.exists' => 'One or more selected members do not exist.',
             'status.in' => 'Invalid status value.',
         ];
     }

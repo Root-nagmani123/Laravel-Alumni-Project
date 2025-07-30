@@ -113,7 +113,7 @@
 <script>
     $(document).ready(function () {
         // AJAX: Toggle state status with confirmation
-        $('.status-toggle').change(function (e) {
+        $(document).on('change', '.status-toggle', function (e) {
             let checkbox = $(this);
             let currentState = checkbox.prop('checked');
             let stateId = checkbox.data('id');

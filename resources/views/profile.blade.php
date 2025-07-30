@@ -61,10 +61,12 @@
                                    data-bs-target="#editProfileModal">
                                    <i class="bi bi-pencil-fill pe-1"></i> Edit profile
                                </button>-->
+                            @if(Auth::guard('user')->check() && Auth::guard('user')->id() == $user->id)
                             <button type="button" class="btn btn-danger-soft me-2" data-bs-toggle="modal"
                                 data-bs-target="#editProfileModal">
                                 <i class="bi bi-pencil-fill pe-1"></i> Edit profile
                             </button>
+                            @endif
                         </div>
                         <!-- modal for edit profile -->
 

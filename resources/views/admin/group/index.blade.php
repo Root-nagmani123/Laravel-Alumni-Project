@@ -137,7 +137,7 @@
 
     $(document).ready(function () {
     // AJAX: Toggle member status with confirmation
-    $('.status-toggle').change(function (e) {
+    $(document).on('change', '.status-toggle', function (e) {
         let checkbox = $(this);
         let status = checkbox.prop('checked') ? 1 : 0;
         let groupId = checkbox.data('id');

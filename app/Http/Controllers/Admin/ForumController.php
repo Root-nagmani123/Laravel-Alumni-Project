@@ -219,6 +219,7 @@ class ForumController extends Controller
 
        $topics = ForumTopic::where('forum_id', $id)
     ->where('created_by', session('LoginID'))
+    ->orderBy('id', 'desc')
     ->with('creator')
     ->get();
 

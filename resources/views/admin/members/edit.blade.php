@@ -56,6 +56,9 @@
                                     <label class="form-label">Mobile<span class="required text-danger text-danger" >*</span></label>
                                     <input type="text" name="mobile" class="form-control"
                                         value="{{ old('mobile', $member->mobile) }}">
+                                    @error('mobile')
+                                    <div class="text-danger">{{ $message }}</div>
+                                    @enderror
                                 </div>
                             </div>
                             <div class="col-6">
@@ -81,7 +84,7 @@
                                 <div class="mb-3">
                                     <label class="form-label">Confirm Password</label>
                                     <input type="password" name="password_confirmation" class="form-control">
-                                     @error('password_confirmation')
+                                    @error('password_confirmation')
                                     <div class="text-danger">{{ $message }}</div>
                                     @enderror
                                 </div>
@@ -91,6 +94,9 @@
                                     <label class="form-label">Cadre<span class="required text-danger text-danger" >*</span></label>
                                     <input type="text" name="cader" class="form-control"
                                         value="{{ old('cadre', $member->cader) }}">
+                                    @error('cader')
+                                    <div class="text-danger">{{ $message }}</div>
+                                    @enderror
                                 </div>
                             </div>
                             <div class="col-6">
@@ -98,6 +104,9 @@
                                     <label class="form-label">Designation<span class="required text-danger text-danger" >*</span></label>
                                     <input type="text" name="designation" class="form-control"
                                         value="{{ old('designation', $member->designation) }}">
+                                    @error('designation')
+                                    <div class="text-danger">{{ $message }}</div>
+                                    @enderror
                                 </div>
                             </div>
                             <div class="col-6">
@@ -105,6 +114,9 @@
                                     <label class="form-label">Batch<span class="required text-danger text-danger" >*</span></label>
                                     <input type="number" name="batch" class="form-control"
                                         value="{{ old('batch', $member->batch) }}">
+                                    @error('batch')
+                                    <div class="text-danger">{{ $message }}</div>
+                                    @enderror
                                 </div>
                             </div>
                         </div>

@@ -31,7 +31,7 @@ class BroadcastController extends Controller
     $validated = $request->validate([
         'title' => 'required|string|max:255',
         'content' => 'required|string',
-        'images.*' => 'nullable|image|max:3072', // 3MB per file
+        'images.*' => 'required|image|max:3072', // 3MB per file
         'video_url' => 'nullable|url',
     ]);
 

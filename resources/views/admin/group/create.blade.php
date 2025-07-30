@@ -39,7 +39,6 @@
                         <div class="mb-3">
                             <label class="form-label">Member Name (Multiple Mentees) <span class="text-danger">*</span></label>
                             <select name="user_id[]" class="form-control js-example-basic-multiple"  multiple="multiple" required>
-
                                 @foreach($users as $user)
                                 <option value="{{ $user->id }}">{{ $user->name }}</option>
                                 @endforeach
@@ -76,6 +75,22 @@
 <script>
 $(document).ready(function() {
     $('.form-select').select2(); // Initialize Select2
+    $('.js-example-basic-multiple').select2(); // Initialize Select2 for multiple select
+    
+    // Filter out mentor from mentees dropdown
+    $('#searchable-select').on('change', function() {
+        var selectedMentor = $(this).val();
+        var menteesSelect = $('.js-example-basic-multiple');
+        
+        // Reset mentees selection
+        menteesSelect.val(null).trigger('change');
+        
+        // Hide the mentor option from mentees dropdown
+        menteesSelect.find('option').show();
+        if (selectedMentor) {
+            menteesSelect.find('option[value="' + selectedMentor + '"]').hide();
+        }
+    });
 });
 </script>
 @endsection

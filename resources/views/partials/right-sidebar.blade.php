@@ -844,15 +844,14 @@
 
 <!-- Group Modal -->
 <div class="modal fade" id="groupModal" tabindex="-1" aria-labelledby="groupModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <form id="groupForm" action="{{ route('group.store') }}" method="POST">
-            @csrf
-            <div class="modal-content">
-                <div class="modal-header bg-danger text-white">
-                    <h5 class="modal-title text-white" id="groupModalLabel">Create Group</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
-                        aria-label="Close"></button>
-                </div>
+  <div class="modal-dialog">
+    <form id="groupForm" action="{{ route('user.group.store') }}" method="POST">
+      @csrf
+      <div class="modal-content">
+        <div class="modal-header bg-danger text-white">
+          <h5 class="modal-title text-white" id="groupModalLabel">Create Group</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
 
                 <div class="modal-body">
                     <div class="mb-3">
@@ -931,12 +930,14 @@
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const modal = document.getElementById('groupActionpost');
-    modal.addEventListener('show.bs.modal', function(event) {
-        const button = event.relatedTarget;
-        const groupName = button.getAttribute('data-group-name');
-        const groupId = button.getAttribute('data-group-id');
+	 document.addEventListener('DOMContentLoaded', function () {
+        const modal = document.getElementById('groupActionpost');
+        modal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
+            const groupName = button.getAttribute('data-group-name');
+            console.log(groupName);
+           const groupId = button.getAttribute('data-group-id');
+           console.log(groupId);
 
 
         // Set hidden input value

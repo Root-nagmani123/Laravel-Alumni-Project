@@ -128,7 +128,7 @@
         });
 
         // AJAX: Toggle city status with confirmation
-        $('.status-toggle').change(function (e) {
+        $(document).on('change', '.status-toggle', function (e) {
             let checkbox = $(this);
             let currentState = checkbox.prop('checked');
             let cityId = checkbox.data('id');
