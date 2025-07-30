@@ -72,8 +72,11 @@ Route::get('/db-check', function () {
     ];
 });
 
-Route::redirect('/', '/user/login');
+
 Route::redirect('/login', '/user/login');
+Route::get('/', function () {
+    return redirect('/user/login');
+});
 
 Route::prefix('user')->name('user.')->group(function () {
     Route::middleware('guest:user')->group(function () {
