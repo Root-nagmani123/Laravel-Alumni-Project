@@ -26,6 +26,7 @@ use Illuminate\Support\Facades\Config;
 
 use App\Http\Controllers\Member\ChangePasswordController;
 use App\Http\Controllers\Member\GroupController as MemberGroupController;
+use App\Http\Controllers\Member\GroupController as MemberGroupController;
 
 Route::resource('post', PostController::class);
 
