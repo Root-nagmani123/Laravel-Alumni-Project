@@ -22,17 +22,28 @@ class CommentController extends Controller
         'comment' => strip_tags($request->comment),
     ]);
 
-    if ($request->ajax()) {
+   /* if ($request->ajax()) {
         return response()->json([
             'status' => 'success',
             'message' => 'Comment added successfully!',
             'comment' => $comment
         ]);
     }
-
     return back();
-   // return back()->with('success', 'Commentss added successfully!');
-    }
+    */
+    if ($request->ajax()) {
+    return response()->json([
+        'status' => 'success',
+        'message' => 'Comment added successfully!',
+        'comment' => $comment->comment,
+        'member_name' => $comment->member->name ?? 'You',
+        'created_at' => $comment->created_at->diffForHumans(),
+    ]);
+}
+
+return back()->with('success', 'Comment added successfully!');
+
+}
 
    public function update(Request $request, $id)
     {

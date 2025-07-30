@@ -290,11 +290,16 @@
                             src="{{asset('storage/'.$user->profile_pic)}}" alt=""> </a>
                 </div>
                 <!-- Comment box  -->
-                <form class="nav nav-item w-100 position-relative" id="commentForm-{{ $post->id }}"
-                    action="{{ route('user.comments.store') }}" method="POST" data-post-id="{{ $post->id }}">
+                <!--<form class="nav nav-item w-100 position-relative" id="commentForm-{{-- $post->id --}}"
+                    action="{{-- route('user.comments.store') --}}" method="POST" data-post-id="{{-- $post->id --}}">-->
+                <form class="commentForm nav nav-item w-100 position-relative" id="commentForm-{{ $post->id }}"
+    action="{{ route('user.comments.store') }}" method="POST" data-post-id="{{ $post->id }}">
+
                     @csrf
-                    <textarea name="comment" data-autoresize class="form-control pe-5 bg-light" rows="1"
-                        placeholder="Add a comment..." id="comments-{{ $post->id }}"></textarea>
+                    <!--<textarea name="comment" data-autoresize class="form-control pe-5 bg-light" rows="1"
+                        placeholder="Add a comment..." id="comments-{{-- $post->id --}}"></textarea>-->
+                        <textarea name="comment" class="commentInput form-control pe-5 bg-light" rows="1"
+    placeholder="Add a comment..." id="comments-{{ $post->id }}"></textarea>
                     <input type="hidden" name="post_id" value="{{ $post->id }}">
                     <button
                         class="nav-link bg-transparent px-3 position-absolute top-50 end-0 translate-middle-y border-0"
@@ -302,7 +307,7 @@
                         <i class="bi bi-send-fill"></i>
                     </button>
                 </form>
-
+          <div class="comment-error text-danger small mt-1"></div>
             </div>
             <ul class="comment-wrap list-unstyled">
                 <!-- Comment item START -->
@@ -1026,6 +1031,7 @@ $('#editPostForm').on('submit', function(e) {
 
 
 $(document).ready(function () {
+    //$('.commentForm').on('submit', function (e) {
     $('.commentForm').on('submit', function (e) {
         e.preventDefault();
 
