@@ -89,9 +89,9 @@ class ProfileController extends Controller
         'undergrad_college'  => 'required|string|max:255',
         'undergrad_degree'   => 'required|string|max:255',
         'undergrad_year'     => "required|integer|min:1900|max:$currentYear",
-        'postgrad_college'   => 'required|string|max:255',
-        'postgrad_degree'    => 'required|string|max:255',
-        'postgrad_year'      => "required|integer|min:1900|max:$currentYear",
+        'postgrad_college'   => 'nullable|string|max:255',
+        'postgrad_degree'    => 'nullable|string|max:255',
+        'postgrad_year'      => "nullable|integer|min:1900|max:$currentYear",
     ]);
 
         $user = Member::findOrFail($id);
