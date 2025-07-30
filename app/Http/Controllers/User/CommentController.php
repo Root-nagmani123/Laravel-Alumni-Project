@@ -79,6 +79,23 @@ public function loadComments($postId)
             ->get();
 
         return response()->json(['comments' => $comments]);
+
+        /*return response()->json([
+    'comments' => $comments->map(function ($comment) {
+        return [
+            'id' => $comment->id,
+            'comment' => e($comment->comment),
+            'member_id' => $comment->member_id,
+            'created_at_human' => $comment->created_at->diffForHumans(),
+            'member' => $comment->member ? [
+                'name' => $comment->member->name,
+                'profile_pic' => $comment->member->profile_pic,
+            ] : null,
+        ];
+    }),
+    'authUserId' => auth()->guard('user')->id(),
+]);
+*/
     }
 
 }

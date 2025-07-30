@@ -72,8 +72,11 @@ Route::get('/db-check', function () {
     ];
 });
 
-Route::redirect('/', '/user/login');
+
 Route::redirect('/login', '/user/login');
+Route::get('/', function () {
+    return redirect('/user/login');
+});
 
 Route::prefix('user')->name('user.')->group(function () {
     Route::middleware('guest:user')->group(function () {
@@ -346,9 +349,21 @@ Route::get('/user_login', function () {
         Route::get('/user/forum', function () {
             return view('user.forum');
         })->name('user.forum');
-        // Route::get('/user/change_password', function () {
-        //     return view('user.change_password');
-        // })->name('user.change_password');
+        Route::get('/user/group', function () {
+            return view('user.groups');
+        })->name('user.groups');
+        Route::get('/user/mentor-mentee', function () {
+            return view('user.mentor_mentee');
+        })->name('user.mentor_mentee');
+          Route::get('/admin/mentorship', function () {
+            return view('admin.mentorship.index');
+        })->name('admin.mentorship.index');
+        Route::get('/admin/mentorship/create', function () {
+            return view('admin.mentorship.create');
+        })->name('admin.mentorship.create');
+         Route::get('/admin/mentorship/edit', function () {
+            return view('admin.mentorship.edit');
+        })->name('admin.mentorship.edit');
 
 require __DIR__.'/auth.php';
 

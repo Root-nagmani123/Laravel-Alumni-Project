@@ -11,8 +11,10 @@ use App\Models\Story;
 use App\Models\Topic;
 use App\Models\Broadcast;
 use App\Models\Member;
+
 use App\Services\NotificationService;
 use App\Models\Group;
+
 
 class FeedController extends Controller
 {
@@ -99,14 +101,12 @@ class FeedController extends Controller
    return view('user.feed', compact('posts','user'));
     }
 
-    public function index()
+   public function index()
     {
-        $user = auth()->guard('user')->user(); // Get logged-in user
+        $user = auth()->guard('user')->user();
         $userId = $user->id;
-
         // Fetch posts with related models
-
-         $stories = Story::where('created_at', '>=', now()->subDay())
+        $stories = Story::where('created_at', '>=', now()->subDay())
                      ->with('user')
                      ->get();
 
@@ -121,7 +121,6 @@ class FeedController extends Controller
         ->where('end_datetime', '>', now())
         ->orderBy('id', 'desc')
         ->get();
-
 
         $forums = DB::table('forums as f')
             ->join('forum_topics as ft', 'ft.forum_id', '=', 'f.id')
@@ -222,11 +221,9 @@ class FeedController extends Controller
            ]);
     }
 
-
     public function search(Request $request)
     {
         $keyword = $request->input('keyword');
-
         $results = Post::where('content', 'like', "%$keyword%")
             ->with('member')
             ->limit(10)
@@ -360,7 +357,7 @@ class FeedController extends Controller
         return view('user.grouppost_details', compact('grouppost_detail'));
     }
 
-    public function getPostByGroup($group_id)
+    public function getPostByGroup_2872025($group_id)
     {
         // $posts = Post::with('member')
          $posts = Post::with(['member', 'media'])
@@ -370,6 +367,24 @@ class FeedController extends Controller
                     // print_r($posts);die;
                   $group = Group::where('id', $group_id)->select('name')->firstOrFail();
                 //   print_r($group);die;
+
+        return view('user.grouppost_details', compact('posts', 'group'));
+    }
+
+    public function getPostByGroup($group_id)
+    {
+        /*$posts = Post::with('member')
+                    ->where('group_id', $group_id)
+                    ->latest()
+                    ->get();
+                    */
+        $posts = Post::with(['member', 'media'])
+            ->where('group_id', $group_id)
+            ->latest()
+            ->get();
+
+
+        $group = Group::find($group_id); // Fetch the group by ID
 
         return view('user.grouppost_details', compact('posts', 'group'));
     }
