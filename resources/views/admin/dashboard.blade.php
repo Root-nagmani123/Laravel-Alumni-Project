@@ -36,21 +36,6 @@
                                             <h4 class="mb-0 text-white mt-1 text-nowrap fs-13 fw-bolder">
                                                 {{ $total_forums }}</h4>
                                         </div>
-                                        <div class="col-6 border-start border-light" style="--bs-border-opacity: .15;">
-                                            <span class="opacity-75"><a href="{{ route('events.index') }}" class="text-white">Events</a></span>
-                                            <h4 class="mb-0 text-white mt-1 text-nowrap fs-13 fw-bolder">
-                                                {{ $total_events }}</h4>
-                                        </div>
-                                        <div class="col-6 border-start border-light" style="--bs-border-opacity: .15;">
-                                            <span class="opacity-75"><a href="{{ route('group.index') }}" class="text-white">Groups</a></span>
-                                            <h4 class="mb-0 text-white mt-1 text-nowrap fs-13 fw-bolder">
-                                                {{ $total_groups }}</h4>
-                                        </div>
-                                        <div class="col-6 border-start border-light" style="--bs-border-opacity: .15;">
-                                            <span class="opacity-75"><a href="{{ route('broadcasts.index') }}" class="text-white">Broadcasts</a></span>
-                                            <h4 class="mb-0 text-white mt-1 text-nowrap fs-13 fw-bolder">
-                                                {{ $total_broadcasts }}</h4>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -68,14 +53,13 @@
                 <!-- -------------------------------------------- -->
                 <!-- Topics -->
                 <!-- -------------------------------------------- -->
-                <div class="col-md-6">
+                <div class="col-md-3">
                     <div class="card bg-secondary-subtle overflow-hidden shadow-none">
                         <div class="card-body p-4">
                             <span class="text-dark-light">Topics</span>
                             <div class="hstack gap-6">
                                 <h5 class="mb-0 fs-7">{{ $total_topics }}</h5>
                               @if (is_null($topicChangePercent))
-                            <span class="fs-11 fw-semibold text-muted">New</span>
                         @else
                             <span class="fs-11 fw-semibold {{ $topicChangePercent < 0 ? 'text-danger' : 'text-success' }}">
                                 {{ $topicChangePercent }}%
@@ -88,7 +72,7 @@
                 <!-- -------------------------------------------- -->
                 <!-- Events -->
                 <!-- -------------------------------------------- -->
-                <div class="col-md-6">
+                <div class="col-md-3">
                     <div class="card bg-success-subtle overflow-hidden shadow-none">
                         <div class="card-body p-4">
                             <span class="text-dark-light">Events</span>
@@ -99,12 +83,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="row mt-3">
-                <!-- -------------------------------------------- -->
-                <!-- Groups -->
-                <!-- -------------------------------------------- -->
-                <div class="col-md-6">
+                <div class="col-md-3">
                     <div class="card bg-info-subtle overflow-hidden shadow-none">
                         <div class="card-body p-4">
                             <span class="text-dark-light">Groups</span>
@@ -118,7 +97,7 @@
                 <!-- -------------------------------------------- -->
                 <!-- Broadcasts -->
                 <!-- -------------------------------------------- -->
-                <div class="col-md-6">
+                <div class="col-md-3">
                     <div class="card bg-danger-subtle overflow-hidden shadow-none">
                         <div class="card-body p-4">
                             <span class="text-dark-light">Broadcasts</span>
