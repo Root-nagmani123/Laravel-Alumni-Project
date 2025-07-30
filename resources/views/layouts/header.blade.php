@@ -32,7 +32,7 @@ Header START -->
             <!-- Main navbar START -->
             <div class="collapse navbar-collapse" id="navbarCollapse">
 
-                <ul class="navbar-nav navbar-nav-scroll justify-content-center flex-grow-1 pe-3 flex-nowrap gap-4">
+                <!-- <ul class="navbar-nav navbar-nav-scroll justify-content-center flex-grow-1 pe-3 flex-nowrap gap-4">
 
                     <li class="nav-item d-flex gap-2 align-items-center">
                         <a class="nav-link bg-light icon-md btn btn-light p-0" href="{{ route('user.profile', ['id' => 1]) }}">
@@ -57,7 +57,21 @@ Header START -->
                         </a>Events
                     </li>
 
-                </ul>
+                </ul> -->
+                <ul class="navbar-nav navbar-nav-scroll mx-auto">
+					<!-- Nav item 1 Demos -->
+					<li class="nav-item">
+                        <a class="nav-link" href="{{ url('user/feed') }}">Feed</a>
+                    </li>
+                    <!-- Nav item 2 Mega menu -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url('user/library') }}">Library</a>
+                    </li>
+                    <!-- Nav item 3 Mega menu -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url('user/events') }}">Events</a>
+                    </li>
+				</ul>
             </div>
             <!-- Main navbar END -->
 
@@ -179,21 +193,6 @@ Header START -->
 						<!-- Links -->
 						<li><a class="dropdown-item" href="{{ route('user.directory') }}"><i class="bi bi-gear-fill fa-fw me-2"></i>Directory</a></li>
 <!-- Dropdown with collapsible Social Media list -->
-<li class="dropdown-submenu">
-  <!-- Toggler item -->
-  <a class="dropdown-item d-flex justify-content-between align-items-center" data-bs-toggle="collapse" href="#socialCollapse" role="button" aria-expanded="false" aria-controls="socialCollapse">
-    <span><i class="bi bi-opencollective fa-fw me-2"></i>Social Media</span>
-    <i class="bi bi-chevron-down small"></i>
-  </a>
-
-  <!-- Collapsible content -->
-  <ul class="list-unstyled ps-4 collapse" id="socialCollapse">
-    <li><a class="dropdown-item" href="{{ $user->facebook }}" target="_blank"><i class="bi bi-facebook me-2"></i>Facebook</a></li>
-    <li><a class="dropdown-item" href="{{ $user->twitter }}" target="_blank"><i class="bi bi-twitter-x me-2"></i>Twitter</a></li>
-    <li><a class="dropdown-item" href="{{ $user->instagram }}" target="_blank"><i class="bi bi-instagram me-2"></i>Instagram</a></li>
-    <li><a class="dropdown-item" href="{{ $user->linkedin }}" target="_blank"><i class="bi bi-linkedin me-2"></i>LinkedIn</a></li>
-  </ul>
-</li>
 <li><a class="dropdown-item" href="{{ route('user.change-password.form') }}"><i class="bi bi-file-earmark-bar-graph-fill fa-fw me-2"></i>Change Password</a></li>
 						<li>
                          <form action="{{ route('user.logout') }}" method="POST" style="display: inline;" >
