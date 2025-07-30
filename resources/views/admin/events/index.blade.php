@@ -37,27 +37,19 @@
                         <div class="col-6">
                             <h4 class="card-title">Events list</h4>
                         </div>
-						 <div class="col-6">
-
+                        <div class="col-6">
                             <div class="float-end gap-2" style="margin-left:20px;">
-
-							<a href="{{ route('events.rsvp') }}" class="btn btn-primary">All RSVP</a>
+                                <a href="{{ route('events.rsvp') }}" class="btn btn-primary">All RSVP</a>
                             </div>
-
                             <div class="float-end">
                                 <a href="{{ route('events.create') }}" class="btn btn-primary">+ Add Events</a>
                             </div>
-
                         </div>
-
                     </div>
                     <hr>
-                    <div id="zero_config_wrapper" class="dataTables_wrapper table-responsive"style="overflow-x: auto;">
-
-
-                        <table id="zero_config"
-                            class="table table-striped table-bordered align-middle dataTable"
-                            aria-describedby="zero_config_info" >
+                    <div id="zero_config_wrapper" class="dataTables_wrapper">
+                        <table id="zero_config" class="table table-striped table-bordered align-middle dataTable"
+                            aria-describedby="zero_config_info">
                             <thead>
                                 <!-- start row -->
                                 <tr>
@@ -76,24 +68,26 @@
                                 @foreach ($events as $event)
                                 <tr class="odd">
                                     <td>{{ $event->title }}</td>
-                                    <td>{{ \Illuminate\Support\Str::words(strip_tags($event->description), 20, '...') }}</td>
+                                    <td>{{ \Illuminate\Support\Str::words(strip_tags($event->description), 20, '...') }}
+                                    </td>
                                     <td>{{ $event->start_datetime }}</td>
                                     <td>{{ $event->end_datetime }}</td>
                                     <td>
                                         @if($event->venue === 'online')
-                                            Online : <a href="{{ $event->url }}" target="_blank">{{ $event->url }}</a>
+                                        Online : <a href="{{ $event->url }}" target="_blank">{{ $event->url }}</a>
                                         @elseif($event->venue === 'physical')
-                                          Physical:  {{ $event->location }}
+                                        Physical: {{ $event->location }}
                                         @else
-                                            N/A
+                                        N/A
                                         @endif
                                     </td>
                                     <td>
 
-                                    <img class="avatar-img rounded-circle"
-                                    src="{{ $event->image && $event->image ? asset('storage/' . $event->image) : asset('feed_assets/images/avatar/12.jpg') }}"
-                                    alt="" height="70" width="70"></td>
-                                     <td>
+                                        <img class="avatar-img rounded-circle"
+                                            src="{{ $event->image && $event->image ? asset('storage/' . $event->image) : asset('feed_assets/images/avatar/12.jpg') }}"
+                                            alt="" height="70" width="70">
+                                    </td>
+                                    <td>
                                         <div class="form-check form-switch d-inline-block">
                                             <input class="form-check-input status-toggle" type="checkbox" role="switch"
                                                 data-table="events" data-column="active_inactive"
@@ -107,40 +101,41 @@
                                     @endphp
 
                                     <td>
-    <div class="d-flex gap-2">
-        @if ($event_datetime > $current_datetime)
-            {{-- Edit Button --}}
-            <a href="{{ route('events.edit', encrypt($event->id)) }}" class="btn btn-success btn-sm">
-                Edit
-            </a>
+                                        <div class="d-flex gap-2">
+                                            @if ($event_datetime > $current_datetime)
+                                            {{-- Edit Button --}}
+                                            <a href="{{ route('events.edit', encrypt($event->id)) }}"
+                                                class="btn btn-success btn-sm">
+                                                Edit
+                                            </a>
 
-            {{-- Delete Button --}}
-            <form action="{{ route('events.destroy', $event->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete?')">
-                @csrf
-                @method('DELETE')
-                <button type="submit" class="btn btn-danger btn-sm">
-                    Delete
-                </button>
-            </form>
-        @else
-            {{-- Expired Badge --}}
-            <span class="badge text-bg-primary align-self-center">Expired</span>
-        @endif
+                                            {{-- Delete Button --}}
+                                            <form action="{{ route('events.destroy', $event->id) }}" method="POST"
+                                                onsubmit="return confirm('Are you sure you want to delete?')">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-danger btn-sm">
+                                                    Delete
+                                                </button>
+                                            </form>
+                                            @else
+                                            {{-- Expired Badge --}}
+                                            <span class="badge text-bg-primary align-self-center">Expired</span>
+                                            @endif
 
-        {{-- RSVP Button --}}
-        <a href="{{ route('events.rsvp', $event->id) }}" class="btn btn-outline-primary btn-sm">
-            RSVP
-        </a>
-    </div>
-</td>
+                                            {{-- RSVP Button --}}
+                                            <a href="{{ route('events.rsvp', $event->id) }}"
+                                                class="btn btn-outline-primary btn-sm">
+                                                RSVP
+                                            </a>
+                                        </div>
+                                    </td>
 
 
                                 </tr>
                                 @endforeach
                             </tbody>
                         </table>
-                        {{ $events->links() }}
-
                     </div>
                 </div>
             </div>
@@ -156,21 +151,22 @@
 
 <script>
 //Toastr message
-    /*$(document).ready(function() {
-        @if (session('success'))
-            toastr.success("{{ session('success') }}");
-        @endif
+/*$(document).ready(function() {
+    @if (session('success'))
+        toastr.success("{{ session('success') }}");
+    @endif
 
-    }); */
+}); */
 
-    $(document).ready(function () {
+$(document).ready(function() {
     // AJAX: Toggle member status with confirmation
-    $(document).on('change', '.status-toggle', function (e) {
+    $(document).on('change', '.status-toggle', function(e) {
         let checkbox = $(this);
         let status = checkbox.prop('checked') ? 1 : 0;
         let eventId = checkbox.data('id');
 
-        let confirmChange = confirm("Are you sure you want to " + (status ? "activate" : "deactivate") + "?");
+        let confirmChange = confirm("Are you sure you want to " + (status ? "activate" : "deactivate") +
+            "?");
 
         if (!confirmChange) {
             // Revert the checkbox state if cancelled
@@ -186,10 +182,10 @@
                 id: eventId,
                 status: status
             },
-            success: function (response) {
+            success: function(response) {
                 toastr.success(response.message);
             },
-            error: function () {
+            error: function() {
                 toastr.error('Failed to update status.');
                 // Optionally revert on failure
                 checkbox.prop('checked', !status);
@@ -197,8 +193,7 @@
         });
     });
 });
-
-    </script>
+</script>
 
 
 @endsection
