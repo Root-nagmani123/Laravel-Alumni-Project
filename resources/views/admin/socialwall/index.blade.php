@@ -58,9 +58,8 @@
                                                 onclick="delete_feed_model({{ $post['post_id'] }})"
                                                 data-bs-toggle="tooltip" data-bs-placement="top"
                                                 title="Delete this Feed"
-                                                onclick="delete_feed_model({{ $post['post_id'] }})">
-                                                delete
-                                                <i class="bi bi-trash3-fill"></i>
+                                                onclick="delete_feed_model({{ $post['post_id'] }})" class=" ms-2 btn btn-sm btn-danger">
+                                                Delete
                                             </a>
                                         </div>
                                     </div>

@@ -17,9 +17,11 @@ class GroupController extends Controller
 {
     public function index()
     {
-        $groups = Group::all();
+        // $groups = Group::all();
+        $groups = Group::orderBy('id', 'desc')->get(); // newest first
         return view('admin.group.index', compact('groups'));
     }
+
     public function create()
     {
         $admins = Admin::select('*')->get();
@@ -28,6 +30,7 @@ class GroupController extends Controller
         $users = Member::all();
         return view('admin.group.create', compact('mentors','users'));
     }
+    
     public function store_1012025(Request $request)
     {
         //Array ( [name] => Dhananjay [mentor_id] => 1 [user_id] => Array ( [0] => 4 [1] => 5 ) [status] => 1 )

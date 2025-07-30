@@ -24,7 +24,7 @@
         <div class="d-flex mb-3">
             <!-- Avatar -->
             <div class="avatar avatar-xs me-2">
-                <a href="#"> <img class="avatar-img rounded-circle" src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar-1.png') }}"
+                <a href="{{ route('user.profile', ['id' => $user->id]) }}"> <img class="avatar-img rounded-circle" src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar-1.png') }}"
                         alt=""> </a>
             </div>
             <!-- Post input -->
@@ -51,8 +51,8 @@
                         class="bi bi-calendar2-event-fill text-danger pe-2"></i>Event </a>
             </li> -->
             <!-- <li class="nav-item">
-							<a class="nav-link bg-light py-1 px-2 mb-0" href="#!" data-bs-toggle="modal" data-bs-target="#modalCreateFeed"> <i class="bi bi-emoji-smile-fill text-warning pe-2"></i>Feeling /Activity</a>
-						</li> -->
+                            <a class="nav-link bg-light py-1 px-2 mb-0" href="#!" data-bs-toggle="modal" data-bs-target="#modalCreateFeed"> <i class="bi bi-emoji-smile-fill text-warning pe-2"></i>Feeling /Activity</a>
+                        </li> -->
         </ul>
         <!-- Share feed toolbar END -->
     </div>
@@ -74,15 +74,18 @@
 
     if ($post->type === 'group_post') {
         // Group post ke liye
-        $profileImage = $post->group_image
-            ? asset('storage/' . $post->group_image)
+        $profileImage = $post->member->profile_pic
+            ? asset('storage/' . $post->member->profile_pic)
             : asset('feed_assets/images/avatar/07.jpg'); // fallback image
 
         $displayName = $post->group_name ?? 'Unknown Group';
         $designation = 'Group Post';
+        $created_by = $post->member->name;
 
         // Optional: if you have a group detail page
-        $profileLink = url('/group/' . ($post->group_id ?? 0));
+        $profileLink =  route('user.profile', ['id' => $post->member->id]);
+       
+        $groupLink = route('user.group-post',['id' =>$post->group_id]);
     } else {
         // Member/user post
         $member = $post->member ?? null;
@@ -93,15 +96,16 @@
 
         $displayName = $member->name ?? 'Unknown';
         $designation = $member->designation ?? 'Unknown';
-        $profileLink = url('/user/profile/' . ($member->id ?? 0));
+        $profileLink = route('user.profile', ['id' => $member->id]);
+
     }
 @endphp
 
 <div class="avatar me-2">
     <a href="{{ $profileLink }}">
-        <img 
-            class="avatar-img rounded-circle" 
-            src="{{ $profileImage }}" 
+        <img
+            class="avatar-img rounded-circle"
+            src="{{ $profileImage }}"
             alt="Profile Picture">
     </a>
 </div>
@@ -110,37 +114,42 @@
 <div>
     <div class="nav nav-divider">
         <h6 class="nav-item card-title mb-0">
-            <a href="#!">{{ $displayName }}</a>
+            <a href="{{ $post->type === 'group_post' ? $groupLink : $profileLink }}">{{ $displayName }}</a>
         </h6>
-        <span class="nav-item small">
+       
+    </div>
+    <p class="mb-0 small">{{ $designation }}
+    @if($post->type === 'group_post')
+        | Group: dk
+    @endif
+</p>
+    <p class="mb-0 small"></p>
+    <span class="nav-item small">
             {{ \Carbon\Carbon::parse($post->created_at)->diffForHumans() }}
         </span>
-    </div>
-    <p class="mb-0 small">{{ $designation }}</p>
 </div>
 
 
                 </div>
                 <div class="dropdown">
-								<a href="#" class="text-secondary btn btn-secondary-soft-hover py-1 px-2" id="cardFeedAction" data-bs-toggle="dropdown" aria-expanded="false">
-									<i class="bi bi-three-dots"></i>
-								</a>
-								<!-- Card feed action dropdown menu -->
+                                <a href="#" class="text-secondary btn btn-secondary-soft-hover py-1 px-2" id="cardFeedAction" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-three-dots"></i>
+                                </a>
 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="cardFeedAction">
-	<li>
-		<a class="dropdown-item edit-post" href="#" data-id="{{ $post->id }}">
-			<i class="bi bi-pen fa-fw pe-2"></i>Edit post
-		</a>
-	</li>
-	<li>
-		<a class="dropdown-item delete-post" href="#" data-id="{{ $post->id }}">
-			<i class="bi bi-trash fa-fw pe-2"></i>Delete post
-		</a>
-	</li>
+    <li>
+        <a class="dropdown-item" href="#">
+            <i class="bi bi-pen fa-fw pe-2"></i>Edit post
+        </a>
+    </li>
+    <li>
+        <a class="dropdown-item " href="#">
+            <i class="bi bi-trash fa-fw pe-2"></i>Delete post
+        </a>
+    </li>
 </ul>
 
 
-							</div>
+                            </div>
 
             </div>
         </div>
@@ -287,7 +296,7 @@
             <div class="d-flex mb-3">
                 <!-- Avatar -->
                 <div class="avatar avatar-xs me-2">
-                    <a href="#!"> <img class="avatar-img rounded-circle"
+                    <a href="{{ route('user.profile', ['id' => $user->id]) }}"> <img class="avatar-img rounded-circle"
                             src="{{asset('storage/'.$user->profile_pic)}}" alt=""> </a>
                 </div>
                 <!-- Comment box  -->
@@ -314,7 +323,7 @@
                         <!-- Avatar -->
                         <div class="avatar avatar-xs">
                             <a href="#!"><img class="avatar-img rounded-circle"
-                                    src="{{ $comment->member && $comment->member->profile_pic ? asset('storage/' . $comment->member->profile_pic) : asset('feed_assets/images/avatar/12.jpg') }}"
+                                   src="${comment.member && comment.member.profile_pic ? '/storage/' + comment.member.profile_pic : '/feed_assets/images/avatar/12.jpg'}"
                                     alt=""></a>
                         </div>
                         <div class="ms-2 w-100">
@@ -721,7 +730,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                         <div class="bg-light rounded-start-top-0 p-3 rounded">
                                             <div class="d-flex justify-content-between">
                                                 <h6 class="mb-1"><a href="#!">${comment.member?.name || 'Anonymous'}</a></h6>
-                                                <small class="ms-2">{{ $comment->created_at->diffForHumans() }}</small>
+                                                <small class="ms-2">${comment.created_at_human || comment.created_at || ''}</small>
                                             </div>
                                             <p class="small mb-0">${comment.comment}</p>
                                         </div>
@@ -1024,9 +1033,50 @@ $('#editPostForm').on('submit', function(e) {
         }
     });
 });
+
+
+$(document).ready(function () {
+    $('.commentForm').on('submit', function (e) {
+        e.preventDefault();
+
+        let form = $(this);
+        let postId = form.data('post-id');
+        let textarea = form.find('.commentInput');
+        let errorDiv = form.find('.comment-error');
+        errorDiv.text(''); // clear previous errors
+
+        if ($.trim(textarea.val()) === '') {
+            errorDiv.text('Comment is required.');
+            textarea.focus();
+            return false;
+        }
+
+        let formData = form.serialize(); // serialize form data
+
+        $.ajax({
+            url: form.attr('action'),
+            method: 'POST',
+            data: formData,
+            success: function (response) {
+                if (response.status === 'success') {
+                    textarea.val(''); // clear comment box
+                    errorDiv.removeClass('text-danger').addClass('text-success').text('Comment added successfully!');
+
+                    // Optionally append to comment list
+                    // $('#comment-list-' + postId).append(`<div><strong>You:</strong> ${response.comment.comment}</div>`);
+                }
+            },
+            error: function (xhr) {
+                if (xhr.responseJSON?.errors?.comment) {
+                    errorDiv.text(xhr.responseJSON.errors.comment[0]);
+                } else {
+                    errorDiv.text('An error occurred.');
+                }
+            }
+        });
+    });
+});
+
 </script>
-
-
-
 
 @endsection

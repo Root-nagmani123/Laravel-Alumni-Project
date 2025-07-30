@@ -79,7 +79,7 @@
                                                 <td>{{ $row->name }}</td>
                                                 <td>{{ $row->email }}</td>
                                                 <td>{{ $row->mobile }}</td>
-                                                <td>{{ $row->cadre }}</td>
+                                                <td>{{ $row->cader }}</td>
                                                 <td>{{ $row->batch }}</td>
                                             </tr>
                                         @endforeach

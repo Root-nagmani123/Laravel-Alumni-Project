@@ -23,13 +23,14 @@ class ProfileController extends Controller
 
    public function showById(Request $request, $id): View
 {
-    $user = auth()->guard('user')->user();
+    //$user = auth()->guard('user')->user();
+    $user = Member::findOrFail($id);
 
     $userId = $user->id;
 
          $posts = Post::with(['member', 'media', 'likes', 'comments.member'])
         ->orderBy('created_at', 'desc')
-        ->where('id', $userId)
+        ->where('member_id', $userId)
         ->get();
 
     return view('profile', compact('user','posts'));
@@ -88,9 +89,9 @@ class ProfileController extends Controller
         'undergrad_college'  => 'required|string|max:255',
         'undergrad_degree'   => 'required|string|max:255',
         'undergrad_year'     => "required|integer|min:1900|max:$currentYear",
-        'postgrad_college'   => 'required|string|max:255',
-        'postgrad_degree'    => 'required|string|max:255',
-        'postgrad_year'      => "required|integer|min:1900|max:$currentYear",
+        'postgrad_college'   => 'nullable|string|max:255',
+        'postgrad_degree'    => 'nullable|string|max:255',
+        'postgrad_year'      => "nullable|integer|min:1900|max:$currentYear",
     ]);
 
         $user = Member::findOrFail($id);
@@ -141,5 +142,25 @@ class ProfileController extends Controller
         $request->session()->regenerateToken();
 
         return Redirect::to('/');
+    }
+    public function updateSocial(Request $request, $id)
+    {
+        // print_r($request->all());
+        // dd($request->all());
+        $request->validate([
+            'facebook' => 'nullable|url|max:255',
+            'instagram' => 'nullable|url|max:255',
+            'linkedin' => 'nullable|url|max:255',
+            'twitter' => 'nullable|url|max:255',
+        ]);
+
+        $user = Member::findOrFail($id);
+        $user->facebook = $request->facebook;
+        $user->instagram = $request->instagram;
+        $user->linkedin = $request->linkedin;
+        $user->twitter = $request->twitter;
+        $user->save();
+
+        return redirect()->back()->with('success', 'Social media links updated successfully.');
     }
 }

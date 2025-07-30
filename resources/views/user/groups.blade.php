@@ -1,7 +1,7 @@
 
 @extends('layouts.app')
 
-@section('title', 'Library - Alumni | Lal Bahadur Shastri National Academy of Administration')
+@section('title', 'Groups - Alumni | Lal Bahadur Shastri National Academy of Administration')
 
 @section('content')
  <div class="container">
@@ -102,7 +102,7 @@
     </div>
        <div class="col-lg-9">
         <div class="bg-mode p-4">
-          <h1 class="h4 mb-4">Forums</h1>
+          <h1 class="h4 mb-4">Library</h1>
           <!-- Blog item START -->
           <div class="card bg-transparent border-0 rounded">
             <div class="row g-3">

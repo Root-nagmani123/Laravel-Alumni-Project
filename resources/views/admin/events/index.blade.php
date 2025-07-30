@@ -81,9 +81,9 @@
                                     <td>{{ $event->end_datetime }}</td>
                                     <td>
                                         @if($event->venue === 'online')
-                                            <a href="{{ $event->url }}" target="_blank">{{ $event->url }}</a>
+                                            Online : <a href="{{ $event->url }}" target="_blank">{{ $event->url }}</a>
                                         @elseif($event->venue === 'physical')
-                                            {{ $event->location }}
+                                          Physical:  {{ $event->location }}
                                         @else
                                             N/A
                                         @endif
@@ -107,31 +107,34 @@
                                     @endphp
 
                                     <td>
-									{{--url(route('events.edit'.base64_encode($event->id))--}}
-                                        @if ($event_datetime > $current_datetime)
-                                        <a href="{{ route('events.edit', encrypt($event->id)) }}" class="btn btn-success text-white btn-sm">Edit</a>
+    <div class="d-flex gap-2">
+        @if ($event_datetime > $current_datetime)
+            {{-- Edit Button --}}
+            <a href="{{ route('events.edit', encrypt($event->id)) }}" class="btn btn-success btn-sm">
+                Edit
+            </a>
 
-                                         <form action="{{ route('events.destroy', $event->id) }}" method="POST" style="display:inline;">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger text-white btn-sm"
-                                            onclick="return confirm('Are you sure you want to delete?')">
-                                        Delete
-                                    </button>
-                                    </form>
-                                        @else
+            {{-- Delete Button --}}
+            <form action="{{ route('events.destroy', $event->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete?')">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="btn btn-danger btn-sm">
+                    Delete
+                </button>
+            </form>
+        @else
+            {{-- Expired Badge --}}
+            <span class="badge text-bg-primary align-self-center">Expired</span>
+        @endif
 
-                                            <span class="badge ms-auto text-bg-primary">Expired</span>
-
-                                        @endif
-										 <a
-                                            class="btn d-flex bg-primary-subtle w-100 d-block text-primary " href="{{ route('events.rsvp', $event->id) }}">
-                                            RSVP
-
-                                        </a>
+        {{-- RSVP Button --}}
+        <a href="{{ route('events.rsvp', $event->id) }}" class="btn btn-outline-primary btn-sm">
+            RSVP
+        </a>
+    </div>
+</td>
 
 
-                                    </td>
                                 </tr>
                                 @endforeach
                             </tbody>

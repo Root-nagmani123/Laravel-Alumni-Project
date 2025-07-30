@@ -7,14 +7,24 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Events;
+use App\Services\NotificationService;
+use App\Models\Member;
 use App\Models\EventRsvp;
 
 
 class EventsController extends Controller
 {
+    protected $notificationService;
+
+    public function __construct(NotificationService $notificationService)
+    {
+        $this->notificationService = $notificationService;
+    }
+
 		public function index()
 		{
-			$events = Events::orderBy('start_datetime', 'desc')->paginate(10);
+			// $events = Events::orderBy('start_datetime', 'desc')->paginate(10);
+			$events = Events::orderBy('id', 'desc')->paginate(10);
 			return view('admin.events.index', compact('events'));
 		}
 
@@ -57,7 +67,7 @@ class EventsController extends Controller
     $url      = $request->venue === 'online'   ? $request->url      : null;
 
 // Create the event
-Events::create([
+       $event = Events::create([
     'title'          => $request->title,
     'description'    => $request->description,
     'location'       => $location,
@@ -68,6 +78,16 @@ Events::create([
     'image'          => $imagePath,
     'created_by'     => Auth::id(),
 ]);
+
+   if($event){
+    $notification = $this->notificationService->notifyAllMembers('event', 'New event has been added.', $event->id, 'event');
+       
+    if($notification){
+
+     Member::query()->update(['is_notification' => 0]);
+
+    }
+  }
 
 		return redirect()->route('events.index')->with('success', 'Event added successfully!');
 	}
@@ -106,7 +126,7 @@ return redirect()->route('events.index')->with('error', 'Event not found!');retu
             'url'            => 'nullable|url|max:255',
             'start_datetime' => 'required|date',
             'end_datetime'   => 'nullable|date|after_or_equal:start_datetime',
-            'image'          => 'nullable|image|max:2048',
+            'image'          => 'required|image|max:2048',
         ]);
 
         if ($validator->fails()) {

@@ -4,26 +4,25 @@
 
 @section('content')
 <div class="container">
-    
+
     <div class="row g-4 py-4">
-         <!-- Error Messages -->
-                                        @if ($errors->any())
-                                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                            <ul class="mb-0">
-                                                @foreach ($errors->all() as $error)
-                                                <li>{{ $error }}</li>
-                                                @endforeach
-                                            </ul>
-                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                        </div>
-                                        @endif
-                                         @if(session('success'))
-                                        <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                            {{ session('success') }}
-                                            <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                                aria-label="Close"></button>
-                                        </div>
-                                        @endif
+        <!-- Error Messages -->
+        @if ($errors->any())
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <ul class="mb-0">
+                @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        @endif
+        @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        @endif
 
         <!-- Main content START -->
         <div class="col-lg-8 vstack gap-4">
@@ -51,10 +50,10 @@
                                 {{ $user->name }}</h1>
                             @endif
                             <ul class="list-inline mb-0 text-center text-sm-start mt-3 mt-sm-0">
-                        <li class="list-inline-item"><i class="bi bi-file-person me-1"></i>
-                        </li>
-                        <li class="list-inline-item"><i class="bi bi-collection me-1"></i></li>
-                    </ul>
+                                <li class="list-inline-item"><i class="bi bi-file-person me-1"></i>
+                                </li>
+                                <li class="list-inline-item"><i class="bi bi-collection me-1"></i></li>
+                            </ul>
                         </div>
                         <!-- Button -->
                         <div class="d-flex mt-3 justify-content-center ms-sm-auto">
@@ -97,6 +96,11 @@
                                                 <button class="nav-link" id="professional-tab" data-bs-toggle="tab"
                                                     data-bs-target="#professional" type="button" role="tab">Professional
                                                     Information</button>
+                                            </li>
+                                            <li class="nav-item" role="presentation">
+                                                <button class="nav-link" id="social_media-tab" data-bs-toggle="tab"
+                                                    data-bs-target="#social_media" type="button" role="tab">Social
+                                                    Media</button>
                                             </li>
                                         </ul>
 
@@ -370,7 +374,7 @@
                                                                 <div class="col-3">
                                                                     <label for="postgrad_college">Postgraduate
                                                                         College/University
-                                                                        Name:<span style="color: red">*</span></label>
+                                                                        Name:</label>
                                                                 </div>
                                                                 <div class="col-9">
                                                                     <input type="text" id="postgrad_college"
@@ -385,8 +389,7 @@
                                                                 <div class="col-3">
                                                                     <label for="postgrad_degree">Postgraduate
                                                                         Degree
-                                                                        Obtained:<span
-                                                                            style="color: red">*</span></label>
+                                                                        Obtained:</label>
                                                                 </div>
                                                                 <div class="col-9">
                                                                     <input type="text" id="postgrad_degree"
@@ -401,8 +404,7 @@
                                                                 <div class="col-3">
                                                                     <label for="postgrad_year">Year
                                                                         of
-                                                                        Graduation:<span
-                                                                            style="color: red">*</span></label>
+                                                                            Post Graduation:</label>
                                                                 </div>
                                                                 <div class="col-9">
                                                                     <input type="text" id="postgrad_year"
@@ -494,6 +496,75 @@
                                                     </form>
                                                 </div>
                                             </div>
+
+                                            <!-- social media -->
+                                             <div class="tab-pane fade" id="social_media" role="tabpanel">
+                                                <div class="p-3 border rounded bg-light">
+                                                    <!-- Professional Information form goes here -->
+                                                    <form
+                                                        action="{{ route('user.profile.social.update', ['id' => $user->id]) }}"
+                                                        method="post" id="myForm" enctype="multipart/form-data">
+                                                        @csrf
+                                                        @method('PUT')
+
+                                                        <div class="form-group">
+                                                            <div class="row mb-3">
+                                                                <div class="col-3">
+                                                                    <label for="facebook">Facebook:</label>
+                                                                </div>
+                                                                <div class="col-9">
+                                                                    <input type="text" id="facebook"
+                                                                        name="facebook"
+                                                                        value="{{ old('facebook', $user->facebook) }}"
+                                                                        class="form-control"
+                                                                        placeholder="Enter your Facebook profile link">
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="row mb-3">
+                                                                <div class="col-3">
+                                                                    <label for="instagram">Instagram:</label>
+                                                                </div>
+                                                                <div class="col-9">
+                                                                    <input type="text" id="instagram"
+                                                                        name="instagram"
+                                                                        value="{{ old('instagram', $user->instagram) }}"
+                                                                        class="form-control"
+                                                                        placeholder="Enter your Instagram profile link">
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="row mb-3">
+                                                                <div class="col-3">
+                                                                    <label for="linkedin">LinkedIn:</label>
+                                                                </div>
+                                                                <div class="col-9">
+                                                                    <input type="text" id="linkedin"
+                                                                        name="linkedin"
+                                                                        value="{{ old('linkedin', $user->linkedin) }}"
+                                                                        class="form-control"
+                                                                        placeholder="Enter your LinkedIn profile link">
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="row mb-3">
+                                                                <div class="col-3">
+                                                                    <label for="twitter">X(Twitter):</label>
+                                                                </div>
+                                                                <div class="col-9">
+                                                                    <input type="text" id="twitter"
+                                                                        name="twitter"
+                                                                        value="{{ old('twitter', $user->twitter) }}"
+                                                                        class="form-control"
+                                                                        placeholder="Enter your Twitter profile link">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <button type="submit" class="btn btn-primary">Update</button>
+                                                    </form>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -504,7 +575,8 @@
                     </div>
                     <!-- List profile -->
                     <ul class="list-inline mb-0 text-center text-sm-start mt-3 mt-sm-0">
-                        <li class="list-inline-item"><i class="bi bi-briefcase me-1"></i> {{ $user->current_designation }}
+                        <li class="list-inline-item"><i class="bi bi-briefcase me-1"></i>
+                            {{ $user->current_designation }}
                         </li>
                         <li class="list-inline-item"><i class="bi bi-backpack me-1"></i> {{ $user->batch }}</li>
                         <li class="list-inline-item"><i class="bi bi-calendar2-plus me-1"></i>
@@ -535,138 +607,185 @@
                                 Videos
                             </a>
                         </li>
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link" id="groups-tab" data-bs-toggle="tab" href="#social" role="tab"
+                                aria-controls="social" aria-selected="false">
+                                Social Media
+                            </a>
+                        </li>
                     </ul>
 
                 </div>
             </div>
             <!-- My profile END -->
             <div class="tab-content" id="profileTabContent" role="tabpanel" aria-labelledby="profileTab">
-                 <div class="tab-pane fade show active" id="about" role="tabpanel" aria-labelledby="about-tab">
-                <div class="card">
-                    <!-- Card header START -->
-                    <div class="card-header border-0 pb-0">
-                        <h5 class="card-title"> Profile Info</h5>
-                    </div>
-                    <!-- Card header END -->
-                    <!-- Card body START -->
-                    <div class="card-body">
-                        <div class="rounded border px-3 py-2 mb-3">
-                            <div class="d-flex align-items-center justify-content-between">
-                                <h6>Overview</h6>
-                            </div>
-                            <p>{{$user->bio}}</p>
+                <div class="tab-pane fade show active" id="about" role="tabpanel" aria-labelledby="about-tab">
+                    <div class="card">
+                        <!-- Card header START -->
+                        <div class="card-header border-0 pb-0">
+                            <h5 class="card-title"> Profile Info</h5>
                         </div>
-                        <div class="row g-4">
-                            <div class="col-sm-6">
-                                <!-- Birthday START -->
-                                <div class="d-flex align-items-center rounded border px-3 py-2">
-                                    <!-- Date -->
-                                    <p class="mb-0">
-                                        <i class="bi bi-calendar-date fa-fw me-2"></i> Born: <strong>
-                                            {{ $user->date_of_birth }} </strong>
-                                    </p>
+                        <!-- Card header END -->
+                        <!-- Card body START -->
+                        <div class="card-body">
+                            <div class="rounded border px-3 py-2 mb-3">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <h6>Overview</h6>
                                 </div>
-                                <!-- Birthday END -->
+                                <p>{{$user->bio}}</p>
                             </div>
-                            <div class="col-sm-6">
-                                <!-- Status START -->
-                                <div class="d-flex align-items-center rounded border px-3 py-2">
-                                    <!-- Date -->
-                                    <p class="mb-0">
-                                        <i class="bi bi-heart fa-fw me-2"></i> Status: <strong>
-                                            {{ $user->marital_status }} </strong>
-                                    </p>
+                            <div class="row g-4">
+                                <div class="col-sm-6">
+                                    <!-- Birthday START -->
+                                    <div class="d-flex align-items-center rounded border px-3 py-2">
+                                        <!-- Date -->
+                                        <p class="mb-0">
+                                            <i class="bi bi-calendar-date fa-fw me-2"></i> Born: <strong>
+                                                {{ $user->date_of_birth }} </strong>
+                                        </p>
+                                    </div>
+                                    <!-- Birthday END -->
                                 </div>
-                                <!-- Status END -->
-                            </div>
-                            <div class="col-sm-6">
-                                <!-- Designation START -->
-                                <div class="d-flex align-items-center rounded border px-3 py-2">
-                                    <!-- Date -->
-                                    <p class="mb-0">
-                                        <i class="bi bi-briefcase fa-fw me-2"></i> <strong>
-                                            {{ $user->current_designation }}
-                                        </strong>
-                                    </p>
+                                <div class="col-sm-6">
+                                    <!-- Status START -->
+                                    <div class="d-flex align-items-center rounded border px-3 py-2">
+                                        <!-- Date -->
+                                        <p class="mb-0">
+                                            <i class="bi bi-heart fa-fw me-2"></i> Status: <strong>
+                                                {{ $user->marital_status }} </strong>
+                                        </p>
+                                    </div>
+                                    <!-- Status END -->
                                 </div>
-                                <!-- Designation END -->
-                            </div>
-                            <div class="col-sm-6">
-                                <!-- Lives START -->
-                                <div class="d-flex align-items-center rounded border px-3 py-2">
-                                    <!-- Date -->
-                                    <p class="mb-0">
-                                        <i class="bi bi-geo-alt fa-fw me-2"></i> Current Location: <strong>
-                                            {{ $user->current_location }}
-                                        </strong>
-                                    </p>
+                                <div class="col-sm-6">
+                                    <!-- Designation START -->
+                                    <div class="d-flex align-items-center rounded border px-3 py-2">
+                                        <!-- Date -->
+                                        <p class="mb-0">
+                                            <i class="bi bi-briefcase fa-fw me-2"></i> Current Designation:<strong>
+                                                {{ $user->current_designation }}
+                                            </strong>
+                                        </p>
+                                    </div>
+                                    <!-- Designation END -->
                                 </div>
-                                <!-- Lives END -->
-                            </div>
-                            <div class="col-sm-6">
-                                <!-- Joined on START -->
-                                <div class="d-flex align-items-center rounded border px-3 py-2">
-                                    <!-- Date -->
-                                    <p class="mb-0">
-                                        <i class="bi bi-geo-alt fa-fw me-2"></i> Joined on: <strong>
-                                            {{$user->created_at->format('F j, Y')}}
-                                        </strong>
-                                    </p>
+                                <div class="col-sm-6">
+                                    <!-- Lives START -->
+                                    <div class="d-flex align-items-center rounded border px-3 py-2">
+                                        <!-- Date -->
+                                        <p class="mb-0">
+                                            <i class="bi bi-geo-alt fa-fw me-2"></i> Current Location: <strong>
+                                                {{ $user->current_location }}
+                                            </strong>
+                                        </p>
+                                    </div>
+                                    <!-- Lives END -->
                                 </div>
-                                <!-- Joined on END -->
-                            </div>
-                            <div class="col-sm-6">
-                                <!-- Joined on START -->
-                                <div class="d-flex align-items-center rounded border px-3 py-2">
-                                    <!-- Date -->
-                                    <p class="mb-0">
-                                        <i class="bi bi-envelope fa-fw me-2"></i> Email: <strong>
-                                            {{ $user->email }} </strong>
-                                    </p>
+                                <div class="col-sm-6">
+                                    <!-- Joined on START -->
+                                    <div class="d-flex align-items-center rounded border px-3 py-2">
+                                        <!-- Date -->
+                                        <p class="mb-0">
+                                            <i class="bi bi-geo-alt fa-fw me-2"></i> Joined on: <strong>
+                                                {{$user->created_at->format('F j, Y')}}
+                                            </strong>
+                                        </p>
+                                    </div>
+                                    <!-- Joined on END -->
                                 </div>
-                                <!-- Joined on END -->
+                                <div class="col-sm-6">
+                                    <!-- Joined on START -->
+                                    <div class="d-flex align-items-center rounded border px-3 py-2">
+                                        <!-- Date -->
+                                        <p class="mb-0">
+                                            <i class="bi bi-envelope fa-fw me-2"></i> Email: <strong>
+                                                {{ $user->email }} </strong>
+                                        </p>
+                                    </div>
+                                    <!-- Joined on END -->
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="d-flex align-items-center rounded border px-3 py-2">
+                                        <!-- Date -->
+                                        <p class="mb-0">
+                                            <i class="bi bi-envelope fa-fw me-2"></i> Year of Graduation: <strong>
+                                                {{ $user->undergrad_year }} </strong>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="d-flex align-items-center rounded border px-3 py-2">
+                                        <!-- Date -->
+                                        <p class="mb-0">
+                                            <i class="bi bi-envelope fa-fw me-2"></i> Year of Post Graduation: <strong>
+                                                {{ $user->postgrad_year }} </strong>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="d-flex align-items-center rounded border px-3 py-2">
+                                        <!-- Date -->
+                                        <p class="mb-0">
+                                            <i class="bi bi-envelope fa-fw me-2"></i> Current Department: <strong>
+                                                {{ $user->current_department }} </strong>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="d-flex align-items-center rounded border px-3 py-2">
+                                        <!-- Date -->
+                                        <p class="mb-0">
+                                            <i class="bi bi-envelope fa-fw me-2"></i> Previous Posting: <strong>
+                                                {{ $user->previous_postings }} </strong>
+                                        </p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+                        <!-- Card body END -->
                     </div>
-                    <!-- Card body END -->
                 </div>
-            </div>
-            <div class="tab-pane fade" id="media" role="tabpanel" aria-labelledby="media-tab">
-                <div class="card">
-                    <!-- Card header START -->
-                    <div class="card-header d-sm-flex align-items-center justify-content-between border-0 pb-0">
-                        <h5 class="card-title">Photos</h5>
-                    </div>
-                    <!-- Card header END -->
-                    <!-- Card body START -->
-                    <div class="card-body">
-                        <!-- Photos of you tab START -->
-                        <div class="row g-3">
+                <div class="tab-pane fade" id="media" role="tabpanel" aria-labelledby="media-tab">
+                    <div class="card">
+                        <!-- Card header START -->
+                        <div class="card-header d-sm-flex align-items-center justify-content-between border-0 pb-0">
+                            <h5 class="card-title">Photos</h5>
+                        </div>
+                        <!-- Card header END -->
+                        <!-- Card body START -->
+                        <div class="card-body">
+                            <!-- Photos of you tab START -->
+                            <div class="row g-3">
 
-                            <!-- Photo item START -->
-                            @if(!empty($posts) && $posts->count())
+                                <!-- Photo item START -->
+                                @if(!empty($posts) && $posts->count())
                                 @foreach($posts as $post)
-                                    @if(!empty($post->media))
-                                        @foreach($post->media as $media)
-                                            @if($media->file_type === 'image')
-                                                @php
-                                                $max_length = 50;
-                                                $relativePath = 'storage/' . str_replace(['app/public/', 'public/'], '',
-                                                $media->file_path);
+                                @if(!empty($post->media))
+                                @foreach($post->media as $media)
+                                @if($media->file_type === 'image')
+                                @php
+                                $max_length = 50;
+                                $relativePath = 'storage/' . str_replace(['app/public/', 'public/'], '',
+                                $media->file_path);
 
-                                                // Check existence of file in public path
-                                                $file_path = public_path($relativePath);
-                                                $image_url = file_exists($file_path) ? asset($relativePath) :
-                                                asset('feed_assets/images/avatar-1.png');
-                                                @endphp
-                                                <div class="col-sm-6 col-md-4 col-lg-3">
-                                                    <!-- Photo -->
-                                                    <a href="{{ $image_url }}" data-gallery="image-popup"
-                                                        data-glightbox="description: .custom-desc2; descPosition: left;">
-                                                        <img class="rounded img-fluid" src="{{ $image_url }}" alt="">
-                                                    </a>
-                                                    <!-- likes -->
-                                                    <ul class="nav nav-stack py-2 small">
+                                // Check existence of file in public path
+                                $file_path = public_path($relativePath);
+                                $image_url = file_exists($file_path) ? asset($relativePath) :
+                                asset('feed_assets/images/avatar-1.png');
+                                @endphp
+                                <div class="col-sm-6 col-md-4 col-lg-3">
+                                    <!-- Photo -->
+                                    <a href="{{ $image_url }}" data-gallery="image-popup"
+                                        data-glightbox="description: .custom-desc2; descPosition: left;">
+                                        <img class="rounded img-fluid" src="{{ $image_url }}" alt=""
+                                            style="width: 100%; height: 200px; object-fit: cover;">
+                                    </a>
+                                    <div class="mt-2 text-center small text-muted">
+                                        <!-- <span>{{ $post->member->name ?? $user->name }}</span><br> -->
+                                        <span>{{ $post->created_at ? $post->created_at->format('F j, Y') : '' }}</span>
+                                    </div>
+                                    <!-- likes -->
+                                    <!-- <ul class="nav nav-stack py-2 small">
                                                         <li class="nav-item">
                                                             <a class="nav-link" href="#!"> <i
                                                                     class="bi bi-heart-fill text-danger pe-1"></i>22k </a>
@@ -675,32 +794,34 @@
                                                             <a class="nav-link" href="#!"> <i class="bi bi-chat-left-text-fill pe-1"></i>3k
                                                             </a>
                                                         </li>
-                                                    </ul>
-                                                </div>
-                                            @endif
-                                        @endforeach
-                                    @endif
+                                                    </ul> -->
+                                </div>
+                                @endif
                                 @endforeach
-                            @endif
-                            <!-- Photo item END -->
+                                @endif
+                                @endforeach
+                                @endif
+                                <!-- Photo item END -->
+                            </div>
+                            <!-- Photos of you tab END -->
                         </div>
-                        <!-- Photos of you tab END -->
+                        <!-- Card body END -->
                     </div>
-                    <!-- Card body END -->
                 </div>
-            </div>
-            <div class="tab-pane fade" id="videos" role="tabpanel" aria-labelledby="videos-tab">
-                <div class="card">
-                    <!-- Card header START -->
-                    <div class="card-header border-0 pb-0">
-                        <h5 class="card-title">Videos</h5>
-                        <!-- Button modal -->
-                    </div>
-                    <!-- Card header END -->
-                    <!-- Card body START -->
-                    <div class="card-body">
-                        <!-- Video of you tab START -->
-                        <div class="row g-3">
+                <div class="tab-pane fade" id="videos" role="tabpanel" aria-labelledby="videos-tab">
+                    <div class="card">
+                        <!-- Card header START -->
+                        <div class="card-header border-0 pb-0">
+                            <h5 class="card-title">Videos</h5>
+                            <!-- Button modal -->
+                        </div>
+                        <!-- Card header END -->
+                        <!-- Card body START -->
+                        <div class="card-body">
+
+                            <!-- Video old code START -->
+
+                            <!-- <div class="row g-3">
                             @if(!empty($post) && !empty($post->media))
                             @foreach($post->media as $media)
                             @if($media->file_type === 'video')
@@ -715,25 +836,20 @@
                             asset('feed_assets/images/avatar-1.png');
                             @endphp
                             <div class="col-sm-6 col-md-4">
-                                <!-- Video START -->
                                 <div class="card p-0 shadow-none border-0 position-relative">
-                                    <!-- Video image -->
                                     <div class="position-relative">
                                         <img class="rounded" src="assets/images/albums/01.jpg" alt="">
-                                        <!-- Play icon -->
                                         <div class="position-absolute top-0 end-0 p-3">
                                             <a class="icon-md bg-danger text-white rounded-circle" data-glightbox=""
                                                 href="assets/images/videos/video-call.mp4"> <i
                                                     class="bi bi-play-fill fs-5"> </i>
                                             </a>
                                         </div>
-                                        <!-- Duration -->
                                         <div class="position-absolute bottom-0 start-0 p-3 d-flex w-100">
                                             <span
                                                 class="bg-dark bg-opacity-50 px-2 rounded text-white small">02:20</span>
                                         </div>
                                     </div>
-                                    <!-- Video info -->
                                     <div class="card-body px-0 pb-0 pt-2">
                                         <ul class="nav nav-stack small">
                                             <li class="nav-item">
@@ -748,21 +864,102 @@
                                         </ul>
                                     </div>
                                 </div>
-                                <!-- Video END -->
                             </div>
                             @endif
                             @endforeach
                             @endif
+                        </div> -->
+                            <!-- Video old code END -->
+
+                            <!-- Video new code START -->
+                            <div class="row g-3">
+                                @if($posts->count())
+                                @foreach($posts as $post)
+                                {{-- Show YouTube Video if video_link exists --}}
+                                @if(!empty($post->video_link))
+                                <div class="col-sm-6 col-md-4 col-lg-3">
+                                    <div class="ratio ratio-16x9 rounded overflow-hidden">
+                                        <iframe class="w-100 h-100"
+                                            src="{{ str_contains($post->video_link, 'embed') ? $post->video_link : str_replace('watch?v=', 'embed/', $post->video_link) }}"
+                                            title="YouTube video" frameborder="0"
+                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                            allowfullscreen>
+                                        </iframe>
+                                    </div>
+                                    <div class="mt-2 text-center small text-muted">
+                                        <!-- <span>{{ $post->member->name ?? $user->name }}</span><br> -->
+                                        <span>{{ $post->created_at ? $post->created_at->format('F j, Y') : '' }}</span>
+                                    </div>
+                                </div>
+                                @endif
+                                @endforeach
+                                @endif
+                            </div>
+
+                            <!-- Video of you tab END -->
                         </div>
-                        <!-- Video of you tab END -->
+                        <!-- Card body END -->
+                        <!-- Card footer START -->
+                        <div class="card-footer border-0 pt-0">
+                        </div>
+                        <!-- Card footer END -->
                     </div>
-                    <!-- Card body END -->
-                    <!-- Card footer START -->
-                    <div class="card-footer border-0 pt-0">
-                    </div>
-                    <!-- Card footer END -->
                 </div>
-            </div>
+                 <div class="tab-pane fade" id="social" role="tabpanel" aria-labelledby="social-tab">
+                    <div class="card">
+                        <!-- Card header START -->
+                        <div class="card-header border-0 pb-0">
+                            <h5 class="card-title">Social Media</h5>
+                        </div>
+                        <!-- Card header END -->
+                        <!-- Card body START -->
+                        <div class="card-body">
+                            <div class="row g-4">
+                                <div class="col-sm-6">
+                                    <!-- Birthday START -->
+                                    <div class="d-flex align-items-center rounded border px-3 py-2">
+                                        <!-- Date -->
+                                        <p class="mb-0">
+                                            <i class="bi bi-facebook fa-fw me-2"></i> <a href="{{ $user->facebook }}" target="_blank">Facebook</a>
+                                        </p>
+                                    </div>
+                                    <!-- Birthday END -->
+                                </div>
+                                <div class="col-sm-6">
+                                    <!-- Status START -->
+                                    <div class="d-flex align-items-center rounded border px-3 py-2">
+                                        <!-- Date -->
+                                        <p class="mb-0">
+                                            <i class="bi bi-instagram fa-fw me-2"></i> <a href="{{ $user->instagram }}" target="_blank">Instagram</a>
+                                        </p>
+                                    </div>
+                                    <!-- Status END -->
+                                </div>
+                                <div class="col-sm-6">
+                                    <!-- Designation START -->
+                                    <div class="d-flex align-items-center rounded border px-3 py-2">
+                                        <!-- Date -->
+                                        <p class="mb-0">
+                                            <i class="bi bi-linkedin fa-fw me-2"></i> <a href="{{ $user->linkedin }}" target="_blank">LinkedIn</a>
+                                        </p>
+                                    </div>
+                                    <!-- Designation END -->
+                                </div>
+                                <div class="col-sm-6">
+                                    <!-- Lives START -->
+                                    <div class="d-flex align-items-center rounded border px-3 py-2">
+                                        <!-- Date -->
+                                        <p class="mb-0">
+                                            <i class="bi bi-twitter fa-fw me-2"></i> <a href="{{ $user->twitter }}" target="_blank">Twitter</a>
+                                        </p>
+                                    </div>
+                                    <!-- Lives END -->
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Card body END -->
+                    </div>
+                </div>
                 <!-- Edit Comment Modal -->
                 <div class="modal fade" id="editCommentModal" tabindex="-1" aria-hidden="true">
                     <div class="modal-dialog">
@@ -960,8 +1157,8 @@ $(document).ready(function() {
 
 
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    $('#editProfileForm').on('submit', function (e) {
+document.addEventListener('DOMContentLoaded', function() {
+    $('#editProfileForm').on('submit', function(e) {
         e.preventDefault(); // Prevent default form submission
 
         var form = document.getElementById("editProfileForm");
@@ -978,21 +1175,23 @@ document.addEventListener('DOMContentLoaded', function () {
             data: formData,
             contentType: false,
             processData: false,
-            success: function (data) {
+            success: function(data) {
                 // Show a success message inside the modal
                 $('#editProfileForm .alert-success').remove();
-                $('#editProfileForm').prepend('<div class="alert alert-success">Updated successfully!</div>');
+                $('#editProfileForm').prepend(
+                    '<div class="alert alert-success">Updated successfully!</div>');
                 // Do NOT close the modal here
             },
-            error: function (xhr) {
+            error: function(xhr) {
                 // Show error message inside the modal
                 $('#editProfileForm .alert-danger').remove();
-                $('#editProfileForm').prepend('<div class="alert alert-danger">Error occurred.</div>');
+                $('#editProfileForm').prepend(
+                    '<div class="alert alert-danger">Error occurred.</div>');
             }
         });
     });
 });
-  */
+*/
 
 function goPrev() {
     window.history.back();

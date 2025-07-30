@@ -28,7 +28,6 @@
                                 aria-hidden="true">-->
                             <select id="searchable-select" class="form-control " name="mentor_id"  required>
                                 <option value="" data-select2-id="select2-data-4-1ybl">Select Mentor</option>
-
                                 @foreach($mentors as $mentors)
                                 <option value="{{ $mentors->id }}">{{ $mentors->name }}</option>
                                 @endforeach

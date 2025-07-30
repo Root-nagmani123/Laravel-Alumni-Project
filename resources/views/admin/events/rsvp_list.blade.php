@@ -56,8 +56,8 @@
                             <thead>
                                 <!-- start row -->
                                 <tr>
+                                    <th>Event</th>
 									   <th>User</th>
-										<th>Event</th>
 										<th>RSVP Date</th>
 										<th>Status</th>
                                 </tr>

@@ -49,7 +49,7 @@
                             @endif
                             <small>{{ Auth::guard('user')->user()->designation }}</small>
                             <ul class="list-inline mb-0 text-center text-sm-start mt-3 mt-sm-0">
-                        <li class="list-inline-item"><i class="bi bi-briefcase me-1"></i> {{ $user->current_designation }}
+                        <li class="list-inline-item"><i class="bi bi-briefcase me-1"></i> {{ $user->cader }}
                         </li>
                         <li class="list-inline-item"><i class="bi bi-backpack me-1"></i> {{ $user->batch }}</li>
                     </ul>

@@ -128,15 +128,16 @@
             <!-- Image Upload -->
             <div class="col-md-6">
                 <div class="mb-3">
-                    <label class="form-label">Event Image</label>
-                    <span>image type: jpg, jpeg, png</span>
+                    <label class="form-label">Event Image <span class="text-danger">*</span></label>
                     <input type="file" name="image" id="imageInput" class="form-control" accept="image/*">
+                    <span>image type: jpg, jpeg, png</span>
                     <div class="mt-2">
                         <img id="imagePreview"
                              src="{{ $event->image ? asset('storage/' . $event->image) : '#' }}"
                              alt="Preview"
                              style="{{ $event->image ? '' : 'display:none;' }} max-height:150px; border:1px solid #ccc; padding:5px;">
                     </div>
+
                     @error('image')
                     <div class="text-danger">{{ $message }}</div>
                     @enderror

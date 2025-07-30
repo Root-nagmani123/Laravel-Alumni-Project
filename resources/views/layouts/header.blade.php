@@ -57,16 +57,6 @@ Header START -->
 
             <!-- Nav right START -->
             <ul class="nav flex-nowrap align-items-center ms-sm-3 list-unstyled">
-                <!-- <li class="nav-item ms-2">
-					<a class="nav-link bg-light icon-md btn btn-light p-0" href="#">
-						<i class="bi bi-chat-left-text-fill fs-6"> </i>
-					</a>
-				</li>
-				<li class="nav-item ms-2">
-					<a class="nav-link bg-light icon-md btn btn-light p-0" href="settings.html">
-						<i class="bi bi-gear-fill fs-6"> </i>
-					</a>
-				</li> -->
                 <li class="nav-item dropdown ms-2">
                     <a class="nav-link bg-light icon-md btn btn-light p-0" href="#" id="notifDropdown" role="button"
                         data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
@@ -114,6 +104,9 @@ Header START -->
                     <a class="nav-link btn icon-md p-0" href="#" id="profileDropdown" role="button"
                         data-bs-auto-close="outside" data-bs-display="static" data-bs-toggle="dropdown"
                         aria-expanded="false">
+                        @php
+                        $user = Auth::guard('user')->user();
+                        @endphp
                         <img class="avatar-img rounded-2" src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar-1.png') }}" alt="">
                     </a>
                     <ul class="dropdown-menu dropdown-animation dropdown-menu-end pt-3 small me-md-n3"
@@ -178,7 +171,7 @@ Header START -->
                                 @endif
 						</li>
 						<!-- Links -->
-						<li><a class="dropdown-item" href="{{ route('user.directory') }}"><i class="bi bi-gear fa-fw me-2"></i>Directory</a></li>
+						<li><a class="dropdown-item" href="{{ route('user.directory') }}"><i class="bi bi-gear-fill fa-fw me-2"></i>Directory</a></li>
 <!-- Dropdown with collapsible Social Media list -->
 <li class="dropdown-submenu">
   <!-- Toggler item -->
@@ -189,17 +182,18 @@ Header START -->
 
   <!-- Collapsible content -->
   <ul class="list-unstyled ps-4 collapse" id="socialCollapse">
-    <li><a class="dropdown-item" href="https://www.facebook.com/profile.php?id=100064810655288" target="_blank"><i class="bi bi-facebook me-2"></i>Facebook</a></li>
-    <li><a class="dropdown-item" href="https://x.com/lbsnaa_official?lang=en" target="_blank"><i class="bi bi-twitter-x me-2"></i>Twitter</a></li>
-    <li><a class="dropdown-item" href="https://www.youtube.com/@lbsnaaofficial2107" target="_blank"><i class="bi bi-youtube me-2"></i>YouTube</a></li>
-    <li><a class="dropdown-item" href="https://www.linkedin.com/company/lal-bahadur-shastri-national-academy-of-administration-official/posts/?feedView=all" target="_blank"><i class="bi bi-linkedin me-2"></i>LinkedIn</a></li>
+    <li><a class="dropdown-item" href="{{ $user->facebook }}" target="_blank"><i class="bi bi-facebook me-2"></i>Facebook</a></li>
+    <li><a class="dropdown-item" href="{{ $user->twitter }}" target="_blank"><i class="bi bi-twitter-x me-2"></i>Twitter</a></li>
+    <li><a class="dropdown-item" href="{{ $user->instagram }}" target="_blank"><i class="bi bi-instagram me-2"></i>Instagram</a></li>
+    <li><a class="dropdown-item" href="{{ $user->linkedin }}" target="_blank"><i class="bi bi-linkedin me-2"></i>LinkedIn</a></li>
   </ul>
 </li>
+<li><a class="dropdown-item" href="{{ route('user.change-password.form') }}"><i class="bi bi-file-earmark-bar-graph-fill fa-fw me-2"></i>Change Password</a></li>
 						<li>
                          <form action="{{ route('user.logout') }}" method="POST" style="display: inline;" >
 										@csrf
-										<button type="submit" class="bg-danger-soft-hover btn-sm btn d-flex align-items-center w-100">
-											<i class="bi bi-power fa-fw me-2"></i>
+										<button type="submit" class="dropdown-item d-flex align-items-center">
+                                            <i class="bi bi-x-circle-fill fa-fw me-2"></i>
 											Sign Out
 										</button>
 									</form>

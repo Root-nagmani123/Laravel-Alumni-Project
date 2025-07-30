@@ -24,6 +24,9 @@ use App\Http\Controllers\User\ProfileController;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Config;
 
+use App\Http\Controllers\Member\ChangePasswordController;
+use App\Http\Controllers\Member\GroupController as MemberGroupController;
+
 Route::resource('post', PostController::class);
 
 use App\Http\Controllers\User\CommentController;
@@ -115,6 +118,7 @@ Route::prefix('user')->name('user.')->group(function () {
 
         Route::put('/eduinfo/update/{id}', [ProfileController::class, 'updateEduinfo'])->name('profile.eduinfo');
         Route::put('/proinfo/update/{id}', [ProfileController::class, 'updateProinfo'])->name('profile.proinfo');
+        Route::put('/social/update/{id}', [ProfileController::class, 'updateSocial'])->name('profile.social.update');
 
         Route::get('directory', [DashboardController::class, 'directory'])->name('directory');
        //Route::post('/feed/search', [FeedController::class, 'search'])->name('feed.search');
@@ -122,6 +126,7 @@ Route::prefix('user')->name('user.')->group(function () {
 	   Route::post('/event-rsvp', [DashboardController::class, 'submitRsvp'])->name('event.rsvp');
 	   Route::get('/all-events', [DashboardController::class, 'allevents'])->name('allevents');
       Route::get('/broadcast/{id}', [FeedController::class, 'broadcastDetails'])->name('broadcastDetails');
+      Route::get('/group-post/{id}', [FeedController::class, 'getPostByGroup'])->name('group-post');
       Route::get('/library', [LibraryController::class, 'index'])->name('library');
 
 
@@ -342,6 +347,12 @@ Route::get('/user_login', function () {
         Route::get('/user/forum', function () {
             return view('user.forum');
         })->name('user.forum');
+        Route::get('/user/group', function () {
+            return view('user.groups');
+        })->name('user.groups');
+        Route::get('/user/mentor-mentee', function () {
+            return view('user.mentor_mentee');
+        })->name('user.mentor_mentee');
 
 require __DIR__.'/auth.php';
 
@@ -349,3 +360,18 @@ require __DIR__.'/auth.php';
 
 Route::get('/maps', [MapController::class, 'showMap'])->name('maps.index');
 Route::get('/mapshow', [MapController::class, 'Map'])->name('maps.show');
+
+// User Change Password
+Route::middleware(['auth:user'])->group(function () {
+    Route::get('/user/change-password', [ChangePasswordController::class, 'showForm'])->name('user.change-password.form');
+    Route::post('/user/change-password', [ChangePasswordController::class, 'changePassword'])->name('user.change-password');
+
+    Route::prefix('member')->name('user.group.')->group(function () {
+        Route::get('/', [MemberGroupController::class, 'index'])->name('index');
+        Route::get('/create', [MemberGroupController::class, 'create'])->name('create');
+        Route::post('/', [MemberGroupController::class, 'store'])->name('store');
+        Route::get('/{group}/edit', [MemberGroupController::class, 'edit'])->name('edit');
+        Route::put('/{group}', [MemberGroupController::class, 'update'])->name('update');
+        Route::delete('/{group}', [MemberGroupController::class, 'destroy'])->name('destroy');
+    });
+});

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Admin\Admin;
 
 class ForumTopic extends Model
 {
@@ -24,7 +25,8 @@ class ForumTopic extends Model
         'is_deleted',
     ];
     public function creator()
-{
-    return $this->belongsTo(User::class, 'created_by');
-}
+	{
+		//return $this->belongsTo(Member::class, 'created_by');
+		 return $this->belongsTo(Admin::class, 'created_by');
+	}
 }
