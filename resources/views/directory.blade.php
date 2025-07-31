@@ -79,7 +79,6 @@
                                             <th>#</th>
                                             <th>Name</th>
                                             <th>Email Id</th>
-                                            <th>Mobile No.</th>
                                             <th>Service</th>
                                             <th>Cadre</th>
                                             <th>Batch</th>
@@ -91,7 +90,6 @@
                                                 <td>{{ $index + 1 }}</td>
                                                 <td>{{ $row->name }}</td>
                                                 <td>{{ $row->email }}</td>
-                                                <td>{{ $row->mobile }}</td>
                                                 <td>{{ $row->service }}</td>
                                                 <td>{{ $row->cader }}</td>
                                                 <td>{{ $row->batch }}</td>

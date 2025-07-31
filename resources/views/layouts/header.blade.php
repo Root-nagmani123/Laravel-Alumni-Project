@@ -32,22 +32,12 @@ Header START -->
 
             <!-- Main navbar START -->
             <div class="collapse navbar-collapse" id="navbarCollapse">
-                <!-- Search Icon Button -->
-                <div class="nav mt-3 mt-lg-0 flex-nowrap align-items-center px-4 px-lg-0">
-                    <div class="nav-item">
-                        <button type="button" class="btn bg-transparent p-0" data-bs-toggle="modal"
-                            data-bs-target="#searchModal">
-                            <i class="bi bi-search fs-5"></i>
-                        </button>
-                    </div>
-                </div>
-
                 <ul class="navbar-nav navbar-nav-scroll mx-auto">
-                <li class="nav-item">
+                    <li class="nav-item">
                         <a class="nav-link" href="{{route('user.profile', ['id' => 1])}}">Home</a>
                     </li>
-					<!-- Nav item 1 Demos -->
-					<li class="nav-item">
+                    <!-- Nav item 1 Demos -->
+                    <li class="nav-item">
                         <a class="nav-link" href="{{ url('user/feed') }}">Feed</a>
                     </li>
                     <!-- Nav item 2 Mega menu -->
@@ -59,6 +49,25 @@ Header START -->
                         <a class="nav-link" href="{{ url('user/events') }}">Events</a>
                     </li>
                 </ul>
+                <!-- Search Input Group with Dropdown -->
+                <div class="position-relative">
+                    <form onsubmit="return showSearchResults(event)">
+                        <input type="search" id="searchInput" class="form-control ps-5" placeholder="Search..."
+                            autocomplete="off" aria-label="Search" />
+                        <button type="submit"
+                            class="btn bg-transparent px-2 py-0 position-absolute top-50 start-0 translate-middle-y">
+                            <i class="bi bi-search fs-5"></i>
+                        </button>
+                    </form>
+
+                    <!-- Dropdown Menu -->
+                    <div id="searchDropdown" class="dropdown-menu w-100 shadow mt-1"
+                        style="max-height: 300px; overflow-y: auto;">
+                        <!-- Filled by JavaScript -->
+                    </div>
+                </div>
+
+
             </div>
             <!-- Main navbar END -->
 
@@ -207,24 +216,69 @@ Header START -->
 </header>
 <!-- =======================
 Header END -->
-<!-- Search Modal -->
-<div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content rounded-4">
-            <div class="modal-header">
-                <h5 class="modal-title" id="searchModalLabel">Search</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form method="GET" action=""> {{-- Replace with your route --}}
-                    <div class="input-group">
-                        <input type="text" name="query" class="form-control" placeholder="Type to search...">
-                        <button class="btn btn-primary" type="submit" style="background-color: #af2910; border-color: #af2910;">
-                            Search
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
+
+<script>
+  const members = [
+    { id: 1, name: 'John Doe' },
+    { id: 2, name: 'Priya Sharma' },
+    { id: 3, name: 'Amit Verma' },
+    // Add more as needed
+  ];
+
+  function showSearchResults(event) {
+    event.preventDefault();
+    const input = document.getElementById('searchInput');
+    const query = input.value.toLowerCase().trim();
+    const dropdown = document.getElementById('searchDropdown');
+
+    // Clear previous results
+    dropdown.innerHTML = '';
+
+    // Always add the "Alumni Already Added" option at the top
+    const alumniItem = document.createElement('button');
+    alumniItem.type = 'button';
+    alumniItem.className = 'dropdown-item fw-bold text-primary';
+    alumniItem.textContent = 'Alumni';
+    dropdown.appendChild(alumniItem);
+
+    // Filter and add matching members
+    const filtered = members.filter(m => m.name.toLowerCase().includes(query));
+
+    if (filtered.length === 0) {
+      const noResult = document.createElement('button');
+      noResult.type = 'button';
+      noResult.className = 'dropdown-item text-muted';
+      noResult.textContent = 'No matching members';
+      dropdown.appendChild(noResult);
+    } else {
+      filtered.forEach(member => {
+        const item = document.createElement('button');
+        item.type = 'button';
+        item.className = 'dropdown-item d-flex justify-content-between align-items-center';
+        item.innerHTML = `
+          <span>${member.name}</span>
+          <i class="bi bi-star text-warning" title="Mark as Favourite"></i>
+        `;
+        dropdown.appendChild(item);
+      });
+    }
+
+    // Show dropdown
+    dropdown.classList.add('show');
+  }
+
+  // Optional: Hide dropdown when clicked outside
+  document.addEventListener('click', function (e) {
+    const dropdown = document.getElementById('searchDropdown');
+    const input = document.getElementById('searchInput');
+    if (!input.contains(e.target) && !dropdown.contains(e.target)) {
+      dropdown.classList.remove('show');
+    }
+  });
+</script>
+<style>
+  #searchInput:focus + #searchDropdown {
+    display: block;
+  }
+</style>
+
