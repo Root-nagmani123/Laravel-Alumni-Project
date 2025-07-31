@@ -1,4 +1,4 @@
-<div class="col-lg-3 left-sidebar">
+<div class="col-md-3 left-sidebar">
 
     <!-- Advanced filter responsive toggler START -->
     <div class="d-flex align-items-center d-lg-none">

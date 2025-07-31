@@ -1,25 +1,6 @@
 <!-- Main content START -->
-<div class="col-md-8 col-lg-6 vstack gap-4" style="margin-top: 100px;">
-
-    <!-- Story START -->
-    <div class="d-flex gap-2 mb-n3">
-      <div class="position-relative" id="openAddStoryModal">
-  <div class="card border border-2 border-dashed h-150px px-4 px-sm-5 shadow-none d-flex align-items-center justify-content-center text-center">
-    <div>
-      <a class="stretched-link btn btn-light rounded-circle icon-md" href="javascript:void(0);">
-        <i class="fa-solid fa-plus"></i>
-      </a>
-      <h6 class="mt-2 mb-0 small">Post a Story</h6>
-    </div>
-  </div>
-</div>
-
-        <!-- Stories -->
-        <div id="stories" class="storiesWrapper stories-square stories user-icon carousel scroll-enable"></div>
-    </div>
-    <!-- Story END -->
-
-    <!-- Share feed START -->
+<div class="col-md-6 vstack gap-4 mx-auto" style="margin-top: 125px;">
+        <!-- Share feed START -->
     <div class="card card-body">
         <div class="d-flex mb-3">
             <!-- Avatar -->
@@ -57,10 +38,30 @@
         <!-- Share feed toolbar END -->
     </div>
     <!-- Share feed END -->
+    <!-- Story START -->
+    <div class="d-flex gap-2 mb-1">
+        
+      <div class="position-relative" id="openAddStoryModal">
+  <div class="card border border-2 border-dashed h-150px px-4 px-sm-5 shadow-none d-flex align-items-center justify-content-center text-center">
+    <div>
+      <a class="stretched-link btn btn-light rounded-circle icon-md" href="javascript:void(0);">
+        <i class="fa-solid fa-plus"></i>
+      </a>
+      <h6 class="mt-2 mb-0 small">Post a Story</h6>
+    </div>
+  </div>
+</div>
+
+        <!-- Stories -->
+        <div id="stories" class="storiesWrapper stories-square stories user-icon carousel scroll-enable"></div>
+    </div>
+    <!-- Story END -->
+
+
 
     <!-- Card feed item START -->
     @foreach($posts as $post)
-    <div class="card">
+    <div class="card mb-3">
         <!-- Card header START -->
         <div class="card-header border-0 pb-0">
             <div class="d-flex align-items-center justify-content-between">
@@ -496,7 +497,7 @@
       </div>
     </form>
   </div>
-</div>
+ </div>
 <!-- Direct Message Modal end -->
 
 @section('scripts')
