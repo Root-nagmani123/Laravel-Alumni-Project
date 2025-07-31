@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="container">
-    <div class="row g-4 mt-2">
+    <div class="row g-4" style="margin-top: 100px;">
         <div class="col-3">
             <!-- Advanced filter responsive toggler START -->
             <div class="d-flex align-items-center d-lg-none">
@@ -103,92 +103,123 @@
                 </div>
             </nav>
         </div>
-        <div class="col-lg-9">
-            <div class="bg-mode p-4">
-                <h1 class="h4 mb-4">{{ $group->name }} : Group Posts</h1>
+        <div class="col-9">
+            <div class="post-list p-3 rounded mb-4" style="background-color: #af2910; color: #fff;">
+    <div class="d-flex justify-content-between align-items-center">
+        <h1 class="h5 mb-0 text-white">{{ $group->name }} : Group Posts</h1>
+        
+        <!-- Dropdown -->
+        <div class="dropdown">
+            <a href="#" class="text-white btn btn-sm btn-transparent py-0 px-2" data-bs-toggle="dropdown">
+                <i class="bi bi-three-dots-vertical"></i>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+                <li><a class="dropdown-item" href="#"><i class="bi bi-arrow-bar-right fa-fw pe-2"></i>Leave Group</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
 
                 @forelse($posts as $post)
-        @php
-            $validMedia = $post->media->filter(function($media) {
-            return file_exists(storage_path('app/public/' . $media->file_path));
-            });
+@php
+    $validMedia = $post->media->filter(function($media) {
+        return file_exists(storage_path('app/public/' . $media->file_path));
+    });
 
-            $imageMedia = $validMedia->where('file_type', 'image')->values();
-             $totalImages = $imageMedia->count();
-            @endphp
-               <!-- <?php  //print_r($imageMedia); ?> -->
-                <div class="card bg-transparent border-0 rounded mb-4">
-                    <div class="row g-3">
-                        <div class="col-4">
+    $imageMedia = $validMedia->where('file_type', 'image')->values();
+    $totalImages = $imageMedia->count();
+@endphp
 
-                             @if($totalImages === 1)
-            <div class="post-img mt-2">
-                <a href="{{ asset('storage/' . $imageMedia[0]->file_path) }}" class="glightbox"
-                    data-gallery="post-gallery-{{ $post->id }}">
-                    <img src="{{ asset('storage/' . $imageMedia[0]->file_path) }}" loading="lazy" class="w-100 rounded"
-                        alt="Post Image" style="width: 100%; height: 200px;object-fit: cover;">
-                </a>
-            </div>
-            @elseif($totalImages > 1)
-            <div class="post-img d-flex justify-content-between flex-wrap gap-2 gap-lg-3 mt-2">
-                @foreach($imageMedia->take(4) as $index => $media)
-                <div class="position-relative" style="width: 48%;">
-                    <a href="{{ asset('storage/' . $media->file_path) }}" class="glightbox"
-                        data-gallery="post-gallery-{{ $post->id }}">
-                        <img src="{{ asset('storage/' . $media->file_path) }}" alt="Post Image" loading="lazy"
-                            class="w-100">
+<div class="card mb-4">
+    <!-- Card header START -->
+    <div class="card-header border-0 pb-0">
+        <div class="d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center">
+                <!-- Avatar -->
+                <div class="avatar avatar-story me-2">
+                    <a href="#!">
+                        <img class="avatar-img rounded-circle" src="{{ asset('storage/' . ($post->member->avatar ?? 'default.jpg')) }}" alt="">
                     </a>
-                    @if($index === 3 && $totalImages > 4)
-                    {{-- Hidden extra images --}}
-                    @foreach($imageMedia->slice(4) as $extra)
-                    <a href="{{ asset('storage/' . $extra->file_path) }}" class="glightbox d-none"
-                        data-gallery="post-gallery-{{ $post->id }}"></a>
-                    @endforeach
+                </div>
+                <!-- Info -->
+                <div>
+                    <div class="nav nav-divider">
+                        <h6 class="nav-item card-title mb-0">
+                            <a href="#!">{{ $post->member->name ?? 'Anonymous' }}</a>
+                        </h6>
+                        <span class="nav-item small">{{ $post->created_at->diffForHumans() }}</span>
+                    </div>
+                    <p class="mb-0 small">{{ $post->member->designation ?? 'Member' }}</p>
+                </div>
+            </div>
+           
+        </div>
+    </div>
+    <!-- Card header END -->
 
-                    {{-- Overlay link to trigger the rest of the images --}}
-                    <a href="{{ asset('storage/' . $imageMedia[4]->file_path) }}"
-                        class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center text-white glightbox"
-                        style="background-color: rgba(0,0,0,0.6); font-size: 2rem; cursor: pointer;"
-                        data-gallery="post-gallery-{{ $post->id }}">
+    <!-- Card body START -->
+    <div class="card-body">
+        <p>{{ \Illuminate\Support\Str::words(strip_tags($post->content), 50, '...') }}</p>
+
+        @if($totalImages === 1)
+        <a href="{{ asset('storage/' . $imageMedia[0]->file_path) }}" class="glightbox" data-gallery="post-gallery-{{ $post->id }}">
+            <img class="card-img" src="{{ asset('storage/' . $imageMedia[0]->file_path) }}" alt="Post" style="max-height: 400px; object-fit: cover;">
+        </a>
+        @elseif($totalImages > 1)
+        <div class="d-flex flex-wrap gap-2">
+            @foreach($imageMedia->take(4) as $index => $media)
+            <div class="position-relative" style="width: 48%;">
+                <a href="{{ asset('storage/' . $media->file_path) }}" class="glightbox" data-gallery="post-gallery-{{ $post->id }}">
+                    <img src="{{ asset('storage/' . $media->file_path) }}" class="img-fluid rounded" alt="Post Image" style="max-height: 400px; object-fit: cover;">>
+                </a>
+                @if($index === 3 && $totalImages > 4)
+                    @foreach($imageMedia->slice(4) as $extra)
+                        <a href="{{ asset('storage/' . $extra->file_path) }}" class="glightbox d-none" data-gallery="post-gallery-{{ $post->id }}"></a>
+                    @endforeach
+                    <a href="{{ asset('storage/' . $imageMedia[4]->file_path) }}" class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center text-white glightbox" style="background-color: rgba(0,0,0,0.6); font-size: 2rem;">
                         +{{ $totalImages - 4 }}
                     </a>
-                    @endif
-                </div>
-
-                @endforeach
+                @endif
             </div>
-            @endif
-                            <!-- <img class="rounded w-100" src="{{ asset('feed_assets/images/post/4by3/03.jpg') }}"
-                                alt="Default Image"> -->
+            @endforeach
+        </div>
+        @endif
 
-                        </div>
-                        <div class="col-8">
+        @if($post->media_type == 'video' && $post->video_link)
+        <div class="mt-3">
+            <iframe width="100%" height="200" src="{{ $post->video_link }}" frameborder="0" allowfullscreen></iframe>
+        </div>
+        @endif
 
-                            <h5 class="fw-bold">Created by: {{ $post->member->name ?? 'Anonymous' }}</h5>
-                            <div class="d-none d-sm-inline-block">
-                               <p class="mb-2">{{ \Illuminate\Support\Str::words(strip_tags($post->content), 50, '...') }}</p>
+        <!-- Reaction Section -->
+        <ul class="nav nav-stack py-3 small">
+            <li class="nav-item">
+                <a class="nav-link active" href="#"><i class="bi bi-hand-thumbs-up-fill pe-1"></i>Liked ({{ $post->likes_count ?? 0 }})</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#"><i class="bi bi-chat-fill pe-1"></i>Comments ({{ $post->comments_count ?? 0 }})</a>
+            </li>
+        </ul>
 
-
-
-                                @if($post->media_type == 'video' && $post->video_link)
-                                <div class="mb-2">
-                                    <iframe width="100%" height="200" src="{{ $post->video_link }}" frameborder="0"
-                                        allowfullscreen></iframe>
-                                </div>
-                                @endif
-
-
-                                <a class="small text-secondary" href="#!">
-                                    <i class="bi bi-calendar-date pe-1"></i> {{ $post->created_at->format('M d, Y') }}
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                @empty
-                <p>No posts found for this group.</p>
-                @endforelse
+        <!-- Comment box -->
+        <div class="d-flex mb-3">
+            <div class="avatar avatar-xs me-2">
+                <img class="avatar-img rounded-circle" src="{{ asset('assets/images/avatar/12.jpg') }}" alt="">
+            </div>
+            <form class="w-100 position-relative">
+                <textarea class="form-control pe-5 bg-light" rows="1" placeholder="Add a comment..."></textarea>
+                <button class="position-absolute top-50 end-0 translate-middle-y border-0 bg-transparent px-3" type="submit">
+                    <i class="bi bi-send-fill"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+    <!-- Card body END -->
+</div>
+@empty
+<p>No posts found for this group.</p>
+@endforelse
 
 
                 {{-- {{ $posts->links() }} --}}
