@@ -21,6 +21,20 @@ class ProfileController extends Controller
      * Display the user's profile form.
      */
 
+    public function showByName($name): View
+    {
+        
+        $user = Member::where('name', $name)->first();
+        $userId = $user->id;
+
+        $posts = Post::with(['member', 'media', 'likes', 'comments.member'])
+       ->orderBy('created_at', 'desc')
+       ->where('member_id', $userId)
+       ->get();
+
+   return view('profile', compact('user','posts'));
+    }
+
    public function showById(Request $request, $id): View
 {
     //$user = auth()->guard('user')->user();

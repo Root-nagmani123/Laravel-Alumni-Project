@@ -1,12 +1,13 @@
 @extends('admin.layouts.master')
 
-@section('title', 'Edit Group - Alumni | Lal Bahadur')
+@section('title', 'Group - Alumni | Lal Bahadur')
 
 @section('content')
-<div class="container-fluid">
-    <x-breadcrum title="Edit Group" />
-    <x-session_message />
 
+<div class="container-fluid">
+    <x-breadcrum title="Group" />
+    <x-session_message />
+    <!-- start Vertical Steps Example -->
     <div class="card">
         <div class="card-body">
             <h4 class="card-title mb-3">Edit Group</h4>
@@ -17,15 +18,14 @@
                 <div class="row">
                     <div class="col-6">
                         <div class="mb-3">
-                            <label class="form-label">Group Name</label>
+                            <label class="form-label">Name</label>
                             <input type="text" name="name" class="form-control" value="{{ $group->name }}" required>
                         </div>
                     </div>
-
                     <div class="col-6">
                         <div class="mb-3">
                             <label class="form-label">Mentor Name</label>
-                            <select name="mentor_id" id="mentor-select" class="form-control form-select" required>
+                            <select name="mentor_id" class="form-control" required>
                                 <option value="">Select Mentor</option>
                                 @foreach($users as $user)
                                 <option value="{{ $user->id }}"
@@ -36,7 +36,6 @@
                             </select>
                         </div>
                     </div>
-
                     <div class="col-6">
                         <div class="mb-3">
                             <label class="form-label">Member Name (Multiple Mentees) <span
@@ -74,25 +73,36 @@
                     <div class="col-6">
                         <div class="mb-3">
                             <label class="form-label">Status</label>
-                            <select class="form-select" name="status" required>
+                            <select class="form-select" aria-label="Default select" name="status" id="status" required>
                                 <option value="1" {{ $group->status == 1 ? 'selected' : '' }}>Active</option>
                                 <option value="0" {{ $group->status == 0 ? 'selected' : '' }}>Inactive</option>
                             </select>
                         </div>
                     </div>
                 </div>
-
                 <hr>
-                <div class="mb-3 text-end">
-                    <button class="btn btn-primary" type="submit">Update</button>
-                    <a href="{{ route('group.index') }}" class="btn btn-secondary">Cancel</a>
+
+                <!--<div class="mb-3">
+                    <label class="form-label">State ID</label>
+                    <input type="number" name="state_id" class="form-control" value="{{ $group->state_id }}">
+                </div>-->
+                <div class="mb-3 gap-2 float-end">
+                    <button class="btn btn-primary" type="submit">
+                        Update
+                    </button>
+                    <a href="{{ route('group.index') }}" class="btn btn-secondary">
+                        Cancel
+                    </a>
                 </div>
             </form>
         </div>
     </div>
+    <!-- end Vertical Steps Example -->
 </div>
+
+
 @endsection
-@push('scripts')
+
 <script>
 $(document).ready(function() {
     $('.form-select').select2();
