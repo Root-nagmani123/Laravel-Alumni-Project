@@ -158,7 +158,7 @@
                                 </select>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">Select Members</label>
+                                <label class="form-label">Select Mentee</label>
                                 <select class="form-select select2" multiple>
                                     
                                 </select>
@@ -194,7 +194,7 @@
                                 </select>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">Select Members</label>
+                                <label class="form-label">Select Mentor</label>
                                 <select class="form-select select2" multiple>
                                    
                                 </select>

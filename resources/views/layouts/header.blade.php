@@ -6,7 +6,7 @@ Header START -->
     <nav class="navbar navbar-expand-lg">
         <div class="container">
             <!-- Logo START -->
-            <a class="navbar-brand d-flex align-items-center gap-2" href="{{ url('user/feed') }}">
+            <a class="navbar-brand d-flex align-items-center gap-2" href="https://www.lbsnaa.gov.in/">
     <img src="{{ asset('admin_assets/images/logos/lbsnaa_logo.jpg') }}" alt="LBSNAA Logo"
          class="navbar-brand-item" style="height: 60px; object-fit: contain;">
 
@@ -34,6 +34,12 @@ Header START -->
 
                 <ul class="navbar-nav navbar-nav-scroll justify-content-center flex-grow-1 pe-3 flex-nowrap gap-4">
 
+                    <li class="nav-item d-flex gap-2 align-items-center">
+                        <a class="nav-link bg-light icon-md btn btn-light p-0" href="{{ route('user.profile', ['id' => 1]) }}">
+                            <i class="bi bi-person-fill"></i>
+                        </a>
+                        Home
+                    </li>
                     <li class="nav-item d-flex gap-2 align-items-center">
                         <a class="nav-link bg-light icon-md btn btn-light p-0" href="{{ url('user/feed') }}">
                             <i class="bi bi-house-door-fill"></i>

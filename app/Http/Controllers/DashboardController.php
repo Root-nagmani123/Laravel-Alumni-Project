@@ -68,7 +68,7 @@ class DashboardController extends Controller
 
     public function index()
     {
-        $members = Member::all();
+        $members = Member::where('status', 1)->get();
         //$forums = Forum::all();
         $forums = Forum::where('status', 1)->get();
         $groups = Group::where('status', 1)->get();
