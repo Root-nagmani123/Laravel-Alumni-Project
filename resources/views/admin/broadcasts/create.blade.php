@@ -38,7 +38,7 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="mb-3">
-                            <label class="form-label" for="title">Title :</label>
+                            <label class="form-label" for="title">Title<span class="text-danger">*</span>:</label>
                            <div class="mb-3">
                             <input type="text" name="title" id="title" class="form-control" required>
                            </div>
@@ -46,7 +46,7 @@
                     </div>
 					 <div class="col-md-12">
                         <div class="mb-3">
-                            <label class="form-label" for="content">Content :</label>
+                            <label class="form-label" for="content">Content<span class="text-danger">*</span>:</label>
                            <div class="mb-3">
                             <textarea class="form-control" id="content" name="content" required=""></textarea>
                            </div>
