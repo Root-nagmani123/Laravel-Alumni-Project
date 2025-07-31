@@ -50,13 +50,6 @@
            @include('partials.right-sidebar')
        </div>
    </div>
-
-<style>
-
-</style>
-
-
-
    <!-- Modal create Feed photo START -->
    <div class="modal fade" id="feedActionPhoto" tabindex="-1" aria-labelledby="feedActionPhotoLabel" aria-hidden="true">
        <div class="modal-dialog modal-dialog-centered">

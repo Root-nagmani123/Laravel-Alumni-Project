@@ -6,15 +6,16 @@ Header START -->
     <nav class="navbar navbar-expand-lg">
         <div class="container">
             <!-- Logo START -->
-            <a class="navbar-brand d-flex align-items-center gap-2" href="https://www.lbsnaa.gov.in/">
-    <img src="{{ asset('admin_assets/images/logos/lbsnaa_logo.jpg') }}" alt="LBSNAA Logo"
-         class="navbar-brand-item" style="height: 60px; object-fit: contain;">
+            <a class="navbar-brand d-flex align-items-center gap-2" href="https://www.lbsnaa.gov.in/" target="_blank">
+                <img src="{{ asset('admin_assets/images/logos/lbsnaa_logo.jpg') }}" alt="LBSNAA Logo"
+                    class="navbar-brand-item" style="height: 60px; object-fit: contain;">
 
-    <div class="d-flex flex-column lh-sm">
-        <span class="h5 mb-0 fw-bold">Alumni</span>
-        <span style="font-size: 12px; font-weight: 500;color: #af2910;">Lal Bahadur Shastri <br>National Academy of Administration</span>
-    </div>
-</a>
+                <div class="d-flex flex-column lh-sm">
+                    <span class="h5 mb-0 fw-bold">Alumni</span>
+                    <span style="font-size: 12px; font-weight: 500;color: #af2910;">Lal Bahadur Shastri <br>National
+                        Academy of Administration</span>
+                </div>
+            </a>
 
             <!-- Logo END -->
 
@@ -31,32 +32,32 @@ Header START -->
 
             <!-- Main navbar START -->
             <div class="collapse navbar-collapse" id="navbarCollapse">
+                <!-- Search Icon Button -->
+                <div class="nav mt-3 mt-lg-0 flex-nowrap align-items-center px-4 px-lg-0">
+                    <div class="nav-item">
+                        <button type="button" class="btn bg-transparent p-0" data-bs-toggle="modal"
+                            data-bs-target="#searchModal">
+                            <i class="bi bi-search fs-5"></i>
+                        </button>
+                    </div>
+                </div>
 
-                <ul class="navbar-nav navbar-nav-scroll justify-content-center flex-grow-1 pe-3 flex-nowrap gap-4">
-
-                    <li class="nav-item d-flex gap-2 align-items-center">
-                        <a class="nav-link bg-light icon-md btn btn-light p-0" href="{{ route('user.profile', ['id' => 1]) }}">
-                            <i class="bi bi-person-fill"></i>
-                        </a>
-                        Home
+                <ul class="navbar-nav navbar-nav-scroll mx-auto">
+                <li class="nav-item">
+                        <a class="nav-link" href="{{route('user.profile', ['id' => 1])}}">Home</a>
                     </li>
-                    <li class="nav-item d-flex gap-2 align-items-center">
-                        <a class="nav-link bg-light icon-md btn btn-light p-0" href="{{ url('user/feed') }}">
-                            <i class="bi bi-house-door-fill"></i>
-                        </a>
-                        Feed
+					<!-- Nav item 1 Demos -->
+					<li class="nav-item">
+                        <a class="nav-link" href="{{ url('user/feed') }}">Feed</a>
                     </li>
-                    <li class="nav-item d-flex gap-2 align-items-center">
-                        <a class="nav-link bg-light icon-md btn btn-light p-0" href="{{ url('user/library') }}">
-                            <i class="bi bi-file-earmark-text-fill"></i>
-                        </a>Library
+                    <!-- Nav item 2 Mega menu -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url('user/library') }}">Library</a>
                     </li>
-                    <li class="nav-item d-flex gap-2 align-items-center">
-                        <a class="nav-link bg-light icon-md btn btn-light p-0" href="{{ url('user/all-events') }}">
-                            <i class="bi bi-calendar-event-fill"></i>
-                        </a>Events
+                    <!-- Nav item 3 Mega menu -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url('user/events') }}">Events</a>
                     </li>
-
                 </ul>
             </div>
             <!-- Main navbar END -->
@@ -113,7 +114,9 @@ Header START -->
                         @php
                         $user = Auth::guard('user')->user();
                         @endphp
-                        <img class="avatar-img rounded-2" src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar-1.png') }}" alt="">
+                        <img class="avatar-img rounded-2"
+                            src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar-1.png') }}"
+                            alt="">
                     </a>
                     <ul class="dropdown-menu dropdown-animation dropdown-menu-end pt-3 small me-md-n3"
                         aria-labelledby="profileDropdown">
@@ -166,47 +169,35 @@ Header START -->
                                     @if(Auth::guard('user')->check())
                                     <a class="h6 stretched-link" href="#">{{ Auth::guard('user')->user()->name }}</a>
                                     @endif
-									<p class="small m-0">{{ Auth::guard('user')->user()->designation }}</p>
-								</div>
-							</div>
-                             @if(Auth::guard('user')->check())
-                                    @php
-                                        $user = Auth::guard('user')->user();
-                                    @endphp
-                                    <a href="{{ route('user.profile', ['id' => $user->id]) }}" class="dropdown-item btn btn-primary-soft btn-sm my-2 text-center">View profile</a>
-                                @endif
-						</li>
-						<!-- Links -->
-						<li><a class="dropdown-item" href="{{ route('user.directory') }}"><i class="bi bi-gear-fill fa-fw me-2"></i>Directory</a></li>
-<!-- Dropdown with collapsible Social Media list -->
-<li class="dropdown-submenu">
-  <!-- Toggler item -->
-  <a class="dropdown-item d-flex justify-content-between align-items-center" data-bs-toggle="collapse" href="#socialCollapse" role="button" aria-expanded="false" aria-controls="socialCollapse">
-    <span><i class="bi bi-opencollective fa-fw me-2"></i>Social Media</span>
-    <i class="bi bi-chevron-down small"></i>
-  </a>
-
-  <!-- Collapsible content -->
-  <ul class="list-unstyled ps-4 collapse" id="socialCollapse">
-    <li><a class="dropdown-item" href="{{ $user->facebook }}" target="_blank"><i class="bi bi-facebook me-2"></i>Facebook</a></li>
-    <li><a class="dropdown-item" href="{{ $user->twitter }}" target="_blank"><i class="bi bi-twitter-x me-2"></i>Twitter</a></li>
-    <li><a class="dropdown-item" href="{{ $user->instagram }}" target="_blank"><i class="bi bi-instagram me-2"></i>Instagram</a></li>
-    <li><a class="dropdown-item" href="{{ $user->linkedin }}" target="_blank"><i class="bi bi-linkedin me-2"></i>LinkedIn</a></li>
-  </ul>
-</li>
-<li><a class="dropdown-item" href="{{ route('user.change-password.form') }}"><i class="bi bi-file-earmark-bar-graph-fill fa-fw me-2"></i>Change Password</a></li>
-						<li>
-                         <form action="{{ route('user.logout') }}" method="POST" style="display: inline;" >
-										@csrf
-										<button type="submit" class="dropdown-item d-flex align-items-center">
-                                            <i class="bi bi-x-circle-fill fa-fw me-2"></i>
-											Sign Out
-										</button>
-									</form>
-						</li>
-					</ul>
-				</li>
-				<!-- Profile START -->
+                                    <p class="small m-0">{{ Auth::guard('user')->user()->designation }}</p>
+                                </div>
+                            </div>
+                            @if(Auth::guard('user')->check())
+                            @php
+                            $user = Auth::guard('user')->user();
+                            @endphp
+                            <a href="{{ route('user.profile', ['id' => $user->id]) }}"
+                                class="dropdown-item btn btn-primary-soft btn-sm my-2 text-center">View profile</a>
+                            @endif
+                        </li>
+                        <!-- Links -->
+                        <li><a class="dropdown-item" href="{{ route('user.directory') }}"><i
+                                    class="bi bi-gear-fill fa-fw me-2"></i>Directory</a></li>
+                        <!-- Dropdown with collapsible Social Media list -->
+                        <li><a class="dropdown-item" href="{{ route('user.change-password.form') }}"><i
+                                    class="bi bi-file-earmark-bar-graph-fill fa-fw me-2"></i>Change Password</a></li>
+                        <li>
+                            <form action="{{ route('user.logout') }}" method="POST" style="display: inline;">
+                                @csrf
+                                <button type="submit" class="dropdown-item d-flex align-items-center">
+                                    <i class="bi bi-x-circle-fill fa-fw me-2"></i>
+                                    Sign Out
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
+                </li>
+                <!-- Profile START -->
 
             </ul>
             <!-- Nav right END -->
@@ -216,3 +207,24 @@ Header START -->
 </header>
 <!-- =======================
 Header END -->
+<!-- Search Modal -->
+<div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-4">
+            <div class="modal-header">
+                <h5 class="modal-title" id="searchModalLabel">Search</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="GET" action=""> {{-- Replace with your route --}}
+                    <div class="input-group">
+                        <input type="text" name="query" class="form-control" placeholder="Type to search...">
+                        <button class="btn btn-primary" type="submit" style="background-color: #af2910; border-color: #af2910;">
+                            Search
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
