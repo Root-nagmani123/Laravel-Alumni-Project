@@ -127,6 +127,7 @@ class FeedController extends Controller
             ->join('forums_member as fm', 'fm.forums_id', '=', 'f.id')
             ->select('f.id', 'f.name','ft.id as topic_id', 'ft.title as topic_name', 'ft.description','ft.images','ft.created_date')
             ->where('fm.user_id', $userId)
+            ->where('ft.status', 1)
             ->get();
 
     $groupIds = DB::table('group_member')
