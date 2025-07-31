@@ -123,12 +123,26 @@ class FeedController extends Controller
         ->get();
 
         $forums = DB::table('forums as f')
-            ->join('forum_topics as ft', 'ft.forum_id', '=', 'f.id')
-            ->join('forums_member as fm', 'fm.forums_id', '=', 'f.id')
-            ->select('f.id', 'f.name','ft.id as topic_id', 'ft.title as topic_name', 'ft.description','ft.images','ft.created_date')
-            ->where('fm.user_id', $userId)
-            ->where('ft.status', 1)
-            ->get();
+    ->join('forum_topics as ft', 'ft.forum_id', '=', 'f.id')
+    ->join('forums_member as fm', 'fm.forums_id', '=', 'f.id')
+    ->select(
+        'f.id', 
+        'f.name',
+        'ft.id as topic_id', 
+        'ft.title as topic_name', 
+        'ft.description',
+        'ft.images',
+        'ft.created_date'
+    )
+    ->where('fm.user_id', $userId)
+    ->where('f.status', 1)
+    ->where(function($query) {
+        $query->whereNull('f.end_date')
+              ->orWhere('f.end_date', '>=', now());
+    })
+      ->orderBy('f.id', 'desc') 
+    ->get();
+
 
     $groupIds = DB::table('group_member')
     ->where('status', 1)
@@ -138,11 +152,28 @@ class FeedController extends Controller
     })
     ->pluck('group_id');
 
-    $groupNames = DB::table('groups')
-    ->whereIn('id', $groupIds)
-    ->select('id', 'name')
+  $groupNames = DB::table('groups as g')
+    ->join('group_member as gm', 'g.id', '=', 'gm.group_id')
+    ->whereIn('g.id', $groupIds)
+    ->where('g.status', 1)
+    ->where(function($query) {
+        $query->whereNull('g.end_date')
+              ->orWhere('g.end_date', '>=', now());
+    })
+   ->select(
+        'g.id',
+        'g.name',
+        DB::raw("CASE 
+            WHEN gm.mentor = $userId THEN 'mentor'
+            WHEN JSON_CONTAINS(gm.mentiee, '\"$userId\"') THEN 'mentee'
+            ELSE 'unknown' 
+        END as user_role")
+    )
+    ->orderBy('g.id', 'desc') // or 'end_date', 'desc' if you prefer
     ->distinct()
     ->get();
+    // print_r($groupNames);die;
+
 
     $members = Member::all();
 
