@@ -6,7 +6,7 @@
       <div class="position-relative" id="openAddStoryModal">
   <div class="card border border-2 border-dashed h-150px px-4 px-sm-5 shadow-none d-flex align-items-center justify-content-center text-center">
     <div>
-      <a class="stretched-link btn btn-light rounded-circle icon-md" href="#!">
+      <a class="stretched-link btn btn-light rounded-circle icon-md" href="javascript:void(0);">
         <i class="fa-solid fa-plus"></i>
       </a>
       <h6 class="mt-2 mb-0 small">Post a Story</h6>
@@ -84,7 +84,7 @@
 
         // Optional: if you have a group detail page
         $profileLink =  route('user.profile', ['id' => $post->member->id]);
-       
+
         $groupLink = route('user.group-post',['id' =>$post->group_id]);
     } else {
         // Member/user post
@@ -116,7 +116,7 @@
         <h6 class="nav-item card-title mb-0">
             <a href="{{ $post->type === 'group_post' ? $groupLink : $profileLink }}">{{ $displayName }}</a>
         </h6>
-       
+
     </div>
     <p class="mb-0 small">{{ $designation }}
     @if($post->type === 'group_post')
@@ -568,7 +568,23 @@ $(document).on('click', '.delete-comment-btn', function() {
 });
 
 //add storis modal
+/*document.getElementById('openAddStoryModal').addEventListener('click', function () {
+    var myModal = new bootstrap.Modal(document.getElementById('addStoryModal'));
+    myModal.show();
+});
+*/
+
 document.getElementById('openAddStoryModal').addEventListener('click', function () {
+    const fileInput = document.getElementById('story_file');
+    const fileError = document.getElementById('fileError');
+    const fileInfo = document.getElementById('fileInfo');
+    const form = document.getElementById('storyForm');
+
+    fileInput.value = '';
+    fileError.innerText = '';
+    fileInfo.innerText = '';
+    form.reset(); // optional if there are other fields
+
     var myModal = new bootstrap.Modal(document.getElementById('addStoryModal'));
     myModal.show();
 });
