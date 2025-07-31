@@ -134,6 +134,18 @@
                     <!-- Tab 1: Mentor Form -->
                     <div class="tab-pane fade show active" id="mentor" role="tabpanel">
                         <form>
+                            <div class="mb-3">
+                                <label class="form-label">Service</label>
+                                <select class="form-select">
+                                    <option selected disabled>Select Service</option>
+                                    <option value="IAS">Indian Administrative Services - IAS</option>
+                                    <option value="IPS">Indian Police Service - IPS</option>
+                                    <option value="IFS">Indian Foreign Service - IFS</option>
+                                    <option value="IRS">Indian Revenue Service - IRS</option>
+                                    <option value="Other">Other</option>
+
+                                </select>
+                            </div>
                            <div class="mb-3">
                                 <label class="form-label">Year</label>
                                 <select class="form-select">
@@ -152,13 +164,21 @@
                              <div class="mb-3">
                                 <label class="form-label">Sector</label>
                                 <select class="form-select">
-                                    <option selected disabled>Select Cadre</option>
-                                    <option value="IAS">IAS</option>
-                                    <option value="IPS">IPS</option>
+                                    <option selected disabled>Select Sector</option>
+                                    <option value="Rural and Agriculture">Rural and Agriculture</option>
+                                    <option value="Infrastructure">Infrastructure</option>
+                                    <option value="Resources">Resources</option>
+                                    <option value="Social">Social</option>
+                                    <option value="Welfare">Welfare</option>
+                                    <option value="Finance and Economy">Finance and Economy</option>
+                                    <option value="Commerce and Industry">Commerce and Industry</option>
+                                    <option value="Technology">Technology</option>
+                                    <option value="Governance">Governance</option>
+                                    <option value="Security and Foreign Affairs">Security and Foreign Affairs</option>
                                 </select>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">Select Members</label>
+                                <label class="form-label">Select Mentee</label>
                                 <select class="form-select select2" multiple>
                                     
                                 </select>
@@ -170,6 +190,18 @@
                     <!-- Tab 2: Mentee Form -->
                     <div class="tab-pane fade" id="mentee" role="tabpanel">
                         <form>
+                            <div class="mb-3">
+                                <label class="form-label">Service</label>
+                                <select class="form-select">
+                                    <option selected disabled>Select Service</option>
+                                    <option value="IAS">Indian Administrative Services - IAS</option>
+                                    <option value="IPS">Indian Police Service - IPS</option>
+                                    <option value="IFS">Indian Foreign Service - IFS</option>
+                                    <option value="IRS">Indian Revenue Service - IRS</option>
+                                    <option value="Other">Other</option>
+
+                                </select>
+                            </div>
                             <div class="mb-3">
                                 <label class="form-label">Year</label>
                                 <select class="form-select">
@@ -188,13 +220,21 @@
                              <div class="mb-3">
                                 <label class="form-label">Sector</label>
                                 <select class="form-select">
-                                    <option selected disabled>Select Cadre</option>
-                                    <option value="IAS">IAS</option>
-                                    <option value="IPS">IPS</option>
+                                    <option selected disabled>Select Sector</option>
+                                    <option value="Rural and Agriculture">Rural and Agriculture</option>
+                                    <option value="Infrastructure">Infrastructure</option>
+                                    <option value="Resources">Resources</option>
+                                    <option value="Social">Social</option>
+                                    <option value="Welfare">Welfare</option>
+                                    <option value="Finance and Economy">Finance and Economy</option>
+                                    <option value="Commerce and Industry">Commerce and Industry</option>
+                                    <option value="Technology">Technology</option>
+                                    <option value="Governance">Governance</option>
+                                    <option value="Security and Foreign Affairs">Security and Foreign Affairs</option>
                                 </select>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">Select Members</label>
+                                <label class="form-label">Select Mentor</label>
                                 <select class="form-select select2" multiple>
                                    
                                 </select>
