@@ -151,15 +151,17 @@
                 <div class="hstack gap-2 mb-3">
                     <!-- Avatar -->
                     <div class="avatar">
-                        <a href="#!"><img class="avatar-img rounded-circle"
-                                src="{{ asset('storage/uploads/images/' . $forum->images) }}" alt=""></a>
+                        <a href="{{ route('user.forum.show', ['id' => $forum->id]) }}"><img class="avatar-img rounded-circle"
+                                src="{{ asset('storage/uploads/images/' . ($forum->images ?? 'default-forum.jpg')) }}" alt=""></a>
                     </div>
                     <!-- Title -->
                     <div class="overflow-hidden">
-                        <a class="h6 mb-0" href="#!">{{ $forum->name }} </a>
+                        <a class="h6 mb-0" href="{{ route('user.forum.show', ['id' => $forum->id]) }}">{{ $forum->name }} </a>
+                        @if(isset($forum->topic_name))
                         <p class="mb-0 small text-truncate">Topic: {{ $forum->topic_name }}</p>
+                        @endif
                         <small
-                            class="text-muted">{{ \Carbon\Carbon::parse($forum->created_date)->format('d M, Y') }}</small>
+                            class="text-muted">{{ \Carbon\Carbon::parse($forum->created_date ?? now())->format('d M, Y') }}</small>
                     </div>
 
                 </div>
