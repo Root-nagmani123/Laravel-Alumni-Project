@@ -53,10 +53,10 @@
                 <!-- -------------------------------------------- -->
                 <!-- Topics -->
                 <!-- -------------------------------------------- -->
-                <div class="col-md-3">
+                <!-- <div class="col-md-3">
                     <div class="card bg-secondary-subtle overflow-hidden shadow-none">
                         <div class="card-body p-4">
-                            <span class="text-dark-light">Topics</span>
+                            <span class="text-dark-light"><a href="#" class="text-white">Topics</a></span>
                             <div class="hstack gap-6">
                                 <h5 class="mb-0 fs-7">{{ $total_topics }}</h5>
                               @if (is_null($topicChangePercent))
@@ -68,14 +68,14 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
                 <!-- -------------------------------------------- -->
                 <!-- Events -->
                 <!-- -------------------------------------------- -->
                 <div class="col-md-3">
                     <div class="card bg-success-subtle overflow-hidden shadow-none">
                         <div class="card-body p-4">
-                            <span class="text-dark-light">Events</span>
+                            <span class="text-dark-light"><a href="{{ route('events.index') }}" class="text-white">Events</a></span>
                             <div class="hstack gap-6">
                                 <h5 class="mb-0 fs-7">{{ $total_events }}</h5>
                                 <span class="fs-11 fw-semibold text-muted"></span>
@@ -86,7 +86,7 @@
                 <div class="col-md-3">
                     <div class="card bg-info-subtle overflow-hidden shadow-none">
                         <div class="card-body p-4">
-                            <span class="text-dark-light">Groups</span>
+                            <span class="text-dark-light"><a href="{{ route('group.index') }}" class="text-white">Groups</a></span>
                             <div class="hstack gap-6">
                                 <h5 class="mb-0 fs-7">{{ $total_groups }}</h5>
                                 <span class="fs-11 fw-semibold text-muted"></span>
@@ -100,7 +100,7 @@
                 <div class="col-md-3">
                     <div class="card bg-danger-subtle overflow-hidden shadow-none">
                         <div class="card-body p-4">
-                            <span class="text-dark-light">Broadcasts</span>
+                            <span class="text-dark-light"><a href="{{ route('broadcasts.index') }}" class="text-white">Broadcasts</a></span>
                             <div class="hstack gap-6">
                                 <h5 class="mb-0 fs-7">{{ $total_broadcasts }}</h5>
                                 <span class="fs-11 fw-semibold text-muted"></span>

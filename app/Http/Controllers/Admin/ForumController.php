@@ -11,8 +11,17 @@ use Illuminate\Http\Request;
 use DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use App\Services\NotificationService;
 class ForumController extends Controller
 {
+
+    protected $notificationService;
+
+    public function __construct(NotificationService $notificationService)
+    {
+        $this->notificationService = $notificationService;
+    }
+
     public function index()
         {
             // $forums = Forum::all();
@@ -117,6 +126,7 @@ class ForumController extends Controller
         'assignedUsers' => $assignedUsers
         ]);
         }
+
     public function storeMembers(Request $request)
         {
         $request->validate([
@@ -143,6 +153,12 @@ class ForumController extends Controller
     if (!empty($insertData)) {
         DB::table('forums_member')->insert($insertData);
     }
+
+    if (!empty($userIds)) {
+        $message = 'New members added to forum.';
+        $this->notificationService->notifyMemberAdded($userIds, 'forum', $message, $forumId, 'forum');
+    }
+
     return redirect()->route('forums.index')->with('success', 'Member created successfully.');
     }
 
@@ -205,7 +221,28 @@ class ForumController extends Controller
             $data['files'] = basename($docPath);
         }
 
-        DB::table('forum_topics')->insert($data);
+        // DB::table('forum_topics')->insert($data);
+
+        $topicId = DB::table('forum_topics')->insertGetId($data);
+
+    // 6. (Optional) Notify all forum members
+    $memberIds = DB::table('forums_member')
+                    ->where('forums_id', $request->forum_id)
+                    ->pluck('user_id')
+                    ->toArray();
+
+    if (!empty($memberIds)) {
+        $message = 'A new topic has been posted in your forum: ' . $request->title;
+
+        // Assuming you have notification service
+        $this->notificationService->notifyGroupOrForumMembers(
+            'forum_topic',
+            $message,
+            $topicId,
+            'forum_topic',
+            $memberIds
+        );
+    }
 
         return redirect()->route('forums.index')->with('success', 'Topic saved successfully!');
     }

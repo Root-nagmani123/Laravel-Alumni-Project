@@ -7,7 +7,35 @@ use App\Models\Member;
 
 class NotificationService
 {
-   
+    
+    //notify all members for event, broadcast
+        public function notifyAllMembers(string $type, string $message, $sourceId, $sourceType, $fromUserId = null)
+        {
+            return $this->createNotification([
+                'from_user_id' => $fromUserId ,
+                'type'         => $type, // e.g., 'event', 'broadcast'
+                'message'      => $message,
+                'source_id'    => $sourceId,
+                'source_type'  => $sourceType,
+                'user_id'     => null, // Means: all users
+            ]);
+        }
+
+        //member add to group or forum
+        public function notifyMemberAdded(array $memberIds, string $type, string $message, $sourceId, string $sourceType, $fromUserId = null)
+        {
+            return $this->createNotification([
+                'from_user_id' => $fromUserId,
+                'type'         => $type,
+                'message'      => $message,
+                'source_id'    => $sourceId,
+                'source_type'  => $sourceType,
+                'user_id'      => json_encode(array_map('intval', $memberIds)), // int values
+            ]);
+        }
+           
+
+
     public function createNotification(array $data): Notification
     {
         return Notification::create([
@@ -22,17 +50,6 @@ class NotificationService
     }
 
 
-    public function notifyAllMembers(string $type, string $message, $sourceId, $sourceType, $fromUserId = null)
-    {
-        return $this->createNotification([
-            'from_user_id' => $fromUserId ,
-            'type'         => $type, // e.g., 'event', 'broadcast'
-            'message'      => $message,
-            'source_id'    => $sourceId,
-            'source_type'  => $sourceType,
-            'user_id'     => null, // Means: all users
-        ]);
-    }
 
     public function notifyGroupOrForumMembers(array $memberIds, string $type, string $message, $sourceId, string $sourceType, $fromUserId = null)
     {
@@ -46,7 +63,7 @@ class NotificationService
         ]);
     }
 
-
+//like or comment on post
     public function notifyPostOwner(int $postOwnerId, int $fromUserId, string $type, string $message, $sourceId, string $sourceType)
     {
         return $this->createNotification([
@@ -59,16 +76,4 @@ class NotificationService
         ]);
     }
 
-
-    public function notifyMemberAdded(int $memberId, int $fromUserId, string $type, string $message, $sourceId, string $sourceType)
-    {
-        return $this->createNotification([
-            'from_user_id' => $fromUserId,
-            'type'         => $type, // 'forum_add' or 'group_add'
-            'message'      => $message,
-            'source_id'    => $sourceId,
-            'source_type'  => $sourceType,
-            'user_id'     => [$memberId],
-        ]);
-    }
 }
