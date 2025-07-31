@@ -31,6 +31,9 @@
 	<!-- Theme CSS -->
 	<link rel="stylesheet" type="text/css" href="{{asset('feed_assets/css/style.css')}}">
 
+	<!-- alpine JS -->
+	 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
 	<!-- Accessibility css -->
 
 	<link rel="stylesheet" href="https://img1.digitallocker.gov.in/ux4g/UX4G-CDN-accessibility/css/accesibility-style-v2.1.css">
@@ -38,7 +41,7 @@
 	 <!-- Global site tag (gtag.js) - Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-GMKQ4P9YMZ"></script>
 
-
+  
 
   <script>
     window.dataLayer = window.dataLayer || [];
