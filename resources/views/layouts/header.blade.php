@@ -60,11 +60,12 @@ Header START -->
 
                 </ul> -->
                 <ul class="navbar-nav navbar-nav-scroll mx-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{route('user.profile', ['id' => 1])}}">Home</a>
-                    </li>
-                    <!-- Nav item 1 Demos -->
-                    <li class="nav-item">
+                <li class="nav-item">
+                    
+                <a class="nav-link" href="{{ route('user.profile.name', ['name' => 'Alumni']) }}">Home</a>
+                </li>
+					<!-- Nav item 1 Demos -->
+					<li class="nav-item">
                         <a class="nav-link" href="{{ url('user/feed') }}">Feed</a>
                     </li>
                     <!-- Nav item 2 Mega menu -->
