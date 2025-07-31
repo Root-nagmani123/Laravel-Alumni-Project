@@ -23,13 +23,12 @@
 
 <body>
 
-    <!-- loader start -->
-    <div class="loading-text">
-        <div>
-            <h1 class="animate">LBSNAA Alumni</h1>
-        </div>
-    </div>
-    <!-- loader end -->
+<!-- Simple Bootstrap Loader -->
+<div class="d-flex justify-content-center align-items-center vh-100 bg-white" id="pageLoader">
+  <div class="spinner-border text-danger" role="status" style="width: 3rem; height: 3rem;">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+</div>
 
 
     <!-- login section start -->
@@ -200,6 +199,17 @@
         });
     });
     </script>
+    <script>
+  window.addEventListener("load", () => {
+    const loader = document.getElementById("pageLoader");
+    if (loader) {
+      loader.style.opacity = "0";
+      loader.style.transition = "opacity 0.4s ease";
+      setTimeout(() => loader.remove(), 400);
+    }
+  });
+</script>
+
 
 </body>
 
