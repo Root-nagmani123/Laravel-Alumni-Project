@@ -28,8 +28,7 @@
                             <select name="mentor_id" class="form-control" required>
                                 <option value="">Select Mentor</option>
                                 @foreach($users as $user)
-                                <option value="{{ $user->id }}"
-                                    {{ $group->groupMember && $group->groupMember->mentor == $user->id ? 'selected' : '' }}>
+                                <option value="{{ $user->id }}" {{ $group->groupMember && $group->groupMember->mentor == $user->id ? 'selected' : '' }}>
                                     {{ $user->name }}
                                 </option>
                                 @endforeach
@@ -53,12 +52,11 @@
                                 }
                                 @endphp
                                 @foreach($users as $user)
-                                @if($user->id != $currentMentor)
-                                <option value="{{ $user->id }}"
-                                    {{ in_array($user->id, $selectedMentees) ? 'selected' : '' }}>
-                                    {{ $user->name }}
-                                </option>
-                                @endif
+                                    @if($user->id != $currentMentor)
+                                    <option value="{{ $user->id }}" {{ in_array($user->id, $selectedMentees) ? 'selected' : '' }}>
+                                        {{ $user->name }}
+                                    </option>
+                                    @endif
                                 @endforeach
                             </select>
                         </div>
