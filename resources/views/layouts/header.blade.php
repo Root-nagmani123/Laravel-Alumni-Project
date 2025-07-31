@@ -33,18 +33,36 @@ Header START -->
             <!-- Main navbar START -->
             <div class="collapse navbar-collapse" id="navbarCollapse">
                 <ul class="navbar-nav navbar-nav-scroll mx-auto">
-                <li class="nav-item">
-                    
-                <a class="nav-link" href="{{ route('user.profile.name', ['name' => 'Alumni']) }}">Home</a>
-                </li>
-					<!-- Nav item 1 Demos -->
-					<li class="nav-item">
+                    <li class="nav-item">
+
+                        <a class="nav-link" href="{{ route('user.profile.name', ['name' => 'Alumni']) }}">Home</a>
+                    </li>
+                    <!-- Nav item 1 Demos -->
+                    <li class="nav-item">
                         <a class="nav-link" href="{{ url('user/feed') }}">Feed</a>
                     </li>
-                    <!-- Nav item 2 Mega menu -->
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url('user/library') }}">Library</a>
+                    <!-- Nav item: Dropdown for Library -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="libraryDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Library
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="libraryDropdown">
+                            <li>
+                                <a class="dropdown-item" href="https://gsl.lbsnaa.gov.in/" target="_blank">
+                                    Gandhi Smriti Library Online Catalogue (OPAC)
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item"
+                                    href="https://idpbridge.myloft.xyz/simplesaml/module.php/core/loginuserpass?AuthState=_13df360546d97777e748e8ded7bf639c5c8c45d3d7%3Ahttps%3A%2F%2Fidpbridge.myloft.xyz%2Fsimplesaml%2Fmodule.php%2Fsaml%2Fidp%2FsingleSignOnService%3Fspentityid%3Dhttps%253A%252F%252Felibrarylbsnaa.myloft.xyz%26cookieTime%3D1688360911"
+                                    target="_blank">
+                                    e-Library (MyLOFT)
+                                </a>
+                            </li>
+                        </ul>
                     </li>
+
                     <!-- Nav item 3 Mega menu -->
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url('user/events') }}">Events</a>
@@ -219,14 +237,22 @@ Header START -->
 Header END -->
 
 <script>
-  const members = [
-    { id: 1, name: 'John Doe' },
-    { id: 2, name: 'Priya Sharma' },
-    { id: 3, name: 'Amit Verma' },
+const members = [{
+        id: 1,
+        name: 'John Doe'
+    },
+    {
+        id: 2,
+        name: 'Priya Sharma'
+    },
+    {
+        id: 3,
+        name: 'Amit Verma'
+    },
     // Add more as needed
-  ];
+];
 
-  function showSearchResults(event) {
+function showSearchResults(event) {
     event.preventDefault();
     const input = document.getElementById('searchInput');
     const query = input.value.toLowerCase().trim();
@@ -246,39 +272,39 @@ Header END -->
     const filtered = members.filter(m => m.name.toLowerCase().includes(query));
 
     if (filtered.length === 0) {
-      const noResult = document.createElement('button');
-      noResult.type = 'button';
-      noResult.className = 'dropdown-item text-muted';
-      noResult.textContent = 'No matching members';
-      dropdown.appendChild(noResult);
+        const noResult = document.createElement('button');
+        noResult.type = 'button';
+        noResult.className = 'dropdown-item text-muted';
+        noResult.textContent = 'No matching members';
+        dropdown.appendChild(noResult);
     } else {
-      filtered.forEach(member => {
-        const item = document.createElement('button');
-        item.type = 'button';
-        item.className = 'dropdown-item d-flex justify-content-between align-items-center';
-        item.innerHTML = `
+        filtered.forEach(member => {
+            const item = document.createElement('button');
+            item.type = 'button';
+            item.className = 'dropdown-item d-flex justify-content-between align-items-center';
+            item.innerHTML = `
           <span>${member.name}</span>
           <i class="bi bi-star text-warning" title="Mark as Favourite"></i>
         `;
-        dropdown.appendChild(item);
-      });
+            dropdown.appendChild(item);
+        });
     }
 
     // Show dropdown
     dropdown.classList.add('show');
-  }
+}
 
-  // Optional: Hide dropdown when clicked outside
-  document.addEventListener('click', function (e) {
+// Optional: Hide dropdown when clicked outside
+document.addEventListener('click', function(e) {
     const dropdown = document.getElementById('searchDropdown');
     const input = document.getElementById('searchInput');
     if (!input.contains(e.target) && !dropdown.contains(e.target)) {
-      dropdown.classList.remove('show');
+        dropdown.classList.remove('show');
     }
-  });
+});
 </script>
 <style>
-  #searchInput:focus + #searchDropdown {
+#searchInput:focus+#searchDropdown {
     display: block;
-  }
+}
 </style>

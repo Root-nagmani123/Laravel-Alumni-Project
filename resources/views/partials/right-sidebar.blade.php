@@ -845,7 +845,7 @@
 
 <!-- Group Modal -->
 <div class="modal fade" id="groupModal" tabindex="-1" aria-labelledby="groupModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <form id="groupForm" action="{{ route('user.group.store') }}" method="POST">
             @csrf
             <div class="modal-content">
@@ -861,22 +861,56 @@
                         <input type="text" class="form-control" id="groupName" name="group_name"
                             placeholder="Enter group name" required>
                     </div>
+                    <div class="mb-3">
+                        <label for="groupName" class="form-label">Services</label>
+                        <select name="sector" id="" class="form-control">
+                            <option value="">Select Services</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="groupName" class="form-label">Cadre</label>
+                        <select name="cadre" id="" class="form-control">
+                            <option value="">Select Cadre</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="groupName" class="form-label">Year</label>
+                       <select name="year" id="" class="form-control">
+                            <option value="">Select Year</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="groupName" class="form-label">Sector</label>
+                        <select name="sector" id="" class="form-control">
+                            <option value="">Select Sector</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="groupName" class="form-label">Expiry Date</label>
+                        <input type="date" class="form-control" name="end_date" id="end_date">
+                    </div>
 
-                   <link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
 
-<select id="memberSelect" name="member_ids[]" multiple>
-    @foreach($members as $member)
-        <option value="{{ $member->id }}">{{ $member->name }}</option>
-    @endforeach
-</select>
+                    <link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.css" rel="stylesheet">
+                    <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js">
+                    </script>
+                    <div class="mb-3">
+                        <label for="groupName" class="form-label">Choose Members</label>
+                        <select id="memberSelect" name="member_ids[]" multiple>
+                            @foreach($members as $member)
+                            <option value="{{ $member->id }}">{{ $member->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
 
-<script>
-    new TomSelect('#memberSelect', {
-        plugins: ['remove_button'],
-        placeholder: 'Select members...',
-    });
-</script>
+
+
+                    <script>
+                    new TomSelect('#memberSelect', {
+                        plugins: ['remove_button'],
+                        placeholder: 'Select members...',
+                    });
+                    </script>
 
 
 

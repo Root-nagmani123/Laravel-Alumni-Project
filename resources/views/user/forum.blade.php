@@ -113,15 +113,9 @@
                             style="background-image:url({{asset('feed_assets/images/bg/01.jpg')}}); background-position: center; background-size: cover; background-repeat: no-repeat;">
                         </div>
                         <!-- Card body START -->
-                        <div class="card-body text-center pt-0">
-                            <!-- Avatar -->
-                            <div class="avatar avatar-lg mt-n5 mb-3">
-                                <a href="group-details.html"><img
-                                        class="avatar-img rounded-circle border border-white border-3 bg-white"
-                                        src="assets/images/logo/08.svg" alt=""></a>
-                            </div>
+                        <div class="card-body text-center pt-2">
                             <!-- Info -->
-                            <h5 class="mb-0"> <a href="group-details.html">All in the Mind</a> </h5>
+                            <h5 class="mb-0 "> <a href="group-details.html">All in the Mind</a> </h5>
                         </div>
                         <!-- Card body END -->
                         <!-- Card Footer START -->
