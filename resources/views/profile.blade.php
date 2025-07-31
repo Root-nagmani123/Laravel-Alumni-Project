@@ -561,6 +561,18 @@
                                                                         placeholder="Enter your Twitter profile link">
                                                                 </div>
                                                             </div>
+                                                            <div class="row mb-3">
+                                                                <div class="col-3">
+                                                                    <label for="twitter">e-HRMS URL:</label>
+                                                                </div>
+                                                                <div class="col-9">
+                                                                    <input type="text" id="e-HREMS"
+                                                                        name="e-HREMS"
+                                                                        value=""
+                                                                        class="form-control"
+                                                                        placeholder="Enter your e-HREMS link">
+                                                                </div>
+                                                            </div>
                                                         </div>
 
                                                         <button type="submit" class="btn btn-primary">Update</button>
@@ -953,6 +965,16 @@
                                         <!-- Date -->
                                         <p class="mb-0">
                                             <i class="bi bi-twitter fa-fw me-2"></i> <a href="{{ $user->twitter }}" target="_blank">Twitter</a>
+                                        </p>
+                                    </div>
+                                    <!-- Lives END -->
+                                </div>
+                                <div class="col-sm-6">
+                                    <!-- Lives START -->
+                                    <div class="d-flex align-items-center rounded border px-3 py-2">
+                                        <!-- Date -->
+                                        <p class="mb-0">
+                                            <i class="bi bi-twitter fa-fw me-2"></i> <a href="{{ $user->twitter }}" target="_blank">e-HRMS</a>
                                         </p>
                                     </div>
                                     <!-- Lives END -->
