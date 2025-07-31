@@ -26,6 +26,7 @@ use Illuminate\Support\Facades\Config;
 
 use App\Http\Controllers\Member\ChangePasswordController;
 use App\Http\Controllers\Member\GroupController as MemberGroupController;
+use App\Http\Controllers\Member\ForumController as MemberForumController;
 
 Route::resource('post', PostController::class);
 
@@ -135,6 +136,9 @@ Route::prefix('user')->name('user.')->group(function () {
 
 
     });
+
+    Route::get('user/forum', [MemberForumController::class, 'index'])->name('forum');
+    Route::get('user/forum/{id}', [MemberForumController::class, 'show'])->name('forum.show');
 
 });
 
