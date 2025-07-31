@@ -17900,7 +17900,7 @@ a.badge:hover {
 .right-sidebar {
   position: sticky; 
   top: 100px; 
-  height: 85vh;
+  height: 90vh;
 }
 .right-sidebar:hover {
   overflow-y: auto;

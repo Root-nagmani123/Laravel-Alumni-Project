@@ -113,9 +113,26 @@
                                             <!-- <i class="input-icon" data-feather="eye-off" width="20" height="20"></i> -->
                                         </div>
                                         <div class="btn-section text-center">
-                                            <button type="submit" class="btn btn-primary btn-lg w-100" style="background-color: #af2910; color: #fff; border-color: #af2910;">Login</button>
-
+                                            <button type="submit" class="btn btn-primary btn-lg w-100"
+                                                style="background-color: #af2910; color: #fff; border-color: #af2910;">Login</button>
                                         </div>
+
+                                        <div class="mt-4 text-center">
+                                            <a href="" class="text-decoration-none"
+                                                style="color:#af2910;">
+                                                👉 Click here to Register
+                                            </a>
+                                            <a href="" class="text-decoration-none"
+                                                style="color:#af2910;">
+                                                🔐 Login with SSO
+                                            </a>
+                                            <a href="" class="text-decoration-none"
+                                                style="color:#af2910;">
+                                                ❓ Forgot Password?
+                                            </a>
+                                        </div>
+
+
                                     </form>
                                 </div>
                             </div>
@@ -127,7 +144,7 @@
     </section>
     <!-- login section end -->
 
-    
+
 
 
     <!-- latest jquery-->

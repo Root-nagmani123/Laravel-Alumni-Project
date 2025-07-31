@@ -364,6 +364,9 @@ Route::get('/user_login', function () {
          Route::get('/admin/mentorship/edit', function () {
             return view('admin.mentorship.edit');
         })->name('admin.mentorship.edit');
+        Route::get('/user/home', function () {
+            return view('user.home');
+        })->name('user.home');
 
 require __DIR__.'/auth.php';
 
