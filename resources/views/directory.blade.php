@@ -98,7 +98,6 @@
                                     </tbody>
                                 </table>
                             </div>
-
                         </div>
                     </div>
                 </div>
@@ -120,18 +119,18 @@
 <script>
     $(document).ready(function () {
         var table = $('#memberTable').DataTable();
+        // Service = 3, Cadre = 4, Batch = 5 (0-based index)
         $('#serviceFilter').on('change', function () {
-            table.column(4).search(this.value).draw();
+            table.column(3).search(this.value).draw();
         });
 
         $('#cadreFilter').on('change', function () {
-            table.column(5).search(this.value).draw();
+            table.column(4).search(this.value).draw();
         });
 
         $('#batchFilter').on('change', function () {
-            table.column(6).search(this.value).draw();
+            table.column(5).search(this.value).draw();
         });
-        
     });
 </script>
 @endsection
