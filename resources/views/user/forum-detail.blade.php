@@ -123,7 +123,7 @@
                             <!-- Forum Info -->
                             <div>
                                 <h5 class="card-title mb-0">{{ $forum->name }}</h5>
-                                <p class="mb-0 small text-muted">Forum • {{ $topics->count() }} topics</p>
+                                <p class="mb-0 small text-muted">{{ $topics->count() }} topics</p>
                             </div>
                         </div>
 
