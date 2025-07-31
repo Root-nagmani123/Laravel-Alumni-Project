@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // Prevent form submit if file is invalid
-    form.addEventListener('submit', function (e) {
+    /*form.addEventListener('submit', function (e) {
         const file = fileInput.files[0];
         fileError.innerText = '';
 
@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', function () {
             e.preventDefault();
             return;
         }
-    });
+    }); */
 });
 </script>
 </body>
