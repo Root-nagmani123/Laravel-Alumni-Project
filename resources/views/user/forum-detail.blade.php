@@ -113,16 +113,10 @@
                 <div class="card-header border-0 pb-0">
                     <div class="d-flex align-items-center justify-content-between">
                         <div class="d-flex align-items-center">
-                            <!-- Forum Avatar -->
-                            <div class="avatar me-3">
-                                <img class="avatar-img rounded-circle" 
-                                     src="{{ asset('storage/uploads/images/' . ($forum->images ?? 'default-forum.jpg')) }}" 
-                                     alt="{{ $forum->name }}">
-                            </div>
                             <!-- Forum Info -->
                             <div>
                                 <h5 class="card-title mb-0">{{ $forum->name }}</h5>
-                                <p class="mb-0 small text-muted">Forum • {{ $topics->count() }} topics</p>
+                                <p class="mb-0 small text-muted">{{ $topics->count() }} topics</p>
                             </div>
                         </div>
                         <!-- Back Button -->
