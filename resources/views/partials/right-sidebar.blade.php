@@ -15,7 +15,8 @@
 
                     <!-- News item -->
                     <!-- Links -->
-                    <a href="{{ route('user.mentor_mentee') }}" class="text-decoration-none" style="color:#af2910;">Wants to become Mentor / Mentee</a>
+                    <a href="{{ route('user.mentor_mentee') }}" class="text-decoration-none"
+                        style="color:#af2910;">Wants to become Mentor / Mentee</a>
                 </div>
                 <!-- Card body END -->
             </div>
@@ -844,14 +845,15 @@
 
 <!-- Group Modal -->
 <div class="modal fade" id="groupModal" tabindex="-1" aria-labelledby="groupModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <form id="groupForm" action="{{ route('user.group.store') }}" method="POST">
-      @csrf
-      <div class="modal-content">
-        <div class="modal-header bg-danger text-white">
-          <h5 class="modal-title text-white" id="groupModalLabel">Create Group</h5>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
+    <div class="modal-dialog">
+        <form id="groupForm" action="{{ route('user.group.store') }}" method="POST">
+            @csrf
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title text-white" id="groupModalLabel">Create Group</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
 
                 <div class="modal-body">
                     <div class="mb-3">
@@ -860,64 +862,23 @@
                             placeholder="Enter group name" required>
                     </div>
 
-                    <!-- Alpine.js (Make sure it's included in your layout or this page) -->
-                    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+                   <link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
 
-                    <div x-data="memberSelector()" class="mb-3">
-                        <label class="form-label">Member Names</label>
+<select id="memberSelect" name="member_ids[]" multiple>
+    @foreach($members as $member)
+        <option value="{{ $member->id }}">{{ $member->name }}</option>
+    @endforeach
+</select>
 
-                        <!-- Input field for typing and selecting -->
-                        <input type="text" class="form-control" placeholder="Type name and press Enter"
-                            x-model="newMember" list="membersList" @keydown.enter.prevent="addMember">
+<script>
+    new TomSelect('#memberSelect', {
+        plugins: ['remove_button'],
+        placeholder: 'Select members...',
+    });
+</script>
 
-                        <!-- Autocomplete list -->
-                        <datalist id="membersList">
-                            <template x-for="member in allMembers" :key="member.id">
-                                <option :value="member.name"></option>
-                            </template>
-                        </datalist>
 
-                        <!-- Selected tags -->
-                        <div class="mt-2">
-                            <template x-for="(member, index) in selectedMembers" :key="member.id">
-                                <span class="badge bg-primary me-1 mb-1">
-                                    <span x-text="member.name"></span>
-                                    <button type="button" class="btn-close btn-close-white btn-sm ms-1"
-                                        @click="removeMember(index)">
-                                    </button>
-                                    <input type="hidden" name="member_ids[]" :value="member.id">
-                                </span>
-                            </template>
-                        </div>
-                    </div>
-
-                    <script>
-                    function memberSelector() {
-                        return {
-                            newMember: '',
-                            selectedMembers: [],
-                            allMembers: @json($members), // assuming each member has {id, name}
-
-                            addMember() {
-                                if (!this.newMember.trim()) return;
-
-                                const match = this.allMembers.find(m =>
-                                    m.name.toLowerCase() === this.newMember.trim().toLowerCase()
-                                );
-
-                                if (match && !this.selectedMembers.some(m => m.id === match.id)) {
-                                    this.selectedMembers.push(match);
-                                }
-
-                                this.newMember = '';
-                            },
-
-                            removeMember(index) {
-                                this.selectedMembers.splice(index, 1);
-                            }
-                        }
-                    }
-                    </script>
 
 
                     <div class="modal-footer">
@@ -930,14 +891,14 @@
 </div>
 
 <script>
-	 document.addEventListener('DOMContentLoaded', function () {
-        const modal = document.getElementById('groupActionpost');
-        modal.addEventListener('show.bs.modal', function (event) {
-            const button = event.relatedTarget;
-            const groupName = button.getAttribute('data-group-name');
-            console.log(groupName);
-           const groupId = button.getAttribute('data-group-id');
-           console.log(groupId);
+document.addEventListener('DOMContentLoaded', function() {
+    const modal = document.getElementById('groupActionpost');
+    modal.addEventListener('show.bs.modal', function(event) {
+        const button = event.relatedTarget;
+        const groupName = button.getAttribute('data-group-name');
+        console.log(groupName);
+        const groupId = button.getAttribute('data-group-id');
+        console.log(groupId);
 
 
         // Set hidden input value
@@ -951,4 +912,7 @@
     });
 });
 </script>
+
+
+
 <!-- Right sidebar END -->
