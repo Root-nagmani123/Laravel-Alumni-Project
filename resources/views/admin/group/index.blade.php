@@ -63,6 +63,7 @@
                                     <th>Name</th>
                                     <th>Topics</th>
                                     <th>Created By</th>
+                                    <th>Group End Date</th>
                                     <th>Status</th>
                                     <th>Action</th>
                                 </tr>
@@ -83,7 +84,12 @@
                                      </div>
                                      </td>
                                    <td>{{ \Carbon\Carbon::parse($group->created_at)->timezone('Asia/Kolkata')->format('l, d M Y, h:i A') }}</td>
-                                    <td>
+                                   <td>
+                                        @if($group->end_date != null)
+                                            {{ \Carbon\Carbon::parse($group->end_date)->timezone('Asia/Kolkata')->format('l, d M Y') }}
+                                        @endif
+                                    </td>
+                                   <td>
                                         <div class="form-check form-switch d-inline-block">
                                             <input class="form-check-input status-toggle" type="checkbox" role="switch"
                                                 data-table="group" data-column="active_inactive" data-id="{{ $group->id }}"

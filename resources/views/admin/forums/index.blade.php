@@ -28,13 +28,13 @@
             </div>
         </div>
     </div>
-  @if(session('success'))
-     <div class="alert alert-success">{{ session('success') }}</div>
+    @if(session('success'))
+    <div class="alert alert-success">{{ session('success') }}</div>
     @endif
-   @if (session('error'))
-       <div class="alert alert-danger" style="color:white;">
-         {{ session('error') }}
-       </div>
+    @if (session('error'))
+    <div class="alert alert-danger" style="color:white;">
+        {{ session('error') }}
+    </div>
     @endif
     <div class="datatables">
         <!-- start Zero Configuration -->
@@ -55,8 +55,7 @@
                     <div id="zero_config_wrapper" class="dataTables_wrapper">
 
 
-                        <table id="zero_config"
-                            class="table table-striped table-bordered align-middle dataTable"
+                        <table id="zero_config" class="table table-striped table-bordered align-middle dataTable"
                             aria-describedby="zero_config_info">
                             <thead>
                                 <!-- start row -->
@@ -66,6 +65,7 @@
                                     <th>Members</th>
                                     <th>Topics</th>
                                     <th>Created At</th>
+                                    <th>Forum End Date</th>
                                     <th>Action</th>
                                     <th>Status</th>
                                 </tr>
@@ -77,49 +77,52 @@
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $forum->name }}</td>
                                     <td>
-    <div class="d-flex gap-2">
-        <a class="btn btn-sm btn-primary"
-            href="{{ route('forums.add_member', ['id' => $forum->id]) }}"
-            data-bs-toggle="tooltip" data-bs-placement="top" title="Add Members">
-            <i class="bi bi-plus"></i>
-        </a>
-        <a class="btn btn-sm btn-success"
-            href="{{ route('forums.view_member', ['id' => $forum->id]) }}"
-            data-bs-toggle="tooltip" data-bs-placement="top" title="View Members">
-            <i class="bi bi-eye"></i>
-        </a>
-    </div>
-</td>
+                                        <div class="d-flex gap-2">
+                                            <a class="btn btn-sm btn-primary"
+                                                href="{{ route('forums.add_member', ['id' => $forum->id]) }}"
+                                                data-bs-toggle="tooltip" data-bs-placement="top" title="Add Members">
+                                                <i class="bi bi-plus"></i>
+                                            </a>
+                                            <a class="btn btn-sm btn-success"
+                                                href="{{ route('forums.view_member', ['id' => $forum->id]) }}"
+                                                data-bs-toggle="tooltip" data-bs-placement="top" title="View Members">
+                                                <i class="bi bi-eye"></i>
+                                            </a>
+                                        </div>
+                                    </td>
 
-                       <td>
-                    <div class="d-flex gap-2">
-                        @if($forum->status == 1)
-                            <a class="btn btn-sm btn-primary"
-                                href="{{ route('forums.add_topic', ['id' => $forum->id]) }}"
-                                title="Add Topic"
-                                data-bs-toggle="tooltip"
-                                data-bs-placement="top">
-                                <i class="bi bi-plus"></i>
-                            </a>
-                            <a class="btn btn-sm btn-success"
-                                href="{{ route('forums.view_topic', ['id' => $forum->id]) }}"
-                                title="View Topic"
-                                data-bs-toggle="tooltip"
-                                data-bs-placement="top">
-                                <i class="bi bi-eye"></i>
-                            </a>
-                        @else
-                            <button class="btn btn-sm btn-primary" disabled title="Add Topic (Inactive)">
-                                <i class="bi bi-plus"></i>
-                            </button>
-                            <button class="btn btn-sm btn-success" disabled title="View Topic (Inactive)">
-                                <i class="bi bi-eye"></i>
-                            </button>
-                        @endif
-                    </div>
-                </td>
+                                    <td>
+                                        <div class="d-flex gap-2">
+                                            @if($forum->status == 1)
+                                            <a class="btn btn-sm btn-primary"
+                                                href="{{ route('forums.add_topic', ['id' => $forum->id]) }}"
+                                                title="Add Topic" data-bs-toggle="tooltip" data-bs-placement="top">
+                                                <i class="bi bi-plus"></i>
+                                            </a>
+                                            <a class="btn btn-sm btn-success"
+                                                href="{{ route('forums.view_topic', ['id' => $forum->id]) }}"
+                                                title="View Topic" data-bs-toggle="tooltip" data-bs-placement="top">
+                                                <i class="bi bi-eye"></i>
+                                            </a>
+                                            @else
+                                            <button class="btn btn-sm btn-primary" disabled
+                                                title="Add Topic (Inactive)">
+                                                <i class="bi bi-plus"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-success" disabled
+                                                title="View Topic (Inactive)">
+                                                <i class="bi bi-eye"></i>
+                                            </button>
+                                            @endif
+                                        </div>
+                                    </td>
 
                                     <td>{{ \Carbon\Carbon::parse($forum->created_at)->timezone('Asia/Kolkata')->format('l, d M Y, h:i A') }}
+                                    </td>
+                                    <td>
+                                        @if($forum->end_date != null)
+                                            {{ \Carbon\Carbon::parse($forum->end_date)->timezone('Asia/Kolkata')->format('l, d M Y') }}
+                                        @endif
                                     </td>
 
 
@@ -129,23 +132,24 @@
                                     <td>
                                         <div class="d-flex gap-2">
                                             <a href="{{route('forums.forum.edit', $forum->id) }}"
-                                            class="btn btn-success btn-sm">Edit</a>
-                                         <form action="{{ route('forums.forum.destroy', $forum->id) }}" method="POST" style="display:inline;">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger text-white btn-sm"
-                                            onclick="return confirm('Are you sure you want to delete?')">
-                                        Delete
-                                    </button>
-                                    </form>
+                                                class="btn btn-success btn-sm">Edit</a>
+                                            <form action="{{ route('forums.forum.destroy', $forum->id) }}" method="POST"
+                                                style="display:inline;">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-danger text-white btn-sm"
+                                                    onclick="return confirm('Are you sure you want to delete?')">
+                                                    Delete
+                                                </button>
+                                            </form>
                                         </div>
                                     </td>
                                     <td>
 
-                                            <div class="form-check form-switch d-inline-block">
+                                        <div class="form-check form-switch d-inline-block">
                                             <input class="form-check-input status-toggle" type="checkbox" role="switch"
-                                                data-table="forums" data-column="active_inactive"  data-id="{{ $forum->id }}"
-                                                {{ $forum->status == 1 ? 'checked' : '' }}>
+                                                data-table="forums" data-column="active_inactive"
+                                                data-id="{{ $forum->id }}" {{ $forum->status == 1 ? 'checked' : '' }}>
                                         </div>
                                     </td>
                                 </tr>
@@ -174,7 +178,7 @@
 
 <script>
 // AJAX to Update the status
-$(document).on('change', '.status-toggle', function () {
+$(document).on('change', '.status-toggle', function() {
     let checkbox = $(this);
     let status = checkbox.prop('checked') ? 1 : 0;
     let forumId = checkbox.data('id');
@@ -196,14 +200,14 @@ $(document).on('change', '.status-toggle', function () {
             id: forumId,
             status: status
         },
-        success: function (response) {
+        success: function(response) {
             const deleteBtn = $(`.delete-forum-btn[data-id="${forumId}"]`);
             deleteBtn.attr('data-status', status);
             toastr.success(response.message);
             location.reload();
 
         },
-        error: function (xhr) {
+        error: function(xhr) {
             toastr.error('Failed to update status.');
             checkbox.prop('checked', !status);
         }
@@ -249,7 +253,5 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 });
 */
-
-
 </script>
 @endsection

@@ -12,6 +12,7 @@ class Forum extends Model
 			'status',
 			'created_by',
             'updated_at',
+			'end_date',
 			];
 
 

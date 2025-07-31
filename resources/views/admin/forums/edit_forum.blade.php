@@ -50,6 +50,13 @@
 
                             </div>
                         </div>
+                          <div class="col-md-5">
+                                    <div class="mb-3">
+                                        <label class="form-label">Forum End Date</label>
+                                        <input type="date" class="form-control" name="end_date" id="end_date"
+                                            value="{{ old('end_date', $forum->end_date) }}">
+                                    </div>
+                                </div>
                         <div class="col-sm-5">
     <label for="status" class="form-label">Status</label>
     <div class="mb-3">
