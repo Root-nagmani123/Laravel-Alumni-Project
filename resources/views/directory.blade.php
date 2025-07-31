@@ -7,7 +7,7 @@
 
 <main class="main-content">
     <div class="container">
-        <div class="pagetitle mt-3">
+        <div class="pagetitle" style="margin-top:7rem !important;">
             <div class="row">
                 <div class="col-6">
                     <h5>{{ $pageName ?? 'Members List' }}</h5>

@@ -5,7 +5,7 @@
 @section('content')
 <div class="container">
 
-    <div class="row g-4 py-4">
+    <div class="row g-4 py-4" style="margin-top:4rem !important;">
         <!-- Error Messages -->
         @if ($errors->any())
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -974,7 +974,7 @@
                                     <div class="d-flex align-items-center rounded border px-3 py-2">
                                         <!-- Date -->
                                         <p class="mb-0">
-                                            <i class="bi bi-twitter fa-fw me-2"></i> <a href="{{ $user->twitter }}" target="_blank">e-HRMS</a>
+                                            <i class="bi bi-back fa-fw me-2"></i> <a href="{{ $user->twitter }}" target="_blank">e-HRMS</a>
                                         </p>
                                     </div>
                                     <!-- Lives END -->
