@@ -6,9 +6,9 @@ Header START -->
     <nav class="navbar navbar-expand-lg">
         <div class="container">
             <!-- Logo START -->
-            <a class="navbar-brand d-flex align-items-center gap-2" href="https://www.lbsnaa.gov.in/" target="_blank">
-                <img src="{{ asset('admin_assets/images/logos/lbsnaa_logo.jpg') }}" alt="LBSNAA Logo"
-                    class="navbar-brand-item" style="height: 60px; object-fit: contain;">
+            <a class="navbar-brand d-flex align-items-center gap-2" href="https://www.lbsnaa.gov.in/">
+    <img src="{{ asset('admin_assets/images/logos/lbsnaa_logo.jpg') }}" alt="LBSNAA Logo"
+         class="navbar-brand-item" style="height: 60px; object-fit: contain;">
 
                 <div class="d-flex flex-column lh-sm">
                     <span class="h5 mb-0 fw-bold">Alumni</span>
@@ -32,6 +32,33 @@ Header START -->
 
             <!-- Main navbar START -->
             <div class="collapse navbar-collapse" id="navbarCollapse">
+
+                <!-- <ul class="navbar-nav navbar-nav-scroll justify-content-center flex-grow-1 pe-3 flex-nowrap gap-4">
+
+                    <li class="nav-item d-flex gap-2 align-items-center">
+                        <a class="nav-link bg-light icon-md btn btn-light p-0" href="{{ route('user.profile', ['id' => 1]) }}">
+                            <i class="bi bi-person-fill"></i>
+                        </a>
+                        Home
+                    </li>
+                    <li class="nav-item d-flex gap-2 align-items-center">
+                        <a class="nav-link bg-light icon-md btn btn-light p-0" href="{{ url('user/feed') }}">
+                            <i class="bi bi-house-door-fill"></i>
+                        </a>
+                        Feed
+                    </li>
+                    <li class="nav-item d-flex gap-2 align-items-center">
+                        <a class="nav-link bg-light icon-md btn btn-light p-0" href="{{ url('user/library') }}">
+                            <i class="bi bi-file-earmark-text-fill"></i>
+                        </a>Library
+                    </li>
+                    <li class="nav-item d-flex gap-2 align-items-center">
+                        <a class="nav-link bg-light icon-md btn btn-light p-0" href="{{ url('user/all-events') }}">
+                            <i class="bi bi-calendar-event-fill"></i>
+                        </a>Events
+                    </li>
+
+                </ul> -->
                 <ul class="navbar-nav navbar-nav-scroll mx-auto">
                 <li class="nav-item">
                     
