@@ -46,6 +46,13 @@
 
                         </div>
                     </div>
+                      <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Group End Date</label>
+                                        <input type="date" class="form-control" name="end_date" id="end_date">
+                                    </div>
+                                </div>
+                    
                     <div class="col-6">
                         <div class="mb-3">
                             <label class="form-label">Status</label>

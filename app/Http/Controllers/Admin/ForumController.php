@@ -38,6 +38,7 @@ class ForumController extends Controller
         {
     $validator = Validator::make($request->all(), [
         'name' => 'required|string|max:255',
+        'end_date' => 'required|date|after_or_equal:today',
       ]);
     // Check if validation fails
     if ($validator->fails()) {
@@ -48,10 +49,9 @@ class ForumController extends Controller
     // insert into the forums table
     $input = [
         'name' => $request->input('name'),
-         'status' => 1,
-       // 'created_by' => auth()->user()->id,
-      //  'created_by' => Auth::guard('admin')->id(),
+         'status' => $request->input('status'), // Default to active if not provided
         'created_by' => session('LoginID'),
+         'end_date' => $request->input('end_date'),
 
     ];
 
@@ -87,6 +87,8 @@ class ForumController extends Controller
             'cat_id' => 'nullable|integer',
             'status' => 'required|integer',
             'created_by' => 'required|integer',
+        'end_date' => 'required|date|after_or_equal:today',
+
 
         ]);
         // Check if validation fails
@@ -100,6 +102,7 @@ class ForumController extends Controller
         $forum->cat_id = $request->cat_id;
         $forum->status = $request->status;
         $forum->created_by = $request->created_by;
+        $forum->end_date = $request->end_date;
         $forum->save();
         return redirect()->route('forums.index')->with('success', 'Forum updated successfully.');
     }

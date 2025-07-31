@@ -59,6 +59,7 @@ class GroupController extends Controller
         'status' => $request->input('status'),
         'created_by' => $request->input('created_by'),
         'member_type' => $request->input('member_type'),
+        'end_date' => $request->input('end_date'), 
     ]);
     // Create the group member
     GroupMember::create([
