@@ -3,7 +3,7 @@
 @section('title', 'Directory - Alumni | Lal Bahadur Shastri National Academy of Administration')
 
 @section('content')
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+
 
 <main class="main-content">
     <div class="container">
