@@ -33,7 +33,7 @@
                             <div class="row mb-3">
                                  <div class="col-md-4">
                                     <label for="serviceFilter" class="form-label">Filter by Service:</label>
-                                    <select id="serviceFilter" class="form-control">
+                                    <select id="serviceFilter" class="form-select">
                                          <option value="">All</option>
                                          @php
                                          $services = $members->pluck('service')->unique()->filter();
@@ -45,7 +45,7 @@
                                 </div>
                                 <div class="col-md-4">
                                     <label for="cadreFilter" class="form-label">Filter by Cadre:</label>
-                                    <select id="cadreFilter" class="form-control">
+                                    <select id="cadreFilter" class="form-select">
                                          <option value="">All</option>
                                          @php
                                          $cadres = $members->pluck('cader')->unique()->filter();
@@ -57,7 +57,7 @@
                                 </div>
                                 <div class="col-md-4">
                                     <label for="batchFilter" class="form-label">Filter by Batch:</label>
-                                    <select id="batchFilter" name="batch" class="form-control">
+                                    <select id="batchFilter" name="batch" class="form-select">">
                                         <option value="">All</option>
                                         @php
                                             $batches = $members->pluck('batch')->unique()->filter(function($value) {
@@ -73,7 +73,7 @@
 
                             <!-- Member Table -->
                             <div class="table-responsive">
-                                <table id="memberTable" class="table datatable table-striped table-bordered table-hover">
+                               <table id="memberTable" class="table table-striped table-bordered dt-bootstrap5">
                                     <thead>
                                         <tr>
                                             <th>#</th>
@@ -108,29 +108,27 @@
 @endsection
 
 @section('scripts')
-<!-- jQuery & DataTables -->
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-
-<!-- Bootstrap Bundle (with Popper) -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-7qAoOXltbVP82dhxHAUje59V5r2YsVfBafyUDxEdApLPmcdhBPg1DKg1ERo0BZlK" crossorigin="anonymous"></script>
 
 <!-- Filter Logic -->
 <script>
     $(document).ready(function () {
         var table = $('#memberTable').DataTable();
-        // Service = 3, Cadre = 4, Batch = 5 (0-based index)
+
+        // Filter by Service
         $('#serviceFilter').on('change', function () {
-            table.column(3).search(this.value).draw();
+            table.column(3).search(this.value).draw(); // 3 = Service column index
         });
 
+        // Filter by Cadre
         $('#cadreFilter').on('change', function () {
-            table.column(4).search(this.value).draw();
+            table.column(4).search(this.value).draw(); // 4 = Cadre column index
         });
 
+        // Filter by Batch
         $('#batchFilter').on('change', function () {
-            table.column(5).search(this.value).draw();
+            table.column(5).search(this.value).draw(); // 5 = Batch column index
         });
     });
 </script>
+
 @endsection

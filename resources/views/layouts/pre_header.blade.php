@@ -31,6 +31,9 @@
 	<!-- Theme CSS -->
 	<link rel="stylesheet" type="text/css" href="{{asset('feed_assets/css/style.css')}}">
 
+	<!-- DataTables + Bootstrap 5 CSS -->
+<link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+
 	<!-- alpine JS -->
 	 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
