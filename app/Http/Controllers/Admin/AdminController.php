@@ -174,5 +174,11 @@ $groupedPosts = $rawPosts->groupBy('post_id')->map(function ($group) {
         return view('admin.profile.profile',$viewData);
 
     }
+    public function grievanceList()
+    {
+        // echo "grievance list";die;
+       $grievances = DB::table('grievances')->orderBy('created_at', 'desc')->get();
+        return view('admin.grievance.list', compact('grievances'));
+    }
 
 }

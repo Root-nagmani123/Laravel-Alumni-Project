@@ -29,9 +29,76 @@ JS libraries, plugins and custom scripts -->
 
 <!-- Accessibility JS -->
 <script src="https://img1.digitallocker.gov.in/ux4g/UX4G-CDN-accessibility/js/weights-v1.js"></script>
+
+
+
+@push('scripts')
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-document.getElementById('uw-widget-custom-trigger2').addEventListener('click', function() {
-    openMain();
+    $(document).ready(function () {
+       
+
+        $('#searchMemberInput').on('input', function () {
+            let query = $(this).val();
+
+            if (query.length >= 1) {
+                $.ajax({
+                    url: '{{ route('user.member.search') }}',
+                    type: 'GET',
+                    data: { q: query },
+                    success: function (response) {
+                        let html = '';
+                        if (response.length > 0) {
+                            response.forEach(item => {
+                                html += `<a href="/user/profile/${item.id}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+    <span>${item.name}</span>
+    <button class="btn btn-sm p-0 border-0 bg-transparent favorite-user" data-id="${item.id}" type="button">
+        <i class="bi bi-star text-danger"></i>
+    </button>
+</a>
+`;
+                            });
+                        } else {
+                            html = '<li class="list-group-item">No results found</li>';
+                        }
+                        $('#searchResults').html(html);
+                    }
+                });
+            } else {
+                $('#searchResults').html('');
+            }
+        });
+        $('#searchMemberInput').on('focus', function () {
+    let resultsHtml = ''; // ✅ Define before using it
+    resultsHtml += `<a href="/user/profile/Alumni" class="list-group-item list-group-item-action">Alumni</a>`;
+    $('#searchResults').html(resultsHtml).show();
+});
+    });
+    
+    document.getElementById('uw-widget-custom-trigger2').addEventListener('click', function() {
+    // openMain();
+    });
+
+ 
+
+</script>
+<script>
+    $(document).on('click', '.favorite-user', function (e) {
+    e.preventDefault();
+    e.stopPropagation(); // prevent triggering parent link
+    const userId = $(this).data('id');
+
+    $.ajax({
+        url: '/user/favorite', // you need to make this route
+        type: 'POST',
+        data: {
+            id: userId,
+            _token: '{{ csrf_token() }}'
+        },
+        success: function () {
+            alert('User favorited!');
+        }
+    });
 });
 
 </script>

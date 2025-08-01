@@ -8,7 +8,8 @@ Header START -->
             <!-- Logo START -->
             <a class="navbar-brand d-flex align-items-center gap-2" href="https://www.lbsnaa.gov.in/" target="_blank">
                 <img src="{{ asset('admin_assets/images/logos/lbsnaa_logo.jpg') }}" alt="LBSNAA Logo"
-                    class="navbar-brand-item" style="height: 60px; object-fit: contain;"  loading="lazy" decoding="async">
+                    class="navbar-brand-item" style="height: 60px; object-fit: contain;" loading="lazy"
+                    decoding="async">
 
                 <div class="d-flex flex-column lh-sm">
                     <span class="h5 mb-0 fw-bold">Alumni</span>
@@ -70,20 +71,15 @@ Header START -->
                 </ul>
                 <!-- Search Input Group with Dropdown -->
                 <div class="position-relative">
-                    <form onsubmit="return showSearchResults(event)">
-                        <input type="search" id="searchInput" class="form-control ps-5" placeholder="Search..."
+                    <form id="searchForm">
+                        <input type="search" id="searchMemberInput" class="form-control ps-5" placeholder="Search..."
                             autocomplete="off" aria-label="Search" />
-                        <button type="submit"
+                        <button type="button"
                             class="btn bg-transparent px-2 py-0 position-absolute top-50 start-0 translate-middle-y">
                             <i class="bi bi-search fs-5"></i>
                         </button>
                     </form>
-
-                    <!-- Dropdown Menu -->
-                    <div id="searchDropdown" class="dropdown-menu w-100 shadow mt-1"
-                        style="max-height: 300px; overflow-y: auto;">
-                        <!-- Filled by JavaScript -->
-                    </div>
+                    <ul id="searchResults" class="list-group position-absolute w-100 z-3 mt-1" style="max-height: 200px; overflow-y: auto;background-color: #ffffffb8;"></ul>
                 </div>
 
 
@@ -239,22 +235,22 @@ Header START -->
     </nav>
     <!-- Logo Nav END -->
 </header>
-<!-- =======================
- <!-- Grievance/Feedback Modal -->
+<!-- ======================= Grievance/Feedback Modal -->
 <div class="modal fade" id="grievanceModal" tabindex="-1" aria-labelledby="grievanceModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form>
+            <form action="{{ route('user.grievance.submit') }}" method="POST">
                 <div class="modal-header">
                     <h5 class="modal-title" id="grievanceModalLabel">Submit Grievance / Feedback</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-
+                          @csrf
                     <!-- Type Dropdown -->
                     <div class="mb-3">
-                        <label for="typeSelect" class="form-label">Type</label>
-                        <select class="form-select" id="typeSelect" required>
+                        <label for="typeSelect" class="form-label">Type<span class="text-danger">*</span></label>
+
+                        <select class="form-select" id="typeSelect" name="typeSelect" required>
                             <option value="">Select</option>
                             <option value="grievance">Grievance</option>
                             <option value="feedback">Feedback</option>
@@ -263,20 +259,20 @@ Header START -->
 
                     <!-- Name -->
                     <div class="mb-3">
-                        <label for="userName" class="form-label">Name</label>
-                        <input type="text" class="form-control" id="userName" placeholder="Enter your name" required>
+                        <label for="userName" class="form-label">Name <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="userName" name="userName" placeholder="Enter your name" value="{{ auth()->guard('user')->user()->name }}" required readonly>
                     </div>
 
                     <!-- Email -->
                     <div class="mb-3">
-                        <label for="userEmail" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="userEmail" placeholder="Enter your email" required>
+                        <label for="userEmail" class="form-label">Email <span class="text-danger">*</span></label>
+                        <input type="email" class="form-control" id="userEmail" name="userEmail" placeholder="Enter your email" value="{{ auth()->guard('user')->user()->email }}" required readonly>
                     </div>
 
                     <!-- Message -->
                     <div class="mb-3">
-                        <label for="userMessage" class="form-label">Message</label>
-                        <textarea class="form-control" id="userMessage" rows="4" maxlength="1000"
+                        <label for="userMessage" class="form-label">Message <span class="text-danger">*</span></label>
+                        <textarea class="form-control" id="userMessage" name="userMessage" rows="4" maxlength="1000"
                             placeholder="Write your message (max 1000 characters)" required></textarea>
                     </div>
 
@@ -290,77 +286,8 @@ Header START -->
     </div>
 </div>
 
-Header END -->
-
-<script>
-const members = [{
-        id: 1,
-        name: 'John Doe'
-    },
-    {
-        id: 2,
-        name: 'Priya Sharma'
-    },
-    {
-        id: 3,
-        name: 'Amit Verma'
-    },
-    // Add more as needed
-];
-
-function showSearchResults(event) {
-    event.preventDefault();
-    const input = document.getElementById('searchInput');
-    const query = input.value.toLowerCase().trim();
-    const dropdown = document.getElementById('searchDropdown');
-
-    // Clear previous results
-    dropdown.innerHTML = '';
-
-    // Always add the "Alumni Already Added" option at the top
-    const alumniItem = document.createElement('button');
-    alumniItem.type = 'button';
-    alumniItem.className = 'dropdown-item fw-bold text-primary';
-    alumniItem.textContent = 'Alumni';
-    dropdown.appendChild(alumniItem);
-
-    // Filter and add matching members
-    const filtered = members.filter(m => m.name.toLowerCase().includes(query));
-
-    if (filtered.length === 0) {
-        const noResult = document.createElement('button');
-        noResult.type = 'button';
-        noResult.className = 'dropdown-item text-muted';
-        noResult.textContent = 'No matching members';
-        dropdown.appendChild(noResult);
-    } else {
-        filtered.forEach(member => {
-            const item = document.createElement('button');
-            item.type = 'button';
-            item.className = 'dropdown-item d-flex justify-content-between align-items-center';
-            item.innerHTML = `
-          <span>${member.name}</span>
-          <i class="bi bi-star text-warning" title="Mark as Favourite"></i>
-        `;
-            dropdown.appendChild(item);
-        });
-    }
-
-    // Show dropdown
-    dropdown.classList.add('show');
-}
-
-// Optional: Hide dropdown when clicked outside
-document.addEventListener('click', function(e) {
-    const dropdown = document.getElementById('searchDropdown');
-    const input = document.getElementById('searchInput');
-    if (!input.contains(e.target) && !dropdown.contains(e.target)) {
-        dropdown.classList.remove('show');
-    }
-});
-</script>
 <style>
-#searchInput:focus+#searchDropdown {
+#searchMemberInput:focus+#searchDropdown {
     display: block;
 }
 </style>

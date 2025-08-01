@@ -15,7 +15,7 @@ class Group extends Model
         'createdFrom',
     ]; */
 	protected $fillable = [
-         'name', 'state_id', 'status', 'created_by', 'member_type','end_date'
+         'name', 'state_id', 'status', 'created_by', 'member_type','end_date', 'image'
     ];
 	
 	public function groupMember()

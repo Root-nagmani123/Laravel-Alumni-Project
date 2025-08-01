@@ -134,11 +134,24 @@ Route::prefix('user')->name('user.')->group(function () {
       Route::get('/group-post/{id}', [FeedController::class, 'getPostByGroup'])->name('group-post');
       Route::get('/library', [LibraryController::class, 'index'])->name('library');
   	Route::post('/groups-leave', [FeedController::class, 'leaveGroup'])->name('groups.leave');
+	Route::post('/grievance.submit', [FeedController::class, 'submitGrievance'])->name('grievance.submit');
 
     });
 
-    Route::get('user/forum', [MemberForumController::class, 'index'])->name('forum');
-    Route::get('user/forum/{id}', [MemberForumController::class, 'show'])->name('forum.show');
+    Route::middleware('auth:user')->group(function () {
+        Route::get('user/forum', [MemberForumController::class, 'index'])->name('forum');
+        Route::get('user/forum/{id}', [MemberForumController::class, 'show'])->name('forum.show');
+        Route::post('user/forum/topic/{id}/like', [MemberForumController::class, 'like'])->name('forum.topic.like');
+        Route::post('user/forum/topic/{id}/unlike', [MemberForumController::class, 'unlike'])->name('forum.topic.unlike');
+        Route::post('user/forum/topic/{id}/comment', [MemberForumController::class, 'comment'])->name('forum.topic.comment');
+    });
+
+
+
+	Route::get('/member/search', [MemberForumController::class, 'member_search'])->name('member.search');
+
+
+	Route::get('/member/search', [MemberForumController::class, 'member_search'])->name('member.search');
 
 });
 
@@ -192,6 +205,8 @@ Route::prefix('admin')->middleware('auth:admin')->controller(AdminController::cl
 
 	// });
 		Route::get('socialwall', [AdminController::class, 'socialwall'])->name('socialwall.index');
+	Route::get('grievance/list', [AdminController::class, 'grievanceList'])->name('grievance.list');
+
 		Route::delete('delete-socialwall/{id}', [AdminController::class, 'socialwall_delete'])->name('socialwall.delete');
 
 	Route::get('profile', [AdminController::class, 'profile'])->name('admin.profile');

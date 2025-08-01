@@ -39,6 +39,7 @@ class ForumController extends Controller
     $validator = Validator::make($request->all(), [
         'name' => 'required|string|max:255',
         'end_date' => 'required|date|after_or_equal:today',
+
       ]);
     // Check if validation fails
     if ($validator->fails()) {
@@ -46,12 +47,17 @@ class ForumController extends Controller
             ->withErrors($validator)
             ->withInput();
         }
+         if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('uploads/images/forums_img', 'public');
+            $data['images'] = basename($imagePath);
+        }
     // insert into the forums table
     $input = [
         'name' => $request->input('name'),
          'status' => $request->input('status'), // Default to active if not provided
         'created_by' => session('LoginID'),
          'end_date' => $request->input('end_date'),
+         'images' => isset($data['images']) ? $data['images'] : null, // Store image if exists
 
     ];
 
@@ -79,33 +85,51 @@ class ForumController extends Controller
         {
             return view('admin.forums.edit_forum', compact('forum'));
         }
-    public function update(Request $request, Forum $forum)
-    {
-        // Validate the incoming request
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'cat_id' => 'nullable|integer',
-            'status' => 'required|integer',
-            'created_by' => 'required|integer',
+  public function update(Request $request, Forum $forum)
+{
+    
+    $validator = Validator::make($request->all(), [
+        'name' => 'required|string|max:255',
+        'cat_id' => 'nullable|integer',
+        'status' => 'required|integer',
+        'forum_image' => 'nullable|forum_image|mimes:jpeg,png,jpg|max:2048', // Optional image validation
         'end_date' => 'required|date|after_or_equal:today',
+    ]);
 
-
-        ]);
-        // Check if validation fails
-        if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->withInput();
-        }
-        // Update forum details
-        $forum->name = $request->name;
-        $forum->cat_id = $request->cat_id;
-        $forum->status = $request->status;
-        $forum->created_by = $request->created_by;
-        $forum->end_date = $request->end_date;
-        $forum->save();
-        return redirect()->route('forums.index')->with('success', 'Forum updated successfully.');
+    if ($validator->fails()) {
+        return redirect()->back()
+            ->withErrors($validator)
+            ->withInput();
     }
+    if ($request->hasFile('forum_image')) {
+            $imagePath = $request->file('forum_image')->store('uploads/images/forums_img', 'public');
+            $data['images'] = basename($imagePath);
+        }
+
+    $forum->name = $request->name;
+    $forum->cat_id = $request->cat_id;
+    $forum->status = $request->status;
+    $forum->end_date = $request->end_date;
+    // Update image if provided
+    if (isset($data['images'])) {
+        // Delete old image if exists
+        if ($forum->images) {
+            Storage::disk('public')->delete('uploads/images/forums_img/' . $forum->images);
+        }
+        $forum->images = $data['images'];
+    }
+
+    // Optional: Only update created_by if sent
+    if ($request->has('created_by')) {
+        $forum->created_by = $request->created_by;
+    }
+    
+
+    $forum->save();
+
+    return redirect()->route('forums.index')->with('success', 'Forum updated successfully.');
+}
+
     public function destroy(Forum $forum)
         {
             $forum->delete();
@@ -236,12 +260,12 @@ class ForumController extends Controller
 
     if (!empty($memberIds)) {
         $message = 'A new topic has been posted in your forum: ' . $request->title;
-
         // Assuming you have notification service
         $this->notificationService->notifyGroupOrForumMembers(
-            'forum_topic',
+            $memberIds,
+            'forum',
             $message,
-            $topicId,
+            $request->forum_id,
             'forum_topic',
             $memberIds
         );
@@ -310,7 +334,6 @@ class ForumController extends Controller
         $topic->video_caption = $request->input('video_caption');
         $topic->video_link = $request->input('video_link');
         $topic->status = $request->input('status');
-
         $topic->save();
 
         return back()->with('success', 'Topic updated successfully.');
@@ -351,10 +374,25 @@ class ForumController extends Controller
     $request->validate([
         'forumname' => 'required|string|max:255',
         'forumstatus' => 'required|in:0,1',
+        'end_date' => 'required|date|after_or_equal:today', // Ensure end date is valid
+        'forum_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048', // Optional image validation
+
     ]);
+    // Handle image upload if provided
+    if ($request->hasFile('forum_image')) {
+        $imagePath = $request->file('forum_image')->store('uploads/images/forums_img', 'public');
+        $data['images'] = basename($imagePath);
+        // Delete old image if exists
+        if ($forum->images) {
+            Storage::disk('public')->delete('uploads/images/forums_img/' . $forum->images);
+        }
+        $forum->images = $data['images'];
+    }
     $forum->update([
         'name' => $request->forumname,
         'status' => $request->forumstatus,
+        'end_date' => $request->end_date, // Update end date
+        'images' => $forum->images ?? null, // Keep existing image if not updated
     ]);
     return redirect()->route('forums.index')->with('success', 'Forum updated successfully!');
 }

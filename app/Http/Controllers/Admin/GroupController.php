@@ -11,10 +11,19 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\DB;
+use App\Services\NotificationService;
+use App\Models\Notification;
 use App\Models\Post;
 use App\Models\PostMedia;
 class GroupController extends Controller
 {
+
+    protected $notificationService;
+    public function __construct(NotificationService $notificationService)
+    {
+        $this->notificationService = $notificationService;
+    }
+
     public function index()
     {
         // $groups = Group::all();
@@ -44,6 +53,7 @@ class GroupController extends Controller
        Group::create($request->all());
         return redirect()->route('group.index')->with('success', 'Group created successfully.');
     }
+
     public function store(Request $request)
     {
      $request->validate([
@@ -51,7 +61,15 @@ class GroupController extends Controller
         'mentor_id' => 'required|integer',
         'user_id' => 'required|array',
         'status' => 'nullable|integer',
+            'end_date' => 'nullable|date|after_or_equal:today', // Ensure end date is valid
+            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048', // Validate image
+
     ]);
+    // Check if the image is uploaded
+    if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('uploads/images/grp_img', 'public');
+            $data['images'] = basename($imagePath);
+        }
     // Create the group
     $group = Group::create([
         'name' => $request->input('name'),
@@ -59,7 +77,8 @@ class GroupController extends Controller
         'status' => $request->input('status'),
         'created_by' => $request->input('created_by'),
         'member_type' => $request->input('member_type'),
-        'end_date' => $request->input('end_date'), 
+        'end_date' => $request->input('end_date'),
+        'image' => $data['images'] ?? null, // Use the image path if it exists
     ]);
     // Create the group member
     GroupMember::create([
@@ -69,6 +88,34 @@ class GroupController extends Controller
         'mentiee' => json_encode($request->input('user_id')),
         'status' => $request->input('status'),
     ]);
+
+    // Notify mentor: "Add in group mentor"
+    $mentorId = $request->input('mentor_id');
+
+    if ($mentorId) {
+        $mentorMessage = 'Member added in group as mentor';
+        $this->notificationService->notifyMemberAdded(
+            [$mentorId],
+            'group',
+            $mentorMessage,
+            $group->id,
+            'group_member'
+        );
+    }
+
+    // Notify new members: "New member add in group"
+    $userIds = $request->input('user_id', []);
+    if (!empty($userIds)) {
+        $memberMessage = 'New member add in group';
+        $this->notificationService->notifyMemberAdded(
+            $userIds,
+            'group',
+            $memberMessage,
+            $group->id,
+            'group_member'
+        );
+    }
+    
     return redirect()->route('group.index')->with('success', 'Group created successfully.');
     }
     public function edit(Group $group)
@@ -79,17 +126,30 @@ class GroupController extends Controller
     }
     public function update(Request $request, Group $group)
     {
+         
         $request->validate([
             'name' => 'required|string|max:255',
             'mentor_id' => 'required|integer',
             'user_id' => 'required|array',
             'status' => 'nullable|integer',
+            'end_date' => 'nullable|date|after_or_equal:today', // Ensure end date is valid
+            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048', // Validate image
         ]);
-        
+         if ($request->hasFile('image')) {
+        $imagePath = $request->file('image')->store('uploads/images/grp_img', 'public');
+        $data['image'] = basename($imagePath);
+        // Delete old image if exists
+        if ($group->image) {
+            Storage::disk('public')->delete('uploads/images/grp_img/' . $group->image);
+        }
+        $group->image = $data['image'];
+    }
         // Update the group
         $group->update([
             'name' => $request->input('name'),
             'status' => $request->input('status'),
+            'end_date' => $request->input('end_date'),
+            'image' => $data['image'] ?? $group->image, // Use the new image if it exists, otherwise keep the old one
         ]);
         
         // Update or create the group member
@@ -225,6 +285,24 @@ class GroupController extends Controller
             'file_type' => 'image',
         ]);
     }
+
+    $memberIds = DB::table('group_member')
+                    ->where('group_id', $group_id)
+                    ->pluck('member_id')
+                    ->toArray();
+
+    if (!empty($memberIds)) {
+        $message = 'A new topic has been posted in your group: ' . $request->title;
+        // Assuming you have notification service
+        $this->notificationService->notifyGroupOrForumMembers(
+            $memberIds,
+            'group',
+            $message,
+            $group_id,
+            'group_topic',
+            $memberIds
+        );
+    }
     return redirect()->route('group.index')->with('success', 'Group post (topic) added successfully.');
 }
     public function view_topic($id)
@@ -283,6 +361,5 @@ class GroupController extends Controller
         $topic->save();
         return response()->json(['message' => 'Status updated successfully.']);
     }
-
 
 }

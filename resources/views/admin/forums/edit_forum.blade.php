@@ -35,38 +35,56 @@
             <hr>
 
 
-            <form method="POST" action="{{ route('forums.forum.update', $forum->id) }}">
+            <form method="POST" action="{{ route('forums.forum.update', $forum->id) }}" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
                 <div class="row">
                     <div id="batch_fields" class="my-2"></div>
                     <div class="row" id="batch_fields">
-                        <div class="col-sm-5">
+                        <div class="col-6">
                             <label for="Schoolname" class="form-label">Forum Name :</label>
 
                             <div class="mb-3">
                                 <input type="text" class="form-control" id="Forumname" name="forumname"
-    value="{{ old('forumname', $forum->name) }}">
+                                    value="{{ old('forumname', $forum->name) }}">
 
                             </div>
                         </div>
-                          <div class="col-md-5">
-                                    <div class="mb-3">
-                                        <label class="form-label">Forum End Date</label>
-                                        <input type="date" class="form-control" name="end_date" id="end_date"
-                                            value="{{ old('end_date', $forum->end_date) }}">
-                                    </div>
-                                </div>
-                        <div class="col-sm-5">
-    <label for="status" class="form-label">Status</label>
-    <div class="mb-3">
-        <select name="forumstatus" id="forumstatus" class="form-select">
-            <option value="1" {{ old('forumstatus', $forum->status) == 1 ? 'selected' : '' }}>Active</option>
-
-            <option value="0" {{ old('forumstatus', $forum->status) == 0 ? 'selected' : '' }}>Inactive</option>
-        </select>
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label class="form-label">Forum End Date</label>
+                                <input type="date" class="form-control" name="end_date" id="end_date"
+                                    value="{{ old('end_date', $forum->end_date) }}">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label class="form-label">Forum Image</label>
+                                <input type="file" class="form-control" name="forum_image" id="forum_image"
+                                    accept="image/*">
+                            </div>
+                            <div class="mt-2">
+        <img
+            id="preview-image"
+            src="{{ isset($forum->images) ? asset('storage/uploads/images/forums_img/' . $forum->images) : '#' }}"
+            alt="Image Preview"
+            class="img-fluid rounded {{ isset($forum->images) ? '' : 'd-none' }}"
+            style="max-height: 200px;"
+        />
     </div>
-</div>
+                        </div>
+                        <div class="col-6">
+                            <label for="status" class="form-label">Status</label>
+                            <div class="mb-3">
+                                <select name="forumstatus" id="forumstatus" class="form-select">
+                                    <option value="1" {{ old('forumstatus', $forum->status) == 1 ? 'selected' : '' }}>
+                                        Active</option>
+
+                                    <option value="0" {{ old('forumstatus', $forum->status) == 0 ? 'selected' : '' }}>
+                                        Inactive</option>
+                                </select>
+                            </div>
+                        </div>
 
 
                     </div>
@@ -74,7 +92,7 @@
                 <hr>
                 <div class="mb-3">
                     <button class="btn btn-primary hstack gap-6 float-end" type="submit">
-                    <i class="material-icons menu-icon">send</i>
+                        <i class="material-icons menu-icon">send</i>
                         Update
                     </button>
                     <a href="{{ route('forums.index') }}" class="btn btn-secondary hstack gap-6 float-end me-2">

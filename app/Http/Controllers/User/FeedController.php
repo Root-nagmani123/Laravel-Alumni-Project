@@ -104,6 +104,7 @@ class FeedController extends Controller
    public function index()
     {
         $user = auth()->guard('user')->user();
+        
         $userId = $user->id;
         // Fetch posts with related models
         $stories = Story::where('created_at', '>=', now()->subDay())
@@ -122,17 +123,14 @@ class FeedController extends Controller
         ->orderBy('id', 'desc')
         ->get();
 
-        $forums = DB::table('forums as f')
-    ->join('forum_topics as ft', 'ft.forum_id', '=', 'f.id')
+    $forums = DB::table('forums as f')
     ->join('forums_member as fm', 'fm.forums_id', '=', 'f.id')
     ->select(
         'f.id', 
         'f.name',
-        'ft.id as topic_id', 
-        'ft.title as topic_name', 
-        'ft.description',
-        'ft.images',
-        'ft.created_date'
+        'f.images',
+        'f.created_at',
+        'f.end_date', // Assuming you have an end_date column
     )
     ->where('fm.user_id', $userId)
     ->where('f.status', 1)
@@ -163,7 +161,8 @@ class FeedController extends Controller
    ->select(
         'g.id',
         'g.name',
-       
+        'g.image',
+        'g.end_date'
     )
     ->orderBy('g.id', 'desc') // or 'end_date', 'desc' if you prefer
     ->distinct()
@@ -458,6 +457,33 @@ class FeedController extends Controller
 
    return redirect()->route('user.feed')->with('success', 'You have left the group.');
 
+}
+function submitGrievance(Request $request)
+{
+    $user = auth()->guard('user')->user();
+    $name = $user->name;
+    $email = $user->email;
+
+    $grievanceType = request('typeSelect');
+    $grievanceMessage = request('userMessage');
+
+    // Validate the input
+    $validatedData = request()->validate([
+        'typeSelect' => 'required|string|max:255',
+        'userMessage' => 'required|string|max:1000',
+    ]);
+
+    // Store the grievance in the database
+    DB::table('grievances')->insert([
+        'name' => $name,
+        'email' => $email,
+        'type' => $grievanceType,
+        'message' => $grievanceMessage,
+        'created_at' => now(),
+    ]);
+
+    return redirect()->back()->with('success', 'Grievance submitted successfully.');
+    
 }
 
 

@@ -12,7 +12,7 @@
         <div class="card-body">
             <h4 class="card-title mb-3">Create Group</h4>
             <hr>
-            <form action="{{ route('group.store') }}" method="POST">
+            <form action="{{ route('group.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="row">
                     <div class="col-6">

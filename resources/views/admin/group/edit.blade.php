@@ -12,7 +12,7 @@
         <div class="card-body">
             <h4 class="card-title mb-3">Edit Group</h4>
             <hr>
-            <form action="{{ route('group.update', $group->id) }}" method="POST">
+            <form action="{{ route('group.update', $group->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
                 <div class="row">
@@ -76,7 +76,7 @@
     <div class="mt-2">
         <img
             id="preview-image"
-            src="{{ isset($group->image) ? asset('storage/' . $group->image) : '#' }}"
+            src="{{ isset($group->image) ? asset('storage/uploads/images/grp_img/' . $group->image) : '#' }}"
             alt="Image Preview"
             class="img-fluid rounded {{ isset($group->image) ? '' : 'd-none' }}"
             style="max-height: 200px;"

@@ -156,18 +156,15 @@
                     <div class="avatar">
                         <a href="{{ route('user.forum.show', ['id' => $forum->id]) }}"><img
                                 class="avatar-img rounded-circle"
-                                src="{{ asset('storage/uploads/images/' . ($forum->images ?? 'default-forum.jpg')) }}"
+                                src="{{ asset('storage/uploads/images/forums_img/' . ($forum->images ?? 'default-forum.jpg')) }}"
                                 alt="" loading="lazy" decoding="async"></a>
                     </div>
                     <!-- Title -->
                     <div class="overflow-hidden">
-                        <a class="h6 mb-0"
-                            href="{{ route('user.forum.show', ['id' => $forum->id]) }}">{{ $forum->name }} </a>
-                        @if(isset($forum->topic_name))
-                        <p class="mb-0 small text-truncate">Topic: {{ $forum->topic_name }}</p>
-                        @endif
-                        <small
-                            class="text-muted">{{ \Carbon\Carbon::parse($forum->created_date ?? now())->format('d M, Y') }}</small>
+                        <a class="h6 mb-0" href="{{ route('user.forum.show', ['id' => $forum->id]) }}">{{ $forum->name }} </a> <br>
+                       
+                        <!-- <small class="text-muted"><b>Start Date:</b> {{ \Carbon\Carbon::parse($forum->created_date ?? now())->format('d-m-Y') }}</small><br> -->
+                        <small class="text-muted"><b>End Date:</b> {{ \Carbon\Carbon::parse($forum->end_date ?? now())->format('d-m-Y') }}</small>
                     </div>
 
                 </div>
