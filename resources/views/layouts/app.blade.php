@@ -3,15 +3,38 @@
 
 <head>
     @include('layouts.pre_header')
+    <style>
+    #pageLoader {
+        transition: opacity 0.3s ease;
+    }
+
+    #pageLoader.hide {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+    }
+</style>
+
+<script>
+    window.addEventListener('load', function () {
+        const loader = document.getElementById('pageLoader');
+        if (loader) {
+            loader.classList.add('hide');
+            setTimeout(() => loader.remove(), 500); // optional: remove from DOM after fade
+        }
+    });
+</script>
+
 </head>
 
 <body>
-    <!-- Simple Bootstrap Loader -->
-    <div class="d-flex justify-content-center align-items-center vh-100 bg-white" id="pageLoader">
-        <div class="spinner-border text-danger" role="status" style="width: 3rem; height: 3rem;">
-            <span class="visually-hidden">Loading...</span>
-        </div>
+    <!-- Page Loader -->
+<div id="pageLoader" class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center bg-white" style="z-index: 9999;">
+    <div class="spinner-border text-danger" role="status" style="width: 3rem; height: 3rem;">
+        <span class="visually-hidden">Loading...</span>
     </div>
+</div>
+
     @include('layouts.header')
     <main>
         @yield('content')
@@ -87,15 +110,14 @@
     });
     </script>
     <script>
-    window.addEventListener("load", () => {
-        const loader = document.getElementById("pageLoader");
+    window.addEventListener('load', function () {
+        const loader = document.getElementById('pageLoader');
         if (loader) {
-            loader.style.opacity = "0";
-            loader.style.transition = "opacity 0.4s ease";
-            setTimeout(() => loader.remove(), 400);
+            loader.style.display = 'none';
         }
     });
-    </script>
+</script>
+
 </body>
 
 </html>

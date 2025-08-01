@@ -1,5 +1,4 @@
 <!-- Right sidebar START -->
-<div class="col-md-3 right-sidebar">
     <div class="row g-4">
         <!-- Card follow START -->
         <!-- Card News START -->
@@ -113,21 +112,7 @@
             </div>
         </div>
         <!-- Card follow START -->
-        <!-- <div class="footer-widget footer-contact">
-  <h5 class="footer-title">Newsletter</h5>
-  <div class="subscribe-input">
-	<form action="javascript:void(0);">
-	  <div class="input-group">
-		<input type="email" class="form-control" placeholder="Enter your Email Address">
-		<button type="submit" class="btn btn-primary btn-sm">
-		  <i class="isax isax-send-2 me-1"></i>Subscribe
-		</button>
-	  </div>
-	</form>
-  </div>
-</div> -->
     </div>
-</div>
 
 
 <!-- Group Modal -->

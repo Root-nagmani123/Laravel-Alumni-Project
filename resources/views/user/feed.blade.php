@@ -3,11 +3,29 @@
    @section('title', 'User Feed - Alumni | Lal Bahadur Shastri National Academy of Administration')
 
    @section('content')
-   <div class="container">
+   <div class="container-fluid">
        <div class="row g-4">
-           @include('partials.left-sidebar')
-           @include('partials.user_feed')
-           @include('partials.right-sidebar')
+           <div class="col-4 left-sidebar">
+            <div class="row">
+                <div class="col-6"></div>
+                <div class="col-6">
+                    @include('partials.left-sidebar')
+                </div>
+            </div>
+           </div>
+
+           <div class="col-4 vstack gap-4 mx-auto" style="margin-top: 100px !important;">
+               <div class="row">
+                   @include('partials.user_feed')
+               </div>
+           </div>
+           <div class="col-4 right-sidebar">
+               <div class="row">
+                   <div class="col-6">
+                       @include('partials.right-sidebar')
+                   </div>
+               </div>
+           </div>
        </div>
    </div>
    <!-- Modal create Feed photo START -->
@@ -82,7 +100,7 @@
                        <!-- User avatar -->
                        <div class="avatar avatar-xs me-2">
                            @php
-                            $profilePic = $user->profile_pic ?? null;
+                           $profilePic = $user->profile_pic ?? null;
                            @endphp
                            <img class="avatar-img rounded-circle"
                                src="{{ $profilePic ? asset('storage/' . $profilePic) : asset('feed_assets/images/avatar/03.jpg') }}"
@@ -117,18 +135,18 @@
            </form>
        </div>
    </div>
-       <!-- Modal create Feed photo END -->
-
-
-       
+   <!-- Modal create Feed photo END -->
 
 
 
 
-       <script>
-       /*  */
 
-        document.addEventListener("DOMContentLoaded", function () {
+
+
+   <script>
+/*  */
+
+document.addEventListener("DOMContentLoaded", function() {
     const dropArea = document.getElementById("drop-area");
     const input = document.getElementById("media");
     const preview = document.getElementById("preview");
@@ -138,7 +156,7 @@
         preview.innerHTML = ''; // Clear old previews
         [...files].forEach(file => {
             const reader = new FileReader();
-            reader.onload = function (e) {
+            reader.onload = function(e) {
                 let mediaElement;
                 if (file.type.startsWith('image/')) {
                     mediaElement = document.createElement('img');
@@ -191,72 +209,72 @@
 
 
 
-       // Like post
-       function bindLikeForms() {
-           document.querySelectorAll('.like-form').forEach(form => {
-               form.addEventListener('submit', function(e) {
-                   e.preventDefault();
-                   const postId = form.dataset.postId;
-                   const formData = new FormData(form);
+// Like post
+function bindLikeForms() {
+    document.querySelectorAll('.like-form').forEach(form => {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const postId = form.dataset.postId;
+            const formData = new FormData(form);
 
-                   fetch(form.action, {
-                           method: 'POST',
-                           headers: {
-                               'X-Requested-With': 'XMLHttpRequest',
-                               'X-CSRF-TOKEN': formData.get('_token')
-                           },
-                           body: formData
-                       })
-                       .then(response => response.text())
-                       .then(html => {
-                           document.getElementById('like-section-' + postId).innerHTML = html;
-                           // 👇 re-bind like button inside the new HTML
-                           bindLikeForms();
-                       });
-               });
-           });
-       }
+            fetch(form.action, {
+                    method: 'POST',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRF-TOKEN': formData.get('_token')
+                    },
+                    body: formData
+                })
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById('like-section-' + postId).innerHTML = html;
+                    // 👇 re-bind like button inside the new HTML
+                    bindLikeForms();
+                });
+        });
+    });
+}
 
-       // Initial bind when DOM is ready
-       document.addEventListener('DOMContentLoaded', bindLikeForms);
-
-
-       function toggleComments(postId) {
-           const box = document.getElementById('comments-' + postId);
-           box.style.display = box.style.display === 'none' ? 'block' : 'none';
-       }
+// Initial bind when DOM is ready
+document.addEventListener('DOMContentLoaded', bindLikeForms);
 
 
-       document.addEventListener('DOMContentLoaded', function() {
-           const buttons = document.querySelectorAll('.copy-url-btn');
-
-           buttons.forEach(button => {
-               button.addEventListener('click', function() {
-                   const urlToCopy = this.getAttribute('data-url');
-
-                   if (navigator.clipboard && navigator.clipboard.writeText) {
-                       navigator.clipboard.writeText(urlToCopy)
-                           .then(() => {
-                               alert('Profile link copied to clipboard!');
-                           })
-                           .catch(err => {
-                               console.error('Clipboard API failed:', err);
-                           });
-                   } else {
-                       // Fallback method
-                       const tempInput = document.createElement('input');
-                       document.body.appendChild(tempInput);
-                       tempInput.value = urlToCopy;
-                       tempInput.select();
-                       document.execCommand('copy');
-                       document.body.removeChild(tempInput);
-                       alert('Profile link copied (fallback method).');
-                   }
-               });
-           });
-       });
-       </script>
+function toggleComments(postId) {
+    const box = document.getElementById('comments-' + postId);
+    box.style.display = box.style.display === 'none' ? 'block' : 'none';
+}
 
 
+document.addEventListener('DOMContentLoaded', function() {
+    const buttons = document.querySelectorAll('.copy-url-btn');
 
-       @endsection
+    buttons.forEach(button => {
+        button.addEventListener('click', function() {
+            const urlToCopy = this.getAttribute('data-url');
+
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(urlToCopy)
+                    .then(() => {
+                        alert('Profile link copied to clipboard!');
+                    })
+                    .catch(err => {
+                        console.error('Clipboard API failed:', err);
+                    });
+            } else {
+                // Fallback method
+                const tempInput = document.createElement('input');
+                document.body.appendChild(tempInput);
+                tempInput.value = urlToCopy;
+                tempInput.select();
+                document.execCommand('copy');
+                document.body.removeChild(tempInput);
+                alert('Profile link copied (fallback method).');
+            }
+        });
+    });
+});
+   </script>
+
+
+
+   @endsection

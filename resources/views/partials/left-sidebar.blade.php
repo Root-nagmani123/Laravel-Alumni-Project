@@ -1,5 +1,3 @@
-<div class="col-md-3 left-sidebar">
-
     <!-- Advanced filter responsive toggler START -->
     <div class="d-flex align-items-center d-lg-none">
         <button class="border-0 bg-transparent" type="button" data-bs-toggle="offcanvas"
@@ -11,65 +9,70 @@
     <!-- Advanced filter responsive toggler END -->
 
     <!-- Navbar START-->
-    <nav class="navbar navbar-expand-lg mx-0">
-        <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasSideNavbar">
-            <!-- Offcanvas header -->
-            <div class="offcanvas-header">
-                <button type="button" class="btn-close text-reset ms-auto" data-bs-dismiss="offcanvas"
-                    aria-label="Close"></button>
-            </div>
-
-            <!-- Offcanvas body -->
-            <div class="offcanvas-body d-block px-2 px-lg-0">
-                <!-- Card START -->
-                <div class="card overflow-hidden">
-                    <!-- Cover image -->
-                    <div class="h-50px"
-                        style="background-image:url({{asset('user_assets/images/login/login-bg.jpg')}}); background-position: center; background-size: cover; background-repeat: no-repeat;">
-                    </div>
-                    <!-- Card body START -->
-                    <div class="card-body pt-0">
-                        <div class="text-center">
-                            <!-- Avatar -->
-                            <div class="avatar avatar-lg mt-n5 mb-3">
-                                  @php
-                            $profilePic = $user->profile_pic ?? null;
-                        @endphp
-                              <img id="existingImage"
-    src="{{ $profilePic ? asset('storage/' . $profilePic) : asset('feed_assets/images/default.png') }}"
-    class="rounded-circle avatar-img" height="50" width="50" alt="User">
-                            </div>
-
-
-
-
-                            <!-- Info -->
-                            @if(Auth::guard('user')->check())
-                            <h5 class="mb-0"> <a href="#!"> {{ Auth::guard('user')->user()->name }} </a> </h5>
-                            @endif
-                            <small>{{ Auth::guard('user')->user()->designation }}</small>
-                            <ul class="list-inline mb-0 text-center text-sm-start mt-3 mt-sm-0">
-                        <li class="list-inline-item"><i class="bi bi-briefcase me-1"></i> {{ $user->cader }}
-                        </li>
-                        <li class="list-inline-item"><i class="bi bi-backpack me-1"></i> {{ $user->batch }}</li>
-                    </ul>
-                        </div>
-                        <!-- Side Nav END -->
-                    </div>
-                    <!-- Card body END -->
-                    <!-- Card footer -->
-                    <div class="card-footer text-center py-2">
-                        <a class="btn btn-link btn-sm" href="{{ route('user.profile', ['id' => $user->id]) }}">View
-                            Profile </a>
-                    </div>
+    <div class="mb-4">
+        <nav class="navbar navbar-expand-lg mx-0">
+            <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasSideNavbar">
+                <!-- Offcanvas header -->
+                <div class="offcanvas-header">
+                    <button type="button" class="btn-close text-reset ms-auto" data-bs-dismiss="offcanvas"
+                        aria-label="Close"></button>
                 </div>
-                <!-- Card END -->
+
+                <!-- Offcanvas body -->
+                <div class="offcanvas-body d-block px-2 px-lg-0">
+                    <!-- Card START -->
+                    <div class="card overflow-hidden">
+                        <!-- Cover image -->
+                        <div class="h-50px"
+                            style="background-image:url({{asset('user_assets/images/login/login-bg.jpg')}}); background-position: center; background-size: cover; background-repeat: no-repeat;">
+                        </div>
+                        <!-- Card body START -->
+                        <div class="card-body pt-0">
+                            <div class="text-center">
+                                <!-- Avatar -->
+                                <div class="avatar avatar-lg mt-n5 mb-3">
+                                    @php
+                                    $profilePic = $user->profile_pic ?? null;
+                                    @endphp
+                                    <img id="existingImage"
+                                        src="{{ $profilePic ? asset('storage/' . $profilePic) : asset('feed_assets/images/default.png') }}"
+                                        class="rounded-circle avatar-img" height="50" width="50" alt="User">
+                                </div>
+
+
+
+
+                                <!-- Info -->
+                                @if(Auth::guard('user')->check())
+                                <h5 class="mb-0"> <a href="#!"> {{ Auth::guard('user')->user()->name }} </a> </h5>
+                                @endif
+                                <small>{{ Auth::guard('user')->user()->designation }}</small>
+                                <ul class="list-inline mb-0 text-center text-sm-start mt-3 mt-sm-0">
+                                    <li class="list-inline-item"><i class="bi bi-briefcase me-1"></i>
+                                        {{ $user->cader }}
+                                    </li>
+                                    <li class="list-inline-item"><i class="bi bi-backpack me-1"></i>
+                                        {{ $user->batch }}
+                                    </li>
+                                </ul>
+                            </div>
+                            <!-- Side Nav END -->
+                        </div>
+                        <!-- Card body END -->
+                        <!-- Card footer -->
+                        <div class="card-footer text-center py-2">
+                            <a class="btn btn-link btn-sm" href="{{ route('user.profile', ['id' => $user->id]) }}">View
+                                Profile </a>
+                        </div>
+                    </div>
+                    <!-- Card END -->
+                </div>
             </div>
-        </div>
-    </nav>
+        </nav>
+    </div>
     <!-- Navbar END-->
     <!-- Card follow START -->
-    <div class="col-sm-6 col-lg-12">
+    <div class="mb-4">
         <div class="card mt-4">
             <!-- Card header START -->
             <div class="card-header pb-0 border-0">
@@ -136,7 +139,7 @@
         </div>
     </div>
     <!-- Card follow START -->
-    <div class="col-sm-6 col-lg-12">
+    <div class="mb-4">
         <div class="card mt-4">
             <!-- Card header START -->
             <div class="card-header pb-0 border-0">
@@ -151,12 +154,15 @@
                 <div class="hstack gap-2 mb-3">
                     <!-- Avatar -->
                     <div class="avatar">
-                        <a href="{{ route('user.forum.show', ['id' => $forum->id]) }}"><img class="avatar-img rounded-circle"
-                                src="{{ asset('storage/uploads/images/' . ($forum->images ?? 'default-forum.jpg')) }}" alt=""></a>
+                        <a href="{{ route('user.forum.show', ['id' => $forum->id]) }}"><img
+                                class="avatar-img rounded-circle"
+                                src="{{ asset('storage/uploads/images/' . ($forum->images ?? 'default-forum.jpg')) }}"
+                                alt=""></a>
                     </div>
                     <!-- Title -->
                     <div class="overflow-hidden">
-                        <a class="h6 mb-0" href="{{ route('user.forum.show', ['id' => $forum->id]) }}">{{ $forum->name }} </a>
+                        <a class="h6 mb-0"
+                            href="{{ route('user.forum.show', ['id' => $forum->id]) }}">{{ $forum->name }} </a>
                         @if(isset($forum->topic_name))
                         <p class="mb-0 small text-truncate">Topic: {{ $forum->topic_name }}</p>
                         @endif
@@ -165,7 +171,7 @@
                     </div>
 
                 </div>
-                
+
                 @endforeach
                 <!-- View more button -->
                 <div class="d-grid mt-3">
@@ -181,11 +187,10 @@
             <!-- Card body END -->
         </div>
     </div>
-</div>
 
-<!-- jQuery and SweetAlert2 -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
+    <!-- jQuery and SweetAlert2 -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
 $(document).ready(function() {
     // Attach click handler using event delegation
     $(document).on('click', '.rsvp-option', function(e) {
@@ -212,6 +217,6 @@ $(document).ready(function() {
         });
     });
 });
-</script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<!-- Card News END -->
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Card News END -->

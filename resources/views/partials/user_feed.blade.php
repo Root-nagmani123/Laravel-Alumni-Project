@@ -1,7 +1,6 @@
 <!-- Main content START -->
-<div class="col-md-6 vstack gap-4 mx-auto" style="margin-top: 100px;">
         <!-- Share feed START -->
-    <div class="card card-body">
+    <div class="card card-body mb-3">
         <div class="d-flex mb-3">
             <!-- Avatar -->
             <div class="avatar avatar-xs me-2">
@@ -39,7 +38,7 @@
     </div>
     <!-- Share feed END -->
     <!-- Story START -->
-    <div class="d-flex gap-2 mb-1">
+    <div class="d-flex gap-2 mb-3">
         
       <div class="position-relative" id="openAddStoryModal">
   <div class="card border border-2 border-dashed h-150px px-4 px-sm-5 shadow-none d-flex align-items-center justify-content-center text-center">
@@ -361,20 +360,6 @@
                 <!-- Comment item END -->
             </ul>
             <!-- Card body END -->
-            <!-- Card footer START -->
-            <!--<div class="card-footer border-0 pt-0">
-
-                <a href="#!" role="button"
-                    class="btn btn-link btn-link-loader btn-sm text-secondary d-flex align-items-center"
-                    data-bs-toggle="button" aria-pressed="true">
-                    <div class="spinner-dots me-2">
-                        <span class="spinner-dot"></span>
-                        <span class="spinner-dot"></span>
-                        <span class="spinner-dot"></span>
-                    </div>
-                    Load more comments
-                </a>
-            </div>-->
             @if ($post->comments->count() > 2)
     <div class="card-footer border-0 pt-0">
         <a href="#!" class="btn btn-link btn-sm text-secondary load-more-comments"
@@ -394,18 +379,6 @@
 
     </div>
     @endforeach
-    <!-- Load more button START -->
-    <!-- <a href="#!" role="button" class="btn btn-loader btn-primary-soft" data-bs-toggle="button" aria-pressed="true">
-        <span class="load-text"> Load more </span>
-        <div class="load-icon">
-            <div class="spinner-grow spinner-grow-sm" role="status">
-                <span class="visually-hidden">Loading...</span>
-            </div>
-        </div>
-    </a> -->
-    <!-- Load more button END -->
-    <!-- Card feed END -->
-</div>
 <!-- Edit Comment Modal -->
 <div class="modal fade" id="editCommentModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog">
