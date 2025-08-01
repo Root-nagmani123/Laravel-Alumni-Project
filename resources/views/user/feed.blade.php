@@ -14,12 +14,12 @@
             </div>
            </div>
 
-           <div class="col-4 vstack gap-4 mx-auto" style="margin-top: 100px !important;">
+           <div class="col-4 vstack gap-4 mx-auto" style="margin-top: 125px !important;">
                <div class="row">
                    @include('partials.user_feed')
                </div>
            </div>
-           <div class="col-4 right-sidebar">
+           <div class="col-4 right-sidebar" >
                <div class="row">
                    <div class="col-6">
                        @include('partials.right-sidebar')

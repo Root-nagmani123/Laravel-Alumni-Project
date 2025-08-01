@@ -13,6 +13,7 @@ class Forum extends Model
 			'created_by',
             'updated_at',
 			'end_date',
+			'images'
 			];
 
 
