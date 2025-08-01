@@ -67,6 +67,25 @@
                                         <input type="date" class="form-control" name="end_date" id="end_date" value="{{ $group->end_date }}">
                                     </div>
                                 </div>
+                                <div class="col-md-6">
+   <div class="mb-3">
+    <label class="form-label">Group Image</label>
+    <input type="file" class="form-control" name="image" id="image" accept="image/*">
+
+    <!-- Preview -->
+    <div class="mt-2">
+        <img
+            id="preview-image"
+            src="{{ isset($group->image) ? asset('storage/' . $group->image) : '#' }}"
+            alt="Image Preview"
+            class="img-fluid rounded {{ isset($group->image) ? '' : 'd-none' }}"
+            style="max-height: 200px;"
+        />
+    </div>
+</div>
+
+</div>
+
 
                     <div class="col-6">
                         <div class="mb-3">
@@ -98,8 +117,24 @@
     <!-- end Vertical Steps Example -->
 </div>
 
+<script>
+document.getElementById('image').addEventListener('change', function (e) {
+    const preview = document.getElementById('preview-image');
+    const file = e.target.files[0];
 
-@endsection
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function (event) {
+            preview.src = event.target.result;
+            preview.classList.remove('d-none');
+        };
+        reader.readAsDataURL(file);
+    } else {
+        preview.src = '#';
+        preview.classList.add('d-none');
+    }
+});
+</script>
 
 <script>
 $(document).ready(function() {
@@ -131,4 +166,6 @@ $(document).ready(function() {
     filterMentees();
 });
 </script>
-@endpush
+
+
+@endsection

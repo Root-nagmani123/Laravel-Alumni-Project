@@ -33,18 +33,36 @@ Header START -->
             <!-- Main navbar START -->
             <div class="collapse navbar-collapse" id="navbarCollapse">
                 <ul class="navbar-nav navbar-nav-scroll mx-auto">
-                <li class="nav-item">
-                    
-                <a class="nav-link" href="{{ route('user.profile.name', ['name' => 'Alumni']) }}">Home</a>
-                </li>
-					<!-- Nav item 1 Demos -->
-					<li class="nav-item">
+                    <li class="nav-item">
+
+                        <a class="nav-link" href="{{ route('user.profile.name', ['name' => 'Alumni']) }}">Home</a>
+                    </li>
+                    <!-- Nav item 1 Demos -->
+                    <li class="nav-item">
                         <a class="nav-link" href="{{ url('user/feed') }}">Feed</a>
                     </li>
-                    <!-- Nav item 2 Mega menu -->
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url('user/library') }}">Library</a>
+                    <!-- Nav item: Dropdown for Library -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="libraryDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Library
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="libraryDropdown">
+                            <li>
+                                <a class="dropdown-item" href="https://gsl.lbsnaa.gov.in/" target="_blank">
+                                    Gandhi Smriti Library Online Catalogue (OPAC)
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item"
+                                    href="https://idpbridge.myloft.xyz/simplesaml/module.php/core/loginuserpass?AuthState=_13df360546d97777e748e8ded7bf639c5c8c45d3d7%3Ahttps%3A%2F%2Fidpbridge.myloft.xyz%2Fsimplesaml%2Fmodule.php%2Fsaml%2Fidp%2FsingleSignOnService%3Fspentityid%3Dhttps%253A%252F%252Felibrarylbsnaa.myloft.xyz%26cookieTime%3D1688360911"
+                                    target="_blank">
+                                    e-Library (MyLOFT)
+                                </a>
+                            </li>
+                        </ul>
                     </li>
+
                     <!-- Nav item 3 Mega menu -->
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url('user/events') }}">Events</a>
@@ -197,6 +215,12 @@ Header START -->
                         <li><a class="dropdown-item" href="{{ route('user.change-password.form') }}"><i
                                     class="bi bi-file-earmark-bar-graph-fill fa-fw me-2"></i>Change Password</a></li>
                         <li>
+                            <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#grievanceModal">
+                                <i class="bi bi-chat-dots-fill fa-fw me-2"></i>Grievance / Feedback
+                            </a>
+                        </li>
+
+                        <li>
                             <form action="{{ route('user.logout') }}" method="POST" style="display: inline;">
                                 @csrf
                                 <button type="submit" class="dropdown-item d-flex align-items-center">
@@ -216,17 +240,75 @@ Header START -->
     <!-- Logo Nav END -->
 </header>
 <!-- =======================
+ <!-- Grievance/Feedback Modal -->
+<div class="modal fade" id="grievanceModal" tabindex="-1" aria-labelledby="grievanceModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form>
+                <div class="modal-header">
+                    <h5 class="modal-title" id="grievanceModalLabel">Submit Grievance / Feedback</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    <!-- Type Dropdown -->
+                    <div class="mb-3">
+                        <label for="typeSelect" class="form-label">Type</label>
+                        <select class="form-select" id="typeSelect" required>
+                            <option value="">Select</option>
+                            <option value="grievance">Grievance</option>
+                            <option value="feedback">Feedback</option>
+                        </select>
+                    </div>
+
+                    <!-- Name -->
+                    <div class="mb-3">
+                        <label for="userName" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="userName" placeholder="Enter your name" required>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="mb-3">
+                        <label for="userEmail" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="userEmail" placeholder="Enter your email" required>
+                    </div>
+
+                    <!-- Message -->
+                    <div class="mb-3">
+                        <label for="userMessage" class="form-label">Message</label>
+                        <textarea class="form-control" id="userMessage" rows="4" maxlength="1000"
+                            placeholder="Write your message (max 1000 characters)" required></textarea>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 Header END -->
 
 <script>
-  const members = [
-    { id: 1, name: 'John Doe' },
-    { id: 2, name: 'Priya Sharma' },
-    { id: 3, name: 'Amit Verma' },
+const members = [{
+        id: 1,
+        name: 'John Doe'
+    },
+    {
+        id: 2,
+        name: 'Priya Sharma'
+    },
+    {
+        id: 3,
+        name: 'Amit Verma'
+    },
     // Add more as needed
-  ];
+];
 
-  function showSearchResults(event) {
+function showSearchResults(event) {
     event.preventDefault();
     const input = document.getElementById('searchInput');
     const query = input.value.toLowerCase().trim();
@@ -246,39 +328,39 @@ Header END -->
     const filtered = members.filter(m => m.name.toLowerCase().includes(query));
 
     if (filtered.length === 0) {
-      const noResult = document.createElement('button');
-      noResult.type = 'button';
-      noResult.className = 'dropdown-item text-muted';
-      noResult.textContent = 'No matching members';
-      dropdown.appendChild(noResult);
+        const noResult = document.createElement('button');
+        noResult.type = 'button';
+        noResult.className = 'dropdown-item text-muted';
+        noResult.textContent = 'No matching members';
+        dropdown.appendChild(noResult);
     } else {
-      filtered.forEach(member => {
-        const item = document.createElement('button');
-        item.type = 'button';
-        item.className = 'dropdown-item d-flex justify-content-between align-items-center';
-        item.innerHTML = `
+        filtered.forEach(member => {
+            const item = document.createElement('button');
+            item.type = 'button';
+            item.className = 'dropdown-item d-flex justify-content-between align-items-center';
+            item.innerHTML = `
           <span>${member.name}</span>
           <i class="bi bi-star text-warning" title="Mark as Favourite"></i>
         `;
-        dropdown.appendChild(item);
-      });
+            dropdown.appendChild(item);
+        });
     }
 
     // Show dropdown
     dropdown.classList.add('show');
-  }
+}
 
-  // Optional: Hide dropdown when clicked outside
-  document.addEventListener('click', function (e) {
+// Optional: Hide dropdown when clicked outside
+document.addEventListener('click', function(e) {
     const dropdown = document.getElementById('searchDropdown');
     const input = document.getElementById('searchInput');
     if (!input.contains(e.target) && !dropdown.contains(e.target)) {
-      dropdown.classList.remove('show');
+        dropdown.classList.remove('show');
     }
-  });
+});
 </script>
 <style>
-  #searchInput:focus + #searchDropdown {
+#searchInput:focus+#searchDropdown {
     display: block;
-  }
+}
 </style>

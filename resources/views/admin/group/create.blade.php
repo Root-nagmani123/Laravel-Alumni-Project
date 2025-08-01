@@ -52,6 +52,17 @@
                                         <input type="date" class="form-control" name="end_date" id="end_date">
                                     </div>
                                 </div>
+                               <div class="col-md-6">
+    <div class="mb-3">
+        <label class="form-label">Group Image</label>
+        <input type="file" class="form-control" name="image" id="image" accept="image/*">
+        <!-- Preview -->
+        <div class="mt-2">
+            <img id="preview-image" src="#" alt="Image Preview" class="img-fluid rounded d-none" style="max-height: 200px;" />
+        </div>
+    </div>
+</div>
+
                     
                     <div class="col-6">
                         <div class="mb-3">
@@ -78,6 +89,25 @@
     </div>
     <!-- end Vertical Steps Example -->
 </div>
+<!-- image preview js -->
+<script>
+document.getElementById('image').addEventListener('change', function (event) {
+    const preview = document.getElementById('preview-image');
+    const file = event.target.files[0];
+
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            preview.src = e.target.result;
+            preview.classList.remove('d-none');
+        }
+        reader.readAsDataURL(file);
+    } else {
+        preview.src = '#';
+        preview.classList.add('d-none');
+    }
+});
+</script>
 
 <script>
 $(document).ready(function() {
