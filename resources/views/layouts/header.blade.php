@@ -215,6 +215,12 @@ Header START -->
                         <li><a class="dropdown-item" href="{{ route('user.change-password.form') }}"><i
                                     class="bi bi-file-earmark-bar-graph-fill fa-fw me-2"></i>Change Password</a></li>
                         <li>
+                            <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#grievanceModal">
+                                <i class="bi bi-chat-dots-fill fa-fw me-2"></i>Grievance / Feedback
+                            </a>
+                        </li>
+
+                        <li>
                             <form action="{{ route('user.logout') }}" method="POST" style="display: inline;">
                                 @csrf
                                 <button type="submit" class="dropdown-item d-flex align-items-center">
@@ -234,6 +240,56 @@ Header START -->
     <!-- Logo Nav END -->
 </header>
 <!-- =======================
+ <!-- Grievance/Feedback Modal -->
+<div class="modal fade" id="grievanceModal" tabindex="-1" aria-labelledby="grievanceModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form>
+                <div class="modal-header">
+                    <h5 class="modal-title" id="grievanceModalLabel">Submit Grievance / Feedback</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    <!-- Type Dropdown -->
+                    <div class="mb-3">
+                        <label for="typeSelect" class="form-label">Type</label>
+                        <select class="form-select" id="typeSelect" required>
+                            <option value="">Select</option>
+                            <option value="grievance">Grievance</option>
+                            <option value="feedback">Feedback</option>
+                        </select>
+                    </div>
+
+                    <!-- Name -->
+                    <div class="mb-3">
+                        <label for="userName" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="userName" placeholder="Enter your name" required>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="mb-3">
+                        <label for="userEmail" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="userEmail" placeholder="Enter your email" required>
+                    </div>
+
+                    <!-- Message -->
+                    <div class="mb-3">
+                        <label for="userMessage" class="form-label">Message</label>
+                        <textarea class="form-control" id="userMessage" rows="4" maxlength="1000"
+                            placeholder="Write your message (max 1000 characters)" required></textarea>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 Header END -->
 
 <script>
