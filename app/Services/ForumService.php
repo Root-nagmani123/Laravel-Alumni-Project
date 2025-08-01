@@ -26,6 +26,7 @@ class ForumService
             ->where('forums_member.user_id', $userId)
             ->where('forums.status', 1)
             ->orderBy('forums.id', 'desc')
+            ->where('forums.end_date', '>=', now())
             ->get();
     }
 
@@ -68,7 +69,9 @@ class ForumService
         return ForumTopic::where('forum_id', $forumId)
             ->where('status', 1)
             ->orderBy('created_date', 'desc')
-            ->with(['creator', 'likes', 'comments.user'])
+            ->with(['creator', 'likes', 'comments' => function($query) {
+                $query->orderBy('created_at', 'desc');
+            }, 'comments.user'])
             ->get();
     }
 

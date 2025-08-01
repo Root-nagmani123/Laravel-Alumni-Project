@@ -106,26 +106,43 @@
         </div>
         <div class="col-lg-9">
             <div class="row g-4">
-                <div class="col-sm-6 col-lg-4">
-                    <!-- Card START -->
-                    <div class="card">
-                        <div class="h-80px rounded-top"
-                            style="background-image:url({{asset('feed_assets/images/bg/01.jpg')}}); background-position: center; background-size: cover; background-repeat: no-repeat;">
+                @if(isset($forums) && count($forums) > 0)
+                    @foreach($forums as $forum)
+                        <div class="col-sm-6 col-lg-4">
+                            <!-- Card START -->
+                            <div class="card">
+                                <div class="h-80px rounded-top"
+                                    style="background-image:url({{asset('feed_assets/images/bg/01.jpg')}}); background-position: center; background-size: cover; background-repeat: no-repeat;">
+                                </div>
+                                <!-- Card body START -->
+                                <div class="card-body text-center pt-2">
+                                    <!-- Info -->
+                                    <h5 class="mb-0 "> <a href="{{ route('user.forum.show', $forum->id) }}">{{ $forum->name }}</a> </h5>
+                                </div>
+                                <div class="card-body">
+                                    <p class="mb-0 small text-muted">Start Date: {{ \Carbon\Carbon::parse($forum->created_at)->format('d M Y') }} </p>
+                                    <p class="mb-0 small text-muted">End Date: {{ \Carbon\Carbon::parse($forum->end_date)->format('d M Y') }} </p>
+                                </div>
+                                <!-- Card body END -->
+                                <!-- Card Footer START -->
+                                <div class="card-footer text-center">
+                                    <a class="btn btn-success-soft btn-sm" href="{{ route('user.forum.show', $forum->id) }}">View Topics</a>
+                                </div>
+                                <!-- Card Footer END -->
+                            </div>
+                            <!-- Card END -->
                         </div>
-                        <!-- Card body START -->
-                        <div class="card-body text-center pt-2">
-                            <!-- Info -->
-                            <h5 class="mb-0 "> <a href="group-details.html">All in the Mind</a> </h5>
+                    @endforeach
+                @else
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body text-center">
+                                <h5 class="text-muted">No forums available</h5>
+                                <p class="text-muted mb-0">You don't have access to any forums yet.</p>
+                            </div>
                         </div>
-                        <!-- Card body END -->
-                        <!-- Card Footer START -->
-                        <div class="card-footer text-center">
-                            <a class="btn btn-success-soft btn-sm" href="#!">View Topics</a>
-                        </div>
-                        <!-- Card Footer END -->
                     </div>
-                    <!-- Card END -->
-                </div>
+                @endif
             </div>
         </div>
     </div>
