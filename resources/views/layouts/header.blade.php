@@ -8,7 +8,8 @@ Header START -->
             <!-- Logo START -->
             <a class="navbar-brand d-flex align-items-center gap-2" href="https://www.lbsnaa.gov.in/" target="_blank">
                 <img src="{{ asset('admin_assets/images/logos/lbsnaa_logo.jpg') }}" alt="LBSNAA Logo"
-                    class="navbar-brand-item" style="height: 60px; object-fit: contain;"  loading="lazy" decoding="async">
+                    class="navbar-brand-item" style="height: 60px; object-fit: contain;" loading="lazy"
+                    decoding="async">
 
                 <div class="d-flex flex-column lh-sm">
                     <span class="h5 mb-0 fw-bold">Alumni</span>
@@ -69,15 +70,17 @@ Header START -->
                     </li>
                 </ul>
                 <!-- Search Input Group with Dropdown -->
-               <div class="position-relative">
-                <form id="searchForm">
-                    <input type="search" id="searchMemberInput" class="form-control ps-5" placeholder="Search..." autocomplete="off" aria-label="Search" />
-                    <button type="button" class="btn bg-transparent px-2 py-0 position-absolute top-50 start-0 translate-middle-y">
-                        <i class="bi bi-search fs-5"></i>
-                    </button>
-                </form>
-                <ul id="searchResults" class="list-group mt-2"></ul>
-            </div>
+                <div class="position-relative">
+                    <form id="searchForm">
+                        <input type="search" id="searchMemberInput" class="form-control ps-5" placeholder="Search..."
+                            autocomplete="off" aria-label="Search" />
+                        <button type="button"
+                            class="btn bg-transparent px-2 py-0 position-absolute top-50 start-0 translate-middle-y">
+                            <i class="bi bi-search fs-5"></i>
+                        </button>
+                    </form>
+                    <ul id="searchResults" class="list-group position-absolute w-100 z-3 mt-1" style="max-height: 200px; overflow-y: auto;"></ul>
+                </div>
 
 
             </div>

@@ -47,7 +47,8 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="mb-3">
-                                        <label class="form-label">Name</label><span class="required text-danger ">*</span>
+                                        <label class="form-label">Name</label><span
+                                            class="required text-danger ">*</span>
                                         <input type="text" name="name" id="name" class="form-control"
                                             value="{{ old('name') }}">
                                         <!-- @error('name')
@@ -62,12 +63,29 @@
                                         <input type="date" class="form-control" name="end_date" id="end_date">
                                     </div>
                                 </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Forum Image</label>
+                                        <input type="file" class="form-control" name="image" id="forum-image"
+                                            accept="image/*">
+
+                                        <!-- Preview -->
+                                        <div class="mt-2">
+                                            <img id="forum-preview"
+                                                src="{{ isset($forum->image) ? asset('storage/' . $forum->image) : '#' }}"
+                                                alt="Image Preview"
+                                                class="img-fluid rounded {{ isset($forum->image) ? '' : 'd-none' }}"
+                                                style="max-height: 200px;" />
+                                        </div>
+                                    </div>
+                                </div>
+
 
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <label class="form-label">Status</label>
-                                        <select class="form-select" aria-label="Default select" name="status"
-                                            required text-danger="">
+                                        <select class="form-select" aria-label="Default select" name="status" required
+                                            text-danger="">
                                             <option selected="">Select Status</option>
                                             <option value="1">Active</option>
                                             <option value="0">InActive</option>
@@ -93,5 +111,22 @@
     </div>
 </div>
 
+<script>
+document.getElementById('forum-image').addEventListener('change', function(event) {
+    const input = event.target;
+    const preview = document.getElementById('forum-preview');
+
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+
+        reader.onload = function(e) {
+            preview.src = e.target.result;
+            preview.classList.remove('d-none');
+        }
+
+        reader.readAsDataURL(input.files[0]);
+    }
+});
+</script>
 
 @endsection

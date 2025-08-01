@@ -161,10 +161,10 @@
                     </div>
                     <!-- Title -->
                     <div class="overflow-hidden">
-                        <a class="h6 mb-0" href="{{ route('user.forum.show', ['id' => $forum->id]) }}">{{ $forum->name }} </a>
+                        <a class="h6 mb-0" href="{{ route('user.forum.show', ['id' => $forum->id]) }}">{{ $forum->name }} </a> <br>
                        
-                        <small class="text-muted">Created Date: {{ \Carbon\Carbon::parse($forum->created_date ?? now())->format('d M, Y') }}</small><br>
-                        <small class="text-muted">End Date: {{ \Carbon\Carbon::parse($forum->end_date ?? now())->format('d M, Y') }}</small>
+                        <small class="text-muted"><b>Created Date:</b> {{ \Carbon\Carbon::parse($forum->created_date ?? now())->format('d M, Y') }}</small><br>
+                        <small class="text-muted"><b>End Date:</b> {{ \Carbon\Carbon::parse($forum->end_date ?? now())->format('d M, Y') }}</small>
                     </div>
 
                 </div>

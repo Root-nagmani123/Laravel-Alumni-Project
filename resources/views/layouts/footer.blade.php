@@ -50,9 +50,13 @@ JS libraries, plugins and custom scripts -->
                         let html = '';
                         if (response.length > 0) {
                             response.forEach(item => {
-                                html += `<a href="/user/profile/${item.id}" class="list-group-item list-group-item-action">
-    ${item.name}
-</a>`;
+                                html += `<a href="/user/profile/${item.id}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+    <span>${item.name}</span>
+    <button class="btn btn-sm p-0 border-0 bg-transparent favorite-user" data-id="${item.id}" type="button">
+        <i class="bi bi-star text-danger"></i>
+    </button>
+</a>
+`;
                             });
                         } else {
                             html = '<li class="list-group-item">No results found</li>';
@@ -76,6 +80,26 @@ JS libraries, plugins and custom scripts -->
     });
 
  
+
+</script>
+<script>
+    $(document).on('click', '.favorite-user', function (e) {
+    e.preventDefault();
+    e.stopPropagation(); // prevent triggering parent link
+    const userId = $(this).data('id');
+
+    $.ajax({
+        url: '/user/favorite', // you need to make this route
+        type: 'POST',
+        data: {
+            id: userId,
+            _token: '{{ csrf_token() }}'
+        },
+        success: function () {
+            alert('User favorited!');
+        }
+    });
+});
 
 </script>
 <link rel="stylesheet"
