@@ -69,22 +69,15 @@ Header START -->
                     </li>
                 </ul>
                 <!-- Search Input Group with Dropdown -->
-                <div class="position-relative">
-                    <form onsubmit="return showSearchResults(event)">
-                        <input type="search" id="searchInput" class="form-control ps-5" placeholder="Search..."
-                            autocomplete="off" aria-label="Search" />
-                        <button type="submit"
-                            class="btn bg-transparent px-2 py-0 position-absolute top-50 start-0 translate-middle-y">
-                            <i class="bi bi-search fs-5"></i>
-                        </button>
-                    </form>
-
-                    <!-- Dropdown Menu -->
-                    <div id="searchDropdown" class="dropdown-menu w-100 shadow mt-1"
-                        style="max-height: 300px; overflow-y: auto;">
-                        <!-- Filled by JavaScript -->
-                    </div>
-                </div>
+               <div class="position-relative">
+                <form id="searchForm">
+                    <input type="search" id="searchMemberInput" class="form-control ps-5" placeholder="Search..." autocomplete="off" aria-label="Search" />
+                    <button type="button" class="btn bg-transparent px-2 py-0 position-absolute top-50 start-0 translate-middle-y">
+                        <i class="bi bi-search fs-5"></i>
+                    </button>
+                </form>
+                <ul id="searchResults" class="list-group mt-2"></ul>
+            </div>
 
 
             </div>
@@ -290,77 +283,8 @@ Header START -->
     </div>
 </div>
 
-Header END -->
-
-<script>
-const members = [{
-        id: 1,
-        name: 'John Doe'
-    },
-    {
-        id: 2,
-        name: 'Priya Sharma'
-    },
-    {
-        id: 3,
-        name: 'Amit Verma'
-    },
-    // Add more as needed
-];
-
-function showSearchResults(event) {
-    event.preventDefault();
-    const input = document.getElementById('searchInput');
-    const query = input.value.toLowerCase().trim();
-    const dropdown = document.getElementById('searchDropdown');
-
-    // Clear previous results
-    dropdown.innerHTML = '';
-
-    // Always add the "Alumni Already Added" option at the top
-    const alumniItem = document.createElement('button');
-    alumniItem.type = 'button';
-    alumniItem.className = 'dropdown-item fw-bold text-primary';
-    alumniItem.textContent = 'Alumni';
-    dropdown.appendChild(alumniItem);
-
-    // Filter and add matching members
-    const filtered = members.filter(m => m.name.toLowerCase().includes(query));
-
-    if (filtered.length === 0) {
-        const noResult = document.createElement('button');
-        noResult.type = 'button';
-        noResult.className = 'dropdown-item text-muted';
-        noResult.textContent = 'No matching members';
-        dropdown.appendChild(noResult);
-    } else {
-        filtered.forEach(member => {
-            const item = document.createElement('button');
-            item.type = 'button';
-            item.className = 'dropdown-item d-flex justify-content-between align-items-center';
-            item.innerHTML = `
-          <span>${member.name}</span>
-          <i class="bi bi-star text-warning" title="Mark as Favourite"></i>
-        `;
-            dropdown.appendChild(item);
-        });
-    }
-
-    // Show dropdown
-    dropdown.classList.add('show');
-}
-
-// Optional: Hide dropdown when clicked outside
-document.addEventListener('click', function(e) {
-    const dropdown = document.getElementById('searchDropdown');
-    const input = document.getElementById('searchInput');
-    if (!input.contains(e.target) && !dropdown.contains(e.target)) {
-        dropdown.classList.remove('show');
-    }
-});
-</script>
 <style>
-#searchInput:focus+#searchDropdown {
+#searchMemberInput:focus+#searchDropdown {
     display: block;
 }
 </style>

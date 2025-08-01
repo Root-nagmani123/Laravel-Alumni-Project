@@ -5,6 +5,10 @@ namespace App\Http\Controllers\Member;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Services\ForumService;
+use App\Models\Forum;
+use App\Models\Member;
+use App\Models\ForumTopic;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
 class ForumController extends Controller
@@ -69,5 +73,16 @@ class ForumController extends Controller
         $this->forumService->addComment($id, $userId, $request->comment);
 
         return back();
+    }
+    public function member_search(Request $request)
+    {
+
+        $query = $request->input('q');
+      
+    $results = Member::where('status', 1)
+                 ->where('name', 'LIKE', '%' . $query . '%')
+                 ->get();
+
+    return response()->json($results);
     }
 }
