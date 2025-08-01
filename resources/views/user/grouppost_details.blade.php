@@ -6,7 +6,7 @@
 @section('content')
 
 <div class="container">
-    <div class="row g-4" style="margin-top: 70px;">
+    <div class="row g-4" style="margin-top: 100px;">
         <div class="col-3">
             <!-- Profile Sidebar START -->
             <nav class="navbar navbar-expand-lg mx-0">
