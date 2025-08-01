@@ -161,8 +161,8 @@ class FeedController extends Controller
    ->select(
         'g.id',
         'g.name',
-        'g.image', // Assuming you have an image column
-       
+        'g.image',
+        'g.end_date'
     )
     ->orderBy('g.id', 'desc') // or 'end_date', 'desc' if you prefer
     ->distinct()

@@ -98,9 +98,10 @@
                     <div class="overflow-hidden">
                         <a class="mb-0 fw-semibold d-block text-truncate"
                             href="{{ route('user.group-post', $recent->id) }}">
-                            {{ $recent->name }}
+                            
+                            {{ ($recent->name) }}
                         </a>
-                        <small class="text-muted d-block">Ends:</small>
+                        <small class="text-muted d-block">End Date: {{ \Carbon\Carbon::parse($forum->end_date ?? now())->format('d-m-Y') }}</small>
                     </div>
 
                     <!-- Post Button -->
