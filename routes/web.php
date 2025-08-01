@@ -137,8 +137,14 @@ Route::prefix('user')->name('user.')->group(function () {
 
     });
 
-    Route::get('user/forum', [MemberForumController::class, 'index'])->name('forum');
-    Route::get('user/forum/{id}', [MemberForumController::class, 'show'])->name('forum.show');
+    Route::middleware('auth:user')->group(function () {
+        Route::get('user/forum', [MemberForumController::class, 'index'])->name('forum');
+        Route::get('user/forum/{id}', [MemberForumController::class, 'show'])->name('forum.show');
+        Route::post('user/forum/topic/{id}/like', [MemberForumController::class, 'like'])->name('forum.topic.like');
+        Route::post('user/forum/topic/{id}/unlike', [MemberForumController::class, 'unlike'])->name('forum.topic.unlike');
+        Route::post('user/forum/topic/{id}/comment', [MemberForumController::class, 'comment'])->name('forum.topic.comment');
+    });
+
 
 });
 

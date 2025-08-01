@@ -56,6 +56,16 @@ class Member extends Authenticatable
     return $topics;
     }
 
+    public function forumTopicLikes()
+    {
+        return $this->hasMany(ForumTopicLike::class, 'user_id');
+    }
+    
+    public function forumTopicComments()
+    {
+        return $this->hasMany(ForumTopicComment::class, 'user_id');
+    }
+
 
 }
 
