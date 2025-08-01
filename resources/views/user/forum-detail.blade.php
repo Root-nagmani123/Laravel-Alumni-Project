@@ -117,6 +117,9 @@
                             <div>
                                 <h5 class="card-title mb-0">{{ $forum->name }}</h5>
                                 <p class="mb-0 small text-muted">{{ $topics->count() }} topics</p>
+                                @if($forum->end_date)
+                                    <p class="mb-0 small text-muted">End Date: {{ \Carbon\Carbon::parse($forum->end_date)->format('d M Y') }} </p>
+                                @endif
                             </div>
                         </div>
                         <!-- Back Button -->
