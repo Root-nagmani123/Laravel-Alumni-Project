@@ -166,6 +166,7 @@ class ProfileController extends Controller
             'instagram' => 'nullable|url|max:255',
             'linkedin' => 'nullable|url|max:255',
             'twitter' => 'nullable|url|max:255',
+            'ehrms' => 'nullable|url|max:255',
         ]);
 
         $user = Member::findOrFail($id);
@@ -173,6 +174,7 @@ class ProfileController extends Controller
         $user->instagram = $request->instagram;
         $user->linkedin = $request->linkedin;
         $user->twitter = $request->twitter;
+        $user->ehrms = $request->ehrms;
         $user->save();
 
         return redirect()->back()->with('success', 'Social media links updated successfully.');
