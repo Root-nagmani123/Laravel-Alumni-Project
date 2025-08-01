@@ -137,8 +137,14 @@ Route::prefix('user')->name('user.')->group(function () {
 
     });
 
-    Route::get('user/forum', [MemberForumController::class, 'index'])->name('forum');
-    Route::get('user/forum/{id}', [MemberForumController::class, 'show'])->name('forum.show');
+    Route::middleware('auth:user')->group(function () {
+        Route::get('user/forum', [MemberForumController::class, 'index'])->name('forum');
+        Route::get('user/forum/{id}', [MemberForumController::class, 'show'])->name('forum.show');
+        Route::post('user/forum/topic/{id}/like', [MemberForumController::class, 'like'])->name('forum.topic.like');
+        Route::post('user/forum/topic/{id}/unlike', [MemberForumController::class, 'unlike'])->name('forum.topic.unlike');
+        Route::post('user/forum/topic/{id}/comment', [MemberForumController::class, 'comment'])->name('forum.topic.comment');
+    });
+
 
 });
 
@@ -351,9 +357,9 @@ Route::get('/user_login', function () {
          Route::get('/user/library', function () {
             return view('user.library');
         })->name('user.library');
-        Route::get('/user/forum', function () {
-            return view('user.forum');
-        })->name('user.forum');
+        // Route::get('/user/forum', function () {
+        //     return view('user.forum');
+        // })->name('user.forum');
         Route::get('/user/group', function () {
             return view('user.groups');
         })->name('user.groups');
