@@ -163,11 +163,7 @@ class FeedController extends Controller
    ->select(
         'g.id',
         'g.name',
-        DB::raw("CASE 
-            WHEN gm.mentor = $userId THEN 'mentor'
-            WHEN JSON_CONTAINS(gm.mentiee, '\"$userId\"') THEN 'mentee'
-            ELSE 'unknown' 
-        END as user_role")
+       
     )
     ->orderBy('g.id', 'desc') // or 'end_date', 'desc' if you prefer
     ->distinct()
@@ -405,11 +401,7 @@ class FeedController extends Controller
 
     public function getPostByGroup($group_id)
     {
-        /*$posts = Post::with('member')
-                    ->where('group_id', $group_id)
-                    ->latest()
-                    ->get();
-                    */
+       $userId = auth()->guard('user')->id();
         $posts = Post::with(['member', 'media'])
             ->where('group_id', $group_id)
             ->latest()
@@ -417,9 +409,57 @@ class FeedController extends Controller
 
 
         $group = Group::find($group_id); // Fetch the group by ID
+         $groupMember = DB::table('group_member')
+        ->where('group_id', $group_id)
+        ->first();
 
-        return view('user.grouppost_details', compact('posts', 'group'));
+    // Determine if user is a mentee
+    $isMentee = 0;
+    if ($groupMember && $groupMember->mentiee) {
+        $mentiees = json_decode($groupMember->mentiee, true);
+        $isMentee = in_array($userId, $mentiees) ? 1 : 0;
     }
+// echo ($isMentee);die;
+        return view('user.grouppost_details', compact('posts', 'group','isMentee'));
+    }
+    public function leaveGroup(Request $request)
+{
+    $request->validate([
+        'group_id' => 'required|integer|exists:group_member,group_id',
+    ]);
+    $groupId = $request->input('group_id');
+     $userId = auth()->guard('user')->id();// ya session('LoginID')
+
+    // Step 1: Get the existing mentiee array
+    $groupMember = DB::table('group_member')
+        ->where('group_id', $groupId)
+        ->first();
+
+    if (!$groupMember) {
+        return back()->with('error', 'Group not found.');
+    }
+
+    $mentiees = json_decode($groupMember->mentiee, true);
+
+    // Step 2: Remove user ID from the array
+    $updatedMentiees = array_filter($mentiees, function ($id) use ($userId) {
+        return $id != $userId;
+    });
+
+    // Re-index the array to maintain proper JSON structure
+    $updatedMentiees = array_values($updatedMentiees);
+// print_r($updatedMentiees);die;
+    // Step 3: Update the record
+    DB::table('group_member')
+        ->where('group_id', $groupId)
+        ->update([
+            'mentiee' => json_encode($updatedMentiees),
+        ]);
+
+   return redirect()->route('user.feed')->with('success', 'You have left the group.');
+
+}
+
 
 
 }

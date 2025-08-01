@@ -132,7 +132,7 @@ Route::prefix('user')->name('user.')->group(function () {
       Route::get('/broadcast/{id}', [FeedController::class, 'broadcastDetails'])->name('broadcastDetails');
       Route::get('/group-post/{id}', [FeedController::class, 'getPostByGroup'])->name('group-post');
       Route::get('/library', [LibraryController::class, 'index'])->name('library');
-
+  	Route::post('/groups-leave', [FeedController::class, 'leaveGroup'])->name('groups.leave');
 
     });
 
