@@ -15,6 +15,9 @@
     @include('layouts.header')
     <main>
         @yield('content')
+        <div class="chat-container">
+            @include('layouts.chat_accessibility')
+        </div>
     </main>
     @include('layouts.footer')
     @yield('scripts')
