@@ -36,7 +36,7 @@
                                     @endphp
                                     <img id="existingImage"
                                         src="{{ $profilePic ? asset('storage/' . $profilePic) : asset('feed_assets/images/default.png') }}"
-                                        class="rounded-circle avatar-img" height="50" width="50" alt="User">
+                                        class="rounded-circle avatar-img" height="50" width="50" alt="User" loading="lazy" decoding="async">
                                 </div>
 
 
@@ -90,7 +90,7 @@
                     <div class="avatar">
                         <a href="#!"><img class="avatar-img rounded-circle"
                                 src="{{ isset($event->image) && $event->image ? asset('storage/' . $event->image) : asset('feed_assets/images/avatar/07.jpg') }}"
-                                alt=""></a>
+                                alt="" loading="lazy" decoding="async"></a>
                     </div>
 
                     <!-- Title -->
@@ -157,7 +157,7 @@
                         <a href="{{ route('user.forum.show', ['id' => $forum->id]) }}"><img
                                 class="avatar-img rounded-circle"
                                 src="{{ asset('storage/uploads/images/' . ($forum->images ?? 'default-forum.jpg')) }}"
-                                alt=""></a>
+                                alt="" loading="lazy" decoding="async"></a>
                     </div>
                     <!-- Title -->
                     <div class="overflow-hidden">

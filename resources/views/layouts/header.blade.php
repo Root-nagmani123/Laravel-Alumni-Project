@@ -8,7 +8,7 @@ Header START -->
             <!-- Logo START -->
             <a class="navbar-brand d-flex align-items-center gap-2" href="https://www.lbsnaa.gov.in/" target="_blank">
                 <img src="{{ asset('admin_assets/images/logos/lbsnaa_logo.jpg') }}" alt="LBSNAA Logo"
-                    class="navbar-brand-item" style="height: 60px; object-fit: contain;">
+                    class="navbar-brand-item" style="height: 60px; object-fit: contain;"  loading="lazy" decoding="async">
 
                 <div class="d-flex flex-column lh-sm">
                     <span class="h5 mb-0 fw-bold">Alumni</span>
@@ -144,7 +144,7 @@ Header START -->
                         @endphp
                         <img class="avatar-img rounded-2"
                             src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar-1.png') }}"
-                            alt="">
+                            alt="" loading="lazy" decoding="async">
                     </a>
                     <ul class="dropdown-menu dropdown-animation dropdown-menu-end pt-3 small me-md-n3"
                         aria-labelledby="profileDropdown">
@@ -191,7 +191,7 @@ Header START -->
                                 <div class="avatar me-3">
                                     <img class="avatar-img rounded-circle"
                                         src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar-1.png') }}"
-                                        alt="avatar">
+                                        alt="avatar" loading="lazy" decoding="async">
                                 </div>
                                 <div>
                                     @if(Auth::guard('user')->check())

@@ -75,7 +75,7 @@
 @endphp
                                         <div class="avatar avatar-lg mt-n5 mb-3">
                                             <a href="#!"><img class="avatar-img rounded-circle"
-                                                                src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar-1.png') }}" alt=""></a>
+                                                                src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar-1.png') }}" alt="" loading="lazy" decoding="async"></a>
                                         </div>
                                         <!-- Info -->
                                         @if(Auth::guard('user')->check())
@@ -127,7 +127,7 @@
 
                </div>
           @if ($broadcast->image_url)
-    <img class="rounded w-100 mb-3" src="{{ asset('storage/' . $broadcast->image_url) }}" alt="Broadcast Image" style="height: 400px; object-fit: cover;">
+    <img class="rounded w-100 mb-3" src="{{ asset('storage/' . $broadcast->image_url) }}" alt="Broadcast Image" style="height: 400px; object-fit: cover;" loading="lazy" decoding="async">
 @endif
 
                         @if ($broadcast->video_url)

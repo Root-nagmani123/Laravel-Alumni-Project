@@ -9,7 +9,7 @@
            <div class="vstack gap-4">
                <!-- Blog single START -->
                <div class="card card-body">
-                   <img class="rounded w-100 mb-3" src="https://social.webestica.com/assets/images/post/16by9/big/03.jpg" alt="">
+                   <img class="rounded w-100 mb-3" src="https://social.webestica.com/assets/images/post/16by9/big/03.jpg" alt="" loading="lazy" decoding="async">
                    <video src="https://www.w3schools.com/html/mov_bbb.mp4" controls class="w-100 mb-3 rounded"></video>
                    <div class="mt-4">
                        <!-- Title info -->

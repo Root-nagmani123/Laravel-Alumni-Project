@@ -40,7 +40,7 @@
                             <div class="avatar avatar-xxl mt-n5 mb-3">
                                 <img class="avatar-img rounded-circle border border-white border-3"
                                     src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar-1.png') }}"
-                                    alt="">
+                                    alt="" loading="lazy" decoding="async">
                             </div>
                         </div>
                         <div class="ms-sm-4 mt-sm-3">
@@ -786,7 +786,7 @@
                                     <a href="{{ $image_url }}" data-gallery="image-popup"
                                         data-glightbox="description: .custom-desc2; descPosition: left;">
                                         <img class="rounded img-fluid" src="{{ $image_url }}" alt=""
-                                            style="width: 100%; height: 200px; object-fit: cover;">
+                                            style="width: 100%; height: 200px; object-fit: cover;" loading="lazy" decoding="async">
                                     </a>
                                     <div class="mt-2 text-center small text-muted">
                                         <!-- <span>{{ $post->member->name ?? $user->name }}</span><br> -->
@@ -1087,7 +1087,7 @@
                         @endphp
                         <img class="avatar-img rounded-circle"
                             src="{{ $profilePic ? asset('storage/' . $profilePic) : asset('feed_assets/images/avatar/03.jpg') }}"
-                            alt="User Avatar">
+                            alt="User Avatar" loading="lazy" decoding="async">
                     </div>
                     <!-- Post textarea -->
                     <textarea class="form-control pe-4 fs-3 lh-1 border-0" name="modalContent" rows="2"
@@ -1140,7 +1140,7 @@
                         @endphp
                         <img class="avatar-img rounded-circle"
                             src="{{ $profilePic ? asset('storage/' . $profilePic) : asset('feed_assets/images/avatar/03.jpg') }}"
-                            alt="User Avatar">
+                            alt="User Avatar" loading="lazy" decoding="async">
                     </div>
                     <!-- Post textarea -->
                     <input type="hidden" name="group_id" class="group_id">
@@ -1464,7 +1464,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                     <div class="avatar avatar-xs">
                                         <a href="#!"><img class="avatar-img rounded-circle"
                                             src="${comment.member && comment.member.profile_pic ? '/storage/' + comment.member.profile_pic : '/feed_assets/images/avatar/12.jpg'}"
-                                            alt=""></a>
+                                            alt="" loading="lazy" decoding="async"></a>
                                     </div>
                                     <div class="ms-2 w-100">
                                         <div class="bg-light rounded-start-top-0 p-3 rounded">

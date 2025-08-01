@@ -77,7 +77,7 @@
                                     <div class="avatar avatar-lg mt-n5 mb-3">
                                         <a href="#!"><img class="avatar-img rounded-circle"
                                                 src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar-1.png') }}"
-                                                alt=""></a>
+                                                alt="" loading="lazy" decoding="async"></a>
                                     </div>
                                     <!-- Info -->
                                     @if(Auth::guard('user')->check())
@@ -118,7 +118,7 @@
                             <div class="avatar me-3">
                                 <img class="avatar-img rounded-circle"
                                     src="{{ asset('storage/uploads/images/' . ($forum->images ?? 'default-forum.jpg')) }}"
-                                    alt="{{ $forum->name }}">
+                                    alt="{{ $forum->name }}" loading="lazy" decoding="async">
                             </div>
                             <!-- Forum Info -->
                             <div>
@@ -150,7 +150,7 @@
                                 <a href="#!">
                                     <img class="avatar-img rounded-circle"
                                         src="{{ $topic->creator && $topic->creator->profile_pic ? asset('storage/' . $topic->creator->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}"
-                                        alt="">
+                                        alt="" loading="lazy" decoding="async">
                                 </a>
                             </div>
                             <!-- Info -->
@@ -181,7 +181,7 @@
                     <!-- Topic Image -->
                     @if($topic->images)
                     <div class="mb-3">
-                        <img class="card-img rounded" src="{{ asset('storage/' . $topic->images) }}" alt="Topic Image">
+                        <img class="card-img rounded" src="{{ asset('storage/' . $topic->images) }}" alt="Topic Image" loading="lazy" decoding="async">
                         @if($topic->image_caption)
                         <p class="small text-muted mt-2">{{ $topic->image_caption }}</p>
                         @endif
@@ -259,7 +259,7 @@
                             <a href="#!">
                                 <img class="avatar-img rounded-circle"
                                     src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}"
-                                    alt="">
+                                    alt="" loading="lazy" decoding="async">
                             </a>
                         </div>
                         <!-- Comment box -->

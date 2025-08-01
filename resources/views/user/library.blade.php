@@ -75,7 +75,7 @@
 @endphp
                                         <div class="avatar avatar-lg mt-n5 mb-3">
                                             <a href="#!"><img class="avatar-img rounded-circle"
-                                                                src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar-1.png') }}" alt=""></a>
+                                                                src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar-1.png') }}" alt="" loading="lazy" decoding="async"></a>
                                         </div>
                                         <!-- Info -->
                                         @if(Auth::guard('user')->check())
@@ -108,7 +108,7 @@
             <div class="row g-3">
               <div class="col-4">
                 <!-- Blog image -->
-                <img class="rounded" src="{{asset('feed_assets/images/post/4by3/03.jpg')}}" alt="">
+                <img class="rounded" src="{{asset('feed_assets/images/post/4by3/03.jpg')}}" alt="" loading="lazy" decoding="async">
               </div>
               <div class="col-8">
                 <!-- Blog caption -->

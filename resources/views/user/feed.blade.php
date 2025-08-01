@@ -50,7 +50,7 @@
                            @endphp
                            <img class="avatar-img rounded-circle"
                                src="{{ $profilePic ? asset('storage/' . $profilePic) : asset('feed_assets/images/avatar/03.jpg') }}"
-                               alt="User Avatar">
+                               alt="User Avatar" loading="lazy" decoding="async">
                        </div>
                        <!-- Post textarea -->
                        <textarea class="form-control pe-4 fs-3 lh-1 border-0" name="modalContent" rows="5"
@@ -104,7 +104,7 @@
                            @endphp
                            <img class="avatar-img rounded-circle"
                                src="{{ $profilePic ? asset('storage/' . $profilePic) : asset('feed_assets/images/avatar/03.jpg') }}"
-                               alt="User Avatar">
+                               alt="User Avatar" loading="lazy" decoding="async">
                        </div>
                        <!-- Post textarea -->
                        <input type="hidden" name="group_id" class="group_id">

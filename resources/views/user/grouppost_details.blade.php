@@ -31,7 +31,7 @@
                                     @endphp
                                     <div class="avatar avatar-lg mt-n5 mb-3">
                                         <a href="{{ $profileLink }}"><img class="avatar-img rounded-circle"
-                                                src="{{ $profileImage }}" alt=""></a>
+                                                src="{{ $profileImage }}" alt="" loading="lazy" decoding="async"></a>
                                     </div>
                                     <h5 class="mb-0"><a href="{{ $profileLink }}">{{ $displayName }}</a></h5>
                                     <small>{{ $designation }}</small>
@@ -98,7 +98,7 @@
                                             ? asset('storage/' . $post->member->profile_pic)
                                             : asset('feed_assets/images/avatar/07.jpg');
                                     @endphp
-                                    <img class="avatar-img rounded-circle" src="{{ $profileImage }}" alt="">
+                                    <img class="avatar-img rounded-circle" src="{{ $profileImage }}" alt="" loading="lazy" decoding="async">
                                 </a>
                             </div>
                             <div>
@@ -117,14 +117,14 @@
                     <p>{{ \Illuminate\Support\Str::words(strip_tags($post->content), 50, '...') }}</p>
                     @if($totalImages === 1)
                         <a href="{{ asset('storage/' . $imageMedia[0]->file_path) }}" class="glightbox" data-gallery="post-gallery-{{ $post->id }}">
-                            <img class="card-img" src="{{ asset('storage/' . $imageMedia[0]->file_path) }}" alt="Post" style="max-height: 400px; object-fit: cover;">
+                            <img class="card-img" src="{{ asset('storage/' . $imageMedia[0]->file_path) }}" alt="Post" style="max-height: 400px; object-fit: cover;" loading="lazy" decoding="async">
                         </a>
                     @elseif($totalImages > 1)
                         <div class="d-flex flex-wrap gap-2">
                             @foreach($imageMedia->take(4) as $index => $media)
                             <div class="position-relative" style="width: 48%;">
                                 <a href="{{ asset('storage/' . $media->file_path) }}" class="glightbox" data-gallery="post-gallery-{{ $post->id }}">
-                                    <img src="{{ asset('storage/' . $media->file_path) }}" class="img-fluid rounded" alt="Post Image" style="max-height: 400px; object-fit: cover;">
+                                    <img src="{{ asset('storage/' . $media->file_path) }}" class="img-fluid rounded" alt="Post Image" style="max-height: 400px; object-fit: cover;" loading="lazy" decoding="async">
                                 </a>
                                 @if($index === 3 && $totalImages > 4)
                                     @foreach($imageMedia->slice(4) as $extra)
@@ -191,7 +191,7 @@
                         <div class="avatar avatar-xs me-2">
                             <a href="{{ route('user.profile', ['id' => $user->id]) }}">
                                 <img class="avatar-img rounded-circle"
-                                    src="{{ asset('storage/'.$user->profile_pic) }}" alt="">
+                                    src="{{ asset('storage/'.$user->profile_pic) }}" alt="" loading="lazy" decoding="async">
                             </a>
                         </div>
                         <form class="nav nav-item w-100 position-relative commentForm" id="commentForm-{{ $post->id }}"
@@ -216,7 +216,7 @@
                                     <a href="{{ $comment->member ? url('/user/profile/' . $comment->member->id) : '#' }}">
                                         <img class="avatar-img rounded-circle"
                                             src="{{ $comment->member && $comment->member->profile_pic ? asset('storage/' . $comment->member->profile_pic) : asset('feed_assets/images/avatar/12.jpg') }}"
-                                            alt="">
+                                            alt="" loading="lazy" decoding="async">
                                     </a>
                                 </div>
                                 <div class="ms-2 w-100">

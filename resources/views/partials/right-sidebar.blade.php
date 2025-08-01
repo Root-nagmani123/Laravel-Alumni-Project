@@ -41,11 +41,11 @@
                             @if($broadcast->image_url)
                             <img class="avatar-img rounded" src="{{ asset('storage/' . $broadcast->image_url) }}" alt=""
                                 height="45" data-bs-toggle="tooltip" data-bs-placement="top"
-                                title="{{ $broadcast->title }}" style="height: 85px; object-fit: cover;">
+                                title="{{ $broadcast->title }}" style="height: 85px; object-fit: cover;" loading="lazy" decoding="async">
                             @else
                             <img src="{{ asset('assets/images/no-image.png') }}" width="45" class="rounded-circle"
                                 data-bs-toggle="tooltip" data-bs-placement="top" title="No image available"
-                                alt="No image">
+                                alt="No image" loading="lazy">
                             @endif
 
                         </div>

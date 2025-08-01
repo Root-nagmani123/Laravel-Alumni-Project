@@ -78,7 +78,7 @@
 @endphp
                                         <div class="avatar avatar-lg mt-n5 mb-3">
                                             <a href="#!"><img class="avatar-img rounded-circle"
-                                                                src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar-1.png') }}" alt=""></a>
+                                                                src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar-1.png') }}" alt="" loading="lazy" decoding="async"></a>
                                         </div>
                                         <!-- Info -->
                                         @if(Auth::guard('user')->check())
@@ -149,7 +149,7 @@
                                             <div class="card h-100">
                                                 <div class="position-relative">
                                                     <img class="img-fluid rounded-top"
-                                                         src="{{ isset($event->image) && $event->image ? asset('storage/' . $event->image) : asset('feed_assets/images/avatar/07.jpg') }}" alt="" style="height: 200px; object-fit: cover;width: 100%;">
+                                                         src="{{ isset($event->image) && $event->image ? asset('storage/' . $event->image) : asset('feed_assets/images/avatar/07.jpg') }}" alt="" style="height: 200px; object-fit: cover;width: 100%;" loading="lazy" decoding="async">
                                                   
                                                 </div>
                                                 <div class="card-body position-relative pt-0">
@@ -204,7 +204,7 @@
                                             <div class="card h-100">
                                                 <div class="position-relative">
                                                     <img class="img-fluid rounded-top"
-                                                         src="{{ isset($event->image) && $event->image ? asset('storage/' . $event->image) : asset('feed_assets/images/avatar/07.jpg') }}" alt="">
+                                                         src="{{ isset($event->image) && $event->image ? asset('storage/' . $event->image) : asset('feed_assets/images/avatar/07.jpg') }}" alt="" loading="lazy" decoding="async">
                                                 </div>
                                                 <div class="card-body position-relative pt-0">
                                                     <h6 class="mt-3">
@@ -248,7 +248,7 @@
                                             <div class="card h-100">
                                                 <div class="position-relative">
                                                     <img class="img-fluid rounded-top"
-                                                         src="{{ isset($event->image) && $event->image ? asset('storage/' . $event->image) : asset('feed_assets/images/events/default.jpg') }}" alt="">
+                                                         src="{{ isset($event->image) && $event->image ? asset('storage/' . $event->image) : asset('feed_assets/images/events/default.jpg') }}" alt="" loading="lazy" decoding="async">
                                                 </div>
                                                 <div class="card-body position-relative pt-0">
                                                     <h6 class="mt-3">
@@ -287,7 +287,7 @@
                                             <div class="card h-100">
                                                 <div class="position-relative">
                                                     <img class="img-fluid rounded-top"
-                                                         src="{{ isset($event->image) && $event->image ? asset('storage/' . $event->image) : asset('feed_assets/images/events/default.jpg') }}" alt="">
+                                                         src="{{ isset($event->image) && $event->image ? asset('storage/' . $event->image) : asset('feed_assets/images/events/default.jpg') }}" alt="" loading="lazy" decoding="async">
                                                 </div>
                                                 <div class="card-body position-relative pt-0">
                                                     <h6 class="mt-3">

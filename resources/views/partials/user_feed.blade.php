@@ -5,7 +5,7 @@
             <!-- Avatar -->
             <div class="avatar avatar-xs me-2">
                 <a href="{{ route('user.profile', ['id' => $user->id]) }}"> <img class="avatar-img rounded-circle" src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar-1.png') }}"
-                        alt=""> </a>
+                        alt="" loading="lazy" decoding="async"> </a>
             </div>
             <!-- Post input -->
             <form class="w-100">
@@ -106,7 +106,7 @@
         <img
             class="avatar-img rounded-circle"
             src="{{ $profileImage }}"
-            alt="Profile Picture">
+            alt="Profile Picture" loading="lazy" decoding="async">
     </a>
 </div>
 
@@ -211,8 +211,8 @@
             <div class="post-img mt-2">
                 <a href="{{ asset('storage/' . $imageMedia[0]->file_path) }}" class="glightbox"
                     data-gallery="post-gallery-{{ $post->id }}">
-                    <img src="{{ asset('storage/' . $imageMedia[0]->file_path) }}" loading="lazy" class="w-100 rounded"
-                        alt="Post Image" style="width: 100%; height: 400px;object-fit: cover;">
+                    <img src="{{ asset('storage/' . $imageMedia[0]->file_path) }}" class="w-100 rounded"
+                        alt="Post Image" style="width: 100%; height: 400px;object-fit: cover;" loading="lazy" decoding="async">
                 </a>
             </div>
             @elseif($totalImages > 1)
@@ -296,7 +296,7 @@
                 <!-- Avatar -->
                 <div class="avatar avatar-xs me-2">
                     <a href="{{ route('user.profile', ['id' => $user->id]) }}"> <img class="avatar-img rounded-circle"
-                            src="{{asset('storage/'.$user->profile_pic)}}" alt=""> </a>
+                            src="{{asset('storage/'.$user->profile_pic)}}" alt="" loading="lazy" decoding="async"> </a>
                 </div>
                 <!-- Comment box  -->
                 <form class="nav nav-item w-100 position-relative" id="commentForm-{{ $post->id }}"
@@ -323,7 +323,7 @@
                         <div class="avatar avatar-xs">
                             <a href="#!"><img class="avatar-img rounded-circle"
                                    src="${comment.member && comment.member.profile_pic ? '/storage/' + comment.member.profile_pic : '/feed_assets/images/avatar/12.jpg'}"
-                                    alt=""></a>
+                                    alt="" loading="lazy" decoding="async"></a>
                         </div>
                         <div class="ms-2 w-100">
                             <!-- Comment by -->
@@ -713,7 +713,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                     <div class="avatar avatar-xs">
                                         <a href="#!"><img class="avatar-img rounded-circle"
                                             src="${comment.member && comment.member.profile_pic ? '/storage/' + comment.member.profile_pic : '/feed_assets/images/avatar/12.jpg'}"
-                                            alt=""></a>
+                                            alt="" loading="lazy" decoding="async"></a>
                                     </div>
                                     <div class="ms-2 w-100">
                                         <div class="bg-light rounded-start-top-0 p-3 rounded">

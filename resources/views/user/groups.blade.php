@@ -76,7 +76,7 @@
                                     <div class="avatar avatar-lg mt-n5 mb-3">
                                         <a href="#!"><img class="avatar-img rounded-circle"
                                                 src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar-1.png') }}"
-                                                alt=""></a>
+                                                alt="" loading="lazy" decoding="async"></a>
                                     </div>
                                     <!-- Info -->
                                     @if(Auth::guard('user')->check())
@@ -118,7 +118,7 @@
                             <div class="avatar avatar-lg mt-n5 mb-3">
                                 <a href="group-details.html"><img
                                         class="avatar-img rounded-circle border border-white border-3 bg-white"
-                                        src="{{asset('feed_assets/images/logo/08.svg')}}" alt=""></a>
+                                        src="{{asset('feed_assets/images/logo/08.svg')}}" alt="" loading="lazy" decoding="async"></a>
                             </div>
                             <!-- Info -->
                             <h5 class="mb-0"> <a href="group-details.html">All in the Mind</a> </h5>
