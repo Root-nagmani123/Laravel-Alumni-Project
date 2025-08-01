@@ -1,5 +1,5 @@
 <!-- Main content START -->
-<div class="col-md-6 vstack gap-4 mx-auto" style="margin-top: 125px;">
+<div class="col-md-6 vstack gap-4 mx-auto" style="margin-top: 100px;">
         <!-- Share feed START -->
     <div class="card card-body">
         <div class="d-flex mb-3">

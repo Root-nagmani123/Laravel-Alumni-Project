@@ -3,6 +3,9 @@
 @section('title', 'Member - Alumni | Lal Bahadur Shastri National Academy of Administration')
 
 @section('content')
+<!-- Tom Select CSS -->
+<link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.css" rel="stylesheet">
+
 <div class="container-fluid">
     <div class="card card-body py-3">
         <div class="row align-items-center">
@@ -31,13 +34,13 @@
             </div>
         </div>
     </div>
- @if(session('success'))
-     <div class="alert alert-success">{{ session('success') }}</div>
+    @if(session('success'))
+    <div class="alert alert-success">{{ session('success') }}</div>
     @endif
-       @if (session('error'))
-       <div class="alert alert-danger" style="color:white;">
-         {{ session('error') }}
-       </div>
+    @if (session('error'))
+    <div class="alert alert-danger" style="color:white;">
+        {{ session('error') }}
+    </div>
     @endif
     <div class="row">
         <div class="col-12">
@@ -60,11 +63,12 @@
                             </div>
                             <div class="col-6">
                                 <div class="mb-3">
-                                    <label class="form-label">Member Name (Multiple Members) <span class="text-danger">*</span></label>
-                                    <select name="user_id[]" class="form-select" multiple>
+                                    <label class="form-label">Member Name (Multiple Members) <span
+                                            class="text-danger">*</span></label>
+                                    <select id="memberSelect" name="user_id[]" class="form-select" multiple>
                                         @foreach($userData as $user)
                                         <option value="{{ $user->id }}"
-                                            {{ in_array($user->id, $assignedUsers) ? 'selected' : '' }}>
+                                            {{ in_array($user->id, $assignedUsers ?? []) ? 'selected' : '' }}>
                                             {{ $user->name }}
                                         </option>
                                         @endforeach
@@ -74,6 +78,7 @@
                                     @enderror
                                 </div>
                             </div>
+
                         </div>
                         <hr>
                         <div class="mb-3 gap-2 float-end">
@@ -91,6 +96,16 @@
         </div>
     </div>
 </div>
+<!-- Tom Select JS -->
+<script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
+<script>
+new TomSelect('#memberSelect', {
+    plugins: ['remove_button'],
+    placeholder: 'Select members...',
+    persist: false,
+    create: false
+});
+</script>
 
 
 @endsection

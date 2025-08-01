@@ -5,7 +5,7 @@
 @section('content')
 <div class="container">
 
-    <div class="row g-4 py-4" style="margin-top:4rem !important;">
+    <div class="row g-4 py-4" style="margin-top:2rem !important;">
         <!-- Error Messages -->
         @if ($errors->any())
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -406,7 +406,7 @@
                                                                 <div class="col-3">
                                                                     <label for="postgrad_year">Year
                                                                         of
-                                                                            Post Graduation:</label>
+                                                                        Post Graduation:</label>
                                                                 </div>
                                                                 <div class="col-9">
                                                                     <input type="text" id="postgrad_year"
@@ -500,7 +500,7 @@
                                             </div>
 
                                             <!-- social media -->
-                                             <div class="tab-pane fade" id="social_media" role="tabpanel">
+                                            <div class="tab-pane fade" id="social_media" role="tabpanel">
                                                 <div class="p-3 border rounded bg-light">
                                                     <!-- Professional Information form goes here -->
                                                     <form
@@ -515,8 +515,7 @@
                                                                     <label for="facebook">Facebook:</label>
                                                                 </div>
                                                                 <div class="col-9">
-                                                                    <input type="text" id="facebook"
-                                                                        name="facebook"
+                                                                    <input type="text" id="facebook" name="facebook"
                                                                         value="{{ old('facebook', $user->facebook) }}"
                                                                         class="form-control"
                                                                         placeholder="Enter your Facebook profile link">
@@ -528,8 +527,7 @@
                                                                     <label for="instagram">Instagram:</label>
                                                                 </div>
                                                                 <div class="col-9">
-                                                                    <input type="text" id="instagram"
-                                                                        name="instagram"
+                                                                    <input type="text" id="instagram" name="instagram"
                                                                         value="{{ old('instagram', $user->instagram) }}"
                                                                         class="form-control"
                                                                         placeholder="Enter your Instagram profile link">
@@ -541,8 +539,7 @@
                                                                     <label for="linkedin">LinkedIn:</label>
                                                                 </div>
                                                                 <div class="col-9">
-                                                                    <input type="text" id="linkedin"
-                                                                        name="linkedin"
+                                                                    <input type="text" id="linkedin" name="linkedin"
                                                                         value="{{ old('linkedin', $user->linkedin) }}"
                                                                         class="form-control"
                                                                         placeholder="Enter your LinkedIn profile link">
@@ -554,8 +551,7 @@
                                                                     <label for="twitter">X(Twitter):</label>
                                                                 </div>
                                                                 <div class="col-9">
-                                                                    <input type="text" id="twitter"
-                                                                        name="twitter"
+                                                                    <input type="text" id="twitter" name="twitter"
                                                                         value="{{ old('twitter', $user->twitter) }}"
                                                                         class="form-control"
                                                                         placeholder="Enter your Twitter profile link">
@@ -566,10 +562,8 @@
                                                                     <label for="twitter">e-HRMS URL:</label>
                                                                 </div>
                                                                 <div class="col-9">
-                                                                    <input type="text" id="e-HREMS"
-                                                                        name="e-HREMS"
-                                                                        value=""
-                                                                        class="form-control"
+                                                                    <input type="text" id="e-HREMS" name="e-HREMS"
+                                                                        value="" class="form-control"
                                                                         placeholder="Enter your e-HREMS link">
                                                                 </div>
                                                             </div>
@@ -919,7 +913,7 @@
                         <!-- Card footer END -->
                     </div>
                 </div>
-                 <div class="tab-pane fade" id="social" role="tabpanel" aria-labelledby="social-tab">
+                <div class="tab-pane fade" id="social" role="tabpanel" aria-labelledby="social-tab">
                     <div class="card">
                         <!-- Card header START -->
                         <div class="card-header border-0 pb-0">
@@ -934,7 +928,12 @@
                                     <div class="d-flex align-items-center rounded border px-3 py-2">
                                         <!-- Date -->
                                         <p class="mb-0">
-                                            <i class="bi bi-facebook fa-fw me-2"></i> <a href="{{ $user->facebook }}" target="_blank">Facebook</a>
+                                            <i class="bi bi-facebook fa-fw me-2"></i>
+                                            @if (!empty($user->facebook))
+                                            <a href="{{ $user->facebook }}" target="_blank">{{ $user->facebook }}</a>
+                                            @else
+                                            N/A
+                                            @endif
                                         </p>
                                     </div>
                                     <!-- Birthday END -->
@@ -944,7 +943,12 @@
                                     <div class="d-flex align-items-center rounded border px-3 py-2">
                                         <!-- Date -->
                                         <p class="mb-0">
-                                            <i class="bi bi-instagram fa-fw me-2"></i> <a href="{{ $user->instagram }}" target="_blank">Instagram</a>
+                                            <i class="bi bi-instagram fa-fw me-2"></i>
+                                            @if (!empty($user->instagram))
+                                            <a href="{{ $user->instagram }}" target="_blank">{{ $user->instagram }}</a>
+                                            @else
+                                            N/A
+                                            @endif
                                         </p>
                                     </div>
                                     <!-- Status END -->
@@ -954,7 +958,12 @@
                                     <div class="d-flex align-items-center rounded border px-3 py-2">
                                         <!-- Date -->
                                         <p class="mb-0">
-                                            <i class="bi bi-linkedin fa-fw me-2"></i> <a href="{{ $user->linkedin }}" target="_blank">LinkedIn</a>
+                                            <i class="bi bi-linkedin fa-fw me-2"></i>
+                                            @if (!empty($user->linkedin))
+                                            <a href="{{ $user->linkedin }}" target="_blank">{{ $user->linkedin }}</a>
+                                            @else
+                                            N/A
+                                            @endif
                                         </p>
                                     </div>
                                     <!-- Designation END -->
@@ -964,7 +973,12 @@
                                     <div class="d-flex align-items-center rounded border px-3 py-2">
                                         <!-- Date -->
                                         <p class="mb-0">
-                                            <i class="bi bi-twitter fa-fw me-2"></i> <a href="{{ $user->twitter }}" target="_blank">Twitter</a>
+                                            <i class="bi bi-twitter fa-fw me-2"></i>
+                                            @if (!empty($user->twitter))
+                                            <a href="{{ $user->twitter }}" target="_blank">{{ $user->twitter }}</a>
+                                            @else
+                                            N/A
+                                            @endif
                                         </p>
                                     </div>
                                     <!-- Lives END -->
@@ -974,8 +988,11 @@
                                     <div class="d-flex align-items-center rounded border px-3 py-2">
                                         <!-- Date -->
                                         <p class="mb-0">
-                                            <i class="bi bi-back fa-fw me-2"></i> <a href="{{ $user->twitter }}" target="_blank">e-HRMS</a>
+                                            <i class="bi bi-back fa-fw me-2"></i>
+                                            {!! $user->ehrms ? '<a href="'.$user->ehrms.'"
+                                                target="_blank">'.$user->ehrms.'</a>' : 'N/A' !!}
                                         </p>
+
                                     </div>
                                     <!-- Lives END -->
                                 </div>
