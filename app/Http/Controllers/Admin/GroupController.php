@@ -11,10 +11,19 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\DB;
+use App\Services\NotificationService;
+use App\Models\Notification;
 use App\Models\Post;
 use App\Models\PostMedia;
 class GroupController extends Controller
 {
+
+    protected $notificationService;
+    public function __construct(NotificationService $notificationService)
+    {
+        $this->notificationService = $notificationService;
+    }
+
     public function index()
     {
         // $groups = Group::all();
@@ -44,6 +53,7 @@ class GroupController extends Controller
        Group::create($request->all());
         return redirect()->route('group.index')->with('success', 'Group created successfully.');
     }
+
     public function store(Request $request)
     {
      $request->validate([
@@ -78,6 +88,34 @@ class GroupController extends Controller
         'mentiee' => json_encode($request->input('user_id')),
         'status' => $request->input('status'),
     ]);
+
+    // Notify mentor: "Add in group mentor"
+    $mentorId = $request->input('mentor_id');
+
+    if ($mentorId) {
+        $mentorMessage = 'Member added in group as mentor';
+        $this->notificationService->notifyMemberAdded(
+            [$mentorId],
+            'group',
+            $mentorMessage,
+            $group->id,
+            'group_member'
+        );
+    }
+
+    // Notify new members: "New member add in group"
+    $userIds = $request->input('user_id', []);
+    if (!empty($userIds)) {
+        $memberMessage = 'New member add in group';
+        $this->notificationService->notifyMemberAdded(
+            $userIds,
+            'group',
+            $memberMessage,
+            $group->id,
+            'group_member'
+        );
+    }
+    
     return redirect()->route('group.index')->with('success', 'Group created successfully.');
     }
     public function edit(Group $group)
@@ -247,6 +285,24 @@ class GroupController extends Controller
             'file_type' => 'image',
         ]);
     }
+
+    $memberIds = DB::table('group_member')
+                    ->where('group_id', $group_id)
+                    ->pluck('member_id')
+                    ->toArray();
+
+    if (!empty($memberIds)) {
+        $message = 'A new topic has been posted in your group: ' . $request->title;
+        // Assuming you have notification service
+        $this->notificationService->notifyGroupOrForumMembers(
+            $memberIds,
+            'group',
+            $message,
+            $group_id,
+            'group_topic',
+            $memberIds
+        );
+    }
     return redirect()->route('group.index')->with('success', 'Group post (topic) added successfully.');
 }
     public function view_topic($id)
@@ -305,6 +361,5 @@ class GroupController extends Controller
         $topic->save();
         return response()->json(['message' => 'Status updated successfully.']);
     }
-
 
 }
