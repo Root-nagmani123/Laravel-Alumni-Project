@@ -140,6 +140,9 @@ Route::prefix('user')->name('user.')->group(function () {
     Route::get('user/forum', [MemberForumController::class, 'index'])->name('forum');
     Route::get('user/forum/{id}', [MemberForumController::class, 'show'])->name('forum.show');
 
+
+	Route::get('/member/search', [MemberForumController::class, 'member_search'])->name('member.search');
+
 });
 
 Route::get('/admin', function () {

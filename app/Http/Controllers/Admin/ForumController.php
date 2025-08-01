@@ -79,33 +79,36 @@ class ForumController extends Controller
         {
             return view('admin.forums.edit_forum', compact('forum'));
         }
-    public function update(Request $request, Forum $forum)
-    {
-        // Validate the incoming request
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'cat_id' => 'nullable|integer',
-            'status' => 'required|integer',
-            'created_by' => 'required|integer',
-        'end_date' => 'required|date|after_or_equal:today',
+  public function update(Request $request, Forum $forum)
+{
+    
+    $validator = Validator::make($request->all(), [
+        'name' => 'required|string|max:255',
+        'cat_id' => 'nullable|integer',
+        'status' => 'required|integer',
+        
+    ]);
 
-
-        ]);
-        // Check if validation fails
-        if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->withInput();
-        }
-        // Update forum details
-        $forum->name = $request->name;
-        $forum->cat_id = $request->cat_id;
-        $forum->status = $request->status;
-        $forum->created_by = $request->created_by;
-        $forum->end_date = $request->end_date;
-        $forum->save();
-        return redirect()->route('forums.index')->with('success', 'Forum updated successfully.');
+    if ($validator->fails()) {
+        return redirect()->back()
+            ->withErrors($validator)
+            ->withInput();
     }
+
+    $forum->name = $request->name;
+    $forum->cat_id = $request->cat_id;
+    $forum->status = $request->status;
+
+    // Optional: Only update created_by if sent
+    if ($request->has('created_by')) {
+        $forum->created_by = $request->created_by;
+    }
+
+    $forum->save();
+
+    return redirect()->route('forums.index')->with('success', 'Forum updated successfully.');
+}
+
     public function destroy(Forum $forum)
         {
             $forum->delete();
@@ -351,10 +354,13 @@ class ForumController extends Controller
     $request->validate([
         'forumname' => 'required|string|max:255',
         'forumstatus' => 'required|in:0,1',
+        'end_date' => 'required|date|after_or_equal:today', // Ensure end date is valid
+
     ]);
     $forum->update([
         'name' => $request->forumname,
         'status' => $request->forumstatus,
+        'end_date' => $request->end_date, // Update end date
     ]);
     return redirect()->route('forums.index')->with('success', 'Forum updated successfully!');
 }

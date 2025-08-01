@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Member;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Forum;
+use App\Models\Member;
 use App\Models\ForumTopic;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -65,5 +66,16 @@ class ForumController extends Controller
             ->get();
             
         return view('user.forum-detail', compact('forum', 'topics', 'user', 'forums'));
+    }
+    public function member_search(Request $request)
+    {
+
+        $query = $request->input('q');
+      
+    $results = Member::where('status', 1)
+                 ->where('name', 'LIKE', '%' . $query . '%')
+                 ->get();
+
+    return response()->json($results);
     }
 }

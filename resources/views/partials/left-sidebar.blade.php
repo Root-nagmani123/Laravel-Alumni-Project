@@ -157,11 +157,9 @@
                     <!-- Title -->
                     <div class="overflow-hidden">
                         <a class="h6 mb-0" href="{{ route('user.forum.show', ['id' => $forum->id]) }}">{{ $forum->name }} </a>
-                        @if(isset($forum->topic_name))
-                        <p class="mb-0 small text-truncate">Topic: {{ $forum->topic_name }}</p>
-                        @endif
-                        <small
-                            class="text-muted">{{ \Carbon\Carbon::parse($forum->created_date ?? now())->format('d M, Y') }}</small>
+                       
+                        <small class="text-muted">Created Date: {{ \Carbon\Carbon::parse($forum->created_date ?? now())->format('d M, Y') }}</small><br>
+                        <small class="text-muted">End Date: {{ \Carbon\Carbon::parse($forum->end_date ?? now())->format('d M, Y') }}</small>
                     </div>
 
                 </div>
