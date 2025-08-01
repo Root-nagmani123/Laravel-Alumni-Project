@@ -156,7 +156,7 @@
                     <div class="avatar">
                         <a href="{{ route('user.forum.show', ['id' => $forum->id]) }}"><img
                                 class="avatar-img rounded-circle"
-                                src="{{ asset('storage/uploads/images/' . ($forum->images ?? 'default-forum.jpg')) }}"
+                                src="{{ asset('storage/uploads/images/forums_img/' . ($forum->images ?? 'default-forum.jpg')) }}"
                                 alt="" loading="lazy" decoding="async"></a>
                     </div>
                     <!-- Title -->

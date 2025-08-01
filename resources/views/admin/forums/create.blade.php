@@ -36,7 +36,7 @@
         <div class="col-12">
             <!-- start Person Info -->
             <div class="card">
-                <form action="{{ route('forums.store') }}" method="POST">
+                <form action="{{ route('forums.store') }}" method="POST" enctype="multipart/form-data">
 
                     @csrf
                     <div>

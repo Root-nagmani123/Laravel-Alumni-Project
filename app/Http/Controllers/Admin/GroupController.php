@@ -52,8 +52,14 @@ class GroupController extends Controller
         'user_id' => 'required|array',
         'status' => 'nullable|integer',
             'end_date' => 'nullable|date|after_or_equal:today', // Ensure end date is valid
+            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048', // Validate image
 
     ]);
+    // Check if the image is uploaded
+    if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('uploads/images/grp_img', 'public');
+            $data['images'] = basename($imagePath);
+        }
     // Create the group
     $group = Group::create([
         'name' => $request->input('name'),
@@ -62,6 +68,7 @@ class GroupController extends Controller
         'created_by' => $request->input('created_by'),
         'member_type' => $request->input('member_type'),
         'end_date' => $request->input('end_date'),
+        'image' => $data['images'] ?? null, // Use the image path if it exists
     ]);
     // Create the group member
     GroupMember::create([
@@ -88,13 +95,23 @@ class GroupController extends Controller
             'user_id' => 'required|array',
             'status' => 'nullable|integer',
             'end_date' => 'nullable|date|after_or_equal:today', // Ensure end date is valid
+            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048', // Validate image
         ]);
-        
+         if ($request->hasFile('image')) {
+        $imagePath = $request->file('image')->store('uploads/images/grp_img', 'public');
+        $data['image'] = basename($imagePath);
+        // Delete old image if exists
+        if ($group->image) {
+            Storage::disk('public')->delete('uploads/images/grp_img/' . $group->image);
+        }
+        $group->image = $data['image'];
+    }
         // Update the group
         $group->update([
             'name' => $request->input('name'),
             'status' => $request->input('status'),
             'end_date' => $request->input('end_date'),
+            'image' => $data['image'] ?? $group->image, // Use the new image if it exists, otherwise keep the old one
         ]);
         
         // Update or create the group member

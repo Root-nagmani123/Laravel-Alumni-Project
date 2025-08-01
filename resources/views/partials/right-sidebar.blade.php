@@ -89,7 +89,7 @@
                 <div class="hstack gap-3 mb-3 align-items-center">
                     <!-- Group Image -->
                     <div class="avatar avatar-md">
-                        <img src="{{asset('feed_assets/images/default-group.png') }}"
+                        <img src="{{asset('storage/uploads/images/grp_img/' . ($recent->image ?? 'default-group.png')) }}"
                             alt="Group Image" class="rounded-circle img-fluid"
                             style="width: 48px; height: 48px; object-fit: cover;">
                     </div>

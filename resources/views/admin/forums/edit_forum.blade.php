@@ -35,7 +35,7 @@
             <hr>
 
 
-            <form method="POST" action="{{ route('forums.forum.update', $forum->id) }}">
+            <form method="POST" action="{{ route('forums.forum.update', $forum->id) }}" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
                 <div class="row">
@@ -63,6 +63,15 @@
                                 <input type="file" class="form-control" name="forum_image" id="forum_image"
                                     accept="image/*">
                             </div>
+                            <div class="mt-2">
+        <img
+            id="preview-image"
+            src="{{ isset($forum->images) ? asset('storage/uploads/images/forums_img/' . $forum->images) : '#' }}"
+            alt="Image Preview"
+            class="img-fluid rounded {{ isset($forum->images) ? '' : 'd-none' }}"
+            style="max-height: 200px;"
+        />
+    </div>
                         </div>
                         <div class="col-6">
                             <label for="status" class="form-label">Status</label>

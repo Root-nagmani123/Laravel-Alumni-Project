@@ -39,6 +39,7 @@ class ForumController extends Controller
     $validator = Validator::make($request->all(), [
         'name' => 'required|string|max:255',
         'end_date' => 'required|date|after_or_equal:today',
+
       ]);
     // Check if validation fails
     if ($validator->fails()) {
@@ -46,12 +47,17 @@ class ForumController extends Controller
             ->withErrors($validator)
             ->withInput();
         }
+         if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('uploads/images/forums_img', 'public');
+            $data['images'] = basename($imagePath);
+        }
     // insert into the forums table
     $input = [
         'name' => $request->input('name'),
          'status' => $request->input('status'), // Default to active if not provided
         'created_by' => session('LoginID'),
          'end_date' => $request->input('end_date'),
+         'images' => isset($data['images']) ? $data['images'] : null, // Store image if exists
 
     ];
 
@@ -86,7 +92,8 @@ class ForumController extends Controller
         'name' => 'required|string|max:255',
         'cat_id' => 'nullable|integer',
         'status' => 'required|integer',
-        
+        'forum_image' => 'nullable|forum_image|mimes:jpeg,png,jpg|max:2048', // Optional image validation
+        'end_date' => 'required|date|after_or_equal:today',
     ]);
 
     if ($validator->fails()) {
@@ -94,15 +101,29 @@ class ForumController extends Controller
             ->withErrors($validator)
             ->withInput();
     }
+    if ($request->hasFile('forum_image')) {
+            $imagePath = $request->file('forum_image')->store('uploads/images/forums_img', 'public');
+            $data['images'] = basename($imagePath);
+        }
 
     $forum->name = $request->name;
     $forum->cat_id = $request->cat_id;
     $forum->status = $request->status;
+    $forum->end_date = $request->end_date;
+    // Update image if provided
+    if (isset($data['images'])) {
+        // Delete old image if exists
+        if ($forum->images) {
+            Storage::disk('public')->delete('uploads/images/forums_img/' . $forum->images);
+        }
+        $forum->images = $data['images'];
+    }
 
     // Optional: Only update created_by if sent
     if ($request->has('created_by')) {
         $forum->created_by = $request->created_by;
     }
+    
 
     $forum->save();
 
@@ -355,12 +376,24 @@ class ForumController extends Controller
         'forumname' => 'required|string|max:255',
         'forumstatus' => 'required|in:0,1',
         'end_date' => 'required|date|after_or_equal:today', // Ensure end date is valid
+        'forum_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048', // Optional image validation
 
     ]);
+    // Handle image upload if provided
+    if ($request->hasFile('forum_image')) {
+        $imagePath = $request->file('forum_image')->store('uploads/images/forums_img', 'public');
+        $data['images'] = basename($imagePath);
+        // Delete old image if exists
+        if ($forum->images) {
+            Storage::disk('public')->delete('uploads/images/forums_img/' . $forum->images);
+        }
+        $forum->images = $data['images'];
+    }
     $forum->update([
         'name' => $request->forumname,
         'status' => $request->forumstatus,
         'end_date' => $request->end_date, // Update end date
+        'images' => $forum->images ?? null, // Keep existing image if not updated
     ]);
     return redirect()->route('forums.index')->with('success', 'Forum updated successfully!');
 }

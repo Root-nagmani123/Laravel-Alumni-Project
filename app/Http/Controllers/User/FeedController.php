@@ -128,6 +128,7 @@ class FeedController extends Controller
     ->select(
         'f.id', 
         'f.name',
+        'f.images',
         'f.created_at',
         'f.end_date', // Assuming you have an end_date column
     )
@@ -160,6 +161,7 @@ class FeedController extends Controller
    ->select(
         'g.id',
         'g.name',
+        'g.image', // Assuming you have an image column
        
     )
     ->orderBy('g.id', 'desc') // or 'end_date', 'desc' if you prefer
