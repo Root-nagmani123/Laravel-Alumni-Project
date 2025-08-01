@@ -104,6 +104,7 @@ class FeedController extends Controller
    public function index()
     {
         $user = auth()->guard('user')->user();
+        
         $userId = $user->id;
         // Fetch posts with related models
         $stories = Story::where('created_at', '>=', now()->subDay())
@@ -454,6 +455,33 @@ class FeedController extends Controller
 
    return redirect()->route('user.feed')->with('success', 'You have left the group.');
 
+}
+function submitGrievance(Request $request)
+{
+    $user = auth()->guard('user')->user();
+    $name = $user->name;
+    $email = $user->email;
+
+    $grievanceType = request('typeSelect');
+    $grievanceMessage = request('userMessage');
+
+    // Validate the input
+    $validatedData = request()->validate([
+        'typeSelect' => 'required|string|max:255',
+        'userMessage' => 'required|string|max:1000',
+    ]);
+
+    // Store the grievance in the database
+    DB::table('grievances')->insert([
+        'name' => $name,
+        'email' => $email,
+        'type' => $grievanceType,
+        'message' => $grievanceMessage,
+        'created_at' => now(),
+    ]);
+
+    return redirect()->back()->with('success', 'Grievance submitted successfully.');
+    
 }
 
 
