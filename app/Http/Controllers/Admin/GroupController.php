@@ -51,6 +51,8 @@ class GroupController extends Controller
         'mentor_id' => 'required|integer',
         'user_id' => 'required|array',
         'status' => 'nullable|integer',
+            'end_date' => 'nullable|date|after_or_equal:today', // Ensure end date is valid
+
     ]);
     // Create the group
     $group = Group::create([
@@ -59,6 +61,7 @@ class GroupController extends Controller
         'status' => $request->input('status'),
         'created_by' => $request->input('created_by'),
         'member_type' => $request->input('member_type'),
+        'end_date' => $request->input('end_date'),
     ]);
     // Create the group member
     GroupMember::create([

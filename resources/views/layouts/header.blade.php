@@ -232,22 +232,22 @@ Header START -->
     </nav>
     <!-- Logo Nav END -->
 </header>
-<!-- =======================
- <!-- Grievance/Feedback Modal -->
+<!-- ======================= Grievance/Feedback Modal -->
 <div class="modal fade" id="grievanceModal" tabindex="-1" aria-labelledby="grievanceModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form>
+            <form action="{{ route('user.grievance.submit') }}" method="POST">
                 <div class="modal-header">
                     <h5 class="modal-title" id="grievanceModalLabel">Submit Grievance / Feedback</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-
+                          @csrf
                     <!-- Type Dropdown -->
                     <div class="mb-3">
-                        <label for="typeSelect" class="form-label">Type</label>
-                        <select class="form-select" id="typeSelect" required>
+                        <label for="typeSelect" class="form-label">Type<span class="text-danger">*</span></label>
+
+                        <select class="form-select" id="typeSelect" name="typeSelect" required>
                             <option value="">Select</option>
                             <option value="grievance">Grievance</option>
                             <option value="feedback">Feedback</option>
@@ -256,20 +256,20 @@ Header START -->
 
                     <!-- Name -->
                     <div class="mb-3">
-                        <label for="userName" class="form-label">Name</label>
-                        <input type="text" class="form-control" id="userName" placeholder="Enter your name" required>
+                        <label for="userName" class="form-label">Name <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="userName" name="userName" placeholder="Enter your name" value="{{ auth()->guard('user')->user()->name }}" required readonly>
                     </div>
 
                     <!-- Email -->
                     <div class="mb-3">
-                        <label for="userEmail" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="userEmail" placeholder="Enter your email" required>
+                        <label for="userEmail" class="form-label">Email <span class="text-danger">*</span></label>
+                        <input type="email" class="form-control" id="userEmail" name="userEmail" placeholder="Enter your email" value="{{ auth()->guard('user')->user()->email }}" required readonly>
                     </div>
 
                     <!-- Message -->
                     <div class="mb-3">
-                        <label for="userMessage" class="form-label">Message</label>
-                        <textarea class="form-control" id="userMessage" rows="4" maxlength="1000"
+                        <label for="userMessage" class="form-label">Message <span class="text-danger">*</span></label>
+                        <textarea class="form-control" id="userMessage" name="userMessage" rows="4" maxlength="1000"
                             placeholder="Write your message (max 1000 characters)" required></textarea>
                     </div>
 
