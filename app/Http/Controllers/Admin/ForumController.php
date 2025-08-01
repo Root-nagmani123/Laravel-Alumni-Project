@@ -236,12 +236,12 @@ class ForumController extends Controller
 
     if (!empty($memberIds)) {
         $message = 'A new topic has been posted in your forum: ' . $request->title;
-
         // Assuming you have notification service
         $this->notificationService->notifyGroupOrForumMembers(
-            'forum_topic',
+            $memberIds,
+            'forum',
             $message,
-            $topicId,
+            $request->forum_id,
             'forum_topic',
             $memberIds
         );
@@ -310,7 +310,6 @@ class ForumController extends Controller
         $topic->video_caption = $request->input('video_caption');
         $topic->video_link = $request->input('video_link');
         $topic->status = $request->input('status');
-
         $topic->save();
 
         return back()->with('success', 'Topic updated successfully.');
