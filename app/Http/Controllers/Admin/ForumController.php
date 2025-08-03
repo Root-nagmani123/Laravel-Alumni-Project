@@ -249,7 +249,9 @@ class ForumController extends Controller
             $docPath = $request->file('doc')->store('uploads/docs', 'public');
             $data['files'] = basename($docPath);
         }
+
         // DB::table('forum_topics')->insert($data);
+
         $topicId = DB::table('forum_topics')->insertGetId($data);
 
     // 6. (Optional) Notify all forum members
