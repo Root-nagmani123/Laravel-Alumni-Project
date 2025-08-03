@@ -80,7 +80,6 @@ class EventsController extends Controller
 ]);
 
    if($event){
-
     $notification = $this->notificationService->notifyAllMembers('event', 'New event has been added.', $event->id, 'event');
        
     if($notification){
@@ -88,8 +87,7 @@ class EventsController extends Controller
      Member::query()->update(['is_notification' => 0]);
 
     }
-
-    }
+  }
 
 		return redirect()->route('events.index')->with('success', 'Event added successfully!');
 	}

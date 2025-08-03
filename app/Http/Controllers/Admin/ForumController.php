@@ -247,7 +247,9 @@ class ForumController extends Controller
             $docPath = $request->file('doc')->store('uploads/docs', 'public');
             $data['files'] = basename($docPath);
         }
+
         // DB::table('forum_topics')->insert($data);
+
         $topicId = DB::table('forum_topics')->insertGetId($data);
 
     // 6. (Optional) Notify all forum members
@@ -259,7 +261,14 @@ class ForumController extends Controller
     if (!empty($memberIds)) {
         $message = 'A new topic has been posted in your forum: ' . $request->title;
         // Assuming you have notification service
-        $this->notificationService->notifyGroupOrForumMembers($memberIds, 'forum', $message, $request->forum_id, 'forum');
+        $this->notificationService->notifyGroupOrForumMembers(
+            $memberIds,
+            'forum',
+            $message,
+            $request->forum_id,
+            'forum_topic',
+            $memberIds
+        );
     }
 
         return redirect()->route('forums.index')->with('success', 'Topic saved successfully!');
