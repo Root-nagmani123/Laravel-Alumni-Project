@@ -8,9 +8,16 @@ use Illuminate\Support\Facades\Storage;
 use App\Models\Post;
 use App\Models\PostMedia;
 use Illuminate\Support\Str; // added on 16-6-2025
+use App\Services\NotificationService;
 
 class PostController extends Controller
 {
+    protected $notificationService;
+
+    public function __construct(NotificationService $notificationService)
+    {
+        $this->notificationService = $notificationService;
+    }
 
 public function store_chnagefor_video_link(Request $request)
     {
@@ -141,6 +148,13 @@ public function group_post_store(Request $request)
         }
     }
 
+    
+
+    // Send notification to group members
+    $fromUserId = auth('user')->id();
+    $message = "New post in group";
+    $this->notificationService->notifyGroupPost($request->group_id, $fromUserId, $message, $post->id);
+
     return redirect()->back()->with('success', 'Group Post created successfully.');
 }
 
@@ -196,12 +210,14 @@ public function toggleLike(Post $post)
 
     $likeUsersTooltip = $post->likes()->with('member')->get()->pluck('member.name')->implode('<br>');
 
+    if($post->member_id !== $user->id){
+        $this->notificationService->notifyPostOwner($post->member_id, $user->id, 'like', "{$user->name} liked your post", $post->id, 'post');
+    }
     return response()->json([
         'like_count' => $post->likes()->count(),
         'tooltip_html' => $likeUsersTooltip ?: 'No likes yet',
     ]);
 }
-
 
     public function toggleLike_old25062025(Post $post, Request $request)
     {
