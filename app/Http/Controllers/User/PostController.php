@@ -21,12 +21,6 @@ use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
-    protected $notificationService;
-
-    public function __construct(NotificationService $notificationService)
-    {
-        $this->notificationService = $notificationService;
-    }
 
 public function store_chnagefor_video_link(Request $request)
     {
@@ -219,14 +213,12 @@ public function toggleLike(Post $post)
 
     $likeUsersTooltip = $post->likes()->with('member')->get()->pluck('member.name')->implode('<br>');
 
-    if($post->member_id !== $user->id){
-        $this->notificationService->notifyPostOwner($post->member_id, $user->id, 'like', "{$user->name} liked your post", $post->id, 'post');
-    }
     return response()->json([
         'like_count' => $post->likes()->count(),
         'tooltip_html' => $likeUsersTooltip ?: 'No likes yet',
     ]);
 }
+
 
     public function toggleLike_old25062025(Post $post, Request $request)
     {
