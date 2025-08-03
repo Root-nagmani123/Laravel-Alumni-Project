@@ -4,8 +4,6 @@ namespace App\Services;
 
 use App\Models\Notification;
 use App\Models\Member;
-use App\Models\GroupMember; // Added this import
-use Carbon\Carbon; // Added this import
 
 class NotificationService
 {
@@ -39,9 +37,8 @@ class NotificationService
 
 
         //topic added to group or forum
-        public function notifyGroupOrForumMembers( $memberIds, $type, $message, $sourceId,  $sourceType, $fromUserId = null)
+        public function notifyGroupOrForumMembers(array $memberIds, string $type, string $message, $sourceId, string $sourceType, $fromUserId = null)
         {
-            
             return Notification::create([
                 'from_user_id' => $fromUserId,
                 'type'         => $type, // e.g., 'group_add', 'forum_topic'
@@ -69,14 +66,13 @@ class NotificationService
 //like or comment on post
     public function notifyPostOwner(int $postOwnerId, int $fromUserId, string $type, string $message, $sourceId, string $sourceType)
     {
-
         return $this->createNotification([
             'from_user_id' => $fromUserId,
             'type'         => $type, // 'like' or 'comment'
             'message'      => $message,
             'source_id'    => $sourceId,
             'source_type'  => $sourceType,
-            'user_id'     => json_encode([$postOwnerId]),
+            'user_id'     => [$postOwnerId],
         ]);
     }
 
