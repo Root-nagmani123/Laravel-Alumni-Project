@@ -93,22 +93,7 @@ Header START -->
                             <i class="bi bi-search fs-5"></i>
                         </button>
                     </form>
-
-                    <!-- Autocomplete Result List -->
-                    <ul id="searchResults" class="list-group position-absolute w-100 z-3 mt-1"
-                        style="max-height: 200px; overflow-y: auto; background-color: #ffffffb8;"></ul>
-                </div>
-
-                <!-- TOAST MESSAGE -->
-                <div class="position-fixed top-0 end-0 p-3" style="z-index: 1100;">
-                    <div id="favoriteToast" class="toast align-items-center text-bg-primary border-0" role="alert"
-                        aria-live="assertive" aria-atomic="true">
-                        <div class="d-flex">
-                            <div class="toast-body"></div>
-                            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
-                                aria-label="Close"></button>
-                        </div>
-                    </div>
+                    <ul id="searchResults" class="list-group position-absolute w-100 z-3 mt-1" style="max-height: 200px; overflow-y: auto;background-color: #ffffffb8;"></ul>
                 </div>
 
 
