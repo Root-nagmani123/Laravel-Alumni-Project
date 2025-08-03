@@ -89,7 +89,8 @@ class EventsController extends Controller
      Member::query()->update(['is_notification' => 0]);
 
     }
-  }
+
+    }
 
 		return redirect()->route('events.index')->with('success', 'Event added successfully!');
 	}

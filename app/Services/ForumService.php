@@ -6,13 +6,20 @@ use App\Models\Forum;
 use App\Models\ForumTopic;
 use App\Models\ForumTopicLike;
 use App\Models\ForumTopicComment;
-use App\Models\User;
+use App\Models\Member;
+use App\Services\NotificationService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class ForumService
 {
+    protected $notificationService;
+
+    public function __construct(NotificationService $notificationService)
+    {
+        $this->notificationService = $notificationService;
+    }
     /**
      * Get all forums that the current user has access to
      *
@@ -141,6 +148,16 @@ return DB::table('forums')
                 'topic_id' => $topicId,
                 'user_id' => $userId,
             ]);
+
+            // Get the topic and user for notification
+            $topic = ForumTopic::find($topicId);
+            $userWhoLiked = Member::find($userId);
+           
+            // Send notification if the topic owner is different from the user who liked
+            if ($topic && $userWhoLiked && $topic->created_by !== $userId) {
+                $this->notificationService->notifyPostOwner($topic->created_by, $userId, 'like', "{$userWhoLiked->name} liked your Topic", $topic->id, 'forum');
+            }
+            
             return true;
         }
         return false;
@@ -186,11 +203,22 @@ return DB::table('forums')
      */
     public function addComment($topicId, $userId, $comment)
     {
-        return ForumTopicComment::create([
+        $commentModel = ForumTopicComment::create([
             'topic_id' => $topicId,
             'user_id' => $userId,
             'comment' => $comment,
         ]);
+
+        // Get the topic and user for notification
+        $topic = ForumTopic::find($topicId);
+        $userWhoCommented = Member::find($userId);
+        
+        // Send notification if the topic owner is different from the user who commented
+        if ($topic && $userWhoCommented && $topic->created_by !== $userId) {
+            $this->notificationService->notifyPostOwner($topic->created_by, $userId, 'comment', "{$userWhoCommented->name} commented on your Topic", $topic->id, 'forum');
+        }
+
+        return $commentModel;
     }
 
     /**
