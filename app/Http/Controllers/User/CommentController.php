@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
+use App\Services\NotificationService;
 
 use Illuminate\Http\Request;
 
@@ -9,6 +10,12 @@ use App\Models\Comment;
 
 class CommentController extends Controller
 {
+    protected $notificationService;
+    public function __construct(NotificationService $notificationService)
+    {
+        $this->notificationService = $notificationService;
+    }
+    
     public function store(Request $request)
     {
     $request->validate([
@@ -21,6 +28,10 @@ class CommentController extends Controller
         'member_id' => auth()->guard('user')->id(),
         'comment' => strip_tags($request->comment),
     ]);
+
+    if($comment){
+        $this->notificationService->notifyPostOwner($comment->post->member_id, auth()->guard('user')->id(), 'comment', "{$comment->member->name} commented on your post", $comment->post->id, 'post');
+    }
 
     if ($request->ajax()) {
         return response()->json([
