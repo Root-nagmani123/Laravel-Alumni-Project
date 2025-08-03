@@ -246,10 +246,10 @@ class ForumController extends Controller
         //     $data['images'] = basename($imagePath);
         // }
 
-        // if ($request->hasFile('doc')) {
-        //     $docPath = $request->file('doc')->store('uploads/docs', 'public');
-        //     $data['files'] = basename($docPath);
-        // }
+        if ($request->hasFile('doc')) {
+            $docPath = $request->file('doc')->store('uploads/docs', 'public');
+            $data['files'] = basename($docPath);
+        }
         // DB::table('forum_topics')->insert($data);
         $topicId = DB::table('forum_topics')->insertGetId($data);
 
