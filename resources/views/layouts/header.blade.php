@@ -79,7 +79,7 @@ Header START -->
                             <i class="bi bi-search fs-5"></i>
                         </button>
                     </form>
-                    <ul id="searchResults" class="list-group position-absolute w-100 z-3 mt-1" style="max-height: 200px; overflow-y: auto;background-color: #ffffff;"></ul>
+                    <ul id="searchResults" class="list-group position-absolute w-100 z-3 mt-1" style="max-height: 200px; overflow-y: auto;background-color: #ffffffb8;"></ul>
                 </div>
 
 
