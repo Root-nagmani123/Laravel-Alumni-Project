@@ -41,7 +41,7 @@
             @csrf
             <div>
                 <div class="card-body">
-                    <h4 class="card-title">Add Mentorship Programme</h4>
+                    <h4 class="card-title">Add Mentorship / Mentee Programme</h4>
                     <small class="form-control-feedback">Please add Mentorship Programme detail.</small>
                     <hr>
                     <div class="row">
@@ -49,7 +49,11 @@
                             <div class="mb-3">
                                 <label class="form-label">Name<span
                                         class="required text-danger text-danger">*</span></label>
-                                <input type="text" name="name" id="name" class="form-control" value="{{ old('name') }}">
+                                <select name="name" id="" class="form-select">
+                                    <option value="">Select Name</option>
+                                    <option value="Mentor 1">Mentor</option>
+                                    <option value="Mentor 2">Mentee</option>
+                                </select>
                                 @error('name')
                                 <div class="text-danger">{{ $message }}</div>
                                 @enderror
@@ -57,43 +61,30 @@
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label class="form-label">Mobile<span
+                                <label class="form-label">Service<span
                                         class="required text-danger text-danger">*</span></label>
-                                <input type="text" name="mobile" id="mobile" class="form-control"
-                                    value="{{ old('mobile') }}">
-                                @error('mobile')
+                                <select name="service" id="" class="form-select">
+                                    <option value="">Select Service</option>
+                                    <option value="ias">IAS</option>
+                                    <option value="ips">IPS</option>
+                                    <option value="ifs">IFS</option>
+                                    <option value="irs">IRS</option>
+                                    <option value="other">Other</option>
+                                </select>
+                                @error('service')
                                 <div class="text-danger">{{ $message }}</div>
                                 @enderror
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label class="form-label">Email<span
+                                <label class="form-label">Year<span
                                         class="required text-danger text-danger">*</span></label>
-                                <input type="text" name="email" id="email" class="form-control"
-                                    value="{{ old('email') }}">
-                                @error('email')
-                                <div class="text-danger">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label class="form-label">Password<span
-                                        class="required text-danger text-danger">*</span></label>
-                                <input type="password" name="password" id="password" class="form-control">
-                                @error('password')
-                                <div class="text-danger">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label class="form-label">Confirm Password:<span
-                                        class="required text-danger text-danger">*</span></label>
-                                <input type="password" name="password_confirmation" id="confirm_password"
-                                    class="form-control">
-                                @error('password_confirmation')
+                                <select name="year" id="" class="form-select">
+                                    <option value="">Select Year</option>
+
+                                </select>
+                                @error('year')
                                 <div class="text-danger">{{ $message }}</div>
                                 @enderror
                             </div>
@@ -102,31 +93,36 @@
                             <div class="mb-3">
                                 <label class="form-label">Cadre<span
                                         class="required text-danger text-danger">*</span></label>
-                                <input type="text" name="cader" id="cader" class="form-control"
-                                    value="{{ old('cader') }}">
-                                @error('cader')
+                                <select name="cadre" id="" class="form-control">
+                                    <option value="">Select Cadre</option>
+                                    <option value="AGMUT">AGMUT</option>
+                                    <option value="ANDAMAN & NICOBAR ISLANDS">ANDAMAN & NICOBAR ISLANDS</option>
+                                </select>
+                                @error('cadre')
                                 <div class="text-danger">{{ $message }}</div>
                                 @enderror
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label class="form-label">Designation<span
+                                <label class="form-label">Sector<span
                                         class="required text-danger text-danger">*</span></label>
-                                <input type="text" name="designation" id="designation" class="form-control"
-                                    value="{{ old('designation') }}">
-                                @error('designation')
+                                <select name="sector" id="sector" class="form-select">
+                                    <option value="">Select Sector</option>
+                                </select>
+                                @error('sector')
                                 <div class="text-danger">{{ $message }}</div>
                                 @enderror
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label class="form-label">Batch<span
-                                        class="required text-danger text-danger">*</span></label>
-                                <input type="number" name="batch" id="batch" class="form-control"
-                                    value="{{ old('batch') }}">
-                                @error('batch')
+                                <label for="" class="form-label">Status</label>
+                                <select name="status" id="" class="form-select">
+                                    <option value="active">Active</option>
+                                    <option value="inactive">Inactive</option>
+                                </select>
+                                @error('status')
                                 <div class="text-danger">{{ $message }}</div>
                                 @enderror
                             </div>
@@ -145,4 +141,5 @@
             </div>
         </form>
     </div>
-    @endsection
+</div>
+@endsection

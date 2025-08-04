@@ -66,9 +66,10 @@
                                 <tr>
                                     <th>S.No.</th>
                                     <th>Name</th>
-                                    <th>Email</th>
-                                    <th>Mobile</th>
-                                    <th>Cadre, Batch</th>
+                                    <th>Service</th>
+                                    <th>Cadre</th>
+                                    <th>Year</th>
+                                    <th>Sector</th>
                                     <th>Action</th>
                                     <th>Status</th>
                                 </tr>
@@ -76,6 +77,7 @@
                             </thead>
                             <tbody>
                                 <tr class="odd">
+                                    <td></td>
                                     <td></td>
                                     <td></td>
                                     <td></td>
