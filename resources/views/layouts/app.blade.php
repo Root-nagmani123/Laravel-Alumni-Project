@@ -13,6 +13,7 @@
         visibility: hidden;
         pointer-events: none;
     }
+    @livewireStyles
 </style>
 
 <script>
@@ -144,7 +145,24 @@
             loader.style.display = 'none';
         }
     });
+
+    window.addEventListener('open-chat-toast', event => {
+        const { id, name, avatar } = event.detail;
+
+        const toast = document.getElementById('chatToast');
+
+        // You could dynamically inject the data here
+        toast.querySelector('.toast-header h6').textContent = name;
+        toast.querySelector('.toast-header img').src = avatar;
+        
+        const bsToast = new bootstrap.Toast(toast);
+        bsToast.show();
+    });
+
 </script>
+<!-- Toast Container -->
+
+@livewireScripts
 
 </body>
 
