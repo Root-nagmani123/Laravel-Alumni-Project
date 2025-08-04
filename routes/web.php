@@ -116,6 +116,42 @@ Route::prefix('user')->name('user.')->group(function () {
     // other protected routes
   });
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
          Route::get('/profile/{id}', [ProfileController::class, 'showById'])->where('id', '[0-9]+')->name('profile');
          Route::get('/profile/{name}', [ProfileController::class, 'showByName'])->where('name', '[a-zA-Z\s]+')->name('profile.name');
 
@@ -144,6 +180,11 @@ Route::prefix('user')->name('user.')->group(function () {
         Route::post('user/forum/topic/{id}/like', [MemberForumController::class, 'like'])->name('forum.topic.like');
         Route::post('user/forum/topic/{id}/unlike', [MemberForumController::class, 'unlike'])->name('forum.topic.unlike');
         Route::post('user/forum/topic/{id}/comment', [MemberForumController::class, 'comment'])->name('forum.topic.comment');
+
+        Route::get('/notifications', [App\Http\Controllers\Member\NotificationController::class, 'getNotifications'])->name('notifications.get');
+        Route::get('/notifications/{id}', [App\Http\Controllers\Member\NotificationController::class, 'notificationstatus'])->name('notifications.status');
+        Route::put('/notifications/{id}/read', [App\Http\Controllers\Member\NotificationController::class, 'markAsRead'])->name('notifications.read');
+        
     });
 
 

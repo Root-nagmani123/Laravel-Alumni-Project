@@ -91,7 +91,9 @@ Header START -->
                 <li class="nav-item dropdown ms-2">
                     <a class="nav-link bg-light icon-md btn btn-light p-0" href="#" id="notifDropdown" role="button"
                         data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
-                        <span class="badge-notif animation-blink"></span>
+                        @if(isset($notifications) && $notifications->count() > 0)
+                            <span class="badge-notif animation-blink"></span>
+                        @endif
                         <i class="bi bi-bell-fill fs-6"> </i>
                     </a>
                     <div class="dropdown-menu dropdown-animation dropdown-menu-end dropdown-menu-size-md p-0 shadow-lg border-0"
@@ -99,32 +101,46 @@ Header START -->
                         <div class="card">
                             <div class="card-header d-flex justify-content-between align-items-center">
                                 <h6 class="m-0">Notifications <span
-                                        class="badge bg-danger bg-opacity-10 text-danger ms-2">4 new</span></h6>
-                                <a class="small" href="#">Clear all</a>
+                                        class="badge bg-danger bg-opacity-10 text-danger ms-2">{{ isset($notifications) ? $notifications->count() : 0 }}</span></h6>
+                                <a class="small" href="">Clear all</a>
                             </div>
                             <div class="card-body p-0">
                                 <ul class="list-group list-group-flush list-unstyled p-2">
-                                    <!-- Notif item -->
-                                    <li>
-                                        <a href="#"
-                                            class="list-group-item list-group-item-action rounded d-flex border-0 mb-1 p-3">
-                                            <div class="avatar text-center d-none d-sm-inline-block">
-                                                <div class="avatar-img rounded-circle bg-success"><span
-                                                        class="text-white position-absolute top-50 start-50 translate-middle fw-bold">WB</span>
+                                    @if(isset($notifications) && $notifications->count() > 0)
+                                        @foreach($notifications as $notification)
+                                        <!-- Notif item -->
+                                        <li>
+                                            <a href="#"
+                                                class="list-group-item list-group-item-action rounded d-flex border-0 mb-1 p-3">
+                                                <div class="avatar text-center d-none d-sm-inline-block">
+                                                    <div class="avatar-img rounded-circle bg-success"><span
+                                                            class="text-white position-absolute top-50 start-50 translate-middle fw-bold">WB</span>
+                                                    </div>
+                                                </div>
+                                                <div class="ms-sm-3">
+                                                    <div class="d-flex">
+                                                        <p class="small mb-2">
+                                                            {{ $notification->message }}
+                                                        </p>
+                                                        <p class="small ms-3">
+                                                            {{ $notification->created_at->format('d M Y H:i') }}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        @endforeach
+                                    @else
+                                        <!-- No notifications -->
+                                        <li>
+                                            <div class="list-group-item rounded d-flex border-0 mb-1 p-3">
+                                                <div class="ms-sm-3">
+                                                    <p class="small mb-0 text-muted">No notifications</p>
                                                 </div>
                                             </div>
-                                            <div class="ms-sm-3">
-                                                <div class="d-flex">
-                                                    <p class="small mb-2">Webestica has 15 like and 1 new activity</p>
-                                                    <p class="small ms-3">1hr</p>
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </li>
+                                        </li>
+                                    @endif
                                 </ul>
-                            </div>
-                            <div class="card-footer text-center">
-                                <a href="#" class="btn btn-sm btn-primary-soft">See all incoming activity</a>
                             </div>
                         </div>
                     </div>
