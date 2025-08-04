@@ -30,7 +30,7 @@ class ChatList extends Component
             $chats = $chats->where('name', 'like', '%' . $this->search . '%');
         }
 
-        $chats = $chats->get();
+        $chats = $chats->limit(10)->get();
 
         $openMembers = Member::whereIn('id', $this->openChats)->get();
 
