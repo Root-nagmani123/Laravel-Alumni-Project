@@ -17,7 +17,7 @@ class AdminController extends Controller
 {
     public function __construct(){
         ini_set('max_execution_time', '600');
-        date_default_timezone_set('Asia/Calcutta');
+        date_default_timezone_set('Asia/Kolkata');
     }
 
     public function index(){
