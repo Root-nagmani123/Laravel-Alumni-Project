@@ -39,6 +39,7 @@ class ForumController extends Controller
     $validator = Validator::make($request->all(), [
         'name' => 'required|string|max:255',
         'end_date' => 'required|date|after_or_equal:today',
+        'images' => 'nullable|image|mimes:jpeg,png,jpg|max:1028', // Optional image validation
 
       ]);
     // Check if validation fails
@@ -92,7 +93,7 @@ class ForumController extends Controller
         'name' => 'required|string|max:255',
         'cat_id' => 'nullable|integer',
         'status' => 'required|integer',
-        'forum_image' => 'nullable|forum_image|mimes:jpeg,png,jpg|max:2048', // Optional image validation
+        'forum_image' => 'nullable|forum_image|mimes:jpeg,png,jpg|max:1048', // Optional image validation
         'end_date' => 'required|date|after_or_equal:today',
     ]);
 

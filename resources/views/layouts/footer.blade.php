@@ -1,7 +1,7 @@
 <!-- forum modal -->
  <div class="modal fade" id="forumModal" tabindex="-1" aria-labelledby="forumModalLabel" aria-hidden="true">
         <div class="modal-dialog">
-            <form method="POST" action="" enctype="multipart/form-data" class="modal-content">
+            <form method="POST" action="{{ route('user.forum.store') }}" enctype="multipart/form-data" class="modal-content">
                 @csrf
                 <div class="modal-header">
                     <h5 class="modal-title" id="forumModalLabel">Create New Forum</h5>
