@@ -10,6 +10,7 @@ use App\Models\Member;
 use App\Services\NotificationService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ForumService
 {
@@ -25,13 +26,18 @@ class ForumService
      * @param int $userId
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function getUserForums($userId)
+    public function getUserForums()
     {
-        return Forum::join('forum_topics', 'forum_topics.forum_id', '=', 'forums.id')
-            ->join('forums_member', 'forums_member.forums_id', '=', 'forums.id')
-            ->select('forums.id', 'forums.name', 'forum_topics.id as topic_id', 'forum_topics.title as topic_name', 'forum_topics.description', 'forum_topics.images', 'forum_topics.created_date')
-            ->where('forums_member.user_id', $userId)
+        return DB::table('forums')
+        // ->leftJoin('forum_topics', 'forum_topics.forum_id', '=', 'forums.id')
+             ->select('forums.id', 'forums.name', 'forums.id as forum_id', 'forums.name', 'forums.images', 'forums.created_at','forums.end_date')
+            // ->where('forums_member.user_id', $userId)
             ->where('forums.status', 1)
+             ->whereNot('forums.end_date', null)
+    ->where(function($query) {
+        $query->whereNull('forums.end_date')
+              ->orWhere('forums.end_date', '>=', now());
+    })
             ->orderBy('forums.id', 'desc')
             ->where('forums.end_date', '>=', now())
             ->get();
@@ -46,6 +52,20 @@ class ForumService
     public function getForumById($forumId)
     {
         return Forum::findOrFail($forumId);
+    //      return DB::table('forums')
+    //     // ->leftJoin('forum_topics', 'forum_topics.forum_id', '=', 'forums.id')
+    //          ->select('forums.id', 'forums.name', 'forums.id as forum_id', 'forums.name', 'forums.images', 'forums.created_at','forums.end_date')
+    //         // ->where('forums_member.user_id', $userId)
+    //         ->where('forums.id', $forumId)
+    //         ->where('forums.status', 1)
+    //          ->whereNot('forums.end_date', null)
+    // ->where(function($query) {
+    //     $query->whereNull('forums.end_date')
+    //           ->orWhere('forums.end_date', '>=', now());
+    // })
+    //         ->orderBy('forums.id', 'desc')
+    //         ->where('forums.end_date', '>=', now())
+    //         ->get();
     }
 
     /**
@@ -88,12 +108,12 @@ class ForumService
      * @param int $userId
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function getForumsForSidebar($userId)
+    public function getForumsForSidebar()
     {
         return Forum::join('forum_topics', 'forum_topics.forum_id', '=', 'forums.id')
             ->join('forums_member', 'forums_member.forums_id', '=', 'forums.id')
             ->select('forums.id', 'forums.name', 'forum_topics.id as topic_id', 'forum_topics.title as topic_name', 'forum_topics.description', 'forum_topics.images', 'forum_topics.created_date')
-            ->where('forums_member.user_id', $userId)
+            // ->where('forums_member.user_id', $userId)
             ->where('forums.status', 1)
             ->orderBy('forums.id', 'desc')
             ->get();
