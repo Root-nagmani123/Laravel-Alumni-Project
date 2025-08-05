@@ -13,6 +13,7 @@
         visibility: hidden;
         pointer-events: none;
     }
+    @vite(['resources/js/app.js'])
     @livewireStyles
 </style>
 
