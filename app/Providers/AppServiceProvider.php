@@ -36,7 +36,7 @@ class AppServiceProvider extends ServiceProvider
                 })
                 ->orderBy('created_at', 'desc')
                 ->limit(5) // Limit to 5 most recent notifications
-                ->get(['id', 'message', 'created_at']);
+                ->get(['id', 'message', 'created_at', 'source_id', 'source_type']);
                 
                 $view->with('notifications', $notifications);
             } else {
