@@ -142,8 +142,11 @@
     <div class="mb-4">
         <div class="card mt-4">
             <!-- Card header START -->
-            <div class="card-header pb-0 border-0">
-                <h5 class="card-title mb-0">Forums</h5>
+           <div class="card-header d-sm-flex justify-content-between border-0">
+                <h5 class="card-title">Forums</h5>
+                <a class="btn btn-primary-soft btn-sm" href="#" data-bs-toggle="modal" data-bs-target="#forumModal">
+    Create Forum
+</a>
             </div>
             <!-- Card header END -->
             <!-- Card body START -->
@@ -184,6 +187,43 @@
             <!-- Card body END -->
         </div>
     </div>
+    <div class="modal fade" id="forumModal" tabindex="-1" aria-labelledby="forumModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <form method="POST" action="" enctype="multipart/form-data" class="modal-content">
+      @csrf
+      <div class="modal-header">
+        <h5 class="modal-title" id="forumModalLabel">Create New Forum</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Forum Name -->
+        <div class="mb-3">
+          <label for="forum_name" class="form-label">Forum Name</label>
+          <input type="text" class="form-control" id="forum_name" name="forum_name" required>
+        </div>
+
+        <!-- Forum Image -->
+        <div class="mb-3">
+          <label for="forum_image" class="form-label">Forum Image</label>
+          <input type="file" class="form-control" id="forum_image" name="forum_image" accept="image/*">
+        </div>
+
+        <!-- End Date -->
+        <div class="mb-3">
+          <label for="forum_end_date" class="form-label">End Date</label>
+          <input type="date" class="form-control" id="forum_end_date" name="forum_end_date" required>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Create Forum</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
 
     <!-- jQuery and SweetAlert2 -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

@@ -70,17 +70,34 @@ Header START -->
                     </li>
                 </ul>
                 <!-- Search Input Group with Dropdown -->
-                <div class="position-relative">
-                    <form id="searchForm">
-                        <input type="search" id="searchMemberInput" class="form-control ps-5" placeholder="Search..."
-                            autocomplete="off" aria-label="Search" />
-                        <button type="button"
-                            class="btn bg-transparent px-2 py-0 position-absolute top-50 start-0 translate-middle-y">
-                            <i class="bi bi-search fs-5"></i>
-                        </button>
-                    </form>
-                    <ul id="searchResults" class="list-group position-absolute w-100 z-3 mt-1" style="max-height: 200px; overflow-y: auto;background-color: #ffffffb8;"></ul>
-                </div>
+               <!-- SEARCH BOX -->
+<div class="position-relative">
+    <form id="searchForm">
+        <input type="search" id="searchMemberInput" class="form-control ps-5" placeholder="Search..."
+            autocomplete="off" aria-label="Search" />
+        <button type="button"
+            class="btn bg-transparent px-2 py-0 position-absolute top-50 start-0 translate-middle-y">
+            <i class="bi bi-search fs-5"></i>
+        </button>
+    </form>
+
+    <!-- Autocomplete Result List -->
+    <ul id="searchResults" class="list-group position-absolute w-100 z-3 mt-1"
+        style="max-height: 200px; overflow-y: auto; background-color: #ffffffb8;"></ul>
+</div>
+
+<!-- TOAST MESSAGE -->
+<div class="position-fixed top-0 end-0 p-3" style="z-index: 1100;">
+    <div id="favoriteToast" class="toast align-items-center text-bg-primary border-0" role="alert"
+        aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body"></div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                aria-label="Close"></button>
+        </div>
+    </div>
+</div>
+
 
 
             </div>
@@ -238,6 +255,11 @@ Header START -->
                         <li>
                             <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#grievanceModal">
                                 <i class="bi bi-chat-dots-fill fa-fw me-2"></i>Grievance / Feedback
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="https://www.lbsnaa.gov.in/lbsnaa-newsletter" target="_blank">
+                                <i class="bi bi-newspaper fa-fw me-2"></i>Newsletter
                             </a>
                         </li>
 

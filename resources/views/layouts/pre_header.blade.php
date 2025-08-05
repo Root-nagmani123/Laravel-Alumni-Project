@@ -53,3 +53,11 @@
 
     gtag('config', 'G-GMKQ4P9YMZ');
   </script>
+  <style>
+.modal-backdrop.show {
+    z-index: 1050 !important;
+}
+.modal.show {
+    z-index: 1060 !important;
+}
+</style>
