@@ -271,7 +271,7 @@ function updateRequest(Request $request) : \Illuminate\Http\RedirectResponse {
 
     // Get the request details before updating
     $requestData = DB::table($table)->where('id', $request->id)->first();
-   
+    
     if (!$requestData) {
         return back()->with('error', 'Request not found.');
     }

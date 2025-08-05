@@ -155,17 +155,17 @@ Header START -->
                                                         case 'broadcast':
                                                             $notificationUrl = route('user.broadcastDetails', ['id' => $notification->source_id]);
                                                             break;
-                                                        case 'forum':
-                                                                $notificationUrl = route('user.forum.show', ['id' => $notification->source_id]);
-                                                                break;
                                                         case 'profile':
                                                             $notificationUrl = url('/profile/' . $notification->source_id);
                                                             break;
                                                         case 'post':
                                                             $notificationUrl = url('/group-post/' . $notification->source_id);
                                                             break;
+                                                        case 'forum':
+                                                            $notificationUrl = url('/user/forum/' . $notification->source_id);
+                                                            break;
                                                         case 'group':
-                                                            $notificationUrl = route('group.post'. $notification->source_id);
+                                                            $notificationUrl = url('/user/forum/' . $notification->source_id);
                                                             break;
                                                         case 'birthday':
                                                             $notificationUrl = url('/profile/' . $notification->source_id);
@@ -183,34 +183,24 @@ Header START -->
                                                     ]);
                                                 }
                                             @endphp
-                                           <!-- Scrollable Wrapper -->
-<!-- Scrollable Notification Container -->
-<div class="notification-scroll-container overflow-auto" style="max-height: 300px;">
-    <!-- Notification Item -->
-    <div class="d-flex align-items-start p-3 border rounded mb-2 notification-item" style="transition: background-color 0.3s;">
-        <!-- Content -->
-        <div class="flex-grow-1 ms-3">
-            <div class="d-flex justify-content-between">
-                <a href="{{ $notificationUrl }}" class="text-decoration-none notification-link" 
+                                            <div class="list-group-item rounded d-flex border-0 mb-1 p-3">
+                                                <div class="ms-sm-3">
+                                                    <div class="d-flex">
+                                                        <a href="{{ $notificationUrl }}" class="text-decoration-none notification-link" 
                                                            data-url="{{ $notificationUrl }}" 
                                                            data-source-type="{{ $notification->source_type ?? '' }}" 
                                                            data-source-id="{{ $notification->source_id ?? '' }}"
-                                                           onclick="handleNotificationClick(event, '{{ $notificationUrl }}', '{{ $notification->source_type ?? '' }}', '{{ $notification->source_id ?? '' }}')"><p class="mb-1">
-                    <strong>{{ $notification->title ?? 'Notification Title' }}</strong>: 
-                    <span class="text-muted">{{ $notification->message }}</span>
-                </p></a>
-                <small class="text-muted ms-2">
-                    {{ \Carbon\Carbon::parse($notification->created_at)->setTimezone('Asia/Kolkata')->diffForHumans(null, null, true) }}
-                </small>
-            </div>
-        </div>
-    </div>
-
-    <!-- Repeat the above block for more notifications -->
-</div>
-
-
-
+                                                           onclick="handleNotificationClick(event, '{{ $notificationUrl }}', '{{ $notification->source_type ?? '' }}', '{{ $notification->source_id ?? '' }}')">
+                                                            <p class="small mb-2 text-primary">
+                                                                {{ $notification->message }}
+                                                            </p>
+                                                        </a>
+                                                        <p class="small ms-3">
+                                                            {{ $notification->created_at->format('d M Y H:i') }}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </li>
                                         @endforeach
                                         @else
