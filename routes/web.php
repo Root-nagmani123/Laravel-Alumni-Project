@@ -121,7 +121,7 @@ Route::prefix('user')->name('user.')->group(function () {
 
   Route::get('/profile/id/{encryptedId}', [ProfileController::class, 'showById'])
     ->name('profile.byId');
-         Route::get('/profile/{id}', [ProfileController::class, 'showById'])->where('id', '[0-9]+')->name('profile');
+         Route::get('/profile/{id}', [ProfileController::class, 'showById_data'])->where('id', '[0-9]+')->name('profile');
          Route::get('/profile/{name}', [ProfileController::class, 'showByName'])->where('name', '[a-zA-Z\s]+')->name('profile.name');
 
          Route::put('/profile/update/{id}', [ProfileController::class, 'update'])->name('profile.update');
