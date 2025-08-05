@@ -20,6 +20,7 @@ use App\Http\Controllers\User\FeedController;
 use App\Http\Controllers\User\PostController;
 use App\Http\Middleware\UserAuthMiddleware;
 use App\Http\Controllers\User\ProfileController;
+use App\Http\Controllers\User\MentorMenteeController;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Config;
@@ -116,42 +117,8 @@ Route::prefix('user')->name('user.')->group(function () {
     // other protected routes
   });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
+  Route::get('/profile/id/{encryptedId}', [ProfileController::class, 'showById'])
+    ->name('profile.byId');
          Route::get('/profile/{id}', [ProfileController::class, 'showById'])->where('id', '[0-9]+')->name('profile');
          Route::get('/profile/{name}', [ProfileController::class, 'showByName'])->where('name', '[a-zA-Z\s]+')->name('profile.name');
 
@@ -160,7 +127,7 @@ Route::prefix('user')->name('user.')->group(function () {
         Route::put('/eduinfo/update/{id}', [ProfileController::class, 'updateEduinfo'])->name('profile.eduinfo');
         Route::put('/proinfo/update/{id}', [ProfileController::class, 'updateProinfo'])->name('profile.proinfo');
         Route::put('/social/update/{id}', [ProfileController::class, 'updateSocial'])->name('profile.social.update');
-
+  		Route::post('favorite-user/toggle', [ProfileController::class, 'toggleFavorite'])->name('favorite.user.toggle');
         Route::get('directory', [DashboardController::class, 'directory'])->name('directory');
        //Route::post('/feed/search', [FeedController::class, 'search'])->name('feed.search');
 
@@ -175,6 +142,15 @@ Route::prefix('user')->name('user.')->group(function () {
     });
 
     Route::middleware('auth:user')->group(function () {
+		Route::get('/mentor-mentee', [MentorMenteeController::class, 'index'])->name('mentor_mentee');
+		Route::post('/get-years', [MentorMenteeController::class, 'getYears'])->name('get.years');
+		Route::post('/get-cadres', [MentorMenteeController::class, 'getCadres'])->name('get.cadres');
+		Route::post('/get-sectors', [MentorMenteeController::class, 'getSectors'])->name('get.sectors');
+		Route::post('/get-mentees', [MentorMenteeController::class, 'getMentees'])->name('get.mentees');
+
+		Route::post('/mentor/want_become_mentor', [MentorMenteeController::class, 'want_become_mentor'])->name('mentor.want_become_mentor');
+		Route::post('/mentor/want_become_mentee', [MentorMenteeController::class, 'want_become_mentee'])->name('mentor.want_become_mentee');
+		Route::post('/request/update', [MentorMenteeController::class, 'updateRequest'])->name('request.update');
         Route::get('user/forum', [MemberForumController::class, 'index'])->name('forum');
         Route::get('user/forum/{id}', [MemberForumController::class, 'show'])->name('forum.show');
         Route::post('user/forum/topic/{id}/like', [MemberForumController::class, 'like'])->name('forum.topic.like');
@@ -413,9 +389,7 @@ Route::get('/user_login', function () {
         Route::get('/user/group', function () {
             return view('user.groups');
         })->name('user.groups');
-        Route::get('/user/mentor-mentee', function () {
-            return view('user.mentor_mentee');
-        })->name('user.mentor_mentee');
+        
           Route::get('/admin/mentorship', function () {
             return view('admin.mentorship.index');
         })->name('admin.mentorship.index');

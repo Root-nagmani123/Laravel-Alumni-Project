@@ -12,7 +12,10 @@ use Illuminate\Support\Facades\Storage; // Make sure this is included at the top
 use Illuminate\View\View;
 //use App\Models\User;
 use App\Models\Post;
+use Illuminate\Support\Facades\DB; // For database operations
+
 use App\Models\member;
+use Illuminate\Support\Facades\Crypt; // For encrypting and decrypting IDs
 
 
 class ProfileController extends Controller
@@ -35,9 +38,10 @@ class ProfileController extends Controller
    return view('profile', compact('user','posts'));
     }
 
-   public function showById(Request $request, $id): View
+   public function showById(Request $request, $encryptedId): View
 {
     //$user = auth()->guard('user')->user();
+    $id = Crypt::decrypt($encryptedId);
     $user = Member::findOrFail($id);
 
     $userId = $user->id;
@@ -179,4 +183,35 @@ class ProfileController extends Controller
 
         return redirect()->back()->with('success', 'Social media links updated successfully.');
     }
+
+    public function toggleFavorite(Request $request)
+{
+    $encryptedId = $request->input('id');
+    $userId = Crypt::decrypt($encryptedId);
+
+    $currentUserId = auth()->guard('user')->id();
+
+    // Check if already favorite
+    $exists = DB::table('favorite_users')
+        ->where('user_id', $currentUserId)
+        ->where('favorite_user_id', $userId)
+        ->exists();
+
+    if ($exists) {
+        DB::table('favorite_users')
+            ->where('user_id', $currentUserId)
+            ->where('favorite_user_id', $userId)
+            ->delete();
+        
+        return response()->json(['status' => 'removed']);
+    } else {
+        DB::table('favorite_users')->insert([
+            'user_id' => $currentUserId,
+            'favorite_user_id' => $userId,
+            'created_at' => now()
+        ]);
+        
+        return response()->json(['status' => 'added']);
+    }
+}
 }
