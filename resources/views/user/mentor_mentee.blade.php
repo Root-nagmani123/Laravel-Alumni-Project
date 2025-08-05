@@ -3,7 +3,13 @@
 @section('title', 'Mentor Mentee - Alumni | Lal Bahadur Shastri National Academy of Administration')
 
 @section('content')
-<div class="container" style="margin-top:5rem !important;">
+<style>
+.select2-results__option {
+    padding-left: 10px !important;
+}
+</style>
+
+<div class="container">
     <div class="row g-4 mt-2">
         <div class="col-3">
             <!-- Advanced filter responsive toggler START -->
@@ -133,112 +139,98 @@
 
                     <!-- Tab 1: Mentor Form -->
                     <div class="tab-pane fade show active" id="mentor" role="tabpanel">
-                        <form>
+                        <form action="{{ route('user.mentor.want_become_mentor') }}" method="POST">
+                            @csrf
                             <div class="mb-3">
                                 <label class="form-label">Service</label>
-                                <select class="form-select">
+                               <select class="form-select service" name="service" id="service" data-id="want_become_mentor">
                                     <option selected disabled>Select Service</option>
-                                    <option value="IAS">Indian Administrative Services - IAS</option>
-                                    <option value="IPS">Indian Police Service - IPS</option>
-                                    <option value="IFS">Indian Foreign Service - IFS</option>
-                                    <option value="IRS">Indian Revenue Service - IRS</option>
-                                    <option value="Other">Other</option>
-
+                                    @if($members->isEmpty())
+                                        <option disabled>No Services Available</option>
+                                    @else
+                                        @foreach($members as $member)
+                                            <option value="{{ $member->Service }}">{{ $member->Service }}</option>
+                                        @endforeach
+                                    @endif
                                 </select>
                             </div>
                            <div class="mb-3">
                                 <label class="form-label">Year</label>
-                                <select class="form-select">
-                                    <option selected disabled>Select Year</option>
-                                    
+                                
+                                <select class="form-select year-select" name="year[]" multiple="multiple" data-id="want_become_mentor">
+                                    <!-- Options will be added dynamically -->
                                 </select>
                             </div>
-                             <div class="mb-3">
-                                <label class="form-label">Cadre</label>
-                                <select class="form-select">
-                                    <option selected disabled>Select Cadre</option>
-                                    <option value="IAS">IAS</option>
-                                    <option value="IPS">IPS</option>
-                                </select>
-                            </div>
-                             <div class="mb-3">
-                                <label class="form-label">Sector</label>
-                                <select class="form-select">
-                                    <option selected disabled>Select Sector</option>
-                                    <option value="Rural and Agriculture">Rural and Agriculture</option>
-                                    <option value="Infrastructure">Infrastructure</option>
-                                    <option value="Resources">Resources</option>
-                                    <option value="Social">Social</option>
-                                    <option value="Welfare">Welfare</option>
-                                    <option value="Finance and Economy">Finance and Economy</option>
-                                    <option value="Commerce and Industry">Commerce and Industry</option>
-                                    <option value="Technology">Technology</option>
-                                    <option value="Governance">Governance</option>
-                                    <option value="Security and Foreign Affairs">Security and Foreign Affairs</option>
-                                </select>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Select Mentee</label>
-                                <select class="form-select select2" multiple>
-                                    
-                                </select>
-                            </div>
+
+
+                                <div class="mb-3">
+                                    <label class="form-label">Cadre</label>
+                                    <select class="form-select select2 cadre"  name="cadre[]" multiple="multiple" data-id="want_become_mentor">
+                                     
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Sector</label>
+                                    <select class="form-select select2 sector" name="sector[]" multiple="multiple" data-id="want_become_mentor">
+                                        <option selected disabled>Select Sector</option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Select Mentee</label>
+                                    <select class="form-select select2 mentees" multiple="multiple" id="mentees" name="mentees[]" data-id="want_become_mentor">
+                                        <option value="" disabled>Select Mentees</option>
+                                    </select>
+                                </div>
                             <button type="submit" class="btn btn-primary">Submit Mentor Request</button>
                         </form>
                     </div>
 
                     <!-- Tab 2: Mentee Form -->
                     <div class="tab-pane fade" id="mentee" role="tabpanel">
-                        <form>
+                        <form action="{{ route('user.mentor.want_become_mentee') }}" method="POST">
+                            @csrf
                             <div class="mb-3">
                                 <label class="form-label">Service</label>
-                                <select class="form-select">
+                               <select class="form-select service" name="service" id="service" data-id="want_become_mentee">
                                     <option selected disabled>Select Service</option>
-                                    <option value="IAS">Indian Administrative Services - IAS</option>
-                                    <option value="IPS">Indian Police Service - IPS</option>
-                                    <option value="IFS">Indian Foreign Service - IFS</option>
-                                    <option value="IRS">Indian Revenue Service - IRS</option>
-                                    <option value="Other">Other</option>
+                                    @if($members->isEmpty())
+                                        <option disabled>No Services Available</option>
+                                    @else
+                                        @foreach($members as $member)
+                                            <option value="{{ $member->Service }}">{{ $member->Service }}</option>
+                                        @endforeach
+                                    @endif
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                    <label class="form-label">Year</label>
+                                    <select class="form-select year" id="year" name="year" data-id="want_become_mentee">
+                                        <option selected disabled>Select Year</option>
+                                    </select>
+                                </div>
 
-                                </select>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Year</label>
-                                <select class="form-select">
-                                    <option selected disabled>Select Year</option>
-                                    
-                                </select>
-                            </div>
-                             <div class="mb-3">
-                                <label class="form-label">Cadre</label>
-                                <select class="form-select">
-                                    <option selected disabled>Select Cadre</option>
-                                    <option value="IAS">IAS</option>
-                                    <option value="IPS">IPS</option>
-                                </select>
-                            </div>
-                             <div class="mb-3">
-                                <label class="form-label">Sector</label>
-                                <select class="form-select">
-                                    <option selected disabled>Select Sector</option>
-                                    <option value="Rural and Agriculture">Rural and Agriculture</option>
-                                    <option value="Infrastructure">Infrastructure</option>
-                                    <option value="Resources">Resources</option>
-                                    <option value="Social">Social</option>
-                                    <option value="Welfare">Welfare</option>
-                                    <option value="Finance and Economy">Finance and Economy</option>
-                                    <option value="Commerce and Industry">Commerce and Industry</option>
-                                    <option value="Technology">Technology</option>
-                                    <option value="Governance">Governance</option>
-                                    <option value="Security and Foreign Affairs">Security and Foreign Affairs</option>
-                                </select>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Select Mentor</label>
-                                <select class="form-select select2" multiple>
-                                   
-                                </select>
-                            </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Cadre</label>
+                                    <select class="form-select cadre" id="cadre" name="cadre" data-id="want_become_mentee">
+                                        <option selected disabled>Select Cadre</option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Sector</label>
+                                    <select class="form-select sector" id="sector" name="sector" data-id="want_become_mentee">
+                                        <option selected disabled>Select Sector</option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Select Mentee</label>
+                                    <select class="form-select select2 mentees" multiple id="mentees" name="mentees[]" data-id="want_become_mentee">
+                                        <option value="" disabled>Select Mentees</option>
+                                    </select>
+                                </div>
                             <button type="submit" class="btn btn-success">Submit Mentee Request</button>
                         </form>
                     </div>
@@ -246,82 +238,145 @@
                     <!-- Tab 3: Requests -->
                     <div class="tab-pane fade" id="requests" role="tabpanel">
                         <h5>Mentor Requests</h5>
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Cadre</th>
-                                    <th>Year</th>
-                                    <th>Sector</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>
-                                        <button class="btn btn-sm btn-success">Accept</button>
-                                        <button class="btn btn-sm btn-danger">Reject</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="4" class="text-center">No mentor requests</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Cadre</th>
+                                        <th>Year</th>
+                                        <th>Sector</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse ($mentor_requests as $request)
+                                    @if($request->status == 2)
+                                        <tr>
+                                            <td>{{ $request->name }}</td>
+                                            <td>{{ $request->cadre }}</td>
+                                            <td>{{ $request->batch }}</td>
+                                            <td>{{ $request->sector }}</td>
+                                            <td>
+                                                <form method="POST" action="{{ route('user.request.update') }}" class="d-inline">
+                                                    @csrf
+                                                    <input type="hidden" name="id" value="{{ $request->request_id }}">
+                                                    <input type="hidden" name="type" value="mentor"> 
+                                                    <input type="hidden" name="status" value="1">
+                                                    <button type="submit" class="btn btn-sm btn-success">Accept</button>
+                                                </form>
+                                                <form method="POST" action="{{ route('user.request.update') }}" class="d-inline">
+                                                    @csrf
+                                                    <input type="hidden" name="id" value="{{ $request->request_id }}">
+                                                    <input type="hidden" name="type" value="mentor"> 
+                                                    <input type="hidden" name="status" value="3">
+                                                    <button type="submit" class="btn btn-sm btn-danger">Reject</button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                        @endif
+                                    @empty
+                                        <tr>
+                                            <td colspan="5" class="text-center">No mentor requests</td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
 
-                        <h5 class="mt-4">Mentee Requests</h5>
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Cadre</th>
-                                    <th>Year</th>
-                                    <th>Sector</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>
-                                        <button class="btn btn-sm btn-success">Accept</button>
-                                        <button class="btn btn-sm btn-danger">Reject</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="4" class="text-center">No mentee requests</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                            <h5 class="mt-4">Mentee Requests</h5>
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Cadre</th>
+                                        <th>Year</th>
+                                        <th>Sector</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse ($mentee_requests as $request)
+                                    @if($request->status == 2)
+
+                                        <tr>
+                                            <td>{{ $request->name }}</td>
+                                            <td>{{ $request->cadre }}</td>
+                                            <td>{{ $request->batch }}</td>
+                                            <td>{{ $request->sector }}</td>
+                                            <td>
+                                                <form method="POST" action="{{ route('user.request.update') }}" class="d-inline">
+                                                    @csrf
+                                                    <input type="hidden" name="id" value="{{ $request->request_id }}">
+                                                    <input type="hidden" name="type" value="mentee"> 
+                                                    <input type="hidden" name="status" value="1">
+                                                    <button type="submit" class="btn btn-sm btn-success">Accept</button>
+                                                </form>
+                                                <form method="POST" action="{{ route('user.request.update') }}" class="d-inline">
+                                                    @csrf
+                                                    <input type="hidden" name="id" value="{{ $request->request_id }}">
+                                                    <input type="hidden" name="type" value="mentee"> 
+                                                    <input type="hidden" name="status" value="3">
+                                                    <button type="submit" class="btn btn-sm btn-danger">Reject</button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                        @endif
+                                    @empty
+                                        <tr>
+                                            <td colspan="5" class="text-center">No mentee requests</td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+
                     </div>
 
                     <!-- Tab 4: Connections -->
-                    <div class="tab-pane fade" id="connections" role="tabpanel">
+                   <div class="tab-pane fade" id="connections" role="tabpanel">
                         <h5>Mentors</h5>
-                        <ul class="list-group mb-3">
-                            <li class="list-group-item d-flex justify-content-between">
-                                <span></span>
-                                <small></small>
-                            </li>
-                
-                            <li class="list-group-item text-center">No mentors added</li>
+                            <ul class="list-group mb-3">
+                                @php
+                                    $hasMentor = false;
+                                @endphp
+
+                                @foreach (array_merge($mentor_requests->toArray(), $mentor_connections->toArray()) as $mentor)
+                                    @if ($mentor->status == 1)
+                                        <li class="list-group-item d-flex justify-content-between">
+                                            <span>{{ $mentor->name }}</span>
+                                            <small>{{ $mentor->cadre }} | {{ $mentor->batch }}</small>
+                                        </li>
+                                        @php $hasMentor = true; @endphp
+                                    @endif
+                                @endforeach
+
+                                @unless($hasMentor)
+                                    <li class="list-group-item text-center">No mentors added</li>
+                                @endunless
+                            </ul>
+
 
                         <h5>Mentees</h5>
-                        <ul class="list-group">
-                            <li class="list-group-item d-flex justify-content-between">
-                                <span></span>
-                                <small></small>
-                            </li>
-                            <li class="list-group-item text-center">No mentees added</li>
-                        </ul>
+                            <ul class="list-group">
+                                @php
+                                    $hasMentee = false;
+                                @endphp
+
+                                @foreach (array_merge($mentee_requests->toArray(), $mentee_connections->toArray()) as $mentee)
+                                    @if ($mentee->status == 1)
+                                        <li class="list-group-item d-flex justify-content-between">
+                                            <span>{{ $mentee->name }}</span>
+                                            <small>{{ $mentee->cadre }} | {{ $mentee->batch }}</small>
+                                        </li>
+                                        @php $hasMentee = true; @endphp
+                                    @endif
+                                @endforeach
+
+                                @unless($hasMentee)
+                                    <li class="list-group-item text-center">No mentees added</li>
+                                @endunless
+                            </ul>
+
                     </div>
+
                 </div>
             </div>
         </div>
@@ -331,15 +386,170 @@
     </div>
 </div>
 <!-- Select2 -->
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+ @endsection
+ 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+
+@section('scripts')
 <script>
-$(document).ready(function() {
-    $('.select2').select2({
-        placeholder: "Select members",
-        width: '100%'
+$(document).ready(function () {
+    // Service change (for both forms)
+    // After service selection, populate year
+$('.service').on('change', function () {
+    let dataId = $(this).data('id');
+    let $form = $(this).closest('form');
+    let service = $(this).val();
+    let $year = $form.find('.year-select[data-id="' + dataId + '"]');
+    
+    $year.empty().append('<option disabled>Select Year</option>');
+    
+
+    $.ajax({
+        url: '{{ route("user.get.years") }}',
+        type: 'POST',
+        data: {
+            service: service,
+            _token: '{{ csrf_token() }}'
+        },
+        success: function (response) {
+            $.each(response, function (key, value) {
+                $year.append('<option value="' + value + '">' + value + '</option>');
+            });
+            $year.prop('disabled', false);
+            $year.select2({ 
+                placeholder: "Select Years",
+                closeOnSelect: false,
+                templateResult: formatCheckbox,
+                templateSelection: formatSelection
+            });
+        }
     });
 });
-</script>
 
+
+    // Year change
+   $('.year-select').on('change', function () {
+        let dataId = $(this).data('id');
+        let $form = $(this).closest('form');
+        let service = $form.find('.service[data-id="' + dataId + '"]').val();
+        let years = $(this).val();
+        
+        let $cadre = $form.find('.cadre[data-id="' + dataId + '"]');
+        $cadre.empty().append('');
+        $form.find('.sector[data-id="' + dataId + '"]').empty().append('');
+        $form.find('.mentees[data-id="' + dataId + '"]').empty().append('');
+        $.ajax({
+            url: '{{ route("user.get.cadres") }}',
+            type: 'POST',
+            data: {
+                service: service,
+                year: years,
+                _token: '{{ csrf_token() }}'
+            },
+            success: function (response) {
+                $.each(response, function (key, value) {
+                    $cadre.append('<option value="' + value + '">' + value + '</option>');
+                });
+                $cadre.prop('disabled', false);
+            $cadre.select2({ 
+                placeholder: "Select cadres",
+                closeOnSelect: false,
+                templateResult: formatCheckbox,
+                templateSelection: formatSelection
+            });
+            }
+        });
+    });
+
+    // Cadre change
+    $('.cadre').on('change', function () {
+        let dataId = $(this).data('id');
+        let $form = $(this).closest('form');
+        let service = $form.find('.service[data-id="' + dataId + '"]').val();
+        let year = $form.find('.year[data-id="' + dataId + '"]').val();
+       let cadre = $(this).val();
+        let $sector = $form.find('.sector[data-id="' + dataId + '"]');
+        $sector.empty().append('');
+        $form.find('.mentees[data-id="' + dataId + '"]').empty().append('');
+        $.ajax({
+            url: '{{ route("user.get.sectors") }}',
+            type: 'POST',
+            data: {
+                service: service,
+                year: year,
+                cadre: cadre,
+                _token: '{{ csrf_token() }}'
+            },
+            success: function (response) {
+                $.each(response, function (key, value) {
+                    $sector.append('<option value="' + value + '">' + value + '</option>');
+                });
+                $sector.prop('disabled', false);
+                $sector.select2({ 
+                    placeholder: "Select sectors",
+                    closeOnSelect: false,
+                    templateResult: formatCheckbox,
+                    templateSelection: formatSelection
+                });
+            }
+        });
+    });
+
+    // Sector change
+    $('.sector').on('change', function () {
+        let dataId = $(this).data('id');
+        let $form = $(this).closest('form');
+        let service = $form.find('.service[data-id="' + dataId + '"]').val();
+        let year = $form.find('.year[data-id="' + dataId + '"]').val();
+        let cadre = $form.find('.cadre[data-id="' + dataId + '"]').val();
+        let sector = $(this).val();
+        let $mentees = $form.find('.mentees[data-id="' + dataId + '"]');
+        $mentees.empty().append('');
+        $.ajax({
+            url: '{{ route("user.get.mentees") }}',
+            type: 'POST',
+            data: {
+                service: service,
+                year: year,
+                cadre: cadre,
+                sector: sector,
+                _token: '{{ csrf_token() }}'
+            },
+            success: function (response) {
+                $.each(response, function (key, user) {
+                    $mentees.append('<option value="' + user.id + '">' + user.name + '</option>');
+                });
+                $mentees.prop('disabled', false);
+                $mentees.select2({ 
+                    placeholder: "Select Mentees",
+                    closeOnSelect: false,
+                    templateResult: formatCheckbox,
+                    templateSelection: formatSelection
+                });
+            }
+        });
+    });
+
+    // Initialize Select2 for both mentee selects
+    $('.mentees, .cadre,.sector').select2({
+        placeholder: "Select",
+    allowClear: true,
+    width: '100%'
+    });
+});
+function formatCheckbox(option) {
+    if (!option.id) return option.text;
+
+    return $(
+        '<span><input type="checkbox" class="me-2"/>' + option.text + '</span>'
+    );
+}
+
+function formatSelection(option) {
+    return option.text;
+}
+
+</script>
 @endsection
