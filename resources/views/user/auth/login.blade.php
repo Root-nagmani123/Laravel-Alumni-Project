@@ -148,12 +148,12 @@
                                             <form method="POST" action="{{ route('user.login.submit') }}">
                                                 @csrf
                                                 <div class="form-group mb-3">
-                                                    <label class="form-label">Email address</label>
+                                                    <label class="form-label fw-bold">Email Address</label>
                                                     <input type="email" name="email" class="form-control"
                                                         placeholder="Enter your email">
                                                 </div>
                                                 <div class="form-group mb-3">
-                                                    <label class="form-label">Password</label>
+                                                    <label class="form-label fw-bold">Password</label>
                                                     <input type="password" name="password" class="form-control"
                                                         placeholder="Enter your password">
                                                 </div>
@@ -211,7 +211,7 @@
                                             <form id="otpForm" method="POST" action="">
                                                 @csrf
                                                 <div class="form-group mb-3">
-                                                    <label class="form-label">Email address</label>
+                                                    <label class="form-label fw-bold">Email Address</label>
                                                     <input type="email" name="otp_email" class="form-control"
                                                         placeholder="Enter your email" required>
                                                 </div>
