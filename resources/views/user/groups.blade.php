@@ -105,51 +105,92 @@
             </nav>
         </div>
         <div class="col-lg-9">
-            <div class="row g-4">
-                <div class="col-sm-6 col-lg-4">
-                    <!-- Card START -->
-                    <div class="card">
-                        <div class="h-80px rounded-top"
-                            style="background-image:url({{asset('feed_assets/images/bg/01.jpg')}}); background-position: center; background-size: cover; background-repeat: no-repeat;">
-                        </div>
-                        <!-- Card body START -->
-                        <div class="card-body text-center pt-0">
-                            <!-- Avatar -->
-                            <div class="avatar avatar-lg mt-n5 mb-3">
-                                <a href="group-details.html"><img
-                                        class="avatar-img rounded-circle border border-white border-3 bg-white"
-                                        src="{{asset('feed_assets/images/logo/08.svg')}}" alt="" loading="lazy" decoding="async"></a>
-                            </div>
-                            <!-- Info -->
-                            <h5 class="mb-0"> <a href="group-details.html">All in the Mind</a> </h5>
-                            <!-- Group stat START -->
-                            <div class="hstack gap-2 gap-xl-3 justify-content-center mt-3">
-                                <!-- Group stat item -->
-                                <div>
-                                    <h6 class="mb-0">32k</h6>
-                                    <small>Members</small>
-                                </div>
-                                <!-- Divider -->
-                                <div class="vr"></div>
-                                <!-- Group stat item -->
-                                <div>
-                                    <h6 class="mb-0">20</h6>
-                                    <small>Post per day</small>
-                                </div>
-                            </div>
-                            <!-- Group stat END -->
-                        </div>
-                        <!-- Card body END -->
-                        <!-- Card Footer START -->
-                        <div class="card-footer text-center">
-                            <a class="btn btn-success-soft btn-sm" href="#!"> View group Posts </a>
-                        </div>
-                        <!-- Card Footer END -->
+            @php use Carbon\Carbon; @endphp
+
+<div class="row g-4">
+   
+
+        <div class="col-sm-6 col-lg-4">
+            <div class="card border ">
+                <div class="h-80px rounded-top"
+                    style="background-image:url({{asset('feed_assets/images/bg/01.jpg')}}); background-position: center; background-size: cover;">
+                </div>
+
+                <div class="card-body text-center pt-0">
+                    <div class="avatar avatar-lg mt-n5 mb-3">
+                        <a href="#"><img
+                            class="avatar-img rounded-circle border border-white border-3 bg-white"
+                            src="{{ asset('feed_assets/images/logo/08.svg') }}" alt="" loading="lazy"></a>
                     </div>
-                    <!-- Card END -->
+
+                    <h5 class="mb-0">
+                        <a href="#"></a>
+                    </h5>
+
+                    <div class="hstack gap-2 gap-xl-3 justify-content-center mt-3">
+                        <div><h6 class="mb-0">{{ $group->member_count ?? 0 }}</h6><small>Members</small></div>
+                        <div class="vr"></div>
+                        <div><h6 class="mb-0">{{ $group->posts_per_day ?? 0 }}</h6><small>Posts/day</small></div>
+                    </div>
+                </div>
+
+                <div class="card-body text-center">
+                    <p class="small text-muted mb-1">End Date: </p>
+                </div>
+
+                <div class="card-footer text-center">
+                        <span class="badge bg-danger-soft text-danger mb-2 d-block">Group Expired</span>
+                        <button class="btn btn-outline-danger btn-sm" data-bs-toggle="modal"
+                                data-bs-target="#activateGroupModal"
+                                data-group-id=""
+                                data-group-name="">
+                            Activate Group
+                        </button>
                 </div>
             </div>
         </div>
+</div>
+
+        </div>
     </div>
 </div>
+<!-- Activate Group Modal -->
+<div class="modal fade" id="activateGroupModal" tabindex="-1" aria-labelledby="activateGroupModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form method="POST" action="">
+            @csrf
+            <input type="hidden" name="group_id" id="modal-group-id">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Activate Group</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>You are about to activate the group: <strong id="modal-group-name"></strong></p>
+                    <div class="mb-3">
+                        <label for="new_end_date" class="form-label">Select New Expiry Date</label>
+                        <input type="date" name="new_end_date" class="form-control" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Activate</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const activateGroupModal = document.getElementById('activateGroupModal');
+        activateGroupModal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
+            const groupId = button.getAttribute('data-group-id');
+            const groupName = button.getAttribute('data-group-name');
+
+            document.getElementById('modal-group-id').value = groupId;
+            document.getElementById('modal-group-name').textContent = groupName;
+        });
+    });
+</script>
+
 @endsection

@@ -105,46 +105,106 @@
             </nav>
         </div>
         <div class="col-lg-9">
+            @php
+            use Carbon\Carbon;
+            $now = Carbon::now();
+            @endphp
+
             <div class="row g-4">
                 @if(isset($forums) && count($forums) > 0)
-                    @foreach($forums as $forum)
-                        <div class="col-sm-6 col-lg-4">
-                            <!-- Card START -->
-                            <div class="card">
-                                <div class="h-80px rounded-top"
-                                    style="background-image:url({{asset('feed_assets/images/bg/01.jpg')}}); background-position: center; background-size: cover; background-repeat: no-repeat;">
-                                </div>
-                                <!-- Card body START -->
-                                <div class="card-body text-center pt-2">
-                                    <!-- Info -->
-                                    <h5 class="mb-0 "> <a href="{{ route('user.forum.show', $forum->id) }}">{{ $forum->name }}</a> </h5>
-                                </div>
-                                <div class="card-body">
-                                    <p class="mb-0 small text-muted">Start Date: {{ \Carbon\Carbon::parse($forum->created_at)->format('d M Y') }} </p>
-                                    <p class="mb-0 small text-muted">End Date: {{ \Carbon\Carbon::parse($forum->end_date)->format('d M Y') }} </p>
-                                </div>
-                                <!-- Card body END -->
-                                <!-- Card Footer START -->
-                                <div class="card-footer text-center">
-                                    <a class="btn btn-success-soft btn-sm" href="{{ route('user.forum.show', $forum->id) }}">View Topics</a>
-                                </div>
-                                <!-- Card Footer END -->
-                            </div>
-                            <!-- Card END -->
+                @foreach($forums as $forum)
+                @php
+                $isExpired = Carbon::parse($forum->end_date)->lt($now);
+                @endphp
+
+                <div class="col-sm-6 col-lg-4">
+                    <div class="card border {{ $isExpired ? 'border-danger' : '' }}">
+                        <div class="h-80px rounded-top"
+                            style="background-image:url({{asset('feed_assets/images/bg/01.jpg')}}); background-position: center; background-size: cover;">
                         </div>
-                    @endforeach
-                @else
-                    <div class="col-12">
-                        <div class="card">
-                            <div class="card-body text-center">
-                                <h5 class="text-muted">No forums available</h5>
-                                <p class="text-muted mb-0">You don't have access to any forums yet.</p>
-                            </div>
+
+                        <div class="card-body text-center pt-2">
+                            <h5 class="mb-0">
+                                <a href="{{ route('user.forum.show', $forum->id) }}">{{ $forum->name }}</a>
+                            </h5>
+                        </div>
+
+                        <div class="card-body">
+                            <p class="mb-0 small text-muted">Start Date:
+                                {{ \Carbon\Carbon::parse($forum->created_at)->format('d M Y') }}</p>
+                            <p class="mb-0 small text-muted">End Date:
+                                {{ \Carbon\Carbon::parse($forum->end_date)->format('d M Y') }}</p>
+                        </div>
+
+                        <div class="card-footer text-center">
+                            @if($isExpired)
+                            <span class="badge bg-danger-soft text-danger mb-2 d-block">Forum Expired</span>
+                            <button class="btn btn-outline-danger btn-sm" data-bs-toggle="modal"
+                                data-bs-target="#activateForumModal" data-forum-id="{{ $forum->id }}"
+                                data-forum-name="{{ $forum->name }}">
+                                Activate Forum
+                            </button>
+                            @else
+                            <a class="btn btn-success-soft btn-sm"
+                                href="{{ route('user.forum.show', $forum->id) }}">View Topics</a>
+                            @endif
                         </div>
                     </div>
+                </div>
+                @endforeach
+                @else
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <h5 class="text-muted">No forums available</h5>
+                            <p class="text-muted mb-0">You don't have access to any forums yet.</p>
+                        </div>
+                    </div>
+                </div>
                 @endif
             </div>
+
         </div>
     </div>
 </div>
+<!-- Activate Forum Modal -->
+<div class="modal fade" id="activateForumModal" tabindex="-1" aria-labelledby="activateForumModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <form method="POST" action="">
+            @csrf
+            <input type="hidden" name="forum_id" id="modal-forum-id">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="activateForumModalLabel">Activate Forum</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <p>You're about to activate the forum: <strong id="modal-forum-name"></strong></p>
+                    <div class="mb-3">
+                        <label for="new_end_date" class="form-label">Select New Expiry Date</label>
+                        <input type="date" class="form-control" name="new_end_date" required>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Activate</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    const activateModal = document.getElementById('activateForumModal');
+    activateModal.addEventListener('show.bs.modal', function (event) {
+        const button = event.relatedTarget;
+        const forumId = button.getAttribute('data-forum-id');
+        const forumName = button.getAttribute('data-forum-name');
+
+        document.getElementById('modal-forum-id').value = forumId;
+        document.getElementById('modal-forum-name').textContent = forumName;
+    });
+</script>
+
 @endsection
