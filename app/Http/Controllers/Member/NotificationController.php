@@ -46,13 +46,10 @@ class NotificationController extends Controller
     public function notificationstatus($id)
     {
         $member = Member::find($id);
-        
-        if ($member) {
-            $member->update(['is_notification' => 1]);
 
-            return redirect()->back();;
-        }
-
+        $member->is_notification = 1;
+        $updated = $member->save();
+        return redirect()->back();
     }
 
 }
