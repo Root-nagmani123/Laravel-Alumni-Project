@@ -79,6 +79,22 @@
             left: -100%;
         }
     }
+.marquee-text {
+    white-space: nowrap;
+    display: inline-block;
+    animation: marquee 15s linear infinite;
+}
+
+.marquee-container:hover .marquee-text {
+    animation-play-state: paused;
+}
+
+@keyframes marquee {
+    0%   { transform: translateX(100%); }
+    100% { transform: translateX(-100%); }
+}
+
+
     </style>
 </head>
 
@@ -146,22 +162,24 @@
                                             <div class="text-center mt-3">
                                                 <a href="#" onclick="flipCard(event)">Login with Email OTP</a>
                                             </div>
-                                            <div class="position-relative w-100 bg-light d-flex align-items-center px-3"
-                                                style="height: 40px; overflow: hidden; z-index: 1040;">
-                                                <div class="position-relative d-flex align-items-center">
-                                                    <button class="btn btn-sm btn-danger position-relative z-1"
-                                                        style="min-width: 120px;">What's
-                                                        New</button>
-                                                </div>
-                                                <div
-                                                    class="marquee-container flex-grow-1 position-relative overflow-hidden ms-2">
-                                                    <div class="marquee-text position-absolute">
-                                                        🎉 Welcome to the LBSNAA Alumni Portal! New features are being
-                                                        added regularly — check
-                                                        out the stories, mentorship, and more! 🚀
-                                                    </div>
-                                                </div>
-                                            </div>
+                                           <div class="position-relative w-100 bg-light d-flex align-items-center px-3"
+     style="height: 40px; overflow: hidden; z-index: 1040;">
+    <div class="position-relative d-flex align-items-center">
+        <button class="btn btn-sm btn-danger position-relative z-1" style="min-width: 120px;">
+            What's New
+        </button>
+    </div>
+
+    <div class="marquee-container flex-grow-1 d-flex align-items-center ms-2"
+         style="overflow: hidden; height: 100%;">
+        <div class="marquee-text">
+            🎉 Welcome to the LBSNAA Alumni Portal! New features are being
+            added regularly — check out the stories, mentorship, and more! 🚀
+        </div>
+    </div>
+</div>
+
+
                                         </div>
                                         <!-- Back Side - OTP Login -->
                                         <div class="flip-card-back p-4">
@@ -208,21 +226,22 @@
                                                 <a href="#" onclick="flipCard(event)">Login with LDAP</a>
                                             </div>
                                             <div class="position-relative w-100 bg-light d-flex align-items-center px-3"
-                                                style="height: 20px; overflow: hidden; z-index: 1040;">
-                                                <div class="position-relative d-flex align-items-center">
-                                                    <button class="btn btn-sm btn-danger position-relative z-1"
-                                                        style="min-width: 120px;">What's
-                                                        New</button>
-                                                </div>
-                                                <div
-                                                    class="marquee-container flex-grow-1 position-relative overflow-hidden ms-2 mt-2">
-                                                    <div class="marquee-text position-absolute">
-                                                        🎉 Welcome to the LBSNAA Alumni Portal! New features are being
-                                                        added regularly — check
-                                                        out the stories, mentorship, and more! 🚀
-                                                    </div>
-                                                </div>
-                                            </div>
+     style="height: 40px; overflow: hidden; z-index: 1040;">
+    <div class="position-relative d-flex align-items-center">
+        <button class="btn btn-sm btn-danger position-relative z-1" style="min-width: 120px;">
+            What's New
+        </button>
+    </div>
+
+    <div class="marquee-container flex-grow-1 d-flex align-items-center ms-2"
+         style="overflow: hidden; height: 100%;">
+        <div class="marquee-text">
+            🎉 Welcome to the LBSNAA Alumni Portal! New features are being
+            added regularly — check out the stories, mentorship, and more! 🚀
+        </div>
+    </div>
+</div>
+
                                         </div>
                                     </div>
                                 </div>
