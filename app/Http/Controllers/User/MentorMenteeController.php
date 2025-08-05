@@ -20,6 +20,7 @@ $members = DB::table('members')
 ->select('Service', DB::raw('COUNT(*) as count'))
 ->groupBy('Service')
 ->get();
+
  $mentee_requests = DB::table('mentee_requests')
         ->join('members', 'mentee_requests.mentor', '=', 'members.id')
         ->where('mentee_requests.mentees_ids', $user_id)
