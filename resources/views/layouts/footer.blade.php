@@ -35,11 +35,22 @@
             </form>
         </div>
     </div>
+<style>
+.select2-results__option {
+    padding-left: 10px !important;
 
+}
+.select2-container {
+    /* width: 100% !important; */
+    z-index: 1060 !important;
+
+
+}
+</style>
     <!-- Group Modal -->
 <div class="modal fade" id="groupModal" tabindex="-1" aria-labelledby="groupModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
-        <form id="groupForm" action="{{ route('user.group.store') }}" method="POST">
+        <form action="{{ route('user.group.store') }}" method="POST" enctype="multipart/form-data" class="form-horizontal">
             @csrf
             <div class="modal-content">
                 <div class="modal-header bg-danger text-white">
@@ -50,62 +61,65 @@
 
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label for="groupName" class="form-label">Group Name</label>
+                        <label for="groupName" class="form-label">Group Name <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" id="groupName" name="group_name"
                             placeholder="Enter group name" required>
                     </div>
                     <div class="mb-3">
-                        <label for="groupName" class="form-label">Services</label>
-                        <select name="sector" id="" class="form-control">
-                            <option value="">Select Services</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="groupName" class="form-label">Cadre</label>
-                        <select name="cadre" id="" class="form-control">
-                            <option value="">Select Cadre</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="groupName" class="form-label">Year</label>
-                        <select name="year" id="" class="form-control">
-                            <option value="">Select Year</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="groupName" class="form-label">Sector</label>
-                        <select name="sector" id="" class="form-control">
-                            <option value="">Select Sector</option>
-                        </select>
-                    </div>
+                                <label class="form-label">Service <span class="text-danger">*</span></label>
+                               <select class="form-select service" name="service" id="service" data-id="new_group_create" required>
+                                   <option selected disabled>Select Service</option>
+                                  @if(isset($members) )
+                                    @if($members->isEmpty())
+                                        <option disabled>No Services Available</option>
+                                    @else
+                                    
+                                        @foreach($members as $member)
+                                        @if($member->Service != '')
+                                            <option value="{{ $member->Service }}">{{ $member->Service }}</option>
+                                        @endif
+                                        @endforeach
+                                    @endif
+                                    @endif
+                                </select>
+                            </div>
+                           <div class="mb-3">
+                                <label class="form-label">Year <span class="text-danger">*</span></label>
+
+                                <select class="form-select year-select" name="year[]" multiple="multiple" data-id="new_group_create" required>
+                                    <!-- Options will be added dynamically -->
+                                </select>
+                            </div>
+
+
+                                <div class="mb-3">
+                                    <label class="form-label">Cadre <span class="text-danger">*</span></label>
+                                    <select class="form-select select2 cadre"  name="cadre[]" multiple="multiple" data-id="new_group_create" required>
+
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Sector <span class="text-danger">*</span></label>
+                                    <select class="form-select select2 sector" name="sector[]" multiple="multiple" data-id="new_group_create" required>
+                                        <option selected disabled>Select Sector</option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Select Mentee <span class="text-danger">*</span></label>
+                                    <select class="form-select select2 mentees" multiple="multiple" id="mentees" name="mentees[]" data-id="new_group_create" required>
+                                        <option value="" disabled>Select Mentees</option>
+                                    </select>
+                                </div>
+                         <div class="mb-3">
+                        <label for="groupName" class="form-label">Group image<span class="text-danger">*</span></label>
+                        <input type="file" class="form-control" name="grp_image" id="grp_image" accept="image/*" required>
+                    </div>       
                     <div class="mb-3">
                         <label for="groupName" class="form-label">Expiry Date</label>
-                        <input type="date" class="form-control" name="end_date" id="end_date">
+                        <input type="date" class="form-control" name="end_date" id="end_date" required>
                     </div>
-
-
-                    <link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.css" rel="stylesheet">
-                    <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js">
-                    </script>
-                    <div class="mb-3">
-                        <label for="groupName" class="form-label">Choose Members</label>
-                        <select id="memberSelect" name="member_ids[]" multiple>
-                          
-                        </select>
-                    </div>
-
-
-
-                    <script>
-                    new TomSelect('#memberSelect', {
-                        plugins: ['remove_button'],
-                        placeholder: 'Select members...',
-                    });
-                    </script>
-
-
-
-
                     <div class="modal-footer">
                         <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
                         <button type="submit" class="btn btn-primary">Create Group</button>
@@ -352,6 +366,197 @@ let button = $(this);
 
     bsToast.show();
 }
+
+$(document).ready(function () {
+    // Service change (for both forms)
+    // After service selection, populate year
+$('.service').on('change', function () {
+    let dataId = $(this).data('id');
+    let $form = $(this).closest('form');
+    let service = $(this).val();
+    let $year = $form.find('.year-select[data-id="' + dataId + '"]');
+    
+    $year.empty().append('');
+    console.log(dataId);
+    console.log($form);
+    console.log(service);
+    console.log($year);
+
+    $.ajax({
+        url: '{{ route("user.get.years") }}',
+        type: 'POST',
+        data: {
+            service: service,
+            _token: '{{ csrf_token() }}'
+        },
+        success: function (response) {
+            $.each(response, function (key, value) {
+                $year.append('<option value="' + value + '">' + value + '</option>');
+            });
+            console.log($year);
+            $year.prop('disabled', false);
+            $year.select2({ 
+                placeholder: "Select Years",
+                closeOnSelect: false,
+                // templateResult: formatCheckbox,
+                templateSelection: formatSelection
+            });
+        }
+    });
+});
+
+
+    // Year change
+   $('.year-select').on('change', function () {
+        let dataId = $(this).data('id');
+        let $form = $(this).closest('form');
+        let service = $form.find('.service[data-id="' + dataId + '"]').val();
+        let years = $(this).val();
+        
+        let $cadre = $form.find('.cadre[data-id="' + dataId + '"]');
+        $cadre.empty().append('');
+        $form.find('.sector[data-id="' + dataId + '"]').empty().append('');
+        $form.find('.mentees[data-id="' + dataId + '"]').empty().append('');
+        $.ajax({
+            url: '{{ route("user.get.cadres") }}',
+            type: 'POST',
+            data: {
+                service: service,
+                year: years,
+                _token: '{{ csrf_token() }}'
+            },
+            success: function (response) {
+                $.each(response, function (key, value) {
+                    $cadre.append('<option value="' + value + '">' + value + '</option>');
+                });
+                $cadre.prop('disabled', false);
+            $cadre.select2({ 
+                placeholder: "Select cadres",
+                closeOnSelect: false,
+                // templateResult: formatCheckbox,
+                templateSelection: formatSelection
+            });
+            }
+        });
+    });
+
+    // Cadre change
+    $('.cadre').on('change', function () {
+        let dataId = $(this).data('id');
+        let $form = $(this).closest('form');
+        let service = $form.find('.service[data-id="' + dataId + '"]').val();
+        let year = $form.find('.year[data-id="' + dataId + '"]').val();
+       let cadre = $(this).val();
+        let $sector = $form.find('.sector[data-id="' + dataId + '"]');
+        $sector.empty().append('');
+        $form.find('.mentees[data-id="' + dataId + '"]').empty().append('');
+        $.ajax({
+            url: '{{ route("user.get.sectors") }}',
+            type: 'POST',
+            data: {
+                service: service,
+                year: year,
+                cadre: cadre,
+                _token: '{{ csrf_token() }}'
+            },
+            success: function (response) {
+                $.each(response, function (key, value) {
+                    $sector.append('<option value="' + value + '">' + value + '</option>');
+                });
+                $sector.prop('disabled', false);
+                $sector.select2({ 
+                    placeholder: "Select sectors",
+                    closeOnSelect: false,
+                    // templateResult: formatCheckbox,
+                    templateSelection: formatSelection
+                });
+            }
+        });
+    });
+
+    // Sector change
+    $('.sector').on('change', function () {
+        let dataId = $(this).data('id');
+        let $form = $(this).closest('form');
+        let service = $form.find('.service[data-id="' + dataId + '"]').val();
+        let year = $form.find('.year[data-id="' + dataId + '"]').val();
+        let cadre = $form.find('.cadre[data-id="' + dataId + '"]').val();
+        let sector = $(this).val();
+        let $mentees = $form.find('.mentees[data-id="' + dataId + '"]');
+        $mentees.empty().append('');
+        $.ajax({
+            url: '{{ route("user.get.mentees") }}',
+            type: 'POST',
+            data: {
+                service: service,
+                year: year,
+                cadre: cadre,
+                sector: sector,
+                _token: '{{ csrf_token() }}'
+            },
+            success: function (response) {
+                $.each(response, function (key, user) {
+                    $mentees.append('<option value="' + user.id + '">' + user.name + '</option>');
+                });
+                $mentees.prop('disabled', false);
+                $mentees.select2({ 
+                    placeholder: "Select Mentees",
+                    closeOnSelect: false,
+                    // templateResult: formatCheckbox,
+                    templateSelection: formatSelection
+                });
+            }
+        });
+    });
+
+    // Initialize Select2 for both mentee selects
+    $('.year-select,.mentees, .cadre,.sector').select2({
+        placeholder: "Select",
+    allowClear: true,
+    width: '100%'
+    });
+});
+function formatCheckbox(option) {
+    if (!option.id) return option.text;
+
+    const selected = $(option.element).is(':selected');
+    const $checkbox = $(`
+        <span>
+            <input type="checkbox" class="select2-checkbox me-2" ${selected ? 'checked' : ''} />
+            ${option.text}
+        </span>
+    `);
+    return $checkbox;
+}
+
+function formatSelection(option) {
+    return option.text;
+}
+$(document).on('click', '.select2-results__option', function (e) {
+    const $option = $(this);
+    const $checkbox = $option.find('.select2-checkbox');
+
+    // Delay execution to ensure Select2 processes click
+    setTimeout(() => {
+        const select = $option.closest('.select2-container').prev('select');
+        const value = $option.attr('id')?.replace('select2-', '')?.split('-result-')[1];
+
+        if (!value) return;
+
+        // Manually toggle the selected option
+        const currentValue = select.val() || [];
+        const index = currentValue.indexOf(value);
+
+        if (index > -1) {
+            currentValue.splice(index, 1); // remove
+        } else {
+            currentValue.push(value); // add
+        }
+
+        select.val(currentValue).trigger('change');
+    }, 0);
+});
+
 
 </script>
 <link rel="stylesheet"

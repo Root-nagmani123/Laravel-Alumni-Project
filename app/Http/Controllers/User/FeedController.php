@@ -170,7 +170,10 @@ class FeedController extends Controller
     // print_r($groupNames);die;
 
 
-    $members = Member::all();
+   $members = DB::table('members')
+->select('Service', DB::raw('COUNT(*) as count'))
+->groupBy('Service')
+->get();
 
     $posts = Post::with(['member', 'media', 'likes', 'comments.member', 'group'])
     ->where(function ($query) use ($groupIds) {
@@ -196,7 +199,7 @@ class FeedController extends Controller
             'group_image' => '',
             'group_id' => $post->group_id,
         ];
-    });
+    }); 
 
     return view('user.feed', compact('posts', 'user', 'storiesByMember', 'broadcast','events', 'forums', 'groupNames', 'members'));
     }

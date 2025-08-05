@@ -53,6 +53,21 @@ class ProfileController extends Controller
 
     return view('profile', compact('user','posts'));
 }
+public function showById_data(Request $request, $id): View
+{
+    //$user = auth()->guard('user')->user();
+    // $id = Crypt::decrypt($encryptedId);
+    $user = Member::findOrFail($id);
+
+    $userId = $user->id;
+
+         $posts = Post::with(['member', 'media', 'likes', 'comments.member'])
+        ->orderBy('created_at', 'desc')
+        ->where('member_id', $userId)
+        ->get();
+
+    return view('profile', compact('user','posts'));
+}
   public function edit($id)
         {
             $member = Member::findOrFail($id);
