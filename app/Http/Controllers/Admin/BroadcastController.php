@@ -92,7 +92,7 @@ public function store(Request $request)
     //notification 
     if($broadcast){
 
-       $notification = $this->notificationService->notifyAllMembers('broadcast', 'New broadcast has been added.', $broadcast->id, 'broadcast');
+       $notification = $this->notificationService->notifyAllMembers('broadcast', $broadcast->title . ' broadcast has been added.', $broadcast->id, 'broadcast');
        
        if($notification){
         Member::query()->update(['is_notification' => 0]);

@@ -23,7 +23,7 @@ class NotificationController extends Controller
                   });
         })
         ->orderBy('created_at', 'desc')
-        ->get(['id', 'message', 'created_at']);
+        ->get(['id', 'message', 'created_at','source_id','source_type']);
     
         return response()->json($notifications);
     }

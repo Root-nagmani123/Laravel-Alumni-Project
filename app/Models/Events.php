@@ -20,6 +20,7 @@ class Events extends Model
     'url',
     'venue',
     'image',
+    'status',
 
 ];
 
