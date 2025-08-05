@@ -479,7 +479,7 @@ $('.service').on('change', function () {
         let dataId = $(this).data('id');
         let $form = $(this).closest('form');
         let service = $form.find('.service[data-id="' + dataId + '"]').val();
-        let year = $form.find('.year[data-id="' + dataId + '"]').val();
+        let year = $form.find('.year-select[data-id="' + dataId + '"]').val();
         let cadre = $form.find('.cadre[data-id="' + dataId + '"]').val();
         let sector = $(this).val();
         let $mentees = $form.find('.mentees[data-id="' + dataId + '"]');
@@ -488,6 +488,7 @@ $('.service').on('change', function () {
             url: '{{ route("user.get.mentees") }}',
             type: 'POST',
             data: {
+                dataId: dataId,
                 service: service,
                 year: year,
                 cadre: cadre,

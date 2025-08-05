@@ -125,8 +125,12 @@
                             type="button" role="tab">Wants to become Mentee</button>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="requests-tab" data-bs-toggle="tab" data-bs-target="#requests"
-                            type="button" role="tab">Requests</button>
+                        <button class="nav-link" id="Incoming-requests-tab" data-bs-toggle="tab" data-bs-target="#requests_incoming"
+                            type="button" role="tab">Incoming Requests</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="Outgoging-requests-tab" data-bs-toggle="tab" data-bs-target="#requests_outgoing"
+                            type="button" role="tab">Outgoging Requests</button>
                     </li>
                     <li class="nav-item" role="presentation">
                         <button class="nav-link" id="connections-tab" data-bs-toggle="tab" data-bs-target="#connections"
@@ -143,7 +147,7 @@
                             @csrf
                             <div class="mb-3">
                                 <label class="form-label">Service</label>
-                               <select class="form-select service" name="service" id="service" data-id="want_become_mentor">
+                               <select class="form-select service" name="service" id="service" data-id="want_become_mentor" required>
                                     <option selected disabled>Select Service</option>
                                     @if($members->isEmpty())
                                         <option disabled>No Services Available</option>
@@ -159,7 +163,7 @@
                            <div class="mb-3">
                                 <label class="form-label">Year</label>
                                 
-                                <select class="form-select year-select" name="year[]" multiple="multiple" data-id="want_become_mentor">
+                                <select class="form-select year-select" name="year[]" multiple="multiple" data-id="want_become_mentor" required>
                                     <!-- Options will be added dynamically -->
                                 </select>
                             </div>
@@ -167,21 +171,21 @@
 
                                 <div class="mb-3">
                                     <label class="form-label">Cadre</label>
-                                    <select class="form-select select2 cadre"  name="cadre[]" multiple="multiple" data-id="want_become_mentor">
+                                    <select class="form-select select2 cadre"  name="cadre[]" multiple="multiple" data-id="want_become_mentor" required>
                                      
                                     </select>
                                 </div>
 
                                 <div class="mb-3">
                                     <label class="form-label">Sector</label>
-                                    <select class="form-select select2 sector" name="sector[]" multiple="multiple" data-id="want_become_mentor">
+                                    <select class="form-select select2 sector" name="sector[]" multiple="multiple" data-id="want_become_mentor" required>
                                         <option selected disabled>Select Sector</option>
                                     </select>
                                 </div>
 
                                 <div class="mb-3">
                                     <label class="form-label">Select Mentee</label>
-                                    <select class="form-select select2 mentees" multiple="multiple" id="mentees" name="mentees[]" data-id="want_become_mentor">
+                                    <select class="form-select select2 mentees" multiple="multiple" id="mentees" name="mentees[]" data-id="want_become_mentor" required>
                                         <option value="" disabled>Select Mentees</option>
                                     </select>
                                 </div>
@@ -195,7 +199,7 @@
                             @csrf
                             <div class="mb-3">
                                 <label class="form-label">Service</label>
-                               <select class="form-select service" name="service" id="service" data-id="want_become_mentee">
+                               <select class="form-select service" name="service" id="service" data-id="want_become_mentee" required>
                                     <option selected disabled>Select Service</option>
                                     @if($members->isEmpty())
                                         <option disabled>No Services Available</option>
@@ -210,34 +214,34 @@
                             </div>
                             <div class="mb-3">
                                     <label class="form-label">Year</label>
-                             <select class="form-select year-select" name="year[]" multiple="multiple" data-id="want_become_mentee">
+                             <select class="form-select year-select" name="year[]" multiple="multiple" data-id="want_become_mentee" required>
                                </select>
                                 </div>
 
                                 <div class="mb-3">
                                     <label class="form-label">Cadre</label>
-                                    <select class="form-select select2 cadre"  name="cadre[]" multiple="multiple" data-id="want_become_mentee">
-                                     
+                                    <select class="form-select select2 cadre"  name="cadre[]" multiple="multiple" data-id="want_become_mentee" required>
+
                                     </select>
                                 </div>
 
                                 <div class="mb-3">
                                     <label class="form-label">Sector</label>
-                                    <select class="form-select select2 sector" name="sector[]" multiple="multiple" data-id="want_become_mentee">
+                                    <select class="form-select select2 sector" name="sector[]" multiple="multiple" data-id="want_become_mentee" required>
                                         </select>
                                 </div>
 
                                 <div class="mb-3">
                                     <label class="form-label">Select Mentee</label>
-                                    <select class="form-select select2 mentees" multiple="multiple" id="mentees" name="mentees[]" data-id="want_become_mentee">
+                                    <select class="form-select select2 mentees" multiple="multiple" id="mentees" name="mentees[]" data-id="want_become_mentee" required>
                                        </select>
                                 </div>
                             <button type="submit" class="btn btn-success">Submit Mentee Request</button>
                         </form>
                     </div>
-
+                    
                     <!-- Tab 3: Requests -->
-                    <div class="tab-pane fade" id="requests" role="tabpanel">
+                    <div class="tab-pane fade" id="requests_incoming" role="tabpanel">
                         <h5>Mentor Requests</h5>
                             <table class="table table-bordered">
                                 <thead>
@@ -250,36 +254,42 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @forelse ($mentor_requests as $request)
-                                    @if($request->status == 2)
-                                        <tr>
-                                            <td>{{ $request->name }}</td>
-                                            <td>{{ $request->cadre }}</td>
-                                            <td>{{ $request->batch }}</td>
-                                            <td>{{ $request->sector }}</td>
-                                            <td>
-                                                <form method="POST" action="{{ route('user.request.update') }}" class="d-inline">
-                                                    @csrf
-                                                    <input type="hidden" name="id" value="{{ $request->request_id }}">
-                                                    <input type="hidden" name="type" value="mentor"> 
-                                                    <input type="hidden" name="status" value="1">
-                                                    <button type="submit" class="btn btn-sm btn-success">Accept</button>
-                                                </form>
-                                                <form method="POST" action="{{ route('user.request.update') }}" class="d-inline">
-                                                    @csrf
-                                                    <input type="hidden" name="id" value="{{ $request->request_id }}">
-                                                    <input type="hidden" name="type" value="mentor"> 
-                                                    <input type="hidden" name="status" value="3">
-                                                    <button type="submit" class="btn btn-sm btn-danger">Reject</button>
-                                                </form>
-                                            </td>
-                                        </tr>
-                                        @endif
-                                    @empty
-                                        <tr>
-                                            <td colspan="5" class="text-center">No mentor requests</td>
-                                        </tr>
-                                    @endforelse
+                                  
+                                    @php
+                                    $filteredmentorRequests = $mentor_requests->filter(function($request) {
+                                        return $request->status == 2;
+                                    });
+                                @endphp
+
+                                @forelse ($filteredmentorRequests as $request)
+                                    <tr>
+                                        <td>{{ $request->name }}</td>
+                                        <td>{{ $request->cadre }}</td>
+                                        <td>{{ $request->batch }}</td>
+                                        <td>{{ $request->sector }}</td>
+                                        <td>
+                                            <form method="POST" action="{{ route('user.request.update') }}" class="d-inline">
+                                                @csrf
+                                                <input type="hidden" name="id" value="{{ $request->request_id }}">
+                                                <input type="hidden" name="type" value="mentee"> 
+                                                <input type="hidden" name="status" value="1">
+                                                <button type="submit" class="btn btn-sm btn-success">Accept</button>
+                                            </form>
+                                            <form method="POST" action="{{ route('user.request.update') }}" class="d-inline">
+                                                @csrf
+                                                <input type="hidden" name="id" value="{{ $request->request_id }}">
+                                                <input type="hidden" name="type" value="mentee"> 
+                                                <input type="hidden" name="status" value="3">
+                                                <button type="submit" class="btn btn-sm btn-danger">Reject</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="5" class="text-center">No mentee requests</td>
+                                    </tr>
+                                @endforelse
+
                                 </tbody>
                             </table>
 
@@ -295,41 +305,96 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @forelse ($mentee_requests as $request)
-                                    @if($request->status == 2)
+                                    @php
+                                    $filteredMenteeRequests = $mentee_requests->filter(function($request) {
+                                        return $request->status == 2;
+                                    });
+                                @endphp
 
-                                        <tr>
-                                            <td>{{ $request->name }}</td>
-                                            <td>{{ $request->cadre }}</td>
-                                            <td>{{ $request->batch }}</td>
-                                            <td>{{ $request->sector }}</td>
-                                            <td>
-                                                <form method="POST" action="{{ route('user.request.update') }}" class="d-inline">
-                                                    @csrf
-                                                    <input type="hidden" name="id" value="{{ $request->request_id }}">
-                                                    <input type="hidden" name="type" value="mentee"> 
-                                                    <input type="hidden" name="status" value="1">
-                                                    <button type="submit" class="btn btn-sm btn-success">Accept</button>
-                                                </form>
-                                                <form method="POST" action="{{ route('user.request.update') }}" class="d-inline">
-                                                    @csrf
-                                                    <input type="hidden" name="id" value="{{ $request->request_id }}">
-                                                    <input type="hidden" name="type" value="mentee"> 
-                                                    <input type="hidden" name="status" value="3">
-                                                    <button type="submit" class="btn btn-sm btn-danger">Reject</button>
-                                                </form>
-                                            </td>
-                                        </tr>
-                                        @endif
-                                    @empty
-                                        <tr>
-                                            <td colspan="5" class="text-center">No mentee requests</td>
-                                        </tr>
-                                    @endforelse
+                                @forelse ($filteredMenteeRequests as $request)
+                                    <tr>
+                                        <td>{{ $request->name }}</td>
+                                        <td>{{ $request->cadre }}</td>
+                                        <td>{{ $request->batch }}</td>
+                                        <td>{{ $request->sector }}</td>
+                                        <td>
+                                            <form method="POST" action="{{ route('user.request.update') }}" class="d-inline">
+                                                @csrf
+                                                <input type="hidden" name="id" value="{{ $request->request_id }}">
+                                                <input type="hidden" name="type" value="mentee"> 
+                                                <input type="hidden" name="status" value="1">
+                                                <button type="submit" class="btn btn-sm btn-success">Accept</button>
+                                            </form>
+                                            <form method="POST" action="{{ route('user.request.update') }}" class="d-inline">
+                                                @csrf
+                                                <input type="hidden" name="id" value="{{ $request->request_id }}">
+                                                <input type="hidden" name="type" value="mentee"> 
+                                                <input type="hidden" name="status" value="3">
+                                                <button type="submit" class="btn btn-sm btn-danger">Reject</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="5" class="text-center">No mentee requests</td>
+                                    </tr>
+                                @endforelse
+
                                 </tbody>
                             </table>
 
                     </div>
+                    <div class="tab-pane fade" id="requests_outgoing" role="tabpanel">
+                        <h5>Outgoing Requests</h5>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Cadre</th>
+                                    <th>Year</th>
+                                    <th>Sector</th>
+                                    <th>Type</th>
+                                    <th>Status</th>
+                                    </tr>
+                            </thead>
+                            <tbody>
+                              </tbody>
+                                @php
+                                    $filteredMentorRequests = $mentor_connections->filter(function($request) {
+                                        $request->type = 'mentor';
+                                        return $request->status == 1 || $request->status == 3;
+                                    });
+                                    $filteredMenteeRequests = $mentee_connections->filter(function($request) {
+                                        $request->type = 'mentee';
+                                        return $request->status == 1 || $request->status == 3;
+
+                                    });
+                                    $mergedRequests = array_merge($filteredMentorRequests->toArray(), $filteredMenteeRequests->toArray());
+                                @endphp
+
+                                @forelse ($filteredMentorRequests as $request)
+                                    <tr>
+                                        <td>{{ $request->name }}</td>
+                                        <td>{{ $request->cadre }}</td>
+                                        <td>{{ $request->batch }}</td>
+                                        <td>{{ $request->sector }}</td>
+                                        <td>{{ $request->type }}</td>
+                                        <td>
+                                            @if ($request->status == 1)
+                                                Pending
+                                            @elseif ($request->status == 3)
+                                                Rejected
+                                            @endif
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="6" class="text-center">No outgoing requests</td>
+                                    </tr>
+                                @endforelse
+                              </table>
+
+                                </div>
 
                     <!-- Tab 4: Connections -->
                    <div class="tab-pane fade" id="connections" role="tabpanel">
@@ -388,4 +453,5 @@
 </div>
 <!-- Select2 -->
  @endsection
+ 
  

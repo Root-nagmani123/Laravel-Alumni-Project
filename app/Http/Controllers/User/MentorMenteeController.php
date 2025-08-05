@@ -18,7 +18,7 @@ class MentorMenteeController extends Controller
 $user_id = auth()->guard('user')->user()->id;    
 $members = DB::table('members')
 ->select('Service', DB::raw('COUNT(*) as count'))
-->groupBy('Service')
+->groupBy('Service') 
 ->get();
 
  $mentee_requests = DB::table('mentee_requests')
@@ -116,8 +116,30 @@ $service = $request->input('service');
 $year = $request->input('year'); // batch
 $cadre = $request->input('cadre');
 $sector = $request->input('sector');
+$dataId = $request->input('dataId');
+if($dataId == 'want_become_mentor'){
+   $data_get = DB::table('mentor_requests')
+    ->select('Mentor_ids')
+    ->whereIn('status', [1, 2])
+    ->where('mentees', auth()->guard('user')->user()->id)
+    ->get();
 
+    $already_mentees = DB::table('mentor_requests')
+    ->select('mentees')
+    ->whereIn('status', [1, 2, 3])
+    ->where('Mentor_ids', auth()->guard('user')->user()->id)
+    ->get();
+}
+if($dataId == 'want_become_mentee'){
+   $data_get = DB::table('mentee_requests')
+    ->select('mentees_ids')
+    ->whereIn('status', [1, 2])
+    ->where('mentor', auth()->guard('user')->user()->id)
+    ->get();
+}
 $query = Member::query();
+$query->select('id', 'name');
+
 
 if (!empty($service)) {
     $query->where('service', $service);
@@ -134,9 +156,20 @@ if (!empty($cadre)) {
 if (!empty($sector)) {
     $query->whereIn('sector', $sector);
 }
+if (isset($dataId) && !empty($dataId)) {
+    if($dataId == 'want_become_mentor'){
+        $query->whereNotIn('id', $already_mentees->pluck('mentees')->toArray());
+        $query->whereNotIn('id', $data_get->pluck('Mentor_ids')->toArray());
+    }
+    if($dataId == 'want_become_mentee'){
+        $query->whereNotIn('id', $data_get->pluck('mentees_ids')->toArray());
+    }
+    
+}
 
 $mentees = $query->whereNotNull('name')
     ->where('name', '!=', 'NA')
+    ->where('status' , 1) 
     ->orderBy('name')
     ->get();
 
