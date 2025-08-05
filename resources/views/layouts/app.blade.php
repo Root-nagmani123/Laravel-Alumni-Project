@@ -3,6 +3,8 @@
 
 <head>
     @include('layouts.pre_header')
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @livewireStyles
     <style>
     #pageLoader {
         transition: opacity 0.3s ease;
@@ -13,8 +15,7 @@
         visibility: hidden;
         pointer-events: none;
     }
-    @vite(['resources/js/app.js'])
-    @livewireStyles
+
 </style>
 
 <script>
@@ -163,8 +164,67 @@
 </script>
 <!-- Toast Container -->
 
-@livewireScripts
 
+@livewireScripts
+<script type="module">
+        let typingTimeout;
+        const chatContainer = document.getElementById('chat-container');
+
+        window.Echo.private(`chat-channel.{{ auth()->guard('user')->id() }}`)
+            .listen('UserTyping', (event) => {
+                const messageInputField = document.getElementById('message-input');
+                if (messageInputField) {
+                    messageInputField.placeholder = 'Typing...';
+                }
+
+                clearTimeout(typingTimeout);
+                typingTimeout = setTimeout(() => {
+                    if (messageInputField) {
+                        messageInputField.placeholder = 'Type here...';
+                    }
+                }, 2000);
+            })
+
+            .listen('MessageSentEvent', (event) => {
+                const isInputFocused = document.activeElement === messageInputField;
+                const isScrolledToBottom = chatContainer.scrollTop + chatContainer.clientHeight >= chatContainer
+                    .scrollHeight - 10;
+
+                if (!isInputFocused || !isScrolledToBottom) {
+                    const audio = new Audio('{{ asset('sounds/notification.mp3') }}');
+                    audio.play();
+                }
+            });
+
+        // Listen for Livewire events
+        Livewire.on('messages-updated', () => {
+            setTimeout(() => {
+                scrollToBottom();
+            }, 50);
+        });
+
+        // Scroll to Message
+        Livewire.on('scroll-to-message', (event) => {
+            const messageElement = document.getElementById(`message-${event.index}`);
+            if (messageElement) {
+                messageElement.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center'
+                });
+            }
+        });
+
+        // Scroll on initial load
+        window.onload = () => {
+            scrollToBottom();
+        };
+
+        function scrollToBottom() {
+            if (chatContainer) {
+                chatContainer.scrollTo(0, chatContainer.scrollHeight);
+            }
+        }
+    </script>
 </body>
 
 </html>
