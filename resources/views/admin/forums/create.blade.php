@@ -50,7 +50,7 @@
                                         <label class="form-label">Name</label><span
                                             class="required text-danger ">*</span>
                                         <input type="text" name="name" id="name" class="form-control"
-                                            value="{{ old('name') }}">
+                                            value="{{ old('name') }}" placeholder="Enter forum name" required>
                                         <!-- @error('name')
                                 <div class="text-danger">{{ $message }}</div>
                             @enderror -->
@@ -60,14 +60,14 @@
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <label class="form-label">Forum End Date</label>
-                                        <input type="date" class="form-control" name="end_date" id="end_date">
+                                        <input type="date" class="form-control" name="end_date" id="end_date" required>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <label class="form-label">Forum Image</label>
                                         <input type="file" class="form-control" name="image" id="forum-image"
-                                            accept="image/*">
+                                            accept="image/*" required>
 
                                         <!-- Preview -->
                                         <div class="mt-2">
@@ -83,13 +83,20 @@
 
                                 <div class="col-md-6">
                                     <div class="mb-3">
-                                        <label class="form-label">Status</label>
-                                        <select class="form-select" aria-label="Default select" name="status" required
-                                            text-danger="">
-                                            <option selected="">Select Status</option>
-                                            <option value="1">Active</option>
-                                            <option value="0">InActive</option>
-                                        </select>
+                                       <form class="needs-validation" novalidate>
+    <div class="mb-3">
+        <label for="status" class="form-label">Status</label>
+        <select class="form-select" name="status" id="status" required>
+            <option value="" disabled selected>Select Status</option>
+            <option value="1">Active</option>
+            <option value="0">Inactive</option>
+        </select>
+        <div class="invalid-feedback">
+            Please select a status.
+        </div>
+    </div>
+</form>
+
                                     </div>
                                 </div>
                             </div>
