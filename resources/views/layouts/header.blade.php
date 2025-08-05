@@ -70,6 +70,7 @@ Header START -->
                     </li>
                 </ul>
                 <!-- Search Input Group with Dropdown -->
+                <!-- SEARCH BOX -->
                 <div class="position-relative">
                     <form id="searchForm">
                         <input type="search" id="searchMemberInput" class="form-control ps-5" placeholder="Search..."
@@ -79,8 +80,24 @@ Header START -->
                             <i class="bi bi-search fs-5"></i>
                         </button>
                     </form>
-                    <ul id="searchResults" class="list-group position-absolute w-100 z-3 mt-1" style="max-height: 200px; overflow-y: auto;background-color: #ffffffb8;"></ul>
+
+                    <!-- Autocomplete Result List -->
+                    <ul id="searchResults" class="list-group position-absolute w-100 z-3 mt-1"
+                        style="max-height: 200px; overflow-y: auto; background-color: #ffffffb8;"></ul>
                 </div>
+
+                <!-- TOAST MESSAGE -->
+                <div class="position-fixed top-0 end-0 p-3" style="z-index: 1100;">
+                    <div id="favoriteToast" class="toast align-items-center text-bg-primary border-0" role="alert"
+                        aria-live="assertive" aria-atomic="true">
+                        <div class="d-flex">
+                            <div class="toast-body"></div>
+                            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                                aria-label="Close"></button>
+                        </div>
+                    </div>
+                </div>
+
 
 
             </div>
@@ -92,16 +109,20 @@ Header START -->
                     <a class="nav-link bg-light icon-md btn btn-light p-0" href="#" id="notifDropdown" role="button"
                         data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
                         @php
-                            $showNotifBadge = false;
-                            if (Auth::guard('user')->check()) {
-                                $member = \App\Models\Member::find(Auth::guard('user')->id());
-                                if ($member && $member->is_notification == 0 && isset($notifications) && $notifications->count() > 0) {
-                                    $showNotifBadge = true;
-                                }
-                            }
+                        $showNotifBadge = false;
+                        if (Auth::guard('user')->check()) {
+                        $member = \App\Models\Member::find(Auth::guard('user')->id());
+                        if ($member && $member->is_notification == 0 && isset($notifications) && $notifications->count()
+                        > 0) {
+                        $showNotifBadge = true;
+                        }
+                        }
+                        @endphp
+                        @php
+                        $latestNotifications = $notifications->sortByDesc('created_at')->take(5);
                         @endphp
                         @if($showNotifBadge)
-                            <span class="badge-notif animation-blink"></span>
+                        <span class="badge-notif animation-blink"></span>
                         @endif
                         <i class="bi bi-bell-fill fs-6"> </i>
                     </a>
@@ -110,13 +131,20 @@ Header START -->
                         <div class="card">
                             <div class="card-header d-flex justify-content-between align-items-center">
                                 <h6 class="m-0">Notifications <span
-                                        class="badge bg-danger bg-opacity-10 text-danger ms-2">{{ isset($notifications) ? $notifications->count() : 0 }}</span></h6>
-                                <a class="small" href="{{ route('user.notifications.status', ['id' => Auth::guard('user')->user()->id]) }}">Clear all</a>
+                                        class="badge bg-danger bg-opacity-10 text-danger ms-2">{{ isset($notifications) ? $notifications->count() : 0 }}</span>
+                                </h6>
+                                <a class="small"
+                                    href="{{ route('user.notifications.status', ['id' => Auth::guard('user')->user()->id]) }}">Clear
+                                    all</a>
                             </div>
                             <div class="card-body p-0">
-                                <ul class="list-group list-group-flush list-unstyled p-2">
-                                    @if(isset($notifications) && $notifications->count() > 0)
-                                        @foreach($notifications as $notification)
+                                <div style="max-height: 300px; overflow-y: auto;">
+                                    <ul class="list-group list-group-flush list-unstyled p-2">
+                                        @if(isset($notifications) && $notifications->count() > 0)
+                                        @php
+                                        $latestNotifications = $notifications->sortByDesc('created_at')->take(5);
+                                        @endphp
+                                        @foreach($latestNotifications as $notification)
                                         <!-- Notif item -->
                                         <li>
                                             @php
@@ -178,7 +206,7 @@ Header START -->
                                             </div>
                                         </li>
                                         @endforeach
-                                    @else
+                                        @else
                                         <!-- No notifications -->
                                         <li>
                                             <div class="list-group-item rounded d-flex border-0 mb-1 p-3">
@@ -187,8 +215,10 @@ Header START -->
                                                 </div>
                                             </div>
                                         </li>
-                                    @endif
-                                </ul>
+                                        @endif
+                                    </ul>
+                                </div>
+
                             </div>
                         </div>
                     </div>
@@ -279,6 +309,16 @@ Header START -->
                                 <i class="bi bi-chat-dots-fill fa-fw me-2"></i>Grievance / Feedback
                             </a>
                         </li>
+                        <li>
+                            <a class="dropdown-item" href="https://www.lbsnaa.gov.in/lbsnaa-newsletter" target="_blank">
+                                <i class="bi bi-newspaper fa-fw me-2"></i>Newsletter
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="https://www.lbsnaa.gov.in/footer_menu/contact-us" target="_blank">
+                                <i class="bi bi-person-lines-fill fa-fw me-2"></i>Contact Us
+                            </a>
+                        </li>
 
                         <li>
                             <form action="{{ route('user.logout') }}" method="POST" style="display: inline;">
@@ -309,7 +349,7 @@ Header START -->
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                          @csrf
+                    @csrf
                     <!-- Type Dropdown -->
                     <div class="mb-3">
                         <label for="typeSelect" class="form-label">Type<span class="text-danger">*</span></label>
@@ -324,13 +364,17 @@ Header START -->
                     <!-- Name -->
                     <div class="mb-3">
                         <label for="userName" class="form-label">Name <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" id="userName" name="userName" placeholder="Enter your name" value="{{ auth()->guard('user')->user()->name }}" required readonly>
+                        <input type="text" class="form-control" id="userName" name="userName"
+                            placeholder="Enter your name" value="{{ auth()->guard('user')->user()->name }}" required
+                            readonly>
                     </div>
 
                     <!-- Email -->
                     <div class="mb-3">
                         <label for="userEmail" class="form-label">Email <span class="text-danger">*</span></label>
-                        <input type="email" class="form-control" id="userEmail" name="userEmail" placeholder="Enter your email" value="{{ auth()->guard('user')->user()->email }}" required readonly>
+                        <input type="email" class="form-control" id="userEmail" name="userEmail"
+                            placeholder="Enter your email" value="{{ auth()->guard('user')->user()->email }}" required
+                            readonly>
                     </div>
 
                     <!-- Message -->

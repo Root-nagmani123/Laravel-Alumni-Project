@@ -1,4 +1,22 @@
 <!-- Main content START -->
+     <!-- Story START -->
+    <div class="d-flex gap-2 mb-3">
+        
+      <div class="position-relative" id="openAddStoryModal">
+  <div class="card border border-2 border-dashed h-150px px-4 px-sm-5 shadow-none d-flex align-items-center justify-content-center text-center">
+    <div>
+      <a class="stretched-link btn btn-light rounded-circle icon-md" href="javascript:void(0);">
+        <i class="fa-solid fa-plus"></i>
+      </a>
+      <h6 class="mt-2 mb-0 small">Post a Story</h6>
+    </div>
+  </div>
+</div>
+
+        <!-- Stories -->
+        <div id="stories" class="storiesWrapper stories-square stories user-icon carousel scroll-enable"></div>
+    </div>
+    <!-- Story END -->
         <!-- Share feed START -->
     <div class="card card-body mb-3">
         <div class="d-flex mb-3">
@@ -37,24 +55,7 @@
         <!-- Share feed toolbar END -->
     </div>
     <!-- Share feed END -->
-    <!-- Story START -->
-    <div class="d-flex gap-2 mb-3">
-        
-      <div class="position-relative" id="openAddStoryModal">
-  <div class="card border border-2 border-dashed h-150px px-4 px-sm-5 shadow-none d-flex align-items-center justify-content-center text-center">
-    <div>
-      <a class="stretched-link btn btn-light rounded-circle icon-md" href="javascript:void(0);">
-        <i class="fa-solid fa-plus"></i>
-      </a>
-      <h6 class="mt-2 mb-0 small">Post a Story</h6>
-    </div>
-  </div>
-</div>
 
-        <!-- Stories -->
-        <div id="stories" class="storiesWrapper stories-square stories user-icon carousel scroll-enable"></div>
-    </div>
-    <!-- Story END -->
 
 
 

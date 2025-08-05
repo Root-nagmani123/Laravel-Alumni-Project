@@ -10,7 +10,7 @@
 </style>
 
 <div class="container">
-    <div class="row g-4 mt-2">
+    <div class="row g-4" style="margin-top:5rem !important;">
         <div class="col-3">
             <!-- Advanced filter responsive toggler START -->
             <div class="d-flex align-items-center d-lg-none">
@@ -149,7 +149,9 @@
                                         <option disabled>No Services Available</option>
                                     @else
                                         @foreach($members as $member)
+                                        @if($member->Service != '')
                                             <option value="{{ $member->Service }}">{{ $member->Service }}</option>
+                                        @endif
                                         @endforeach
                                     @endif
                                 </select>
@@ -199,37 +201,36 @@
                                         <option disabled>No Services Available</option>
                                     @else
                                         @foreach($members as $member)
+                                         @if($member->Service != '')
                                             <option value="{{ $member->Service }}">{{ $member->Service }}</option>
+                                         @endif
                                         @endforeach
                                     @endif
                                 </select>
                             </div>
                             <div class="mb-3">
                                     <label class="form-label">Year</label>
-                                    <select class="form-select year" id="year" name="year" data-id="want_become_mentee">
-                                        <option selected disabled>Select Year</option>
-                                    </select>
+                             <select class="form-select year-select" name="year[]" multiple="multiple" data-id="want_become_mentee">
+                               </select>
                                 </div>
 
                                 <div class="mb-3">
                                     <label class="form-label">Cadre</label>
-                                    <select class="form-select cadre" id="cadre" name="cadre" data-id="want_become_mentee">
-                                        <option selected disabled>Select Cadre</option>
+                                    <select class="form-select select2 cadre"  name="cadre[]" multiple="multiple" data-id="want_become_mentee">
+                                     
                                     </select>
                                 </div>
 
                                 <div class="mb-3">
                                     <label class="form-label">Sector</label>
-                                    <select class="form-select sector" id="sector" name="sector" data-id="want_become_mentee">
-                                        <option selected disabled>Select Sector</option>
-                                    </select>
+                                    <select class="form-select select2 sector" name="sector[]" multiple="multiple" data-id="want_become_mentee">
+                                        </select>
                                 </div>
 
                                 <div class="mb-3">
                                     <label class="form-label">Select Mentee</label>
-                                    <select class="form-select select2 mentees" multiple id="mentees" name="mentees[]" data-id="want_become_mentee">
-                                        <option value="" disabled>Select Mentees</option>
-                                    </select>
+                                    <select class="form-select select2 mentees" multiple="multiple" id="mentees" name="mentees[]" data-id="want_become_mentee">
+                                       </select>
                                 </div>
                             <button type="submit" class="btn btn-success">Submit Mentee Request</button>
                         </form>
@@ -403,7 +404,7 @@ $('.service').on('change', function () {
     let service = $(this).val();
     let $year = $form.find('.year-select[data-id="' + dataId + '"]');
     
-    $year.empty().append('<option disabled>Select Year</option>');
+    $year.empty().append('');
     
 
     $.ajax({
@@ -421,7 +422,7 @@ $('.service').on('change', function () {
             $year.select2({ 
                 placeholder: "Select Years",
                 closeOnSelect: false,
-                templateResult: formatCheckbox,
+                // templateResult: formatCheckbox,
                 templateSelection: formatSelection
             });
         }
@@ -456,7 +457,7 @@ $('.service').on('change', function () {
             $cadre.select2({ 
                 placeholder: "Select cadres",
                 closeOnSelect: false,
-                templateResult: formatCheckbox,
+                // templateResult: formatCheckbox,
                 templateSelection: formatSelection
             });
             }
@@ -490,7 +491,7 @@ $('.service').on('change', function () {
                 $sector.select2({ 
                     placeholder: "Select sectors",
                     closeOnSelect: false,
-                    templateResult: formatCheckbox,
+                    // templateResult: formatCheckbox,
                     templateSelection: formatSelection
                 });
             }
@@ -525,7 +526,7 @@ $('.service').on('change', function () {
                 $mentees.select2({ 
                     placeholder: "Select Mentees",
                     closeOnSelect: false,
-                    templateResult: formatCheckbox,
+                    // templateResult: formatCheckbox,
                     templateSelection: formatSelection
                 });
             }
@@ -542,14 +543,44 @@ $('.service').on('change', function () {
 function formatCheckbox(option) {
     if (!option.id) return option.text;
 
-    return $(
-        '<span><input type="checkbox" class="me-2"/>' + option.text + '</span>'
-    );
+    const selected = $(option.element).is(':selected');
+    const $checkbox = $(`
+        <span>
+            <input type="checkbox" class="select2-checkbox me-2" ${selected ? 'checked' : ''} />
+            ${option.text}
+        </span>
+    `);
+    return $checkbox;
 }
 
 function formatSelection(option) {
     return option.text;
 }
+$(document).on('click', '.select2-results__option', function (e) {
+    const $option = $(this);
+    const $checkbox = $option.find('.select2-checkbox');
+
+    // Delay execution to ensure Select2 processes click
+    setTimeout(() => {
+        const select = $option.closest('.select2-container').prev('select');
+        const value = $option.attr('id')?.replace('select2-', '')?.split('-result-')[1];
+
+        if (!value) return;
+
+        // Manually toggle the selected option
+        const currentValue = select.val() || [];
+        const index = currentValue.indexOf(value);
+
+        if (index > -1) {
+            currentValue.splice(index, 1); // remove
+        } else {
+            currentValue.push(value); // add
+        }
+
+        select.val(currentValue).trigger('change');
+    }, 0);
+});
+
 
 </script>
 @endsection

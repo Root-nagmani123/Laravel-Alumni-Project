@@ -130,8 +130,6 @@
         }
     });
 </script>
-<!-- Toast Container -->
-
 
 </body>
 

@@ -29,28 +29,29 @@ $members = DB::table('members')
 ->select('Service', DB::raw('COUNT(*) as count'))
 ->groupBy('Service')
 ->get();
+
  $mentee_requests = DB::table('mentee_requests')
         ->join('members', 'mentee_requests.mentor', '=', 'members.id')
         ->where('mentee_requests.mentees_ids', $user_id)
-        ->select('mentee_requests.id as request_id', 'members.name', 'mentee_requests.cadre', 'mentee_requests.batch', 'mentee_requests.sector','mentee_requests.status')
+        ->select('mentee_requests.id as request_id', 'members.name','members.cader as cadre', 'members.batch', 'members.sector','mentee_requests.status')
         ->get();
 
     $mentor_requests = DB::table('mentor_requests')
         ->join('members', 'mentor_requests.mentees', '=', 'members.id')
         ->where('mentor_requests.Mentor_ids', $user_id)
-        ->select('mentor_requests.id as request_id', 'members.name', 'mentor_requests.cadre', 'mentor_requests.batch', 'mentor_requests.sector','mentor_requests.status')
+        ->select('mentor_requests.id as request_id', 'members.name', 'members.cader as cadre', 'members.batch', 'members.sector','mentor_requests.status')
         ->get();
 
          $mentor_connections = DB::table('mentee_requests')
         ->join('members', 'mentee_requests.mentees_ids', '=', 'members.id')
         ->where('mentee_requests.mentor', $user_id)
-        ->select('mentee_requests.id as request_id', 'members.name', 'mentee_requests.cadre', 'mentee_requests.batch', 'mentee_requests.sector','mentee_requests.status')
+        ->select('mentee_requests.id as request_id', 'members.name', 'members.cader as cadre', 'members.batch', 'members.sector','mentee_requests.status')
         ->get();
 
     $mentee_connections = DB::table('mentor_requests')
         ->join('members', 'mentor_requests.Mentor_ids', '=', 'members.id')
         ->where('mentor_requests.mentees', $user_id)
-        ->select('mentor_requests.id as request_id', 'members.name', 'mentor_requests.cadre', 'mentor_requests.batch', 'mentor_requests.sector','mentor_requests.status')
+        ->select('mentor_requests.id as request_id', 'members.name', 'members.cader as cadre', 'members.batch', 'members.sector','mentor_requests.status')
         ->get();
 
 

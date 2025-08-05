@@ -28,12 +28,12 @@
         </div>
     </div>
     @if(session('success'))
-     <div class="alert alert-success">{{ session('success') }}</div>
+    <div class="alert alert-success">{{ session('success') }}</div>
     @endif
-       @if (session('error'))
-       <div class="alert alert-danger" style="color:white;">
-         {{ session('error') }}
-       </div>
+    @if (session('error'))
+    <div class="alert alert-danger" style="color:white;">
+        {{ session('error') }}
+    </div>
     @endif
     <div class="datatables">
         <!-- start Zero Configuration -->
@@ -46,63 +46,30 @@
                         <div class="col-6">
                             <h4 class="card-title">Mentorship Programme</h4>
                         </div>
-                        <div class="col-6">
-                            <div class="float-end gap-2">
-                                <a href="{{ route('admin.mentorship.create') }}" class="btn btn-primary">+ Add Mentor/Mentee</a>
-                            </div>
-
-                        </div>
                     </div>
                     <hr>
-                    <div id="zero_config_wrapper" class="dataTables_wrapper">
+                    <div>
+
+                        <h5>Mentors</h5>
+                        <ul class="list-group mb-3">
+
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span></span>
+                                <small></small>
+                            </li>
+
+                        </ul>
 
 
+                        <h5>Mentees</h5>
+                        <ul class="list-group">
 
-                        <table id="zero_config"
-                            class="table table-striped table-bordered text-nowrap align-middle dataTable"
-                            aria-describedby="zero_config_info">
-                            <thead>
-                                <!-- start row -->
-                                <tr>
-                                    <th>S.No.</th>
-                                    <th>Name</th>
-                                    <th>Service</th>
-                                    <th>Cadre</th>
-                                    <th>Year</th>
-                                    <th>Sector</th>
-                                    <th>Action</th>
-                                    <th>Status</th>
-                                </tr>
-                                <!-- end row -->
-                            </thead>
-                            <tbody>
-                                <tr class="odd">
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>
-                                        <a href="{{ route('admin.mentorship.edit', ['id' => '']) }}" class="btn btn-success text-white btn-sm">Edit</a>
-                                  <form action="" method="POST" style="display:inline;">
-                                    
-                                    <button type="submit" class="btn btn-danger text-white btn-sm"
-                                            onclick="return confirm('Are you sure you want to delete?')">
-                                        Delete
-                                    </button>
-                                    </form>
-                                    </td>
-                                    <td>
-                                        <div class="form-check form-switch d-inline-block">
-                                            <input class="form-check-input status-toggle" type="checkbox" role="switch"
-                                                data-table="members" data-column="active_inactive"  data-id="">
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span></span>
+                                <small></small>
+                            </li>
 
+                        </ul>
 
                     </div>
                 </div>

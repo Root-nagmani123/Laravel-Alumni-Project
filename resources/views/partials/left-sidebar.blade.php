@@ -36,7 +36,8 @@
                                     @endphp
                                     <img id="existingImage"
                                         src="{{ $profilePic ? asset('storage/' . $profilePic) : asset('feed_assets/images/default.png') }}"
-                                        class="rounded-circle avatar-img" height="50" width="50" alt="User" loading="lazy" decoding="async">
+                                        class="rounded-circle avatar-img" height="50" width="50" alt="User"
+                                        loading="lazy" decoding="async">
                                 </div>
 
 
@@ -142,8 +143,11 @@
     <div class="mb-4">
         <div class="card mt-4">
             <!-- Card header START -->
-            <div class="card-header pb-0 border-0">
-                <h5 class="card-title mb-0">Forums</h5>
+            <div class="card-header d-sm-flex justify-content-between border-0">
+                <h5 class="card-title">Forums</h5>
+                <a class="btn btn-primary-soft btn-sm" href="#" data-bs-toggle="modal" data-bs-target="#forumModal">
+                    Create Forum
+                </a>
             </div>
             <!-- Card header END -->
             <!-- Card body START -->
@@ -161,10 +165,12 @@
                     </div>
                     <!-- Title -->
                     <div class="overflow-hidden">
-                        <a class="h6 mb-0" href="{{ route('user.forum.show', ['id' => $forum->id]) }}">{{ $forum->name }} </a> <br>
-                       
+                        <a class="h6 mb-0"
+                            href="{{ route('user.forum.show', ['id' => $forum->id]) }}">{{ $forum->name }} </a> <br>
+
                         <!-- <small class="text-muted"><b>Start Date:</b> {{ \Carbon\Carbon::parse($forum->created_date ?? now())->format('d-m-Y') }}</small><br> -->
-                        <small class="text-muted"><b>End Date:</b> {{ \Carbon\Carbon::parse($forum->end_date ?? now())->format('d-m-Y') }}</small>
+                        <small class="text-muted"><b>End Date:</b>
+                            {{ \Carbon\Carbon::parse($forum->end_date ?? now())->format('d-m-Y') }}</small>
                     </div>
 
                 </div>
@@ -184,6 +190,8 @@
             <!-- Card body END -->
         </div>
     </div>
+   
+
 
     <!-- jQuery and SweetAlert2 -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

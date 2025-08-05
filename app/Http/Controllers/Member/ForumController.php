@@ -24,31 +24,30 @@ class ForumController extends Controller
 
     public function index()
     {
-        $user = $this->forumService->getCurrentUser();
-        $forums = $this->forumService->getUserForums($user->id);
-            
+        $forums = $this->forumService->getUserForums();
+            // print_r($forums);die;
         return view('user.forum', compact('forums'));
     }
     
     public function show($id)
     {
-        $user = $this->forumService->getCurrentUser();
+        // $user = $this->forumService->getCurrentUser();
         
         // Get forum details
         $forum = $this->forumService->getForumById($id);
-        
+        // print_r($forum);die;
         // Check if user has access to this forum
-        if (!$this->forumService->userHasAccessToForum($id, $user->id)) {
-            return redirect()->route('user.forum')->with('error', 'You do not have access to this forum.');
-        }
-        
+        // if (!$this->forumService->userHasAccessToForum($id, $user->id)) {
+        //     return redirect()->route('user.forum')->with('error', 'You do not have access to this forum.');
+        // }
+         
         // Get topics for this forum
         $topics = $this->forumService->getForumTopics($id);
             
         // Get forums data for left sidebar
-        $forums = $this->forumService->getForumsForSidebar($user->id);
+        $forums = $this->forumService->getForumsForSidebar();
             
-        return view('user.forum-detail', compact('forum', 'topics', 'user', 'forums'));
+        return view('user.forum-detail', compact('forum', 'topics', 'forums'));
     }
 
     public function like($id)
@@ -101,5 +100,22 @@ class ForumController extends Controller
 
 
     return response()->json($results);
+    }
+    function member_store_topic(Request $request, $forumId){
+       
+        $validated = $request->validate([
+            'description' => 'required|string',
+        ]);
+
+        $userId = Auth::guard('user')->id();
+        $topic = ForumTopic::create([
+            'forum_id' => $forumId,
+            'created_by' => $userId,
+            'description' => $validated['description'],
+            'created_date' => now(),
+            'status' => 1, // Assuming status 1 means active
+        ]);
+        return redirect()->back()->with('success', 'Topic saved successfully!');
+
     }
 }

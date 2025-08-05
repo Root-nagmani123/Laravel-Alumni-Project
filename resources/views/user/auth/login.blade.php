@@ -18,121 +18,232 @@
 
     <!-- Theme css -->
     <link id="change-link" rel="stylesheet" type="text/css" href="{{asset('user_assets/css/style.css')}}">
+    <style>
+    .flip-card {
+        position: relative;
+        width: 100%;
+        min-height: 500px;
+        transition: transform 0.8s;
+        transform-style: preserve-3d;
+    }
 
+    .flip-card-inner {
+        position: relative;
+        width: 100%;
+        transition: transform 0.6s;
+        transform-style: preserve-3d;
+    }
+
+    .flip-card.flipped .flip-card-inner {
+        transform: rotateY(180deg);
+    }
+
+    .flip-card-front,
+    .flip-card-back {
+        position: absolute;
+        width: 100%;
+        backface-visibility: hidden;
+        background: #fff;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        border-radius: 12px;
+    }
+
+    .flip-card-front {
+        z-index: 2;
+    }
+
+    .flip-card-back {
+        transform: rotateY(180deg);
+        z-index: 1;
+    }
+
+    .marquee-container {
+        height: 100%;
+    }
+
+    .marquee-text {
+        white-space: nowrap;
+        animation: scrollMarquee 20s linear infinite;
+    }
+
+    .marquee-container:hover .marquee-text {
+        animation-play-state: paused;
+    }
+
+    @keyframes scrollMarquee {
+        0% {
+            left: 100%;
+        }
+
+        100% {
+            left: -100%;
+        }
+    }
+.marquee-text {
+    white-space: nowrap;
+    display: inline-block;
+    animation: marquee 15s linear infinite;
+}
+
+.marquee-container:hover .marquee-text {
+    animation-play-state: paused;
+}
+
+@keyframes marquee {
+    0%   { transform: translateX(100%); }
+    100% { transform: translateX(-100%); }
+}
+
+
+    </style>
 </head>
 
 <body>
 
-<!-- Simple Bootstrap Loader -->
-<div class="d-flex justify-content-center align-items-center vh-100 bg-white" id="pageLoader">
-  <div class="spinner-border text-danger" role="status" style="width: 3rem; height: 3rem;">
-    <span class="visually-hidden">Loading...</span>
-  </div>
-</div>
+    <!-- Simple Bootstrap Loader -->
+    <div class="d-flex justify-content-center align-items-center vh-100 bg-white" id="pageLoader">
+        <div class="spinner-border text-danger" role="status" style="width: 3rem; height: 3rem;">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
 
 
     <!-- login section start -->
     <section class="login-section" style="background-image: url({{asset('user_assets/images/login/login-bg.jpg')}});">
-        <div class="header-section">
-            <div class="logo-sec">
-                <a href="#!">
-
-                </a>
-            </div>
-        </div>
         <div class="container">
             <div class="row">
                 <div class="col-xl-6 col-lg-6 col-md-6 col-12 mx-auto">
-                    <div class="login-form">
+                    <div class="login-form" style="background-color:transparent !important;">
                         <div>
-                            <div class="logo-sec text-center">
-                                <a href="#!"
-                                    class="d-flex align-items-center gap-3 text-decoration-none justify-content-center flex-wrap">
-                                    <!-- Logo Image -->
-                                    <img src="{{ asset('admin_assets/images/logos/lbsnaa_logo.jpg') }}"
-                                        alt="LBSNAA Logo" style="height: 60px; object-fit: contain;">
+                            <div class="d-flex justify-content-center align-items-center min-vh-100">
+                                <div class="flip-card" id="loginCard">
+                                    <div class="flip-card-inner">
+                                        <!-- Front Side - LDAP Login -->
+                                        <div class="flip-card-front p-4">
+                                            <div class="logo-sec text-center">
+                                                <a href="#!"
+                                                    class="d-flex align-items-center gap-3 text-decoration-none justify-content-center flex-wrap">
+                                                    <!-- Logo Image -->
+                                                    <img src="{{ asset('admin_assets/images/logos/lbsnaa_logo.jpg') }}"
+                                                        alt="LBSNAA Logo" style="height: 60px; object-fit: contain;">
 
-                                    <!-- Text Block -->
-                                    <div class="d-flex flex-column text-start">
-                                        <span class="mb-0"
-                                            style="color: #000000;font-weight: bold;font-size: 24px;">Alumni</span>
-                                        <span style="font-size: 16px; font-weight: 500;color: #af2910;">
-                                            Lal Bahadur Shastri National Academy of Administration
-                                        </span>
+                                                    <!-- Text Block -->
+                                                    <div class="d-flex flex-column text-start">
+                                                        <span class="mb-0"
+                                                            style="color: #000000;font-weight: bold;font-size: 24px;">Alumni</span>
+                                                        <span style="font-size: 16px; font-weight: 500;color: #af2910;">
+                                                            Lal Bahadur Shastri National Academy of Administration
+                                                        </span>
+                                                    </div>
+                                                </a>
+                                                          
+                                            </div>
+                                            <hr>
+                                            <div class="login-title">
+                                                <h2>Login with LDAP</h2>
+                                            </div>
+                                            <div class="login-discription mb-4">
+                                                <h4>Welcome to LBSNAA Alumni, please login using LDAP credentials.</h4>
+                                            </div>
+                                            <form method="POST" action="{{ route('user.login.submit') }}">
+                                                @csrf
+                                                <div class="form-group mb-3">
+                                                    <label class="form-label fw-bold">Email Address</label>
+                                                    <input type="email" name="email" class="form-control"
+                                                        placeholder="Enter your email">
+                                                </div>
+                                                <div class="form-group mb-3">
+                                                    <label class="form-label fw-bold">Password</label>
+                                                    <input type="password" name="password" class="form-control"
+                                                        placeholder="Enter your password">
+                                                </div>
+                                                <button type="submit" class="btn btn-primary w-100">Login</button>
+                                            </form>
+                                            <div class="text-center mt-3">
+                                                <a href="#" onclick="flipCard(event)">Login with Email OTP</a>
+                                            </div>
+                                           <div class="position-relative w-100 bg-light d-flex align-items-center px-3"
+     style="height: 40px; overflow: hidden; z-index: 1040;">
+    <div class="position-relative d-flex align-items-center">
+        <button class="btn btn-sm btn-danger position-relative z-1" style="min-width: 120px;">
+            What's New
+        </button>
+    </div>
+
+    <div class="marquee-container flex-grow-1 d-flex align-items-center ms-2"
+         style="overflow: hidden; height: 100%;">
+        <div class="marquee-text">
+            🎉 Welcome to the LBSNAA Alumni Portal! New features are being
+            added regularly — check out the stories, mentorship, and more! 🚀
+        </div>
+    </div>
+</div>
+
+
+                                        </div>
+                                        <!-- Back Side - OTP Login -->
+                                        <div class="flip-card-back p-4">
+                                            <div class="logo-sec text-center">
+                                                <a href="#!"
+                                                    class="d-flex align-items-center gap-3 text-decoration-none justify-content-center flex-wrap">
+                                                    <!-- Logo Image -->
+                                                    <img src="{{ asset('admin_assets/images/logos/lbsnaa_logo.jpg') }}"
+                                                        alt="LBSNAA Logo" style="height: 60px; object-fit: contain;">
+
+                                                    <!-- Text Block -->
+                                                    <div class="d-flex flex-column text-start">
+                                                        <span class="mb-0"
+                                                            style="color: #000000;font-weight: bold;font-size: 24px;">Alumni</span>
+                                                        <span style="font-size: 16px; font-weight: 500;color: #af2910;">
+                                                            Lal Bahadur Shastri National Academy of Administration
+                                                        </span>
+                                                    </div>
+                                                </a>
+                                                          
+                                            </div>
+                                            <hr>
+                                            <div class="login-title">
+                                                <h2>Login with Email OTP</h2>
+                                            </div>
+                                            <div class="login-discription mb-4">
+                                                <h4>Enter your email to receive a one-time password.</h4>
+                                            </div>
+                                            <form id="otpForm" method="POST" action="">
+                                                @csrf
+                                                <div class="form-group mb-3">
+                                                    <label class="form-label fw-bold">Email Address</label>
+                                                    <input type="email" name="otp_email" class="form-control"
+                                                        placeholder="Enter your email" required>
+                                                </div>
+                                                <div id="otpInputContainer"></div>
+                                                <button type="button" id="sendOtpBtn" class="btn btn-success w-100">Send
+                                                    OTP</button>
+                                                <button type="submit" id="submitOtpBtn"
+                                                    class="btn btn-primary w-100 mt-2" style="display:none;">Login with
+                                                    OTP</button>
+                                            </form>
+                                            <div class="text-center mt-3">
+                                                <a href="#" onclick="flipCard(event)">Login with LDAP</a>
+                                            </div>
+                                            <div class="position-relative w-100 bg-light d-flex align-items-center px-3"
+     style="height: 40px; overflow: hidden; z-index: 1040;">
+    <div class="position-relative d-flex align-items-center">
+        <button class="btn btn-sm btn-danger position-relative z-1" style="min-width: 120px;">
+            What's New
+        </button>
+    </div>
+
+    <div class="marquee-container flex-grow-1 d-flex align-items-center ms-2"
+         style="overflow: hidden; height: 100%;">
+        <div class="marquee-text">
+            🎉 Welcome to the LBSNAA Alumni Portal! New features are being
+            added regularly — check out the stories, mentorship, and more! 🚀
+        </div>
+    </div>
+</div>
+
+                                        </div>
                                     </div>
-                                </a>
-                            </div>
-
-                            <hr>
-                            <div class="login-title">
-                                <h2>Login</h2>
-                            </div>
-                            <div class="login-discription">
-                                <h3>Hello Everyone :)</h3>
-                                <h4>Welcome to LBSNAA Alumni, please login to your account.
-                                </h4>
-                            </div>
-                            <div class="form-sec">
-                                <div>
-                                    <form class="theme-form" method="POST" action="{{ route('user.login.submit') }}">
-                                        @csrf
-                                        <div class="form-group">
-                                            <label for="exampleInputEmail1">Email address</label>
-
-                                            <input type="email"
-                                                class="form-control @error('email') is-invalid @enderror"
-                                                id="exampleInputEmail1" placeholder="Enter your email" name="email"
-                                                value="{{ old('email') }}">
-                                            @error('email')
-                                            <div class="invalid-feedback">
-                                                {{ $message }}
-                                            </div>
-                                            @enderror
-
-                                            <i class="input-icon iw-20 ih-20" data-feather="user"></i>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="exampleInputPassword1">Password</label>
-                                            <div class="position-relative">
-                                                <input type="password"
-                                                    class="form-control @error('password') is-invalid @enderror"
-                                                    id="password" placeholder="Enter your password" name="password">
-                                                <span toggle="#password"
-                                                    class="toggle-password position-absolute end-0 top-50 translate-middle-y me-3"
-                                                    style="cursor: pointer;">
-                                                    👁️
-                                                </span>
-                                            </div>
-                                            @error('password')
-                                            <div class="invalid-feedback">
-                                                {{ $message }}
-                                            </div>
-                                            @enderror
-
-                                            <!-- <i class="input-icon" data-feather="eye-off" width="20" height="20"></i> -->
-                                        </div>
-                                        <div class="btn-section text-center">
-                                            <button type="submit" class="btn btn-primary btn-lg w-100"
-                                                style="background-color: #af2910; color: #fff; border-color: #af2910;">Login</button>
-                                        </div>
-
-                                        <div class="mt-4 text-center">
-                                            <a href="" class="text-decoration-none"
-                                                style="color:#af2910;">
-                                                👉 Click here to Register
-                                            </a>
-                                            <a href="" class="text-decoration-none"
-                                                style="color:#af2910;">
-                                                🔐 Login with SSO
-                                            </a>
-                                            <a href="" class="text-decoration-none"
-                                                style="color:#af2910;">
-                                                ❓ Forgot Password?
-                                            </a>
-                                        </div>
-
-
-                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -143,8 +254,60 @@
     </section>
     <!-- login section end -->
 
+    <script>
+    $(document).ready(function() {
+        $('#sendOtpBtn').on('click', function() {
+            // Check if OTP input already exists
+            if ($('#otpInputContainer input[name="otp"]').length === 0) {
+                // Append OTP input field
+                $('#otpInputContainer').html(`
+                    <div class="form-group mb-3">
+                        <label class="form-label">Enter OTP</label>
+                        <input type="text" name="otp" class="form-control" placeholder="Enter OTP" required>
+                    </div>
+                `);
+            }
+
+            // Show the Submit OTP button
+            $('#submitOtpBtn').show();
+
+            // Optionally disable send button or show a success message
+            $('#sendOtpBtn').text('OTP Sent').prop('disabled', true);
+        });
+    });
+    </script>
 
 
+    <script>
+    function flipCard(e) {
+        if (e) e.preventDefault();
+        const card = document.querySelector('.flip-card');
+        card.classList.toggle('flipped');
+    }
+
+    // OTP logic
+    document.addEventListener('DOMContentLoaded', function() {
+        const sendOtpBtn = document.getElementById('sendOtpBtn');
+        const otpInputContainer = document.getElementById('otpInputContainer');
+        const submitOtpBtn = document.getElementById('submitOtpBtn');
+        const otpForm = document.getElementById('otpForm');
+
+        if (sendOtpBtn) {
+            sendOtpBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                // Show OTP input
+                otpInputContainer.innerHTML = `
+                    <div class="form-group mb-3">
+                        <label>Enter OTP</label>
+                        <input type="text" name="otp_code" class="form-control" placeholder="Enter OTP" required>
+                    </div>
+                `;
+                sendOtpBtn.style.display = 'none';
+                submitOtpBtn.style.display = 'block';
+            });
+        }
+    });
+    </script>
 
     <!-- latest jquery-->
     <script src="{{asset('user_assets/js/jquery-3.6.0.min.js')}}"></script>
@@ -200,15 +363,15 @@
     });
     </script>
     <script>
-  window.addEventListener("load", () => {
-    const loader = document.getElementById("pageLoader");
-    if (loader) {
-      loader.style.opacity = "0";
-      loader.style.transition = "opacity 0.4s ease";
-      setTimeout(() => loader.remove(), 400);
-    }
-  });
-</script>
+    window.addEventListener("load", () => {
+        const loader = document.getElementById("pageLoader");
+        if (loader) {
+            loader.style.opacity = "0";
+            loader.style.transition = "opacity 0.4s ease";
+            setTimeout(() => loader.remove(), 400);
+        }
+    });
+    </script>
 
 
 </body>
