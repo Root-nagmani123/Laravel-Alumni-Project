@@ -108,6 +108,8 @@ Route::prefix('user')->name('user.')->group(function () {
          Route::delete('/delete-story/{id}', [StoryController::class, 'destroy'])->name('stories.destroy');
 
 
+        Route::post('/forum-store', [PostController::class, 'forum_store'])->name('forum.store');
+
 		Route::post('/post/{post}/like', [PostController::class, 'toggleLike'])->name('post.like');
 		//Route::post('/user/comments', [CommentController::class, 'store'])->name('user.comments.store');
 		//Route::put('/user/comments/{id}', [CommentController::class, 'update'])->name('user.comments.update');
@@ -156,7 +158,9 @@ Route::prefix('user')->name('user.')->group(function () {
         Route::post('user/forum/topic/{id}/like', [MemberForumController::class, 'like'])->name('forum.topic.like');
         Route::post('user/forum/topic/{id}/unlike', [MemberForumController::class, 'unlike'])->name('forum.topic.unlike');
         Route::post('user/forum/topic/{id}/comment', [MemberForumController::class, 'comment'])->name('forum.topic.comment');
-
+      
+        Route::post('user/forum/topic/{id}/store', [MemberForumController::class, 'member_store_topic'])->name('forum.topic.store');
+       
         Route::get('/notifications', [App\Http\Controllers\Member\NotificationController::class, 'getNotifications'])->name('notifications.get');
         Route::get('/notifications/{id}', [App\Http\Controllers\Member\NotificationController::class, 'notificationstatus'])->name('notifications.status');
         Route::put('/notifications/{id}/read', [App\Http\Controllers\Member\NotificationController::class, 'markAsRead'])->name('notifications.read');

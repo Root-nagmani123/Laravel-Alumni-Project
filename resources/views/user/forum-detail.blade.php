@@ -121,14 +121,16 @@
                                 <p class="mb-0 small text-muted">End Date:
                                     {{ \Carbon\Carbon::parse($forum->end_date)->format('d M Y') }} </p>
                                 @endif
-                            </div>
+                            </div> 
                         </div>
                         <!-- Back Button -->
 
                         <div>
+                            @if($forum->created_by == Auth::guard('user')->user()->id)
                             <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addTopicModal">
                                 <i class="bi bi-plus me-1"></i>Add a Topic
                             </button>
+                           
 
                             <!-- Add Topic Modal -->
                             <div class="modal fade" id="addTopicModal" tabindex="-1" aria-labelledby="addTopicModalLabel" aria-hidden="true">
@@ -138,7 +140,7 @@
                                     <h5 class="modal-title" id="addTopicModalLabel">Add a Topic</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                   </div>
-                                  <form method="POST" action="">
+                                  <form method="POST" action="{{ route('user.forum.topic.store', $forum->id) }}">
                                     @csrf
                                     <div class="modal-body">
                                       <div class="mb-3">
@@ -154,6 +156,7 @@
                                 </div>
                               </div>
                             </div>
+                             @endif
                             <a href="{{ route('user.forum') }}" class="btn btn-outline-secondary btn-sm">
                                 <i class="bi bi-arrow-left me-1"></i>Back to Forums
                             </a>

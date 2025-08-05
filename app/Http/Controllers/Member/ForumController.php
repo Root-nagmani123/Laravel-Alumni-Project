@@ -35,12 +35,12 @@ class ForumController extends Controller
         
         // Get forum details
         $forum = $this->forumService->getForumById($id);
-        
+        // print_r($forum);die;
         // Check if user has access to this forum
         // if (!$this->forumService->userHasAccessToForum($id, $user->id)) {
         //     return redirect()->route('user.forum')->with('error', 'You do not have access to this forum.');
         // }
-        
+         
         // Get topics for this forum
         $topics = $this->forumService->getForumTopics($id);
             
@@ -100,5 +100,22 @@ class ForumController extends Controller
 
 
     return response()->json($results);
+    }
+    function member_store_topic(Request $request, $forumId){
+       
+        $validated = $request->validate([
+            'description' => 'required|string',
+        ]);
+
+        $userId = Auth::guard('user')->id();
+        $topic = ForumTopic::create([
+            'forum_id' => $forumId,
+            'created_by' => $userId,
+            'description' => $validated['description'],
+            'created_date' => now(),
+            'status' => 1, // Assuming status 1 means active
+        ]);
+        return redirect()->back()->with('success', 'Topic saved successfully!');
+
     }
 }

@@ -6,9 +6,18 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Post;
+use App\Models\Forum;
 use App\Models\PostMedia;
-use Illuminate\Support\Str; // added on 16-6-2025
+use Illuminate\Support\Str;
 use App\Services\NotificationService;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+
+
+
+
+
 
 class PostController extends Controller
 {
@@ -333,5 +342,54 @@ public function destroy($id)
     return response()->json(['message' => 'Deleted']);
 }
 
+
+function forum_store(Request $request)
+{
+   
+
+   $validator = Validator::make($request->all(), [
+        'forum_name' => 'required|string|max:255',
+        'forum_end_date' => 'required|date|after_or_equal:today',
+        'forum_image' => 'nullable|image|mimes:jpeg,png,jpg|max:1028', // Optional image validation
+
+      ]);
+    // Check if validation fails
+    if ($validator->fails()) {
+        return redirect()->back()
+            ->withErrors($validator)
+            ->withInput();
+        }
+         if ($request->hasFile('forum_image')) {
+            $imagePath = $request->file('forum_image')->store('uploads/images/forums_img', 'public');
+            $data['images'] = basename($imagePath);
+        }
+    // insert into the forums table
+    $input = [
+        'name' => $request->input('forum_name'),
+         'status' => 1, // Default to active if not provided
+        'created_by' => auth()->guard('user')->id(),
+         'end_date' => $request->input('forum_end_date'),
+         'images' => isset($data['images']) ? $data['images'] : null, // Store image if exists
+
+    ];
+
+    $last_id = Forum::create($input)->id;
+    // Insert into forums_member
+    DB::table('forums_member')->insert([
+
+            'forums_id' => $last_id,
+            'status' => 1,
+        ]);
+    // Insert into notification
+       DB::table('notification')->insert([
+        'group_id' => $last_id,
+        'status' => 1,
+        'type' => 'forum',
+        'created_at' => now(),
+        'message' => "<a href='" . url('home/profile/' . Auth::guard('user')->user()->id) . "'>" . Auth::guard('user')->user()->name . "</a> added you in Forum: <a href='" . url('home/forum/' . $last_id) . "'>" . $request->input('forum_name') . "</a>",
+        ]);
+
+        return redirect()->route('user.feed')->with('success', 'Topic saved successfully!');
+    }
 };
 

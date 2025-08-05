@@ -1,7 +1,7 @@
 <!-- forum modal -->
  <div class="modal fade" id="forumModal" tabindex="-1" aria-labelledby="forumModalLabel" aria-hidden="true">
         <div class="modal-dialog">
-            <form method="POST" action="" enctype="multipart/form-data" class="modal-content">
+            <form method="POST" action="{{ route('user.forum.store') }}" enctype="multipart/form-data" class="modal-content">
                 @csrf
                 <div class="modal-header">
                     <h5 class="modal-title" id="forumModalLabel">Create New Forum</h5>
@@ -90,9 +90,7 @@
                     <div class="mb-3">
                         <label for="groupName" class="form-label">Choose Members</label>
                         <select id="memberSelect" name="member_ids[]" multiple>
-                            @foreach($members as $member)
-                            <option value="{{ $member->id }}">{{ $member->name }}</option>
-                            @endforeach
+                          
                         </select>
                     </div>
 
