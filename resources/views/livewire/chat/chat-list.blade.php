@@ -66,13 +66,15 @@
                         type="submit"><i class="bi bi-search fs-5"> </i></button>
 
                     <!-- Search contact END -->
-                    @if($chats)
+                    @if(!empty($chats))
                         <ul class="list-unstyled">
                             @foreach ($chats as $key => $chat)
 
                                 <!-- Contact item -->
-                                <li class="mt-3 hstack gap-3 align-items-center position-relative toast-btn"
-                                    data-target="chatToast-{{ $chat->id }}" wire:click="selectChat({{ $chat->id }})"
+                                <li class="mt-3 hstack gap-3 align-items-center position-relative toast-btn {{ $selectedChat == $chat->id ? 'active-chat' : '' }}"
+                                    data-target="chatToast-{{ $chat->id }}"
+                                    wire:click="selectChat({{ $chat->id }})"
+                                    wire:key="chat-{{ $chat->id }}"
                                     style="cursor: pointer;">
                                     <!-- Avatar -->
                                     <div class="avatar status-online">
@@ -115,185 +117,147 @@
 
 
 
-    @if($openMembers)
+    @if($selectedChat)
 
         {{--
         <pre>{{ json_encode($openMembers) }}</pre> --}}
 
         <div class="toast-container toast-chat d-flex gap-3 align-items-end">
-            @foreach ($openMembers as $member)
-                <!-- Chat toast START -->
-                {{-- <div class="toast mb-0 bg-mode" role="alert" aria-live="assertive" aria-atomic="true"
-                    data-bs-autohide="false"> --}}
-                    <div class="toast mb-0 bg-mode show" role="alert" aria-live="assertive" aria-atomic="true"
-                        data-bs-autohide="false">
+            {{-- @foreach ($openMembers as $member) --}}
+            <!-- Chat toast START -->
+            {{-- <div class="toast mb-0 bg-mode" role="alert" aria-live="assertive" aria-atomic="true"
+                data-bs-autohide="false"> --}}
+                <div class="toast mb-0 bg-mode show" role="alert" aria-live="assertive" aria-atomic="true"
+                    data-bs-autohide="false">
 
-                        <div class="toast-header bg-mode">
-                            <!-- Top avatar and status START -->
-                            <div class="d-flex justify-content-between align-items-center w-100">
-                                <div class="d-flex">
-                                    <div class="flex-shrink-0 avatar me-2">
-                                        <img class="avatar-img rounded-circle" src="assets/images/avatar/01.jpg" alt="">
-                                    </div>
-                                    <div class="flex-grow-1">
-                                        <h6 class="mb-0 mt-1">{{ $member->name }}</h6>
-                                        <div class="small text-secondary"><i
-                                                class="fa-solid fa-circle text-success me-1"></i>Online
-                                        </div>
-                                    </div>
+                    <div class="toast-header bg-mode">
+                        <!-- Top avatar and status START -->
+                        <div class="d-flex justify-content-between align-items-center w-100">
+                            <div class="d-flex">
+                                <div class="flex-shrink-0 avatar me-2">
+                                    <img class="avatar-img rounded-circle" src="assets/images/avatar/01.jpg" alt="">
                                 </div>
-                                <div class="d-flex">
-                                    <!-- Call button -->
-                                    {{-- <div class="dropdown">
-                                        <a class="btn btn-secondary-soft-hover py-1 px-2" href="#" id="chatcoversationDropdown"
-                                            data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false"><i
-                                                class="bi bi-three-dots-vertical"></i></a>
-                                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="chatcoversationDropdown">
-                                            <li><a class="dropdown-item" href="#"><i
-                                                        class="bi bi-camera-video me-2 fw-icon"></i>Video call</a></li>
-                                            <li><a class="dropdown-item" href="#"><i
-                                                        class="bi bi-telephone me-2 fw-icon"></i>Audio
-                                                    call</a></li>
-                                            <li><a class="dropdown-item" href="#"><i class="bi bi-trash me-2 fw-icon"></i>Delete
-                                                </a></li>
-                                            <li><a class="dropdown-item" href="#"><i
-                                                        class="bi bi-chat-square-text me-2 fw-icon"></i>Mark as unread</a></li>
-                                            <li><a class="dropdown-item" href="#"><i
-                                                        class="bi bi-volume-up me-2 fw-icon"></i>Muted</a></li>
-                                            <li><a class="dropdown-item" href="#"><i
-                                                        class="bi bi-archive me-2 fw-icon"></i>Archive</a></li>
-                                            <li class="dropdown-divider"></li>
-                                            <li><a class="dropdown-item" href="#"><i
-                                                        class="bi bi-flag me-2 fw-icon"></i>Report</a>
-                                            </li>
-                                        </ul>
-                                    </div> --}}
-                                    <!-- Card action END -->
-                                    <a class="btn btn-secondary-soft-hover py-1 px-2" data-bs-toggle="collapse"
-                                        href="#collapseChat-{{ $member->id }}" aria-expanded="false" aria-controls="collapseChat-{{ $member->id }}"><i
-                                            class="bi bi-dash-lg"></i></a>
-                                    <button class="btn btn-secondary-soft-hover py-1 px-2" 
-                                        data-bs-dismiss="toast"
-                                        aria-label="Close" 
-                                        wire:click="closeChat({{ $member->id }})"
-                                        >
-                                        <i class="fa-solid fa-xmark"></i>
-                                    </button>
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-0 mt-1">{{ $selectChat->name }}</h6>
+                                    <div class="small text-secondary"><i
+                                            class="fa-solid fa-circle text-success me-1"></i>Online
+                                    </div>
                                 </div>
                             </div>
-                            <!-- Top avatar and status END -->
-
+                            <div class="d-flex">
+                                
+                                <a class="btn btn-secondary-soft-hover py-1 px-2" data-bs-toggle="collapse"
+                                    href="#collapseChat-{{ $selectChat->id }}" aria-expanded="false"
+                                    aria-controls="collapseChat-{{ $selectChat->id }}"><i class="bi bi-dash-lg"></i></a>
+                                <button class="btn btn-secondary-soft-hover py-1 px-2" data-bs-dismiss="toast"
+                                    aria-label="Close" wire:click="closeChat({{ $selectChat->id }})">
+                                    <i class="fa-solid fa-xmark"></i>
+                                </button>
+                            </div>
                         </div>
-                        <div class="toast-body collapse show" id="collapseChat-{{ $member->id }}" style="overflow-y: auto;">
-                            <!-- Chat conversation START -->
-                            <div
-                                class="chat-conversation-content custom-scrollbar h-200px os-host os-theme-dark os-host-resize-disabled os-host-scrollbar-horizontal-hidden os-host-scrollbar-vertical-hidden os-host-transition">
-                                <div class="os-resize-observer-host observed">
-                                    <div class="os-resize-observer" style="left: 0px; right: auto;"></div>
-                                </div>
-                                <div class="os-size-auto-observer observed" style="height: calc(100% + 1px); float: left;">
-                                    <div class="os-resize-observer"></div>
-                                </div>
-                                <div class="os-content-glue" style="margin: 0px;"></div>
-                                <div class="os-padding">
-                                    <div class="os-viewport os-viewport-native-scrollbars-invisible" style="overflow: visible;">
-                                        <div class="os-content" style="padding: 0px; height: 100%; width: 100%;">
-                                            <!-- Chat time -->
-                                            
-                                            <!-- Chat message left -->
-                                            {{-- <div class="d-flex mb-1">
-                                                <div class="flex-shrink-0 avatar avatar-xs me-2">
-                                                    <img class="avatar-img rounded-circle" src="assets/images/avatar/01.jpg"
-                                                        alt="">
-                                                </div>
-                                                <div class="flex-grow-1">
-                                                    <div class="w-100">
-                                                        <div class="d-flex flex-column align-items-start">
-                                                            <div class="bg-light text-secondary p-2 px-3 rounded-2">Applauded no
-                                                                discovery😊</div>
-                                                            <div class="small my-2">6:15 AM</div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div> --}}
-                                            <!-- Chat message right -->
-                                            {{-- <div class="d-flex justify-content-end text-end mb-1">
-                                                <div class="w-100">
-                                                    <div class="d-flex flex-column align-items-end">
-                                                        <div class="bg-primary text-white p-2 px-3 rounded-2">With pleasure
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div> --}}
+                        <!-- Top avatar and status END -->
 
-                                            @if ($messages)
-                                                @foreach ($messages as $message)
-                                                    {{-- @dump($message) --}}
-                                                    <p>{{ $message['message'] }}</p>
-                                                @endforeach
-                                            @endif
-                                            
-                                            <!-- Chat Typing -->
-                                            {{-- <div class="d-flex mb-1">
-                                                <div class="flex-shrink-0 avatar avatar-xs me-2">
-                                                    <img class="avatar-img rounded-circle" src="assets/images/avatar/01.jpg"
-                                                        alt="">
-                                                </div>
-                                                <div class="flex-grow-1">
+                    </div>
+                    <div class="toast-body collapse show" id="collapseChat-{{ $selectChat->id }}" style="overflow-y: auto;">
+                        <!-- Chat conversation START -->
+                        <div
+                            class="chat-conversation-content custom-scrollbar h-200px os-host os-theme-dark os-host-resize-disabled os-host-scrollbar-horizontal-hidden os-host-scrollbar-vertical-hidden os-host-transition">
+                            <div class="os-resize-observer-host observed">
+                                <div class="os-resize-observer" style="left: 0px; right: auto;"></div>
+                            </div>
+                            <div class="os-size-auto-observer observed" style="height: calc(100% + 1px); float: left;">
+                                <div class="os-resize-observer"></div>
+                            </div>
+                            <div class="os-content-glue" style="margin: 0px;"></div>
+                            <div class="os-padding">
+                                <div class="os-viewport os-viewport-native-scrollbars-invisible" style="overflow: visible;">
+                                    <div class="os-content" style="padding: 0px; height: 100%; width: 100%;">
+                                        <!-- Chat time -->
+
+                                        @if ($messages)
+                                            @foreach ($messages as $message)
+                                                
+                                                @if ($message->sender_id != auth()->guard('user')->id())
+                                                    <div class="d-flex flex-column align-items-start">
+                                                        <div class="bg-light text-secondary p-2 px-3 rounded-2">{{ $message->message ?? '' }}</div>
+                                                    </div>
+                                                @else
+                                                <div class="d-flex justify-content-end text-end mb-1">
                                                     <div class="w-100">
-                                                        <div class="d-flex flex-column align-items-start">
-                                                            <div class="bg-light text-secondary p-3 rounded-2">
-                                                                <div class="typing d-flex align-items-center">
-                                                                    <div class="dot"></div>
-                                                                    <div class="dot"></div>
-                                                                    <div class="dot"></div>
-                                                                </div>
+                                                        <div class="d-flex flex-column align-items-end">
+                                                            <div class="bg-primary text-white p-2 px-3 rounded-2">{{ $message->message ?? '' }}</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                @endif
+                                            @endforeach
+                                        @endif
+
+                                        <!-- Chat Typing -->
+                                        {{-- <div class="d-flex mb-1">
+                                            <div class="flex-shrink-0 avatar avatar-xs me-2">
+                                                <img class="avatar-img rounded-circle" src="assets/images/avatar/01.jpg"
+                                                    alt="">
+                                            </div>
+                                            <div class="flex-grow-1">
+                                                <div class="w-100">
+                                                    <div class="d-flex flex-column align-items-start">
+                                                        <div class="bg-light text-secondary p-3 rounded-2">
+                                                            <div class="typing d-flex align-items-center">
+                                                                <div class="dot"></div>
+                                                                <div class="dot"></div>
+                                                                <div class="dot"></div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div> --}}
-                                        </div>
+                                            </div>
+                                        </div> --}}
                                     </div>
                                 </div>
-                                <div
-                                    class="os-scrollbar os-scrollbar-horizontal os-scrollbar-unusable os-scrollbar-auto-hidden">
-                                    <div class="os-scrollbar-track os-scrollbar-track-off">
-                                        <div class="os-scrollbar-handle" style="transform: translate(0px, 0px);"></div>
-                                    </div>
-                                </div>
-                                <div class="os-scrollbar os-scrollbar-vertical os-scrollbar-unusable os-scrollbar-auto-hidden">
-                                    <div class="os-scrollbar-track os-scrollbar-track-off">
-                                        <div class="os-scrollbar-handle" style="transform: translate(0px, 0px);"></div>
-                                    </div>
-                                </div>
-                                <div class="os-scrollbar-corner"></div>
                             </div>
-                            <!-- Chat conversation END -->
-                            <!-- Chat bottom START -->
-
-                            <!-- Chat bottom START -->
+                            <div
+                                class="os-scrollbar os-scrollbar-horizontal os-scrollbar-unusable os-scrollbar-auto-hidden">
+                                <div class="os-scrollbar-track os-scrollbar-track-off">
+                                    <div class="os-scrollbar-handle" style="transform: translate(0px, 0px);"></div>
+                                </div>
+                            </div>
+                            <div class="os-scrollbar os-scrollbar-vertical os-scrollbar-unusable os-scrollbar-auto-hidden">
+                                <div class="os-scrollbar-track os-scrollbar-track-off">
+                                    <div class="os-scrollbar-handle" style="transform: translate(0px, 0px);"></div>
+                                </div>
+                            </div>
+                            <div class="os-scrollbar-corner"></div>
                         </div>
-                        <div class="toast-footer">
-                            <div class="mt-2">
-                                <form wire:submit.prevent="submit">
-                                    <!-- Chat textarea -->
-                                    <input type="text" class="form-control mb-sm-0 mb-3" placeholder="Type a message" wire:model="newMessage">
-                                    <!-- Button -->
-                                    <div class="d-sm-flex align-items-end mt-2">
-                                        {{-- <button class="btn btn-sm btn-danger-soft me-2"><i
-                                            class="fa-solid fa-face-smile fs-6"></i></button> 
-                                    <button class="btn btn-sm btn-secondary-soft me-2"><i
-                                            class="fa-solid fa-paperclip fs-6"></i></button>
-                                    <button class="btn btn-sm btn-success-soft me-2"> Gif </button> --}}
-                                    <button class="btn btn-sm btn-primary ms-auto" type="submit"> Send </button>
-                                </div>
-                            </div>
+                        <!-- Chat conversation END -->
+                        <!-- Chat bottom START -->
+
+                        <!-- Chat bottom START -->
+                    </div>
+                    <div class="toast-footer">
+                        <div class="mt-2">
+                            <form wire:submit.prevent="submit">
+                                <!-- File Upload Input -->
+                                {{-- <input type="file" wire:model="uploadFile" accept="image/*,.pdf"
+                                    class="form-control mb-2"> --}}
+
+                                <!-- Text Input -->
+                                <input type="text" wire:model.defer="newMessage" wire:key="message-input-{{ now() }}"
+                                    wire:keydown.enter="submit" class="form-control mb-2"
+                                    placeholder="Type your message...">
+
+                                <!-- Submit Button -->
+                                <button type="submit" class="btn btn-primary">
+                                    Send
+                                </button>
+                            </form>
+
                         </div>
                     </div>
-                    <!-- Chat toast END -->
+                </div>
+                <!-- Chat toast END -->
 
-            @endforeach
+                {{-- @endforeach --}}
             </div>
     @endif
         <!-- Chat END -->
