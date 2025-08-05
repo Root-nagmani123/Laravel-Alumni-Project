@@ -59,7 +59,7 @@
                                 <!-- start row -->
                                 <tr>
                                     <th>S.No.</th>
-                                    <th>Title</th>
+                                    <th>Description</th>
                                     <th>Created By</th>
                                     <th>Created Date</th>
                                     <th>Actions</th>
@@ -71,7 +71,7 @@
                                 @forelse ($topics as $topic)
                                 <tr>
                                     <td>{{$loop -> iteration}}</td>
-                                    <td>{{ $topic->title }}</td>
+                                    <td>{{ $topic->description }}</td>
 
                                     <td>{{ $topic->creator->name ?? 'Unknown' }}</td>
                                     <td>{{ \Carbon\Carbon::parse($topic->created_date)->timezone('Asia/Kolkata')->format('l, d M Y, h:i A') }}
@@ -143,11 +143,11 @@
                                         <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
                                             <!-- Your form fields (as you have already) -->
                                             <!-- Title -->
-                                            <div class="mb-3">
+                                            <!-- <div class="mb-3">
                                                 <label>Title</label><span class="required text-danger">*</span>
                                                 <input type="text" name="title" class="form-control"
                                                     value="{{ $topic->title }}">
-                                            </div>
+                                            </div> -->
 
                                             <!-- Description -->
                                             <div class="mb-3">
@@ -157,24 +157,24 @@
                                             </div>
 
                                             <!-- Image -->
-                                            <div class="mb-3">
+                                            <!-- <div class="mb-3">
                                                 <label>Current Image</label><br>
                                                 @if ($topic->images)
                                                 <img src="{{ asset('storage/' . $topic->images) }}"
                                                     class="img-fluid mb-2" style="max-height: 200px;">
                                                 @endif
                                                 <input type="file" name="images" accept="image/*" class="form-control">
-                                            </div>
+                                            </div> -->
 
                                             <!-- Photo Caption -->
-                                            <div class="mb-3">
+                                            <!-- <div class="mb-3">
                                                 <label>Photo Caption</label>
                                                 <input type="text" name="photo_caption" class="form-control"
                                                     value="{{ $topic->photo_caption ?? '' }}">
-                                            </div>
+                                            </div> -->
 
                                             <!-- PDF File -->
-                                            <div class="mb-3">
+                                            <!-- <div class="mb-3">
                                                 <label>Current PDF</label><br>
                                                 @if ($topic->files)
 
@@ -183,13 +183,13 @@
                                                 @endif
                                                 <input type="file" name="doc" accept="application/pdf"
                                                     class="form-control">
-                                            </div>
+                                            </div> -->
 
 
 
 
                                             <!-- Video Link -->
-                                            <div class="mb-3">
+                                            <!-- <div class="mb-3">
                                                 <label>Video Link (YouTube/Vimeo)</label>
                                                 @if (!empty($topic->video_link))
                                                 <a href="{{ $topic->video_link }}" target="_blank">View uploaded
@@ -199,14 +199,14 @@
                                                 @endif
                                                 <input type="url" name="video_link" class="form-control"
                                                     value="{{ $topic->video_link }}">
-                                            </div>
+                                            </div> -->
 
                                             <!-- Video Caption -->
-                                            <div class="mb-3">
+                                            <!-- <div class="mb-3">
                                                 <label>Video Caption</label>
                                                 <input type="text" name="video_caption" class="form-control"
                                                     value="{{ $topic->video_caption }}">
-                                            </div>
+                                            </div> -->
 
                                             <!-- Status -->
                                             <div class="mb-3">

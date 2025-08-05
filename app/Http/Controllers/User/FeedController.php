@@ -132,8 +132,8 @@ class FeedController extends Controller
         'f.created_at',
         'f.end_date', // Assuming you have an end_date column
     )
-    ->where('fm.user_id', $userId)
     ->where('f.status', 1)
+    ->whereNot('f.end_date', null)
     ->where(function($query) {
         $query->whereNull('f.end_date')
               ->orWhere('f.end_date', '>=', now());

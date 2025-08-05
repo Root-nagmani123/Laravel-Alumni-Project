@@ -56,13 +56,13 @@ $pageName = 'Add Forum Topic'; // Set the page name here
                         </div>
 
                         <!-- Title -->
-                        <div class="row mb-3">
+                        <!-- <div class="row mb-3">
                             <label for="inputText" class="col-sm-3 col-form-label">Title<span
                                     class="required text-danger">*</span></label>
                             <div class="col-sm-9">
                                 <input type="text" name="title" class="form-control" value="{{ old('title') }}">
                             </div>
-                        </div>
+                        </div> -->
 
                         <!-- Description -->
                         <div class="row mb-3">
@@ -71,49 +71,53 @@ $pageName = 'Add Forum Topic'; // Set the page name here
                             <div class="col-sm-9">
                                 <textarea class="form-control" name="description"
                                     style="height: 100px">{{ old('description') }}</textarea>
+                                     @if ($errors->has('description'))
+                                <span class="text-danger">{{ $errors->first('description') }}</span>
+                                @endif
                             </div>
+                           
                         </div>
 
                         <!-- Photo -->
-                        <div class="row mb-3">
+                        <!-- <div class="row mb-3">
                             <label for="topicImage" class="col-sm-3 col-form-label">Photo</label>
                             <div class="col-sm-9">
                                 <input class="form-control" name="topic_image" type="file" id="topicImage">
                             </div>
-                        </div>
+                        </div> -->
 
                         <!-- Photo Caption -->
-                        <div class="row mb-3 d-none" id="photoCaptionRow">
+                        <!-- <div class="row mb-3 d-none" id="photoCaptionRow">
                             <label for="inputText" class="col-sm-3 col-form-label">Photo Caption</label>
                             <div class="col-sm-9">
                                 <input type="text" name="image_caption" class="form-control">
                             </div>
-                        </div>
+                        </div> -->
 
                         <!-- Video Link -->
-                        <div class="row mb-3">
+                        <!-- <div class="row mb-3">
                             <label for="videoLink" class="col-sm-3 col-form-label">Video Link</label>
                             <div class="col-sm-9">
                                 <input type="text" name="video_link" class="form-control" id="videoLink">
                             </div>
-                        </div>
+                        </div> -->
 
                         <!-- Video Caption -->
-                        <div class="row mb-3 d-none" id="videoCaptionRow">
+                        <!-- <div class="row mb-3 d-none" id="videoCaptionRow">
                             <label for="inputText" class="col-sm-3 col-form-label">Video Caption</label>
                             <div class="col-sm-9">
                                 <input type="text" name="video_caption" class="form-control">
                             </div>
-                        </div>
+                        </div> -->
 
                         <!-- Document (PDF) -->
-                        <div class="row mb-3">
+                        <!-- <div class="row mb-3">
                             <label for="inputNumber" class="col-sm-3 col-form-label">Document <small>(PDF
                                     Only)</small></label>
                             <div class="col-sm-9">
                                 <input class="form-control" type="file" id="formFile" name="doc">
                             </div>
-                        </div>
+                        </div> -->
 
                         <!-- Status -->
                         <div class="row mb-3">
@@ -126,6 +130,10 @@ $pageName = 'Add Forum Topic'; // Set the page name here
                                     <option value="1" {{ old('status') == '1' ? 'selected' : '' }}>Active</option>
                                     <option value="0" {{ old('status') == '0' ? 'selected' : '' }}>Inactive</option>
                                 </select>
+                                <!-- status ka error velidation error -->
+                                @if ($errors->has('status'))
+                                <span class="text-danger">{{ $errors->first('status') }}</span>
+                                @endif
 
                             </div>
                         </div>

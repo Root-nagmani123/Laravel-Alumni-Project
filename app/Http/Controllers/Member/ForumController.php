@@ -24,31 +24,30 @@ class ForumController extends Controller
 
     public function index()
     {
-        $user = $this->forumService->getCurrentUser();
-        $forums = $this->forumService->getUserForums($user->id);
-            
+        $forums = $this->forumService->getUserForums();
+            // print_r($forums);die;
         return view('user.forum', compact('forums'));
     }
     
     public function show($id)
     {
-        $user = $this->forumService->getCurrentUser();
+        // $user = $this->forumService->getCurrentUser();
         
         // Get forum details
         $forum = $this->forumService->getForumById($id);
         
         // Check if user has access to this forum
-        if (!$this->forumService->userHasAccessToForum($id, $user->id)) {
-            return redirect()->route('user.forum')->with('error', 'You do not have access to this forum.');
-        }
+        // if (!$this->forumService->userHasAccessToForum($id, $user->id)) {
+        //     return redirect()->route('user.forum')->with('error', 'You do not have access to this forum.');
+        // }
         
         // Get topics for this forum
         $topics = $this->forumService->getForumTopics($id);
             
         // Get forums data for left sidebar
-        $forums = $this->forumService->getForumsForSidebar($user->id);
+        $forums = $this->forumService->getForumsForSidebar();
             
-        return view('user.forum-detail', compact('forum', 'topics', 'user', 'forums'));
+        return view('user.forum-detail', compact('forum', 'topics', 'forums'));
     }
 
     public function like($id)
