@@ -33,9 +33,9 @@ class NotificationController extends Controller
     public function markAsSeen($notificationId)
     {
         $userIdsJson = Notification::where('id', $notificationId)->value('user_id'); // fixed key name
-        $userIds = json_decode($userIdsJson, true);
+        $member = Member::find($id);
     
-        if (is_array($userIds)) {
+        if (is_array($member)) {
             Member::whereIn('id', $userIds)->update(['is_notification' => 1]);
         }
     
@@ -47,13 +47,12 @@ class NotificationController extends Controller
     {
         $member = Member::find($id);
         
-        if ($member && $member->is_notification == 1) {
-            // Notification seen
-            return response()->json(['status' => 'seen']);
+        if ($member) {
+            $member->update(['is_notification' => 1]);
+
+            return redirect()->back();;
         }
 
-        // No notification
-        return response()->json(['status' => 'not_seen']);
     }
 
 }
