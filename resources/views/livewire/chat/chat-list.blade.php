@@ -262,3 +262,13 @@
     @endif
         <!-- Chat END -->
     </div>
+
+
+
+<script type="module">
+    window.Echo.private(`chat-channel.${userId}`)
+    .listen('MessageSentEvent', (data) => {
+        console.log('Message received:', data);
+        // Handle the incoming message
+    });
+    </script>

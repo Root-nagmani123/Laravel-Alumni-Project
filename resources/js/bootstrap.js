@@ -1,5 +1,7 @@
 import 'bootstrap';
-
+import Echo from 'laravel-echo';
+console.log('Echo==');
+console.log(Echo);
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests
  * to our Laravel back-end. This library automatically handles sending the
@@ -39,4 +41,15 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
  * allow your team to quickly build robust real-time web applications.
  */
 
-import './echo';
+// import './echo';
+
+
+
+window.Echo = new Echo({
+    broadcaster: 'reverb',
+    key: process.env.MIX_REVERB_APP_KEY,
+    wsHost: window.location.hostname,
+    wsPort: 8080, // Default Reverb port
+    forceTLS: false, // Set to true if using HTTPS
+    enabledTransports: ['ws', 'wss'],
+});

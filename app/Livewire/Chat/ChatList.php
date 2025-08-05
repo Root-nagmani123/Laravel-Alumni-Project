@@ -16,7 +16,7 @@ class ChatList extends Component
     public $newMessage = '';
     public $messages = [];
     public $selectedChat = null;
-    public $senderId = auth()->guard('user')->id();
+    // public $senderId = auth()->guard('user')->id();
 
     public function selectChat($chatId)
     {
