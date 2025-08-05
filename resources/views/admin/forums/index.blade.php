@@ -62,7 +62,7 @@
                                 <tr>
                                     <th>S.No.</th>
                                     <th>Name</th>
-                                    <th>Members</th>
+                                    <!-- <th>Members</th> -->
                                     <th>Topics</th>
                                     <th>Created At</th>
                                     <th>Forum End Date</th>
@@ -76,7 +76,7 @@
                                 <tr class="odd">
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $forum->name }}</td>
-                                    <td>
+                                    <!-- <td>
                                         <div class="d-flex gap-2">
                                             <a class="btn btn-sm btn-primary"
                                                 href="{{ route('forums.add_member', ['id' => $forum->id]) }}"
@@ -89,7 +89,7 @@
                                                 <i class="bi bi-eye"></i>
                                             </a>
                                         </div>
-                                    </td>
+                                    </td> -->
 
                                     <td>
                                         <div class="d-flex gap-2">

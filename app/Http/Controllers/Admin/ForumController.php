@@ -219,17 +219,17 @@ class ForumController extends Controller
     public function save_topic(Request $request)
     {
     $request->validate([
-        'title' => 'required',
+        // 'title' => 'required',
         'description' => 'required',
         'status' => 'required',
     ]);
     $data = [
-        'title' => $request->input('title'),
+        // 'title' => $request->input('title'),
         'description' => $request->input('description'),
-        'images' => $request->input('topic_image'),
-        'image_caption' => $request->input('image_caption'),
-        'video_link' => $request->input('video_link'),
-        'video_caption' => $request->input('video_caption'),
+        // 'images' => $request->input('topic_image'),
+        // 'image_caption' => $request->input('image_caption'),
+        // 'video_link' => $request->input('video_link'),
+        // 'video_caption' => $request->input('video_caption'),
         'status' => $request->input('status'),
         'forum_id' => $request->input('forum_id'),
         //'created_by' => Auth::id(),
@@ -238,15 +238,15 @@ class ForumController extends Controller
     ];
 
     // Handle file uploads (images, documents)
-        if ($request->hasFile('topic_image')) {
-            $imagePath = $request->file('topic_image')->store('uploads/images', 'public');
-            $data['images'] = basename($imagePath);
-        }
+        // if ($request->hasFile('topic_image')) {
+        //     $imagePath = $request->file('topic_image')->store('uploads/images', 'public');
+        //     $data['images'] = basename($imagePath);
+        // }
 
-        if ($request->hasFile('doc')) {
-            $docPath = $request->file('doc')->store('uploads/docs', 'public');
-            $data['files'] = basename($docPath);
-        }
+        // if ($request->hasFile('doc')) {
+        //     $docPath = $request->file('doc')->store('uploads/docs', 'public');
+        //     $data['files'] = basename($docPath);
+        // }
         // DB::table('forum_topics')->insert($data);
         $topicId = DB::table('forum_topics')->insertGetId($data);
 
@@ -259,8 +259,8 @@ class ForumController extends Controller
     if (!empty($memberIds)) {
         $message = 'A new topic has been posted in your forum: ' . $request->title;
         // Assuming you have notification service
-        $this->notificationService->notifyGroupOrForumMembers($memberIds, 'forum', $message, $request->forum_id, 'forum');
-    }
+        $notification = $this->notificationService->notifyAllMembers('forum', 'New forum has been added.', $request->forum_id, 'forum');
+   }
 
         return redirect()->route('forums.index')->with('success', 'Topic saved successfully!');
     }
@@ -286,44 +286,44 @@ class ForumController extends Controller
     $topic = ForumTopic::findOrFail($id);
 
     $request->validate([
-        'title' => 'required|string|max:255',
+        // 'title' => 'required|string|max:255',
         'description' => 'required|string',
-        'images' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        'doc' => 'nullable|mimes:pdf|max:10000',
-        'video_link' => 'nullable|url',
-        'image_caption' => 'nullable|string|max:255',
-        'video_caption' => 'nullable|string|max:255',
+        // 'images' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        // 'doc' => 'nullable|mimes:pdf|max:10000',
+        // 'video_link' => 'nullable|url',
+        // 'image_caption' => 'nullable|string|max:255',
+        // 'video_caption' => 'nullable|string|max:255',
         'status' => 'required|in:0,1',
     ]);
 
     // Image upload
-    if ($request->hasFile('images')) {
-        if ($topic->images) {
-            Storage::disk('public')->delete($topic->images); // if path includes folders
-        }
+    // if ($request->hasFile('images')) {
+    //     if ($topic->images) {
+    //         Storage::disk('public')->delete($topic->images); // if path includes folders
+    //     }
 
-        $image = $request->file('images');
-        $imageUrl = $image->store('uploads/topics', 'public');
-        $topic->images = $imageUrl;
-    }
+    //     $image = $request->file('images');
+    //     $imageUrl = $image->store('uploads/topics', 'public');
+    //     $topic->images = $imageUrl;
+    // }
 
-    // PDF upload
-    if ($request->hasFile('doc')) {
-        if ($topic->files) {
-            Storage::disk('public')->delete($topic->files);
-        }
+    // // PDF upload
+    // if ($request->hasFile('doc')) {
+    //     if ($topic->files) {
+    //         Storage::disk('public')->delete($topic->files);
+    //     }
 
-        $doc = $request->file('doc');
-        $docUrl = $doc->store('uploads/topics', 'public');
-        $topic->files = $docUrl;
-    }
+    //     $doc = $request->file('doc');
+    //     $docUrl = $doc->store('uploads/topics', 'public');
+    //     $topic->files = $docUrl;
+    // }
 
         // Assign other fields
         $topic->title = $request->input('title');
         $topic->description = $request->input('description');
-        $topic->image_caption = $request->input('image_caption');
-        $topic->video_caption = $request->input('video_caption');
-        $topic->video_link = $request->input('video_link');
+        // $topic->image_caption = $request->input('image_caption');
+        // $topic->video_caption = $request->input('video_caption');
+        // $topic->video_link = $request->input('video_link');
         $topic->status = $request->input('status');
         $topic->save();
 
