@@ -90,9 +90,7 @@
                     <div class="mb-3">
                         <label for="groupName" class="form-label">Choose Members</label>
                         <select id="memberSelect" name="member_ids[]" multiple>
-                            @foreach($members as $member)
-                            <option value="{{ $member->id }}">{{ $member->name }}</option>
-                            @endforeach
+                          
                         </select>
                     </div>
 
