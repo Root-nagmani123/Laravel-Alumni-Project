@@ -91,7 +91,16 @@ Header START -->
                 <li class="nav-item dropdown ms-2">
                     <a class="nav-link bg-light icon-md btn btn-light p-0" href="#" id="notifDropdown" role="button"
                         data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
-                        @if(isset($notifications) && $notifications->count() > 0)
+                        @php
+                            $showNotifBadge = false;
+                            if (Auth::guard('user')->check()) {
+                                $member = \App\Models\Member::find(Auth::guard('user')->id());
+                                if ($member && $member->is_notification == 0 && isset($notifications) && $notifications->count() > 0) {
+                                    $showNotifBadge = true;
+                                }
+                            }
+                        @endphp
+                        @if($showNotifBadge)
                             <span class="badge-notif animation-blink"></span>
                         @endif
                         <i class="bi bi-bell-fill fs-6"> </i>
@@ -102,7 +111,7 @@ Header START -->
                             <div class="card-header d-flex justify-content-between align-items-center">
                                 <h6 class="m-0">Notifications <span
                                         class="badge bg-danger bg-opacity-10 text-danger ms-2">{{ isset($notifications) ? $notifications->count() : 0 }}</span></h6>
-                                <a class="small" href="">Clear all</a>
+                                <a class="small" href="{{ route('user.notifications.status', ['id' => Auth::guard('user')->user()->id]) }}">Clear all</a>
                             </div>
                             <div class="card-body p-0">
                                 <ul class="list-group list-group-flush list-unstyled p-2">
