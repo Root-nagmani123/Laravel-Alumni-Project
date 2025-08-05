@@ -20,7 +20,7 @@ class Member extends Authenticatable
         'school_name','school_year','undergrad_college',
         'undergrad_degree','undergrad_year','postgrad_college',
         'postgrad_degree','postgrad_year','current_designation',
-        'current_department','current_location','previous_postings'
+        'current_department','current_location','previous_postings','service'
     ];
 
     // protected $hidden = [

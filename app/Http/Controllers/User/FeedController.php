@@ -482,8 +482,8 @@ function submitGrievance(Request $request)
         'created_at' => now(),
     ]);
 
-    return redirect()->back()->with('success', 'Grievance submitted successfully.');
-    
+    return redirect()->back()->with('success', 'Request submitted successfully.');
+
 }
 
 

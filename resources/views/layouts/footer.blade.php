@@ -30,10 +30,12 @@ JS libraries, plugins and custom scripts -->
 <!-- Accessibility JS -->
 <script src="https://img1.digitallocker.gov.in/ux4g/UX4G-CDN-accessibility/js/weights-v1.js"></script>
 
-
-
-@push('scripts')
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Select2 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+<!-- Select2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
     $(document).ready(function () {
        
@@ -41,7 +43,7 @@ JS libraries, plugins and custom scripts -->
         $('#searchMemberInput').on('input', function () {
             let query = $(this).val();
 
-            if (query.length >= 1) {
+            if (query.length >= 3) {
                 $.ajax({
                     url: '{{ route('user.member.search') }}',
                     type: 'GET',
@@ -50,12 +52,13 @@ JS libraries, plugins and custom scripts -->
                         let html = '';
                         if (response.length > 0) {
                             response.forEach(item => {
-                                html += `<a href="/user/profile/${item.id}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-    <span>${item.name}</span>
-    <button class="btn btn-sm p-0 border-0 bg-transparent favorite-user" data-id="${item.id}" type="button">
-        <i class="bi bi-star text-danger"></i>
+                                const favClass = item.is_favourite ? 'text-danger' : 'text-muted';
+                                html += `<a href="/user/profile/id/${item.encrypted_id}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+    <span>${item.name}</span></a>
+    <button class="btn btn-sm p-0 border-0 bg-transparent favorite-user" data-id="${item.encrypted_id}" type="button">
+        <i class="bi bi-star ${favClass}"></i>
     </button>
-</a>
+
 `;
                             });
                         } else {
@@ -72,34 +75,41 @@ JS libraries, plugins and custom scripts -->
     let resultsHtml = ''; // ✅ Define before using it
     resultsHtml += `<a href="/user/profile/Alumni" class="list-group-item list-group-item-action">Alumni</a>`;
     $('#searchResults').html(resultsHtml).show();
-});
     });
     
-    document.getElementById('uw-widget-custom-trigger2').addEventListener('click', function() {
-    // openMain();
     });
-
- 
-
-</script>
-<script>
-    $(document).on('click', '.favorite-user', function (e) {
+       $(document).on('click', '.favorite-user', function (e) {
     e.preventDefault();
     e.stopPropagation(); // prevent triggering parent link
     const userId = $(this).data('id');
-
+let button = $(this);
     $.ajax({
-        url: '/user/favorite', // you need to make this route
+         url: '{{ route('user.favorite.user.toggle') }}',
         type: 'POST',
         data: {
             id: userId,
             _token: '{{ csrf_token() }}'
         },
-        success: function () {
-            alert('User favorited!');
+         success: function(response) {
+            if (response.status === 'added') {
+                button.find('i').addClass('text-warning').removeClass('text-danger');
+            } else if (response.status === 'removed') {
+                button.find('i').addClass('text-danger').removeClass('text-warning');
+            }
         }
     });
 });
+    
+    document.getElementById('uw-widget-custom-trigger2').addEventListener('click', function() {
+    // openMain();
+    });
+   
+
+ 
+
+</script>
+<script>
+    
 
 </script>
 <link rel="stylesheet"

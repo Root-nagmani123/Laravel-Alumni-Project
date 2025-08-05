@@ -10,6 +10,8 @@ use App\Models\Member;
 use App\Models\ForumTopic;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\DB;
 
 class ForumController extends Controller
 {
@@ -78,10 +80,25 @@ class ForumController extends Controller
     {
 
         $query = $request->input('q');
+        $userId = auth()->guard('user')->id();
       
     $results = Member::where('status', 1)
                  ->where('name', 'LIKE', '%' . $query . '%')
                  ->get();
+                  $results->transform(function ($item) use ($userId) {
+        // Check if this member is in favorites
+        $isFav = DB::table('favorite_users')
+            ->where('user_id', $userId)
+            ->where('favorite_user_id', $item->id)
+            ->exists();
+
+        $item->encrypted_id = Crypt::encrypt($item->id);
+        $item->is_favourite = $isFav ? true : false;
+        
+        unset($item->id); // optional
+        return $item;
+    });
+
 
     return response()->json($results);
     }
