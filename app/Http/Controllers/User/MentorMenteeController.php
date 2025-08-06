@@ -284,13 +284,12 @@ function updateRequest(Request $request) : \Illuminate\Http\RedirectResponse {
         if ($request->type === 'mentor') {
             $notification = $this->notificationService->notifyMentorRequestAccepted($requestData->mentees, $user, 'Your mentor request has been accepted!', $request->id);
             Member::where('id', $requestData->mentees)->update(['is_notification' => 0]);
-       
+
         } else {
-            $notification = $this->notificationService->notifyMenteeRequestAccepted($requestData->mentees_ids, $user, 'Your mentee request has been accepted!', $request->id);
-            Member::where('id', $requestData->mentees_ids)->update(['is_notification' => 0]);
-       
+            $notification = $this->notificationService->notifyMenteeRequestAccepted($requestData->Mentor_ids, $user, 'Your mentee request has been accepted!', $request->id);
+            Member::where('id', $requestData->Mentor_ids)->update(['is_notification' => 0]);
+
         }
-       
         $message = $request->type === 'mentor' ? 'You are now a mentor.' : 'You are now a mentee.';
     } else if($request->status == 3) {
         // Request rejected
