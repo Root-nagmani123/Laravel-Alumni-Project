@@ -57,7 +57,7 @@
             <div class="post-list p-3 rounded mb-4" style="background-color: #af2910; color: #fff;">
                 <div class="d-flex justify-content-between align-items-center">
                     <h1 class="h5 mb-0 text-white">{{ $group->name }} : Group Posts</h1>
-                    @if($isMentee)
+                 
                     <div class="dropdown">
                         <a href="#" class="text-white btn btn-sm btn-transparent py-0 px-2" data-bs-toggle="dropdown">
                             <i class="bi bi-three-dots-vertical"></i>
@@ -74,7 +74,7 @@
                             </li>
                         </ul>
                     </div>
-                    @endif
+                   
                 </div>
             </div>
 

@@ -156,6 +156,17 @@
                               </div>
                             </div>
                              @endif
+                             @if($forum->created_by == Auth::guard('user')->user()->id )
+                            <form method="POST" action="{{ route('user.forum.delete') }}">
+                                    @csrf
+                                    <input type="hidden" name="forum_id" value="{{ $forum->id }}">
+                                    <input type="hidden" name="action" value="delete">
+                                    <button type="button" class="btn btn-outline-danger btn-sm" 
+                                            onclick="if(confirm('Are you sure you want to delete this forum?')) { this.form.submit(); }">
+                                        <i class="bi bi-trash me-1"></i>Delete Forum
+                                    </button>
+                                  </form>
+                            @endif
                             <a href="{{ route('user.forum') }}" class="btn btn-outline-secondary btn-sm">
                                 <i class="bi bi-arrow-left me-1"></i>Back to Forums
                             </a>
@@ -184,7 +195,7 @@
                                 <div>
                                     <div class="nav nav-divider">
                                         <h6 class="nav-item card-title mb-0">
-                                            <a href="#!">{{ $topic->creator ? $topic->creator->name : 'Unknown User' }}</a>
+                                            <a href="#!">{{ $topic->creator_name ? $topic->creator_name : $topic->member->name }}</a>
                                         </h6>
                                         <span class="nav-item small">{{ \Carbon\Carbon::parse($topic->created_date)->diffForHumans() }}</span>
                                     </div>

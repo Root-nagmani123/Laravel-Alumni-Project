@@ -11,19 +11,22 @@
                 <div class="modal-body">
                     <!-- Forum Name -->
                     <div class="mb-3">
-                        <label for="forum_name" class="form-label">Forum Name</label>
+                        <label for="forum_name" class="form-label">Forum Name<span
+                                            class="required text-danger ">*</span></label>
                         <input type="text" class="form-control" id="forum_name" name="forum_name" required>
                     </div>
 
                     <!-- Forum Image -->
                     <div class="mb-3">
-                        <label for="forum_image" class="form-label">Forum Image</label>
-                        <input type="file" class="form-control" id="forum_image" name="forum_image" accept="image/*">
+                        <label for="forum_image" class="form-label">Forum Image<span
+                                            class="required text-danger ">*</span></label>
+                        <input type="file" class="form-control" id="forum_image" name="forum_image" accept="image/*" required>
                     </div>
 
                     <!-- End Date -->
                     <div class="mb-3">
-                        <label for="forum_end_date" class="form-label">End Date</label>
+                        <label for="forum_end_date" class="form-label">End Date<span
+                                            class="required text-danger ">*</span></label>
                         <input type="date" class="form-control" id="forum_end_date" name="forum_end_date" required>
                     </div>
                 </div>
@@ -558,6 +561,11 @@ $(document).on('click', '.select2-results__option', function (e) {
     }, 0);
 });
 
+document.addEventListener('DOMContentLoaded', function () {
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById("forum_end_date").setAttribute('min', today);
+        document.getElementById("end_date").setAttribute('min', today);
+    });
 
 </script>
 <link rel="stylesheet"

@@ -111,7 +111,7 @@ return DB::table('forums')
         return ForumTopic::where('forum_id', $forumId)
             ->where('status', 1)
             ->orderBy('created_date', 'desc')
-            ->with(['creator', 'likes', 'comments' => function($query) {
+            ->with(['member:id,name', 'creator', 'likes', 'comments' => function($query) {
                 $query->orderBy('created_at', 'desc');
             }, 'comments.user'])
             ->get();

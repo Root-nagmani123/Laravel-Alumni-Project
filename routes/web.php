@@ -195,7 +195,7 @@ Route::prefix('user')->name('user.')->group(function () {
         Route::post('user/forum/topic/{id}/comment', [MemberForumController::class, 'comment'])->name('forum.topic.comment');
       
         Route::post('user/forum/topic/{id}/store', [MemberForumController::class, 'member_store_topic'])->name('forum.topic.store');
-       
+       Route::post('user/forum/delete', [MemberForumController::class, 'deleteforum'])->name('forum.delete');
         Route::get('/notifications', [App\Http\Controllers\Member\NotificationController::class, 'getNotifications'])->name('notifications.get');
         Route::get('/notifications/{id}', [App\Http\Controllers\Member\NotificationController::class, 'notificationstatus'])->name('notifications.status');
         Route::put('/notifications/{id}/read', [App\Http\Controllers\Member\NotificationController::class, 'markAsRead'])->name('notifications.read');
@@ -207,7 +207,6 @@ Route::prefix('user')->name('user.')->group(function () {
 	Route::get('/member/search', [MemberForumController::class, 'member_search'])->name('member.search');
 
 
-	Route::get('/member/search', [MemberForumController::class, 'member_search'])->name('member.search');
 
 });
 
