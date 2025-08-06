@@ -115,28 +115,31 @@
                 <h1 class="h4 mb-4">Mentor / Mentee</h1>
 
                 <!-- Tabs Navigation -->
-                <ul class="nav nav-tabs mb-3" id="mentorMenteeTabs" role="tablist">
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link active" id="mentor-tab" data-bs-toggle="tab" data-bs-target="#mentor"
-                            type="button" role="tab">Wants to become Mentor</button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="mentee-tab" data-bs-toggle="tab" data-bs-target="#mentee"
-                            type="button" role="tab">Wants to become Mentee</button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="Incoming-requests-tab" data-bs-toggle="tab" data-bs-target="#requests_incoming"
-                            type="button" role="tab">Incoming Requests</button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="Outgoging-requests-tab" data-bs-toggle="tab" data-bs-target="#requests_outgoing"
-                            type="button" role="tab">Outgoging Requests</button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="connections-tab" data-bs-toggle="tab" data-bs-target="#connections"
-                            type="button" role="tab">My Connections</button>
-                    </li>
-                </ul>
+               <div class="overflow-auto">
+    <ul class="nav nav-tabs mb-3 flex-nowrap" id="mentorMenteeTabs" role="tablist" style="white-space: nowrap;">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="mentor-tab" data-bs-toggle="tab" data-bs-target="#mentor"
+                type="button" role="tab">Wants to become Mentor</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="mentee-tab" data-bs-toggle="tab" data-bs-target="#mentee"
+                type="button" role="tab">Wants to become Mentee</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="Incoming-requests-tab" data-bs-toggle="tab" data-bs-target="#requests_incoming"
+                type="button" role="tab">Incoming Requests</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="Outgoging-requests-tab" data-bs-toggle="tab" data-bs-target="#requests_outgoing"
+                type="button" role="tab">Outgoging Requests</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="connections-tab" data-bs-toggle="tab" data-bs-target="#connections"
+                type="button" role="tab">My Connections</button>
+        </li>
+    </ul>
+</div>
+
 
                 <!-- Tabs Content -->
                 <div class="tab-content" id="mentorMenteeTabsContent">
