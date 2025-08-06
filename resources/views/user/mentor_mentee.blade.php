@@ -7,6 +7,9 @@
 .select2-results__option {
     padding-left: 10px !important;
 }
+.select2-container {
+    position: static !important;
+}
 </style>
 
 <div class="container">

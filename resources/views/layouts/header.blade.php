@@ -5,6 +5,11 @@ Header START -->
     background-color: #f8f9fa; /* Light gray on hover */
     cursor: pointer;
 }
+/* This goes in your CSS file */
+.dropdown-menu {
+    z-index: 1100 !important;
+}
+
 
 </style>
 <header class="navbar-light fixed-top header-static bg-mode">
@@ -237,7 +242,7 @@ Header START -->
                 </li>
                 <!-- Notification dropdown END -->
 
-                <li class="nav-item ms-2 dropdown">
+                <li class="nav-item ms-2 dropdown" style="z-index:1060 !important;">
                     <a class="nav-link btn icon-md p-0" href="#" id="profileDropdown" role="button"
                         data-bs-auto-close="outside" data-bs-display="static" data-bs-toggle="dropdown"
                         aria-expanded="false">
@@ -249,7 +254,9 @@ Header START -->
                             alt="" loading="lazy" decoding="async">
                     </a>
                     <ul class="dropdown-menu dropdown-animation dropdown-menu-end pt-3 small me-md-n3"
-                        aria-labelledby="profileDropdown">
+    aria-labelledby="profileDropdown"
+    style="z-index: 1100;">
+
                         <!-- Profile info -->
                         @php
                         $profileImage = '';
