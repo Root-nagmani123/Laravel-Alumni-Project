@@ -87,10 +87,12 @@ return response()->json($years);
                 $query->whereIn('batch', $year);
             }
 
-            $cadres = $query->whereNotNull('cader')
+           $cadres = $query->whereNotNull('cader')
                 ->where('cader', '!=', 'NA')
                 ->distinct()
+                ->orderBy('cader')
                 ->pluck('cader');
+
 
             return response()->json($cadres);
             }
@@ -117,6 +119,8 @@ return response()->json($years);
                 $sectors = $query->whereNotNull('sector')
                     ->where('sector', '!=', 'NA')
                     ->distinct()
+                    ->orderBy('sector')
+
                     ->pluck('sector');
 
                 return response()->json($sectors);
