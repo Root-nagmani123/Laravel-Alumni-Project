@@ -269,8 +269,10 @@ Route::prefix('admin')->middleware('auth:admin')->controller(AdminController::cl
 
 	Route::get('mentorship', [AdminController::class, 'mentorship'])->name('admin.mentorship.index');
 
+    Route::post('mentorship/search', [AdminController::class, 'mentorshipSearch'])->name('admin.mentorship.search');
+    Route::post('members/search', [AdminController::class, 'membersSearch'])->name('admin.members.search');
 
-    // Location Routes
+   // Location Routes
     Route::prefix('location')->name('admin.location.')->group(function () {
        
 
