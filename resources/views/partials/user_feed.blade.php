@@ -115,15 +115,15 @@
 <div>
     <div class="nav nav-divider">
         <h6 class="nav-item card-title mb-0">
-            <a href="{{ $post->type === 'group_post' ? $groupLink : $profileLink }}">{{ $displayName }}</a>
+            <a href="{{ $post->type === 'group_post' ? $groupLink : $profileLink }}">{{ $designation }} : {{ $displayName }}</a>
         </h6>
 
     </div>
-    <p class="mb-0 small">{{ $designation }}
     @if($post->type === 'group_post')
-        | Group: dk
-    @endif
+    <p class="mb-0 small">
+        Post Owner :- {{ $created_by }}
 </p>
+ @endif
     <p class="mb-0 small"></p>
     <span class="nav-item small">
             {{ \Carbon\Carbon::parse($post->created_at)->diffForHumans() }}
