@@ -206,10 +206,14 @@ Header START -->
         <!-- Content -->
         <div class="flex-grow-1 ms-3">
             <div class="d-flex justify-content-between">
-                <p class="mb-1">
+                <a href="{{ $notificationUrl }}" class="text-decoration-none notification-link" 
+                                                           data-url="{{ $notificationUrl }}" 
+                                                           data-source-type="{{ $notification->source_type ?? '' }}" 
+                                                           data-source-id="{{ $notification->source_id ?? '' }}"
+                                                           onclick="handleNotificationClick(event, '{{ $notificationUrl }}', '{{ $notification->source_type ?? '' }}', '{{ $notification->source_id ?? '' }}')"><p class="mb-1">
                     <strong>{{ $notification->title ?? 'Notification Title' }}</strong>: 
                     <span class="text-muted">{{ $notification->message }}</span>
-                </p>
+                </p></a>
                 <small class="text-muted ms-2">
                     {{ \Carbon\Carbon::parse($notification->created_at)->setTimezone('Asia/Kolkata')->diffForHumans(null, null, true) }}
                 </small>

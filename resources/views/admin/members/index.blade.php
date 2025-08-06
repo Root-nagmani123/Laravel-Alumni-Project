@@ -28,93 +28,91 @@
         </div>
     </div>
     @if(session('success'))
-     <div class="alert alert-success">{{ session('success') }}</div>
+    <div class="alert alert-success">{{ session('success') }}</div>
     @endif
-       @if (session('error'))
-       <div class="alert alert-danger" style="color:white;">
-         {{ session('error') }}
-       </div>
+    @if (session('error'))
+    <div class="alert alert-danger" style="color:white;">
+        {{ session('error') }}
+    </div>
     @endif
     <div class="datatables">
         <!-- start Zero Configuration -->
         <div class="card">
             <div class="card-body">
-
-
-                <div class="table-responsive">
-                    <div class="row">
-                        <div class="col-6">
-                            <h4 class="card-title">Member list</h4>
-                        </div>
-                        <div class="col-6">
-                            <div class="float-end gap-2">
-                                <a href="{{ route('members.create') }}" class="btn btn-primary">+ Add Members</a>
-                                <a href="{{ route('members.bulk_upload') }}" class="btn btn-secondary">Bulk Upload</a>
-                            </div>
-
-                        </div>
+                <div class="row">
+                    <div class="col-6">
+                        <h4 class="card-title">Member list</h4>
                     </div>
-                    <hr>
-                    <div id="zero_config_wrapper" class="dataTables_wrapper">
+                    <div class="col-6">
+                        <div class="float-end gap-2">
+                            <a href="{{ route('members.create') }}" class="btn btn-primary">+ Add Members</a>
+                            <a href="{{ route('members.bulk_upload') }}" class="btn btn-secondary">Bulk Upload</a>
+                        </div>
 
-
-
-                        <table id="zero_config"
-                            class="table table-striped table-bordered text-nowrap align-middle dataTable"
-                            aria-describedby="zero_config_info">
-                            <thead>
-                                <!-- start row -->
-                                <tr>
-                                    <th>S.No.</th>
-                                    <th>Name</th>
-                                    <th>Email</th>
-                                    <th>Mobile</th>
-                                    <th>Cadre, Batch</th>
-                                    <th>Action</th>
-                                    <th>Status</th>
-                                </tr>
-                                <!-- end row -->
-                            </thead>
-                            <tbody>
-                                @foreach($members as $member)
-                                <tr class="odd">
-                                    <td>{{ $loop ->iteration }}</td>
-                                    <td>{{ $member->name }}</td>
-                                    <td>{{ $member->email }}</td>
-                                    <td>{{ $member->mobile }}</td>
-                                    <td>{{ $member->cader }}, {{ $member->batch }}</td>
-                                    <td>
-                                        <a href="{{route('members.edit', $member->id) }}"
-                                            class="btn btn-success text-white btn-sm">Edit</a>
-                                        <!--<form action="{{-- route('members.destroy', $member->id) --}}" method="POST"
+                    </div>
+                </div>
+                <hr>
+                <div id="zero_config_wrapper" class="dataTables_wrapper">
+                   <div class="table-responsive">
+                     <table id="zero_config"
+                        class="table table-striped table-bordered text-nowrap align-middle dataTable w-100  text-wrap"
+                        aria-describedby="zero_config_info">
+                        <thead>
+                            <!-- start row -->
+                            <tr>
+                                <th class="col">S.No.</th>
+                                <th class="col">Name</th>
+                                <th class="col">Email</th>
+                                <th class="col">Mobile</th>
+                                <th class="col">Service</th>
+                                <th class="col">Sector</th>
+                                <th class="col">Cadre, Batch</th>
+                                <th class="col">Action</th>
+                                <th class="col">Status</th>
+                            </tr>
+                            <!-- end row -->
+                        </thead>
+                        <tbody>
+                            @foreach($members as $member)
+                            <tr class="odd">
+                                <td>{{ $loop ->iteration }}</td>
+                                <td>{{ $member->name }}</td>
+                                <td>{{ $member->email }}</td>
+                                <td>{{ $member->mobile }}</td>
+                                <td>{{ $member->service }}</td>
+                                <td>{{ $member->sector }}</td>
+                                <td>{{ $member->cader }}, {{ $member->batch }}</td>
+                                <td>
+                                    <a href="{{route('members.edit', $member->id) }}"
+                                        class="btn btn-success text-white btn-sm">Edit</a>
+                                    <!--<form action="{{-- route('members.destroy', $member->id) --}}" method="POST"
                                             style="display:inline;">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-danger text-white btn-sm" onclick="return confirm('Are you sure you want to delete?')">Delete</button>
                                         </form>-->
-                                  <form action="{{ route('members.destroy', $member->id) }}" method="POST" style="display:inline;">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger text-white btn-sm"
+                                    <form action="{{ route('members.destroy', $member->id) }}" method="POST"
+                                        style="display:inline;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger text-white btn-sm"
                                             onclick="return confirm('Are you sure you want to delete?')">
-                                        Delete
-                                    </button>
+                                            Delete
+                                        </button>
                                     </form>
-                                    </td>
-                                    <td>
-                                        <div class="form-check form-switch d-inline-block">
-                                            <input class="form-check-input status-toggle" type="checkbox" role="switch"
-                                                data-table="members" data-column="active_inactive"  data-id="{{ $member->id }}"
-                                                {{ $member->status == 1 ? 'checked' : '' }}>
-                                        </div>
-                                    </td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-
-
-                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-check form-switch d-inline-block">
+                                        <input class="form-check-input status-toggle" type="checkbox" role="switch"
+                                            data-table="members" data-column="active_inactive"
+                                            data-id="{{ $member->id }}" {{ $member->status == 1 ? 'checked' : '' }}>
+                                    </div>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                   </div>
                 </div>
             </div>
         </div>
@@ -129,21 +127,22 @@
 
 <script>
 //Toastr message
-    /*$(document).ready(function() {
-        @if (session('success'))
-            toastr.success("{{ session('success') }}");
-        @endif
+/*$(document).ready(function() {
+    @if (session('success'))
+        toastr.success("{{ session('success') }}");
+    @endif
 
-    }); */
+}); */
 
-    $(document).ready(function () {
+$(document).ready(function() {
     // AJAX: Toggle member status with confirmation using event delegation
-    $(document).on('change', '.status-toggle', function (e) {
+    $(document).on('change', '.status-toggle', function(e) {
         let checkbox = $(this);
         let status = checkbox.prop('checked') ? 1 : 0;
         let memberId = checkbox.data('id');
 
-        let confirmChange = confirm("Are you sure you want to " + (status ? "activate" : "deactivate") + "?");
+        let confirmChange = confirm("Are you sure you want to " + (status ? "activate" : "deactivate") +
+            "?");
 
         if (!confirmChange) {
             // Revert the checkbox state if cancelled
@@ -159,10 +158,10 @@
                 id: memberId,
                 status: status
             },
-            success: function (response) {
+            success: function(response) {
                 toastr.success(response.message);
             },
-            error: function () {
+            error: function() {
                 toastr.error('Failed to update status.');
                 // Optionally revert on failure
                 checkbox.prop('checked', !status);
@@ -170,8 +169,7 @@
         });
     });
 });
-
-    </script>
+</script>
 
 
 @endsection
