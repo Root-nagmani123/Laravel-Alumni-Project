@@ -185,16 +185,65 @@
                 }, 2000);
             })
 
-            .listen('MessageSentEvent', (event) => {
-                const isInputFocused = document.activeElement === messageInputField;
-                const isScrolledToBottom = chatContainer.scrollTop + chatContainer.clientHeight >= chatContainer
-                    .scrollHeight - 10;
+            // .listen('MessageSentEvent', (event) => {
+            //     console.log('MessageSentEvent received:', event);
+                
+            //     const isInputFocused = document.activeElement === messageInputField;
+            //     const isScrolledToBottom = chatContainer.scrollTop + chatContainer.clientHeight >= chatContainer
+            //         .scrollHeight - 10;
 
-                if (!isInputFocused || !isScrolledToBottom) {
-                    const audio = new Audio('{{ asset('sounds/notification.mp3') }}');
-                    audio.play();
-                }
-            });
+            //     if (!isInputFocused || !isScrolledToBottom) {
+            //         const audio = new Audio('{{ asset('sounds/notification.mp3') }}');
+            //         audio.play();
+            //     }
+            // });
+
+            .listen('MessageSentEvent', (event) => {
+            console.log('MessageSentEvent received:', event);
+
+            const chatContainer = document.getElementById('chat-container');
+            const messageInputField = document.getElementById('message-input');
+            
+            const isInputFocused = document.activeElement === messageInputField;
+            const isScrolledToBottom = chatContainer.scrollTop + chatContainer.clientHeight >= chatContainer.scrollHeight - 10;
+
+            // Append the message
+            const message = event.message;
+            const isSender = message.sender_id === {{ auth()->guard('user')->id() }};
+            
+            const messageWrapper = document.createElement('div');
+            if (isSender) {
+                messageWrapper.className = 'd-flex justify-content-end text-end mb-1';
+                messageWrapper.innerHTML = `
+                    <div class="w-100">
+                        <div class="d-flex flex-column align-items-end">
+                            <div class="bg-primary text-white p-2 px-3 rounded-2">
+                                ${message.message}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                messageWrapper.className = 'd-flex flex-column align-items-start';
+                messageWrapper.innerHTML = `
+                    <div class="bg-light text-secondary p-2 px-3 rounded-2">
+                        ${message.message}
+                    </div>
+                `;
+            }
+
+            chatContainer.appendChild(messageWrapper);
+
+            // Play sound if not focused or scrolled
+            if (!isInputFocused || !isScrolledToBottom) {
+                const audio = new Audio('{{ asset('sounds/notification.mp3') }}');
+                audio.play();
+            }
+
+            // Scroll to bottom after new message
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        });
+
 
         // Listen for Livewire events
         Livewire.on('messages-updated', () => {

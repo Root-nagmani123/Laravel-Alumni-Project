@@ -72,10 +72,8 @@
 
                                 <!-- Contact item -->
                                 <li class="mt-3 hstack gap-3 align-items-center position-relative toast-btn {{ $selectedChat == $chat->id ? 'active-chat' : '' }}"
-                                    data-target="chatToast-{{ $chat->id }}"
-                                    wire:click="selectChat({{ $chat->id }})"
-                                    wire:key="chat-{{ $chat->id }}"
-                                    style="cursor: pointer;">
+                                    data-target="chatToast-{{ $chat->id }}" wire:click="selectChat({{ $chat->id }})"
+                                    wire:key="chat-{{ $chat->id }}" style="cursor: pointer;">
                                     <!-- Avatar -->
                                     <div class="avatar status-online">
                                         <img class="avatar-img rounded-circle" src="assets/images/avatar/01.jpg" alt="">
@@ -145,7 +143,7 @@
                                 </div>
                             </div>
                             <div class="d-flex">
-                                
+
                                 <a class="btn btn-secondary-soft-hover py-1 px-2" data-bs-toggle="collapse"
                                     href="#collapseChat-{{ $selectChat->id }}" aria-expanded="false"
                                     aria-controls="collapseChat-{{ $selectChat->id }}"><i class="bi bi-dash-lg"></i></a>
@@ -171,24 +169,26 @@
                             <div class="os-content-glue" style="margin: 0px;"></div>
                             <div class="os-padding">
                                 <div class="os-viewport os-viewport-native-scrollbars-invisible" style="overflow: visible;">
-                                    <div class="os-content" style="padding: 0px; height: 100%; width: 100%;">
+                                    <div class="os-content" style="padding: 0px; height: 100%; width: 100%;" id="chat-container">
                                         <!-- Chat time -->
 
                                         @if ($messages)
                                             @foreach ($messages as $message)
-                                                
+
                                                 @if ($message->sender_id != auth()->guard('user')->id())
                                                     <div class="d-flex flex-column align-items-start">
-                                                        <div class="bg-light text-secondary p-2 px-3 rounded-2">{{ $message->message ?? '' }}</div>
+                                                        <div class="bg-light text-secondary p-2 px-3 rounded-2">
+                                                            {{ $message->message ?? '' }}</div>
                                                     </div>
                                                 @else
-                                                <div class="d-flex justify-content-end text-end mb-1">
-                                                    <div class="w-100">
-                                                        <div class="d-flex flex-column align-items-end">
-                                                            <div class="bg-primary text-white p-2 px-3 rounded-2">{{ $message->message ?? '' }}</div>
+                                                    <div class="d-flex justify-content-end text-end mb-1">
+                                                        <div class="w-100">
+                                                            <div class="d-flex flex-column align-items-end">
+                                                                <div class="bg-primary text-white p-2 px-3 rounded-2">
+                                                                    {{ $message->message ?? '' }}</div>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
                                                 @endif
                                             @endforeach
                                         @endif
@@ -262,5 +262,3 @@
     @endif
         <!-- Chat END -->
     </div>
-
-
