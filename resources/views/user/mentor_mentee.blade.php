@@ -151,7 +151,7 @@
                             <div class="mb-3">
                                 <label class="form-label">Service</label>
                                <select class="form-select service" name="service" id="service" data-id="want_become_mentor" required>
-                                    <option selected disabled>Select Service</option>
+                                    <option  value=''>Select Service</option>
                                     @if($members->isEmpty())
                                         <option disabled>No Services Available</option>
                                     @else
@@ -203,7 +203,7 @@
                             <div class="mb-3">
                                 <label class="form-label">Service</label>
                                <select class="form-select service" name="service" id="service" data-id="want_become_mentee" required>
-                                    <option selected disabled>Select Service</option>
+                                    <option  value=''>Select Service</option>
                                     @if($members->isEmpty())
                                         <option disabled>No Services Available</option>
                                     @else
@@ -274,14 +274,14 @@
                                             <form method="POST" action="{{ route('user.request.update') }}" class="d-inline">
                                                 @csrf
                                                 <input type="hidden" name="id" value="{{ $request->request_id }}">
-                                                <input type="hidden" name="type" value="mentee"> 
+                                                <input type="hidden" name="type" value="mentor"> 
                                                 <input type="hidden" name="status" value="1">
                                                 <button type="submit" class="btn btn-sm btn-success">Accept</button>
                                             </form>
                                             <form method="POST" action="{{ route('user.request.update') }}" class="d-inline">
                                                 @csrf
                                                 <input type="hidden" name="id" value="{{ $request->request_id }}">
-                                                <input type="hidden" name="type" value="mentee"> 
+                                                <input type="hidden" name="type" value="mentor"> 
                                                 <input type="hidden" name="status" value="3">
                                                 <button type="submit" class="btn btn-sm btn-danger">Reject</button>
                                             </form>
@@ -365,11 +365,11 @@
                                 @php
                                     $filteredMentorRequests = $mentor_connections->filter(function($request) {
                                         $request->type = 'mentor';
-                                        return $request->status == 1 || $request->status == 3;
+                                        return $request->status == 2 || $request->status == 3;
                                     });
                                     $filteredMenteeRequests = $mentee_connections->filter(function($request) {
                                         $request->type = 'mentee';
-                                        return $request->status == 1 || $request->status == 3;
+                                        return $request->status == 2 || $request->status == 3;
 
                                     });
                                     $mergedRequests = array_merge($filteredMentorRequests->toArray(), $filteredMenteeRequests->toArray());
@@ -383,7 +383,7 @@
                                         <td>{{ $request->sector }}</td>
                                         <td>{{ $request->type }}</td>
                                         <td>
-                                            @if ($request->status == 1)
+                                            @if ($request->status == 2)
                                                 Pending
                                             @elseif ($request->status == 3)
                                                 Rejected
