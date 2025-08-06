@@ -42,12 +42,21 @@ $members = DB::table('members')
         ->where('mentor_requests.Mentor_ids', $user_id)
         ->select('mentor_requests.id as request_id', 'members.name', 'members.cader as cadre', 'members.batch', 'members.sector','mentor_requests.status')
         ->get();
+        // print_r($mentee_requests);die;
 
          $mentee_connections = DB::table('mentee_requests')
         ->join('members', 'mentee_requests.mentees_ids', '=', 'members.id')
         ->where('mentee_requests.mentor', $user_id)
         ->select('mentee_requests.id as request_id', 'members.name', 'members.cader as cadre', 'members.batch', 'members.sector','mentee_requests.status')
         ->get();
+
+        //   $mentee_connections = DB::table('mentee_requests')
+        //     ->join('members', 'mentee_requests.mentor', '=', 'members.id')
+        //     ->where('mentee_requests.mentees_ids', $user_id)
+        //     ->select('mentee_requests.id as request_id', 'members.name', 'members.cader as cadre', 'members.batch', 'members.sector', 'mentee_requests.status', 'members.id as member_id')
+        //     ->get();
+            // print_r($mentee_connections);die;
+
     $mentor_connections = DB::table('mentor_requests')
         ->join('members', 'mentor_requests.Mentor_ids', '=', 'members.id')
         ->where('mentor_requests.mentees', $user_id)
@@ -270,29 +279,33 @@ function updateRequest(Request $request) : \Illuminate\Http\RedirectResponse {
     DB::table($table)
         ->where('id', $request->id)
         ->update(['status' => $request->status]);
-
+// print_r($requestData);die;
     // Send notifications based on status
     if ($request->status == 1) {
         // Request accepted
         if ($request->type === 'mentor') {
             $notification = $this->notificationService->notifyMentorRequestAccepted($requestData->mentees, $user, 'Your mentor request has been accepted!', $request->id);
+            Member::where('id', $requestData->mentees)->update(['is_notification' => 0]);
+       
         } else {
-            $notification = $this->notificationService->notifyMenteeRequestAccepted($requestData->Mentor_ids, $user, 'Your mentee request has been accepted!', $request->id);
+            $notification = $this->notificationService->notifyMenteeRequestAccepted($requestData->mentees_ids, $user, 'Your mentee request has been accepted!', $request->id);
+            Member::where('id', $requestData->mentees_ids)->update(['is_notification' => 0]);
+       
         }
-        if($notification){
-            Member::where('id', $requestData->Mentor_ids)->update(['is_notification' => 0]);
-        }
+       
         $message = $request->type === 'mentor' ? 'You are now a mentor.' : 'You are now a mentee.';
     } else if($request->status == 3) {
         // Request rejected
         if ($request->type === 'mentor') {
             $notification = $this->notificationService->notifyMentorRequestRejected($requestData->mentees, $user, 'Your mentor request has been rejected.', $request->id);
+            Member::where('id', $requestData->mentees)->update(['is_notification' => 0]);
+       
         } else {
-            $notification = $this->notificationService->notifyMenteeRequestRejected($requestData->Mentor_ids, $user, 'Your mentee request has been rejected.', $request->id);
+            $notification = $this->notificationService->notifyMenteeRequestRejected($requestData->mentees_ids, $user, 'Your mentee request has been rejected.', $request->id);
+        
+            Member::where('id', $requestData->mentees_ids)->update(['is_notification' => 0]);
         }
-        if($notification){
-            Member::where('id', $requestData->Mentor_ids)->update(['is_notification' => 0]);
-        }
+       
         $message = $request->type === 'mentor' ? 'Your mentor request has been rejected.' : 'Your mentee request has been rejected.';
     }
 
