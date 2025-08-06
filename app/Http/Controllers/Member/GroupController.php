@@ -8,6 +8,8 @@ use App\Http\Requests\GroupRequest;
 use App\Services\GroupService;
 use Illuminate\Http\RedirectResponse;
 use App\Models\Group;
+use App\Models\Post;
+
 use Illuminate\Support\Facades\DB;
 use App\Models\GroupMember;
 
@@ -139,14 +141,21 @@ function activateGroup(Request $request) : RedirectResponse {
         return redirect()->route('member.groups.index')->with('success', 'Group updated successfully.');
     }
 
-    public function destroy(Group $group)
-    {
-        try {
-            $this->groupService->delete($group);
-            return redirect()->route('member.groups.index')->with('success', 'Group deleted successfully.');
-        } catch (\Exception $e) {
-            return redirect()->route('member.groups.index')->with('error', $e->getMessage());
-        }
+   public function destroy(Group $group)
+{
+    try { 
+        $this->groupService->delete($group);
+        return redirect()->route('user.group.index')->with('success', 'Group deleted successfully.');
+    } catch (\Exception $e) {
+        return redirect()->route('user.group.index')->with('error', $e->getMessage());
     }
-    
+}
+function post_destroy(Request $request, $id) : RedirectResponse {
+    $post = Post::find($id);
+    if (!$post) {
+        return redirect()->back()->with('error', 'Post not found.');
+    }
+    $post->delete();
+    return redirect()->back()->with('success', 'Post deleted successfully.');
+}
 }

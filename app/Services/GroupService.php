@@ -67,13 +67,10 @@ class GroupService
 
     public function delete(Group $group)
     {
-        if ($group->status == 1) {
-            throw new \Exception("Cannot delete active group.");
-        }
+        GroupMember::where('group_id', $group->id)->delete();
 
-        // Optionally delete associated GroupMember entry
-        Member::where('group_id', $group->id)->delete();
+    // Delete the group itself
+    return $group->delete();
 
-        return $group->delete();
     }
 }

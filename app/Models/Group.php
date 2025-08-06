@@ -22,4 +22,9 @@ class Group extends Model
     {
         return $this->hasOne(GroupMember::class);
     }
+    public function members()
+{
+    return $this->hasMany(GroupMember::class);
+}
+
 }

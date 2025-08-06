@@ -72,6 +72,19 @@
                                     </button>
                                 </form>
                             </li>
+                            @if($isMentee)
+                            <li>
+                               <form action="{{ route('user.group.destroy', $group->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this group?');">
+                                    @csrf
+                                    @method('DELETE') {{-- This is the key to spoof DELETE --}}
+                                    <input type="hidden" name="group_id" value="{{ $group->id }}">
+                                    <button type="submit" class="dropdown-item text-danger">
+                                        <i class="bi bi-trash fa-fw pe-2"></i>Delete Group
+                                    </button>
+                                </form>
+
+                            </li>
+                            @endif
                         </ul>
                     </div>
                    
@@ -109,6 +122,17 @@
                                     <span class="nav-item small">{{ $post->created_at->diffForHumans() }}</span>
                                 </div>
                                 <p class="mb-0 small">{{ $post->member->designation ?? 'Member' }}</p>
+                            </div>
+                            <div>
+                                @if($post->member && $post->member->id === auth('user')->id())
+                                <form action="{{ route('user.group.post.destroy', $post->id) }}" method="POST">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="text-decoration-none text-primary ms-2 border-0 bg-transparent">
+                                        <i class="bi bi-trash"></i> Delete Post
+                                    </button>
+                                </form>
+                                @endif
                             </div>
                         </div>
                     </div>

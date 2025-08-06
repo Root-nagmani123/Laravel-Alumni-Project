@@ -466,5 +466,10 @@ Route::middleware(['auth:user'])->group(function () {
         Route::get('/{group}/edit', [MemberGroupController::class, 'edit'])->name('edit');
         Route::put('/{group}', [MemberGroupController::class, 'update'])->name('update');
         Route::delete('/{group}', [MemberGroupController::class, 'destroy'])->name('destroy');
+
+   
+        Route::delete('group_post_data/{post}', [MemberGroupController::class, 'post_destroy'])->name('post.destroy');
+
+
     });
 });
