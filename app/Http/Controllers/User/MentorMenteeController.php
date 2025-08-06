@@ -209,7 +209,8 @@ foreach ($request->input('mentees') as $menteeId) {
     'updated_at'   => now(),
 ]);
 
-   $notification = $this->notificationService->notifyMentorRequest($menteeId, $user, 'You have a new mentor request', $requestId);
+   $userName=auth()->guard('user')->user()->name;
+   $notification = $this->notificationService->notifyMentorRequest($menteeId, $user, $userName. 'sent a new mentor request', $requestId);
    if($notification){
     Member::where('id', $menteeId)->update(['is_notification' => 0]);
    }
@@ -243,7 +244,9 @@ function want_become_mentee(Request $request)  {
            'created_at'   => now(),
            'updated_at'   => now(),
        ]);
-       $notification = $this->notificationService->notifyMenteeRequest($menteeId, $user, 'You have a new mentee request', $requestId);
+       
+       $userName = auth()->guard('user')->user()->name;
+       $notification = $this->notificationService->notifyMenteeRequest($menteeId, $user, $userName . ' sent you a new mentee request', $requestId);
        if($notification){
         Member::where('id', $menteeId)->update(['is_notification' => 0]);
        }
@@ -272,11 +275,12 @@ function updateRequest(Request $request) : \Illuminate\Http\RedirectResponse {
         // Request accepted
         if ($request->type === 'mentor') {
             $notification = $this->notificationService->notifyMentorRequestAccepted($requestData->mentees, $user, 'Your mentor request has been accepted!', $request->id);
+            Member::where('id', $requestData->mentees)->update(['is_notification' => 0]);
+
         } else {
             $notification = $this->notificationService->notifyMenteeRequestAccepted($requestData->Mentor_ids, $user, 'Your mentee request has been accepted!', $request->id);
-        }
-        if($notification){
             Member::where('id', $requestData->Mentor_ids)->update(['is_notification' => 0]);
+
         }
         $message = $request->type === 'mentor' ? 'You are now a mentor.' : 'You are now a mentee.';
     } else if($request->status == 3) {
