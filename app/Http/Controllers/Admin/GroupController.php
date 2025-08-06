@@ -93,8 +93,8 @@ class GroupController extends Controller
     $mentorId = $request->input('mentor_id');
 
     if ($mentorId && $request->input('status') == 1) {
-        $mentorMessage = $request->input('name') . ' group has been added as mentor';
-        $notification=$this->notificationService->notifyMemberAdded(
+        $mentorMessage = $request->input('name') . 'group has been added as mentor';
+        $notificationMentor=$this->notificationService->notifyMemberAdded(
             [$mentorId],
             'group',
             $mentorMessage,
@@ -102,8 +102,8 @@ class GroupController extends Controller
             'group_member'
         );
 
-        if($notification){
-            Member::query()->whereIn('id', $mentorId)->update(['is_notification' => 0]);
+        if($notificationMentor){
+            Member::query()->whereIn('id', [$mentorId])->update(['is_notification' => 0]);
         }
 
     }
@@ -112,7 +112,7 @@ class GroupController extends Controller
     $userIds = $request->input('user_id', []);
     if (!empty($userIds) && $request->input('status') == 1) {
         $memberMessage = $request->input('name') . ' group has been added as mentiee';
-        $this->notificationService->notifyMemberAdded(
+        $notificationMentiee=$this->notificationService->notifyMemberAdded(
             $userIds,
             'group',
             $memberMessage,
@@ -121,7 +121,7 @@ class GroupController extends Controller
         );
     }
 
-    if($notification){
+    if($notificationMentor && $notificationMentiee){
         Member::query()->whereIn('id', $userIds)->update(['is_notification' => 0]);
     }
     
