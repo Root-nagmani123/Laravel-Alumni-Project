@@ -24,6 +24,7 @@ class MentorMenteeController extends Controller
 
     public function index()
     {
+     
 $user_id = auth()->guard('user')->user()->id;    
 $members = DB::table('members')
 ->select('Service', DB::raw('COUNT(*) as count'))
@@ -42,18 +43,19 @@ $members = DB::table('members')
         ->select('mentor_requests.id as request_id', 'members.name', 'members.cader as cadre', 'members.batch', 'members.sector','mentor_requests.status')
         ->get();
 
-         $mentor_connections = DB::table('mentee_requests')
+         $mentee_connections = DB::table('mentee_requests')
         ->join('members', 'mentee_requests.mentees_ids', '=', 'members.id')
         ->where('mentee_requests.mentor', $user_id)
         ->select('mentee_requests.id as request_id', 'members.name', 'members.cader as cadre', 'members.batch', 'members.sector','mentee_requests.status')
         ->get();
+       
 
-    $mentee_connections = DB::table('mentor_requests')
+    $mentor_connections = DB::table('mentor_requests')
         ->join('members', 'mentor_requests.Mentor_ids', '=', 'members.id')
         ->where('mentor_requests.mentees', $user_id)
         ->select('mentor_requests.id as request_id', 'members.name', 'members.cader as cadre', 'members.batch', 'members.sector','mentor_requests.status')
         ->get();
-
+//  print_r($mentee_connections);die;
 
 
         // print_r($members);die;
