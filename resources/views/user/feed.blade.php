@@ -7,8 +7,8 @@
        <div class="row g-4">
            <div class="col-4 left-sidebar">
             <div class="row">
-                <div class="col-6"></div>
-                <div class="col-6">
+                <div class="col-4"></div>
+                <div class="col-8">
                     @include('partials.left-sidebar')
                 </div>
             </div>
@@ -21,7 +21,7 @@
            </div>
            <div class="col-4 right-sidebar" >
                <div class="row">
-                   <div class="col-6">
+                   <div class="col-8">
                        @include('partials.right-sidebar')
                    </div>
                </div>
