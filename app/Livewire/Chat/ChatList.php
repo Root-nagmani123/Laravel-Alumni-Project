@@ -16,7 +16,12 @@ class ChatList extends Component
     public $newMessage = '';
     public $messages = [];
     public $selectedChat = null;
-    // public $senderId = auth()->guard('user')->id();
+    public $senderId;
+
+    public function mount()
+    {
+        $this->senderId = auth()->guard('user')->id();
+    }
 
     public function selectChat($chatId)
     {
@@ -57,11 +62,20 @@ class ChatList extends Component
         $message->message = $this->newMessage;
         $message->save();
 
-        // broadcast(new MessageSentEvent($message))->toOthers();
+        $this->messages[] = $message;
+        
         broadcast(new MessageSentEvent($message))->toOthers();
         $this->reset(['newMessage']);
     }
 
+    #[On('echo-private:chat-channel.{senderId},MessageSentEvent')]
+    public function listenMessage($event)
+    {
+        # Convert the event message array into an Eloquent model with relationships
+        $newMessage = Message::find($event['message']['id'])->load('sender:id,name', 'receiver:id,name');
+
+        $this->messages[] = $newMessage;
+    }
     
 
     public function render()
