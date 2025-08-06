@@ -27,14 +27,7 @@
             </div>
         </div>
     </div>
-    @if(session('success'))
-    <div class="alert alert-success">{{ session('success') }}</div>
-    @endif
-    @if (session('error'))
-    <div class="alert alert-danger" style="color:white;">
-        {{ session('error') }}
-    </div>
-    @endif
+    
     <div class="datatables">
         <!-- start Zero Configuration -->
         <div class="card">
@@ -52,22 +45,24 @@
 
                         <h5>Mentors</h5>
                         <ul class="list-group mb-3">
-
+                            @foreach($mentor_connections as $mentor)
                             <li class="list-group-item d-flex justify-content-between">
-                                <span></span>
-                                <small></small>
+                                <span>{{ $mentor->mentor_name }}  Mentor of {{ $mentor->mentee_name }}</span>
+                                <small>@if($mentor->status) Active @else Inactive @endif</small>
                             </li>
-
+                            @endforeach
                         </ul>
 
 
                         <h5>Mentees</h5>
                         <ul class="list-group">
 
+                               @foreach($mentee_connections as $mentee)
                             <li class="list-group-item d-flex justify-content-between">
-                                <span></span>
-                                <small></small>
+                                <span>{{ $mentee->mentor_name }}  Mentee of {{ $mentee->mentee_name }}</span>
+                                <small>@if($mentee->status) Active @else Inactive @endif</small>
                             </li>
+                            @endforeach
 
                         </ul>
 

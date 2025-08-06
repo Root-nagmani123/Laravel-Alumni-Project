@@ -47,14 +47,20 @@
                                     <label for="sectorFilter" class="form-label">Filter by Sector:</label>
                                     <select id="sectorFilter" name="sector" class="form-select">
     <option value="">All</option>
-    @php
-        $sectors = $members->pluck('sector')
-            ->unique()
-            ->filter(function($value) {
-                return !is_null($value) && $value !== '' && $value != 0;
-            })
-            ->sort(); // Sort alphabetically
-    @endphp
+   @php
+use Illuminate\Support\Str;
+
+$sectors = $members->pluck('sector')
+    ->map(function($value) {
+        return Str::of($value)->trim(); // remove leading/trailing spaces
+    })
+    ->filter(function($value) {
+        return !is_null($value) && $value !== '' && $value != '0';
+    })
+    ->unique()
+    ->sort(); // Sort alphabetically
+@endphp
+
     @foreach ($sectors as $sector)
         <option value="{{ $sector }}">{{ $sector }}</option>
     @endforeach

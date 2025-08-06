@@ -267,8 +267,12 @@ Route::prefix('admin')->middleware('auth:admin')->controller(AdminController::cl
 
 	Route::get('profile', [AdminController::class, 'profile'])->name('admin.profile');
 
+	Route::get('mentorship', [AdminController::class, 'mentorship'])->name('admin.mentorship.index');
+
+
     // Location Routes
     Route::prefix('location')->name('admin.location.')->group(function () {
+       
 
         // Country Routes
         Route::get('/country', [App\Http\Controllers\Admin\Location\CountryController::class, 'index'])->name('country');
@@ -429,9 +433,7 @@ Route::get('/user_login', function () {
         //     return view('user.groups');
         // })->name('user.groups');
         
-          Route::get('/admin/mentorship', function () {
-            return view('admin.mentorship.index');
-        })->name('admin.mentorship.index');
+         
         Route::get('/admin/mentorship/create', function () {
             return view('admin.mentorship.create');
         })->name('admin.mentorship.create');
