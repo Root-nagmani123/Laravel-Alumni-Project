@@ -173,9 +173,6 @@ Header START -->
                                                         case 'post':
                                                             $notificationUrl = url('user/group-post/' . $notification->source_id);
                                                             break;
-                                                        case 'forum':
-                                                            $notificationUrl = url('/user/forum/' . $notification->source_id);
-                                                            break;
                                                         case 'group':
                                                             $notificationUrl = route('user.group-post', ['id' => $notification->source_id]);
                                                             break;
