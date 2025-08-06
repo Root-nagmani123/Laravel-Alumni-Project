@@ -1,5 +1,12 @@
 <!-- =======================
 Header START -->
+<style>
+    .notification-item:hover {
+    background-color: #f8f9fa; /* Light gray on hover */
+    cursor: pointer;
+}
+
+</style>
 <header class="navbar-light fixed-top header-static bg-mode">
 
     <!-- Logo Nav START -->
@@ -138,9 +145,8 @@ Header START -->
                                     href="{{ route('user.notifications.status', ['id' => Auth::guard('user')->user()->id]) }}">Clear
                                     all</a>
                             </div>
-                            <div class="card-body p-0">
-                                <div style="max-height: 300px; overflow-y: auto;">
-                                    <ul class="list-group list-group-flush list-unstyled p-2">
+                            <div class="card-body p-0" style="max-height: 300px; overflow-y: auto;">
+                                <ul class="list-group list-group-flush list-unstyled p-2">
                                         @if(isset($notifications) && $notifications->count() > 0)
                                         @php
                                         $latestNotifications = $notifications->sortByDesc('created_at')->take(5);
@@ -187,24 +193,30 @@ Header START -->
                                                     ]);
                                                 }
                                             @endphp
-                                            <div class="list-group-item rounded d-flex border-0 mb-1 p-3">
-                                                <div class="ms-sm-3">
-                                                    <div class="d-flex">
-                                                        <a href="{{ $notificationUrl }}" class="text-decoration-none notification-link" 
-                                                           data-url="{{ $notificationUrl }}" 
-                                                           data-source-type="{{ $notification->source_type ?? '' }}" 
-                                                           data-source-id="{{ $notification->source_id ?? '' }}"
-                                                           onclick="handleNotificationClick(event, '{{ $notificationUrl }}', '{{ $notification->source_type ?? '' }}', '{{ $notification->source_id ?? '' }}')">
-                                                            <p class="small mb-2 text-primary">
-                                                                {{ $notification->message }}
-                                                            </p>
-                                                        </a>
-                                                        <p class="small ms-3">
-                                                            {{ $notification->created_at->setTimezone('Asia/Kolkata')->format('d-m-Y') }}
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                           <!-- Scrollable Wrapper -->
+<!-- Scrollable Notification Container -->
+<div class="notification-scroll-container overflow-auto" style="max-height: 300px;">
+    <!-- Notification Item -->
+    <div class="d-flex align-items-start p-3 border rounded mb-2 notification-item" style="transition: background-color 0.3s;">
+        <!-- Content -->
+        <div class="flex-grow-1 ms-3">
+            <div class="d-flex justify-content-between">
+                <p class="mb-1">
+                    <strong>{{ $notification->title ?? 'Notification Title' }}</strong>: 
+                    <span class="text-muted">{{ $notification->message }}</span>
+                </p>
+                <small class="text-muted ms-2">
+                    {{ \Carbon\Carbon::parse($notification->created_at)->setTimezone('Asia/Kolkata')->diffForHumans(null, null, true) }}
+                </small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Repeat the above block for more notifications -->
+</div>
+
+
+
                                         </li>
                                         @endforeach
                                         @else
@@ -218,7 +230,6 @@ Header START -->
                                         </li>
                                         @endif
                                     </ul>
-                                </div>
 
                             </div>
                         </div>
