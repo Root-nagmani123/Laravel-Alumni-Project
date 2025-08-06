@@ -59,13 +59,16 @@
 
                                 <div class="col-md-6">
                                     <div class="mb-3">
-                                        <label class="form-label">Forum End Date</label>
+                                        <label class="form-label">Forum End Date<span
+                                            class="required text-danger ">*</span></label>
+                                        
                                         <input type="date" class="form-control" name="end_date" id="end_date" required>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="mb-3">
-                                        <label class="form-label">Forum Image</label>
+                                        <label class="form-label">Forum Image<span
+                                            class="required text-danger ">*</span></label>
                                         <input type="file" class="form-control" name="image" id="forum-image"
                                             accept="image/*" required>
 
@@ -85,7 +88,8 @@
                                     <div class="mb-3">
                                        <form class="needs-validation" novalidate>
     <div class="mb-3">
-        <label for="status" class="form-label">Status</label>
+        <label for="status" class="form-label">Status<span
+                                            class="required text-danger ">*</span></label>
         <select class="form-select" name="status" id="status" required>
             <option value="" disabled selected>Select Status</option>
             <option value="1">Active</option>
@@ -134,6 +138,10 @@ document.getElementById('forum-image').addEventListener('change', function(event
         reader.readAsDataURL(input.files[0]);
     }
 });
+document.addEventListener('DOMContentLoaded', function () {
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById("end_date").setAttribute('min', today);
+    });
 </script>
 
 @endsection

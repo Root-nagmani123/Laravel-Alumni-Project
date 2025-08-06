@@ -270,7 +270,7 @@ class ForumController extends Controller
         ->get();*/
 
        $topics = ForumTopic::where('forum_id', $id)
-    ->where('created_by', session('LoginID'))
+    
     ->orderBy('id', 'desc')
     ->with('creator')
     ->get();
