@@ -26,23 +26,33 @@
                             <label class="form-label">Mentor Name</label>
                             <!--<select id="" class="form-control" name="mentor_id" required="" tabindex="-1"
                                 aria-hidden="true">-->
-                            <select id="searchable-select" class="form-control " name="mentor_id"  required>
-                                <option value="" data-select2-id="select2-data-4-1ybl">Select Mentor</option>
-                                @foreach($mentors as $mentors)
-                                <option value="{{ $mentors->id }}">{{ $mentors->name }}</option>
-                                @endforeach
-                            </select>
+                            @php
+    $sortedMentors = $mentors->sortBy('name');
+@endphp
+
+<select id="searchable-select" class="form-control" name="mentor_id" required>
+    <option value="">Select Mentor</option>
+    @foreach($sortedMentors as $mentor)
+        <option value="{{ $mentor->id }}">{{ $mentor->name }}</option>
+    @endforeach
+</select>
+
 
                         </div>
                     </div>
                     <div class="col-6">
                         <div class="mb-3">
                             <label class="form-label">Member Name (Multiple Mentees) <span class="text-danger">*</span></label>
-                            <select name="user_id[]" class="form-control js-example-basic-multiple"  multiple="multiple" required>
-                                @foreach($users as $user)
-                                <option value="{{ $user->id }}">{{ $user->name }}</option>
-                                @endforeach
-                            </select>
+                           @php
+    $sortedUsers = $users->sortBy('name');
+@endphp
+
+<select name="user_id[]" class="form-control js-example-basic-multiple" multiple="multiple" required>
+    @foreach($sortedUsers as $user)
+        <option value="{{ $user->id }}">{{ $user->name }}</option>
+    @endforeach
+</select>
+
 
                         </div>
                     </div>

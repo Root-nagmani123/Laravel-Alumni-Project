@@ -118,4 +118,21 @@ class ForumController extends Controller
         return redirect()->back()->with('success', 'Topic saved successfully!');
 
     }
+    function activateForum(Request $request){
+        // Validate the request
+        $request->validate([
+            'forum_id' => 'required|exists:forums,id',
+            'end_date' => 'required|date|after_or_equal:today',
+        ]);
+        $forum = Forum::find($request->input('forum_id'));
+        if (!$forum) {
+            return redirect()->back()->with('error', 'Forum not found.');
+        }
+        // Activate the forum
+        $forum->end_date = $request->input('end_date');
+        $forum->updated_at = now();
+        $forum->save();
+
+        return redirect()->back()->with('success', 'Forum activated successfully!');
+    }
 }

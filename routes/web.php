@@ -188,6 +188,7 @@ Route::prefix('user')->name('user.')->group(function () {
 		Route::post('/mentor/want_become_mentee', [MentorMenteeController::class, 'want_become_mentee'])->name('mentor.want_become_mentee');
 		Route::post('/request/update', [MentorMenteeController::class, 'updateRequest'])->name('request.update');
         Route::get('user/forum', [MemberForumController::class, 'index'])->name('forum');
+        Route::post('user/forum/activate', [MemberForumController::class, 'activateForum'])->name('forum.activate');
         Route::get('user/forum/{id}', [MemberForumController::class, 'show'])->name('forum.show');
         Route::post('user/forum/topic/{id}/like', [MemberForumController::class, 'like'])->name('forum.topic.like');
         Route::post('user/forum/topic/{id}/unlike', [MemberForumController::class, 'unlike'])->name('forum.topic.unlike');
@@ -424,9 +425,9 @@ Route::get('/user_login', function () {
         // Route::get('/user/forum', function () {
         //     return view('user.forum');
         // })->name('user.forum');
-        Route::get('/user/group', function () {
-            return view('user.groups');
-        })->name('user.groups');
+        // Route::get('/user/group', function () {
+        //     return view('user.groups');
+        // })->name('user.groups');
         
           Route::get('/admin/mentorship', function () {
             return view('admin.mentorship.index');
@@ -454,6 +455,8 @@ Route::middleware(['auth:user'])->group(function () {
     Route::post('/user/change-password', [ChangePasswordController::class, 'changePassword'])->name('user.change-password');
 
     Route::prefix('group')->name('user.group.')->group(function () {
+         
+        Route::post('/activate-group', [MemberGroupController::class, 'activateGroup'])->name('activate-group');
         Route::get('/', [MemberGroupController::class, 'index'])->name('index');
         Route::get('/create', [MemberGroupController::class, 'create'])->name('create');
         Route::post('/store', [MemberGroupController::class, 'store'])->name('store');

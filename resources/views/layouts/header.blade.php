@@ -1,24 +1,37 @@
 <!-- =======================
 Header START -->
+<style>
+    .notification-item:hover {
+    background-color: #f8f9fa; /* Light gray on hover */
+    cursor: pointer;
+}
+/* This goes in your CSS file */
+.dropdown-menu {
+    z-index: 1100 !important;
+}
+
+
+</style>
 <header class="navbar-light fixed-top header-static bg-mode">
 
     <!-- Logo Nav START -->
     <nav class="navbar navbar-expand-lg">
         <div class="container">
             <!-- Logo START -->
-            <a class="navbar-brand d-flex align-items-center gap-2" href="https://www.lbsnaa.gov.in/" target="_blank">
-                <img src="{{ asset('admin_assets/images/logos/lbsnaa_logo.jpg') }}" alt="LBSNAA Logo"
-                    class="navbar-brand-item" style="height: 60px; object-fit: contain;" loading="lazy"
-                    decoding="async">
+<a class="navbar-brand d-flex align-items-center gap-2" href="https://www.lbsnaa.gov.in/" target="_blank">
+    <img src="{{ asset('admin_assets/images/logos/lbsnaa_logo.jpg') }}" alt="LBSNAA Logo"
+        class="navbar-brand-item" style="height: 60px; object-fit: contain;" loading="lazy" decoding="async">
 
-                <div class="d-flex flex-column lh-sm">
-                    <span class="h5 mb-0 fw-bold">Alumni</span>
-                    <span style="font-size: 12px; font-weight: 500;color: #af2910;">Lal Bahadur Shastri <br>National
-                        Academy of Administration</span>
-                </div>
-            </a>
+    <!-- Text: visible only on medium and up -->
+    <div class="d-none d-md-flex flex-column lh-sm">
+        <span class="h5 mb-0 fw-bold">Alumni</span>
+        <span style="font-size: 12px; font-weight: 500; color: #af2910;">
+            Lal Bahadur Shastri <br> National Academy of Administration
+        </span>
+    </div>
+</a>
+<!-- Logo END -->
 
-            <!-- Logo END -->
 
             <!-- Responsive navbar toggler -->
             <button class="navbar-toggler ms-auto icon-md btn btn-light p-0" type="button" data-bs-toggle="collapse"
@@ -66,7 +79,7 @@ Header START -->
 
                     <!-- Nav item 3 Mega menu -->
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url('user/events') }}">Events</a>
+                        <a class="nav-link" href="{{ url('user/all-events') }}">Events</a>
                     </li>
                 </ul>
                 <!-- Search Input Group with Dropdown -->
@@ -122,9 +135,8 @@ Header START -->
                                     href="{{ route('user.notifications.status', ['id' => Auth::guard('user')->user()->id]) }}">Clear
                                     all</a>
                             </div>
-                            <div class="card-body p-0">
-                                <div style="max-height: 300px; overflow-y: auto;">
-                                    <ul class="list-group list-group-flush list-unstyled p-2">
+                            <div class="card-body p-0" style="max-height: 300px; overflow-y: auto;">
+                                <ul class="list-group list-group-flush list-unstyled p-2">
                                         @if(isset($notifications) && $notifications->count() > 0)
                                         @php
                                         $latestNotifications = $notifications->sortByDesc('created_at')->take(5);
@@ -171,24 +183,34 @@ Header START -->
                                                     ]);
                                                 }
                                             @endphp
-                                            <div class="list-group-item rounded d-flex border-0 mb-1 p-3">
-                                                <div class="ms-sm-3">
-                                                    <div class="d-flex">
-                                                        <a href="{{ $notificationUrl }}" class="text-decoration-none notification-link" 
+                                           <!-- Scrollable Wrapper -->
+<!-- Scrollable Notification Container -->
+<div class="notification-scroll-container overflow-auto" style="max-height: 300px;">
+    <!-- Notification Item -->
+    <div class="d-flex align-items-start p-3 border rounded mb-2 notification-item" style="transition: background-color 0.3s;">
+        <!-- Content -->
+        <div class="flex-grow-1 ms-3">
+            <div class="d-flex justify-content-between">
+                <a href="{{ $notificationUrl }}" class="text-decoration-none notification-link" 
                                                            data-url="{{ $notificationUrl }}" 
                                                            data-source-type="{{ $notification->source_type ?? '' }}" 
                                                            data-source-id="{{ $notification->source_id ?? '' }}"
-                                                           onclick="handleNotificationClick(event, '{{ $notificationUrl }}', '{{ $notification->source_type ?? '' }}', '{{ $notification->source_id ?? '' }}')">
-                                                            <p class="small mb-2 text-primary">
-                                                                {{ $notification->message }}
-                                                            </p>
-                                                        </a>
-                                                        <p class="small ms-3">
-                                                            {{ $notification->created_at->setTimezone('Asia/Kolkata')->format('d-m-Y') }}
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                                           onclick="handleNotificationClick(event, '{{ $notificationUrl }}', '{{ $notification->source_type ?? '' }}', '{{ $notification->source_id ?? '' }}')"><p class="mb-1">
+                    <strong>{{ $notification->title ?? 'Notification Title' }}</strong>: 
+                    <span class="text-muted">{{ $notification->message }}</span>
+                </p></a>
+                <small class="text-muted ms-2">
+                    {{ \Carbon\Carbon::parse($notification->created_at)->setTimezone('Asia/Kolkata')->diffForHumans(null, null, true) }}
+                </small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Repeat the above block for more notifications -->
+</div>
+
+
+
                                         </li>
                                         @endforeach
                                         @else
@@ -202,7 +224,6 @@ Header START -->
                                         </li>
                                         @endif
                                     </ul>
-                                </div>
 
                             </div>
                         </div>
@@ -210,7 +231,7 @@ Header START -->
                 </li>
                 <!-- Notification dropdown END -->
 
-                <li class="nav-item ms-2 dropdown">
+                <li class="nav-item ms-2 dropdown" style="z-index:1060 !important;">
                     <a class="nav-link btn icon-md p-0" href="#" id="profileDropdown" role="button"
                         data-bs-auto-close="outside" data-bs-display="static" data-bs-toggle="dropdown"
                         aria-expanded="false">
@@ -222,7 +243,9 @@ Header START -->
                             alt="" loading="lazy" decoding="async">
                     </a>
                     <ul class="dropdown-menu dropdown-animation dropdown-menu-end pt-3 small me-md-n3"
-                        aria-labelledby="profileDropdown">
+    aria-labelledby="profileDropdown"
+    style="z-index: 1100;">
+
                         <!-- Profile info -->
                         @php
                         $profileImage = '';
@@ -428,3 +451,42 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
+
+<style>
+/* Adjust logo text font for better mobile experience */
+@media (max-width: 767.98px) {
+    .navbar-brand .h5 {
+        font-size: 1rem;
+    }
+}
+
+/* Make sure dropdown menus don't overflow on mobile */
+.dropdown-menu {
+    max-width: 90vw;
+    word-wrap: break-word;
+}
+
+/* Fix search box for smaller screens */
+@media (max-width: 767.98px) {
+    #searchForm {
+        width: 100%;
+        margin-top: 0.5rem;
+    }
+
+    .navbar-collapse {
+        margin-top: 1rem;
+    }
+
+    #searchResults {
+        max-height: 150px;
+        font-size: 14px;
+    }
+}
+
+/* Toast positioning for small screens */
+@media (max-width: 576px) {
+    .toast {
+        width: 90vw;
+    }
+}
+</style>

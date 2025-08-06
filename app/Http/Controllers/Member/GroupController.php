@@ -24,10 +24,67 @@ class GroupController extends Controller
 
     public function index()
     {
-        $members = $this->groupService->index();
-        return view('partials.right-sidebar', compact('members'));
+        $user = auth()->guard('user')->user();
+        
+        $userId = $user->id;
+        $groupIds = DB::table('group_member')
+    ->where('status', 1)
+    ->where(function ($query) use ($userId) {
+        $query->where('mentor', $userId)
+              ->orWhereRaw("JSON_CONTAINS(mentiee, '\"$userId\"')");
+    })
+    ->pluck('group_id');
+
+  $groupNames = DB::table('groups as g')
+    ->join('group_member as gm', 'g.id', '=', 'gm.group_id')
+    ->whereIn('g.id', $groupIds)
+    ->where('g.status', 1)
+    ->where(function($query) use ($userId) {
+        $query->where(function($q) {
+            $q->whereNull('g.end_date')
+              ->orWhere('g.end_date', '>=', now());
+        })
+        ->orWhere(function($q) use ($userId) {
+            $q->where('g.member_type', '2')
+              ->where('g.created_by', $userId);
+        });
+    })
+    ->select(
+        'g.id',
+        'g.name',
+        'g.image',
+        'g.end_date',
+        'g.created_by',
+        'g.member_type'
+    )
+    ->orderBy('g.id', 'desc')
+    ->distinct()
+    ->get();
+
+    
+
+        return view('user.groups', compact('groupNames'));
+    }
+function activateGroup(Request $request) : RedirectResponse {
+
+    // Validate the request
+    $request->validate([
+        'group_id' => 'required|exists:groups,id',
+        'end_date' => 'required|date|after_or_equal:today',
+    ]);
+    $groupId = $request->input('group_id');
+    $group = Group::find($groupId);
+
+    if (!$group) {
+        return redirect()->back()->with('error', 'Group not found.');
     }
 
+    // Activate the group
+    $group->end_date = $request->input('end_date');
+    $group->save();
+
+    return redirect()->back()->with('success', 'Group activated successfully.');
+}
     public function create()
     {
         $members = $this->groupService->index();

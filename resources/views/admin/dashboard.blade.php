@@ -72,8 +72,8 @@
                 <!-- -------------------------------------------- -->
                 <!-- Events -->
                 <!-- -------------------------------------------- -->
-                <div class="col-md-3">
-                    <div class="card bg-success-subtle overflow-hidden shadow-none">
+                <div class="col-md-4">
+                    <div class="card bg-success overflow-hidden shadow-none">
                         <div class="card-body p-4">
                             <span class="text-dark-light"><a href="{{ route('events.index') }}" class="text-white">Events</a></span>
                             <div class="hstack gap-6">
@@ -83,8 +83,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <div class="card bg-info-subtle overflow-hidden shadow-none">
+                <div class="col-md-4">
+                    <div class="card bg-info overflow-hidden shadow-none">
                         <div class="card-body p-4">
                             <span class="text-dark-light"><a href="{{ route('group.index') }}" class="text-white">Groups</a></span>
                             <div class="hstack gap-6">
@@ -97,8 +97,8 @@
                 <!-- -------------------------------------------- -->
                 <!-- Broadcasts -->
                 <!-- -------------------------------------------- -->
-                <div class="col-md-3">
-                    <div class="card bg-danger-subtle overflow-hidden shadow-none">
+                <div class="col-md-4">
+                    <div class="card bg-danger overflow-hidden shadow-none">
                         <div class="card-body p-4">
                             <span class="text-dark-light"><a href="{{ route('broadcasts.index') }}" class="text-white">Broadcasts</a></span>
                             <div class="hstack gap-6">

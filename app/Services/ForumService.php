@@ -28,20 +28,35 @@ class ForumService
      */
     public function getUserForums()
     {
-        return DB::table('forums')
-        // ->leftJoin('forum_topics', 'forum_topics.forum_id', '=', 'forums.id')
-             ->select('forums.id', 'forums.name', 'forums.id as forum_id', 'forums.name', 'forums.images', 'forums.created_at','forums.end_date')
-            // ->where('forums_member.user_id', $userId)
-            ->where('forums.status', 1)
-             ->whereNot('forums.end_date', null)
-    ->where(function($query) {
-        $query->whereNull('forums.end_date')
-              ->orWhere('forums.end_date', '>=', now());
-    })
-            ->orderBy('forums.id', 'desc')
-            ->where('forums.end_date', '>=', now())
-            ->get();
-    }
+       $userId = Auth::guard('user')->id();
+
+return DB::table('forums')
+  // ->leftJoin('forum_topics', 'forum_topics.forum_id', '=', 'forums.id')
+    ->select(
+        'forums.id',
+        'forums.name',
+        'forums.id as forum_id',
+        'forums.name',
+        'forums.images',
+        'forums.created_at',
+        'forums.end_date',
+        'forums.created_by'
+    )
+    ->where('forums.status', 1)
+     // ->where('forums_member.user_id', $userId)
+  ->where(function ($query) use ($userId) {
+            $query->where('forums.created_by', $userId)
+                  ->orWhere(function ($q) use ($userId) {
+                      $q->where('forums.created_by', '!=', $userId)
+                        ->whereNotNull('forums.end_date')
+                        ->where('forums.end_date', '>=', now());
+                  });
+        })
+    ->orderBy('forums.id', 'desc')
+    ->get();
+
+}
+
 
     /**
      * Get forum details by ID

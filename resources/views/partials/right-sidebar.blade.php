@@ -101,7 +101,7 @@
                             
                             {{ ($recent->name) }}
                         </a>
-                        <small class="text-muted d-block">End Date: {{ \Carbon\Carbon::parse($forum->end_date ?? now())->format('d-m-Y') }}</small>
+                        <small class="text-muted d-block">End Date: {{ \Carbon\Carbon::parse($recent->end_date ?? now())->format('d-m-Y') }}</small>
                     </div>
 
                     <!-- Post Button -->
@@ -114,7 +114,7 @@
 
                 @endforeach
                 <div class="d-grid mt-3">
-                    <a class="btn btn-sm btn-primary-soft" href="{{ route('user.groups') }}">View more</a>
+                    <a class="btn btn-sm btn-primary-soft" href="{{ route('user.group.index') }}">View more</a>
                 </div>
                 @else
                 <p class="text-muted">No recent groups available</p>

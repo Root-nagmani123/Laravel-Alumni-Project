@@ -115,28 +115,31 @@
                 <h1 class="h4 mb-4">Mentor / Mentee</h1>
 
                 <!-- Tabs Navigation -->
-                <ul class="nav nav-tabs mb-3" id="mentorMenteeTabs" role="tablist">
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link active" id="mentor-tab" data-bs-toggle="tab" data-bs-target="#mentor"
-                            type="button" role="tab">Wants to become Mentor</button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="mentee-tab" data-bs-toggle="tab" data-bs-target="#mentee"
-                            type="button" role="tab">Wants to become Mentee</button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="Incoming-requests-tab" data-bs-toggle="tab" data-bs-target="#requests_incoming"
-                            type="button" role="tab">Incoming Requests</button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="Outgoging-requests-tab" data-bs-toggle="tab" data-bs-target="#requests_outgoing"
-                            type="button" role="tab">Outgoging Requests</button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="connections-tab" data-bs-toggle="tab" data-bs-target="#connections"
-                            type="button" role="tab">My Connections</button>
-                    </li>
-                </ul>
+               <div class="overflow-auto">
+    <ul class="nav nav-tabs mb-3 flex-nowrap" id="mentorMenteeTabs" role="tablist" style="white-space: nowrap;">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="mentor-tab" data-bs-toggle="tab" data-bs-target="#mentor"
+                type="button" role="tab">Wants to become Mentor</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="mentee-tab" data-bs-toggle="tab" data-bs-target="#mentee"
+                type="button" role="tab">Wants to become Mentee</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="Incoming-requests-tab" data-bs-toggle="tab" data-bs-target="#requests_incoming"
+                type="button" role="tab">Incoming Requests</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="Outgoging-requests-tab" data-bs-toggle="tab" data-bs-target="#requests_outgoing"
+                type="button" role="tab">Outgoing Requests</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="connections-tab" data-bs-toggle="tab" data-bs-target="#connections"
+                type="button" role="tab">My Connections</button>
+        </li>
+    </ul>
+</div>
+
 
                 <!-- Tabs Content -->
                 <div class="tab-content" id="mentorMenteeTabsContent">
@@ -148,7 +151,7 @@
                             <div class="mb-3">
                                 <label class="form-label">Service</label>
                                <select class="form-select service" name="service" id="service" data-id="want_become_mentor" required>
-                                    <option selected disabled>Select Service</option>
+                                    <option  value=''>Select Service</option>
                                     @if($members->isEmpty())
                                         <option disabled>No Services Available</option>
                                     @else
@@ -200,7 +203,7 @@
                             <div class="mb-3">
                                 <label class="form-label">Service</label>
                                <select class="form-select service" name="service" id="service" data-id="want_become_mentee" required>
-                                    <option selected disabled>Select Service</option>
+                                    <option  value=''>Select Service</option>
                                     @if($members->isEmpty())
                                         <option disabled>No Services Available</option>
                                     @else
@@ -232,7 +235,7 @@
                                 </div>
 
                                 <div class="mb-3">
-                                    <label class="form-label">Select Mentee</label>
+                                    <label class="form-label">Select Mentor</label>
                                     <select class="form-select select2 mentees" multiple="multiple" id="mentees" name="mentees[]" data-id="want_become_mentee" required>
                                        </select>
                                 </div>
@@ -271,14 +274,14 @@
                                             <form method="POST" action="{{ route('user.request.update') }}" class="d-inline">
                                                 @csrf
                                                 <input type="hidden" name="id" value="{{ $request->request_id }}">
-                                                <input type="hidden" name="type" value="mentee"> 
+                                                <input type="hidden" name="type" value="mentor"> 
                                                 <input type="hidden" name="status" value="1">
                                                 <button type="submit" class="btn btn-sm btn-success">Accept</button>
                                             </form>
                                             <form method="POST" action="{{ route('user.request.update') }}" class="d-inline">
                                                 @csrf
                                                 <input type="hidden" name="id" value="{{ $request->request_id }}">
-                                                <input type="hidden" name="type" value="mentee"> 
+                                                <input type="hidden" name="type" value="mentor"> 
                                                 <input type="hidden" name="status" value="3">
                                                 <button type="submit" class="btn btn-sm btn-danger">Reject</button>
                                             </form>
@@ -362,17 +365,17 @@
                                 @php
                                     $filteredMentorRequests = $mentor_connections->filter(function($request) {
                                         $request->type = 'mentor';
-                                        return $request->status == 1 || $request->status == 3;
+                                        return $request->status == 2 || $request->status == 3;
                                     });
                                     $filteredMenteeRequests = $mentee_connections->filter(function($request) {
                                         $request->type = 'mentee';
-                                        return $request->status == 1 || $request->status == 3;
+                                        return $request->status == 2 || $request->status == 3;
 
                                     });
                                     $mergedRequests = array_merge($filteredMentorRequests->toArray(), $filteredMenteeRequests->toArray());
-                                @endphp
+                                   @endphp
 
-                                @forelse ($filteredMentorRequests as $request)
+                                @forelse ($mergedRequests as $request)
                                     <tr>
                                         <td>{{ $request->name }}</td>
                                         <td>{{ $request->cadre }}</td>
@@ -380,7 +383,7 @@
                                         <td>{{ $request->sector }}</td>
                                         <td>{{ $request->type }}</td>
                                         <td>
-                                            @if ($request->status == 1)
+                                            @if ($request->status == 2)
                                                 Pending
                                             @elseif ($request->status == 3)
                                                 Rejected

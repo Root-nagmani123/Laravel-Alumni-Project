@@ -411,16 +411,23 @@ class FeedController extends Controller
 
 
         $group = Group::find($group_id); // Fetch the group by ID
+      
+         $isMentee = 0;
+        if($group->member_type == 2)
+        {
+            if($group->created_by == $userId) {
+                 $isMentee = 1;
+                }
+        }
+        $created_by = $group->created_by;
+       
          $groupMember = DB::table('group_member')
         ->where('group_id', $group_id)
         ->first();
 
     // Determine if user is a mentee
-    $isMentee = 0;
-    if ($groupMember && $groupMember->mentiee) {
-        $mentiees = json_decode($groupMember->mentiee, true);
-        $isMentee = in_array($userId, $mentiees) ? 1 : 0;
-    }
+   
+   
 // echo ($isMentee);die;
         return view('user.grouppost_details', compact('posts', 'group','isMentee'));
     }
