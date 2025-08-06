@@ -36,52 +36,64 @@
                                     <select id="serviceFilter" class="form-select">
                                          <option value="">All</option>
                                          @php
-                                         $services = $members->pluck('service')->unique()->filter();
+                                         $services = $members->pluck('Service')->unique()->filter();
                                          @endphp
-                                         @foreach ($services as $service)
-                                         <option value="{{ $service }}">{{ $service }}</option>
+                                         @foreach ($services as $Service)
+                                         <option value="{{ $Service }}">{{ $Service }}</option>
                                          @endforeach
                                      </select>
                                 </div>
                                 <div class="col-3">
                                     <label for="sectorFilter" class="form-label">Filter by Sector:</label>
                                     <select id="sectorFilter" name="sector" class="form-select">
-                                        <option value="">All</option>
-                                        @php
-                                            $sectors = $members->pluck('sector')->unique()->filter(function($value) {
-                                                return !is_null($value) && $value !== '' && $value != 0;
-                                            });
-                                        @endphp
-                                        @foreach ($sectors as $sector)
-                                            <option value="{{ $sector }}">{{ $sector }}</option>
-                                        @endforeach
-                                    </select>
+    <option value="">All</option>
+    @php
+        $sectors = $members->pluck('sector')
+            ->unique()
+            ->filter(function($value) {
+                return !is_null($value) && $value !== '' && $value != 0;
+            })
+            ->sort(); // Sort alphabetically
+    @endphp
+    @foreach ($sectors as $sector)
+        <option value="{{ $sector }}">{{ $sector }}</option>
+    @endforeach
+</select>
+
                                 </div>
                                 <div class="col-3">
                                     <label for="cadreFilter" class="form-label">Filter by Cadre:</label>
                                     <select id="cadreFilter" class="form-select">
-                                         <option value="">All</option>
-                                         @php
-                                         $cadres = $members->pluck('cader')->unique()->filter();
-                                         @endphp
-                                         @foreach ($cadres as $cadre)
-                                         <option value="{{ $cadre }}">{{ $cadre }}</option>
-                                         @endforeach
-                                     </select>
+    <option value="">All</option>
+    @php
+        $cadres = $members->pluck('cader')
+            ->filter(fn($value) => !is_null($value) && trim($value) !== '')
+            ->unique()
+            ->sort();
+    @endphp
+    @foreach ($cadres as $cadre)
+        <option value="{{ $cadre }}">{{ $cadre }}</option>
+    @endforeach
+</select>
+
                                 </div>
                                 <div class="col-3">
                                     <label for="batchFilter" class="form-label">Filter by Batch:</label>
-                                    <select id="batchFilter" name="batch" class="form-select">">
-                                        <option value="">All</option>
-                                        @php
-                                            $batches = $members->pluck('batch')->unique()->filter(function($value) {
-                                                return !is_null($value) && $value !== '' && $value != 0;
-                                            });
-                                        @endphp
-                                        @foreach ($batches as $batch)
-                                            <option value="{{ $batch }}">{{ $batch }}</option>
-                                        @endforeach
-                                    </select>
+                                    <select id="batchFilter" name="batch" class="form-select">
+    <option value="">All</option>
+    @php
+        $batches = $members->pluck('batch')
+            ->filter(function($value) {
+                return !is_null($value) && $value !== '' && $value != 0;
+            })
+            ->unique()
+            ->sort(); // Sort numerically (ascending)
+    @endphp
+    @foreach ($batches as $batch)
+        <option value="{{ $batch }}">{{ $batch }}</option>
+    @endforeach
+</select>
+
                                 </div>
                             </div>
 
@@ -105,7 +117,7 @@
                                                 <td>{{ $index + 1 }}</td>
                                                 <td>{{ $row->name }}</td>
                                                 <td>{{ $row->email }}</td>
-                                                <td>{{ $row->service }}</td>
+                                                <td>{{ $row->Service }}</td>
                                                 <td>{{ $row->sector }}</td>
                                                 <td>{{ $row->cader }}</td>
                                                 <td>{{ $row->batch }}</td>

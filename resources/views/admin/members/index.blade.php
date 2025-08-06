@@ -79,7 +79,7 @@
                                 <td>{{ $member->name }}</td>
                                 <td>{{ $member->email }}</td>
                                 <td>{{ $member->mobile }}</td>
-                                <td>{{ $member->service }}</td>
+                                <td>{{ $member->Service }}</td>
                                 <td>{{ $member->sector }}</td>
                                 <td>{{ $member->cader }}, {{ $member->batch }}</td>
                                 <td>
