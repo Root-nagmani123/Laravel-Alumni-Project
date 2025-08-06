@@ -66,7 +66,10 @@ class Member extends Authenticatable
         return $this->hasMany(ForumTopicComment::class, 'user_id');
     }
 
-
+    public function unreadMessages()
+    {
+        return $this->hasMany(Message::class, 'sender_id', 'id')->where('is_read', false);
+    }
 }
 
 //
