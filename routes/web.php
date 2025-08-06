@@ -390,9 +390,9 @@ Route::get('/user_login', function () {
         // Route::get('/user/forum', function () {
         //     return view('user.forum');
         // })->name('user.forum');
-        Route::get('/user/group', function () {
-            return view('user.groups');
-        })->name('user.groups');
+        // Route::get('/user/group', function () {
+        //     return view('user.groups');
+        // })->name('user.groups');
         
           Route::get('/admin/mentorship', function () {
             return view('admin.mentorship.index');
@@ -420,6 +420,8 @@ Route::middleware(['auth:user'])->group(function () {
     Route::post('/user/change-password', [ChangePasswordController::class, 'changePassword'])->name('user.change-password');
 
     Route::prefix('group')->name('user.group.')->group(function () {
+         
+        Route::post('/activate-group', [MemberGroupController::class, 'activateGroup'])->name('activate-group');
         Route::get('/', [MemberGroupController::class, 'index'])->name('index');
         Route::get('/create', [MemberGroupController::class, 'create'])->name('create');
         Route::post('/store', [MemberGroupController::class, 'store'])->name('store');

@@ -109,7 +109,8 @@
 
 <div class="row g-4">
    
-
+ @if(isset($groupNames) && $groupNames->count() > 0)
+                @foreach($groupNames as $index => $recent)
         <div class="col-sm-6 col-lg-4">
             <div class="card border ">
                 <div class="h-80px rounded-top"
@@ -120,44 +121,61 @@
                     <div class="avatar avatar-lg mt-n5 mb-3">
                         <a href="#"><img
                             class="avatar-img rounded-circle border border-white border-3 bg-white"
-                            src="{{ asset('feed_assets/images/logo/08.svg') }}" alt="" loading="lazy"></a>
+                            src="{{ asset('storage/uploads/images/grp_img/' . ($recent->image ?? 'default-group.png')) }}" alt="" loading="lazy"></a>
                     </div>
 
                     <h5 class="mb-0">
-                        <a href="#"></a>
+                           
+                        <a href="{{ route('user.group-post', $recent->id) }}"> {{ ($recent->name) }}s</a>
                     </h5>
 
-                    <div class="hstack gap-2 gap-xl-3 justify-content-center mt-3">
+                    <!-- <div class="hstack gap-2 gap-xl-3 justify-content-center mt-3">
                         <div><h6 class="mb-0">{{ $group->member_count ?? 0 }}</h6><small>Members</small></div>
                         <div class="vr"></div>
                         <div><h6 class="mb-0">{{ $group->posts_per_day ?? 0 }}</h6><small>Posts/day</small></div>
-                    </div>
+                    </div> -->
                 </div>
 
                 <div class="card-body text-center">
-                    <p class="small text-muted mb-1">End Date: </p>
+                    <p class="small text-muted mb-1">End Date: {{ \Carbon\Carbon::parse($recent->end_date ?? now())->format('d-m-Y') }}</p>
                 </div>
 
                 <div class="card-footer text-center">
+                    @if($recent->end_date && Carbon::parse($recent->end_date)->isFuture())
+                        <span class="badge bg-success-soft text-success mb-2 d-block">Group Active</span>
+                        <a href="{{ route('user.group-post', $recent->id) }}" class="btn btn-primary btn-sm">View Group</a>
+                 
+                        @else
                         <span class="badge bg-danger-soft text-danger mb-2 d-block">Group Expired</span>
+                        @if($recent->member_type == '2')
+                        @if($recent->created_by == Auth::guard('user')->user()->id)
                         <button class="btn btn-outline-danger btn-sm" data-bs-toggle="modal"
                                 data-bs-target="#activateGroupModal"
-                                data-group-id=""
-                                data-group-name="">
+                                data-group-id="{{ $recent->id }}"
+                                data-group-name="{{ $recent->name }}">
                             Activate Group
                         </button>
+                        @endif
+                        @endif
+                    @endif
                 </div>
             </div>
         </div>
-</div>
+        @endforeach
+        @else
+        <div class="col-12">
+            <div class="alert alert-info" role="alert">
+                No groups available. Please create a group to get started.
+            </div>
 
         </div>
+        @endif
     </div>
 </div>
 <!-- Activate Group Modal -->
 <div class="modal fade" id="activateGroupModal" tabindex="-1" aria-labelledby="activateGroupModalLabel" aria-hidden="true">
     <div class="modal-dialog">
-        <form method="POST" action="">
+        <form method="POST" action="{{ route('user.group.activate-group') }}">
             @csrf
             <input type="hidden" name="group_id" id="modal-group-id">
             <div class="modal-content">
@@ -168,8 +186,8 @@
                 <div class="modal-body">
                     <p>You are about to activate the group: <strong id="modal-group-name"></strong></p>
                     <div class="mb-3">
-                        <label for="new_end_date" class="form-label">Select New Expiry Date</label>
-                        <input type="date" name="new_end_date" class="form-control" required>
+                        <label for="end_date" class="form-label">Select New Expiry Date</label>
+                        <input type="date" name="end_date" class="form-control" required>
                     </div>
                 </div>
                 <div class="modal-footer">
