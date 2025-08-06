@@ -41,6 +41,8 @@ class GroupController extends Controller
                 'group' => $group
             ]);
         }
+
+        
         return redirect()->back()->with('success', 'Group created successfully.');
     }
 

@@ -12,6 +12,7 @@ use DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use App\Services\NotificationService;
+
 class ForumController extends Controller
 {
 
@@ -63,21 +64,21 @@ class ForumController extends Controller
     ];
 
     $last_id = Forum::create($input)->id;
+
+    if($last_id && $request->input('status') == 1){
+        $notification = $this->notificationService->notifyAllMembers('forum_admin', $request->input('name') . '  forum has been added.', $last_id, 'forum');
+        if($notification){
+            Member::query()->update(['is_notification' => 0]);
+        }
+    }
+
     // Insert into forums_member
     DB::table('forums_member')->insert([
 
             'forums_id' => $last_id,
             'status' => 1,
         ]);
-    // Insert into notification
-       DB::table('notification')->insert([
-        'group_id' => $last_id,
-        'status' => 1,
-        'type' => 'forum',
-        'created_at' => now(),
-        'message' => "<a href='" . url('home/profile/' . auth()->user()->id) . "'>" . auth()->user()->name . "</a> added you in Forum: <a href='" . url('home/forum/' . $last_id) . "'>" . $request->input('name') . "</a>",
-        ]);
-   // }
+        
     // Redirect to the forum page
     return redirect()->route('forums.index')->with('success', 'Forum added successfully.');
     }
@@ -102,6 +103,7 @@ class ForumController extends Controller
             ->withErrors($validator)
             ->withInput();
     }
+
     if ($request->hasFile('forum_image')) {
             $imagePath = $request->file('forum_image')->store('uploads/images/forums_img', 'public');
             $data['images'] = basename($imagePath);
@@ -256,12 +258,6 @@ class ForumController extends Controller
                     ->where('forums_id', $request->forum_id)
                     ->pluck('user_id')
                     ->toArray();
-
-    if (!empty($memberIds)) {
-        $message = 'A new topic has been posted in your forum: ' . $request->title;
-        // Assuming you have notification service
-        $notification = $this->notificationService->notifyAllMembers('forum', 'New forum has been added.', $request->forum_id, 'forum');
-   }
 
         return redirect()->route('forums.index')->with('success', 'Topic saved successfully!');
     }
