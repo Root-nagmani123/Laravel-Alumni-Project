@@ -131,7 +131,7 @@
         </li>
         <li class="nav-item" role="presentation">
             <button class="nav-link" id="Outgoging-requests-tab" data-bs-toggle="tab" data-bs-target="#requests_outgoing"
-                type="button" role="tab">Outgoging Requests</button>
+                type="button" role="tab">Outgoing Requests</button>
         </li>
         <li class="nav-item" role="presentation">
             <button class="nav-link" id="connections-tab" data-bs-toggle="tab" data-bs-target="#connections"
@@ -235,7 +235,7 @@
                                 </div>
 
                                 <div class="mb-3">
-                                    <label class="form-label">Select Mentee</label>
+                                    <label class="form-label">Select Mentor</label>
                                     <select class="form-select select2 mentees" multiple="multiple" id="mentees" name="mentees[]" data-id="want_become_mentee" required>
                                        </select>
                                 </div>

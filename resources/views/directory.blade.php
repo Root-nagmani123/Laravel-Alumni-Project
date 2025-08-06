@@ -73,7 +73,7 @@
 
                             <!-- Member Table -->
                             <div class="table-responsive">
-                               <table id="memberTable" class="table table-striped table-bordered dt-bootstrap5">
+                               <table id="memberTable" class="table table-striped dt-bootstrap5">
                                     <thead>
                                         <tr>
                                             <th>#</th>

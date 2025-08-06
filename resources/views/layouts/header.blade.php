@@ -67,7 +67,7 @@ Header START -->
 
                     <!-- Nav item 3 Mega menu -->
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url('user/events') }}">Events</a>
+                        <a class="nav-link" href="{{ url('user/all-events') }}">Events</a>
                     </li>
                 </ul>
                 <!-- Search Input Group with Dropdown -->
