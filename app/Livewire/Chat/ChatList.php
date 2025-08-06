@@ -27,6 +27,15 @@ class ChatList extends Component
 
     public function selectChat($chatId)
     {
+        if ($this->selectedChat && $this->selectedChat !== $chatId) {
+            Message::where('receiver_id', auth()->guard('user')->id())
+                ->where('sender_id', $this->selectedChat)
+                ->where('is_read', 0)
+                ->update(['is_read' => 1]);
+
+            broadcast(new UnreadMessage(auth()->guard('user')->id(), $this->selectedChat, 0))->toOthers();
+        }
+        
         $this->selectedChat = $chatId;
         $this->loadMessages();
         $this->markMessagesAsRead();
@@ -69,6 +78,11 @@ class ChatList extends Component
 
     public function closeChat($chatId)
     {
+        Message::where('receiver_id', auth()->guard('user')->id())
+            ->where('sender_id', $this->selectedChat)
+            ->where('is_read', 0)
+            ->update(['is_read' => 1]);
+
         $this->reset(['selectedChat', 'newMessage']);
     }
 

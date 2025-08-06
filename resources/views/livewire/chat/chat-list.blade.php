@@ -66,12 +66,12 @@
                         type="submit"><i class="bi bi-search fs-5"> </i></button>
 
                     <!-- Search contact END -->
-                    @if(!empty($chats))
+                    @if($chats && $chats->isNotEmpty())
                         <ul class="list-unstyled">
                             @foreach ($chats as $key => $chat)
 
                                 <!-- Contact item -->
-                                <li class="mt-3 hstack gap-3 align-items-center position-relative toast-btn {{ $selectedChat == $chat->member_id ? 'active-chat' : '' }}"
+                                <li class="mt-3 hstack gap-3 align-items-center position-relative toast-btn" style=" {{ $selectedChat == $chat->member_id ? 'background-color: #af2910' : '' }}"
                                     data-target="chatToast-{{ $chat->member_id }}" wire:click="selectChat({{ $chat->member_id }})"
                                     wire:key="chat-{{ $chat->member_id }}" style="cursor: pointer;">
                                     <!-- Avatar -->
@@ -80,7 +80,7 @@
                                     </div>
                                     <!-- Info -->
                                     <div class="overflow-hidden">
-                                        <a class="h6 mb-0 stretched-link" href="#!">{{ $chat->name }} 
+                                        <a class="h6 mb-0 stretched-link {{ $selectedChat == $chat->member_id ? 'text-white' : '' }}" href="#!">{{ $chat->name }} 
                                             @if ($selectedChat != $chat->member_id)
                                                 <span id="unread-count-{{ $chat->member_id }}">
                                                     {{ App\Models\Member::find($chat->member_id)->unreadMessages->count() > 0 ? '(' . App\Models\Member::find($chat->member_id)->unreadMessages->count() . ')' : null }}
@@ -94,6 +94,12 @@
                                     {{-- <div class="small ms-auto text-nowrap"> Just now </div> --}}
                                 </li>
                             @endforeach
+                        </ul>
+                    @else
+                        <ul class="list-unstyled">
+                            <li class="text-center mt-5">
+                                <p class="text-danger">No user found.</p>
+                            </li>
                         </ul>
                     @endif
 
@@ -124,9 +130,6 @@
 
     @if($selectedChat)
 
-        {{--
-        <pre>{{ json_encode($openMembers) }}</pre> --}}
-
         <div class="toast-container toast-chat d-flex gap-3 align-items-end">
             {{-- @foreach ($openMembers as $member) --}}
             <!-- Chat toast START -->
@@ -144,9 +147,9 @@
                                 </div>
                                 <div class="flex-grow-1">
                                     <h6 class="mb-0 mt-1">{{ $selectChat->name }}</h6>
-                                    <div class="small text-secondary"><i
+                                    {{-- <div class="small text-secondary"><i
                                             class="fa-solid fa-circle text-success me-1"></i>Online
-                                    </div>
+                                    </div> --}}
                                 </div>
                             </div>
                             <div class="d-flex">
@@ -176,7 +179,7 @@
                             <div class="os-content-glue" style="margin: 0px;"></div>
                             <div class="os-padding">
                                 <div class="os-viewport os-viewport-native-scrollbars-invisible" style="overflow: visible;">
-                                    <div class="os-content" style="padding: 0px; height: 100%; width: 100%;" id="chat-container" >
+                                    <div class="os-content" style="padding: 0px; height: 100%; width: 100%;" id="chat-container-{{ $selectChat->id }}" >
                                         <!-- Chat time -->
 
                                         @if ($messages)

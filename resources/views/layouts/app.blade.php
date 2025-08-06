@@ -171,54 +171,13 @@
         const chatContainer = document.getElementById('chat-container');
 
         window.Echo.private(`chat-channel.{{ auth()->guard('user')->id() }}`)
-    //         .listen('UserTyping', (event) => {
-    // console.log('UserTyping event received:', event);
-
-//     const messageInputField = document.getElementById('message-input');
-//     const typingIndicator = document.getElementById('typing-indicator');
-//     const chatContainer = document.getElementById('chat-container');
-
-//     const typingSenderId = event.senderId;
-//     const currentChatId = parseInt(chatContainer.dataset.chatId);
-
-//     if (typingSenderId === {{ auth()->id() }}) {
-//     return; 
-// }
-
-//     console.log('Typing indicator for chat ID:', currentChatId);
-
-    // if (typingIndicator) {
-    //     console.log('Typing indicator found:', typingIndicator);
-    //     typingIndicator.classList.remove('d-none');
-
-    //     // // 👇 Add animation class dynamically
-    //     // typingIndicator.classList.add('typing-animation');
-
-    //     // // Optional: Remove animation after it's done to allow it to retrigger
-    //     // setTimeout(() => {
-    //     //     typingIndicator.classList.remove('typing-animation');
-    //     // }, 1000);
-
-    //     chatContainer.scrollTop = chatContainer.scrollHeight;
-    // }
-
-    // clearTimeout(typingTimeout);
-
-    // typingTimeout = setTimeout(() => {
-    //     if (messageInputField) {
-    //         messageInputField.placeholder = 'Type here...';
-    //     }
-    //     if (typingIndicator) {
-    //         typingIndicator.classList.add('d-none');
-    //     }
-    // }, 2000);
-// })
-
-
+    
             .listen('MessageSentEvent', (event) => {
             console.log('MessageSentEvent received:', event);
 
-            const chatContainer = document.getElementById('chat-container');
+            // const chatContainer = document.getElementById('chat-container');
+            const chatContainer = document.getElementById(`chat-container-${event.message.sender_id === {{ auth()->guard('user')->id() }} ? event.message.receiver_id : event.message.sender_id}`);
+
             const messageInputField = document.getElementById('message-input');
             
             const isInputFocused = document.activeElement === messageInputField;
@@ -228,6 +187,12 @@
             const message = event.message;
             const isSender = message.sender_id === {{ auth()->guard('user')->id() }};
             
+            if (!chatContainer) {
+                console.log("Chat window not open, skipping append.");
+                return;
+            }
+
+
             const messageWrapper = document.createElement('div');
             if (isSender) {
                 messageWrapper.className = 'd-flex justify-content-end text-end mb-1';
@@ -252,13 +217,16 @@
             chatContainer.appendChild(messageWrapper);
 
             // Play sound if not focused or scrolled
-            if (!isInputFocused || !isScrolledToBottom) {
-                const audio = new Audio('{{ asset('sounds/notification.mp3') }}');
-                audio.play();
-            }
+            //if (!isInputFocused || !isScrolledToBottom) {
+              //  const audio = new Audio('{{ asset('sounds/notification.mp3') }}');
+                // audio.play();
+            // }
 
             // Scroll to bottom after new message
-            chatContainer.scrollTop = chatContainer.scrollHeight;
+            // chatContainer.scrollTop = chatContainer.scrollHeight;
+            setTimeout(() => {
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            }, 10);
         });
 
         window.Echo.private('unread-channel.{{ auth()->guard('user')->id() }}')
