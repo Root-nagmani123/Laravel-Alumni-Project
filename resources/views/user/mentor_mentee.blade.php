@@ -373,9 +373,9 @@
 
                                     });
                                     $mergedRequests = array_merge($filteredMentorRequests->toArray(), $filteredMenteeRequests->toArray());
-                                @endphp
+                                   @endphp
 
-                                @forelse ($filteredMentorRequests as $request)
+                                @forelse ($mergedRequests as $request)
                                     <tr>
                                         <td>{{ $request->name }}</td>
                                         <td>{{ $request->cadre }}</td>
