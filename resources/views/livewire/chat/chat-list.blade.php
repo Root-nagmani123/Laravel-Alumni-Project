@@ -71,16 +71,23 @@
                             @foreach ($chats as $key => $chat)
 
                                 <!-- Contact item -->
-                                <li class="mt-3 hstack gap-3 align-items-center position-relative toast-btn {{ $selectedChat == $chat->id ? 'active-chat' : '' }}"
-                                    data-target="chatToast-{{ $chat->id }}" wire:click="selectChat({{ $chat->id }})"
-                                    wire:key="chat-{{ $chat->id }}" style="cursor: pointer;">
+                                <li class="mt-3 hstack gap-3 align-items-center position-relative toast-btn {{ $selectedChat == $chat->member_id ? 'active-chat' : '' }}"
+                                    data-target="chatToast-{{ $chat->member_id }}" wire:click="selectChat({{ $chat->member_id }})"
+                                    wire:key="chat-{{ $chat->member_id }}" style="cursor: pointer;">
                                     <!-- Avatar -->
                                     <div class="avatar status-online">
                                         <img class="avatar-img rounded-circle" src="assets/images/avatar/01.jpg" alt="">
                                     </div>
                                     <!-- Info -->
                                     <div class="overflow-hidden">
-                                        <a class="h6 mb-0 stretched-link" href="#!">{{ $chat->name }} </a>
+                                        <a class="h6 mb-0 stretched-link" href="#!">{{ $chat->name }} 
+                                            @if ($selectedChat != $chat->member_id)
+                                                <span id="unread-count-{{ $chat->member_id }}">
+                                                    {{ App\Models\Member::find($chat->member_id)->unreadMessages->count() > 0 ? '(' . App\Models\Member::find($chat->member_id)->unreadMessages->count() . ')' : null }}
+                                                </span>
+                                            @endif
+
+                                        </a>
                                         {{-- <div class="small text-secondary text-truncate">Frances sent a photo.</div> --}}
                                     </div>
                                     <!-- Chat time -->
@@ -169,7 +176,7 @@
                             <div class="os-content-glue" style="margin: 0px;"></div>
                             <div class="os-padding">
                                 <div class="os-viewport os-viewport-native-scrollbars-invisible" style="overflow: visible;">
-                                    <div class="os-content" style="padding: 0px; height: 100%; width: 100%;" id="chat-container">
+                                    <div class="os-content" style="padding: 0px; height: 100%; width: 100%;" id="chat-container" >
                                         <!-- Chat time -->
 
                                         @if ($messages)
@@ -194,7 +201,7 @@
                                         @endif
 
                                         <!-- Chat Typing -->
-                                        {{-- <div class="d-flex mb-1">
+                                        <div id="typing-indicator" class="d-flex mb-1 d-none" style="" data-chat-id="{{ $selectChat?->id }}">
                                             <div class="flex-shrink-0 avatar avatar-xs me-2">
                                                 <img class="avatar-img rounded-circle" src="assets/images/avatar/01.jpg"
                                                     alt="">
@@ -212,7 +219,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div> --}}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -242,7 +249,9 @@
                                     class="form-control mb-2"> --}}
 
                                 <!-- Text Input -->
-                                <input type="text" wire:model.defer="newMessage" wire:key="message-input-{{ now() }}"
+                                <input type="text" 
+                                    {{-- wire:keydown="userTyping"  --}}
+                                    wire:model.defer="newMessage" wire:key="message-input-{{ now() }}"
                                     wire:keydown.enter="submit" class="form-control mb-2"
                                     placeholder="Type your message...">
 

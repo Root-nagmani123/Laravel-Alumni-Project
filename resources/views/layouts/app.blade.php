@@ -156,32 +156,49 @@
         const chatContainer = document.getElementById('chat-container');
 
         window.Echo.private(`chat-channel.{{ auth()->guard('user')->id() }}`)
-            .listen('UserTyping', (event) => {
-                const messageInputField = document.getElementById('message-input');
-                if (messageInputField) {
-                    messageInputField.placeholder = 'Typing...';
-                }
+    //         .listen('UserTyping', (event) => {
+    // console.log('UserTyping event received:', event);
 
-                clearTimeout(typingTimeout);
-                typingTimeout = setTimeout(() => {
-                    if (messageInputField) {
-                        messageInputField.placeholder = 'Type here...';
-                    }
-                }, 2000);
-            })
+//     const messageInputField = document.getElementById('message-input');
+//     const typingIndicator = document.getElementById('typing-indicator');
+//     const chatContainer = document.getElementById('chat-container');
 
-            // .listen('MessageSentEvent', (event) => {
-            //     console.log('MessageSentEvent received:', event);
-                
-            //     const isInputFocused = document.activeElement === messageInputField;
-            //     const isScrolledToBottom = chatContainer.scrollTop + chatContainer.clientHeight >= chatContainer
-            //         .scrollHeight - 10;
+//     const typingSenderId = event.senderId;
+//     const currentChatId = parseInt(chatContainer.dataset.chatId);
 
-            //     if (!isInputFocused || !isScrolledToBottom) {
-            //         const audio = new Audio('{{ asset('sounds/notification.mp3') }}');
-            //         audio.play();
-            //     }
-            // });
+//     if (typingSenderId === {{ auth()->id() }}) {
+//     return; 
+// }
+
+//     console.log('Typing indicator for chat ID:', currentChatId);
+
+    // if (typingIndicator) {
+    //     console.log('Typing indicator found:', typingIndicator);
+    //     typingIndicator.classList.remove('d-none');
+
+    //     // // 👇 Add animation class dynamically
+    //     // typingIndicator.classList.add('typing-animation');
+
+    //     // // Optional: Remove animation after it's done to allow it to retrigger
+    //     // setTimeout(() => {
+    //     //     typingIndicator.classList.remove('typing-animation');
+    //     // }, 1000);
+
+    //     chatContainer.scrollTop = chatContainer.scrollHeight;
+    // }
+
+    // clearTimeout(typingTimeout);
+
+    // typingTimeout = setTimeout(() => {
+    //     if (messageInputField) {
+    //         messageInputField.placeholder = 'Type here...';
+    //     }
+    //     if (typingIndicator) {
+    //         typingIndicator.classList.add('d-none');
+    //     }
+    // }, 2000);
+// })
+
 
             .listen('MessageSentEvent', (event) => {
             console.log('MessageSentEvent received:', event);
@@ -227,6 +244,14 @@
 
             // Scroll to bottom after new message
             chatContainer.scrollTop = chatContainer.scrollHeight;
+        });
+
+        window.Echo.private('unread-channel.{{ auth()->guard('user')->id() }}')
+        .listen('UnreadMessage', (event) => {
+            const unreadCountElement = document.getElementById(`unread-count-${event.senderId}`);
+            if (unreadCountElement) {
+                unreadCountElement.textContent = event.unreadCount > 0 ? `(${event.unreadCount})` : '';
+            }
         });
 
 
