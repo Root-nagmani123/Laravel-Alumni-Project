@@ -154,6 +154,7 @@ Route::prefix('user')->name('user.')->group(function () {
 		Route::post('/mentor/want_become_mentee', [MentorMenteeController::class, 'want_become_mentee'])->name('mentor.want_become_mentee');
 		Route::post('/request/update', [MentorMenteeController::class, 'updateRequest'])->name('request.update');
         Route::get('user/forum', [MemberForumController::class, 'index'])->name('forum');
+        Route::post('user/forum/activate', [MemberForumController::class, 'activateForum'])->name('forum.activate');
         Route::get('user/forum/{id}', [MemberForumController::class, 'show'])->name('forum.show');
         Route::post('user/forum/topic/{id}/like', [MemberForumController::class, 'like'])->name('forum.topic.like');
         Route::post('user/forum/topic/{id}/unlike', [MemberForumController::class, 'unlike'])->name('forum.topic.unlike');

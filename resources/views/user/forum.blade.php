@@ -120,7 +120,7 @@
                 <div class="col-sm-6 col-lg-4">
                     <div class="card border {{ $isExpired ? 'border-danger' : '' }}">
                         <div class="h-80px rounded-top"
-                            style="background-image:url({{asset('feed_assets/images/bg/01.jpg')}}); background-position: center; background-size: cover;">
+                            style="background-image:url({{ asset('storage/uploads/images/forums_img/' . ($forum->images ?? 'default-forum.jpg')) }}); background-position: center; background-size: cover;">
                         </div>
 
                         <div class="card-body text-center pt-2">
@@ -171,7 +171,7 @@
 <div class="modal fade" id="activateForumModal" tabindex="-1" aria-labelledby="activateForumModalLabel"
     aria-hidden="true">
     <div class="modal-dialog">
-        <form method="POST" action="">
+        <form method="POST" action="{{ route('user.forum.activate') }}">
             @csrf
             <input type="hidden" name="forum_id" id="modal-forum-id">
             <div class="modal-content">
@@ -183,8 +183,8 @@
                 <div class="modal-body">
                     <p>You're about to activate the forum: <strong id="modal-forum-name"></strong></p>
                     <div class="mb-3">
-                        <label for="new_end_date" class="form-label">Select New Expiry Date</label>
-                        <input type="date" class="form-control" name="new_end_date" required>
+                        <label for="end_date" class="form-label">Select New Expiry Date</label>
+                        <input type="date" class="form-control" name="end_date" required>
                     </div>
                 </div>
 
