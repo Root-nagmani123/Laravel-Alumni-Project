@@ -121,7 +121,7 @@ class GroupController extends Controller
         );
     }
 
-    if($notificationMentor && $notificationMentiee){
+    if($notificationMentiee){
         Member::query()->whereIn('id', $userIds)->update(['is_notification' => 0]);
     }
     
