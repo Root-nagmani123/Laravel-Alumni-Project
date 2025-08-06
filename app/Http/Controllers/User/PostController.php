@@ -157,11 +157,11 @@ public function group_post_store(Request $request)
         }
     }
 
-    
-
     // Send notification to group members
     $fromUserId = auth('user')->id();
     $message = "New post in group";
+
+
     $this->notificationService->notifyGroupPost($request->group_id, $fromUserId, $message, $post->id);
 
     return redirect()->back()->with('success', 'Group Post created successfully.');

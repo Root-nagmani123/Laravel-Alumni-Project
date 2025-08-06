@@ -16,15 +16,16 @@ class NotificationController extends Controller
         $userId = auth()->id();
     
         $notifications = Notification::where(function ($query) use ($userId) {
-            $query->whereIn('type', ['event', 'broadcast']) // show to all users
+            $query->whereIn('type', ['event', 'broadcast','forum_admin']) // show to all users
                   ->orWhere(function ($q) use ($userId) {
-                      $q->whereNotIn('type', ['event', 'broadcast'])
+                      $q->whereNotIn('type', ['event', 'broadcast','forum_admin'])
                         ->whereJsonContains('user_id', $userId); // user-specific notifications
                   });
+
         })
         ->orderBy('created_at', 'desc')
         ->get(['id', 'message', 'created_at','source_id','source_type']);
-    
+
         return response()->json($notifications);
     }
 

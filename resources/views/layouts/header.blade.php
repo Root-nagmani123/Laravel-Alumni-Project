@@ -143,17 +143,17 @@ Header START -->
                                                         case 'broadcast':
                                                             $notificationUrl = route('user.broadcastDetails', ['id' => $notification->source_id]);
                                                             break;
+                                                        case 'forum':
+                                                                $notificationUrl = route('user.forum.show', ['id' => $notification->source_id]);
+                                                                break;
                                                         case 'profile':
                                                             $notificationUrl = url('/profile/' . $notification->source_id);
                                                             break;
                                                         case 'post':
                                                             $notificationUrl = url('/group-post/' . $notification->source_id);
                                                             break;
-                                                        case 'forum':
-                                                            $notificationUrl = url('/user/forum/' . $notification->source_id);
-                                                            break;
                                                         case 'group':
-                                                            $notificationUrl = url('/user/forum/' . $notification->source_id);
+                                                            $notificationUrl = route('group.post'. $notification->source_id);
                                                             break;
                                                         case 'birthday':
                                                             $notificationUrl = url('/profile/' . $notification->source_id);
@@ -184,7 +184,7 @@ Header START -->
                                                             </p>
                                                         </a>
                                                         <p class="small ms-3">
-                                                            {{ $notification->created_at->format('d M Y H:i') }}
+                                                            {{ $notification->created_at->setTimezone('Asia/Kolkata')->format('d-m-Y') }}
                                                         </p>
                                                     </div>
                                                 </div>

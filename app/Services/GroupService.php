@@ -37,6 +37,22 @@ class GroupService
                 'mentiee' => json_encode($data['member_ids']),
             ]);
 
+            $userIds = $data['member_ids'];
+            if (!empty($userIds) && $data['status'] == 1) {
+                $memberMessage = $data['group_name'] . ' group has been added as mentiee';
+               $notification= $this->notificationService->notifyMemberAdded(
+                    $userIds,
+                    'group',
+                    $memberMessage,
+                    $group->id,
+                    'group_member'
+                );
+            }
+
+            if($notification){
+                Member::query()->whereIn('id', $userIds)->update(['is_notification' => 0]);
+            }
+
             return $group;
         });
     }
