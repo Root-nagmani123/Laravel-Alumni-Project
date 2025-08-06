@@ -180,5 +180,48 @@ $groupedPosts = $rawPosts->groupBy('post_id')->map(function ($group) {
        $grievances = DB::table('grievances')->orderBy('created_at', 'desc')->get();
         return view('admin.grievance.list', compact('grievances'));
     }
+    public function mentorship(Request $request)
+    {
+        // $mentee_connections = DB::table('mentee_requests')
+        // ->join('members', 'mentee_requests.mentor', '=', 'members.id')
+       
+        // ->select('mentee_requests.id as request_id', 'members.name','members.cader as cadre', 'members.batch', 'members.sector','mentee_requests.status')
+        // ->get();
+        $mentee_connections = DB::table('mentee_requests')
+    ->join('members as mentors', 'mentee_requests.mentor', '=', 'mentors.id')
+    ->join('members as mentees', 'mentee_requests.mentees_ids', '=', 'mentees.id')
+    ->select(
+        'mentee_requests.id as request_id',
+        'mentors.name as mentor_name',
+        'mentees.name as mentee_name',
+        'mentee_requests.status'
+    )
+    ->get();
+
+        // print_r($mentee_connections);
+
+    // $mentor_connections = DB::table('mentor_requests')
+    //     ->join('members', 'mentor_requests.mentees', '=', 'members.id')
+    //     ->where('mentor_requests.status', 1)
+    //     ->select('mentor_requests.id as request_id', 'members.name', 'members.cader as cadre', 'members.batch', 'members.sector','mentor_requests.status')
+    //     ->get();
+    $mentor_connections = DB::table('mentor_requests')
+    ->join('members as mentors', 'mentor_requests.Mentor_ids', '=', 'mentors.id')
+    ->join('members as mentees', 'mentor_requests.mentees', '=', 'mentees.id')
+    // ->where('mentor_requests.status', 1)
+    ->select(
+        'mentor_requests.id as request_id',
+        'mentors.name as mentor_name',
+        'mentees.name as mentee_name',
+        'mentor_requests.status'
+    )
+    ->get();
+
+        // print_r($mentor_connections);die;
+
+  
+
+        return view('admin.mentorship.index', compact('mentee_connections', 'mentor_connections'));
+    }
 
 }

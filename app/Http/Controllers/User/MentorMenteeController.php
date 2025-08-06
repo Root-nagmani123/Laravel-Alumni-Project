@@ -50,12 +50,7 @@ $members = DB::table('members')
         ->select('mentee_requests.id as request_id', 'members.name', 'members.cader as cadre', 'members.batch', 'members.sector','mentee_requests.status')
         ->get();
 
-        //   $mentee_connections = DB::table('mentee_requests')
-        //     ->join('members', 'mentee_requests.mentor', '=', 'members.id')
-        //     ->where('mentee_requests.mentees_ids', $user_id)
-        //     ->select('mentee_requests.id as request_id', 'members.name', 'members.cader as cadre', 'members.batch', 'members.sector', 'mentee_requests.status', 'members.id as member_id')
-        //     ->get();
-            // print_r($mentee_connections);die;
+       
 
     $mentor_connections = DB::table('mentor_requests')
         ->join('members', 'mentor_requests.Mentor_ids', '=', 'members.id')
