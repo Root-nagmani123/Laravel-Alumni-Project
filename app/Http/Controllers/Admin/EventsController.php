@@ -45,6 +45,7 @@ class EventsController extends Controller
 			'start_datetime' => 'required|date',
 			'end_datetime'   => 'required|date|after_or_equal:start_datetime',
 			'image' => 'required|image|mimes:jpg,jpeg,png|max:2048', // max 2MB
+            'status' => 'required|in:1,0',
 		]);
 
 		// Return back with errors if validation fails
@@ -65,7 +66,6 @@ class EventsController extends Controller
 		// Create the event
 	$location = $request->venue === 'physical' ? $request->location : null;
     $url      = $request->venue === 'online'   ? $request->url      : null;
-
 // Create the event
        $event = Events::create([
     'title'          => $request->title,
@@ -76,12 +76,13 @@ class EventsController extends Controller
     'start_datetime' => $request->start_datetime,
     'end_datetime'   => $request->end_datetime,
     'image'          => $imagePath,
+    'status'         => $request->status,
     'created_by'     => Auth::id(),
 ]);
 
-   if($event){
+   if($event->status == 1){
 
-    $notification = $this->notificationService->notifyAllMembers('event', 'New event has been added.', $event->id, 'event');
+    $notification = $this->notificationService->notifyAllMembers('event', $event->title . ' Event has been added.', $event->id, 'event');
        
     if($notification){
 

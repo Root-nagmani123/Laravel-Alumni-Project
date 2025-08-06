@@ -147,22 +147,63 @@ Header START -->
                                         @foreach($latestNotifications as $notification)
                                         <!-- Notif item -->
                                         <li>
-                                            <a href="#"
-                                                class="list-group-item list-group-item-action rounded d-flex border-0 mb-1 p-3">
-                                                <div class="avatar text-center d-none d-sm-inline-block">
-                                                    <div class="avatar-img rounded-circle bg-success">
-                                                        <span
-                                                            class="text-white position-absolute top-50 start-50 translate-middle fw-bold">WB</span>
+                                            @php
+                                                $notificationUrl = '#';
+                                                // Debug: Log notification data
+                                                if (isset($notification->source_id) && isset($notification->source_type)) {
+                                                    switch ($notification->source_type) {
+                                                        case 'event':
+                                                            $notificationUrl = route('user.allevents');
+                                                            break;
+                                                        case 'broadcast':
+                                                            $notificationUrl = route('user.broadcastDetails', ['id' => $notification->source_id]);
+                                                            break;
+                                                        case 'forum':
+                                                                $notificationUrl = route('user.forum.show', ['id' => $notification->source_id]);
+                                                                break;
+                                                        case 'profile':
+                                                            $notificationUrl = url('/profile/' . $notification->source_id);
+                                                            break;
+                                                        case 'post':
+                                                            $notificationUrl = url('/group-post/' . $notification->source_id);
+                                                            break;
+                                                        case 'group':
+                                                            $notificationUrl = route('group.post'. $notification->source_id);
+                                                            break;
+                                                        case 'birthday':
+                                                            $notificationUrl = url('/profile/' . $notification->source_id);
+                                                            break;
+                                                        default:
+                                                            $notificationUrl = '#';
+                                                    }
+                                                }
+                                                // Debug: Log the generated URL
+                                                if (app()->environment('local')) {
+                                                    \Log::info('Notification URL generated:', [
+                                                        'source_id' => $notification->source_id ?? 'null',
+                                                        'source_type' => $notification->source_type ?? 'null',
+                                                        'url' => $notificationUrl
+                                                    ]);
+                                                }
+                                            @endphp
+                                            <div class="list-group-item rounded d-flex border-0 mb-1 p-3">
+                                                <div class="ms-sm-3">
+                                                    <div class="d-flex">
+                                                        <a href="{{ $notificationUrl }}" class="text-decoration-none notification-link" 
+                                                           data-url="{{ $notificationUrl }}" 
+                                                           data-source-type="{{ $notification->source_type ?? '' }}" 
+                                                           data-source-id="{{ $notification->source_id ?? '' }}"
+                                                           onclick="handleNotificationClick(event, '{{ $notificationUrl }}', '{{ $notification->source_type ?? '' }}', '{{ $notification->source_id ?? '' }}')">
+                                                            <p class="small mb-2 text-primary">
+                                                                {{ $notification->message }}
+                                                            </p>
+                                                        </a>
+                                                        <p class="small ms-3">
+                                                            {{ $notification->created_at->setTimezone('Asia/Kolkata')->format('d-m-Y') }}
+                                                        </p>
                                                     </div>
                                                 </div>
-                                                <div class="ms-sm-3 w-100">
-                                                    <div class="d-flex justify-content-between">
-                                                        <p class="small mb-2">{{ $notification->message }}</p>
-                                                        <p class="small text-muted mb-2">
-                                                            {{ $notification->created_at->format('d M Y H:i') }}</p>
-                                                    </div>
-                                                </div>
-                                            </a>
+                                            </div>
                                         </li>
                                         @endforeach
                                         @else
@@ -358,3 +399,47 @@ Header START -->
     display: block;
 }
 </style>
+
+<script>
+function handleNotificationClick(event, url, sourceType, sourceId) {
+    event.preventDefault();
+    event.stopPropagation();
+    
+    console.log('Notification clicked:', {
+        url: url,
+        sourceType: sourceType,
+        sourceId: sourceId
+    });
+    
+    // Only redirect if we have a valid URL (not '#')
+    if (url && url !== '#') {
+        window.location.href = url;
+    } else {
+        console.log('No valid URL for notification type:', sourceType);
+    }
+}
+
+// Add event listeners for notification links
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM loaded, looking for notification links...');
+    const notificationLinks = document.querySelectorAll('.notification-link');
+    console.log('Found notification links:', notificationLinks.length);
+    
+    notificationLinks.forEach((link, index) => {
+        console.log(`Link ${index}:`, {
+            url: link.getAttribute('data-url'),
+            sourceType: link.getAttribute('data-source-type'),
+            sourceId: link.getAttribute('data-source-id')
+        });
+        
+        link.addEventListener('click', function(e) {
+            console.log('Notification link clicked!');
+            const url = this.getAttribute('data-url');
+            const sourceType = this.getAttribute('data-source-type');
+            const sourceId = this.getAttribute('data-source-id');
+            
+            handleNotificationClick(e, url, sourceType, sourceId);
+        });
+    });
+});
+</script>

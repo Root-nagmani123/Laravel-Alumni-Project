@@ -61,8 +61,8 @@ class GroupController extends Controller
         'mentor_id' => 'required|integer',
         'user_id' => 'required|array',
         'status' => 'nullable|integer',
-            'end_date' => 'nullable|date|after_or_equal:today', // Ensure end date is valid
-            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048', // Validate image
+        'end_date' => 'nullable|date|after_or_equal:today', // Ensure end date is valid
+        'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048', // Validate image
 
     ]);
     // Check if the image is uploaded
@@ -92,21 +92,26 @@ class GroupController extends Controller
     // Notify mentor: "Add in group mentor"
     $mentorId = $request->input('mentor_id');
 
-    if ($mentorId) {
-        $mentorMessage = 'Member added in group as mentor';
-        $this->notificationService->notifyMemberAdded(
+    if ($mentorId && $request->input('status') == 1) {
+        $mentorMessage = $request->input('name') . ' group has been added as mentor';
+        $notification=$this->notificationService->notifyMemberAdded(
             [$mentorId],
             'group',
             $mentorMessage,
             $group->id,
             'group_member'
         );
+
+        if($notification){
+            Member::query()->whereIn('id', $mentorId)->update(['is_notification' => 0]);
+        }
+
     }
 
     // Notify new members: "New member add in group"
     $userIds = $request->input('user_id', []);
-    if (!empty($userIds)) {
-        $memberMessage = 'New member add in group';
+    if (!empty($userIds) && $request->input('status') == 1) {
+        $memberMessage = $request->input('name') . ' group has been added as mentiee';
         $this->notificationService->notifyMemberAdded(
             $userIds,
             'group',
@@ -114,6 +119,10 @@ class GroupController extends Controller
             $group->id,
             'group_member'
         );
+    }
+
+    if($notification){
+        Member::query()->whereIn('id', $userIds)->update(['is_notification' => 0]);
     }
     
     return redirect()->route('group.index')->with('success', 'Group created successfully.');
@@ -163,7 +172,21 @@ class GroupController extends Controller
         $groupMember->mentiee = json_encode($request->input('user_id'));
         $groupMember->status = $request->input('status');
         $groupMember->save();
-        
+
+        if($groupMember->status == 1){
+            $notification = $this->notificationService->notifyGroupOrForumMembers(
+                $request->input('user_id'),
+                'admin_group_member',
+                $request->input('name') . ' group has been added as mentiee',
+                $group->id,
+                'group_member',
+                Auth::id()
+            );
+
+            if($notification){
+                Member::query()->whereIn('id', $request->input('user_id'))->update(['is_notification' => 0]);
+            }
+        }
         return redirect()->route('group.index')->with('success', 'Group updated successfully.');
     }
 
@@ -294,15 +317,20 @@ class GroupController extends Controller
     if (!empty($memberIds)) {
         $message = 'A new topic has been posted in your group: ' . $request->title;
         // Assuming you have notification service
-        $this->notificationService->notifyGroupOrForumMembers(
+       $notification = $this->notificationService->notifyGroupOrForumMembers(
             $memberIds,
-            'group',
+            'admin_group_topic',
             $message,
             $group_id,
             'group_topic',
-            $memberIds
+            Auth::id()
         );
+
+        if($notification){
+            Member::query()->whereIn('id', $memberIds)->update(['is_notification' => 0]);
+        }
     }
+
     return redirect()->route('group.index')->with('success', 'Group post (topic) added successfully.');
 }
     public function view_topic($id)

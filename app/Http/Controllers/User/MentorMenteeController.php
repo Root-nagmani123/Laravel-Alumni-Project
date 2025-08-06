@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\GroupRequest;
 use App\Services\GroupService;
+use App\Services\NotificationService;
 use Illuminate\Http\RedirectResponse;
 use App\Models\Member;
 use Illuminate\Support\Facades\DB;
@@ -13,6 +14,14 @@ use Illuminate\Support\Facades\DB;
 
 class MentorMenteeController extends Controller
 {
+
+    protected $notificationService;
+
+    public function __construct(NotificationService $notificationService)
+    {
+        $this->notificationService = $notificationService;
+    }
+
     public function index()
     {
 $user_id = auth()->guard('user')->user()->id;    
@@ -175,6 +184,7 @@ $mentees = $query->whereNotNull('name')
 
 return response()->json($mentees);
 }
+
 function want_become_mentor(Request $request)  {
     // print_r($request->all());die;
    $request->validate([
@@ -184,19 +194,26 @@ function want_become_mentor(Request $request)  {
 'sector' => 'required',
 'mentees' => 'required|array',
 ]);
+$user = auth()->guard('user')->user()->id;
 foreach ($request->input('mentees') as $menteeId) {
     // Validate each mentee ID
-    DB::table('mentor_requests')->insert([
+    $requestId = DB::table('mentor_requests')->insertGetId([
     'service'      => $request->input('service'),
     'batch'        => json_encode($request->input('year')),
     'cadre'        => json_encode($request->input('cadre')),
     'sector'       => json_encode($request->input('sector')),
     'Mentor_ids'  => $menteeId, // assuming mentee_id is the ID of the mentee
-    'mentees'       =>  $user = auth()->guard('user')->user()->id, // assuming the logged-in user is the mentor
+    'mentees'       => $user, // assuming the logged-in user is the mentor
     'status'       => 2, // default status
     'created_at'   => now(),
     'updated_at'   => now(),
 ]);
+
+   $notification = $this->notificationService->notifyMentorRequest($menteeId, $user, 'You have a new mentor request', $requestId);
+   if($notification){
+    Member::where('id', $menteeId)->update(['is_notification' => 0]);
+   }
+
 }
 
 return redirect()->back()->with('success', 'Your request to become a mentor has been submitted successfully.');
@@ -212,19 +229,24 @@ function want_become_mentee(Request $request)  {
        'mentees' => 'required|array',
    ]);
 
+   $user = auth()->guard('user')->user()->id;
    foreach ($request->input('mentees') as $menteeId) {
        // Validate each mentee ID
-       DB::table('mentee_requests')->insert([
+       $requestId = DB::table('mentee_requests')->insertGetId([
            'service'      => $request->input('service'),
            'batch'        => json_encode($request->input('year')),
            'cadre'        => json_encode($request->input('cadre')),
            'sector'       => json_encode($request->input('sector')),
            'mentees_ids'   => $menteeId, // assuming mentee_id is the ID of the mentee
-           'mentor'     =>  $user = auth()->guard('user')->user()->id, // assuming the logged-in user is the mentee
+           'mentor'     => $user, // assuming the logged-in user is the mentee
            'status'       => 2, // default status
            'created_at'   => now(),
            'updated_at'   => now(),
        ]);
+       $notification = $this->notificationService->notifyMenteeRequest($menteeId, $user, 'You have a new mentee request', $requestId);
+       if($notification){
+        Member::where('id', $menteeId)->update(['is_notification' => 0]);
+       }
    }
 
    return redirect()->back()->with('success', 'Your request to become a mentee has been submitted successfully.');
@@ -232,15 +254,43 @@ function want_become_mentee(Request $request)  {
 function updateRequest(Request $request) : \Illuminate\Http\RedirectResponse {
   
     $table = $request->type === 'mentor' ? 'mentor_requests' : 'mentee_requests';
+    $user = auth()->guard('user')->user()->id;
+
+    // Get the request details before updating
+    $requestData = DB::table($table)->where('id', $request->id)->first();
+    
+    if (!$requestData) {
+        return back()->with('error', 'Request not found.');
+    }
 
     DB::table($table)
         ->where('id', $request->id)
         ->update(['status' => $request->status]);
-if ($request->status == 1) {
-    $message = $request->type === 'mentor' ? 'You are now a mentor.' : 'You are now a mentee.';
-}else if($request->status == 3){
-    $message = $request->type === 'mentor' ? 'Your mentor request has been rejected.' : 'Your mentee request has been rejected.';
-}
+
+    // Send notifications based on status
+    if ($request->status == 1) {
+        // Request accepted
+        if ($request->type === 'mentor') {
+            $notification = $this->notificationService->notifyMentorRequestAccepted($requestData->mentees, $user, 'Your mentor request has been accepted!', $request->id);
+        } else {
+            $notification = $this->notificationService->notifyMenteeRequestAccepted($requestData->Mentor_ids, $user, 'Your mentee request has been accepted!', $request->id);
+        }
+        if($notification){
+            Member::where('id', $requestData->Mentor_ids)->update(['is_notification' => 0]);
+        }
+        $message = $request->type === 'mentor' ? 'You are now a mentor.' : 'You are now a mentee.';
+    } else if($request->status == 3) {
+        // Request rejected
+        if ($request->type === 'mentor') {
+            $notification = $this->notificationService->notifyMentorRequestRejected($requestData->mentees, $user, 'Your mentor request has been rejected.', $request->id);
+        } else {
+            $notification = $this->notificationService->notifyMenteeRequestRejected($requestData->Mentor_ids, $user, 'Your mentee request has been rejected.', $request->id);
+        }
+        if($notification){
+            Member::where('id', $requestData->Mentor_ids)->update(['is_notification' => 0]);
+        }
+        $message = $request->type === 'mentor' ? 'Your mentor request has been rejected.' : 'Your mentee request has been rejected.';
+    }
 
     return back()->with('success', 'Request ' . $message . ' successfully.');
 }

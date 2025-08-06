@@ -127,4 +127,76 @@ class NotificationService
         return null;
     }
 
+    public function notifyMentorRequest(int $mentorId, int $fromUserId, string $message, int $requestId)
+    {
+        return $this->createNotification([
+            'from_user_id' => $fromUserId,
+            'type'         => 'mentor_request',
+            'message'      => $message,
+            'source_id'    => $requestId,
+            'source_type'  => 'request',
+            'user_id'      => json_encode([$mentorId]),
+        ]);
+    }
+
+    public function notifyMenteeRequest(int $menteeId, int $fromUserId, string $message, int $requestId)
+    {
+        return $this->createNotification([
+            'from_user_id' => $fromUserId,
+            'type'         => 'mentee_request',
+            'message'      => $message,
+            'source_id'    => $requestId,
+            'source_type'  => 'request',
+            'user_id'      => json_encode([$menteeId]),
+        ]);
+    }
+
+    public function notifyMentorRequestAccepted(int $mentorId, int $fromUserId, string $message, int $requestId)
+    {
+        return $this->createNotification([
+            'from_user_id' => $fromUserId,
+            'type'         => 'mentor_request_accepted',
+            'message'      => $message,
+            'source_id'    => $requestId,
+            'source_type'  => 'request',
+            'user_id'      => json_encode([$mentorId]),
+        ]);
+    }
+
+    public function notifyMenteeRequestAccepted(int $menteeId, int $fromUserId, string $message, int $requestId)
+    {
+        return $this->createNotification([
+            'from_user_id' => $fromUserId,
+            'type'         => 'mentee_request_accepted',
+            'message'      => $message,
+            'source_id'    => $requestId,
+            'source_type'  => 'request',
+            'user_id'      => json_encode([$menteeId]),
+        ]);
+    }
+
+    public function notifyMentorRequestRejected(int $mentorId, int $fromUserId, string $message, int $requestId)
+    {
+        return $this->createNotification([
+            'from_user_id' => $fromUserId,
+            'type'         => 'mentor_request_rejected',
+            'message'      => $message,
+            'source_id'    => $requestId,
+            'source_type'  => 'request',
+            'user_id'      => json_encode([$mentorId]),
+        ]);
+    }
+
+    public function notifyMenteeRequestRejected(int $menteeId, int $fromUserId, string $message, int $requestId)
+    {
+        return $this->createNotification([
+            'from_user_id' => $fromUserId,
+            'type'         => 'mentee_request_rejected',
+            'message'      => $message,
+            'source_id'    => $requestId,
+            'source_type'  => 'request',
+            'user_id'      => json_encode([$menteeId]),
+        ]);
+    }
+
 }
