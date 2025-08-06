@@ -48,8 +48,6 @@ $members = DB::table('members')
         ->where('mentee_requests.mentor', $user_id)
         ->select('mentee_requests.id as request_id', 'members.name', 'members.cader as cadre', 'members.batch', 'members.sector','mentee_requests.status')
         ->get();
-       
-
     $mentor_connections = DB::table('mentor_requests')
         ->join('members', 'mentor_requests.Mentor_ids', '=', 'members.id')
         ->where('mentor_requests.mentees', $user_id)
@@ -264,7 +262,7 @@ function updateRequest(Request $request) : \Illuminate\Http\RedirectResponse {
 
     // Get the request details before updating
     $requestData = DB::table($table)->where('id', $request->id)->first();
-    
+   
     if (!$requestData) {
         return back()->with('error', 'Request not found.');
     }
