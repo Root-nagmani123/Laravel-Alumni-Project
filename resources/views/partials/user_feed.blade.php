@@ -115,9 +115,15 @@
     <!-- Text content -->
     <div>
         <!-- Name -->
+         @if($post->type === 'group_post')
+        <h6 class="mb-1">
+           <i class="fa-solid fa-users fa-fw pe-2"></i> {{ $displayName }}
+        </h6>
+        @else
         <h6 class="mb-1">
             {{ $displayName }}
         </h6>
+        @endif
         
 
         <!-- Group post info + Time -->
@@ -178,7 +184,6 @@
         </div>
         <!-- Card header END -->
         <!-- Card body START -->
-         <hr>
         <div class="card-body">
 @php
     $fullContent = strip_tags($post->content);
