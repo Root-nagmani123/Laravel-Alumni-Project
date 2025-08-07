@@ -44,7 +44,7 @@ class GroupController extends Controller
     ->where(function($query) use ($userId) {
         $query->where(function($q) {
             $q->whereNull('g.end_date')
-              ->orWhere('g.end_date', '>=', now());
+              ->orWhere('g.end_date', '>', now());
         })
         ->orWhere(function($q) use ($userId) {
             $q->where('g.member_type', '2')

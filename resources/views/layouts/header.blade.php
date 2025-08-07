@@ -292,7 +292,7 @@ Header START -->
                             @php
                             $user = Auth::guard('user')->user();
                             @endphp
-                            <a href="{{ route('user.profile', ['id' => $user->id]) }}"
+                            <a href="{{ route('user.profile.data', ['id' => $user->id]) }}"
                                 class="dropdown-item btn btn-primary-soft btn-sm my-2 text-center">View profile</a>
                             @endif
                         </li>

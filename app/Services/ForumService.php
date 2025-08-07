@@ -49,7 +49,7 @@ return DB::table('forums')
                   ->orWhere(function ($q) use ($userId) {
                       $q->where('forums.created_by', '!=', $userId)
                         ->whereNotNull('forums.end_date')
-                        ->where('forums.end_date', '>=', now());
+                        ->where('forums.end_date', '>', now());
                   });
         })
     ->orderBy('forums.id', 'desc')

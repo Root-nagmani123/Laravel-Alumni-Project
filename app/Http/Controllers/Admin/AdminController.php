@@ -235,8 +235,8 @@ $groupedPosts = $rawPosts->groupBy('post_id')->map(function ($group) {
             ->get();
     } else {
         $results = DB::table('mentee_requests')
-            ->join('members as mentors', 'mentee_requests.mentor', '=', 'mentors.id')
-            ->where('mentee_requests.mentees_ids', $id)
+            ->join('members as mentors', 'mentee_requests.mentees_ids', '=', 'mentors.id')
+            ->where('mentee_requests.mentor', $id)
             ->where('mentee_requests.status', 1)
             ->select('mentors.name as name', 'mentors.cader as cadre', 'mentors.batch', 'mentors.sector')
             ->get();

@@ -102,7 +102,7 @@
                             <!-- Card footer -->
                             <div class="card-footer text-center py-2">
                                 <a class="btn btn-link btn-sm"
-                                    href="{{ route('user.profile', ['id' => $user->id]) }}">View Profile </a>
+                                    href="{{ route('user.profile.data', ['id' => $user->id]) }}">View Profile </a>
                             </div>
                         </div>
                         <!-- Card END -->
@@ -182,7 +182,7 @@
                                 <div class="mb-3">
                                     <label class="form-label">Sector</label>
                                     <select class="form-select select2 sector" name="sector[]" multiple="multiple" data-id="want_become_mentor" required>
-                                        <option selected disabled>Select Sector</option>
+                                        <option value="" disabled>Select Sector</option>
                                     </select>
                                 </div>
 

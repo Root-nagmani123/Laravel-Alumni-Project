@@ -96,7 +96,7 @@
                             <!-- Card footer -->
                             <div class="card-footer text-center py-2">
                                 <a class="btn btn-link btn-sm"
-                                    href="{{ route('user.profile', ['id' => $user->id]) }}">View Profile </a>
+                                    href="{{ route('user.profile.data', ['id' => $user->id]) }}">View Profile </a>
                             </div>
                         </div>
                         <!-- Card END -->
@@ -139,9 +139,13 @@
                 <div class="card-body text-center">
                     <p class="small text-muted mb-1">End Date: {{ \Carbon\Carbon::parse($recent->end_date ?? now())->format('d-m-Y') }}</p>
                 </div>
+      @php
+    $now = \Carbon\Carbon::now();
+    $isExpired = \Carbon\Carbon::parse($recent->end_date)->lt($now);
+@endphp
 
                 <div class="card-footer text-center">
-                    @if($recent->end_date && Carbon::parse($recent->end_date)->isFuture())
+                    @if($isExpired)
                         <span class="badge bg-success-soft text-success mb-2 d-block">Group Active</span>
                         <a href="{{ route('user.group-post', $recent->id) }}" class="btn btn-primary btn-sm">View Group</a>
                  

@@ -14,7 +14,7 @@ class Member extends Authenticatable
     // protected $dates = ['deleted_at'];
 
     protected $fillable = [
-        'name', 'email', 'password', 'mobile', 'cader',
+        'name', 'email', 'password', 'mobile', 'cader','username',
         'designation','batch','address','bio','profile_pic','date_of_birth',
         'place_of_birth','gender','marital_status',
         'school_name','school_year','undergrad_college',
