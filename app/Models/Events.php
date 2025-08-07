@@ -21,7 +21,7 @@ class Events extends Model
     'venue',
     'image',
     'status',
-
+    'notified_at',
 ];
 
 

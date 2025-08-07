@@ -78,19 +78,17 @@ class EventsController extends Controller
     'image'          => $imagePath,
     'status'         => $request->status,
     'created_by'     => Auth::id(),
+    'notified_at'    => 0,
 ]);
 
-   if($event->status == 1){
-
+   if($event->status == 1 && $event->notified_at == 0){
     $notification = $this->notificationService->notifyAllMembers('event', $event->title . ' Event has been added.', $event->id, 'event');
-       
     if($notification){
-
-     Member::query()->update(['is_notification' => 0]);
-
+        Member::query()->update(['is_notification' => 0]);
+        $event->notified_at = 1;
+        $event->save();
     }
-
-    }
+   }
 
 		return redirect()->route('events.index')->with('success', 'Event added successfully!');
 	}
@@ -167,11 +165,19 @@ return redirect()->route('events.index')->with('error', 'Event not found!');retu
 		}
 	 public function toggleStatus(Request $request)
     {
-
         $event = Events::findOrFail($request->id);
+        $oldStatus = $event->status;
         $event->status = $request->status;
         $event->save();
-
+        // If event is being activated and notification not sent
+        if ($oldStatus == 0 && $event->status == 1 && $event->notified_at == 0) {
+            $notification = $this->notificationService->notifyAllMembers('broadcast', $broadcast->title . ' broadcast has been added.', $broadcast->id, 'broadcast');
+            if ($notification) {
+                Member::query()->update(['is_notification' => 0]);
+                $event->notified_at = 1;
+                $event->save();
+            }
+        }
         return response()->json(['message' => 'Status updated successfully.']);
     }
 

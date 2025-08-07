@@ -10,16 +10,22 @@ use Illuminate\Http\RedirectResponse;
 use App\Models\Group;
 use Illuminate\Support\Facades\DB;
 use App\Models\GroupMember;
-
+use App\Models\Notification;
+use App\Models\Member;
+use App\Services\NotificationService;
 
 
 class GroupController extends Controller
 {
     protected $groupService;
+    protected $notificationService;
+ 
 
-    public function __construct(GroupService $groupService)
+    public function __construct(GroupService $groupService ,NotificationService $notificationService)
     {
         $this->groupService = $groupService;
+        $this->notificationService = $notificationService;
+
     }
 
     public function index()
@@ -65,9 +71,9 @@ class GroupController extends Controller
 
         return view('user.groups', compact('groupNames'));
     }
-function activateGroup(Request $request) : RedirectResponse {
 
-    // Validate the request
+function activateGroup(Request $request) : RedirectResponse {
+   // Validate the request
     $request->validate([
         'group_id' => 'required|exists:groups,id',
         'end_date' => 'required|date|after_or_equal:today',
@@ -85,6 +91,8 @@ function activateGroup(Request $request) : RedirectResponse {
 
     return redirect()->back()->with('success', 'Group activated successfully.');
 }
+
+
     public function create()
     {
         $members = $this->groupService->index();
@@ -95,11 +103,11 @@ function activateGroup(Request $request) : RedirectResponse {
     {
         $validated = $request->validate([
             'group_name' => 'required|string|max:255',
-            
             'mentees' => 'required|array',
             'end_date' => 'required|date',
             'grp_image' => 'required|image|mimes:jpeg,png,jpg|max:1048', // Validate image file
         ]);
+
         if ($request->hasFile('grp_image')) {
             $imagePath = $request->file('grp_image')->store('uploads/images/grp_img', 'public');
             $data['images'] = basename($imagePath);
@@ -115,7 +123,7 @@ function activateGroup(Request $request) : RedirectResponse {
             'updated_at' => now(),
         ]);
 
-         GroupMember::create([
+      $group = GroupMember::create([
         'group_id' => $data_id,
         'member_id' => auth('user')->id(),
         'mentor' => auth('user')->id(),
@@ -123,8 +131,24 @@ function activateGroup(Request $request) : RedirectResponse {
         'status' => 1
     ]);
 
-  
 
+     // Notify new members: "New member add in group"
+     $userIds = $validated['mentees'];
+     if ($group) {
+         $memberMessage = $validated['group_name'] . ' group has been added as mentiee';
+         $notificationMentiee=$this->notificationService->notifyMemberAdded(
+             $userIds,
+             'group_member',
+             $memberMessage,
+             $data_id,
+             'group'
+         );
+     }
+ 
+     if($notificationMentiee){
+         Member::query()->whereIn('id', $userIds)->update(['is_notification' => 0]);
+     }
+     
         return redirect()->back()->with('success', 'Group created successfully.');
     }
 

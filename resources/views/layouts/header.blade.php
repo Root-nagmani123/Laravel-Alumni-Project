@@ -95,9 +95,6 @@ Header START -->
                     </form>
                     <ul id="searchResults" class="list-group position-absolute w-100 z-3 mt-1" style="max-height: 200px; overflow-y: auto;background-color: #ffffffb8;"></ul>
                 </div>
-
-
-
             </div>
             <!-- Main navbar END -->
 
@@ -165,7 +162,7 @@ Header START -->
                                                             $notificationUrl = url('/group-post/' . $notification->source_id);
                                                             break;
                                                         case 'group':
-                                                            $notificationUrl = route('group.post'. $notification->source_id);
+                                                            $notificationUrl = route('user.group-post', ['id' => $notification->source_id]);
                                                             break;
                                                         case 'birthday':
                                                             $notificationUrl = url('/profile/' . $notification->source_id);

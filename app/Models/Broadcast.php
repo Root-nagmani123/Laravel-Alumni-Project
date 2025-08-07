@@ -18,7 +18,8 @@ class Broadcast extends Model
         'createdBy',
         'is_deleted',
         'deleted_by',
-        'deleted_on'
+        'deleted_on',
+        'notified_at',
     ];
 
     public $timestamps = true;
