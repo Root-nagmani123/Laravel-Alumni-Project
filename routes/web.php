@@ -158,6 +158,7 @@ Route::prefix('user')->name('user.')->group(function () {
          Route::get('/profile/{id}', [ProfileController::class, 'showById'])->where('id', '[0-9]+')->name('profile');
          Route::get('/profile/{name}', [ProfileController::class, 'showByName'])->where('name', '[a-zA-Z\s]+')->name('profile.name');
 
+         Route::get('/profile/data/{id}', [ProfileController::class, 'showById_data'])->where('id', '[0-9]+')->name('profile.data');
          Route::put('/profile/update/{id}', [ProfileController::class, 'update'])->name('profile.update');
 
         Route::put('/eduinfo/update/{id}', [ProfileController::class, 'updateEduinfo'])->name('profile.eduinfo');
@@ -195,7 +196,7 @@ Route::prefix('user')->name('user.')->group(function () {
         Route::post('user/forum/topic/{id}/comment', [MemberForumController::class, 'comment'])->name('forum.topic.comment');
       
         Route::post('user/forum/topic/{id}/store', [MemberForumController::class, 'member_store_topic'])->name('forum.topic.store');
-       
+       Route::post('user/forum/delete', [MemberForumController::class, 'deleteforum'])->name('forum.delete');
         Route::get('/notifications', [App\Http\Controllers\Member\NotificationController::class, 'getNotifications'])->name('notifications.get');
         Route::get('/notifications/{id}', [App\Http\Controllers\Member\NotificationController::class, 'notificationstatus'])->name('notifications.status');
         Route::put('/notifications/{id}/read', [App\Http\Controllers\Member\NotificationController::class, 'markAsRead'])->name('notifications.read');
@@ -207,7 +208,6 @@ Route::prefix('user')->name('user.')->group(function () {
 	Route::get('/member/search', [MemberForumController::class, 'member_search'])->name('member.search');
 
 
-	Route::get('/member/search', [MemberForumController::class, 'member_search'])->name('member.search');
 
 });
 
@@ -467,5 +467,10 @@ Route::middleware(['auth:user'])->group(function () {
         Route::get('/{group}/edit', [MemberGroupController::class, 'edit'])->name('edit');
         Route::put('/{group}', [MemberGroupController::class, 'update'])->name('update');
         Route::delete('/{group}', [MemberGroupController::class, 'destroy'])->name('destroy');
+
+   
+        Route::delete('group_post_data/{post}', [MemberGroupController::class, 'post_destroy'])->name('post.destroy');
+
+
     });
 });

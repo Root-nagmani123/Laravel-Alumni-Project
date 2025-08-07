@@ -87,15 +87,19 @@ public function store(Request $request)
         'createdBy' => auth()->id() ?? null,
         'is_deleted' => 0,
         'deleted_on' => now(),
+        'notified_at'    => 0,
     ]);
 
     //notification 
-    if($broadcast){
+    if($broadcast && $event->notified_at == 0){
 
        $notification = $this->notificationService->notifyAllMembers('broadcast', $broadcast->title . ' broadcast has been added.', $broadcast->id, 'broadcast');
        
        if($notification){
         Member::query()->update(['is_notification' => 0]);
+        $broadcast->notified_at = 1;
+        $broadcast->save();
+
        }
     }
 
@@ -105,8 +109,18 @@ public function store(Request $request)
 public function toggleStatus(Request $request)
 {
     $broadcast = Broadcast::findOrFail($request->id);
+    $oldStatus = $broadcast->status;
     $broadcast->status = $request->status;
     $broadcast->save();
+
+    if ($oldStatus == 0 && $broadcast->status == 1 && $broadcast->notified_at == 0) {
+        $notification = $this->notificationService->notifyAllMembers('event', $event->title . ' Event has been activated.', $event->id, 'event');
+        if ($notification) {
+            Member::query()->update(['is_notification' => 0]);
+            $broadcast->notified_at = 1;
+            $broadcast->save();
+        }
+    }
 
     return response()->json(['message' => 'Status updated successfully.']);
 }

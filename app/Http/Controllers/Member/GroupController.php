@@ -8,18 +8,26 @@ use App\Http\Requests\GroupRequest;
 use App\Services\GroupService;
 use Illuminate\Http\RedirectResponse;
 use App\Models\Group;
+use App\Models\Post;
+
 use Illuminate\Support\Facades\DB;
 use App\Models\GroupMember;
-
+use App\Models\Notification;
+use App\Models\Member;
+use App\Services\NotificationService;
 
 
 class GroupController extends Controller
 {
     protected $groupService;
+    protected $notificationService;
+ 
 
-    public function __construct(GroupService $groupService)
+    public function __construct(GroupService $groupService ,NotificationService $notificationService)
     {
         $this->groupService = $groupService;
+        $this->notificationService = $notificationService;
+
     }
 
     public function index()
@@ -42,7 +50,7 @@ class GroupController extends Controller
     ->where(function($query) use ($userId) {
         $query->where(function($q) {
             $q->whereNull('g.end_date')
-              ->orWhere('g.end_date', '>=', now());
+            ->orWhere('g.end_date', '>', now());
         })
         ->orWhere(function($q) use ($userId) {
             $q->where('g.member_type', '2')
@@ -65,9 +73,9 @@ class GroupController extends Controller
 
         return view('user.groups', compact('groupNames'));
     }
-function activateGroup(Request $request) : RedirectResponse {
 
-    // Validate the request
+function activateGroup(Request $request) : RedirectResponse {
+   // Validate the request
     $request->validate([
         'group_id' => 'required|exists:groups,id',
         'end_date' => 'required|date|after_or_equal:today',
@@ -85,6 +93,8 @@ function activateGroup(Request $request) : RedirectResponse {
 
     return redirect()->back()->with('success', 'Group activated successfully.');
 }
+
+
     public function create()
     {
         $members = $this->groupService->index();
@@ -95,11 +105,11 @@ function activateGroup(Request $request) : RedirectResponse {
     {
         $validated = $request->validate([
             'group_name' => 'required|string|max:255',
-            
             'mentees' => 'required|array',
             'end_date' => 'required|date',
             'grp_image' => 'required|image|mimes:jpeg,png,jpg|max:1048', // Validate image file
         ]);
+
         if ($request->hasFile('grp_image')) {
             $imagePath = $request->file('grp_image')->store('uploads/images/grp_img', 'public');
             $data['images'] = basename($imagePath);
@@ -115,7 +125,7 @@ function activateGroup(Request $request) : RedirectResponse {
             'updated_at' => now(),
         ]);
 
-         GroupMember::create([
+      $group = GroupMember::create([
         'group_id' => $data_id,
         'member_id' => auth('user')->id(),
         'mentor' => auth('user')->id(),
@@ -123,8 +133,24 @@ function activateGroup(Request $request) : RedirectResponse {
         'status' => 1
     ]);
 
-  
 
+     // Notify new members: "New member add in group"
+     $userIds = $validated['mentees'];
+     if ($group) {
+         $memberMessage = $validated['group_name'] . ' group has been added as mentiee';
+         $notificationMentiee=$this->notificationService->notifyMemberAdded(
+             $userIds,
+             'group_member',
+             $memberMessage,
+             $data_id,
+             'group'
+         );
+     }
+ 
+     if($notificationMentiee){
+         Member::query()->whereIn('id', $userIds)->update(['is_notification' => 0]);
+     }
+     
         return redirect()->back()->with('success', 'Group created successfully.');
     }
 
@@ -139,14 +165,21 @@ function activateGroup(Request $request) : RedirectResponse {
         return redirect()->route('member.groups.index')->with('success', 'Group updated successfully.');
     }
 
-    public function destroy(Group $group)
-    {
-        try {
-            $this->groupService->delete($group);
-            return redirect()->route('member.groups.index')->with('success', 'Group deleted successfully.');
-        } catch (\Exception $e) {
-            return redirect()->route('member.groups.index')->with('error', $e->getMessage());
-        }
+   public function destroy(Group $group)
+{
+    try { 
+        $this->groupService->delete($group);
+        return redirect()->route('user.group.index')->with('success', 'Group deleted successfully.');
+    } catch (\Exception $e) {
+        return redirect()->route('user.group.index')->with('error', $e->getMessage());
     }
-    
+}
+function post_destroy(Request $request, $id) : RedirectResponse {
+    $post = Post::find($id);
+    if (!$post) {
+        return redirect()->back()->with('error', 'Post not found.');
+    }
+    $post->delete();
+    return redirect()->back()->with('success', 'Post deleted successfully.');
+}
 }

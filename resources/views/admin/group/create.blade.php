@@ -30,11 +30,9 @@
     $sortedMentors = $mentors->sortBy('name');
 @endphp
 
-<select id="searchable-select" class="form-control" name="mentor_id" required>
-    <option value="">Select Mentor</option>
-    @foreach($sortedMentors as $mentor)
-        <option value="{{ $mentor->id }}">{{ $mentor->name }}</option>
-    @endforeach
+<select id="mentor_id" class="form-control" name="mentor_id" required>
+   
+  
 </select>
 
 
@@ -100,6 +98,7 @@
     <!-- end Vertical Steps Example -->
 </div>
 <!-- image preview js -->
+@section('scripts')
 <script>
 document.getElementById('image').addEventListener('change', function (event) {
     const preview = document.getElementById('preview-image');
@@ -117,9 +116,6 @@ document.getElementById('image').addEventListener('change', function (event) {
         preview.classList.add('d-none');
     }
 });
-</script>
-
-<script>
 $(document).ready(function() {
     $('.form-select').select2(); // Initialize Select2
     $('.js-example-basic-multiple').select2(); // Initialize Select2 for multiple select
@@ -139,5 +135,35 @@ $(document).ready(function() {
         }
     });
 });
+$(document).ready(function () {
+    $('#mentor_id').select2({
+        placeholder: "-- Select Member --",
+        minimumInputLength: 2, // start search after typing 2 chars
+        ajax: {
+            url: '{{ route("admin.members.search") }}',
+            type: 'POST',
+            dataType: 'json',
+            delay: 250,
+            data: function (params) {
+                return {
+                    q: params.term,
+                    _token: '{{ csrf_token() }}'
+                };
+            },
+            processResults: function (data) {
+                return {
+                    results: $.map(data, function (item) {
+                        return {
+                            id: item.id,
+                            text: item.name
+                        };
+                    })
+                };
+            },
+            cache: true
+        }
+    });
+});
 </script>
+@endsection
 @endsection

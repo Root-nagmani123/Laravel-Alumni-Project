@@ -3,6 +3,8 @@
 
 <head>
     @include('layouts.pre_header')
+    @vite(['resources/js/app.js'])
+    @livewireStyles
     <style>
     #pageLoader {
         transition: opacity 0.3s ease;
@@ -13,6 +15,7 @@
         visibility: hidden;
         pointer-events: none;
     }
+
 </style>
 
 <script>
@@ -144,8 +147,126 @@
             loader.style.display = 'none';
         }
     });
-</script>
 
+    window.addEventListener('open-chat-toast', event => {
+        const { id, name, avatar } = event.detail;
+
+        const toast = document.getElementById('chatToast');
+
+        // You could dynamically inject the data here
+        toast.querySelector('.toast-header h6').textContent = name;
+        toast.querySelector('.toast-header img').src = avatar;
+        
+        const bsToast = new bootstrap.Toast(toast);
+        bsToast.show();
+    });
+
+</script>
+<!-- Toast Container -->
+
+
+@livewireScripts
+<script type="module">
+        let typingTimeout;
+        const chatContainer = document.getElementById('chat-container');
+
+        window.Echo.private(`chat-channel.{{ auth()->guard('user')->id() }}`)
+    
+            .listen('MessageSentEvent', (event) => {
+            console.log('MessageSentEvent received:', event);
+
+            // const chatContainer = document.getElementById('chat-container');
+            const chatContainer = document.getElementById(`chat-container-${event.message.sender_id === {{ auth()->guard('user')->id() }} ? event.message.receiver_id : event.message.sender_id}`);
+
+            const messageInputField = document.getElementById('message-input');
+            
+            const isInputFocused = document.activeElement === messageInputField;
+            const isScrolledToBottom = chatContainer.scrollTop + chatContainer.clientHeight >= chatContainer.scrollHeight - 10;
+
+            // Append the message
+            const message = event.message;
+            const isSender = message.sender_id === {{ auth()->guard('user')->id() }};
+            
+            if (!chatContainer) {
+                console.log("Chat window not open, skipping append.");
+                return;
+            }
+
+
+            const messageWrapper = document.createElement('div');
+            if (isSender) {
+                messageWrapper.className = 'd-flex justify-content-end text-end mb-1';
+                messageWrapper.innerHTML = `
+                    <div class="w-100">
+                        <div class="d-flex flex-column align-items-end">
+                            <div class="bg-primary text-white p-2 px-3 rounded-2">
+                                ${message.message}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                messageWrapper.className = 'd-flex flex-column align-items-start';
+                messageWrapper.innerHTML = `
+                    <div class="bg-light text-secondary p-2 px-3 rounded-2">
+                        ${message.message}
+                    </div>
+                `;
+            }
+
+            chatContainer.appendChild(messageWrapper);
+
+            // Play sound if not focused or scrolled
+            //if (!isInputFocused || !isScrolledToBottom) {
+              //  const audio = new Audio('{{ asset('sounds/notification.mp3') }}');
+                // audio.play();
+            // }
+
+            // Scroll to bottom after new message
+            // chatContainer.scrollTop = chatContainer.scrollHeight;
+            setTimeout(() => {
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            }, 10);
+        });
+
+        window.Echo.private('unread-channel.{{ auth()->guard('user')->id() }}')
+        .listen('UnreadMessage', (event) => {
+            const unreadCountElement = document.getElementById(`unread-count-${event.senderId}`);
+            if (unreadCountElement) {
+                unreadCountElement.textContent = event.unreadCount > 0 ? `(${event.unreadCount})` : '';
+            }
+        });
+
+
+        // Listen for Livewire events
+        Livewire.on('messages-updated', () => {
+            setTimeout(() => {
+                scrollToBottom();
+            }, 50);
+        });
+
+        // Scroll to Message
+        Livewire.on('scroll-to-message', (event) => {
+            const messageElement = document.getElementById(`message-${event.index}`);
+            if (messageElement) {
+                messageElement.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center'
+                });
+            }
+        });
+
+        // Scroll on initial load
+        window.onload = () => {
+            scrollToBottom();
+        };
+
+        function scrollToBottom() {
+            if (chatContainer) {
+                chatContainer.scrollTo(0, chatContainer.scrollHeight);
+            }
+        }
+    </script>
 </body>
 
 </html>

@@ -15,11 +15,16 @@ class Group extends Model
         'createdFrom',
     ]; */
 	protected $fillable = [
-         'name', 'state_id', 'status', 'created_by', 'member_type','end_date', 'image'
+         'name', 'state_id', 'status', 'created_by', 'member_type','end_date', 'image','notified_at',
     ];
 	
 	public function groupMember()
     {
         return $this->hasOne(GroupMember::class);
     }
+    public function members()
+{
+    return $this->hasMany(GroupMember::class);
+}
+
 }

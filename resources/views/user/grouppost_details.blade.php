@@ -45,7 +45,7 @@
                                 </div>
                             </div>
                             <div class="card-footer text-center py-2">
-                                <a class="btn btn-link btn-sm" href="{{ route('user.profile', ['id' => $user->id]) }}">View Profile </a>
+                                <a class="btn btn-link btn-sm" href="{{ route('user.profile.data', ['id' => $user->id]) }}">View Profile </a>
                             </div>
                         </div>
                     </div>
@@ -57,12 +57,25 @@
             <div class="post-list p-3 rounded mb-4" style="background-color: #af2910; color: #fff;">
                 <div class="d-flex justify-content-between align-items-center">
                     <h1 class="h5 mb-0 text-white">{{ $group->name }} : Group Posts</h1>
-                    @if($isMentee)
+                 
                     <div class="dropdown">
                         <a href="#" class="text-white btn btn-sm btn-transparent py-0 px-2" data-bs-toggle="dropdown">
                             <i class="bi bi-three-dots-vertical"></i>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
+                            @if($isMentee)
+                               <li>
+                               <form action="{{ route('user.group.destroy', $group->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this group?');">
+                                    @csrf
+                                    @method('DELETE') {{-- This is the key to spoof DELETE --}}
+                                    <input type="hidden" name="group_id" value="{{ $group->id }}">
+                                    <button type="submit" class="dropdown-item text-danger">
+                                        <i class="bi bi-trash fa-fw pe-2"></i>Delete Group
+                                    </button>
+                                </form>
+
+                            </li>
+                            @endif
                             <li>
                                 <form action="{{ route('user.groups.leave') }}" method="POST" onsubmit="return confirm('Are you sure you want to leave this group?');">
                                     @csrf
@@ -71,10 +84,11 @@
                                         <i class="bi bi-arrow-bar-right fa-fw pe-2"></i>Leave Group
                                     </button>
                                 </form>
-                            </li>
+                            </li>                         
+                            @endif
                         </ul>
                     </div>
-                    @endif
+                   
                 </div>
             </div>
 
@@ -109,6 +123,17 @@
                                     <span class="nav-item small">{{ $post->created_at->diffForHumans() }}</span>
                                 </div>
                                 <p class="mb-0 small">{{ $post->member->designation ?? 'Member' }}</p>
+                            </div>
+                            <div>
+                                @if($post->member && $post->member->id === auth('user')->id())
+                                <form action="{{ route('user.group.post.destroy', $post->id) }}" method="POST">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="text-decoration-none text-primary ms-2 border-0 bg-transparent">
+                                        <i class="bi bi-trash"></i> Delete Post
+                                    </button>
+                                </form>
+                                @endif
                             </div>
                         </div>
                     </div>

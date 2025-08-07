@@ -40,7 +40,8 @@ class ForumController extends Controller
     $validator = Validator::make($request->all(), [
         'name' => 'required|string|max:255',
         'end_date' => 'required|date|after_or_equal:today',
-        'images' => 'nullable|image|mimes:jpeg,png,jpg|max:1028', // Optional image validation
+        'images' => 'nullable|image|mimes:jpeg,png,jpg|max:1028', 
+        'status' => 'required|in:1,0',
 
       ]);
     // Check if validation fails
@@ -49,35 +50,33 @@ class ForumController extends Controller
             ->withErrors($validator)
             ->withInput();
         }
-         if ($request->hasFile('image')) {
+        $imagePath = null;
+        if ($request->hasFile('image')) {
             $imagePath = $request->file('image')->store('uploads/images/forums_img', 'public');
-            $data['images'] = basename($imagePath);
         }
-    // insert into the forums table
-    $input = [
-        'name' => $request->input('name'),
-         'status' => $request->input('status'), // Default to active if not provided
-        'created_by' => session('LoginID'),
-         'end_date' => $request->input('end_date'),
-         'images' => isset($data['images']) ? $data['images'] : null, // Store image if exists
-
-    ];
-
-    $last_id = Forum::create($input)->id;
-
-    if($last_id && $request->input('status') == 1){
-        $notification = $this->notificationService->notifyAllMembers('forum_admin', $request->input('name') . '  forum has been added.', $last_id, 'forum');
-        if($notification){
-            Member::query()->update(['is_notification' => 0]);
-        }
-    }
-
-    // Insert into forums_member
-    DB::table('forums_member')->insert([
-
-            'forums_id' => $last_id,
-            'status' => 1,
+    
+        $forum = Forum::create([
+            'name' => $request->input('name'),
+            'status' => $request->input('status'),
+            'created_by' => session('LoginID'),
+            'end_date' => $request->input('end_date'),
+            'images' => $imagePath ? basename($imagePath) : null,
+            'notified_at' => 0,
         ]);
+
+        if ($forum->status == 1 && $forum->notified_at == 0) {
+            $notification = $this->notificationService->notifyAllMembers(
+                'forum_admin',
+                $forum->name . ' forum has been added.',
+                $forum->id,
+                'forum'
+            );
+            if ($notification) {
+                Member::query()->update(['is_notification' => 0]);
+                $forum->notified_at = 1;
+                $forum->save();
+            }
+        }
         
     // Redirect to the forum page
     return redirect()->route('forums.index')->with('success', 'Forum added successfully.');
@@ -270,7 +269,7 @@ class ForumController extends Controller
         ->get();*/
 
        $topics = ForumTopic::where('forum_id', $id)
-    ->where('created_by', session('LoginID'))
+    
     ->orderBy('id', 'desc')
     ->with('creator')
     ->get();
@@ -409,8 +408,25 @@ public function destroyforum(Forum $forum)
 public function toggleStatus(Request $request)
 {
     $forum = Forum::findOrFail($request->id);
+    $oldStatus = $forum->status;
     $forum->status = $request->status;
     $forum->save();
+    
+   // Notify only when activated and not yet notified
+   if ($oldStatus == 0 && $forum->status == 1 && $forum->notified_at == 0) {
+    $notification = $this->notificationService->notifyAllMembers(
+        'forum_admin',
+        $forum->name . ' forum has been activated.',
+        $forum->id,
+        'forum'
+    );
+    if ($notification) {
+        Member::query()->update(['is_notification' => 0]);
+        $forum->notified_at = 1;
+        $forum->save();
+    }
+}
+
     return response()->json(['message' => 'Forum status updated successfully.']);
 }
 public function TopictoggleStatus(Request $request)
