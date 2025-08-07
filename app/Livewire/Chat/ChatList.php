@@ -97,8 +97,8 @@ class ChatList extends Component
         $message->receiver_id = $this->selectedChat;
         $message->message = $this->newMessage;
         $message->save();
-
         $this->messages[] = $message;
+
         broadcast(new MessageSentEvent($message))->toOthers();
         
         $unreadCount = $this->getUnreadMessagesCount();
