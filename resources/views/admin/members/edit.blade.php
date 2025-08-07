@@ -53,8 +53,18 @@
                             </div>
                             <div class="col-6">
                                 <div class="mb-3">
+                                    <label class="form-label">User Name</label>
+                                    <input type="text" name="username" class="form-control"
+                                        value="{{ old('username', $member->username) }}">
+                                    @error('username')
+                                    <div class="text-danger">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="mb-3">
                                     <label class="form-label">Mobile<span class="required text-danger text-danger" >*</span></label>
-                                    <input type="text" name="mobile" class="form-control"
+                                    <input type="number" name="mobile" class="form-control"
                                         value="{{ old('mobile', $member->mobile) }}">
                                     @error('mobile')
                                     <div class="text-danger">{{ $message }}</div>

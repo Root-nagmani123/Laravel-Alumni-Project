@@ -30,6 +30,7 @@ class MemberController extends Controller
         // Validate the incoming request
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
+            'username' => 'required|string|max:255|unique:members',
             'mobile' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:members',
             'password' => 'required|string|min:8|confirmed',
@@ -46,6 +47,7 @@ class MemberController extends Controller
         // Create a new member
         Member::create([
             'name' => $request->name,
+            'username' => $request->username,
             'mobile' => $request->mobile,
             'email' => $request->email,
             'password' => Hash::make($request->password),
@@ -66,6 +68,7 @@ class MemberController extends Controller
         // Validate the incoming request
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
+            'username' => 'required|string|max:255|unique:members,username,' . $member->id,
             'mobile' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:members,email,' . $member->id,
             'password' => 'nullable|string|min:8',
