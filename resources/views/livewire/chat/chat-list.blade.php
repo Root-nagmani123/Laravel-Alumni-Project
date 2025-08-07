@@ -174,17 +174,22 @@
     <!-- Chat Footer -->
     <div class="toast-footer border-top pt-2 mt-2 px-3">
         <form wire:submit.prevent="submit">
-            <input type="file" wire:model="uploadFile" accept="image/*,.pdf" class="form-control mb-2">
+            <!-- <input type="file" wire:model="uploadFile" accept="image/*,.pdf" class="form-control mb-2"> -->
 
-            <input type="text"
-                   wire:model.defer="newMessage"
-                   wire:keydown.enter="submit"
-                   class="form-control mb-2"
-                   placeholder="Type your message...">
+            <form wire:submit.prevent="submit" class="d-flex gap-2">
+    <!-- Text Input -->
+    <input type="text"
+           wire:model.defer="newMessage"
+           wire:keydown.enter="submit"
+           class="form-control"
+           placeholder="Type your message...">
 
-            <button type="submit" class="btn btn-primary w-100">
-                Send
-            </button>
+    <!-- Send Button -->
+    <button type="submit" class="btn btn-primary">
+        Send
+    </button>
+</form>
+
         </form>
     </div>
 </div>
