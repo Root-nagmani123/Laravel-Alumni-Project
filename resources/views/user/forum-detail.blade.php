@@ -6,7 +6,7 @@
 <div class="container">
     <div class="row g-4" style="margin-top: 100px;">
         <!-- Left Sidebar -->
-           <div class="col-3">
+        <div class="col-3">
             <!-- Advanced filter responsive toggler START -->
             <div class="d-flex align-items-center d-lg-none">
                 <button class="border-0 bg-transparent" type="button" data-bs-toggle="offcanvas"
@@ -118,57 +118,36 @@
                                 <h5 class="card-title mb-0">{{ $forum->name }}</h5>
                                 <p class="mb-0 small text-muted">{{ $topics->count() }} topics</p>
                                 @if($forum->end_date)
-                                    <p class="mb-0 small text-muted">End Date: {{ \Carbon\Carbon::parse($forum->end_date)->format('d M Y') }} </p>
+                                <p class="mb-0 small text-muted">End Date:
+                                    {{ \Carbon\Carbon::parse($forum->end_date)->format('d M Y') }} </p>
                                 @endif
                             </div>
                         </div>
                         <!-- Back Button -->
 
-                        <div>
+                        <div class="d-flex align-items-center gap-2">
                             @if($forum->created_by == Auth::guard('user')->user()->id)
-                            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addTopicModal">
-                                <i class="bi bi-plus me-1"></i>Add a Topic
+                            <button type="button" class="btn btn-outline-success btn-sm" data-bs-toggle="modal"
+                                data-bs-target="#addTopicModal" title="Add Topic" data-bs-placement="top" data-bs-html="true"
+                                data-bs-custom-class="tooltip-text-start">
+                                <i class="bi bi-plus me-1"></i>
                             </button>
-                           
-
-                            <!-- Add Topic Modal -->
-                            <div class="modal fade" id="addTopicModal" tabindex="-1" aria-labelledby="addTopicModalLabel" aria-hidden="true">
-                              <div class="modal-dialog">
-                                <div class="modal-content">
-                                  <div class="modal-header">
-                                    <h5 class="modal-title" id="addTopicModalLabel">Add a Topic</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                  </div>
-                                  <form method="POST" action="{{ route('user.forum.topic.store', $forum->id) }}">
-                                    @csrf
-                                    <div class="modal-body">
-                                      <div class="mb-3">
-                                        <label for="topicDescription" class="form-label">Description</label>
-                                        <textarea class="form-control" id="topicDescription" name="description" rows="4" placeholder="Enter topic description" required></textarea>
-                                      </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                      <button type="submit" class="btn btn-primary">Add Topic</button>
-                                    </div>
-                                  </form>
-                                </div>
-                              </div>
-                            </div>
-                             @endif
-                             @if($forum->created_by == Auth::guard('user')->user()->id )
-                            <form method="POST" action="{{ route('user.forum.delete') }}">
-                                    @csrf
-                                    <input type="hidden" name="forum_id" value="{{ $forum->id }}">
-                                    <input type="hidden" name="action" value="delete">
-                                    <button type="button" class="btn btn-outline-danger btn-sm" 
-                                            onclick="if(confirm('Are you sure you want to delete this forum?')) { this.form.submit(); }">
-                                        <i class="bi bi-trash me-1"></i>Delete Forum
-                                    </button>
-                                  </form>
                             @endif
-                            <a href="{{ route('user.forum') }}" class="btn btn-outline-secondary btn-sm">
-                                <i class="bi bi-arrow-left me-1"></i>Back to Forums
+                            @if($forum->created_by == Auth::guard('user')->user()->id )
+                            <form method="POST" action="{{ route('user.forum.delete') }}">
+                                @csrf
+                                <input type="hidden" name="forum_id" value="{{ $forum->id }}">
+                                <input type="hidden" name="action" value="delete">
+                                <button type="button" class="btn btn-outline-primary btn-sm"
+                                    onclick="if(confirm('Are you sure you want to delete this forum?')) { this.form.submit(); }" title="Delete Forum" data-bs-placement="top" data-bs-html="true"
+                                data-bs-custom-class="tooltip-text-start">
+                                    <i class="bi bi-trash me-1"></i>
+                                </button>
+                            </form>
+                            @endif
+                            <a href="{{ route('user.forum') }}" class="btn btn-outline-secondary btn-sm" title="Back to Forum" data-bs-placement="top" data-bs-html="true"
+                                data-bs-custom-class="tooltip-text-start">
+                                <i class="bi bi-arrow-left me-1"></i>
                             </a>
                         </div>
                     </div>
@@ -177,130 +156,130 @@
 
             <!-- Topics/Posts -->
             @if($topics->count() > 0)
-                @foreach($topics as $topic)
-                <div class="card mb-4">
-                    <!-- Card header START -->
-                    <div class="card-header border-0 pb-0">
-                        <div class="d-flex align-items-center justify-content-between">
-                            <div class="d-flex align-items-center">
-                                <!-- Avatar -->
-                                <div class="avatar me-2">
-                                    <a href="#!">
-                                        <img class="avatar-img rounded-circle" 
-                                             src="{{ $topic->creator && $topic->creator->profile_pic ? asset('storage/' . $topic->creator->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}" 
-                                             alt="">
-                                    </a>
-                                </div>
-                                <!-- Info -->
-                                <div>
-                                    <div class="nav nav-divider">
-                                        <h6 class="nav-item card-title mb-0">
-                                            <a href="#!">{{ $topic->creator_name ? $topic->creator_name : $topic->member->name }}</a>
-                                        </h6>
-                                        <span class="nav-item small">{{ \Carbon\Carbon::parse($topic->created_date)->diffForHumans() }}</span>
-                                    </div>
-                                    <p class="mb-0 small">{{ $topic->creator ? $topic->creator->designation : 'Member' }}</p>
-                                </div>
-                            </div>
-                            <!-- Card feed action dropdown START -->
-                            <div class="dropdown">
-                                <a href="#" class="text-secondary btn btn-secondary-soft-hover py-1 px-2" 
-                                   id="cardFeedAction{{ $topic->id }}" 
-                                   data-bs-toggle="dropdown" 
-                                   aria-expanded="false">
-                                    <i class="bi bi-three-dots"></i>
+            @foreach($topics as $topic)
+            <div class="card mb-4">
+                <!-- Card header START -->
+                <div class="card-header border-0 pb-0">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="d-flex align-items-center">
+                            <!-- Avatar -->
+                            <div class="avatar me-2">
+                                <a href="#!">
+                                    <img class="avatar-img rounded-circle"
+                                        src="{{ $topic->creator && $topic->creator->profile_pic ? asset('storage/' . $topic->creator->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}"
+                                        alt="">
                                 </a>
-                                <!-- Card feed action dropdown menu -->
-                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="cardFeedAction{{ $topic->id }}">
-                                    <li><a class="dropdown-item" href="#"><i class="bi bi-bookmark fa-fw pe-2"></i>Save post</a></li>
-                                    <li><a class="dropdown-item" href="#"><i class="bi bi-share fa-fw pe-2"></i>Share</a></li>
-                                    <li><a class="dropdown-item" href="#"><i class="bi bi-flag fa-fw pe-2"></i>Report post</a></li>
-                                </ul>
                             </div>
-                            <!-- Card feed action dropdown END -->
-                        </div>
-                    </div>
-                    <!-- Card header END -->
-
-                    <!-- Card body START -->
-                    <div class="card-body">
-                        <!-- Topic Title -->
-                        <h5 class="mb-3">{{ $topic->title }}</h5>
-                        
-                        <!-- Topic Description -->
-                        <p class="mb-3">{{ $topic->description }}</p>
-
-                        <!-- Topic Image -->
-                        @if($topic->images)
-                        <div class="mb-3">
-                            <img class="card-img rounded" 
-                                 src="{{ asset('storage/' . $topic->images) }}" 
-                                 alt="Topic Image">
-                            @if($topic->image_caption)
-                            <p class="small text-muted mt-2">{{ $topic->image_caption }}</p>
-                            @endif
-                        </div>
-                        @endif
-
-                        <!-- Topic Video -->
-                        @if($topic->video_link)
-                        <div class="mb-3">
-                            <div class="ratio ratio-16x9">
-                                <iframe src="{{ $topic->video_link }}" 
-                                        title="Video" 
-                                        frameborder="0" 
-                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                                        allowfullscreen></iframe>
+                            <!-- Info -->
+                            <div>
+                                <div class="nav nav-divider">
+                                    <h6 class="nav-item card-title mb-0">
+                                        <a
+                                            href="#!">{{ $topic->creator_name ? $topic->creator_name : $topic->member->name }}</a>
+                                    </h6>
+                                    <span
+                                        class="nav-item small">{{ \Carbon\Carbon::parse($topic->created_date)->diffForHumans() }}</span>
+                                </div>
+                                <p class="mb-0 small">{{ $topic->creator ? $topic->creator->designation : 'Member' }}
+                                </p>
                             </div>
-                            @if($topic->video_caption)
-                            <p class="small text-muted mt-2">{{ $topic->video_caption }}</p>
-                            @endif
                         </div>
-                        @endif
-
-                        <!-- Topic File -->
-                        @if($topic->files)
-                        <div class="mb-3">
-                            <a href="{{ asset('storage/' . $topic->files) }}" 
-                               class="btn btn-outline-primary btn-sm" 
-                               target="_blank">
-                                <i class="bi bi-file-earmark-text me-1"></i>View Document
+                        <!-- Card feed action dropdown START -->
+                        <div class="dropdown">
+                            <a href="#" class="text-secondary btn btn-secondary-soft-hover py-1 px-2"
+                                id="cardFeedAction{{ $topic->id }}" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-three-dots"></i>
                             </a>
+                            <!-- Card feed action dropdown menu -->
+                            <ul class="dropdown-menu dropdown-menu-end"
+                                aria-labelledby="cardFeedAction{{ $topic->id }}">
+                                <li><a class="dropdown-item" href="#"><i class="bi bi-bookmark fa-fw pe-2"></i>Save
+                                        post</a></li>
+                                <li><a class="dropdown-item" href="#"><i class="bi bi-share fa-fw pe-2"></i>Share</a>
+                                </li>
+                                <li><a class="dropdown-item" href="#"><i class="bi bi-flag fa-fw pe-2"></i>Report
+                                        post</a></li>
+                            </ul>
                         </div>
-                        @endif
+                        <!-- Card feed action dropdown END -->
+                    </div>
+                </div>
+                <!-- Card header END -->
 
-                        <!-- Feed react START -->
-                        <ul class="nav nav-stack py-3 small">
+                <!-- Card body START -->
+                <div class="card-body">
+                    <!-- Topic Title -->
+                    <h5 class="mb-3">{{ $topic->title }}</h5>
+
+                    <!-- Topic Description -->
+                    <p class="mb-3">{{ $topic->description }}</p>
+
+                    <!-- Topic Image -->
+                    @if($topic->images)
+                    <div class="mb-3">
+                        <img class="card-img rounded" src="{{ asset('storage/' . $topic->images) }}" alt="Topic Image">
+                        @if($topic->image_caption)
+                        <p class="small text-muted mt-2">{{ $topic->image_caption }}</p>
+                        @endif
+                    </div>
+                    @endif
+
+                    <!-- Topic Video -->
+                    @if($topic->video_link)
+                    <div class="mb-3">
+                        <div class="ratio ratio-16x9">
+                            <iframe src="{{ $topic->video_link }}" title="Video" frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowfullscreen></iframe>
+                        </div>
+                        @if($topic->video_caption)
+                        <p class="small text-muted mt-2">{{ $topic->video_caption }}</p>
+                        @endif
+                    </div>
+                    @endif
+
+                    <!-- Topic File -->
+                    @if($topic->files)
+                    <div class="mb-3">
+                        <a href="{{ asset('storage/' . $topic->files) }}" class="btn btn-outline-primary btn-sm"
+                            target="_blank">
+                            <i class="bi bi-file-earmark-text me-1"></i>View Document
+                        </a>
+                    </div>
+                    @endif
+
+                    <!-- Feed react START -->
+                    <ul class="nav nav-stack py-3 small">
                         <li class="nav-item">
                             @if($user && $topic->isLikedBy($user->id))
-                                <form action="{{ route('user.forum.topic.unlike', $topic->id) }}" method="POST" style="display: inline;">
-                                    @csrf
-                                    <button type="submit" class="nav-link active border-0 bg-transparent" 
-                                           data-bs-container="body" data-bs-toggle="tooltip"
-                                           data-bs-placement="top" data-bs-html="true" data-bs-custom-class="tooltip-text-start"
-                                           data-bs-title="Unlike this topic">
-                                        <i class="bi bi-hand-thumbs-up-fill pe-1"></i>Liked ({{ $topic->likes->count() }})
-                                    </button>
-                                </form>
+                            <form action="{{ route('user.forum.topic.unlike', $topic->id) }}" method="POST"
+                                style="display: inline;">
+                                @csrf
+                                <button type="submit" class="nav-link active border-0 bg-transparent"
+                                    data-bs-container="body" data-bs-toggle="tooltip" data-bs-placement="top"
+                                    data-bs-html="true" data-bs-custom-class="tooltip-text-start"
+                                    data-bs-title="Unlike this topic">
+                                    <i class="bi bi-hand-thumbs-up-fill pe-1"></i>Liked ({{ $topic->likes->count() }})
+                                </button>
+                            </form>
                             @else
-                                @if($user)
-                                    <form action="{{ route('user.forum.topic.like', $topic->id) }}" method="POST" style="display: inline;">
-                                        @csrf
-                                        <button type="submit" class="nav-link border-0 bg-transparent" 
-                                               data-bs-container="body" data-bs-toggle="tooltip"
-                                               data-bs-placement="top" data-bs-html="true" data-bs-custom-class="tooltip-text-start"
-                                               data-bs-title="Like this topic">
-                                            <i class="bi bi-hand-thumbs-up pe-1"></i>Like ({{ $topic->likes->count() }})
-                                        </button>
-                                    </form>
-                                @else
-                                    <a class="nav-link" href="{{ route('user.login') }}" 
-                                       data-bs-container="body" data-bs-toggle="tooltip"
-                                       data-bs-placement="top" data-bs-html="true" data-bs-custom-class="tooltip-text-start"
-                                       data-bs-title="Login to like this topic">
-                                        <i class="bi bi-hand-thumbs-up pe-1"></i>Like ({{ $topic->likes->count() }})
-                                    </a>
-                                @endif
+                            @if($user)
+                            <form action="{{ route('user.forum.topic.like', $topic->id) }}" method="POST"
+                                style="display: inline;">
+                                @csrf
+                                <button type="submit" class="nav-link border-0 bg-transparent" data-bs-container="body"
+                                    data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true"
+                                    data-bs-custom-class="tooltip-text-start" data-bs-title="Like this topic">
+                                    <i class="bi bi-hand-thumbs-up pe-1"></i>Like ({{ $topic->likes->count() }})
+                                </button>
+                            </form>
+                            @else
+                            <a class="nav-link" href="{{ route('user.login') }}" data-bs-container="body"
+                                data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true"
+                                data-bs-custom-class="tooltip-text-start" data-bs-title="Login to like this topic">
+                                <i class="bi bi-hand-thumbs-up pe-1"></i>Like ({{ $topic->likes->count() }})
+                            </a>
+                            @endif
                             @endif
                         </li>
                         <li class="nav-item">
@@ -308,10 +287,10 @@
                                 <i class="bi bi-chat-fill pe-1"></i>Comments ({{ $topic->comments->count() }})</a>
                         </li>
                     </ul>
-                        <!-- Feed react END -->
+                    <!-- Feed react END -->
 
-                        <!-- Add comment -->
-                        @if($user)
+                    <!-- Add comment -->
+                    @if($user)
                     <div class="d-flex mb-3">
                         <!-- Avatar -->
                         <div class="avatar avatar-xs me-2">
@@ -322,7 +301,8 @@
                             </a>
                         </div>
                         <!-- Comment box -->
-                        <form action="{{ route('user.forum.topic.comment', $topic->id) }}" method="POST" class="nav nav-item w-100 position-relative">
+                        <form action="{{ route('user.forum.topic.comment', $topic->id) }}" method="POST"
+                            class="nav nav-item w-100 position-relative">
                             @csrf
                             <textarea name="comment" data-autoresize="" class="form-control pe-5 bg-light" rows="1"
                                 placeholder="Add a comment..." required></textarea>
@@ -343,66 +323,94 @@
                     </div>
                     @endif
 
-                        <!-- Comment wrap START -->
-                        <ul class="comment-wrap list-unstyled">
+                    <!-- Comment wrap START -->
+                    <ul class="comment-wrap list-unstyled">
                         @if($topic->comments->count() > 0)
-                            @foreach($topic->comments as $comment)
-                                <li class="comment-item">
+                        @foreach($topic->comments as $comment)
+                        <li class="comment-item">
+                            <div class="d-flex">
+                                <!-- Avatar -->
+                                <div class="avatar avatar-xs me-2">
+                                    <a href="#!">
+                                        <img class="avatar-img rounded-circle"
+                                            src="{{ $comment->user && $comment->user->profile_pic ? asset('storage/' . $comment->user->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}"
+                                            alt="">
+                                    </a>
+                                </div>
+                                <!-- Comment by -->
+                                <div class="comment-body">
                                     <div class="d-flex">
-                                        <!-- Avatar -->
-                                        <div class="avatar avatar-xs me-2">
-                                            <a href="#!">
-                                                <img class="avatar-img rounded-circle"
-                                                    src="{{ $comment->user && $comment->user->profile_pic ? asset('storage/' . $comment->user->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}"
-                                                    alt="">
-                                            </a>
-                                        </div>
-                                        <!-- Comment by -->
-                                        <div class="comment-body">
-                                            <div class="d-flex">
-                                                
-                                                <h6 class="me-2"><a href="#!">{{ $comment->user ? $comment->user->name : 'Unknown User' }}</a></h6>
-                                                <small class="text-muted">{{ $comment->created_at->diffForHumans() }}</small>
-                                            </div>
-                                            <p class="mb-0">{{ $comment->comment }}</p>
-                                        </div>
+
+                                        <h6 class="me-2"><a
+                                                href="#!">{{ $comment->user ? $comment->user->name : 'Unknown User' }}</a>
+                                        </h6>
+                                        <small class="text-muted">{{ $comment->created_at->diffForHumans() }}</small>
                                     </div>
-                                </li>
-                            @endforeach
+                                    <p class="mb-0">{{ $comment->comment }}</p>
+                                </div>
+                            </div>
+                        </li>
+                        @endforeach
                         @else
-                            <!-- No comments yet -->
-                            <li class="text-center text-muted small py-3">
-                                No comments yet. Be the first to comment!
-                            </li>
-                            @endif
+                        <!-- No comments yet -->
+                        <li class="text-center text-muted small py-3">
+                            No comments yet. Be the first to comment!
+                        </li>
+                        @endif
                     </ul>
                     <!-- Comment wrap END -->
-                    </div>
-                    <!-- Card body END -->
                 </div>
-                @endforeach
+                <!-- Card body END -->
+            </div>
+            @endforeach
             @else
-                <!-- No Topics -->
-                <div class="card">
-                    <div class="card-body text-center py-5">
-                        <div class="mb-3">
-                            <i class="bi bi-chat-dots display-4 text-muted"></i>
-                        </div>
-                        <h5 class="mb-2">No topics yet</h5>
-                        <p class="text-muted mb-0">This forum doesn't have any topics yet. Topics will appear here once they are created by forum administrators.</p>
+            <!-- No Topics -->
+            <div class="card">
+                <div class="card-body text-center py-5">
+                    <div class="mb-3">
+                        <i class="bi bi-chat-dots display-4 text-muted"></i>
                     </div>
+                    <h5 class="mb-2">No topics yet</h5>
+                    <p class="text-muted mb-0">This forum doesn't have any topics yet. Topics will appear here once they
+                        are created by forum administrators.</p>
                 </div>
+            </div>
             @endif
         </div>
-    </>
+    </div>
 </div>
-@endsection 
+<!-- Add Topic Modal -->
+<div class="modal fade" id="addTopicModal" tabindex="-1" aria-labelledby="addTopicModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addTopicModalLabel">Add a Topic</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="POST" action="{{ route('user.forum.topic.store', $forum->id) }}">
+                @csrf
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="topicDescription" class="form-label">Description</label>
+                        <textarea class="form-control" id="topicDescription" name="description" rows="4"
+                            placeholder="Enter topic description" required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Add Topic</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@endsection
 
 @push('scripts')
-    <script>
-        function toggleComments(topicId) {
-            // This function can be used to show/hide comments if needed
-            console.log('Toggle comments for topic: ' + topicId);
-        }
-    </script>
-    @endpush
+<script>
+function toggleComments(topicId) {
+    // This function can be used to show/hide comments if needed
+    console.log('Toggle comments for topic: ' + topicId);
+}
+</script>
+@endpush

@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="container">
-    <div class="row g-4" style="margin-top: 70px;">
+    <div class="row g-4" style="margin-top: 5rem;">
         <div class="col-3">
             <!-- Advanced filter responsive toggler START -->
             <div class="d-flex align-items-center d-lg-none">
@@ -112,55 +112,62 @@
  @if(isset($groupNames) && $groupNames->count() > 0)
                 @foreach($groupNames as $index => $recent)
         <div class="col-sm-6 col-lg-4">
-            <div class="card border ">
-                <div class="h-80px rounded-top"
-                    style="background-image:url({{asset('feed_assets/images/bg/01.jpg')}}); background-position: center; background-size: cover;">
-                </div>
+    <div class="card border h-100 d-flex flex-column">
+        <div class="h-100px rounded-top"
+             style="height: 100px; background-image:url({{ asset('storage/uploads/images/grp_img/' . ($recent->image ?? 'default-group.png')) }}); background-position: center; background-size: cover;">
+        </div>
 
-                <div class="card-body text-center pt-0">
-                    <div class="avatar avatar-lg mt-n5 mb-3">
-                        <a href="#"><img
-                            class="avatar-img rounded-circle border border-white border-3 bg-white"
-                            src="{{ asset('storage/uploads/images/grp_img/' . ($recent->image ?? 'default-group.png')) }}" alt="" loading="lazy"></a>
-                    </div>
+        <div class="card-body text-center pt-0 flex-grow-1 d-flex flex-column justify-content-between">
+            <div>
+                <!-- <div class="avatar avatar-lg mt-n5 mb-3">
+                    <a href="#"><img
+                        class="avatar-img rounded-circle border border-white border-3 bg-white"
+                        src="{{ asset('storage/uploads/images/grp_img/' . ($recent->image ?? 'default-group.png')) }}"
+                        alt="" loading="lazy"></a>
+                </div> -->
 
-                    <h5 class="mb-0">
-                           
-                        <a href="{{ route('user.group-post', $recent->id) }}"> {{ ($recent->name) }}s</a>
-                    </h5>
+                <h5 class="mb-0 mt-3">
+                    <a href="{{ route('user.group-post', $recent->id) }}">{{ $recent->name }}</a>
+                </h5>
 
-                    <!-- <div class="hstack gap-2 gap-xl-3 justify-content-center mt-3">
-                        <div><h6 class="mb-0">{{ $group->member_count ?? 0 }}</h6><small>Members</small></div>
-                        <div class="vr"></div>
-                        <div><h6 class="mb-0">{{ $group->posts_per_day ?? 0 }}</h6><small>Posts/day</small></div>
-                    </div> -->
-                </div>
-
-                <div class="card-body text-center">
-                    <p class="small text-muted mb-1">End Date: {{ \Carbon\Carbon::parse($recent->end_date ?? now())->format('d-m-Y') }}</p>
-                </div>
-
-                <div class="card-footer text-center">
-                    @if($recent->end_date && Carbon::parse($recent->end_date)->isFuture())
-                        <span class="badge bg-success-soft text-success mb-2 d-block">Group Active</span>
-                        <a href="{{ route('user.group-post', $recent->id) }}" class="btn btn-primary btn-sm">View Group</a>
-                 
-                        @else
-                        <span class="badge bg-danger-soft text-danger mb-2 d-block">Group Expired</span>
-                        @if($recent->member_type == '2')
-                        @if($recent->created_by == Auth::guard('user')->user()->id)
-                        <button class="btn btn-outline-danger btn-sm" data-bs-toggle="modal"
-                                data-bs-target="#activateGroupModal"
-                                data-group-id="{{ $recent->id }}"
-                                data-group-name="{{ $recent->name }}">
-                            Activate Group
-                        </button>
-                        @endif
-                        @endif
-                    @endif
-                </div>
+                <p class="small text-muted mb-1">End Date: {{ \Carbon\Carbon::parse($recent->end_date ?? now())->format('d-m-Y') }}</p>
+                <p class="small text-muted mb-1">Created By : {{ $recent->created_by }}</p>
+                <div class="hstack gap-2 gap-xl-3 justify-content-center mt-3">
+                              <!-- Group stat item -->
+                              <div>
+                                <h6 class="mb-0">250</h6>
+                                <small>Members</small>
+                              </div>
+                              <!-- Divider -->
+                              <div class="vr"></div>
+                              <!-- Group stat item -->
+                              <div>
+                                <h6 class="mb-0">2</h6>
+                                <small>Post per day</small>
+                              </div>
+                            </div>
             </div>
         </div>
+
+        <div class="card-footer text-center mt-auto">
+            @if($recent->end_date && Carbon::parse($recent->end_date)->isFuture())
+                <span class="badge bg-success-soft text-success mb-2 d-block">Group Active</span>
+                <a href="{{ route('user.group-post', $recent->id) }}" class="btn btn-primary btn-sm">View Group</a>
+            @else
+                <span class="badge bg-danger-soft text-danger mb-2 d-block">Group Expired</span>
+                @if($recent->member_type == '2' && $recent->created_by == Auth::guard('user')->user()->id)
+                    <button class="btn btn-outline-danger btn-sm" data-bs-toggle="modal"
+                            data-bs-target="#activateGroupModal"
+                            data-group-id="{{ $recent->id }}"
+                            data-group-name="{{ $recent->name }}">
+                        Activate Group
+                    </button>
+                @endif
+            @endif
+        </div>
+    </div>
+</div>
+
         @endforeach
         @else
         <div class="col-12">
