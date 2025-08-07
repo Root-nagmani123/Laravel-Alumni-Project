@@ -71,9 +71,18 @@
                             @foreach ($chats as $key => $chat)
 
                                 <!-- Contact item -->
-                                <li class="mt-3 hstack gap-3 align-items-center position-relative toast-btn" style=" {{ $selectedChat == $chat->member_id ? 'background-color: #af2910' : '' }}"
+                                {{-- <li class="mt-3 hstack gap-3 align-items-center position-relative toast-btn" style=" {{ $selectedChat == $chat->member_id ? 'background-color: #af2910' : '' }}"
                                     data-target="chatToast-{{ $chat->member_id }}" wire:click="selectChat({{ $chat->member_id }})"
-                                    wire:key="chat-{{ $chat->member_id }}" style="cursor: pointer;">
+                                    wire:key="chat-{{ $chat->member_id }}" style="cursor: pointer;"> --}}
+
+                                    {{-- new code needed to test --}}
+
+                                    <li class="mt-3 hstack gap-3 align-items-center position-relative toast-btn"
+    style="cursor: pointer; {{ $selectedChat == $chat->member_id ? 'background-color: #af2910;' : '' }}"
+    data-target="chatToast-{{ $chat->member_id }}"
+    wire:click="selectChat({{ $chat->member_id }})"
+    wire:key="chat-{{ $chat->member_id }}">
+
                                     <!-- Avatar -->
                                     <div class="avatar status-online">
                                         <img class="avatar-img rounded-circle" src="assets/images/avatar/01.jpg" alt="">
