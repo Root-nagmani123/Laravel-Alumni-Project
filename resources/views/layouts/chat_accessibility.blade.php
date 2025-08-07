@@ -1,14 +1,23 @@
-<div class="d-none d-lg-block">
-    <a class="icon-md btn btn-primary position-fixed end-0 bottom-0" data-bs-toggle="offcanvas" href="#offcanvasChat"
-        role="button" aria-controls="offcanvasChat"
-        style="margin-right: 2rem !important; margin-bottom: 7rem !important;background-color: #792421; color: #fff; border-radius: 50%; box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2);">
+<div class="d-none d-lg-block position-relative">
+    <a class="icon-md btn btn-primary position-fixed end-0 bottom-0"
+       data-bs-toggle="offcanvas"
+       href="#offcanvasChat"
+       role="button"
+       aria-controls="offcanvasChat"
+       style="margin-right: 2rem !important; margin-bottom: 7rem !important; background-color: #792421; color: #fff; border-radius: 50%; box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2);">
+        
+        <!-- Green Dot -->
+        <span class="chat-dot"></span>
+
         <i class="bi bi-chat-left-text-fill" style="color: #fff;"></i>
     </a>
+
     <div class="offcanvas offcanvas-end" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1"
-        id="offcanvasChat">
-    <livewire:chat.chat-list />
+         id="offcanvasChat">
+        <livewire:chat.chat-list />
     </div>
 </div>
+
 
 <!-- accessibility panel -->
        <div class="uwaw uw-light-theme gradient-head uwaw-initial paid_widget" id="uw-main">

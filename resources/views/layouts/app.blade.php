@@ -15,6 +15,18 @@
         visibility: hidden;
         pointer-events: none;
     }
+    .chat-dot {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    width: 10px;
+    height: 10px;
+    background-color: #28a745; /* Bootstrap green */
+    border: 2px solid #fff;
+    border-radius: 50%;
+    z-index: 2;
+}
+
 
 </style>
 
