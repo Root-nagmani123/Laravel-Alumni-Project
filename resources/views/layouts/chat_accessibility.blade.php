@@ -6,7 +6,7 @@
     </a>
     <div class="offcanvas offcanvas-end" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1"
         id="offcanvasChat">
-    @livewire('chat.chat-list')
+    <livewire:chat.chat-list />
     </div>
 </div>
 
