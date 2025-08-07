@@ -167,6 +167,9 @@
 
 @livewireScripts
 <script type="module">
+    console.log('Livewire scripts loaded');
+    console.log(window.Echo);
+    console.log('Echo instance:', window.Echo);
         let typingTimeout;
         const chatContainer = document.getElementById('chat-container');
 

@@ -3,6 +3,11 @@
 @section('title', 'Mentorship Programme - Alumni | Lal Bahadur Shastri National Academy of Administration')
 
 @section('content')
+<style>
+    body .select2-container{
+        display: block !important;
+    }
+</style>
 <div class="container-fluid">
     <div class="card card-body py-3">
         <div class="row align-items-center">
@@ -33,11 +38,11 @@
 
             <div class="row">
                 <div class="col-md-4">
-                    <label for="memberSelect">Select Member</label>
+                    <label for="memberSelect" class="form-label">Select Member</label>
                     <select class="form-select" id="memberSelect" style="width: 100%"></select>
                 </div>
                 <div class="col-md-4">
-                    <label>Role</label><br>
+                    <label for="role" class="form-label">Role</label><br>
                     <div class="form-check form-check-inline">
                         <input class="form-check-input" type="radio" name="role" id="mentor" value="mentor" checked>
                         <label class="form-check-label" for="mentor">Mentor</label>
