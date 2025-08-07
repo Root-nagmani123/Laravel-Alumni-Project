@@ -180,9 +180,23 @@ Header START -->
                                                     ]);
                                                 }
                                             @endphp
-                                            <div class="list-group-item rounded d-flex border-0 mb-1 p-3">
-                                                <div class="ms-sm-3">
-                                                    <div class="d-flex">
+                                            <div class="notification-card bg-white border rounded shadow-sm p-3 mb-3"
+             style="min-width: 300px; max-width: 340px; scroll-snap-align: start;">
+            
+            <!-- Avatar + Content -->
+            <div class="d-flex align-items-start">
+                <!-- Avatar -->
+                <div class="flex-shrink-0">
+                    <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center"
+                         style="width: 40px; height: 40px;">
+                        <strong>{{ strtoupper(substr($notification->title ?? 'B', 0, 1)) }}</strong>
+                    </div>
+                </div>
+
+                <!-- Message -->
+                <div class="flex-grow-1 ms-3 notification-item mb-2"
+                     style="max-width: calc(100% - 60px);">
+                    <div class="d-flex justify-content-between">
                                                         <a href="{{ $notificationUrl }}" class="text-decoration-none notification-link" 
                                                            data-url="{{ $notificationUrl }}" 
                                                            data-source-type="{{ $notification->source_type ?? '' }}" 
@@ -192,12 +206,13 @@ Header START -->
                                                                 {{ $notification->message }}
                                                             </p>
                                                         </a>
-                                                        <p class="small ms-3">
-                                                            {{ $notification->created_at->setTimezone('Asia/Kolkata')->format('d-m-Y') }}
+                                                        <p class="small ms-3 mb-0 text-muted text-nowrap">
+                                                             {{ \Carbon\Carbon::parse($notification->created_at)->setTimezone('Asia/Kolkata')->diffForHumans(null, null, true) }}
                                                         </p>
                                                     </div>
-                                                </div>
-                                            </div>
+                </div>
+            </div>
+        </div>
                                         </li>
                                         @endforeach
                                         @else
@@ -289,7 +304,7 @@ Header START -->
                             @php
                             $user = Auth::guard('user')->user();
                             @endphp
-                            <a href="{{ route('user.profile', ['id' => $user->id]) }}"
+                           <a href="{{ route('user.profile.data', ['id' => $user->id]) }}"
                                 class="dropdown-item btn btn-primary-soft btn-sm my-2 text-center">View profile</a>
                             @endif
                         </li>

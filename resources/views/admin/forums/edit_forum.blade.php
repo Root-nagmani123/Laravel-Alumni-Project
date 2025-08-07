@@ -42,7 +42,8 @@
                     <div id="batch_fields" class="my-2"></div>
                     <div class="row" id="batch_fields">
                         <div class="col-6">
-                            <label for="Schoolname" class="form-label">Forum Name :</label>
+                            <label for="Schoolname" class="form-label">Forum Name :<span
+                                            class="required text-danger ">*</span></label>
 
                             <div class="mb-3">
                                 <input type="text" class="form-control" id="Forumname" name="forumname"
@@ -52,14 +53,16 @@
                         </div>
                         <div class="col-6">
                             <div class="mb-3">
-                                <label class="form-label">Forum End Date</label>
+                                <label class="form-label">Forum End Date<span
+                                            class="required text-danger ">*</span></label>
                                 <input type="date" class="form-control" name="end_date" id="end_date"
                                     value="{{ old('end_date', $forum->end_date) }}">
                             </div>
                         </div>
                         <div class="col-6">
                             <div class="mb-3">
-                                <label class="form-label">Forum Image</label>
+                                <label class="form-label">Forum Image<span
+                                            class="required text-danger ">*</span></label>
                                 <input type="file" class="form-control" name="forum_image" id="forum_image"
                                     accept="image/*">
                             </div>
@@ -74,7 +77,8 @@
     </div>
                         </div>
                         <div class="col-6">
-                            <label for="status" class="form-label">Status</label>
+                            <label for="status" class="form-label">Status<span
+                                            class="required text-danger ">*</span></label>
                             <div class="mb-3">
                                 <select name="forumstatus" id="forumstatus" class="form-select">
                                     <option value="1" {{ old('forumstatus', $forum->status) == 1 ? 'selected' : '' }}>
@@ -105,6 +109,10 @@
     </div>
     <!-- end Vertical Steps Example -->
 </div>
-
-
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById("end_date").setAttribute('min', today);
+    });
+</script>
 @endsection

@@ -36,16 +36,13 @@ class ForumController extends Controller
         // Get forum details
         $forum = $this->forumService->getForumById($id);
         // print_r($forum);die;
-        // Check if user has access to this forum
-        // if (!$this->forumService->userHasAccessToForum($id, $user->id)) {
-        //     return redirect()->route('user.forum')->with('error', 'You do not have access to this forum.');
-        // }
-         
+       
         // Get topics for this forum
         $topics = $this->forumService->getForumTopics($id);
-            
+            //  print_r($topics);die;
         // Get forums data for left sidebar
         $forums = $this->forumService->getForumsForSidebar();
+       
             
         return view('user.forum-detail', compact('forum', 'topics', 'forums'));
     }
@@ -83,6 +80,7 @@ class ForumController extends Controller
       
     $results = Member::where('status', 1)
                  ->where('name', 'LIKE', '%' . $query . '%')
+                 ->orderby('name', 'asc')
                  ->get();
                   $results->transform(function ($item) use ($userId) {
         // Check if this member is in favorites
@@ -134,5 +132,25 @@ class ForumController extends Controller
         $forum->save();
 
         return redirect()->back()->with('success', 'Forum activated successfully!');
+    }
+    function deleteforum(Request $request)
+    {
+        // Validate the request
+        $request->validate([
+            'forum_id' => 'required|exists:forums,id',
+        ]);
+
+        $forumId = $request->input('forum_id');
+        $forum = Forum::find($forumId);
+
+        if (!$forum) {
+            return redirect()->back()->with('error', 'Forum not found.');
+        }
+
+        $forum->topics()->delete(); // Delete all topics associated with the forum
+        $forum->delete(); // Delete the forum itself
+
+        return redirect()->route('user.forum')->with('success', 'Forum deleted successfully!');
+
     }
 }

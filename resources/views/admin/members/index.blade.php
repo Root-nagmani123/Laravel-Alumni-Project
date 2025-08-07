@@ -62,6 +62,7 @@
                             <tr>
                                 <th class="col">S.No.</th>
                                 <th class="col">Name</th>
+                                <th class="col">User Name</th>
                                 <th class="col">Email</th>
                                 <th class="col">Mobile</th>
                                 <th class="col">Service</th>
@@ -77,6 +78,7 @@
                             <tr class="odd">
                                 <td>{{ $loop ->iteration }}</td>
                                 <td>{{ $member->name }}</td>
+                                <td>{{ $member->username }}</td>
                                 <td>{{ $member->email }}</td>
                                 <td>{{ $member->mobile }}</td>
                                 <td>{{ $member->Service }}</td>

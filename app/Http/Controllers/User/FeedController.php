@@ -136,7 +136,7 @@ class FeedController extends Controller
     ->whereNot('f.end_date', null)
     ->where(function($query) {
         $query->whereNull('f.end_date')
-              ->orWhere('f.end_date', '>=', now());
+              ->orWhere('f.end_date', '>', now());
     })
       ->orderBy('f.id', 'desc') 
     ->get();
@@ -156,7 +156,7 @@ class FeedController extends Controller
     ->where('g.status', 1)
     ->where(function($query) {
         $query->whereNull('g.end_date')
-              ->orWhere('g.end_date', '>=', now());
+              ->orWhere('g.end_date', '>', now());
     })
    ->select(
         'g.id',

@@ -96,7 +96,7 @@
                             <!-- Card footer -->
                             <div class="card-footer text-center py-2">
                                 <a class="btn btn-link btn-sm"
-                                    href="{{ route('user.profile', ['id' => $user->id]) }}">View Profile </a>
+                                    href="{{ route('user.profile.data', ['id' => $user->id]) }}">View Profile </a>
                             </div>
                         </div>
                         <!-- Card END -->

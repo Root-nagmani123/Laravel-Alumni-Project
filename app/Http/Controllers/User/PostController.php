@@ -389,7 +389,7 @@ function forum_store(Request $request)
         'message' => "<a href='" . url('home/profile/' . Auth::guard('user')->user()->id) . "'>" . Auth::guard('user')->user()->name . "</a> added you in Forum: <a href='" . url('home/forum/' . $last_id) . "'>" . $request->input('forum_name') . "</a>",
         ]);
 
-        return redirect()->route('user.feed')->with('success', 'Topic saved successfully!');
+        return redirect()->route('user.feed')->with('success', 'Forum created successfully!');
     }
 };
 

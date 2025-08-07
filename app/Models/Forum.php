@@ -20,12 +20,12 @@ class Forum extends Model
 
 			public function members()
 				{
-				    return $this->hasMany(ForumMember::class, 'forums_id'); // not 'forum_id'
+				    return $this->hasMany(ForumMember::class, 'forum_id'); // not 'forum_id'
 				}
 
 			public function topics()
 				{
-				    return $this->hasMany(ForumTopic::class, 'forums_id');
+				    return $this->hasMany(ForumTopic::class, 'forum_id');
 				}
 			public function getFilePath()
 				{
