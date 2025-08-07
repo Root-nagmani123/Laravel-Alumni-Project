@@ -45,7 +45,7 @@
                                 </div>
                             </div>
                             <div class="card-footer text-center py-2">
-                                <a class="btn btn-link btn-sm" href="{{ route('user.profile', ['id' => $user->id]) }}">View Profile </a>
+                                <a class="btn btn-link btn-sm" href="{{ route('user.profile.data', ['id' => $user->id]) }}">View Profile </a>
                             </div>
                         </div>
                     </div>
@@ -63,17 +63,8 @@
                             <i class="bi bi-three-dots-vertical"></i>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
-                            <li>
-                                <form action="{{ route('user.groups.leave') }}" method="POST" onsubmit="return confirm('Are you sure you want to leave this group?');">
-                                    @csrf
-                                    <input type="hidden" name="group_id" value="{{ $group->id }}">
-                                    <button type="submit" class="dropdown-item text-danger">
-                                        <i class="bi bi-arrow-bar-right fa-fw pe-2"></i>Leave Group
-                                    </button>
-                                </form>
-                            </li>
                             @if($isMentee)
-                            <li>
+                               <li>
                                <form action="{{ route('user.group.destroy', $group->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this group?');">
                                     @csrf
                                     @method('DELETE') {{-- This is the key to spoof DELETE --}}
@@ -84,6 +75,16 @@
                                 </form>
 
                             </li>
+                            @endif
+                            <li>
+                                <form action="{{ route('user.groups.leave') }}" method="POST" onsubmit="return confirm('Are you sure you want to leave this group?');">
+                                    @csrf
+                                    <input type="hidden" name="group_id" value="{{ $group->id }}">
+                                    <button type="submit" class="dropdown-item text-danger">
+                                        <i class="bi bi-arrow-bar-right fa-fw pe-2"></i>Leave Group
+                                    </button>
+                                </form>
+                            </li>                         
                             @endif
                         </ul>
                     </div>

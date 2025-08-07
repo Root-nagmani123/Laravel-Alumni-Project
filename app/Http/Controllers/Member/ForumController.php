@@ -80,6 +80,7 @@ class ForumController extends Controller
       
     $results = Member::where('status', 1)
                  ->where('name', 'LIKE', '%' . $query . '%')
+                 ->orderby('name', 'asc')
                  ->get();
                   $results->transform(function ($item) use ($userId) {
         // Check if this member is in favorites

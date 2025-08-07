@@ -158,6 +158,7 @@ Route::prefix('user')->name('user.')->group(function () {
          Route::get('/profile/{id}', [ProfileController::class, 'showById'])->where('id', '[0-9]+')->name('profile');
          Route::get('/profile/{name}', [ProfileController::class, 'showByName'])->where('name', '[a-zA-Z\s]+')->name('profile.name');
 
+         Route::get('/profile/data/{id}', [ProfileController::class, 'showById_data'])->where('id', '[0-9]+')->name('profile.data');
          Route::put('/profile/update/{id}', [ProfileController::class, 'update'])->name('profile.update');
 
         Route::put('/eduinfo/update/{id}', [ProfileController::class, 'updateEduinfo'])->name('profile.eduinfo');
