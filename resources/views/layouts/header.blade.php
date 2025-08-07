@@ -114,7 +114,7 @@ Header START -->
                         }
                         @endphp
                         @php
-                        $latestNotifications = $notifications->sortByDesc('created_at')->take(5);
+                        $latestNotifications = $notifications->sortByDesc('created_at');
                         @endphp
                         @if($showNotifBadge)
                         <span class="badge-notif animation-blink"></span>
@@ -136,7 +136,7 @@ Header START -->
                                 <ul class="list-group list-group-flush list-unstyled p-2">
                                         @if(isset($notifications) && $notifications->count() > 0)
                                         @php
-                                        $latestNotifications = $notifications->sortByDesc('created_at')->take(5);
+                                        $latestNotifications = $notifications->sortByDesc('created_at');
                                         @endphp
                                         @foreach($latestNotifications as $notification)
                                         <!-- Notif item -->
