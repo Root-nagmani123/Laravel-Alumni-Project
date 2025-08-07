@@ -5,7 +5,7 @@
 
 @section('content')
  <div class="container">
-   <div class="row g-4 mt-2">
+   <div class="row g-4" style="margin-top: 5rem;">
     <div class="col-3">
         <!-- Advanced filter responsive toggler START -->
                 <div class="d-flex align-items-center d-lg-none">
