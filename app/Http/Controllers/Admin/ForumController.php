@@ -134,7 +134,16 @@ class ForumController extends Controller
 
     public function destroy(Forum $forum)
         {
+            $forumName = $forum->name;
+            $forumId = $forum->id;
             $forum->delete();
+            // Notify all members about forum deletion
+            $this->notificationService->notifyAllMembers(
+                'forum_admin',
+                $forumName . ' forum has been deleted.',
+                $forumId,
+                'forum'
+            );
             return redirect()->route('forums.index')->with('success', 'Forum deleted successfully.');
         }
    public function add_member($id)
@@ -218,48 +227,97 @@ class ForumController extends Controller
         'userData' => $userData,
     ]);
     }
+
     public function save_topic(Request $request)
-    {
+{
     $request->validate([
-        // 'title' => 'required',
-        'description' => 'required',
-        'status' => 'required',
+        'description' => 'required|string',
+        'status'      => 'required|in:0,1',
+        'forum_id'    => 'required|exists:forums,id',
     ]);
+
     $data = [
-        // 'title' => $request->input('title'),
-        'description' => $request->input('description'),
-        // 'images' => $request->input('topic_image'),
-        // 'image_caption' => $request->input('image_caption'),
-        // 'video_link' => $request->input('video_link'),
-        // 'video_caption' => $request->input('video_caption'),
-        'status' => $request->input('status'),
-        'forum_id' => $request->input('forum_id'),
-        //'created_by' => Auth::id(),
-         'created_by' => session('LoginID'),
-        'created_date' => now(),
+        'description'   => $request->input('description'),
+        'status'        => $request->input('status'),
+        'forum_id'      => $request->input('forum_id'),
+        'created_by'    => session('LoginID'),
+        'created_date'  => now(),
+        'notified_at'   => 0,
     ];
 
-    // Handle file uploads (images, documents)
-        // if ($request->hasFile('topic_image')) {
-        //     $imagePath = $request->file('topic_image')->store('uploads/images', 'public');
-        //     $data['images'] = basename($imagePath);
-        // }
+    $topicId = DB::table('forum_topics')->insertGetId($data);
 
-        if ($request->hasFile('doc')) {
-            $docPath = $request->file('doc')->store('uploads/docs', 'public');
-            $data['files'] = basename($docPath);
+    // Send notification if active
+    if ($request->input('status') == 1) {
+        $forum = Forum::find($request->input('forum_id'));
+        $message = $forum->name . ' - New topic added: ' . $request->input('description');
+        $notification = $this->notificationService->notifyAllMembers(
+            'forum_topic',
+            $message,
+            $forum->id,
+            'forum'
+        );
+
+        if ($notification) {
+            // Update notified_at
+            DB::table('forum_topics')->where('id', $topicId)->update(['notified_at' => 1]);
+            Member::query()->update(['is_notification' => 0]);
         }
-        // DB::table('forum_topics')->insert($data);
-        $topicId = DB::table('forum_topics')->insertGetId($data);
-
-    // 6. (Optional) Notify all forum members
-    $memberIds = DB::table('forums_member')
-                    ->where('forums_id', $request->forum_id)
-                    ->pluck('user_id')
-                    ->toArray();
-
-        return redirect()->route('forums.index')->with('success', 'Topic saved successfully!');
     }
+
+    return redirect()->route('forums.index')->with('success', 'Topic saved successfully!');
+}
+
+
+
+
+
+//old code
+    // public function save_topic(Request $request)
+    // {
+    // $request->validate([
+    //     // 'title' => 'required',
+    //     'description' => 'required',
+    //     'status' => 'required',
+    // ]);
+    // $data = [
+    //     // 'title' => $request->input('title'),
+    //     'description' => $request->input('description'),
+    //     // 'images' => $request->input('topic_image'),
+    //     // 'image_caption' => $request->input('image_caption'),
+    //     // 'video_link' => $request->input('video_link'),
+    //     // 'video_caption' => $request->input('video_caption'),
+    //     'status' => $request->input('status'),
+    //     'forum_id' => $request->input('forum_id'),
+    //     //'created_by' => Auth::id(),
+    //      'created_by' => session('LoginID'),
+    //     'created_date' => now(),
+    // ];
+
+    // // Handle file uploads (images, documents)
+    //     // if ($request->hasFile('topic_image')) {
+    //     //     $imagePath = $request->file('topic_image')->store('uploads/images', 'public');
+    //     //     $data['images'] = basename($imagePath);
+    //     // }
+
+    //     if ($request->hasFile('doc')) {
+    //         $docPath = $request->file('doc')->store('uploads/docs', 'public');
+    //         $data['files'] = basename($docPath);
+    //     }
+    //     // DB::table('forum_topics')->insert($data);
+    //     $topicId = DB::table('forum_topics')->insertGetId($data);
+
+    // // 6. (Optional) Notify all forum members
+    // $memberIds = DB::table('forums_member')
+    //                 ->where('forums_id', $request->forum_id)
+    //                 ->pluck('user_id')
+    //                 ->toArray();
+
+    //     return redirect()->route('forums.index')->with('success', 'Topic saved successfully!');
+    // }
+
+
+
 
     public function view_forum_topics($id)
     {
@@ -401,7 +459,16 @@ public function destroyforum(Forum $forum)
         $topic->delete();
     }
     // Finally delete the forum
+    $forumName = $forum->name;
+    $forumId = $forum->id;
     $forum->delete();
+    // Notify all members about forum deletion
+    $this->notificationService->notifyAllMembers(
+        'forum_admin',
+        $forumName . ' forum has been deleted.',
+        $forumId,
+        'forum'
+    );
     return redirect()->route('forums.index')->with('success', 'Forum and all associated data deleted successfully.');
 }
 
@@ -432,10 +499,32 @@ public function toggleStatus(Request $request)
 public function TopictoggleStatus(Request $request)
 {
     $topic = ForumTopic::findOrFail($request->id);
+    $oldStatus = $topic->status;
     $topic->status = $request->status;
     $topic->save();
+
+    // Notify only when activated and not yet notified
+    if ($oldStatus == 0 && $topic->status == 1 && $topic->notified_at == 0) {
+        $forum = Forum::find($topic->forum_id);
+        $message = $forum->name . ' - New topic activated: ' . $topic->description;
+
+        $notification = $this->notificationService->notifyAllMembers(
+            'forum_topic',
+            $message,
+            $forum->id,
+            'forum'
+        );
+
+        if ($notification) {
+            Member::query()->update(['is_notification' => 0]);
+            $topic->notified_at = 1;
+            $topic->save();
+        }
+    }
+
     return response()->json(['message' => 'Topic status updated successfully.']);
 }
+
 function member_delete_forum(Request $request)
 {
     $forumId = $request->input('forum_id');

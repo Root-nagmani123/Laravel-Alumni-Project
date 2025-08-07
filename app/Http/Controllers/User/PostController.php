@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Models\Post;
 use App\Models\Forum;
 use App\Models\PostMedia;
+use App\Models\Member;
 use Illuminate\Support\Str;
 use App\Services\NotificationService;
 use Illuminate\Support\Facades\Validator;
@@ -345,8 +346,6 @@ public function destroy($id)
 
 function forum_store(Request $request)
 {
-   
-
    $validator = Validator::make($request->all(), [
         'forum_name' => 'required|string|max:255',
         'forum_end_date' => 'required|date|after_or_equal:today',
@@ -363,33 +362,38 @@ function forum_store(Request $request)
             $imagePath = $request->file('forum_image')->store('uploads/images/forums_img', 'public');
             $data['images'] = basename($imagePath);
         }
-    // insert into the forums table
-    $input = [
-        'name' => $request->input('forum_name'),
-         'status' => 1, // Default to active if not provided
-        'created_by' => auth()->guard('user')->id(),
-         'end_date' => $request->input('forum_end_date'),
-         'images' => isset($data['images']) ? $data['images'] : null, // Store image if exists
 
-    ];
+        $forum = Forum::create([
+            'name' => $request->input('forum_name'),
+            'status' => 1,
+            'created_by' => auth()->guard('user')->id(),
+            'end_date' => $request->input('forum_end_date'),
+            'images' =>  isset($data['images']) ? $data['images'] : null,
+            'notified_at' => 0,
+        ]);
 
-    $last_id = Forum::create($input)->id;
+        
+        if ($forum->status == 1 && $forum->notified_at == 0) {
+            $notification = $this->notificationService->notifyAllMembers(
+                'forum_admin',
+                $forum->name . ' forum has been added.',
+                $forum->id,
+                'forum'
+            );
+            if ($notification) {
+                Member::query()->update(['is_notification' => 0]);
+                $forum->notified_at = 1;
+                $forum->save();
+            }
+        }
+
     // Insert into forums_member
     DB::table('forums_member')->insert([
-
-            'forums_id' => $last_id,
+            'forums_id' => $forum->id,
             'status' => 1,
-        ]);
-    // Insert into notification
-       DB::table('notification')->insert([
-        'group_id' => $last_id,
-        'status' => 1,
-        'type' => 'forum',
-        'created_at' => now(),
-        'message' => "<a href='" . url('home/profile/' . Auth::guard('user')->user()->id) . "'>" . Auth::guard('user')->user()->name . "</a> added you in Forum: <a href='" . url('home/forum/' . $last_id) . "'>" . $request->input('forum_name') . "</a>",
         ]);
 
         return redirect()->route('user.feed')->with('success', 'Forum created successfully!');
     }
-};
+}
 

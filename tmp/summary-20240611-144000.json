@@ -1,0 +1,4 @@
+{
+  "summary": "Added notification logic to the admin forum deletion methods (destroy and destroyforum) so that all members are notified when a forum is deleted. Used NotificationService::notifyAllMembers with appropriate parameters. No linter errors were introduced.",
+  "current_status": "Forum deletion on the admin side now triggers notifications to all members. Project changes are up to date and error-free."
+}
