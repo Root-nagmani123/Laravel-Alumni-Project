@@ -102,39 +102,61 @@
     }
 @endphp
 
-<div class="avatar me-2">
-    <a href="{{ $profileLink }}">
-        <img
-            class="avatar-img rounded-circle"
-            src="{{ $profileImage }}"
-            alt="Profile Picture" loading="lazy" decoding="async">
-    </a>
-</div>
-
 <!-- Info -->
-<div>
-    <div class="nav nav-divider">
-        <h6 class="nav-item card-title mb-0">
-            <a href="{{ $post->type === 'group_post' ? $groupLink : $profileLink }}">{{ $designation }} : {{ $displayName }}</a>
-        </h6>
-
+ <div class="d-flex align-items-center">
+    <!-- Avatar -->
+    <div class="me-4 flex-shrink-0 avatar">
+        <a href="{{ $profileLink }}">
+            <img src="{{ $profileImage }}" alt="Profile Picture"
+                 class="img-fluid avatar-img rounded-circle" loading="lazy" decoding="async">
+        </a>
     </div>
-    @if($post->type === 'group_post')
-    <p class="mb-0 small">
-        Post Owner :- {{ $created_by }}
-</p>
- @endif
-    <p class="mb-0 small"></p>
-    <span class="nav-item small">
-            {{ \Carbon\Carbon::parse($post->created_at)->diffForHumans() }}
-        </span>
-</div>
 
+    <!-- Text content -->
+    <div>
+        <!-- Name -->
+        <h6 class="mb-1">
+            {{ $displayName }}
+        </h6>
+        
+
+        <!-- Group post info + Time -->
+        @php
+            $createdAt = \Carbon\Carbon::parse($post->created_at)->setTimezone('Asia/Kolkata');
+            $now = \Carbon\Carbon::now('Asia/Kolkata');
+            $diff = $createdAt->diff($now);
+            if ($diff->y > 0) {
+                $timeDiff = $diff->y . 'y';
+            } elseif ($diff->m > 0) {
+                $timeDiff = $diff->m . 'mo';
+            } elseif ($diff->d > 0) {
+                $timeDiff = $diff->d . 'd';
+            } elseif ($diff->h > 0) {
+                $timeDiff = $diff->h . 'hr';
+            } elseif ($diff->i > 0) {
+                $timeDiff = $diff->i . 'min';
+            } else {
+                $timeDiff = 'Just now';
+            }
+        @endphp
+
+        @if($post->type === 'group_post')
+            <p class="mb-1">
+                Group Post | <i class="bi bi-person-fill"></i> {{ $created_by }}
+            </p>
+        @else
+        <!-- Designation -->
+        <p class="mb-0">
+            {{ $designation }}
+        </p>
+        @endif
+    </div>
+</div>
 
                 </div>
                 <div class="dropdown">
-                                <a href="#" class="text-secondary btn btn-secondary-soft-hover py-1 px-2" id="cardFeedAction" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="bi bi-three-dots"></i>
+                                <a href="#" class="text-secondary py-1 px-2" id="cardFeedAction" data-bs-toggle="dropdown" aria-expanded="false">
+                                   {{ $timeDiff }} <i class="bi bi-caret-down fa-fw pe-2"></i>
                                 </a>
 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="cardFeedAction">
     <li>
@@ -156,6 +178,7 @@
         </div>
         <!-- Card header END -->
         <!-- Card body START -->
+         <hr>
         <div class="card-body">
 @php
     $fullContent = strip_tags($post->content);
