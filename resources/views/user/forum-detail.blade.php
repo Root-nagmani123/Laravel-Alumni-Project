@@ -75,8 +75,8 @@
                                     $profileLink = url('/user/profile/' . ($user->id ?? 0));
                                     @endphp
                                     <div class="avatar avatar-lg mt-n5 mb-3">
-                                        <a href="#!"><img class="avatar-img rounded-circle"
-                                                src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar-1.png') }}"
+                                        <a href="#!"><img class="avatar-img rounded-circle qwetyu"
+                                                src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}"
                                                 alt=""></a>
                                     </div>
                                     <!-- Info -->
@@ -166,7 +166,7 @@
                             <div class="avatar me-2">
                                 <a href="#!">
                                     <img class="avatar-img rounded-circle"
-                                        src="{{ $topic->creator && $topic->creator->profile_pic ? asset('storage/' . $topic->creator->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}"
+                                        src="{{ $user->profile_pic && $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}"
                                         alt="">
                                 </a>
                             </div>
@@ -290,13 +290,17 @@
                     <!-- Feed react END -->
 
                     <!-- Add comment -->
+                     
                     @if($user)
                     <div class="d-flex mb-3">
                         <!-- Avatar -->
                         <div class="avatar avatar-xs me-2">
                             <a href="#!">
+                                
                                 <img class="avatar-img rounded-circle"
                                     src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}"
+                                    
+
                                     alt="">
                             </a>
                         </div>

@@ -4,47 +4,14 @@
     <!-- Chat sidebar START -->
 
     <!-- Offcanvas header -->
-    <div class="offcanvas-header d-flex justify-content-between">
-        <h5 class="offcanvas-title">Messaging</h5>
-        <div class="d-flex">
-            <!-- New chat box open button -->
-            <a href="#" class="btn btn-secondary-soft-hover py-1 px-2">
-                <i class="bi bi-pencil-square"></i>
-            </a>
-            <!-- Chat action START -->
-            <div class="dropdown">
-                <a href="#" class="btn btn-secondary-soft-hover py-1 px-2" id="chatAction" data-bs-toggle="dropdown"
-                    aria-expanded="false">
-                    <i class="bi bi-three-dots"></i>
-                </a>
-                <!-- Chat action menu -->
-                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="chatAction">
-                    <li><a class="dropdown-item" href="#"> <i class="bi bi-check-square fa-fw pe-2"></i>Mark all as
-                            read</a></li>
-                    <li><a class="dropdown-item" href="#"> <i class="bi bi-gear fa-fw pe-2"></i>Chat setting </a>
-                    </li>
-                    <li><a class="dropdown-item" href="#"> <i class="bi bi-bell fa-fw pe-2"></i>Disable
-                            notifications</a></li>
-                    <li><a class="dropdown-item" href="#"> <i class="bi bi-volume-up-fill fa-fw pe-2"></i>Message
-                            sounds</a></li>
-                    <li><a class="dropdown-item" href="#"> <i class="bi bi-slash-circle fa-fw pe-2"></i>Block
-                            setting</a></li>
-                    <li>
-                        <hr class="dropdown-divider">
-                    </li>
-                    <li><a class="dropdown-item" href="#"> <i class="bi bi-people fa-fw pe-2"></i>Create a group
-                            chat</a></li>
-                </ul>
-            </div>
-            <!-- Chat action END -->
+    <div class="offcanvas-header">
+    <h5 class="offcanvas-title mb-0">Messaging</h5>
 
-            <!-- Close  -->
-            <a href="#" class="btn btn-secondary-soft-hover py-1 px-2" data-bs-dismiss="offcanvas" aria-label="Close">
-                <i class="fa-solid fa-xmark"></i>
-            </a>
+    <button type="button" class="btn btn-secondary-soft-hover py-1 px-2 ms-auto" data-bs-dismiss="offcanvas" aria-label="Close">
+        <i class="fa-solid fa-xmark"></i>
+    </button>
+</div>
 
-        </div>
-    </div>
     <!-- Offcanvas body START -->
     <div
         class="offcanvas-body pt-0 custom-scrollbar os-host os-theme-dark os-host-overflow os-host-overflow-y os-host-resize-disabled os-host-scrollbar-horizontal-hidden os-host-transition h-100">

@@ -64,7 +64,7 @@
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
                             @if($isMentee)
-                               <li>
+                            <li>
                                <form action="{{ route('user.group.destroy', $group->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this group?');">
                                     @csrf
                                     @method('DELETE') {{-- This is the key to spoof DELETE --}}
@@ -75,7 +75,7 @@
                                 </form>
 
                             </li>
-                            @endif
+                            @else
                             <li>
                                 <form action="{{ route('user.groups.leave') }}" method="POST" onsubmit="return confirm('Are you sure you want to leave this group?');">
                                     @csrf
@@ -84,7 +84,8 @@
                                         <i class="bi bi-arrow-bar-right fa-fw pe-2"></i>Leave Group
                                     </button>
                                 </form>
-                            </li>                         
+                            </li>
+                            
                             @endif
                         </ul>
                     </div>
@@ -102,42 +103,66 @@
             @endphp
 
             <div class="card mb-4">
-                <div class="card-header border-0 pb-0">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <div class="d-flex align-items-center">
-                            <div class="avatar avatar-story me-2">
-                                <a href="{{ $post->member ? url('/user/profile/' . $post->member->id) : '#' }}">
-                                    @php
-                                        $profileImage = $post->member && $post->member->profile_pic
-                                            ? asset('storage/' . $post->member->profile_pic)
-                                            : asset('feed_assets/images/avatar/07.jpg');
-                                    @endphp
-                                    <img class="avatar-img rounded-circle" src="{{ $profileImage }}" alt="" loading="lazy" decoding="async">
-                                </a>
-                            </div>
-                            <div>
-                                <div class="nav nav-divider">
-                                    <h6 class="nav-item card-title mb-0">
-                                        <a href="{{ $post->member ? url('/user/profile/' . $post->member->id) : '#' }}">{{ $post->member->name ?? 'Anonymous' }}</a>
-                                    </h6>
-                                    <span class="nav-item small">{{ $post->created_at->diffForHumans() }}</span>
-                                </div>
-                                <p class="mb-0 small">{{ $post->member->designation ?? 'Member' }}</p>
-                            </div>
-                            <div>
-                                @if($post->member && $post->member->id === auth('user')->id())
-                                <form action="{{ route('user.group.post.destroy', $post->id) }}" method="POST">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="text-decoration-none text-primary ms-2 border-0 bg-transparent">
-                                        <i class="bi bi-trash"></i> Delete Post
-                                    </button>
-                                </form>
-                                @endif
-                            </div>
-                        </div>
-                    </div>
+               @php
+    $defaultImage = asset('feed_assets/images/avatar/07.jpg');
+    $profileImage = $defaultImage;
+
+    if ($post->member && $post->member->profile_pic) {
+        $profilePicPath = public_path('storage/' . $post->member->profile_pic);
+        if (file_exists($profilePicPath)) {
+            $profileImage = asset('storage/' . $post->member->profile_pic);
+        }
+    }
+@endphp
+
+<div class="card-header border-0 pb-0">
+    <div class="d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center">
+            <!-- Avatar -->
+            <div class="avatar me-2">
+                <a href="{{ $post->member ? url('/user/profile/' . $post->member->id) : '#' }}">
+                    <img class="avatar-img rounded-circle" src="{{ $profileImage }}" alt="Profile Picture" loading="lazy" decoding="async">
+                </a>
+            </div>
+
+            <!-- Name + Time + Designation -->
+            <div>
+                <div class="nav nav-divider">
+                    <h6 class="nav-item card-title mb-0">
+                        <a href="{{ $post->member ? url('/user/profile/' . $post->member->id) : '#' }}">
+                            {{ $post->member->name ?? 'Anonymous' }}
+                        </a>
+                    </h6>
+                    <span class="nav-item small">
+                        {{ $post->created_at->setTimezone('Asia/Kolkata')->diffForHumans() }}
+                    </span>
                 </div>
+                <p class="mb-0 small">{{ $post->member->designation ?? 'Member' }}</p>
+            </div>
+        </div>
+
+        <!-- Delete Button (if owner) -->
+        @if($post->member && $post->member->id === auth('user')->id())
+        <div class="dropdown">
+                        <a href="#" class="btn btn-sm btn-transparent py-0 px-2" data-bs-toggle="dropdown">
+                            <i class="bi bi-three-dots-vertical"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li>
+                                <form action="{{ route('user.group.post.destroy', $post->id) }}" method="POST">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="text-decoration-none ms-2 border-0 bg-transparent d-flex align-items-center gap-2 text-danger">
+                        <i class="bi bi-trash"></i> Delete Post
+                    </button>
+                </form>
+                            </li>
+                        </ul>
+                    </div>
+        @endif
+    </div>
+</div>
+
                 <div class="card-body">
                     <p>{{ \Illuminate\Support\Str::words(strip_tags($post->content), 50, '...') }}</p>
                     @if($totalImages === 1)
