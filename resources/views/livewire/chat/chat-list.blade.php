@@ -113,28 +113,28 @@
                 data-bs-autohide="false"> --}}
                 <div class="toast mb-0 bg-mode show" role="alert" aria-live="assertive" aria-atomic="true"
                     data-bs-autohide="false">
-
-                    <div class="toast-header bg-mode">
+<div class="toast-header bg-mode">
     <div class="d-flex justify-content-between align-items-center w-100">
-        
+
         <!-- Avatar and Name -->
         <div class="d-flex align-items-center">
             <div class="avatar me-2 flex-shrink-0">
-                <img class="avatar-img rounded-circle" src="{{ asset('assets/images/avatar/01.jpg') }}" alt="User Avatar">
+                <img class="avatar-img rounded-circle"
+                     src="http://4.247.151.249/assets/images/avatar/01.jpg"
+                     alt="User Avatar"
+                     width="40" height="40" loading="lazy">
             </div>
-            <div>
-                <h6 class="mb-0">{{ $selectChat->name }}</h6>
-            </div>
+            <h6 class="mb-0">{{ $selectChat->name }}</h6>
         </div>
 
-        <!-- Actions -->
+        <!-- Action Buttons -->
         <div class="d-flex align-items-center gap-1">
             <!-- Collapse Button -->
             <a class="btn btn-secondary-soft-hover py-1 px-2"
                data-bs-toggle="collapse"
-               href="#collapseChat-{{ $selectChat->id }}"
-               aria-expanded="false"
-               aria-controls="collapseChat-{{ $selectChat->id }}">
+               href="#collapseChat-161"
+               aria-expanded="true"
+               aria-controls="collapseChat-161">
                 <i class="bi bi-dash-lg"></i>
             </a>
 
@@ -143,7 +143,7 @@
                     class="btn btn-secondary-soft-hover py-1 px-2"
                     data-bs-dismiss="toast"
                     aria-label="Close"
-                    wire:click="closeChat({{ $selectChat->id }})">
+                    wire:click="closeChat(161)">
                 <i class="fa-solid fa-xmark"></i>
             </button>
         </div>
