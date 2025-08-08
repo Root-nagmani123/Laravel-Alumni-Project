@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\BroadcastController;
 use App\Http\Controllers\Admin\EventsController;
 use App\Http\Controllers\Admin\SocialWallController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\User\OtpLoginController;
 
 use App\Http\Controllers\User\AuthController;
 use App\Http\Controllers\User\FeedController;
@@ -474,3 +475,7 @@ Route::middleware(['auth:user'])->group(function () {
 
     });
 });
+
+
+Route::post('/otp/send', [OtpLoginController::class, 'sendOtp'])->name('otp.send');
+Route::post('/otp/verify', [OtpLoginController::class, 'verifyOtp'])->name('otp.verify');

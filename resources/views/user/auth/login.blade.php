@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -18,6 +17,9 @@
 
     <!-- Theme css -->
     <link id="change-link" rel="stylesheet" type="text/css" href="{{asset('user_assets/css/style.css')}}">
+
+    <!-- Add CSRF token meta -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <style>
     .flip-card {
         position: relative;
@@ -79,22 +81,45 @@
             left: -100%;
         }
     }
-.marquee-text {
-    white-space: nowrap;
-    display: inline-block;
-    animation: marquee 15s linear infinite;
-}
+    .marquee-text {
+        white-space: nowrap;
+        display: inline-block;
+        animation: marquee 15s linear infinite;
+    }
 
-.marquee-container:hover .marquee-text {
-    animation-play-state: paused;
-}
+    .marquee-container:hover .marquee-text {
+        animation-play-state: paused;
+    }
 
-@keyframes marquee {
-    0%   { transform: translateX(100%); }
-    100% { transform: translateX(-100%); }
-}
+    @keyframes marquee {
+        0%   { transform: translateX(100%); }
+        100% { transform: translateX(-100%); }
+    }
 
+    .error-message {
+        color: #dc3545;
+        font-size: 0.9rem;
+        margin-top: 0.5rem;
+    }
 
+    .success-message {
+        color: #28a745;
+        font-size: 0.9rem;
+        margin-top: 0.5rem;
+    }
+
+    #otpInputContainer {
+        display: none;
+    }
+
+    #resendOtp {
+        cursor: pointer;
+        color: #007bff;
+        text-decoration: underline;
+        font-size: 0.8rem;
+        margin-top: 5px;
+        display: none;
+    }
     </style>
 </head>
 
@@ -208,19 +233,27 @@
                                             <div class="login-discription mb-4">
                                                 <h4>Enter your email to receive a one-time password.</h4>
                                             </div>
-                                            <form id="otpForm" method="POST" action="">
+                                            <form id="otpForm">
                                                 @csrf
                                                 <div class="form-group mb-3">
                                                     <label class="form-label fw-bold">Email Address</label>
-                                                    <input type="email" name="otp_email" class="form-control"
+                                                    <input type="email" name="otp_email" id="otp_email" class="form-control"
                                                         placeholder="Enter your email" required>
+                                                    <div id="emailError" class="error-message"></div>
+                                                    <div id="emailSuccess" class="success-message"></div>
                                                 </div>
-                                                <div id="otpInputContainer"></div>
-                                                <button type="button" id="sendOtpBtn" class="btn btn-success w-100">Send
-                                                    OTP</button>
-                                                <button type="submit" id="submitOtpBtn"
-                                                    class="btn btn-primary w-100 mt-2" style="display:none;">Login with
-                                                    OTP</button>
+                                                <div id="otpInputContainer">
+                                                    <div class="form-group mb-3">
+                                                        <label class="form-label fw-bold">Enter OTP</label>
+                                                        <input type="text" name="otp_code" id="otp_code" class="form-control" 
+                                                            placeholder="Enter OTP" required>
+                                                        <div id="otpError" class="error-message"></div>
+                                                        <div id="otpSuccess" class="success-message"></div>
+                                                        <div id="resendOtp">Didn't receive OTP? Resend</div>
+                                                    </div>
+                                                </div>
+                                                <button type="button" id="sendOtpBtn" class="btn btn-success w-100">Send OTP</button>
+                                                <button type="button" id="verifyOtpBtn" class="btn btn-primary w-100 mt-2">Verify OTP</button>
                                             </form>
                                             <div class="text-center mt-3">
                                                 <a href="#" onclick="flipCard(event)">Login with LDAP</a>
@@ -254,126 +287,169 @@
     </section>
     <!-- login section end -->
 
+    <script src="{{ asset('user_assets/js/jquery-3.6.0.min.js') }}"></script>
+    <script src="{{ asset('user_assets/js/popper.min.js') }}"></script>
+    <script src="{{ asset('user_assets/js/slick.js') }}"></script>
+    <script src="{{ asset('user_assets/js/custom-slick.js') }}"></script>
+    <script src="{{ asset('user_assets/js/feather.min.js') }}"></script>
+    <script src="{{ asset('user_assets/js/emojionearea.min.js') }}"></script>
+    <script src="{{ asset('user_assets/js/bootstrap.js') }}"></script>
+    <script src="{{ asset('user_assets/js/chatbox.js') }}"></script>
+    <script src="{{ asset('user_assets/js/lazysizes.min.js') }}"></script>
+    <script src="{{ asset('user_assets/js/theme-setting.js') }}"></script>
+    <script src="{{ asset('user_assets/js/script.js') }}"></script>
+
     <script>
-    $(document).ready(function() {
-        $('#sendOtpBtn').on('click', function() {
-            // Check if OTP input already exists
-            if ($('#otpInputContainer input[name="otp"]').length === 0) {
-                // Append OTP input field
-                $('#otpInputContainer').html(`
-                    <div class="form-group mb-3">
-                        <label class="form-label">Enter OTP</label>
-                        <input type="text" name="otp" class="form-control" placeholder="Enter OTP" required>
-                    </div>
-                `);
+        feather.replace();
+        $(".emojiPicker").emojioneArea({
+            inline: true,
+            placement: 'absleft',
+            pickerPosition: "top left",
+        });
+
+        window.addEventListener("load", () => {
+            const loader = document.getElementById("pageLoader");
+            if (loader) {
+                loader.style.opacity = "0";
+                loader.style.transition = "opacity 0.4s ease";
+                setTimeout(() => loader.remove(), 400);
+            }
+        });
+
+        function flipCard(e) {
+            if (e) e.preventDefault();
+            const card = document.querySelector('.flip-card');
+            card.classList.toggle('flipped');
+            
+            // Reset OTP form when flipping
+            $('#otpForm')[0].reset();
+            $('#emailError, #otpError, #emailSuccess, #otpSuccess').hide().text('');
+            $('#otpInputContainer').hide();
+            $('#sendOtpBtn').show().text('Send OTP').prop('disabled', false);
+            $('#verifyOtpBtn').hide();
+            $('#resendOtp').hide();
+        }
+
+        $(document).ready(function() {
+            // Initially hide OTP fields
+            $('#otpInputContainer').hide();
+            $('#verifyOtpBtn').hide();
+            $('#resendOtp').hide();
+
+            // Email validation
+            function isValidEmail(email) {
+                const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return re.test(email);
             }
 
-            // Show the Submit OTP button
-            $('#submitOtpBtn').show();
+            // Send OTP
+            $('#sendOtpBtn').on('click', function() {
+                const email = $('#otp_email').val();
+                const token = $('input[name="_token"]').val();
+                
+                // Validate email
+                if (!isValidEmail(email)) {
+                    $('#emailError').text('Please enter a valid email address').show();
+                    return;
+                }
 
-            // Optionally disable send button or show a success message
-            $('#sendOtpBtn').text('OTP Sent').prop('disabled', true);
-        });
-    });
-    </script>
+                $('#emailError').hide();
+                $(this).prop('disabled', true).text('Sending...');
 
-
-    <script>
-    function flipCard(e) {
-        if (e) e.preventDefault();
-        const card = document.querySelector('.flip-card');
-        card.classList.toggle('flipped');
-    }
-
-    // OTP logic
-    document.addEventListener('DOMContentLoaded', function() {
-        const sendOtpBtn = document.getElementById('sendOtpBtn');
-        const otpInputContainer = document.getElementById('otpInputContainer');
-        const submitOtpBtn = document.getElementById('submitOtpBtn');
-        const otpForm = document.getElementById('otpForm');
-
-        if (sendOtpBtn) {
-            sendOtpBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                // Show OTP input
-                otpInputContainer.innerHTML = `
-                    <div class="form-group mb-3">
-                        <label>Enter OTP</label>
-                        <input type="text" name="otp_code" class="form-control" placeholder="Enter OTP" required>
-                    </div>
-                `;
-                sendOtpBtn.style.display = 'none';
-                submitOtpBtn.style.display = 'block';
+                $.ajax({
+                    url: '{{ route("otp.send") }}',
+                    method: 'POST',
+                    data: { otp_email: email, _token: token },
+                    success: function(response) {
+                        $('#emailSuccess').text('OTP sent successfully!').show();
+                        $('#otpInputContainer').show();
+                        $('#verifyOtpBtn').show();
+                        $('#sendOtpBtn').hide();
+                        $('#resendOtp').show().text('Resend OTP in 30 seconds');
+                        startResendTimer();
+                    },
+                    error: function(xhr) {
+                        const errorMsg = xhr.responseJSON?.error || 'Failed to send OTP. Please try again.';
+                        $('#emailError').text(errorMsg).show();
+                        $('#sendOtpBtn').prop('disabled', false).text('Send OTP');
+                    }
+                });
             });
-        }
-    });
-    </script>
 
-    <!-- latest jquery-->
-    <script src="{{asset('user_assets/js/jquery-3.6.0.min.js')}}"></script>
+            // Verify OTP
+            $('#verifyOtpBtn').on('click', function() {
+                const email = $('#otp_email').val();
+                const otp = $('#otp_code').val();
+                const token = $('input[name="_token"]').val();
 
-    <!-- popper js-->
-    <script src="{{asset('user_assets/js/popper.min.js')}}"></script>
+                if (!otp || otp.length !== 6) {
+                    $('#otpError').text('Please enter a valid 6-digit OTP').show();
+                    return;
+                }
 
-    <!-- slick slider js -->
-    <script src="{{asset('user_assets/js/slick.js')}}"></script>
-    <script src="{{asset('user_assets/js/custom-slick.js')}}"></script>
+                $('#otpError').hide();
+                $(this).prop('disabled', true).text('Verifying...');
 
-    <!-- feather icon js-->
-    <script src="{{asset('user_assets/js/feather.min.js')}}"></script>
+                $.ajax({
+                    url: '{{ route("otp.verify") }}',
+                    method: 'POST',
+                    data: { otp_email: email, otp_code: otp, _token: token },
+                    success: function(response) {
+                        $('#otpSuccess').text('OTP verified successfully!').show();
+                        window.location.href = response.redirect;
+                    },
+                    error: function(xhr) {
+                        const errorMsg = xhr.responseJSON?.error || 'Invalid or expired OTP';
+                        $('#otpError').text(errorMsg).show();
+                        $('#verifyOtpBtn').prop('disabled', false).text('Verify OTP');
+                    }
+                });
+            });
 
-    <!-- emoji picker js-->
-    <script src="{{asset('user_assets/js/emojionearea.min.js')}}"></script>
+            // Resend OTP
+            $('#resendOtp').on('click', function() {
+                if ($(this).hasClass('disabled')) return;
+                
+                const email = $('#otp_email').val();
+                const token = $('input[name="_token"]').val();
+                
+                $(this).text('Sending...').addClass('disabled');
+                $('#otpError, #otpSuccess').hide();
 
-    <!-- Bootstrap js-->
-    <script src="{{asset('user_assets/js/bootstrap.js')}}"></script>
+                $.ajax({
+                    url: '{{ route("otp.send") }}',
+                    method: 'POST',
+                    data: { otp_email: email, _token: token },
+                    success: function(response) {
+                        $('#emailSuccess').text('New OTP sent successfully!').show();
+                        $('#resendOtp').text('Resend OTP in 30 seconds');
+                        startResendTimer();
+                    },
+                    error: function(xhr) {
+                        const errorMsg = xhr.responseJSON?.error || 'Failed to resend OTP. Please try again.';
+                        $('#emailError').text(errorMsg).show();
+                        $('#resendOtp').text('Resend OTP').removeClass('disabled');
+                    }
+                });
+            });
 
-    <!-- chatbox js -->
-    <script src="{{asset('user_assets/js/chatbox.js')}}"></script>
-
-    <!-- lazyload js-->
-    <script src="{{asset('user_assets/js/lazysizes.min.js')}}"></script>
-
-    <!-- theme setting js-->
-    <script src="{{asset('user_assets/js/theme-setting.js')}}"></script>
-
-    <!-- Theme js-->
-    <script src="{{asset('user_assets/js/script.js')}}"></script>
-
-    <script>
-    feather.replace();
-    $(".emojiPicker ").emojioneArea({
-        inline: true,
-        placement: 'absleft',
-        pickerPosition: "top left ",
-    });
-    // JS to make password visible
-
-    document.addEventListener('DOMContentLoaded', function() {
-        const togglePassword = document.querySelector('.toggle-password');
-        const passwordField = document.querySelector('#password');
-
-        togglePassword.addEventListener('click', function() {
-            const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
-            passwordField.setAttribute('type', type);
-
-            // Optionally toggle icon appearance
-            this.textContent = type === 'password' ? '👁️' : '🙈';
+            // Timer for resend OTP
+            function startResendTimer() {
+                let seconds = 30;
+                const resendButton = $('#resendOtp');
+                resendButton.addClass('disabled');
+                
+                const timer = setInterval(function() {
+                    seconds--;
+                    resendButton.text(`Resend OTP in ${seconds} seconds`);
+                    
+                    if (seconds <= 0) {
+                        clearInterval(timer);
+                        resendButton.text('Resend OTP').removeClass('disabled');
+                    }
+                }, 1000);
+            }
         });
-    });
     </script>
-    <script>
-    window.addEventListener("load", () => {
-        const loader = document.getElementById("pageLoader");
-        if (loader) {
-            loader.style.opacity = "0";
-            loader.style.transition = "opacity 0.4s ease";
-            setTimeout(() => loader.remove(), 400);
-        }
-    });
-    </script>
-
-
 </body>
-
 </html>
