@@ -229,4 +229,15 @@ public function showById_data(Request $request, $id): View
         return response()->json(['status' => 'added']);
     }
 }
+
+function searchFavMembers(Request $request) {
+     $currentUserId = auth()->guard('user')->id();
+    $favorites = DB::table('favorite_users')
+        ->join('members', 'favorite_users.favorite_user_id', '=', 'members.id')
+        ->where('favorite_users.user_id', $currentUserId)
+        ->select('members.id', 'members.name', 'members.username')
+        ->get();
+
+    return response()->json($favorites);
+}
 }
