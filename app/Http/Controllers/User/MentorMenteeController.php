@@ -44,21 +44,29 @@ $members = DB::table('members')
         ->get();
         // print_r($mentee_requests);die;
 
-         $mentee_connections = DB::table('mentee_requests')
-        ->join('members', 'mentee_requests.mentees_ids', '=', 'members.id')
-        ->where('mentee_requests.mentor', $user_id)
-        ->select('mentee_requests.id as request_id', 'members.name', 'members.cader as cadre', 'members.batch', 'members.sector','mentee_requests.status')
-        ->get();
+        //  $mentee_connections = DB::table('mentee_requests')
+        // ->join('members', 'mentee_requests.mentees_ids', '=', 'members.id')
+        // ->where('mentee_requests.mentor', $user_id)
+        // ->select('mentee_requests.id as request_id', 'members.name', 'members.cader as cadre', 'members.batch', 'members.sector','mentee_requests.status')
+        // ->get();
 
        
 
-    $mentor_connections = DB::table('mentor_requests')
-        ->join('members', 'mentor_requests.Mentor_ids', '=', 'members.id')
-        ->where('mentor_requests.mentees', $user_id)
-        ->select('mentor_requests.id as request_id', 'members.name', 'members.cader as cadre', 'members.batch', 'members.sector','mentor_requests.status')
+    // $mentor_connections = DB::table('mentor_requests')
+    //     ->join('members', 'mentor_requests.Mentor_ids', '=', 'members.id')
+    //     ->where('mentor_requests.mentees', $user_id)
+    //     ->select('mentor_requests.id as request_id', 'members.name', 'members.cader as cadre', 'members.batch', 'members.sector','mentor_requests.status')
+    //     ->get();
+        $mentor_connections = DB::table('mentor_mentee_connection')
+        ->join('members as mentors', 'mentor_mentee_connection.mentee_id', '=', 'mentors.id')
+        ->where('mentor_mentee_connection.mentor_id', $user_id)
+        ->select('mentor_mentee_connection.id as connection_id', 'mentors.name', 'mentors.cader as cadre', 'mentors.batch', 'mentors.sector','mentor_mentee_connection.status')
         ->get();
-//  print_r($mentee_connections);die;
-
+         $mentee_connections = DB::table('mentor_mentee_connection')
+        ->join('members as mentors', 'mentor_mentee_connection.mentor_id', '=', 'mentors.id')
+        ->where('mentor_mentee_connection.mentee_id', $user_id)
+        ->select('mentor_mentee_connection.id as connection_id', 'mentors.name', 'mentors.cader as cadre', 'mentors.batch', 'mentors.sector','mentor_mentee_connection.status')
+        ->get();
 
         // print_r($members);die;
         return view('user.mentor_mentee', compact('members', 'mentee_requests', 'mentor_requests', 'mentor_connections', 'mentee_connections'));
@@ -282,12 +290,28 @@ function updateRequest(Request $request) : \Illuminate\Http\RedirectResponse {
     if ($request->status == 1) {
         // Request accepted
         if ($request->type === 'mentor') {
+            DB::table('mentor_mentee_connection')
+                ->insert([
+                    'mentor_id' => $requestData->mentees,
+                    'mentee_id' => $requestData->Mentor_ids,
+                    'status' => 1, // Assuming 1 means active
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
             $notification = $this->notificationService->notifyMentorRequestAccepted($requestData->mentees, $user, 'Your mentor request has been accepted!', $request->id);
             Member::where('id', $requestData->mentees)->update(['is_notification' => 0]);
 
         } else {
-            $notification = $this->notificationService->notifyMenteeRequestAccepted($requestData->Mentor_ids, $user, 'Your mentee request has been accepted!', $request->id);
-            Member::where('id', $requestData->Mentor_ids)->update(['is_notification' => 0]);
+             DB::table('mentor_mentee_connection')
+                ->insert([
+                    'mentee_id' => $requestData->mentor,
+                    'mentor_id' => $requestData->mentees_ids,
+                    'status' => 1, // Assuming 1 means active
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            $notification = $this->notificationService->notifyMenteeRequestAccepted($requestData->mentees_ids, $user, 'Your mentee request has been accepted!', $request->id);
+            Member::where('id', $requestData->mentees_ids)->update(['is_notification' => 0]);
 
         }
         $message = $request->type === 'mentor' ? 'You are now a mentor.' : 'You are now a mentee.';

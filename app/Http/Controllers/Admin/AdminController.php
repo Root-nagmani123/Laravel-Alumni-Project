@@ -215,33 +215,20 @@ $groupedPosts = $rawPosts->groupBy('post_id')->map(function ($group) {
     $role = $request->role;
 
     if ($role === 'mentor') {
-          
-    // $mentor_connections = DB::table('mentor_requests')
-    // ->join('members as mentors', 'mentor_requests.Mentor_ids', '=', 'mentors.id')
-    // ->join('members as mentees', 'mentor_requests.mentees', '=', 'mentees.id')
-    // // ->where('mentor_requests.status', 1)
-    // ->select(
-    //     'mentor_requests.id as request_id',
-    //     'mentors.name as mentor_name',
-    //     'mentees.name as mentee_name',
-    //     'mentor_requests.status'
-    // )
-    // ->get();
-        $results = DB::table('mentor_requests')
-            ->join('members as mentees', 'mentor_requests.Mentor_ids', '=', 'mentees.id')
-            ->where('mentor_requests.mentees', $id)
-            ->where('mentor_requests.status', 1)
-            ->select('mentees.name as name', 'mentees.cader as cadre', 'mentees.batch', 'mentees.sector')
-            ->get();
-    } else {
-        $results = DB::table('mentee_requests')
-            ->join('members as mentors', 'mentee_requests.mentor', '=', 'mentors.id')
-            ->where('mentee_requests.mentees_ids', $id)
-            ->where('mentee_requests.status', 1)
-            ->select('mentors.name as name', 'mentors.cader as cadre', 'mentors.batch', 'mentors.sector')
-            ->get();
+         $results = DB::table('mentor_mentee_connection')
+        ->join('members as mentors', 'mentor_mentee_connection.mentee_id', '=', 'mentors.id')
+        ->where('mentor_mentee_connection.mentor_id', $id)
+        ->select('mentors.name as name', 'mentors.cader as cadre', 'mentors.batch', 'mentors.sector')
+        ->get();
+       
+    }else{
+         $results = DB::table('mentor_mentee_connection')
+        ->join('members as mentors', 'mentor_mentee_connection.mentor_id', '=', 'mentors.id')
+        ->where('mentor_mentee_connection.mentee_id', $id)
+         ->select('mentors.name as name', 'mentors.cader as cadre', 'mentors.batch', 'mentors.sector')
+         ->get();
     }
-
+   
     $html = view('admin.mentorship.result_table', compact('results', 'role'))->render();
 
     return response()->json(['html' => $html]);
