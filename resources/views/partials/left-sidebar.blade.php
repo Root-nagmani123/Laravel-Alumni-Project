@@ -35,7 +35,7 @@
                                     $profilePic = $user->profile_pic ?? null;
                                     @endphp
                                     <img id="existingImage"
-                                        src="{{ $profilePic ? asset('storage/' . $profilePic) : asset('feed_assets/images/default.png') }}"
+                                        src="{{ $profilePic ? asset('storage/' . $profilePic) : asset('feed_assets/images/avatar/07.jpg') }}"
                                         class="rounded-circle avatar-img" height="50" width="50" alt="User"
                                         loading="lazy" decoding="async">
                                 </div>

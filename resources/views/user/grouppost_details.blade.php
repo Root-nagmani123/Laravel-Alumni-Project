@@ -31,7 +31,7 @@
                                     @endphp
                                     <div class="avatar avatar-lg mt-n5 mb-3">
                                         <a href="{{ $profileLink }}"><img class="avatar-img rounded-circle"
-                                                src="{{ $profileImage }}" alt="" loading="lazy" decoding="async"></a>
+                                                src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}" alt="" loading="lazy" decoding="async"></a>
                                     </div>
                                     <h5 class="mb-0"><a href="{{ $profileLink }}">{{ $displayName }}</a></h5>
                                     <small>{{ $designation }}</small>
@@ -241,7 +241,7 @@
                         <div class="avatar avatar-xs me-2">
                             <a href="{{ route('user.profile', ['id' => $user->id]) }}">
                                 <img class="avatar-img rounded-circle"
-                                    src="{{ asset('storage/'.$user->profile_pic) }}" alt="" loading="lazy" decoding="async">
+                                    src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}" alt="" loading="lazy" decoding="async">
                             </a>
                         </div>
                         <form class="nav nav-item w-100 position-relative commentForm" id="commentForm-{{ $post->id }}"
