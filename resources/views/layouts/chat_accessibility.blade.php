@@ -7,7 +7,7 @@
        style="margin-right: 2rem !important; margin-bottom: 7rem !important; background-color: #792421; color: #fff; border-radius: 50%; box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2);">
         
         <!-- Green Dot -->
-        <span class="chat-dot"></span>
+        <span class="chat-dot d-none" id="unread-count-{{ auth()->guard('user')->id() }}"></span>
 
         <i class="bi bi-chat-left-text-fill" style="color: #fff;"></i>
     </a>
