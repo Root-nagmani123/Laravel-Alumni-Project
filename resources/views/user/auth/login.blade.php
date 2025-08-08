@@ -263,22 +263,22 @@
                                                     <div class="form-group mb-3">
                                                         <label class="form-label fw-bold">Enter OTP</label>
                                                         <div class="d-flex gap-2">
-                                                            <input type="text"
+                                                            <input type="number"
                                                                 class="form-control text-center otp-input" maxlength="1"
                                                                 pattern="[0-9]*" inputmode="numeric">
-                                                            <input type="text"
+                                                            <input type="number"
                                                                 class="form-control text-center otp-input" maxlength="1"
                                                                 pattern="[0-9]*" inputmode="numeric">
-                                                            <input type="text"
+                                                            <input type="number"
                                                                 class="form-control text-center otp-input" maxlength="1"
                                                                 pattern="[0-9]*" inputmode="numeric">
-                                                            <input type="text"
+                                                            <input type="number"
                                                                 class="form-control text-center otp-input" maxlength="1"
                                                                 pattern="[0-9]*" inputmode="numeric">
-                                                            <input type="text"
+                                                            <input type="number"
                                                                 class="form-control text-center otp-input" maxlength="1"
                                                                 pattern="[0-9]*" inputmode="numeric">
-                                                            <input type="text"
+                                                            <input type="number"
                                                                 class="form-control text-center otp-input" maxlength="1"
                                                                 pattern="[0-9]*" inputmode="numeric">
                                                         </div>
