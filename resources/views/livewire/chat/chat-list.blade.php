@@ -149,35 +149,28 @@
                 data-bs-autohide="false"> --}}
                 <div class="toast mb-0 bg-mode show" role="alert" aria-live="assertive" aria-atomic="true"
                     data-bs-autohide="false">
-
                     <div class="toast-header bg-mode">
-                        <!-- Top avatar and status START -->
-                        <div class="d-flex justify-content-between align-items-center w-100">
-                            <div class="d-flex">
-                                <div class="flex-shrink-0 avatar me-2">
-                                    <img class="avatar-img rounded-circle" src="assets/images/avatar/01.jpg" alt="">
-                                </div>
-                                <div class="flex-grow-1">
-                                    <h6 class="mb-0 mt-1">{{ $selectChat->name }}</h6>
-                                    {{-- <div class="small text-secondary"><i
-                                            class="fa-solid fa-circle text-success me-1"></i>Online
-                                    </div> --}}
-                                </div>
-                            </div>
-                            <div class="d-flex">
-
-                                <a class="btn btn-secondary-soft-hover py-1 px-2" data-bs-toggle="collapse"
-                                    href="#collapseChat-{{ $selectChat->id }}" aria-expanded="false"
-                                    aria-controls="collapseChat-{{ $selectChat->id }}"><i class="bi bi-dash-lg"></i></a>
-                                <button class="btn btn-secondary-soft-hover py-1 px-2" data-bs-dismiss="toast"
+					<!-- Top avatar and status START -->
+					<div class="d-flex justify-content-between align-items-center w-100">
+						<div class="d-flex">
+							<div class="flex-shrink-0 avatar me-2">
+								<img class="avatar-img rounded-circle" src="{{asset('feed_assets/images/avatar/07.jpg')}}" alt="">
+							</div>
+							<div class="flex-grow-1">
+								<h6 class="mb-0 mt-1">{{ $selectChat->name }}</h6>
+							</div>
+						</div>
+						<div class="d-flex">
+						<a class="btn btn-secondary-soft-hover py-1 px-2" data-bs-toggle="collapse" href="#collapseChat" aria-expanded="false" aria-controls="collapseChat"><i class="bi bi-dash-lg"></i></a>        
+						<button class="btn btn-secondary-soft-hover py-1 px-2" data-bs-dismiss="toast"
                                     aria-label="Close" wire:click="closeChat({{ $selectChat->id }})">
                                     <i class="fa-solid fa-xmark"></i>
                                 </button>
-                            </div>
-                        </div>
-                        <!-- Top avatar and status END -->
-
-                    </div>
+					</div>
+				</div>
+				<!-- Top avatar and status END -->
+					
+				</div>
                     <div class="toast-body collapse show" id="collapseChat-{{ $selectChat->id }}" style="overflow-y: auto;">
                         <!-- Chat conversation START -->
                         <div

@@ -207,7 +207,13 @@
                 data: { search: query },
                 success: function (response) {
                     let resultsHtml = '';
-                     resultsHtml += '<a href="/user/profile/Alumni" class="list-group-item list-group-item-action">Alumni</a>';
+                    if (response.length > 0) {
+                        response.forEach(function (item) {
+                            resultsHtml += '<li class="list-group-item d-flex justify-content-between align-items-center"><a href="/user/profile/id/${item.encrypted_id}" class="text-decoration-none text-dark flex-grow-1">Alumni</a><button class="btn btn-sm p-0 border-0 bg-transparent favorite-user" data-id="${item.encrypted_id}" type="button"><i class="bi bi-star-fill text-warning" style="font-size: 1.2rem;"></i></button></li>';
+                        });
+                    } else {
+                        resultsHtml = `<div class="list-group-item">No results found</div>`;
+                    }
 
             if (response.length > 0) {
                 response.forEach(function (member) {

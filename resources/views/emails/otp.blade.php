@@ -60,7 +60,7 @@
         
         <div style="text-align: center; margin: 20px 0;">
             <span style="display: inline-block; font-size: 24px; font-weight: bold; color: #ffffff; background-color: #792421; padding: 10px 20px; border-radius: 6px;">
-                <!-- {{ $otp }} -->123654
+                {{ $otp }}
             </span>
         </div>
 
