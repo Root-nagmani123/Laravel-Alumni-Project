@@ -181,10 +181,6 @@ Header START -->
                                                     ]);
                                                 }
                                             @endphp
-                                            <div class="list-group-item rounded d-flex border-0 mb-1 p-3">
-                                                <div class="ms-sm-3">
-                                                    <div class="d-flex">
-                                                        <a href="{{ $notificationUrl }}" class="text-decoration-none notification-link" 
                                             <div class="notification-card bg-white border rounded shadow-sm p-3 mb-3"
              style="min-width: 300px; max-width: 340px; scroll-snap-align: start;">
             
