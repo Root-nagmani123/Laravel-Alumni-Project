@@ -17,7 +17,7 @@
     <link href="../../css2-1?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
     <!-- Theme css -->
-    <link id="change-link" rel="stylesheet" type="text/css" href="{{asset('user_assets/css/style.css')}}">
+    <link id="change-link" rel="stylesheet" type="text/css" href="{{secure_asset('user_assets/css/style.css')}}">
     <style>
     .flip-card {
         position: relative;
@@ -310,10 +310,10 @@
     </script>
 
     <!-- latest jquery-->
-    <script src="{{asset('user_assets/js/jquery-3.6.0.min.js')}}"></script>
+    <script src="{{secure_asset('user_assets/js/jquery-3.6.0.min.js')}}"></script>
 
     <!-- popper js-->
-    <script src="{{asset('user_assets/js/popper.min.js')}}"></script>
+    <script src="{{secure_asset('user_assets/js/popper.min.js')}}"></script>
 
     <!-- slick slider js -->
     <script src="{{asset('user_assets/js/slick.js')}}"></script>
