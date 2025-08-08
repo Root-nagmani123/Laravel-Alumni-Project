@@ -24,7 +24,10 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('send:birthday-notifications')->daily();
+       $schedule->command('send:birthday-notifications')
+                   ->dailyAt('16:00') // send at 4:00 PM
+                   ->timezone('Asia/Kolkata');
+
     }
 
     /**
@@ -32,6 +35,7 @@ class Kernel extends ConsoleKernel
      *
      * @return void
      */
+
     protected function commands()
     {
         $this->load(__DIR__.'/Commands');
