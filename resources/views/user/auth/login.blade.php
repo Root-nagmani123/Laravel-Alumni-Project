@@ -263,22 +263,22 @@
                                                     <div class="form-group mb-3">
                                                         <label class="form-label fw-bold">Enter OTP</label>
                                                         <div class="d-flex gap-2">
-                                                            <input type="number"
+                                                            <input type="text"
                                                                 class="form-control text-center otp-input" maxlength="1"
                                                                 pattern="[0-9]*" inputmode="numeric">
-                                                            <input type="number"
+                                                            <input type="text"
                                                                 class="form-control text-center otp-input" maxlength="1"
                                                                 pattern="[0-9]*" inputmode="numeric">
-                                                            <input type="number"
+                                                            <input type="text"
                                                                 class="form-control text-center otp-input" maxlength="1"
                                                                 pattern="[0-9]*" inputmode="numeric">
-                                                            <input type="number"
+                                                            <input type="text"
                                                                 class="form-control text-center otp-input" maxlength="1"
                                                                 pattern="[0-9]*" inputmode="numeric">
-                                                            <input type="number"
+                                                            <input type="text"
                                                                 class="form-control text-center otp-input" maxlength="1"
                                                                 pattern="[0-9]*" inputmode="numeric">
-                                                            <input type="number"
+                                                            <input type="text"
                                                                 class="form-control text-center otp-input" maxlength="1"
                                                                 pattern="[0-9]*" inputmode="numeric">
                                                         </div>
@@ -340,6 +340,35 @@
     <script src="{{ asset('user_assets/js/lazysizes.min.js') }}"></script>
     <script src="{{ asset('user_assets/js/theme-setting.js') }}"></script>
     <script src="{{ asset('user_assets/js/script.js') }}"></script>
+    <script>
+document.addEventListener("DOMContentLoaded", function () {
+    const inputs = document.querySelectorAll(".otp-input");
+    const hiddenOtp = document.getElementById("otp_code");
+
+    inputs.forEach((input, index) => {
+        input.addEventListener("input", () => {
+            // Allow only digits
+            input.value = input.value.replace(/[^0-9]/g, '');
+            
+            if (input.value.length === 1 && index < inputs.length - 1) {
+                inputs[index + 1].focus();
+            }
+            updateHiddenOtp();
+        });
+
+        input.addEventListener("keydown", (e) => {
+            if (e.key === "Backspace" && !input.value && index > 0) {
+                inputs[index - 1].focus();
+            }
+        });
+    });
+
+    function updateHiddenOtp() {
+        hiddenOtp.value = Array.from(inputs).map(i => i.value).join("");
+    }
+});
+</script>
+
     <script>
     document.addEventListener("DOMContentLoaded", function() {
         const inputs = document.querySelectorAll(".otp-input");
