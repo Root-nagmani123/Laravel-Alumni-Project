@@ -63,13 +63,15 @@ class BroadcastController extends Controller
 
 public function store(Request $request)
 {
+ 
     // Validate request
     $validated = $request->validate([
         'title' => 'required|string|max:255',
         'content' => 'required|string',
-        'images.*' => 'required|image|max:3072', // 3MB per file
+        'images' => 'required|array', // <-- FIXED: added this line
         'video_url' => 'nullable|url',
     ]);
+
 
     // Handle image upload (store first image only if multiple uploaded)
     $imageUrl = null;
@@ -86,13 +88,12 @@ public function store(Request $request)
         'video_url' => $validated['video_url'] ?? null,
         'createdBy' => auth()->id() ?? null,
         'is_deleted' => 0,
-        'deleted_on' => now(),
+        'deleted_on' => null,
         'notified_at'    => 0,
     ]);
 
     //notification 
-    if($broadcast && $event->notified_at == 0){
-
+    if($broadcast && $broadcast->notified_at == 0){
        $notification = $this->notificationService->notifyAllMembers('broadcast', $broadcast->title . ' broadcast has been added.', $broadcast->id, 'broadcast');
        
        if($notification){
@@ -133,7 +134,17 @@ public function destroybroadcast(Broadcast $broadcast)
 
         if ($broadcast->image_url && Storage::disk('public')->exists($broadcast->image_url))
         Storage::disk('public')->delete($broadcast->image_url);
-        $broadcast->delete();
+        $data=$broadcast->delete();
+
+        if($data){
+            // Notify members about the broadcast deletion
+            $notification = $this->notificationService->notifyAllMembers('broadcast', $broadcast->title . ' broadcast has been deleted.', $broadcast->id, 'broadcast');
+            if ($notification) {
+                Member::query()->update(['is_notification' => 0]);
+            }
+        }
+
+
         return redirect()->route('broadcasts.index')->with('success', 'Broadcast deleted successfully.');
     }
     public function update(Request $request, $id)
@@ -168,7 +179,16 @@ public function destroybroadcast(Broadcast $broadcast)
     $broadcast->description = $validated['description'];
     $broadcast->video_url = $validated['video_url'] ?? null;
 
-    $broadcast->save();
+    $result = $broadcast->save();
+
+    if ($result && $broadcast->status == 1) {
+        $notification = $this->notificationService->notifyAllMembers('broadcast', $broadcast->title . ' broadcast has been updated.', $broadcast->id, 'broadcast');
+        if ($notification) {
+            Member::query()->update(['is_notification' => 0]);
+            $broadcast->notified_at = 1;
+            $broadcast->save();
+        }
+    }
 
     return redirect()->back()->with('success', 'Broadcast updated successfully.');
 }

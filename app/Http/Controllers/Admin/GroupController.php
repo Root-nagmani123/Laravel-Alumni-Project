@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\DB;
 use App\Services\NotificationService;
 use App\Models\Notification;
+use Illuminate\Support\Str;
 use App\Models\Post;
 use App\Models\PostMedia;
 class GroupController extends Controller
@@ -56,17 +57,19 @@ class GroupController extends Controller
 
     public function store(Request $request)
     {
+      
         $request->validate([
             'name'        => 'required|string|max:255',
             'mentor_id'   => 'required|integer',
             'user_id'     => 'required|array',
             'status'      => 'nullable|integer|in:0,1',
             'end_date'    => 'nullable|date|after_or_equal:today',
-            'image'       => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'image'       => 'nullable|image|mimes:jpeg,png,jpg,avif|max:2048',
             'state_id'    => 'nullable|integer',
             'created_by'  => 'nullable|integer',
             'member_type' => 'nullable|string|max:255',
         ]);
+        
     
         $imagePath = null;
         if ($request->hasFile('image')) {
@@ -104,10 +107,10 @@ class GroupController extends Controller
                 $mentorMessage = $group->name . ' group has been added as mentor';
                 $mentorNotification = $this->notificationService->notifyMemberAdded(
                     [$mentorId],
-                    'group',
+                    'group_member',
                     $mentorMessage,
                     $group->id,
-                    'group_member'
+                    'group'
                 );
     
                 if ($mentorNotification) {
@@ -120,10 +123,10 @@ class GroupController extends Controller
                 $mentieeMessage = $group->name . ' group has been added as mentiee';
                 $mentieeNotification = $this->notificationService->notifyMemberAdded(
                     $userIds,
-                    'group',
+                    'group_member',
                     $mentieeMessage,
                     $group->id,
-                    'group_member'
+                    'group'
                 );
     
                 if ($mentieeNotification) {
@@ -193,7 +196,7 @@ class GroupController extends Controller
                 'admin_group_member',
                 $request->input('name') . ' group has been added as mentiee',
                 $group->id,
-                'group_member',
+                'group',
                 Auth::id()
             );
 
@@ -210,7 +213,18 @@ class GroupController extends Controller
                 return redirect()->route('group.index')
                                 ->with('error', 'Cannot delete an active Group. Please deactivate it first.');
             }
-            $group->delete();
+            $data = $group->delete();
+            if($data) {
+                // Notify all members about group deletion
+                $this->notificationService->notifyAllMembers(
+                    'group_admin',
+                    $group->name . ' group has been deleted.',
+                    $group->id,
+                    'group'
+                    
+                );
+            }
+
             return redirect()->route('group.index')
                             ->with('success', 'Group deleted successfully.');
         }
@@ -234,10 +248,10 @@ class GroupController extends Controller
                         $mentorMessage = $group->name . ' group has been activated as mentor';
                         $mentorNotification = $this->notificationService->notifyMemberAdded(
                             [$mentorId],
-                            'group',
+                            'group_member',
                             $mentorMessage,
                             $group->id,
-                            'group_member'
+                            'group'
                         );
         
                         if ($mentorNotification) {
@@ -250,10 +264,10 @@ class GroupController extends Controller
                         $mentieeMessage = $group->name . ' group has been activated as mentiee';
                         $mentieeNotification = $this->notificationService->notifyMemberAdded(
                             $mentiees,
-                            'group',
+                            'group_member',
                             $mentieeMessage,
                             $group->id,
-                            'group_member'
+                            'group'
                         );
         
                         if ($mentieeNotification) {
@@ -328,6 +342,8 @@ class GroupController extends Controller
             return redirect()->route('group.index')
                                 ->with('success', 'Topic added successfully.');
         }
+
+
         public function save_topic(Request $request, $group_id)
 {
     $request->validate([
@@ -379,7 +395,10 @@ class GroupController extends Controller
                     ->toArray();
 
     if (!empty($memberIds)) {
-        $message = 'A new topic has been posted in your group: ' . $request->title;
+        $groupName = DB::table('groups')->where('id', $group_id)->value('name');
+
+         $message = $groupName . ' new topic has been posted: ' . Str::limit($request->description, 50);
+
         // Assuming you have notification service
        $notification = $this->notificationService->notifyGroupOrForumMembers(
             $memberIds,
@@ -449,8 +468,58 @@ class GroupController extends Controller
   public function topicToggleStatus(Request $request)
     {
         $topic = Topic::findOrFail($request->id);
+        $oldStatus = $topic->status;
         $topic->status = $request->status;
         $topic->save();
+
+        if ($oldStatus == 0 && $topic->status == 1) {
+            $groupMembers = GroupMember::where('group_id', $topic->group_id)->first();
+            if ($groupMembers) {
+                $mentorId = $groupMembers->mentor;
+                $mentiees = json_decode($groupMembers->mentiee, true);
+
+                $notificationsSent = false;
+
+                if ($mentorId) {
+                    $groupName = DB::table('groups')->where('id', $topic->group_id)->value('name');
+                    $mentorMessage = $groupName . ' topic has been activated as mentor: ' . $topic->title;
+                    $mentorNotification = $this->notificationService->notifyMemberAdded(
+                        [$mentorId],
+                        'group',
+                        $mentorMessage,
+                        $topic->group_id,
+                        'group_topic'
+                    );
+
+                    if ($mentorNotification) {
+                        Member::query()->whereIn('id', [$mentorId])->update(['is_notification' => 0]);
+                        $notificationsSent = true;
+                    }
+                }
+
+                if (!empty($mentiees)) {
+                    $mentieeMessage = $topic->title . ' topic has been activated as mentiee';
+                    $mentieeNotification = $this->notificationService->notifyMemberAdded(
+                        $mentiees,
+                        'group',
+                        $mentieeMessage,
+                        $topic->group_id,
+                        'group_topic'
+                    );
+
+                    if ($mentieeNotification) {
+                        Member::query()->whereIn('id', $mentiees)->update(['is_notification' => 0]);
+                        $notificationsSent = true;
+                    }
+                }
+
+                if ($notificationsSent) {
+                    // Optionally update a notified_at field or similar
+                }
+            }
+        }
+
+
         return response()->json(['message' => 'Status updated successfully.']);
     }
 

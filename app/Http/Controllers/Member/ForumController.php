@@ -9,6 +9,7 @@ use App\Models\Forum;
 use App\Models\Member;
 use App\Models\ForumTopic;
 use App\Models\User;
+use App\Services\NotificationService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
@@ -16,10 +17,12 @@ use Illuminate\Support\Facades\DB;
 class ForumController extends Controller
 {
     protected $forumService;
+    protected $notificationService;
 
-    public function __construct(ForumService $forumService)
+    public function __construct(ForumService $forumService, NotificationService $notificationService)
     {
         $this->forumService = $forumService;
+        $this->notificationService = $notificationService;
     }
 
     public function index()
@@ -113,6 +116,24 @@ class ForumController extends Controller
             'created_date' => now(),
             'status' => 1, // Assuming status 1 means active
         ]);
+
+        if ( $topic) {
+            $forum = Forum::find($forumId);
+            $message = $forum->name . ' - New topic added: ' . $request->input('description');
+            $notification = $this->notificationService->notifyAllMembers(
+                'forum_topic',
+                $message,
+                $forumId,
+                'forum'
+            );
+    
+            if ($notification) {
+                // Update notified_at
+                DB::table('forum_topics')->where('id', $topic->id)->update(['notified_at' => 1]);
+                Member::query()->update(['is_notification' => 0]);
+            }
+        }
+
         return redirect()->back()->with('success', 'Topic saved successfully!');
 
     }
@@ -133,24 +154,48 @@ class ForumController extends Controller
 
         return redirect()->back()->with('success', 'Forum activated successfully!');
     }
-    function deleteforum(Request $request)
-    {
-        // Validate the request
-        $request->validate([
-            'forum_id' => 'required|exists:forums,id',
-        ]);
 
-        $forumId = $request->input('forum_id');
-        $forum = Forum::find($forumId);
+public function deleteforum(Request $request)
+{
+    $request->validate([
+        'forum_id' => 'required|exists:forums,id',
+    ]);
 
-        if (!$forum) {
-            return redirect()->back()->with('error', 'Forum not found.');
+    DB::beginTransaction();
+
+    try {
+        $forum = Forum::with('topics')->findOrFail($request->input('forum_id'));
+
+        $forumName = $forum->name;
+        $forumId = $forum->id;
+
+        // Delete related topics
+        $forum->topics()->delete();
+
+        // Delete forum
+         $forum->delete();
+
+        // Notify all members that the forum has been deleted
+        $message = $forumName . ' forum has been deleted.';
+        $notification = $this->notificationService->notifyAllMembers(
+            'forum_deleted',
+            $message,
+            $forumId,
+            'forum'
+        );
+
+        if ($notification) {
+            Member::query()->update(['is_notification' => 0]);
         }
+    
 
-        $forum->topics()->delete(); // Delete all topics associated with the forum
-        $forum->delete(); // Delete the forum itself
+        DB::commit();
 
         return redirect()->route('user.forum')->with('success', 'Forum deleted successfully!');
-
+    } catch (\Exception $e) {
+        DB::rollBack();
+        return redirect()->back()->with('error', 'Failed to delete forum. Please try again.');
     }
+}
+
 }
