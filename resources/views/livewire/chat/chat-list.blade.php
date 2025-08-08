@@ -193,6 +193,13 @@
                                 <div class="os-viewport os-viewport-native-scrollbars-invisible" style="overflow: visible;">
                                     <div class="os-content" style="padding: 0px; height: 100%; width: 100%;"
                                         id="chat-container-{{ $selectChat->id }}">
+                                        @if ($hasMoreMessages)
+                                            <div class="text-center mb-3">
+                                                <button wire:click="loadOlderMessages" class="btn">
+                                                    Load older messages
+                                                </button>
+                                            </div>
+                                        @endif
                                         <!-- Chat time -->
                                         @php
                                             $groupedMessages = $messages->groupBy(function ($message) {

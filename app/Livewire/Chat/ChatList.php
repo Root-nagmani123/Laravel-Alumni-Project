@@ -19,6 +19,16 @@ class ChatList extends Component
     public $messages = [];
     public $selectedChat = null;
     public $senderId;
+    public $messageLimit = 20;
+    public $hasMoreMessages = false;
+
+    public function loadOlderMessages()
+    {
+        $this->messageLimit += 20;
+        $this->loadMessages();
+    }
+
+
 
     public function mount()
     {
@@ -54,25 +64,47 @@ class ChatList extends Component
 
     public function loadMessages()
     {
+        // if ($this->selectedChat) {
+
+
+        //     Message::where('sender_id', $this->selectedChat)
+        //     ->where('receiver_id', auth()->guard('user')->id())
+        //     ->where('is_read', 0)
+        //     ->update(['is_read' => 1]);
+
+        //     $this->messages = Message::where(function ($query) {
+        //         $query->where('sender_id', auth()->guard('user')->id())
+        //             ->where('receiver_id', $this->selectedChat);
+        //     })
+        //         ->orWhere(function ($query) {
+        //             $query->where('sender_id', $this->selectedChat)
+        //                 ->where('receiver_id', auth()->guard('user')->id());
+        //         })
+        //         ->orderBy('created_at', 'asc')
+        //         ->get();
+                
+        // }
+
         if ($this->selectedChat) {
-
-
-            Message::where('sender_id', $this->selectedChat)
-            ->where('receiver_id', auth()->guard('user')->id())
-            ->where('is_read', 0)
-            ->update(['is_read' => 1]);
-
-            $this->messages = Message::where(function ($query) {
-                $query->where('sender_id', auth()->guard('user')->id())
-                    ->where('receiver_id', $this->selectedChat);
-            })
+            $query = Message::where(function ($query) {
+                    $query->where('sender_id', auth()->guard('user')->id())
+                        ->where('receiver_id', $this->selectedChat);
+                })
                 ->orWhere(function ($query) {
                     $query->where('sender_id', $this->selectedChat)
                         ->where('receiver_id', auth()->guard('user')->id());
-                })
-                ->orderBy('created_at', 'asc')
-                ->get();
-                
+                });
+
+            $totalMessages = $query->count();
+
+            $this->hasMoreMessages = $totalMessages > $this->messageLimit;
+
+            $this->messages = $query
+                ->orderBy('created_at', 'desc')
+                ->limit($this->messageLimit)
+                ->get()
+                ->reverse()
+                ->values();
         }
     }
 
@@ -173,27 +205,37 @@ class ChatList extends Component
     {
         $user_id = auth()->guard('user')->user()->id;
 
-        $mentor_connections = DB::table('mentor_requests')
-            ->join('members', 'mentor_requests.Mentor_ids', '=', 'members.id')
-            ->where('mentor_requests.mentees', $user_id)
-            ->where('mentor_requests.status', 1)
-            ->select('mentor_requests.id as request_id', 'members.name', 'members.cader as cadre', 'members.batch', 'members.sector', 'mentor_requests.status', 'members.id as member_id')
-            ->get();
+        $results = DB::table('mentor_mentee_connection')
+        ->join('members as mentors', 'mentor_mentee_connection.mentee_id', '=', 'mentors.id')
+        ->where('mentor_mentee_connection.mentor_id', $user_id)
+        ->select('mentors.name as name', 'mentors.cader as cadre', 'mentors.batch', 'mentors.sector')
+        ->get();
 
-        return $mentor_connections;
+        return $results;
     }
 
     function menteeList()
     {
         $user_id = auth()->guard('user')->user()->id;
         
-        $mentee_connections = DB::table('mentee_requests')
-            ->join('members', 'mentee_requests.mentor', '=', 'members.id')
-            ->where('mentee_requests.mentees_ids', $user_id)
-            ->where('mentee_requests.status', 1)
-            ->select('mentee_requests.id as request_id', 'members.name', 'members.cader as cadre', 'members.batch', 'members.sector', 'mentee_requests.status', 'members.id as member_id')
+        $results = DB::table('mentor_mentee_connection')
+            ->join('members as mentors', 'mentor_mentee_connection.mentor_id', '=', 'mentors.id')
+            ->where('mentor_mentee_connection.mentee_id', $user_id)
+            ->select('mentors.name as name', 'mentors.cader as cadre', 'mentors.batch', 'mentors.sector')
             ->get();
-        
-        return $mentee_connections;
+
+        return $results;
     }
+
+    public function deleteMessage($messageId)
+    {
+        $message = Message::find($messageId);
+
+        // Only sender can delete their message
+        if ($message && $message->sender_id === auth()->guard('user')->id()) {
+            $message->delete();
+            $this->messages = $this->messages->filter(fn($msg) => $msg->id !== $messageId);
+        }
+    }
+
 }
