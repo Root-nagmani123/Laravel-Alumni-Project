@@ -49,7 +49,7 @@
                            $profilePic = $user->profile_pic ?? null;
                            @endphp
                            <img class="avatar-img rounded-circle"
-                               src="{{ $profilePic ? asset('storage/' . $profilePic) : asset('feed_assets/images/avatar/03.jpg') }}"
+                               src="{{ $profilePic ? asset('storage/' . $profilePic) : asset('feed_assets/images/avatar/07.jpg') }}"
                                alt="User Avatar" loading="lazy" decoding="async">
                        </div>
                        <!-- Post textarea -->
@@ -103,7 +103,7 @@
                            $profilePic = $user->profile_pic ?? null;
                            @endphp
                            <img class="avatar-img rounded-circle"
-                               src="{{ $profilePic ? asset('storage/' . $profilePic) : asset('feed_assets/images/avatar/03.jpg') }}"
+                               src="{{ $profilePic ? asset('storage/' . $profilePic) : asset('feed_assets/images/avatar/07.jpg') }}"
                                alt="User Avatar" loading="lazy" decoding="async">
                        </div>
                        <!-- Post textarea -->

@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\BroadcastController;
 use App\Http\Controllers\Admin\EventsController;
 use App\Http\Controllers\Admin\SocialWallController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\User\OtpLoginController;
 
 use App\Http\Controllers\User\AuthController;
 use App\Http\Controllers\User\FeedController;
@@ -167,6 +168,7 @@ Route::prefix('user')->name('user.')->group(function () {
   		Route::post('favorite-user/toggle', [ProfileController::class, 'toggleFavorite'])->name('favorite.user.toggle');
         Route::get('directory', [DashboardController::class, 'directory'])->name('directory');
        //Route::post('/feed/search', [FeedController::class, 'search'])->name('feed.search');
+       Route::get('/search-fav-members', [ProfileController::class, 'searchFavMembers'])->name('search.fav.members');
 
 	   Route::post('/event-rsvp', [DashboardController::class, 'submitRsvp'])->name('event.rsvp');
 	   Route::get('/all-events', [DashboardController::class, 'allevents'])->name('allevents');
@@ -474,3 +476,7 @@ Route::middleware(['auth:user'])->group(function () {
 
     });
 });
+
+
+Route::post('/otp/send', [OtpLoginController::class, 'sendOtp'])->name('otp.send');
+Route::post('/otp/verify', [OtpLoginController::class, 'verifyOtp'])->name('otp.verify');

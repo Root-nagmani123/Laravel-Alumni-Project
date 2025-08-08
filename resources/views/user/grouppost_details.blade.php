@@ -31,7 +31,7 @@
                                     @endphp
                                     <div class="avatar avatar-lg mt-n5 mb-3">
                                         <a href="{{ $profileLink }}"><img class="avatar-img rounded-circle"
-                                                src="{{ $profileImage }}" alt="" loading="lazy" decoding="async"></a>
+                                                src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}" alt="" loading="lazy" decoding="async"></a>
                                     </div>
                                     <h5 class="mb-0"><a href="{{ $profileLink }}">{{ $displayName }}</a></h5>
                                     <small>{{ $designation }}</small>
@@ -56,7 +56,7 @@
         <div class="col-9">
             <div class="post-list p-3 rounded mb-4" style="background-color: #af2910; color: #fff;">
                 <div class="d-flex justify-content-between align-items-center">
-                    <h1 class="h5 mb-0 text-white">{{ $group->name }} : Group Posts</h1>
+                    <h1 class="h5 mb-0 text-white">Group Posts : {{ $group->name }}</h1>
                  
                     <div class="dropdown">
                         <a href="#" class="text-white btn btn-sm btn-transparent py-0 px-2" data-bs-toggle="dropdown">
@@ -241,7 +241,7 @@
                         <div class="avatar avatar-xs me-2">
                             <a href="{{ route('user.profile', ['id' => $user->id]) }}">
                                 <img class="avatar-img rounded-circle"
-                                    src="{{ asset('storage/'.$user->profile_pic) }}" alt="" loading="lazy" decoding="async">
+                                    src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}" alt="" loading="lazy" decoding="async">
                             </a>
                         </div>
                         <form class="nav nav-item w-100 position-relative commentForm" id="commentForm-{{ $post->id }}"

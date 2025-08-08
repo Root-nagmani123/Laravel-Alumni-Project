@@ -248,38 +248,38 @@
                     </div>
                     @endif
 
-                    <!-- Feed react START -->
-                    <ul class="nav nav-stack py-3 small">
+                        <!-- Feed react START -->
+                        <ul class="nav nav-stack py-3 small">
                         <li class="nav-item">
                             @if($user && $topic->isLikedBy($user->id))
-                            <form action="{{ route('user.forum.topic.unlike', $topic->id) }}" method="POST"
-                                style="display: inline;">
-                                @csrf
-                                <button type="submit" class="nav-link active border-0 bg-transparent"
-                                    data-bs-container="body" data-bs-toggle="tooltip" data-bs-placement="top"
-                                    data-bs-html="true" data-bs-custom-class="tooltip-text-start"
-                                    data-bs-title="Unlike this topic">
-                                    <i class="bi bi-hand-thumbs-up-fill pe-1"></i>Liked ({{ $topic->likes->count() }})
-                                </button>
-                            </form>
+                                <form action="{{ route('user.forum.topic.unlike', $topic->id) }}" method="POST" style="display: inline;">
+                                    @csrf
+                                    <button type="submit" class="nav-link active border-0 bg-transparent" 
+                                           data-bs-container="body" data-bs-toggle="tooltip"
+                                           data-bs-placement="top" data-bs-html="true" data-bs-custom-class="tooltip-text-start"
+                                           data-bs-title="Unlike this topic">
+                                        <i class="bi bi-hand-thumbs-up-fill pe-1"></i>Liked ({{ $topic->likes->count() }})
+                                    </button>
+                                </form>
                             @else
-                            @if($user)
-                            <form action="{{ route('user.forum.topic.like', $topic->id) }}" method="POST"
-                                style="display: inline;">
-                                @csrf
-                                <button type="submit" class="nav-link border-0 bg-transparent" data-bs-container="body"
-                                    data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true"
-                                    data-bs-custom-class="tooltip-text-start" data-bs-title="Like this topic">
-                                    <i class="bi bi-hand-thumbs-up pe-1"></i>Like ({{ $topic->likes->count() }})
-                                </button>
-                            </form>
-                            @else
-                            <a class="nav-link" href="{{ route('user.login') }}" data-bs-container="body"
-                                data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true"
-                                data-bs-custom-class="tooltip-text-start" data-bs-title="Login to like this topic">
-                                <i class="bi bi-hand-thumbs-up pe-1"></i>Like ({{ $topic->likes->count() }})
-                            </a>
-                            @endif
+                                @if($user)
+                                    <form action="{{ route('user.forum.topic.like', $topic->id) }}" method="POST" style="display: inline;">
+                                        @csrf
+                                        <button type="submit" class="nav-link border-0 bg-transparent" 
+                                               data-bs-container="body" data-bs-toggle="tooltip"
+                                               data-bs-placement="top" data-bs-html="true" data-bs-custom-class="tooltip-text-start"
+                                               data-bs-title="Like this topic">
+                                            <i class="bi bi-hand-thumbs-up pe-1"></i>Like ({{ $topic->likes->count() }})
+                                        </button>
+                                    </form>
+                                @else
+                                    <a class="nav-link" href="{{ route('user.login') }}" 
+                                       data-bs-container="body" data-bs-toggle="tooltip"
+                                       data-bs-placement="top" data-bs-html="true" data-bs-custom-class="tooltip-text-start"
+                                       data-bs-title="Login to like this topic">
+                                        <i class="bi bi-hand-thumbs-up pe-1"></i>Like ({{ $topic->likes->count() }})
+                                    </a>
+                                @endif
                             @endif
                         </li>
                         <li class="nav-item">
@@ -287,11 +287,10 @@
                                 <i class="bi bi-chat-fill pe-1"></i>Comments ({{ $topic->comments->count() }})</a>
                         </li>
                     </ul>
-                    <!-- Feed react END -->
+                        <!-- Feed react END -->
 
-                    <!-- Add comment -->
-                     
-                    @if($user)
+                        <!-- Add comment -->
+                        @if($user)
                     <div class="d-flex mb-3">
                         <!-- Avatar -->
                         <div class="avatar avatar-xs me-2">
@@ -305,8 +304,7 @@
                             </a>
                         </div>
                         <!-- Comment box -->
-                        <form action="{{ route('user.forum.topic.comment', $topic->id) }}" method="POST"
-                            class="nav nav-item w-100 position-relative">
+                        <form action="{{ route('user.forum.topic.comment', $topic->id) }}" method="POST" class="nav nav-item w-100 position-relative">
                             @csrf
                             <textarea name="comment" data-autoresize="" class="form-control pe-5 bg-light" rows="1"
                                 placeholder="Add a comment..." required></textarea>
@@ -327,46 +325,44 @@
                     </div>
                     @endif
 
-                    <!-- Comment wrap START -->
-                    <ul class="comment-wrap list-unstyled">
+                        <!-- Comment wrap START -->
+                        <ul class="comment-wrap list-unstyled">
                         @if($topic->comments->count() > 0)
-                        @foreach($topic->comments as $comment)
-                        <li class="comment-item">
-                            <div class="d-flex">
-                                <!-- Avatar -->
-                                <div class="avatar avatar-xs me-2">
-                                    <a href="#!">
-                                        <img class="avatar-img rounded-circle"
-                                            src="{{ $comment->user && $comment->user->profile_pic ? asset('storage/' . $comment->user->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}"
-                                            alt="">
-                                    </a>
-                                </div>
-                                <!-- Comment by -->
-                                <div class="comment-body">
+                            @foreach($topic->comments as $comment)
+                                <li class="comment-item">
                                     <div class="d-flex">
-
-                                        <h6 class="me-2"><a
-                                                href="#!">{{ $comment->user ? $comment->user->name : 'Unknown User' }}</a>
-                                        </h6>
-                                        <small class="text-muted">{{ $comment->created_at->diffForHumans() }}</small>
+                                        <!-- Avatar -->
+                                        <div class="avatar avatar-xs me-2">
+                                            <a href="#!">
+                                                <img class="avatar-img rounded-circle"
+                                                    src="{{ $comment->user && $comment->user->profile_pic ? asset('storage/' . $comment->user->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}"
+                                                    alt="">
+                                            </a>
+                                        </div>
+                                        <!-- Comment by -->
+                                        <div class="comment-body">
+                                            <div class="d-flex">
+                                                
+                                                <h6 class="me-2"><a href="#!">{{ $comment->user ? $comment->user->name : 'Unknown User' }}</a></h6>
+                                                <small class="text-muted">{{ $comment->created_at->diffForHumans() }}</small>
+                                            </div>
+                                            <p class="mb-0">{{ $comment->comment }}</p>
+                                        </div>
                                     </div>
-                                    <p class="mb-0">{{ $comment->comment }}</p>
-                                </div>
-                            </div>
-                        </li>
-                        @endforeach
+                                </li>
+                            @endforeach
                         @else
-                        <!-- No comments yet -->
-                        <li class="text-center text-muted small py-3">
-                            No comments yet. Be the first to comment!
-                        </li>
-                        @endif
+                            <!-- No comments yet -->
+                            <li class="text-center text-muted small py-3">
+                                No comments yet. Be the first to comment!
+                            </li>
+                            @endif
                     </ul>
                     <!-- Comment wrap END -->
+                    </div>
+                    <!-- Card body END -->
                 </div>
-                <!-- Card body END -->
-            </div>
-            @endforeach
+                @endforeach
             @else
             <!-- No Topics -->
             <div class="card">

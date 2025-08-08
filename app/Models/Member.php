@@ -23,6 +23,11 @@ class Member extends Authenticatable
         'current_department','current_location','previous_postings','service'
     ];
 
+    public function otps()
+{
+    return $this->hasMany(\App\Models\UserOtp::class);
+}
+
     // protected $hidden = [
     //     'password', 'remember_token',
     // ];

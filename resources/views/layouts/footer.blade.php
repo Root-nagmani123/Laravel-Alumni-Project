@@ -200,8 +200,33 @@
 
         // Default option on focus
         $('#searchMemberInput').on('focus', function () {
-            let resultsHtml = `<a href="/user/profile/Alumni" class="list-group-item list-group-item-action">Alumni</a>`;
+            let query = $(this).val();
+            $.ajax({
+                url: '{{ route('user.search.fav.members') }}', // Laravel route
+                method: 'GET',
+                data: { search: query },
+                success: function (response) {
+                    let resultsHtml = '';
+                     resultsHtml += '<a href="/user/profile/Alumni" class="list-group-item list-group-item-action">Alumni</a>';
+
+            if (response.length > 0) {
+                response.forEach(function (member) {
+                    resultsHtml += `
+                        <a href="/user/profile/${member.username}" 
+                           class="list-group-item list-group-item-action">
+                            ${member.name}
+                        </a>
+                    `;
+                });
+            } else {
+                resultsHtml = `<div class="list-group-item">No results found</div>`;
+            }
+
             $('#searchResults').html(resultsHtml).show();
+        }
+    });
+            // let resultsHtml = `<a href="/user/profile/Alumni" class="list-group-item list-group-item-action">Alumni</a>`;
+            // $('#searchResults').html(resultsHtml).show();
         });
 
         // Toggle favorite
