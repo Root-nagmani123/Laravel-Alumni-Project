@@ -9,6 +9,7 @@ use App\Models\Forum;
 use App\Models\Member;
 use App\Models\ForumTopic;
 use App\Models\User;
+use App\Services\NotificationService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
@@ -16,10 +17,12 @@ use Illuminate\Support\Facades\DB;
 class ForumController extends Controller
 {
     protected $forumService;
+    protected $notificationService;
 
-    public function __construct(ForumService $forumService)
+    public function __construct(ForumService $forumService, NotificationService $notificationService)
     {
         $this->forumService = $forumService;
+        $this->notificationService = $notificationService;
     }
 
     public function index()
@@ -126,7 +129,7 @@ class ForumController extends Controller
     
             if ($notification) {
                 // Update notified_at
-                DB::table('forum_topics')->where('id', $topicId)->update(['notified_at' => 1]);
+                DB::table('forum_topics')->where('id', $topic->id)->update(['notified_at' => 1]);
                 Member::query()->update(['is_notification' => 0]);
             }
         }
@@ -170,10 +173,10 @@ public function deleteforum(Request $request)
         $forum->topics()->delete();
 
         // Delete forum
-        $forum->delete();
+         $forum->delete();
 
         // Notify all members that the forum has been deleted
-        $message = 'Forum deleted: ' . $forumName;
+        $message = $forumName . ' forum has been deleted.';
         $notification = $this->notificationService->notifyAllMembers(
             'forum_deleted',
             $message,
@@ -184,6 +187,7 @@ public function deleteforum(Request $request)
         if ($notification) {
             Member::query()->update(['is_notification' => 0]);
         }
+    
 
         DB::commit();
 

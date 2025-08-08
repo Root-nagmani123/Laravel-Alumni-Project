@@ -125,10 +125,16 @@ class ForumController extends Controller
     if ($request->has('created_by')) {
         $forum->created_by = $request->created_by;
     }
-    
 
-    $forum->save();
-
+    $result = $forum->save();
+    if ($result && $forum->status == 1) {
+        $notification = $this->notificationService->notifyAllMembers('forum_admin', $forum->name . ' forum has been updated.', $forum->id, 'forum');
+        if ($notification) {
+            Member::query()->update(['is_notification' => 0]);
+            $forum->notified_at = 1;
+            $forum->save();
+        }
+    }
     return redirect()->route('forums.index')->with('success', 'Forum updated successfully.');
 }
 
@@ -136,14 +142,17 @@ class ForumController extends Controller
         {
             $forumName = $forum->name;
             $forumId = $forum->id;
-            $forum->delete();
-            // Notify all members about forum deletion
-            $this->notificationService->notifyAllMembers(
-                'forum_admin',
-                $forumName . ' forum has been deleted.',
-                $forumId,
-                'forum'
-            );
+           $data = $forum->delete();
+
+           if ($data) {
+               // Notify all members about forum deletion
+               $this->notificationService->notifyAllMembers(
+                   'forum_admin',
+                   $forumName . ' forum has been deleted.',
+                   $forumId,
+                   'forum'
+               );
+           }
             return redirect()->route('forums.index')->with('success', 'Forum deleted successfully.');
         }
    public function add_member($id)

@@ -160,7 +160,8 @@ public function group_post_store(Request $request)
 
     // Send notification to group members
     $fromUserId = auth('user')->id();
-    $message = "New post in group";
+    $groupName = $post->group->name;
+    $message = "$groupName - New post by " . auth('user')->user()->name;
 
 
     $this->notificationService->notifyGroupPost($request->group_id, $fromUserId, $message, $post->id);

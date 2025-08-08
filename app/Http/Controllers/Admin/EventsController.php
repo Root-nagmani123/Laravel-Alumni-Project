@@ -23,8 +23,8 @@ class EventsController extends Controller
 
 		public function index()
 		{
-			// $events = Events::orderBy('start_datetime', 'desc')->paginate(10);
-			$events = Events::orderBy('id', 'desc')->paginate(10);
+            $events = Events::orderBy('created_at', 'desc')->paginate(10);
+			//$events = Events::orderBy('id', 'desc')->paginate(10);
 			return view('admin.events.index', compact('events'));
 		}
 
@@ -89,7 +89,6 @@ class EventsController extends Controller
         $event->save();
     }
    }
-
 		return redirect()->route('events.index')->with('success', 'Event added successfully!');
 	}
 
@@ -146,7 +145,16 @@ return redirect()->route('events.index')->with('error', 'Event not found!');retu
             $data['image'] = $imagePath;
         }
 
-        $event->update($data);
+      $result =  $event->update($data);
+
+        if ($result && $event->status == 1) {
+            $notification = $this->notificationService->notifyAllMembers('Event', $event->title . ' event has been updated.', $event->id, 'event');
+            if ($notification) {
+                Member::query()->update(['is_notification' => 0]);
+                $event->notified_at = 1;
+                $event->save();
+            }
+        }
 
         return redirect('/admin/events')->with('success', 'Event updated successfully!');
     }
@@ -159,7 +167,15 @@ return redirect()->route('events.index')->with('error', 'Event not found!');retu
 								->with('error', 'Cannot delete an active events. Please deactivate it first.');
 			}
 
-			$event->delete();
+			$data = $event->delete();
+            if ($data) {
+                // Notify members about the event deletion
+                $notification = $this->notificationService->notifyAllMembers('Event', $event->title . ' event has been deleted.', $event->id, 'event');
+                if ($notification) {
+                    Member::query()->update(['is_notification' => 0]);
+                }
+            }
+
 			return redirect()->route('events.index')
 							->with('success', 'Event deleted successfully.');
 		}
@@ -171,7 +187,7 @@ return redirect()->route('events.index')->with('error', 'Event not found!');retu
         $event->save();
         // If event is being activated and notification not sent
         if ($oldStatus == 0 && $event->status == 1 && $event->notified_at == 0) {
-            $notification = $this->notificationService->notifyAllMembers('broadcast', $broadcast->title . ' broadcast has been added.', $broadcast->id, 'broadcast');
+            $notification = $this->notificationService->notifyAllMembers('Event', $event->title . ' event has been added.', $event->id, 'event');
             if ($notification) {
                 Member::query()->update(['is_notification' => 0]);
                 $event->notified_at = 1;
