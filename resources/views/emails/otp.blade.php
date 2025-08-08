@@ -46,21 +46,33 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <img src="{{ asset('admin_assets/images/logos/lbsnaa_logo.jpg') }}" alt="LBSNAA Logo">
-            <h1>LBSNAA Alumni Login OTP</h1>
-        </div>
-        <div class="content">
-            <p>Dear User,</p>
-            <p>Your One-Time Password (OTP) for login is:</p>
-            <p>Your OTP is: <strong>{{ $otp }}</strong></p>
-            <p>This OTP is valid for 10 minutes. Please do not share it with anyone.</p>
-            <p>If you did not request this OTP, please ignore this email.</p>
-        </div>
-        <div class="footer">
-            <p>Thank you,<br>LBSNAA Alumni Team</p>
-        </div>
+   <div style="max-width: 500px; margin: auto; font-family: Arial, sans-serif; border: 1px solid #ddd; border-radius: 8px; padding: 20px; background-color: #f9f9f9;">
+    <!-- Header -->
+    <div style="text-align: center; margin-bottom: 20px;">
+        <img src="{{ asset('admin_assets/images/logos/lbsnaa_logo.jpg') }}" alt="LBSNAA Logo" style="max-width: 100px; margin-bottom: 10px;">
+        <h2 style="color: #792421; margin: 0;">LBSNAA Alumni Login OTP</h2>
     </div>
+
+    <!-- Content -->
+    <div style="font-size: 16px; color: #333;">
+        <p>Dear User,</p>
+        <p>Your One-Time Password (OTP) for login is:</p>
+        
+        <div style="text-align: center; margin: 20px 0;">
+            <span style="display: inline-block; font-size: 24px; font-weight: bold; color: #ffffff; background-color: #792421; padding: 10px 20px; border-radius: 6px;">
+                <!-- {{ $otp }} -->123654
+            </span>
+        </div>
+
+        <p>This OTP is valid for <strong>10 minutes</strong>. Please do not share it with anyone.</p>
+        <p>If you did not request this OTP, please ignore this email.</p>
+    </div>
+
+    <!-- Footer -->
+    <div style="margin-top: 30px; font-size: 14px; color: #666; text-align: center; border-top: 1px solid #ddd; padding-top: 10px;">
+        <p>Thank you,<br><strong>LBSNAA Alumni Team</strong></p>
+    </div>
+</div>
+
 </body>
 </html>
