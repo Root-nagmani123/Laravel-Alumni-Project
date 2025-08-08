@@ -407,7 +407,7 @@
                                     $hasMentor = false;
                                 @endphp
 
-                                @foreach (array_merge($mentor_requests->toArray(), $mentor_connections->toArray()) as $mentor)
+                                @foreach ($mentor_connections as $mentor)
                                     @if ($mentor->status == 1)
                                         <li class="list-group-item d-flex justify-content-between">
                                             <span>{{ $mentor->name }}</span>
@@ -429,7 +429,7 @@
                                     $hasMentee = false;
                                 @endphp
 
-                                @foreach (array_merge($mentee_requests->toArray(), $mentee_connections->toArray()) as $mentee)
+                                @foreach ($mentee_connections as $mentee)
                                     @if ($mentee->status == 1)
                                         <li class="list-group-item d-flex justify-content-between">
                                             <span>{{ $mentee->name }}</span>
