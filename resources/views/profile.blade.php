@@ -39,7 +39,7 @@
                             <!-- Avatar -->
                             <div class="avatar avatar-xxl mt-n5 mb-3">
                                 <img class="avatar-img rounded-circle border border-white border-3"
-                                    src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar-1.png') }}"
+                                    src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}"
                                     alt="" loading="lazy" decoding="async">
                             </div>
                         </div>
