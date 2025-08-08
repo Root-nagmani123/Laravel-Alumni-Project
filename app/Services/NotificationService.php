@@ -84,8 +84,8 @@ class NotificationService
     {
         $today = Carbon::today()->format('m-d');
 
-        $members = Member::whereNotNull('dob') // dob = date of birth
-            ->whereRaw("DATE_FORMAT(dob, '%m-%d') = ?", [$today])
+        $members = Member::whereNotNull('date_of_birth') // dob = date of birth
+            ->whereRaw("DATE_FORMAT(`date_of_birth`, '%m-%d') = ?", [$today])
             ->get();
 
         foreach ($members as $member) {
