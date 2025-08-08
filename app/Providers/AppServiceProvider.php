@@ -28,9 +28,9 @@ class AppServiceProvider extends ServiceProvider
                 $userId = Auth::guard('user')->id();
                 
                 $notifications = Notification::where(function ($query) use ($userId) {
-                    $query->whereIn('type', ['event', 'broadcast','forum_admin']) // show to all users
+                    $query->whereIn('type', ['event', 'broadcast','forum_admin','forum_topic','forum_deleted']) // show to all users
                           ->orWhere(function ($q) use ($userId) {
-                              $q->whereNotIn('type', ['event', 'broadcast','forum_admin'])
+                              $q->whereNotIn('type', ['event', 'broadcast','forum_admin','forum_topic','forum_deleted']) // exclude these types
                                 ->whereJsonContains('user_id', $userId); // user-specific notifications
                           });
                 })

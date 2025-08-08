@@ -142,6 +142,7 @@ Header START -->
                                         <!-- Notif item -->
                                         <li>
                                             @php
+                    
                                                 $notificationUrl = '#';
                                                 // Debug: Log notification data
                                                 if (isset($notification->source_id) && isset($notification->source_type)) {
@@ -159,7 +160,7 @@ Header START -->
                                                             $notificationUrl = url('/profile/' . $notification->source_id);
                                                             break;
                                                         case 'post':
-                                                            $notificationUrl = url('/group-post/' . $notification->source_id);
+                                                            $notificationUrl = url('user/group-post/' . $notification->source_id);
                                                             break;
                                                         case 'group':
                                                             $notificationUrl = route('user.group-post', ['id' => $notification->source_id]);
