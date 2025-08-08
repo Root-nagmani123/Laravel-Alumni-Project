@@ -351,7 +351,7 @@
                         <!-- Avatar -->
                         <div class="avatar avatar-xs">
                             <a href="#!"><img class="avatar-img rounded-circle"
-                                   src="${comment.member && comment.member.profile_pic ? '/storage/' + comment.member.profile_pic : '/feed_assets/images/avatar/12.jpg'}"
+                                   src="${comment.member && comment.member.profile_pic ? '/storage/' + comment.member.profile_pic : '/feed_assets/images/avatar/07.jpg'}"
                                     alt="" loading="lazy" decoding="async"></a>
                         </div>
                         <div class="ms-2 w-100">

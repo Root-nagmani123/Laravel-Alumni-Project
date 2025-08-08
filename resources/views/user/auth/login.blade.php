@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -81,6 +82,7 @@
             left: -100%;
         }
     }
+
     .marquee-text {
         white-space: nowrap;
         display: inline-block;
@@ -92,8 +94,13 @@
     }
 
     @keyframes marquee {
-        0%   { transform: translateX(100%); }
-        100% { transform: translateX(-100%); }
+        0% {
+            transform: translateX(100%);
+        }
+
+        100% {
+            transform: translateX(-100%);
+        }
     }
 
     .error-message {
@@ -119,6 +126,15 @@
         font-size: 0.8rem;
         margin-top: 5px;
         display: none;
+    }
+
+    .otp-input {
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+        border: 1px solid #0049ac;
+        border-radius: 5px;
+        text-align: center;
     }
     </style>
 </head>
@@ -187,22 +203,23 @@
                                             <div class="text-center mt-3">
                                                 <a href="#" onclick="flipCard(event)">Login with Email OTP</a>
                                             </div>
-                                           <div class="position-relative w-100 bg-light d-flex align-items-center px-3"
-     style="height: 40px; overflow: hidden; z-index: 1040;">
-    <div class="position-relative d-flex align-items-center">
-        <button class="btn btn-sm btn-danger position-relative z-1" style="min-width: 120px;">
-            What's New
-        </button>
-    </div>
+                                            <div class="position-relative w-100 bg-light d-flex align-items-center px-3"
+                                                style="height: 40px; overflow: hidden; z-index: 1040;">
+                                                <div class="position-relative d-flex align-items-center">
+                                                    <button class="btn btn-sm btn-danger position-relative z-1"
+                                                        style="min-width: 120px;">
+                                                        Alert
+                                                    </button>
+                                                </div>
 
-    <div class="marquee-container flex-grow-1 d-flex align-items-center ms-2"
-         style="overflow: hidden; height: 100%;">
-        <div class="marquee-text">
-            🎉 Welcome to the LBSNAA Alumni Portal! New features are being
-            added regularly — check out the stories, mentorship, and more! 🚀
-        </div>
-    </div>
-</div>
+                                                <div class="marquee-container flex-grow-1 d-flex align-items-center ms-2"
+                                                    style="overflow: hidden; height: 100%;">
+                                                    <div class="marquee-text">
+                                                        Helpdesk : Phone: 135-2222346 (Mon–Fri, 9:00 AM–5:30 PM) Email:
+                                                        ithelpdesk.lbsnaa@nic.in
+                                                    </div>
+                                                </div>
+                                            </div>
 
 
                                         </div>
@@ -237,43 +254,68 @@
                                                 @csrf
                                                 <div class="form-group mb-3">
                                                     <label class="form-label fw-bold">Email Address</label>
-                                                    <input type="email" name="otp_email" id="otp_email" class="form-control"
-                                                        placeholder="Enter your email" required>
+                                                    <input type="email" name="otp_email" id="otp_email"
+                                                        class="form-control" placeholder="Enter your email" required>
                                                     <div id="emailError" class="error-message"></div>
                                                     <div id="emailSuccess" class="success-message"></div>
                                                 </div>
                                                 <div id="otpInputContainer">
                                                     <div class="form-group mb-3">
                                                         <label class="form-label fw-bold">Enter OTP</label>
-                                                        <input type="text" name="otp_code" id="otp_code" class="form-control" 
-                                                            placeholder="Enter OTP" required>
+                                                        <div class="d-flex gap-2">
+                                                            <input type="text"
+                                                                class="form-control text-center otp-input" maxlength="1"
+                                                                pattern="[0-9]*" inputmode="numeric">
+                                                            <input type="text"
+                                                                class="form-control text-center otp-input" maxlength="1"
+                                                                pattern="[0-9]*" inputmode="numeric">
+                                                            <input type="text"
+                                                                class="form-control text-center otp-input" maxlength="1"
+                                                                pattern="[0-9]*" inputmode="numeric">
+                                                            <input type="text"
+                                                                class="form-control text-center otp-input" maxlength="1"
+                                                                pattern="[0-9]*" inputmode="numeric">
+                                                            <input type="text"
+                                                                class="form-control text-center otp-input" maxlength="1"
+                                                                pattern="[0-9]*" inputmode="numeric">
+                                                            <input type="text"
+                                                                class="form-control text-center otp-input" maxlength="1"
+                                                                pattern="[0-9]*" inputmode="numeric">
+                                                        </div>
+
+                                                        <!-- Hidden field to store the final OTP -->
+                                                        <input type="hidden" name="otp_code" id="otp_code">
+
                                                         <div id="otpError" class="error-message"></div>
                                                         <div id="otpSuccess" class="success-message"></div>
                                                         <div id="resendOtp">Didn't receive OTP? Resend</div>
                                                     </div>
                                                 </div>
-                                                <button type="button" id="sendOtpBtn" class="btn btn-success w-100">Send OTP</button>
-                                                <button type="button" id="verifyOtpBtn" class="btn btn-primary w-100 mt-2">Verify OTP</button>
+                                                <button type="button" id="sendOtpBtn" class="btn btn-success w-100">Send
+                                                    OTP</button>
+                                                <button type="button" id="verifyOtpBtn"
+                                                    class="btn btn-primary w-100 mt-2">Verify OTP</button>
                                             </form>
                                             <div class="text-center mt-3">
                                                 <a href="#" onclick="flipCard(event)">Login with LDAP</a>
                                             </div>
                                             <div class="position-relative w-100 bg-light d-flex align-items-center px-3"
-     style="height: 40px; overflow: hidden; z-index: 1040;">
-    <div class="position-relative d-flex align-items-center">
-        <button class="btn btn-sm btn-danger position-relative z-1" style="min-width: 120px;">
-            What's New
-        </button>
-    </div>
+                                                style="height: 40px; overflow: hidden; z-index: 1040;">
+                                                <div class="position-relative d-flex align-items-center">
+                                                    <button class="btn btn-sm btn-danger position-relative z-1"
+                                                        style="min-width: 120px;">
+                                                        What's New
+                                                    </button>
+                                                </div>
 
-    <div class="marquee-container flex-grow-1 d-flex align-items-center ms-2"
-         style="overflow: hidden; height: 100%;">
-        <div class="marquee-text">
-            🎉 Welcome to the LBSNAA Alumni Portal! New features are being
-            added regularly — check out the stories, mentorship, and more! 🚀
-        </div>
-    </div>
-</div>
+                                                <div class="marquee-container flex-grow-1 d-flex align-items-center ms-2"
+                                                    style="overflow: hidden; height: 100%;">
+                                                    <div class="marquee-text">
+                                                        Helpdesk : Phone: 135-2222346 (Mon–Fri, 9:00 AM–5:30 PM) Email:
+                                                        ithelpdesk.lbsnaa@nic.in
+                                                    </div>
+                                                </div>
+                                            </div>
 
                                         </div>
                                     </div>
@@ -298,158 +340,196 @@
     <script src="{{ asset('user_assets/js/lazysizes.min.js') }}"></script>
     <script src="{{ asset('user_assets/js/theme-setting.js') }}"></script>
     <script src="{{ asset('user_assets/js/script.js') }}"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const inputs = document.querySelectorAll(".otp-input");
+        const hiddenOtp = document.getElementById("otp_code");
+
+        inputs.forEach((input, index) => {
+            input.addEventListener("input", () => {
+                if (input.value.length === 1 && index < inputs.length - 1) {
+                    inputs[index + 1].focus();
+                }
+                updateHiddenOtp();
+            });
+
+            input.addEventListener("keydown", (e) => {
+                if (e.key === "Backspace" && !input.value && index > 0) {
+                    inputs[index - 1].focus();
+                }
+            });
+        });
+
+        function updateHiddenOtp() {
+            hiddenOtp.value = Array.from(inputs).map(i => i.value).join("");
+        }
+    });
+    </script>
 
     <script>
-        feather.replace();
-        $(".emojiPicker").emojioneArea({
-            inline: true,
-            placement: 'absleft',
-            pickerPosition: "top left",
-        });
+    feather.replace();
+    $(".emojiPicker").emojioneArea({
+        inline: true,
+        placement: 'absleft',
+        pickerPosition: "top left",
+    });
 
-        window.addEventListener("load", () => {
-            const loader = document.getElementById("pageLoader");
-            if (loader) {
-                loader.style.opacity = "0";
-                loader.style.transition = "opacity 0.4s ease";
-                setTimeout(() => loader.remove(), 400);
-            }
-        });
+    window.addEventListener("load", () => {
+        const loader = document.getElementById("pageLoader");
+        if (loader) {
+            loader.style.opacity = "0";
+            loader.style.transition = "opacity 0.4s ease";
+            setTimeout(() => loader.remove(), 400);
+        }
+    });
 
-        function flipCard(e) {
-            if (e) e.preventDefault();
-            const card = document.querySelector('.flip-card');
-            card.classList.toggle('flipped');
-            
-            // Reset OTP form when flipping
-            $('#otpForm')[0].reset();
-            $('#emailError, #otpError, #emailSuccess, #otpSuccess').hide().text('');
-            $('#otpInputContainer').hide();
-            $('#sendOtpBtn').show().text('Send OTP').prop('disabled', false);
-            $('#verifyOtpBtn').hide();
-            $('#resendOtp').hide();
+    function flipCard(e) {
+        if (e) e.preventDefault();
+        const card = document.querySelector('.flip-card');
+        card.classList.toggle('flipped');
+
+        // Reset OTP form when flipping
+        $('#otpForm')[0].reset();
+        $('#emailError, #otpError, #emailSuccess, #otpSuccess').hide().text('');
+        $('#otpInputContainer').hide();
+        $('#sendOtpBtn').show().text('Send OTP').prop('disabled', false);
+        $('#verifyOtpBtn').hide();
+        $('#resendOtp').hide();
+    }
+
+    $(document).ready(function() {
+        // Initially hide OTP fields
+        $('#otpInputContainer').hide();
+        $('#verifyOtpBtn').hide();
+        $('#resendOtp').hide();
+
+        // Email validation
+        function isValidEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
         }
 
-        $(document).ready(function() {
-            // Initially hide OTP fields
-            $('#otpInputContainer').hide();
-            $('#verifyOtpBtn').hide();
-            $('#resendOtp').hide();
+        // Send OTP
+        $('#sendOtpBtn').on('click', function() {
+            const email = $('#otp_email').val();
+            const token = $('input[name="_token"]').val();
 
-            // Email validation
-            function isValidEmail(email) {
-                const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                return re.test(email);
+            // Validate email
+            if (!isValidEmail(email)) {
+                $('#emailError').text('Please enter a valid email address').show();
+                return;
             }
 
-            // Send OTP
-            $('#sendOtpBtn').on('click', function() {
-                const email = $('#otp_email').val();
-                const token = $('input[name="_token"]').val();
-                
-                // Validate email
-                if (!isValidEmail(email)) {
-                    $('#emailError').text('Please enter a valid email address').show();
-                    return;
+            $('#emailError').hide();
+            $(this).prop('disabled', true).text('Sending...');
+
+            $.ajax({
+                url: '{{ route("otp.send") }}',
+                method: 'POST',
+                data: {
+                    otp_email: email,
+                    _token: token
+                },
+                success: function(response) {
+                    $('#emailSuccess').text('OTP sent successfully!').show();
+                    $('#otpInputContainer').show();
+                    $('#verifyOtpBtn').show();
+                    $('#sendOtpBtn').hide();
+                    $('#resendOtp').show().text('Resend OTP in 30 seconds');
+                    startResendTimer();
+                },
+                error: function(xhr) {
+                    const errorMsg = xhr.responseJSON?.error ||
+                        'Failed to send OTP. Please try again.';
+                    $('#emailError').text(errorMsg).show();
+                    $('#sendOtpBtn').prop('disabled', false).text('Send OTP');
                 }
-
-                $('#emailError').hide();
-                $(this).prop('disabled', true).text('Sending...');
-
-                $.ajax({
-                    url: '{{ route("otp.send") }}',
-                    method: 'POST',
-                    data: { otp_email: email, _token: token },
-                    success: function(response) {
-                        $('#emailSuccess').text('OTP sent successfully!').show();
-                        $('#otpInputContainer').show();
-                        $('#verifyOtpBtn').show();
-                        $('#sendOtpBtn').hide();
-                        $('#resendOtp').show().text('Resend OTP in 30 seconds');
-                        startResendTimer();
-                    },
-                    error: function(xhr) {
-                        const errorMsg = xhr.responseJSON?.error || 'Failed to send OTP. Please try again.';
-                        $('#emailError').text(errorMsg).show();
-                        $('#sendOtpBtn').prop('disabled', false).text('Send OTP');
-                    }
-                });
             });
-
-            // Verify OTP
-            $('#verifyOtpBtn').on('click', function() {
-                const email = $('#otp_email').val();
-                const otp = $('#otp_code').val();
-                const token = $('input[name="_token"]').val();
-
-                if (!otp || otp.length !== 6) {
-                    $('#otpError').text('Please enter a valid 6-digit OTP').show();
-                    return;
-                }
-
-                $('#otpError').hide();
-                $(this).prop('disabled', true).text('Verifying...');
-
-                $.ajax({
-                    url: '{{ route("otp.verify") }}',
-                    method: 'POST',
-                    data: { otp_email: email, otp_code: otp, _token: token },
-                    success: function(response) {
-                        $('#otpSuccess').text('OTP verified successfully!').show();
-                        window.location.href = response.redirect;
-                    },
-                    error: function(xhr) {
-                        const errorMsg = xhr.responseJSON?.error || 'Invalid or expired OTP';
-                        $('#otpError').text(errorMsg).show();
-                        $('#verifyOtpBtn').prop('disabled', false).text('Verify OTP');
-                    }
-                });
-            });
-
-            // Resend OTP
-            $('#resendOtp').on('click', function() {
-                if ($(this).hasClass('disabled')) return;
-                
-                const email = $('#otp_email').val();
-                const token = $('input[name="_token"]').val();
-                
-                $(this).text('Sending...').addClass('disabled');
-                $('#otpError, #otpSuccess').hide();
-
-                $.ajax({
-                    url: '{{ route("otp.send") }}',
-                    method: 'POST',
-                    data: { otp_email: email, _token: token },
-                    success: function(response) {
-                        $('#emailSuccess').text('New OTP sent successfully!').show();
-                        $('#resendOtp').text('Resend OTP in 30 seconds');
-                        startResendTimer();
-                    },
-                    error: function(xhr) {
-                        const errorMsg = xhr.responseJSON?.error || 'Failed to resend OTP. Please try again.';
-                        $('#emailError').text(errorMsg).show();
-                        $('#resendOtp').text('Resend OTP').removeClass('disabled');
-                    }
-                });
-            });
-
-            // Timer for resend OTP
-            function startResendTimer() {
-                let seconds = 30;
-                const resendButton = $('#resendOtp');
-                resendButton.addClass('disabled');
-                
-                const timer = setInterval(function() {
-                    seconds--;
-                    resendButton.text(`Resend OTP in ${seconds} seconds`);
-                    
-                    if (seconds <= 0) {
-                        clearInterval(timer);
-                        resendButton.text('Resend OTP').removeClass('disabled');
-                    }
-                }, 1000);
-            }
         });
+
+        // Verify OTP
+        $('#verifyOtpBtn').on('click', function() {
+            const email = $('#otp_email').val();
+            const otp = $('#otp_code').val();
+            const token = $('input[name="_token"]').val();
+
+            if (!otp || otp.length !== 6) {
+                $('#otpError').text('Please enter a valid 6-digit OTP').show();
+                return;
+            }
+
+            $('#otpError').hide();
+            $(this).prop('disabled', true).text('Verifying...');
+
+            $.ajax({
+                url: '{{ route("otp.verify") }}',
+                method: 'POST',
+                data: {
+                    otp_email: email,
+                    otp_code: otp,
+                    _token: token
+                },
+                success: function(response) {
+                    $('#otpSuccess').text('OTP verified successfully!').show();
+                    window.location.href = response.redirect;
+                },
+                error: function(xhr) {
+                    const errorMsg = xhr.responseJSON?.error || 'Invalid or expired OTP';
+                    $('#otpError').text(errorMsg).show();
+                    $('#verifyOtpBtn').prop('disabled', false).text('Verify OTP');
+                }
+            });
+        });
+
+        // Resend OTP
+        $('#resendOtp').on('click', function() {
+            if ($(this).hasClass('disabled')) return;
+
+            const email = $('#otp_email').val();
+            const token = $('input[name="_token"]').val();
+
+            $(this).text('Sending...').addClass('disabled');
+            $('#otpError, #otpSuccess').hide();
+
+            $.ajax({
+                url: '{{ route("otp.send") }}',
+                method: 'POST',
+                data: {
+                    otp_email: email,
+                    _token: token
+                },
+                success: function(response) {
+                    $('#emailSuccess').text('New OTP sent successfully!').show();
+                    $('#resendOtp').text('Resend OTP in 30 seconds');
+                    startResendTimer();
+                },
+                error: function(xhr) {
+                    const errorMsg = xhr.responseJSON?.error ||
+                        'Failed to resend OTP. Please try again.';
+                    $('#emailError').text(errorMsg).show();
+                    $('#resendOtp').text('Resend OTP').removeClass('disabled');
+                }
+            });
+        });
+
+        // Timer for resend OTP
+        function startResendTimer() {
+            let seconds = 30;
+            const resendButton = $('#resendOtp');
+            resendButton.addClass('disabled');
+
+            const timer = setInterval(function() {
+                seconds--;
+                resendButton.text(`Resend OTP in ${seconds} seconds`);
+
+                if (seconds <= 0) {
+                    clearInterval(timer);
+                    resendButton.text('Resend OTP').removeClass('disabled');
+                }
+            }, 1000);
+        }
+    });
     </script>
 </body>
+
 </html>

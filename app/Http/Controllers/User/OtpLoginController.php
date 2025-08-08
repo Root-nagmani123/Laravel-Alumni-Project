@@ -9,6 +9,7 @@ use App\Models\Member;
 use App\Models\UserOtp;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
 
 class OtpLoginController extends Controller
 {
