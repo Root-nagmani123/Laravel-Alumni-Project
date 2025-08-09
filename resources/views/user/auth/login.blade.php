@@ -188,9 +188,9 @@
                                             <form method="POST" action="{{ route('user.login.submit') }}">
                                                 @csrf
                                                 <div class="form-group mb-3">
-                                                    <label class="form-label fw-bold">Email Address</label>
-                                                    <input type="email" name="email" class="form-control"
-                                                        placeholder="Enter your email">
+                                                    <label class="form-label fw-bold">User Name</label>
+                                                    <input type="username" name="username" class="form-control"
+                                                        placeholder="Enter your username">
                                                 </div>
                                                 <div class="form-group mb-3">
                                                     <label class="form-label fw-bold">Password</label>
