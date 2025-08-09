@@ -5,6 +5,7 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use LdapRecord\Container;
 
 class AuthController extends Controller
 {
@@ -41,8 +42,10 @@ class AuthController extends Controller
                 return redirect()->intended('/user/feed');
             }
         } else {
+            $connection = Container::getDefaultConnection();
+
+if ($connection->auth()->attempt($username, $password)) {
             // 🌐 Production: LDAP authentication
-          if (app('ldap')->auth()->attempt($username, $password)) {
                 $user = \App\Models\Member::where('username', $username)
                             ->where('status', 1)
                             ->first();
