@@ -43,7 +43,6 @@ class AuthController extends Controller
             }
         } else {
             $connection = Container::getDefaultConnection();
-
 if ($connection->auth()->attempt($username, $password)) {
             // 🌐 Production: LDAP authentication
                 $user = \App\Models\Member::where('username', $username)

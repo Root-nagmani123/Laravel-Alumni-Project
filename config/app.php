@@ -126,5 +126,6 @@ return [
 
         // LDAP facade
         'Ldap' => LdapRecord\Laravel\Facades\Ldap::class,
+        
     ],
 ];
