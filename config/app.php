@@ -95,6 +95,10 @@ return [
         // LDAP alias
         'Ldap' => LdapRecord\Laravel\Facades\Ldap::class,
     ],
+    'providers' => [
+    // ...
+    LdapRecord\Laravel\LdapServiceProvider::class,
+],
     /*
     |--------------------------------------------------------------------------
     | Encryption Key
