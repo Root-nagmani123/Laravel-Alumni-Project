@@ -84,6 +84,17 @@ return [
 
     'faker_locale' => env('APP_FAKER_LOCALE', 'en_US'),
 
+     'aliases' => [
+
+        'App' => Illuminate\Support\Facades\App::class,
+        'Arr' => Illuminate\Support\Arr::class,
+        'Artisan' => Illuminate\Support\Facades\Artisan::class,
+        'Auth' => Illuminate\Support\Facades\Auth::class,
+        // ... Laravel ke default aliases
+
+        // LDAP alias
+        'Ldap' => LdapRecord\Laravel\Facades\Ldap::class,
+    ],
     /*
     |--------------------------------------------------------------------------
     | Encryption Key
