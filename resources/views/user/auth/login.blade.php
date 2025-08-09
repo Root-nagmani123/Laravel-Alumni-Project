@@ -19,7 +19,7 @@
     <!-- Theme css -->
     <!-- Add CSRF token meta -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link id="change-link" rel="stylesheet" type="text/css" href="{{secure_asset('user_assets/css/style.css')}}">
+    <link id="change-link" rel="stylesheet" type="text/css" href="{{asset('user_assets/css/style.css')}}">
     <style>
     .flip-card {
         position: relative;
@@ -395,10 +395,10 @@ document.addEventListener("DOMContentLoaded", function () {
     </script>
 
     <!-- latest jquery-->
-    <script src="{{secure_asset('user_assets/js/jquery-3.6.0.min.js')}}"></script>
+    <script src="{{asset('user_assets/js/jquery-3.6.0.min.js')}}"></script>
 
     <!-- popper js-->
-    <script src="{{secure_asset('user_assets/js/popper.min.js')}}"></script>
+    <script src="{{asset('user_assets/js/popper.min.js')}}"></script>
 
     <!-- slick slider js -->
     <script src="{{asset('user_assets/js/slick.js')}}"></script>
