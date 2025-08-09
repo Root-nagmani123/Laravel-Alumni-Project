@@ -183,7 +183,7 @@
                                                 <h2>Login with LDAP</h2>
                                             </div>
                                             <div class="login-discription mb-4">
-                                                <h4>Welcome to LBSNAA Alumni, please login using LDAP credentials.</h4>
+                                                <h4>Welcome to LBSNAA Alumni, please login using LDAP credentials..</h4>
                                             </div>
                                             <form method="POST" action="{{ route('user.login.submit') }}">
                                                 @csrf
