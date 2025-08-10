@@ -18,7 +18,7 @@ class AuthController extends Controller
 
 
 
- public function login(Request $request)
+ public function login_bkp(Request $request)
 {
     $request->validate([
         'username' => 'required|string',
@@ -66,7 +66,7 @@ if ($connection->auth()->attempt($username, $password)) {
 }
 
 
-    public function login_bkp(Request $request)
+    public function login(Request $request)
 {
     $credentials = $request->validate([
         'email' => 'required|email',
