@@ -41,7 +41,7 @@ class ProfileController extends Controller
    public function showById(Request $request, $encryptedId): View
 {
     //$user = auth()->guard('user')->user();
-    $id = Crypt::decrypt($encryptedId);
+    $id = Crypt::decrypt($encryptedId); 
     $user = Member::findOrFail($id);
 
     $userId = $user->id;
