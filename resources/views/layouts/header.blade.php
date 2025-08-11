@@ -204,8 +204,9 @@ Header START -->
                                                            data-source-id="{{ $notification->source_id ?? '' }}"
                                                            onclick="handleNotificationClick(event, '{{ $notificationUrl }}', '{{ $notification->source_type ?? '' }}', '{{ $notification->source_id ?? '' }}')">
                                                             <p class="small mb-2 text-primary">
-                                                                {{ $notification->message }}
-                                                            </p>
+    {{ \Illuminate\Support\Str::words($notification->message, 20, '...') }}
+</p>
+
                                                         </a>
                                                         <p class="small ms-3 mb-0 text-muted text-nowrap">
                                                              {{ \Carbon\Carbon::parse($notification->created_at)->setTimezone('Asia/Kolkata')->diffForHumans(null, null, true) }}
