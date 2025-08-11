@@ -97,6 +97,26 @@ function login_ldap(Request $request){
     $username = $request->input('username');
     $password = $request->input('password');
     $serverHost = $request->getHost(); // e.g., localhost or production domain
+$connection = Container::getDefaultConnection();
+
+    // Bind as admin user (already configured in config)
+    $connection->connect();
+
+    // Search for user
+  
+
+    // Try binding as user with password
+    try {
+        $connection->auth()->bind($username, $password);
+        // return true; // Authentication successful
+         return redirect()->intended('/user/feed');
+    } catch (\Exception $e) {
+        logger('Login failed: ' . $e->getMessage());
+        return back()->withErrors([
+            'username' => 'Invalid username or password.',
+        ]);
+    }
+
 
     try {
         // if (in_array($serverHost, ['localhost', '127.0.0.1', 'dev.local'])) {
