@@ -350,7 +350,7 @@
                         @if($topic->comments->count() > 0)
                             @foreach($topic->comments as $comment)
                                <!-- Comment item START -->
-							<li class="comment-item">
+							<li class="comment-item mb-3">
 								<div class="d-flex position-relative">
 									<!-- Avatar -->
 									<div class="avatar avatar-xs">
