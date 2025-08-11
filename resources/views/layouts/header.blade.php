@@ -320,11 +320,11 @@ Header START -->
                                 <i class="bi bi-chat-dots-fill fa-fw me-2"></i>Grievance / Feedback
                             </a>
                         </li>
-                        <li>
+                        <!-- <li>
                             <a class="dropdown-item" href="https://www.lbsnaa.gov.in/lbsnaa-newsletter" target="_blank">
                                 <i class="bi bi-newspaper fa-fw me-2"></i>Newsletter
                             </a>
-                        </li>
+                        </li> -->
                         <li>
                             <a class="dropdown-item" href="https://www.lbsnaa.gov.in/footer_menu/contact-us" target="_blank">
                                 <i class="bi bi-person-lines-fill fa-fw me-2"></i>Contact Us
