@@ -19,7 +19,7 @@ class MemberController extends Controller
             //$members = Member::all();
            
            $members = Member::orderBy('id', 'desc')
-    ->select('id', 'name', 'username', 'mobile', 'email', 'cader', 'designation', 'batch', 'Service');
+    ->select('id', 'name', 'username', 'mobile', 'email', 'cader', 'designation', 'batch', 'Service','status');
      if ($request->filled('search')) {
         $search = $request->search;
         $members->where(function ($q) use ($search) {

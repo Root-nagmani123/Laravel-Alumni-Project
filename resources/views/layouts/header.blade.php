@@ -47,13 +47,13 @@ Header START -->
             <!-- Main navbar START -->
             <div class="collapse navbar-collapse" id="navbarCollapse">
                 <ul class="navbar-nav navbar-nav-scroll mx-auto">
-                    <li class="nav-item">
+                    <!-- <li class="nav-item">
 
                         <a class="nav-link" href="{{ route('user.profile.name', ['name' => 'Alumni']) }}">Home</a>
-                    </li>
+                    </li> -->
                     <!-- Nav item 1 Demos -->
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url('user/feed') }}">Feed</a>
+                        <a class="nav-link" href="{{ url('user/feed') }}">Home</a>
                     </li>
                     <!-- Nav item: Dropdown for Library -->
                     <li class="nav-item dropdown">
@@ -129,8 +129,8 @@ Header START -->
                                         class="badge bg-danger bg-opacity-10 text-danger ms-2">{{ isset($notifications) ? $notifications->count() : 0 }}</span>
                                 </h6>
                                 <a class="small"
-                                    href="{{ route('user.notifications.status', ['id' => Auth::guard('user')->user()->id]) }}">Clear
-                                    all</a>
+                                    href="{{ route('user.notifications.status', ['id' => Auth::guard('user')->user()->id]) }}">Mark
+                                    all as read</a>
                             </div>
                             <div class="card-body p-0" style="max-height: 300px; overflow-y: auto;">
                                 <ul class="list-group list-group-flush list-unstyled p-2">
@@ -204,8 +204,9 @@ Header START -->
                                                            data-source-id="{{ $notification->source_id ?? '' }}"
                                                            onclick="handleNotificationClick(event, '{{ $notificationUrl }}', '{{ $notification->source_type ?? '' }}', '{{ $notification->source_id ?? '' }}')">
                                                             <p class="small mb-2 text-primary">
-                                                                {{ $notification->message }}
-                                                            </p>
+    {{ \Illuminate\Support\Str::words($notification->message, 20, '...') }}
+</p>
+
                                                         </a>
                                                         <p class="small ms-3 mb-0 text-muted text-nowrap">
                                                              {{ \Carbon\Carbon::parse($notification->created_at)->setTimezone('Asia/Kolkata')->diffForHumans(null, null, true) }}
@@ -574,3 +575,24 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 }
 </style>
+<script>
+document.addEventListener('click', function (event) {
+    const searchContainer = document.querySelector('.position-relative'); // wrapper div
+    const searchResults = document.getElementById('searchResults');
+
+    // If click is outside search container, hide results
+    if (!searchContainer.contains(event.target)) {
+        searchResults.style.display = 'none';
+    }
+});
+
+// Show results again when typing
+document.getElementById('searchMemberInput').addEventListener('input', function () {
+    const searchResults = document.getElementById('searchResults');
+    if (this.value.trim() !== '') {
+        searchResults.style.display = 'block';
+    } else {
+        searchResults.style.display = 'none';
+    }
+});
+</script>

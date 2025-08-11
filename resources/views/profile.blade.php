@@ -7,22 +7,6 @@
 
     <div class="row g-4 py-4" style="margin-top:4rem !important;">
         <!-- Error Messages -->
-        @if ($errors->any())
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <ul class="mb-0">
-                @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-        @endif
-        @if(session('success'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            {{ session('success') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-        @endif
 
         <!-- Main content START -->
         <div class="col-lg-8 vstack gap-4">
@@ -649,7 +633,12 @@
                                         <!-- Date -->
                                         <p class="mb-0">
                                             <i class="bi bi-calendar-date fa-fw me-2"></i> Born: <strong>
-                                                {{ $user->date_of_birth }} </strong>
+                                               @if($user->date_of_birth)
+            {{ \Carbon\Carbon::parse($user->date_of_birth)->format('d/m/Y') }}
+            ({{ \Carbon\Carbon::parse($user->date_of_birth)->age }} years old)
+        @else
+            Not set
+        @endif </strong>
                                         </p>
                                     </div>
                                     <!-- Birthday END -->
@@ -660,7 +649,8 @@
                                         <!-- Date -->
                                         <p class="mb-0">
                                             <i class="bi bi-heart fa-fw me-2"></i> Status: <strong>
-                                                {{ $user->marital_status }} </strong>
+                                                {{ \Illuminate\Support\Str::title(str_replace('_', ' ', $user->marital_status)) }}
+</strong>
                                         </p>
                                     </div>
                                     <!-- Status END -->
@@ -1044,8 +1034,19 @@
                             <p>{{ $user->bio }}</p>
                             <!-- Date time -->
                             <ul class="list-unstyled mt-3 mb-0">
-                                <li class="mb-2"> <i class="bi bi-calendar-date fa-fw pe-1"></i> Born: <strong>
-                                        {{ $user->date_of_birth }} </strong> </li>
+                               <li class="mb-2">
+    <i class="bi bi-calendar-date fa-fw pe-1"></i>
+    Born:
+    <strong>
+        @if($user->date_of_birth)
+            {{ \Carbon\Carbon::parse($user->date_of_birth)->format('d/m/Y') }}
+            ({{ \Carbon\Carbon::parse($user->date_of_birth)->age }} years old)
+        @else
+            Not set
+        @endif
+    </strong>
+</li>
+
                                 <li class="mb-2"> <i class="bi bi-heart fa-fw pe-1"></i> Status: <strong>
                                         {{ $user->marital_status }}
                                     </strong> </li>
