@@ -162,7 +162,10 @@
                     <div class="avatar">
                         <a href="{{ route('user.forum.show', ['id' => $forum->id]) }}"><img
                                 class="avatar-img rounded-circle"
-                                src="{{ asset('storage/uploads/images/forums_img/' . ($forum->images ?? 'default-forum.jpg')) }}"
+                               src="{{ isset($forum->images) && $forum->images 
+        ? asset('storage/uploads/images/forums_img/' . $forum->images) 
+        : asset('feed_assets/images/avatar/01.webp') }}"
+                               
                                 alt="" loading="lazy" decoding="async"></a>
                     </div>
                     <!-- Title -->
