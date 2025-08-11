@@ -15,7 +15,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         //
-        // $middleware->append(\App\Http\Middleware\TrustProxies::class);
+        $middleware->append(\App\Http\Middleware\TrustProxies::class);
 		 $middleware->alias([            //added this line by dhananjay 04-05-2025
             'admin_auth' => AdminAuthMiddleware::class,
             'admin_guest' => AdminGuestMiddleware::class
