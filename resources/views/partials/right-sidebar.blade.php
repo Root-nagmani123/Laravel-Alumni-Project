@@ -3,7 +3,7 @@
     <!-- Card follow START -->
     <!-- Card News START -->
     <div class="col-sm-6 col-lg-12">
-        <div class="card" style="max-height: 500px;">
+        <div class="card">
             <!-- Card header START -->
             <div class="card-header pb-0 border-0">
                 <h5 class="card-title mb-0">Mentorship Program</h5>
@@ -23,17 +23,24 @@
 
         <div class="col-sm-6 col-lg-12">
         <div class="card">
-            <!-- Card header START -->
-            <div class="card-header pb-0 border-0">
-                <h5 class="card-title mb-0">Newsletter</h5>
-            </div>
-            <!-- Card header END -->
-            <!-- Card body START -->
-            <div class="card-body">
-                <a href="https://www.lbsnaa.gov.in/lbsnaa-newsletter" class="text-decoration-none" style="color:#af2910;" target="_blank">Newsletter</a>
-            </div>
-            <!-- Card body END -->
-        </div>
+                        <div class="h-80px rounded-top" style="background-image:url({{asset('user_assets/images/login/login-bg.jpg')}}); background-position: center; background-size: cover; background-repeat: no-repeat;"></div>
+                          <!-- Card body START -->
+                          <div class="card-body text-center pt-0">
+                            <!-- Avatar -->
+                            <div class="avatar avatar-lg mt-n5 mb-3">
+                              <img class="avatar-img rounded-circle border border-white border-3 bg-white" src="https://www.lbsnaa.gov.in/newsletter_img/1743757337_Screenshot%202025-04-04%20143132.png" alt="">
+                            </div>
+                            <!-- Info -->
+                            <h5 class="mb-0"> <a href="group-details.html">Newsletter</a> </h5>
+                            <!-- Group stat END -->
+                            </div>
+                        <!-- Card body END -->
+                        <!-- Card Footer START -->
+                        <div class="card-footer text-center">
+                          <a class="btn btn-success-soft btn-sm" href="https://www.lbsnaa.gov.in/lbsnaa-newsletter"> View Newsletter </a>
+                        </div>
+                        <!-- Card Footer END -->
+                      </div>
     </div>
     <!-- Card News END -->
     <!-- Card News START -->

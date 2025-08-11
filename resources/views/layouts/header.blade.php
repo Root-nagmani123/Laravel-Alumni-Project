@@ -574,3 +574,24 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 }
 </style>
+<script>
+document.addEventListener('click', function (event) {
+    const searchContainer = document.querySelector('.position-relative'); // wrapper div
+    const searchResults = document.getElementById('searchResults');
+
+    // If click is outside search container, hide results
+    if (!searchContainer.contains(event.target)) {
+        searchResults.style.display = 'none';
+    }
+});
+
+// Show results again when typing
+document.getElementById('searchMemberInput').addEventListener('input', function () {
+    const searchResults = document.getElementById('searchResults');
+    if (this.value.trim() !== '') {
+        searchResults.style.display = 'block';
+    } else {
+        searchResults.style.display = 'none';
+    }
+});
+</script>
