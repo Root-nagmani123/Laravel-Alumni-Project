@@ -39,93 +39,100 @@
         <!-- start Zero Configuration -->
         <div class="card">
             <div class="card-body">
-                <div class="row">
-                    <div class="col-6">
-                        <h4 class="card-title">Member list</h4>
+                <div class="row align-items-center g-3 mb-4">
+                    <!-- Title -->
+                    <div class="col-lg-3 col-md-6">
+                        <h4 class="card-title mb-0">Member List</h4>
                     </div>
-    <div class="col-6">
-        <form method="GET" action="{{ route('members.index') }}">
-            <div class="input-group">
-                <input type="text" name="search" class="form-control" 
-                       placeholder="Search by name, username, email or mobile"
-                       value="{{ request('search') }}">
-                <button type="submit" class="btn btn-primary">Search</button>
-                @if(request('search'))
-                    <a href="{{ route('members.index') }}" class="btn btn-secondary">Reset</a>
-                @endif
-            </div>
-        </form>
-    </div>
 
-                    <div class="col-3">
-                        <div class="float-end gap-2">
-                            <a href="{{ route('members.create') }}" class="btn btn-primary">+ Add Members</a>
-                            <a href="{{ route('members.bulk_upload') }}" class="btn btn-secondary">Bulk Upload</a>
-                        </div>
+                    <!-- Search Form -->
+                    <div class="col-lg-6 col-md-12">
+                        <form method="GET" action="{{ route('members.index') }}">
+                            <div class="input-group">
+                                <input type="text" name="search" class="form-control"
+                                    placeholder="Search by name, username, email or mobile"
+                                    value="{{ request('search') }}">
+                                <button type="submit" class="btn btn-primary">Search</button>
+                                @if(request('search'))
+                                <a href="{{ route('members.index') }}" class="btn btn-outline-secondary">Reset</a>
+                                @endif
+                            </div>
+                        </form>
+                    </div>
 
+                    <!-- Action Buttons -->
+                    <div
+                        class="col-lg-3 col-md-6 text-lg-end text-md-start d-flex gap-2 justify-content-lg-end justify-content-md-start">
+                        <a href="{{ route('members.create') }}" class="btn btn-success btn-md">
+                            <i class="bi bi-person-plus"></i> Add Member
+                        </a>
+                        <a href="{{ route('members.bulk_upload') }}" class="btn btn-outline-primary btn-md">
+                            <i class="bi bi-upload"></i> Bulk Upload
+                        </a>
                     </div>
                 </div>
-                <hr>
-                <div id="zero_config_wrapper" class="dataTables_wrapper">
-                   <div class="table-responsive">
-                     <table class="table table-striped table-bordered text-nowrap align-middle dataTable w-100  text-wrap">
-                        <thead>
-                            <!-- start row -->
-                            <tr>
-                                <th class="col">S.No.</th>
-                                <th class="col">Name</th>
-                                <th class="col">User Name</th>
-                                <th class="col">Email</th>
-                                <th class="col">Mobile</th>
-                                <th class="col">Service</th>
-                                <th class="col">Sector</th>
-                                <th class="col">Cadre, Batch</th>
-                                <th class="col">Action</th>
-                                <th class="col">Status</th>
-                            </tr>
-                            <!-- end row -->
-                        </thead>
-                        <tbody>
-                            @foreach($members as $member)
-                            <tr class="odd">
-                                <td>{{ $loop ->iteration }}</td>
-                                <td>{{ $member->name }}</td>
-                                <td>{{ $member->username }}</td>
-                                <td>{{ $member->email }}</td>
-                                <td>{{ $member->mobile }}</td>
-                                <td>{{ $member->Service }}</td>
-                                <td>{{ $member->sector }}</td>
-                                <td>{{ $member->cader }}, {{ $member->batch }}</td>
-                                <td>
-                                    <a href="{{route('members.edit', $member->id) }}"
-                                        class="btn btn-success text-white btn-sm">Edit</a>
-                                 
-                                    <form action="{{ route('members.destroy', $member->id) }}" method="POST"
-                                        style="display:inline;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger text-white btn-sm"
-                                            onclick="return confirm('Are you sure you want to delete?')">
-                                            Delete
-                                        </button>
-                                    </form>
-                                </td>
-                                <td>
-                                    <div class="form-check form-switch d-inline-block">
-                                        <input class="form-check-input status-toggle" type="checkbox" role="switch"
-                                            data-table="members" data-column="active_inactive"
-                                            data-id="{{ $member->id }}" {{ $member->status == 1 ? 'checked' : '' }}>
-                                    </div>
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                <div class="mt-3 d-flex justify-content-center">
-    {{ $members->appends(request()->query())->links() }}
-</div>
 
-                   </div>
+                <hr>
+                <div class="dataTables_wrapper">
+                    <div class="table-responsive">
+                        <table
+                            class="table table-striped table-bordered text-nowrap align-middle dataTable w-100  text-wrap">
+                            <thead>
+                                <!-- start row -->
+                                <tr>
+                                    <th class="col">S.No.</th>
+                                    <th class="col">Name</th>
+                                    <th class="col">User Name</th>
+                                    <th class="col">Email</th>
+                                    <th class="col">Mobile</th>
+                                    <th class="col">Service</th>
+                                    <th class="col">Sector</th>
+                                    <th class="col">Cadre, Batch</th>
+                                    <th class="col">Action</th>
+                                    <th class="col">Status</th>
+                                </tr>
+                                <!-- end row -->
+                            </thead>
+                            <tbody>
+                                @foreach($members as $member)
+                                <tr class="odd">
+                                    <td>{{ $loop ->iteration }}</td>
+                                    <td>{{ $member->name }}</td>
+                                    <td>{{ $member->username }}</td>
+                                    <td>{{ $member->email }}</td>
+                                    <td>{{ $member->mobile }}</td>
+                                    <td>{{ $member->Service }}</td>
+                                    <td>{{ $member->sector }}</td>
+                                    <td>{{ $member->cader }}, {{ $member->batch }}</td>
+                                    <td>
+                                        <a href="{{route('members.edit', $member->id) }}"
+                                            class="btn btn-success text-white btn-sm">Edit</a>
+
+                                        <form action="{{ route('members.destroy', $member->id) }}" method="POST"
+                                            style="display:inline;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger text-white btn-sm"
+                                                onclick="return confirm('Are you sure you want to delete?')">
+                                                Delete
+                                            </button>
+                                        </form>
+                                    </td>
+                                    <td>
+                                        <div class="form-check form-switch d-inline-block">
+                                            <input class="form-check-input status-toggle" type="checkbox" role="switch"
+                                                data-table="members" data-column="active_inactive"
+                                                data-id="{{ $member->id }}" {{ $member->status == 1 ? 'checked' : '' }}>
+                                        </div>
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                        <div class="mt-3 d-flex justify-content-end">
+                            {{ $members->appends(request()->query())->links() }}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
