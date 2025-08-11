@@ -17889,19 +17889,44 @@ a.badge:hover {
 /*# sourceMappingURL=style.css.map */
 
 
-.left-sidebar {
-  position: sticky; 
-  top: 100px; 
-  height: 90vh;
-}
-.left-sidebar:hover {
-  overflow-y: auto;
-}
+/* Default for large screens */
+.left-sidebar,
 .right-sidebar {
-  position: sticky; 
-  top: 100px; 
+  position: sticky;
+  top: 100px;
   height: 90vh;
 }
+
+.middle-sidebar {
+  margin-top: 125px;
+}
+
+.left-sidebar:hover,
 .right-sidebar:hover {
   overflow-y: auto;
+}
+
+/* Scrollbar hidden until hover */
+.left-sidebar,
+.right-sidebar {
+  overflow-y: hidden;
+}
+
+/* Responsive adjustments */
+@media (max-width: 991px) { /* Bootstrap lg breakpoint */
+  .left-sidebar,
+  .right-sidebar {
+    position: static;  /* No sticky on small screens */
+    height: auto;      /* Full height based on content */
+    overflow-y: visible;
+    top: auto;
+  }
+
+  .left-sidebar {
+    margin-top: 125px;
+  }
+
+  .middle-sidebar {
+    margin-top: 0; /* Remove extra spacing on small screens */
+  }
 }
