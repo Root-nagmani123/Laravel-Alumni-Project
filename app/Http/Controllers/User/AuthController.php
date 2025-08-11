@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use LdapRecord\Container;
+use LdapRecord\Models\ActiveDirectory\User as LdapUser;
 
 class AuthController extends Controller
 {
@@ -101,7 +102,12 @@ $connection = Container::getDefaultConnection();
 
     // Bind as admin user (already configured in config)
     $connection->connect();
+ $ldapUser = LdapUser::whereEquals('samaccountname', $username)->first();
 
+    if (!$ldapUser) {
+        return back()->withErrors(['username' => 'User not found in LDAP']);
+    }
+    die;
     // Search for user
   
 
