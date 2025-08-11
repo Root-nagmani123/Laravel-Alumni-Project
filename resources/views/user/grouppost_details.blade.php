@@ -133,9 +133,29 @@
                             {{ $post->member->name ?? 'Anonymous' }}
                         </a>
                     </h6>
-                    <span class="nav-item small">
-                        {{ $post->created_at->setTimezone('Asia/Kolkata')->diffForHumans() }}
-                    </span>
+                   @php
+    $createdAt = \Carbon\Carbon::parse($post->created_at)->setTimezone('Asia/Kolkata');
+    $now = \Carbon\Carbon::now('Asia/Kolkata');
+    $diff = $createdAt->diff($now);
+
+    if ($diff->y > 0) {
+        $timeDiff = $diff->y . 'y';
+    } elseif ($diff->m > 0) {
+        $timeDiff = $diff->m . 'mo';
+    } elseif ($diff->d > 0) {
+        $timeDiff = $diff->d . 'd';
+    } elseif ($diff->h > 0) {
+        $timeDiff = $diff->h . 'h';
+    } elseif ($diff->i > 0) {
+        $timeDiff = $diff->i . 'min';
+    } else {
+        $timeDiff = 'Just now';
+    }
+@endphp
+
+<span class="nav-item small">{{ $timeDiff }}</span>
+
+                    
                 </div>
                 <p class="mb-0 small">{{ $post->member->designation ?? 'Member' }}</p>
             </div>
@@ -265,7 +285,7 @@
                                 <div class="avatar avatar-xs">
                                     <a href="{{ $comment->member ? url('/user/profile/' . $comment->member->id) : '#' }}">
                                         <img class="avatar-img rounded-circle"
-                                            src="{{ $comment->member && $comment->member->profile_pic ? asset('storage/' . $comment->member->profile_pic) : asset('feed_assets/images/avatar/12.jpg') }}"
+                                            src="{{ $comment->member && $comment->member->profile_pic ? asset('storage/' . $comment->member->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}"
                                             alt="" loading="lazy" decoding="async">
                                     </a>
                                 </div>
@@ -277,7 +297,28 @@
                                                     {{ $comment->member->name ?? 'Anonymous' }}
                                                 </a>
                                             </h6>
-                                            <small class="ms-2">{{ $comment->created_at->diffForHumans() }}</small>
+                                              @php
+    $createdAt =  \Carbon\Carbon::parse($comment->created_at)->setTimezone('Asia/Kolkata');
+    $now = \Carbon\Carbon::now('Asia/Kolkata');
+    $diff = $createdAt->diff($now);
+
+    if ($diff->y > 0) {
+        $timeDiff = $diff->y . 'y';
+    } elseif ($diff->m > 0) {
+        $timeDiff = $diff->m . 'mo';
+    } elseif ($diff->d > 0) {
+        $timeDiff = $diff->d . 'd';
+    } elseif ($diff->h > 0) {
+        $timeDiff = $diff->h . 'h';
+    } elseif ($diff->i > 0) {
+        $timeDiff = $diff->i . 'min';
+    } else {
+        $timeDiff = 'Just now';
+    }
+@endphp
+
+<span class="nav-item small">{{ $timeDiff }}</span>
+                                           
                                         </div>
                                         <p class="small mb-0" id="comment-text-{{ $comment->id }}">{{ $comment->comment }}</p>
                                     </div>

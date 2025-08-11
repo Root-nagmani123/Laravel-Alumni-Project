@@ -84,8 +84,8 @@ class NotificationService
     {
         $today = Carbon::today()->format('m-d');
 
-        $members = Member::whereNotNull('date_of_birth') // date_of_birth = date of birth
-            ->whereRaw("DATE_FORMAT(date_of_birth, '%m-%d') = ?", [$today])
+        $members = Member::whereNotNull('date_of_birth') // dob = date of birth
+            ->whereRaw("DATE_FORMAT(`date_of_birth`, '%m-%d') = ?", [$today])
             ->get();
 
         foreach ($members as $member) {
@@ -93,8 +93,8 @@ class NotificationService
                 'from_user_id' => null,
                 'type'         => 'birthday',
                 'user_id'      => json_encode([$member->id]),
-                'message'      => "🎉 Wishing {$member->name} a very Happy Birthday! May the year ahead be filled with success, good health, and happiness.",
-                'source_id'    => $member->id,
+                'message'      => "Happy Birthday, {$member->name}!",
+                'source_id'    => null,
                 'source_type'  => 'birthday',
                 'is_read'      => false,
             ]);

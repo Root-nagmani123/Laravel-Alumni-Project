@@ -84,7 +84,9 @@ Route::get('/', function () {
 Route::prefix('user')->name('user.')->group(function () {
     Route::middleware('guest:user')->group(function () {
         Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+        Route::get('/loginldap', [AuthController::class, 'showLoginForm_ldap'])->name('loginldap');
         Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
+        Route::post('/login_ldap', [AuthController::class, 'login_ldap'])->name('login.submit_ldap');
     });
 
       Route::middleware(UserAuthMiddleware::class)->group(function () {

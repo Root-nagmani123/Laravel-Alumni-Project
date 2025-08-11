@@ -180,12 +180,12 @@
                                             </div>
                                             <hr>
                                             <div class="login-title">
-                                               <h2>Login with LDAP</h2>
+                                                <h2>Login with LDAP</h2>
                                             </div>
                                             <div class="login-discription mb-4">
-                                         <h4>Welcome to LBSNAA Alumni, please login using LDAP credentials..</h4>
+                                                <h4>Welcome to LBSNAA Alumni, please login using LDAP credentials..</h4>
                                             </div>
-                                           <form method="POST" action="{{ route('user.login.submit_ldap') }}">
+                                            <form method="POST" action="{{ route('user.login.submit_ldap') }}">
                                                 @csrf
                                                 <div class="form-group mb-3">
                                                     <label class="form-label fw-bold">User Name</label>
