@@ -3,28 +3,19 @@
    @section('title', 'User Feed - Alumni | Lal Bahadur Shastri National Academy of Administration')
 
    @section('content')
-   <div class="container-fluid">
+   <div class="container">
        <div class="row g-4">
-           <div class="col-4 left-sidebar">
-            <div class="row">
-                <div class="col-4"></div>
-                <div class="col-8">
+           <div class="col-lg-3 left-sidebar col-12">
                     @include('partials.left-sidebar')
-                </div>
-            </div>
            </div>
 
-           <div class="col-4 vstack gap-4 mx-auto" style="margin-top: 125px !important;">
+           <div class="col-lg-6 vstack gap-4 mx-auto col-12 middle-sidebar">
                <div class="row">
                    @include('partials.user_feed')
                </div>
            </div>
-           <div class="col-4 right-sidebar" >
-               <div class="row">
-                   <div class="col-8">
+           <div class="col-lg-3 right-sidebar col-12" >
                        @include('partials.right-sidebar')
-                   </div>
-               </div>
            </div>
        </div>
    </div>
