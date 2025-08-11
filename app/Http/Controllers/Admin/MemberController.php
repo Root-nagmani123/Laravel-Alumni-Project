@@ -9,14 +9,28 @@ use App\Imports\MembersImport;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Models\Topic;
 use Maatwebsite\Excel\Validators\ValidationException;
+use Illuminate\Pagination\Paginator;
 
 class MemberController extends Controller
 {
-    public function index()
+    public function index(Request $request)
         {
         //$members = Member::whereNull('deleted_at')->get();
             //$members = Member::all();
-            $members = Member::orderBy('id', 'desc')->get(); // newest first
+           
+           $members = Member::orderBy('id', 'desc')
+    ->select('id', 'name', 'username', 'mobile', 'email', 'cader', 'designation', 'batch', 'Service');
+     if ($request->filled('search')) {
+        $search = $request->search;
+        $members->where(function ($q) use ($search) {
+            $q->where('name', 'like', "%{$search}%")
+              ->orWhere('username', 'like', "%{$search}%")
+              ->orWhere('email', 'like', "%{$search}%")
+              ->orWhere('mobile', 'like', "%{$search}%");
+        });
+    }
+   $members = $members->paginate(10); // har page me 20 records
+ Paginator::useBootstrap();
             return view('admin.members.index', compact('members'));
         }
 
