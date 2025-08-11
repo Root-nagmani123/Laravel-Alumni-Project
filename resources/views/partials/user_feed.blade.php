@@ -56,9 +56,6 @@
     </div>
     <!-- Share feed END -->
 
-
-
-
     <!-- Card feed item START -->
     @foreach($posts as $post)
     <div class="card mb-3">
@@ -74,9 +71,10 @@
     $profileLink = '#';
 
     if ($post->type === 'group_post') {
+
         // Group post ke liye
-        $profileImage = $post->member->profile_pic
-            ? asset('storage/' . $post->member->profile_pic)
+        $profileImage = $post->group_image
+            ? asset('storage/' . $post->group_image)
             : asset('feed_assets/images/avatar/07.jpg'); // fallback image
 
         $displayName = $post->group_name ?? 'Unknown Group';
@@ -106,10 +104,18 @@
  <div class="d-flex align-items-center">
     <!-- Avatar -->
     <div class="me-4 flex-shrink-0 avatar">
+
+    @if($post->type === 'group_post')
+        <a href="{{ $groupLink }}">
+            <img src="{{ $profileImage }}" alt="Group Picture"
+                 class="img-fluid avatar-img rounded-circle" loading="lazy" decoding="async">
+        </a>
+    @else
         <a href="{{ $profileLink }}">
             <img src="{{ $profileImage }}" alt="Profile Picture"
                  class="img-fluid avatar-img rounded-circle" loading="lazy" decoding="async">
         </a>
+    @endif
     </div>
 
     <!-- Text content -->
@@ -117,11 +123,11 @@
         <!-- Name -->
          @if($post->type === 'group_post')
         <h6 class="mb-1">
-           <i class="fa-solid fa-users fa-fw pe-2"></i> {{ $displayName }}
+           <i class="fa-solid fa-users fa-fw pe-2"></i> <a href="{{ $groupLink }}">{{ $displayName }}</a>
         </h6>
         @else
         <h6 class="mb-1">
-            {{ $displayName }}
+            <a href="{{ $profileLink }}" class="text-dark">{{ $displayName }}</a>
         </h6>
         @endif
         
@@ -148,7 +154,7 @@
 
         @if($post->type === 'group_post')
             <p class="mb-1">
-                Group Post | <i class="bi bi-person-fill"></i> {{ $created_by }}
+                Group Post | <i class="bi bi-person-fill"></i><a  class="text-dark" href="{{ $profileLink }}">{{ $created_by }}</a>
             </p>
         @else
         <!-- Designation -->
@@ -350,9 +356,15 @@
                     <div class="d-flex position-relative">
                         <!-- Avatar -->
                         <div class="avatar avatar-xs">
-                            <a href="#!"><img class="avatar-img rounded-circle"
+                            <!-- <a href="#!"><img class="avatar-img rounded-circle"
                                    src="${comment.member && comment.member.profile_pic ? '/storage/' + comment.member.profile_pic : '/feed_assets/images/avatar/07.jpg'}"
-                                    alt="" loading="lazy" decoding="async"></a>
+                                    alt="" loading="lazy" decoding="async"></a> -->
+
+                                    <a href="{{ $comment->member ? route('user.profile.data', ['id' => $comment->member->id]) : '#' }}">
+                                        <img class="avatar-img rounded-circle"
+                                             src="{{ $comment->member && $comment->member->profile_pic ? asset('storage/' . $comment->member->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}"
+                                             alt="" loading="lazy" decoding="async">
+                                    </a>
                         </div>
                         <div class="ms-2 w-100">
                             <!-- Comment by -->

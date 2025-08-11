@@ -195,7 +195,7 @@ class FeedController extends Controller
             'comments' => $post->comments,
             'video_link' => $post->video_link,
             'shares' => $post->shares,
-            'group_image' => '',
+            'group_image' => $post->group->image ?? null,
             'group_id' => $post->group_id,
         ];
     }); 
