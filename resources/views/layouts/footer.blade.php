@@ -272,7 +272,6 @@ JS libraries, plugins and custom scripts -->
 
 <!-- Bootstrap JS -->
 <script src="{{asset('feed_assets/vendor/bootstrap/dist/js/bootstrap.bundle.min.js')}}"></script>
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
 <!-- Vendors -->
 <script src="{{asset('feed_assets/vendor/tiny-slider/dist/tiny-slider.js')}}"></script>
@@ -291,19 +290,22 @@ JS libraries, plugins and custom scripts -->
 <script src="{{asset('assets/js/functions.js')}}"></script>
 
 <!-- DataTables JS -->
-<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
+<script src="{{asset('feed_assets/js/vendor/bootstrap/dist/js/dataTables.min.js')}}"></script>
+<script src="{{asset('feed_assets/js/vendor/bootstrap/dist/js/dataTables.bootstrap5.min.js')}}"></script>
 
 
 <!-- Accessibility JS -->
-<script src="https://img1.digitallocker.gov.in/ux4g/UX4G-CDN-accessibility/js/weights-v1.js"></script>
+<script src="{{asset('feed_assets/js/weights-v1.js')}}"></script>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{{asset('feed_assets/js/jquery-3.6.0.min.js')}}"></script>
+
 <!-- Select2 CSS -->
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="{{asset('feed_assets/css/select2.min.css')}}">
 
 <!-- Select2 JS -->
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script src="{{asset('feed_assets/js/select2.min.js')}}"></script>
+
 
 
 <script>
