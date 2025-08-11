@@ -3,7 +3,7 @@
     <!-- Card follow START -->
     <!-- Card News START -->
     <div class="col-sm-6 col-lg-12">
-        <div class="card">
+        <div class="card" style="max-height: 500px;">
             <!-- Card header START -->
             <div class="card-header pb-0 border-0">
                 <h5 class="card-title mb-0">Mentorship Program</h5>

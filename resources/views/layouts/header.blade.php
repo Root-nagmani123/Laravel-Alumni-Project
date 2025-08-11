@@ -47,13 +47,13 @@ Header START -->
             <!-- Main navbar START -->
             <div class="collapse navbar-collapse" id="navbarCollapse">
                 <ul class="navbar-nav navbar-nav-scroll mx-auto">
-                    <li class="nav-item">
+                    <!-- <li class="nav-item">
 
                         <a class="nav-link" href="{{ route('user.profile.name', ['name' => 'Alumni']) }}">Home</a>
-                    </li>
+                    </li> -->
                     <!-- Nav item 1 Demos -->
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url('user/feed') }}">Feed</a>
+                        <a class="nav-link" href="{{ url('user/feed') }}">Home</a>
                     </li>
                     <!-- Nav item: Dropdown for Library -->
                     <li class="nav-item dropdown">
@@ -129,8 +129,8 @@ Header START -->
                                         class="badge bg-danger bg-opacity-10 text-danger ms-2">{{ isset($notifications) ? $notifications->count() : 0 }}</span>
                                 </h6>
                                 <a class="small"
-                                    href="{{ route('user.notifications.status', ['id' => Auth::guard('user')->user()->id]) }}">Clear
-                                    all</a>
+                                    href="{{ route('user.notifications.status', ['id' => Auth::guard('user')->user()->id]) }}">Mark
+                                    all as read</a>
                             </div>
                             <div class="card-body p-0" style="max-height: 300px; overflow-y: auto;">
                                 <ul class="list-group list-group-flush list-unstyled p-2">

@@ -104,17 +104,18 @@
     <!-- Avatar -->
     <div class="me-4 flex-shrink-0 avatar">
 
-    @if($post->type === 'group_post')
-        <a href="{{ $groupLink }}">
-            <img src="{{ $profileImage }}" alt="Group Picture"
-                 class="img-fluid avatar-img rounded-circle" loading="lazy" decoding="async">
-        </a>
-    @else
-        <a href="{{ $profileLink }}">
-            <img src="{{ $profileImage }}" alt="Profile Picture"
-                 class="img-fluid avatar-img rounded-circle" loading="lazy" decoding="async">
-        </a>
-    @endif
+@if($post->type === 'group_post')
+    <a href="{{ $groupLink }}">
+        <img src="{{ !empty($profileImage) ? $profileImage : asset('feed_assets/images/avatar/07.jpg') }}"
+             alt="Group Picture" class="img-fluid avatar-img rounded-circle" loading="lazy" decoding="async">
+    </a>
+@else
+    <a href="{{ $profileLink }}">
+        <img src="{{ !empty($profileImage) ? $profileImage : asset('feed_assets/images/avatar/07.jpg') }}"
+             alt="Profile Picture" class="img-fluid avatar-img rounded-circle" loading="lazy" decoding="async">
+    </a>
+@endif
+
     </div>
 
     <!-- Text content -->
