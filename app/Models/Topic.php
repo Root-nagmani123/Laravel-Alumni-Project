@@ -42,4 +42,9 @@ public function group()
     return $this->belongsTo(Group::class, 'group_id');
 }
 
+public function forum()
+{
+    return $this->belongsTo(Forum::class, 'forum_id');
+}
+
 }

@@ -84,7 +84,9 @@ Route::get('/', function () {
 Route::prefix('user')->name('user.')->group(function () {
     Route::middleware('guest:user')->group(function () {
         Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+        Route::get('/loginldap', [AuthController::class, 'showLoginForm_ldap'])->name('loginldap');
         Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
+        Route::post('/login_ldap', [AuthController::class, 'login_ldap'])->name('login.submit_ldap');
     });
 
       Route::middleware(UserAuthMiddleware::class)->group(function () {
@@ -169,6 +171,7 @@ Route::prefix('user')->name('user.')->group(function () {
         Route::get('directory', [DashboardController::class, 'directory'])->name('directory');
        //Route::post('/feed/search', [FeedController::class, 'search'])->name('feed.search');
        Route::get('/search-fav-members', [ProfileController::class, 'searchFavMembers'])->name('search.fav.members');
+       Route::get('/profile/id/{id}', [ProfileController::class, 'showById'])->name('profile.id');
 
 	   Route::post('/event-rsvp', [DashboardController::class, 'submitRsvp'])->name('event.rsvp');
 	   Route::get('/all-events', [DashboardController::class, 'allevents'])->name('allevents');

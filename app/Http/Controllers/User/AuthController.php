@@ -5,6 +5,7 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use LdapRecord\Container;
 
 class AuthController extends Controller
 {
@@ -14,30 +15,13 @@ class AuthController extends Controller
        /*  return redirect()->route('user.feed1'); */
 		 return view('user.auth.login');
     }
-
-
-
-    public function login_807205(Request $request)
-    {
-		//$name = Auth::guard('user')->user()->name;
-
-        $credentials = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
-//dd($request);
-        if (Auth::guard('user')->attempt($credentials)) {
-            $request->session()->regenerate();
-            return redirect()->intended('/user/feed');
-        }
-
-        return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
-        ]);
+    function showLoginForm_ldap(){
+        return view('user.auth.login_ldap');
     }
 
 
-    public function login_ldap(Request $request)
+
+ public function login_bkp(Request $request)
 {
     $request->validate([
         'username' => 'required|string',
@@ -61,8 +45,9 @@ class AuthController extends Controller
                 return redirect()->intended('/user/feed');
             }
         } else {
+            $connection = Container::getDefaultConnection();
+if ($connection->auth()->attempt($username, $password)) {
             // 🌐 Production: LDAP authentication
-            if (Ldap::auth()->attempt($username, $password)) {
                 $user = \App\Models\Member::where('username', $username)
                             ->where('status', 1)
                             ->first();
@@ -83,6 +68,7 @@ class AuthController extends Controller
     ]);
 }
 
+
     public function login(Request $request)
 {
     $credentials = $request->validate([
@@ -100,6 +86,51 @@ class AuthController extends Controller
 
     return back()->withErrors([
         'email' => 'The provided credentials do not match our records or your account is inactive.',
+    ]);
+}
+function login_ldap(Request $request){
+     $request->validate([
+        'username' => 'required|string',
+        'password' => 'required|string',
+    ]);
+
+    $username = $request->input('username');
+    $password = $request->input('password');
+    $serverHost = $request->getHost(); // e.g., localhost or production domain
+
+    try {
+        // if (in_array($serverHost, ['localhost', '127.0.0.1', 'dev.local'])) {
+        //     // 👨‍💻 Localhost: Normal DB-based login
+        //     $user = \App\Models\Member::where('username', $username)
+        //                 ->where('status', 1) // only active users
+        //                 ->first();
+
+        //     if ($user) {
+        //         Auth::guard('user')->login($user);
+        //         $request->session()->regenerate();
+        //         return redirect()->intended('/user/feed');
+        //     }
+        // } else {
+            $connection = Container::getDefaultConnection();
+if ($connection->auth()->attempt($username, $password)) {
+            // 🌐 Production: LDAP authentication
+                $user = \App\Models\Member::where('username', $username)
+                            ->where('status', 1)
+                            ->first();
+
+                if ($user) {
+                    Auth::guard('user')->login($user);
+                    $request->session()->regenerate();
+                    return redirect()->intended('/user/feed');
+                }
+            }
+        // }
+    } catch (\Exception $e) {
+        logger('Login failed: ' . $e->getMessage());
+    }
+
+    return back()->withErrors([
+        'username' => 'Invalid username or password.',
     ]);
 }
 
