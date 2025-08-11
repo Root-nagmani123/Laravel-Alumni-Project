@@ -89,75 +89,54 @@ if ($connection->auth()->attempt($username, $password)) {
         'email' => 'The provided credentials do not match our records or your account is inactive.',
     ]);
 }
-function login_ldap(Request $request){
-     $request->validate([
+public function login_ldap(Request $request)
+{
+    $request->validate([
         'username' => 'required|string',
         'password' => 'required|string',
     ]);
 
     $username = $request->input('username');
     $password = $request->input('password');
-    $serverHost = $request->getHost(); // e.g., localhost or production domain
-$connection = Container::getDefaultConnection();
-
-    // Bind as admin user (already configured in config)
-    $connection->connect();
- $ldapUser = LdapUser::whereEquals('samaccountname', $username)->first();
-
-    if (!$ldapUser) {
-        return back()->withErrors(['username' => 'User not found in LDAP']);
-    }
-    die;
-    // Search for user
-  
-
-    // Try binding as user with password
-    try {
-        $connection->auth()->bind($username, $password);
-        // return true; // Authentication successful
-         return redirect()->intended('/user/feed');
-    } catch (\Exception $e) {
-        logger('Login failed: ' . $e->getMessage());
-        return back()->withErrors([
-            'username' => 'Invalid username or password.',
-        ]);
-    }
-
 
     try {
-        // if (in_array($serverHost, ['localhost', '127.0.0.1', 'dev.local'])) {
-        //     // 👨‍💻 Localhost: Normal DB-based login
-        //     $user = \App\Models\Member::where('username', $username)
-        //                 ->where('status', 1) // only active users
-        //                 ->first();
+        $connection = Container::getDefaultConnection();
+        $connection->connect();
 
-        //     if ($user) {
-        //         Auth::guard('user')->login($user);
-        //         $request->session()->regenerate();
-        //         return redirect()->intended('/user/feed');
-        //     }
-        // } else {
-            $connection = Container::getDefaultConnection();
-if ($connection->auth()->attempt($username, $password)) {
-            // 🌐 Production: LDAP authentication
-                $user = \App\Models\Member::where('username', $username)
-                            ->where('status', 1)
-                            ->first();
+        // Find LDAP user
+        $ldapUser = LdapUser::whereEquals('samaccountname', strtolower($username))
+            ->orWhereEquals('userprincipalname', $username)
+            ->first();
 
-                if ($user) {
-                    Auth::guard('user')->login($user);
-                    $request->session()->regenerate();
-                    return redirect()->intended('/user/feed');
-                }
+        if (!$ldapUser) {
+            return back()->withErrors(['username' => 'User not found in LDAP']);
+        }
+
+        // Bind as this user
+        $bindUsername = str_contains($username, '@') 
+            ? $username 
+            : $username . '@lbsnaa.gov.in';
+
+        if ($connection->auth()->attempt($bindUsername, $password)) {
+            // Match LDAP user to local DB user
+            $localUser = \App\Models\Member::where('username', $username)
+                ->where('status', 1)
+                ->first();
+
+            if ($localUser) {
+                Auth::guard('user')->login($localUser);
+                $request->session()->regenerate();
+                return redirect()->intended('/user/feed');
+            } else {
+                return back()->withErrors(['username' => 'LDAP auth passed, but user not found locally']);
             }
-        // }
+        } else {
+            return back()->withErrors(['username' => 'Invalid username or password.']);
+        }
     } catch (\Exception $e) {
         logger('Login failed: ' . $e->getMessage());
+        return back()->withErrors(['username' => 'LDAP connection failed.']);
     }
-
-    return back()->withErrors([
-        'username' => 'Invalid username or password.',
-    ]);
 }
 
 	/* public function logout()
