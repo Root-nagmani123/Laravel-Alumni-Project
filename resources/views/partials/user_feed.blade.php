@@ -22,7 +22,7 @@
         <div class="d-flex mb-3">
             <!-- Avatar -->
             <div class="avatar avatar-xs me-2">
-                <a href="{{ route('user.profile.data', ['id' => $user->id]) }}"> <img class="avatar-img rounded-circle" src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}"
+                <a href="{{ route('user.profile', ['id' => $user->id]) }}"> <img class="avatar-img rounded-circle" src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}"
                         alt="" loading="lazy" decoding="async"> </a>
             </div>
             <!-- Post input -->
@@ -84,7 +84,7 @@
         $created_by = $post->member->name;
 
         // Optional: if you have a group detail page
-        $profileLink =  route('user.profile.data', ['id' => $post->member->id]);
+        $profileLink =  route('user.profile', ['id' => $post->member->id]);
 
         $groupLink = route('user.group-post',['id' =>$post->group_id]);
     } else {
@@ -97,7 +97,7 @@
 
         $displayName = $member->name ?? 'Unknown';
         $designation = $member->designation ?? 'Unknown';
-        $profileLink = route('user.profile.data', ['id' => $member->id]);
+        $profileLink = route('user.profile', ['id' => $member->id]);
 
     }
 @endphp
@@ -323,10 +323,17 @@
             </ul>
             <div class="d-flex mb-3">
                 <!-- Avatar -->
-                <div class="avatar avatar-xs me-2">
-                    <a href="{{ route('user.profile.data', ['id' => $user->id]) }}"> <img class="avatar-img rounded-circle"
-                            src="{{asset('storage/'.$user->profile_pic)}}" alt="" loading="lazy" decoding="async"> </a>
-                </div>
+               <div class="avatar avatar-xs me-2">
+    <a href="{{ route('user.profile', ['id' => auth()->guard('user')->id()]) }}">
+        <img class="avatar-img rounded-circle"
+             src="{{ auth()->guard('user')->user()->profile_pic
+                    ? asset('storage/' . auth()->guard('user')->user()->profile_pic)
+                    : asset('feed_assets/images/avatar/07.jpg') }}"
+             alt="{{ auth()->guard('user')->user()->name ?? 'User' }}"
+             loading="lazy" decoding="async">
+    </a>
+</div>
+
                 <!-- Comment box  -->
                 <form class="nav nav-item w-100 position-relative" id="commentForm-{{ $post->id }}"
                     action="{{ route('user.comments.store') }}" method="POST" data-post-id="{{ $post->id }}">
@@ -351,8 +358,11 @@
                         <!-- Avatar -->
                         <div class="avatar avatar-xs">
                             <a href="#!"><img class="avatar-img rounded-circle"
-                                   src="${comment.member && comment.member.profile_pic ? '/storage/' + comment.member.profile_pic : '/feed_assets/images/avatar/07.jpg'}"
-                                    alt="" loading="lazy" decoding="async"></a>
+     src="{{ $comment->member && $comment->member->profile_pic 
+            ? asset('storage/' . $comment->member->profile_pic) 
+            : asset('feed_assets/images/avatar/07.jpg') }}"
+     alt="{{ $comment->member->name ?? 'User' }}"
+     loading="lazy" decoding="async"></a>
                         </div>
                         <div class="ms-2 w-100">
                             <!-- Comment by -->

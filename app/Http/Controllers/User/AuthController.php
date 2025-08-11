@@ -96,46 +96,82 @@ public function login_ldap(Request $request)
         'password' => 'required|string',
     ]);
 
-    $username = $request->input('username');
+    $username = trim($request->input('username'));
     $password = $request->input('password');
+ $serverHost = $request->getHost(); 
+     try {
+        if (in_array($serverHost, ['localhost', '127.0.0.1', 'dev.local'])) {
+            // 👨‍💻 Localhost: Normal DB-based login
+            $user = \App\Models\Member::where('username', $username)
+                        ->where('status', 1) // only active users
+                        ->first();
 
-    try {
+            if ($user) {
+                Auth::guard('user')->login($user);
+                $request->session()->regenerate();
+                return redirect()->intended('/user/feed');
+            }
+        } else {
+        
+        // Get the default LDAP connection from config
         $connection = Container::getDefaultConnection();
         $connection->connect();
 
-        // Find LDAP user
-        $ldapUser = LdapUser::whereEquals('samaccountname', strtolower($username))
-            ->orWhereEquals('userprincipalname', $username)
-            ->first();
+        // 1️⃣ Search for the user in LDAP (try both samaccountname & userPrincipalName)
+        $ldapUser = LdapUser::findBy('samaccountname', strtolower($username));
 
-        if (!$ldapUser) {
-            return back()->withErrors(['username' => 'User not found in LDAP']);
+        if (! $ldapUser) {
+            $ldapUser = LdapUser::findBy('userprincipalname', $username);
         }
 
-        // Bind as this user
-        $bindUsername = str_contains($username, '@') 
-            ? $username 
-            : $username . '@lbsnaa.gov.in';
+        if (! $ldapUser) {
+            logger("LDAP: User '{$username}' not found.");
+            return back()->withErrors(['username' => 'User not found in LDAP directory.']);
+        }
 
-        if ($connection->auth()->attempt($bindUsername, $password)) {
-            // Match LDAP user to local DB user
-            $localUser = \App\Models\Member::where('username', $username)
-                ->where('status', 1)
-                ->first();
+        // 2️⃣ Prepare possible bind usernames
+        $bindAttempts = [];
 
-            if ($localUser) {
-                Auth::guard('user')->login($localUser);
-                $request->session()->regenerate();
-                return redirect()->intended('/user/feed');
-            } else {
-                return back()->withErrors(['username' => 'LDAP auth passed, but user not found locally']);
-            }
+        if (str_contains($username, '@')) {
+            $bindAttempts[] = $username; // already UPN
         } else {
+            $bindAttempts[] = $username . '@lbsnaa.gov.in'; // UPN format
+            $bindAttempts[] = 'LBSNAA\\' . $username;       // DOMAIN\username format
+        }
+
+        // 3️⃣ Try each bind format
+        $bindSuccess = false;
+        foreach ($bindAttempts as $bindUser) {
+            if ($connection->auth()->attempt($bindUser, $password)) {
+                $bindSuccess = true;
+                break;
+            }
+        }
+
+        if (! $bindSuccess) {
+            logger("LDAP: Invalid credentials for '{$username}'. Tried formats: " . implode(', ', $bindAttempts));
             return back()->withErrors(['username' => 'Invalid username or password.']);
         }
+
+        // 4️⃣ If LDAP auth succeeded, log into local app
+        $localUser = \App\Models\Member::where('username', $username)
+            ->where('status', 1)
+            ->first();
+
+        if (! $localUser) {
+            logger("LDAP auth passed but no local Member found for '{$username}'.");
+            return back()->withErrors(['username' => 'LDAP auth passed, but user not registered locally.']);
+        }
+
+        Auth::guard('user')->login($localUser);
+        $request->session()->regenerate();
+
+        logger("LDAP: Login successful for '{$username}'.");
+        return redirect()->intended('/user/feed');
+    }
     } catch (\Exception $e) {
-        logger('Login failed: ' . $e->getMessage());
-        return back()->withErrors(['username' => 'LDAP connection failed.']);
+        logger('LDAP login error: ' . $e->getMessage());
+        return back()->withErrors(['username' => 'LDAP connection or authentication failed.']);
     }
 }
 
