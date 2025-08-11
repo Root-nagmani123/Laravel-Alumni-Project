@@ -24,18 +24,6 @@
         <div class="col-sm-6 col-lg-12">
         <div class="card">
                         <div class="h-80px rounded-top" style="background-image:url({{asset('user_assets/images/login/login-bg.jpg')}}); background-position: center; background-size: cover; background-repeat: no-repeat;"></div>
-                          <!-- Card body START -->
-                          <div class="card-body text-center pt-0">
-                            <!-- Avatar -->
-                            <div class="avatar avatar-lg mt-n5 mb-3">
-                              <img class="avatar-img rounded-circle border border-white border-3 bg-white" src="https://www.lbsnaa.gov.in/newsletter_img/1743757337_Screenshot%202025-04-04%20143132.png" alt="">
-                            </div>
-                            <!-- Info -->
-                            <h5 class="mb-0"> <a href="group-details.html">Newsletter</a> </h5>
-                            <!-- Group stat END -->
-                            </div>
-                        <!-- Card body END -->
-                        <!-- Card Footer START -->
                         <div class="card-footer text-center">
                           <a class="btn btn-success-soft btn-sm" href="https://www.lbsnaa.gov.in/lbsnaa-newsletter"> View Newsletter </a>
                         </div>
