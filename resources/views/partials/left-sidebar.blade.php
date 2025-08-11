@@ -96,10 +96,12 @@
 
                     <!-- Title -->
                     <div class="overflow-hidden">
-                        <a class="h6 mb-0" href="{{ $event->url ?? '#' }}">
+                        <a class="h6 mb-0" href="{{ route('user.allevents') }}">
                             {{ \Illuminate\Support\Str::limit($event->title, 20) }}</a>
                         <p class="mb-0 small text-truncate">
-                            {{ \Carbon\Carbon::parse($event->start_datetime)->format('D, M d, Y \a\t h:i A') }}</p>
+                            <!-- {{ \Carbon\Carbon::parse($event->start_datetime)->format('D, M d, Y \a\t h:i A') }}</p> -->
+                                  {{ \Carbon\Carbon::parse($event->start_datetime)->format('d-m-Y') }}
+                        </p>
                     </div>
 
                     <!-- RSVP Dropdown -->
