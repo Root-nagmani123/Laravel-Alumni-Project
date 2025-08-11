@@ -147,7 +147,8 @@ class GroupController extends Controller
     public function edit(Group $group)
     {
         $users = Member::all();
-        $group->load('groupMember');
+    $group->load('groupMember');
+
         return view('admin.group.edit', compact('group', 'users'));
     }
     public function update(Request $request, Group $group)
