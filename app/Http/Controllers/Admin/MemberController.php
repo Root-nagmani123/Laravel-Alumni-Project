@@ -107,6 +107,7 @@ class MemberController extends Controller
         $member->cader = $request->cader;
         $member->designation = $request->designation;
         $member->batch = $request->batch;
+        $member->username = $request->username;
         $member->save();
        return redirect()->route('members.index')->with('success', 'Member updated successfully.');
 
