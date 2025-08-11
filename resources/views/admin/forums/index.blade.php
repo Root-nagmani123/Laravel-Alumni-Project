@@ -117,11 +117,14 @@
                                         </div>
                                     </td>
 
-                                    <td>{{ \Carbon\Carbon::parse($forum->created_at)->timezone('Asia/Kolkata')->format('l, d M Y, h:i A') }}
+                                    <!-- <td>{{ \Carbon\Carbon::parse($forum->created_at)->timezone('Asia/Kolkata')->format('l, d M Y, h:i A') }} -->
+                                    <td>
+                                        {{ $forum->created_at }}
                                     </td>
                                     <td>
                                         @if($forum->end_date != null)
-                                            {{ \Carbon\Carbon::parse($forum->end_date)->timezone('Asia/Kolkata')->format('l, d M Y') }}
+                                            <!-- {{ \Carbon\Carbon::parse($forum->end_date)->timezone('Asia/Kolkata')->format('l, d M Y') }} -->
+                                              {{ $forum->end_date }}
                                         @endif
                                     </td>
 

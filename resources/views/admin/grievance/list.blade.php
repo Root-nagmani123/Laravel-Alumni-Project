@@ -45,7 +45,8 @@
                             <td>{{ $grievance->name }}</td>
                             <td>{{ $grievance->email }}</td>
                             <td>{{ Str::limit($grievance->message, 100) }}</td>
-                            <td>{{ \Carbon\Carbon::parse($grievance->created_at)->format('d M Y, h:i A') }}</td>
+                            <!-- <td>{{ \Carbon\Carbon::parse($grievance->created_at)->format('d M Y, h:i A') }}</td> -->
+                             <td>{{ $grievance->created_at }}</td>
                         </tr>
                         @empty
                         <tr>

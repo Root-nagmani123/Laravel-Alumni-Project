@@ -54,7 +54,7 @@
 
                                     $displayName = $member->name ?? 'Unknown';
                                     $designation = $member->designation ?? 'Unknown';
-                                    $profileLink = url('/user/profile/' . ($member->id ?? 0));
+                                    $profileLink = route('user.profile.data', ['id' => $member->id ?? 0]);
                                     }
                                     else {
                                     // Default user profile
@@ -65,23 +65,23 @@
 
                                     $displayName = $user->name ?? 'Guest User';
                                     $designation = $user->designation ?? 'Guest';
-                                    $profileLink = url('/user/profile/' . ($user->id ?? 0));
+                                    $profileLink = route('user.profile.data', ['id' => $user->id ?? 0]);
                                     }
                                     $user = Auth::guard('user')->user();
                                     $profileImage = $user->profile_pic ? asset('storage/' . $user->profile_pic) :
                                     asset('feed_assets/images/avatar-1.png');
                                     $displayName = $user->name ?? 'Guest User';
                                     $designation = $user->designation ?? 'Guest';
-                                    $profileLink = url('/user/profile/' . ($user->id ?? 0));
+                                    $profileLink = route('user.profile.data', ['id' => $user->id ?? 0]);
                                     @endphp
                                     <div class="avatar avatar-lg mt-n5 mb-3">
-                                        <a href="#!"><img class="avatar-img rounded-circle qwetyu"
+                                        <a href="{{route('user.profile.data', ['id' => $user->id ?? 0])}}"><img class="avatar-img rounded-circle qwetyu"
                                                 src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}"
                                                 alt=""></a>
                                     </div>
                                     <!-- Info -->
                                     @if(Auth::guard('user')->check())
-                                    <h5 class="mb-0"> <a href="#!">{{ Auth::guard('user')->user()->name }} </a> </h5>
+                                    <h5 class="mb-0"> <a href="{{route('user.profile.data', ['id' => Auth::guard('user')->user()->id])}}">{{ Auth::guard('user')->user()->name }} </a> </h5>
                                     @endif
                                     <small>{{ Auth::guard('user')->user()->designation }}</small>
                                     <ul class="list-inline mb-0 text-center text-sm-start mt-3 mt-sm-0">
@@ -164,7 +164,7 @@
                         <div class="d-flex align-items-center">
                             <!-- Avatar -->
                             <div class="avatar me-2">
-                                <a href="#!">
+                                <a href="{{ route('user.profile.data', ['id' => $topic->member->id]) }}">
                                     <img class="avatar-img rounded-circle"
                                         src="{{ $user->profile_pic && $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}"
                                         alt="">
@@ -175,7 +175,7 @@
                                 <div class="nav nav-divider">
                                     <h6 class="nav-item card-title mb-0">
                                         <a
-                                            href="#!">{{ $topic->creator_name ? $topic->creator_name : $topic->member->name }}</a>
+                                            href="{{ route('user.profile.data', ['id' => $topic->member->id]) }}">{{ $topic->creator_name ? $topic->creator_name : $topic->member->name }}</a>
                                     </h6>
                                         @php
     $createdAt = \Carbon\Carbon::parse($topic->created_date)->setTimezone('Asia/Kolkata');
@@ -314,13 +314,13 @@
                     <div class="d-flex mb-3">
                         <!-- Avatar -->
                         <div class="avatar avatar-xs me-2">
-                            <a href="#!">
+                            <a href="{{ route('user.profile.data', ['id' => $user->id]) }}">
                                 
                                 <img class="avatar-img rounded-circle"
                                     src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}"
                                     
 
-                                    alt="">
+                                    alt=""> 
                             </a>
                         </div>
                         <!-- Comment box -->
@@ -354,7 +354,7 @@
 								<div class="d-flex position-relative">
 									<!-- Avatar -->
 									<div class="avatar avatar-xs">
-										<a href="#!"><img class="avatar-img rounded-circle" src="{{ $comment->user && $comment->user->profile_pic ? asset('storage/' . $comment->user->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}" alt=""></a>
+										<a href="{{ route('user.profile.data', ['id' => $comment->user->id]) }}"><img class="avatar-img rounded-circle" src="{{ $comment->user && $comment->user->profile_pic ? asset('storage/' . $comment->user->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}" alt=""></a>
 									</div>
 									<div class="ms-2">
 										<!-- Comment by -->

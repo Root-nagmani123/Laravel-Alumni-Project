@@ -159,7 +159,6 @@ return redirect()->route('events.index')->with('error', 'Event not found!');retu
         return redirect('/admin/events')->with('success', 'Event updated successfully!');
     }
 
-
 	public function destroy(Events $event)
 		{
 			if ($event->status == 1) {
@@ -186,7 +185,7 @@ return redirect()->route('events.index')->with('error', 'Event not found!');retu
         $event->status = $request->status;
         $event->save();
         // If event is being activated and notification not sent
-        if ($oldStatus == 0 && $event->status == 1 && $event->notified_at == 0) {
+        if ($oldStatus == 0 && $event->status == 1 ) {
             $notification = $this->notificationService->notifyAllMembers('Event', $event->title . ' event has been added.', $event->id, 'event');
             if ($notification) {
                 Member::query()->update(['is_notification' => 0]);
@@ -194,6 +193,16 @@ return redirect()->route('events.index')->with('error', 'Event not found!');retu
                 $event->save();
             }
         }
+
+        //Deactivate event
+        if ($oldStatus == 1 && $event->status == 0) {
+            $notification = $this->notificationService->notifyAllMembers('Event', $event->title . ' event has been deactivated.', $event->id, 'event');
+            if ($notification) {
+                Member::query()->update(['is_notification' => 0]);
+                $event->notified_at = 0;
+                $event->save();
+            }
+        }   
         return response()->json(['message' => 'Status updated successfully.']);
     }
 

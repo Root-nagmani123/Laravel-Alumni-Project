@@ -99,6 +99,8 @@ class NotificationService
                 'is_read'      => false,
             ]);
         }
+
+        Member::query()->update(['is_notification' => 0]);
     }
 
     // Simple notification for group posts

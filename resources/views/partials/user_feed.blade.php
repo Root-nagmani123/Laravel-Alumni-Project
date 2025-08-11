@@ -21,7 +21,7 @@
         <div class="d-flex mb-3">
             <!-- Avatar -->
             <div class="avatar avatar-xs me-2">
-                <a href="{{ route('user.profile', ['id' => $user->id]) }}"> <img class="avatar-img rounded-circle" src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}"
+                <a href="{{ route('user.profile.data', ['id' => $user->id]) }}"> <img class="avatar-img rounded-circle" src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}"
                         alt="" loading="lazy" decoding="async"> </a>
             </div>
             <!-- Post input -->
@@ -73,7 +73,7 @@
 
         // Group post ke liye
         $profileImage = $post->group_image
-            ? asset('storage/' . $post->group_image)
+            ? asset('storage/uploads/images/grp_img/' . $post->group_image)
             : asset('feed_assets/images/avatar/07.jpg'); // fallback image
 
         $displayName = $post->group_name ?? 'Unknown Group';
@@ -81,7 +81,7 @@
         $created_by = $post->member->name;
 
         // Optional: if you have a group detail page
-        $profileLink =  route('user.profile', ['id' => $post->member->id]);
+        $profileLink =  route('user.profile.data', ['id' => $post->member->id]);
 
         $groupLink = route('user.group-post',['id' =>$post->group_id]);
     } else {
@@ -94,7 +94,7 @@
 
         $displayName = $member->name ?? 'Unknown';
         $designation = $member->designation ?? 'Unknown';
-        $profileLink = route('user.profile', ['id' => $member->id]);
+        $profileLink = route('user.profile.data', ['id' => $member->id]);
 
     }
 @endphp
@@ -329,7 +329,7 @@
             <div class="d-flex mb-3">
                 <!-- Avatar -->
                <div class="avatar avatar-xs me-2">
-    <a href="{{ route('user.profile', ['id' => auth()->guard('user')->id()]) }}">
+    <a href="{{ route('user.profile.data', ['id' => auth()->guard('user')->id()]) }}">
         <img class="avatar-img rounded-circle"
              src="{{ auth()->guard('user')->user()->profile_pic
                     ? asset('storage/' . auth()->guard('user')->user()->profile_pic)

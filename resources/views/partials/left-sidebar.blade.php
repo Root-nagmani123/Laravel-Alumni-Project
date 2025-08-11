@@ -89,7 +89,7 @@
                 <div class="hstack gap-2 mb-3" id="event-{{ $event->id }}">
                     <!-- Avatar -->
                     <div class="avatar">
-                        <a href="#!"><img class="avatar-img rounded-circle"
+                        <a href="{{ route('user.allevents') }}"><img class="avatar-img rounded-circle"
                                 src="{{ isset($event->image) && $event->image ? asset('storage/' . $event->image) : asset('feed_assets/images/avatar/07.jpg') }}"
                                 alt="" loading="lazy" decoding="async"></a>
                     </div>

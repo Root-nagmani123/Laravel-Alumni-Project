@@ -47,6 +47,7 @@
                 <div class="mb-3">
 
                     <div class="d-flex align-items-center gap-2 mb-2">
+                        <a href="{{ route('user.broadcastDetails', $broadcast->id) }}">
                         @if($broadcast->image_url)
                         <img class="avatar-img rounded" src="{{ asset('storage/' . $broadcast->image_url) }}" alt=""
                             height="45" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $broadcast->title }}"
@@ -56,6 +57,7 @@
                             data-bs-toggle="tooltip" data-bs-placement="top" title="No image available" alt="No image"
                             loading="lazy">
                         @endif
+                        </a>
 
                     </div>
 
@@ -98,9 +100,11 @@
                 <div class="hstack gap-3 mb-3 align-items-center">
                     <!-- Group Image -->
                     <div class="avatar avatar-md">
-                        <img src="{{asset('storage/uploads/images/grp_img/' . ($recent->image ?? 'default-group.png')) }}"
-                            alt="Group Image" class="rounded-circle img-fluid"
-                            style="width: 48px; height: 48px; object-fit: cover;">
+                        <a href="{{ route('user.group-post', $recent->id) }}">
+                            <img src="{{asset('storage/uploads/images/grp_img/' . ($recent->image ?? 'default-group.png')) }}"
+                                alt="Group Image" class="rounded-circle img-fluid"
+                                style="width: 48px; height: 48px; object-fit: cover;">
+                        </a>
                     </div>
 
                     <!-- Title + End Date -->

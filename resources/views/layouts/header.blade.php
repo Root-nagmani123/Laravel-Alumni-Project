@@ -87,7 +87,7 @@ Header START -->
                 <div class="position-relative">
                     <form id="searchForm">
                         <input type="search" id="searchMemberInput" class="form-control ps-5" placeholder="Search..."
-                            autocomplete="off" aria-label="Search" />
+                            autocomplete="off" aria-label="Search"/>
                         <button type="button"
                             class="btn bg-transparent px-2 py-0 position-absolute top-50 start-0 translate-middle-y">
                             <i class="bi bi-search fs-5"></i>
@@ -128,9 +128,12 @@ Header START -->
                                 <h6 class="m-0">Notifications <span
                                         class="badge bg-danger bg-opacity-10 text-danger ms-2">{{ isset($notifications) ? $notifications->count() : 0 }}</span>
                                 </h6>
-                                <a class="small"
-                                    href="{{ route('user.notifications.status', ['id' => Auth::guard('user')->user()->id]) }}">Mark
-                                    all as read</a>
+
+
+<a class="small clear-all-notifications"
+   href="{{ route('user.notifications.clear', ['id' => Auth::guard('user')->user()->id]) }}"
+   onclick="clearNotifications(event)">Clear all</a>
+
                             </div>
                             <div class="card-body p-0" style="max-height: 300px; overflow-y: auto;">
                                 <ul class="list-group list-group-flush list-unstyled p-2">
@@ -236,7 +239,7 @@ Header START -->
                 <!-- Notification dropdown END -->
 
                 <li class="nav-item ms-2 dropdown" style="z-index:1060 !important;">
-                    <a class="nav-link btn icon-md p-0" href="#" id="profileDropdown" role="button"
+                    <a class="nav-link btn icon-md p-0" href="{{ route('user.profile.data', ['id' => $user->id]) }}" id="profileDropdown" role="button"
                         data-bs-auto-close="outside" data-bs-display="static" data-bs-toggle="dropdown"
                         aria-expanded="false">
                         @php
@@ -535,6 +538,51 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+</script>
+
+
+
+<script>
+function clearNotifications(event) {
+    event.preventDefault();
+
+    const url = event.currentTarget.href;
+
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        },
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Clear all route called:', data);
+
+        // ✅ Hide the red dot
+        const notifBadge = document.querySelector('.badge-notif');
+        if (notifBadge) {
+            notifBadge.remove();
+        }
+
+        // ✅ Optionally also set count to 0 in header
+        const notifCount = document.querySelector('.card-header h6 .badge');
+        if (notifCount) {
+            notifCount.textContent = '0';
+        }
+    })
+    .catch(error => {
+        console.error('Error calling clear notifications route:', error);
+    });
+}
+
+
 </script>
 
 <style>

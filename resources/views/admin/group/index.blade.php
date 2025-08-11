@@ -83,10 +83,12 @@
                                         <a href="{{ route('group.topic.view' , ['id' => $group->id] )}}" class="btn btn-sm btn-success" data-bs-toggle="tooltip" data-bs-placement="top" title="View Group Topics"><i class="bi bi-eye"></i></a>
                                      </div>
                                      </td>
-                                   <td>{{ \Carbon\Carbon::parse($group->created_at)->timezone('Asia/Kolkata')->format('l, d M Y, h:i A') }}</td>
+                                   <!-- <td>{{ \Carbon\Carbon::parse($group->created_at)->timezone('Asia/Kolkata')->format('l, d M Y, h:i A') }}</td> -->
+                                   <td>{{ $group->created_at }}</td>
                                    <td>
                                         @if($group->end_date != null)
-                                            {{ \Carbon\Carbon::parse($group->end_date)->timezone('Asia/Kolkata')->format('l, d M Y') }}
+                                            <!-- {{ \Carbon\Carbon::parse($group->end_date)->timezone('Asia/Kolkata')->format('l, d M Y') }} -->
+                                            {{ $group->end_date }}
                                         @endif
                                     </td>
                                    <td>
