@@ -1,7 +1,6 @@
 <!-- Main content START -->
      <!-- Story START -->
-    <div class="d-flex gap-2 mb-3">
-        
+    <div class="d-flex gap-2 mb-3" style="margin-left:-.5rem;">
       <div class="position-relative" id="openAddStoryModal">
   <div class="card border border-2 border-dashed h-150px px-4 px-sm-5 shadow-none d-flex align-items-center justify-content-center text-center">
     <div>

@@ -110,13 +110,13 @@
         <div class="col-lg-9">
             <!-- Forum Header -->
             <div class="card mb-4">
-                <div class="card-header border-0 pb-0">
+                <div class="card-body border-0">
                     <div class="d-flex align-items-center justify-content-between">
                         <div class="d-flex align-items-center">
                             <!-- Forum Info -->
                             <div>
                                 <h5 class="card-title mb-0">{{ $forum->name }}</h5>
-                                <p class="mb-0 small text-muted">{{ $topics->count() }} topics</p>
+                                <p class="mb-0 small text-muted mb-2">{{ $topics->count() }} topics</p>
                                 @if($forum->end_date)
                                 <p class="mb-0 small text-muted">End Date:
                                     {{ \Carbon\Carbon::parse($forum->end_date)->format('d M Y') }} </p>
@@ -177,8 +177,28 @@
                                         <a
                                             href="#!">{{ $topic->creator_name ? $topic->creator_name : $topic->member->name }}</a>
                                     </h6>
-                                    <span
-                                        class="nav-item small">{{ \Carbon\Carbon::parse($topic->created_date)->diffForHumans() }}</span>
+                                        @php
+    $createdAt = \Carbon\Carbon::parse($topic->created_date)->setTimezone('Asia/Kolkata');
+    $now = \Carbon\Carbon::now('Asia/Kolkata');
+    $diff = $createdAt->diff($now);
+
+    if ($diff->y > 0) {
+        $timeDiff = $diff->y . 'y';
+    } elseif ($diff->m > 0) {
+        $timeDiff = $diff->m . 'mo';
+    } elseif ($diff->d > 0) {
+        $timeDiff = $diff->d . 'd';
+    } elseif ($diff->h > 0) {
+        $timeDiff = $diff->h . 'h';
+    } elseif ($diff->i > 0) {
+        $timeDiff = $diff->i . 'min';
+    } else {
+        $timeDiff = 'Just now';
+    }
+@endphp
+
+<small class="ms-2">{{ $timeDiff }}</small>
+
                                 </div>
                                 <p class="mb-0 small">{{ $topic->creator ? $topic->creator->designation : 'Member' }}
                                 </p>
@@ -329,26 +349,45 @@
                         <ul class="comment-wrap list-unstyled">
                         @if($topic->comments->count() > 0)
                             @foreach($topic->comments as $comment)
-                                <li class="comment-item">
-                                    <div class="d-flex">
-                                        <!-- Avatar -->
-                                        <div class="avatar avatar-xs me-2">
-                                            <a href="#!">
-                                                <img class="avatar-img rounded-circle"
-                                                    src="{{ $comment->user && $comment->user->profile_pic ? asset('storage/' . $comment->user->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}"
-                                                    alt="">
-                                            </a>
-                                        </div>
-                                        <!-- Comment by -->
-                                        <div class="comment-body">
-                                            <div class="d-flex">
-                                                
-                                                <h6 class="me-2"><a href="#!">{{ $comment->user ? $comment->user->name : 'Unknown User' }}</a></h6>
-                                                <small class="text-muted">{{ $comment->created_at->diffForHumans() }}</small>
-                                            </div>
-                                            <p class="mb-0">{{ $comment->comment }}</p>
-                                        </div>
-                                    </div>
+                               <!-- Comment item START -->
+							<li class="comment-item">
+								<div class="d-flex position-relative">
+									<!-- Avatar -->
+									<div class="avatar avatar-xs">
+										<a href="#!"><img class="avatar-img rounded-circle" src="{{ $comment->user && $comment->user->profile_pic ? asset('storage/' . $comment->user->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}" alt=""></a>
+									</div>
+									<div class="ms-2">
+										<!-- Comment by -->
+										<div class="bg-light rounded-start-top-0 p-3 rounded">
+											<div class="d-flex justify-content-between">
+												<h6 class="mb-1"> <a href="#!">{{ $comment->user ? $comment->user->name : 'Unknown User' }}</a></h6>
+												@php
+    $createdAt = \Carbon\Carbon::parse($comment->created_at)->setTimezone('Asia/Kolkata');
+    $now = \Carbon\Carbon::now('Asia/Kolkata');
+    $diff = $createdAt->diff($now);
+
+    if ($diff->y > 0) {
+        $timeDiff = $diff->y . 'y';
+    } elseif ($diff->m > 0) {
+        $timeDiff = $diff->m . 'mo';
+    } elseif ($diff->d > 0) {
+        $timeDiff = $diff->d . 'd';
+    } elseif ($diff->h > 0) {
+        $timeDiff = $diff->h . 'h';
+    } elseif ($diff->i > 0) {
+        $timeDiff = $diff->i . 'min';
+    } else {
+        $timeDiff = 'Just now';
+    }
+@endphp
+
+<small class="ms-2">{{ $timeDiff }}</small>
+
+											</div>
+											<p class="small mb-0">{{ $comment->comment }}</p>
+										</div>
+									</div>
+								</div>
                                 </li>
                             @endforeach
                         @else
