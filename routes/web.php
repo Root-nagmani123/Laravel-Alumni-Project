@@ -203,7 +203,10 @@ Route::prefix('user')->name('user.')->group(function () {
         Route::post('user/forum/topic/{id}/store', [MemberForumController::class, 'member_store_topic'])->name('forum.topic.store');
        Route::post('user/forum/delete', [MemberForumController::class, 'deleteforum'])->name('forum.delete');
         Route::get('/notifications', [App\Http\Controllers\Member\NotificationController::class, 'getNotifications'])->name('notifications.get');
-        Route::get('/notifications/{id}', [App\Http\Controllers\Member\NotificationController::class, 'notificationstatus'])->name('notifications.status');
+        // Route::get('/notifications/{id}', [App\Http\Controllers\Member\NotificationController::class, 'notificationstatus'])->name('notifications.status');
+       Route::post('/notifications/{id}/clear', [App\Http\Controllers\Member\NotificationController::class, 'clearNotifications'])
+     ->name('notifications.clear');
+       
         Route::put('/notifications/{id}/read', [App\Http\Controllers\Member\NotificationController::class, 'markAsRead'])->name('notifications.read');
         
     });

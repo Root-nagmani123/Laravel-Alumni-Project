@@ -21,7 +21,7 @@
         <div class="d-flex mb-3">
             <!-- Avatar -->
             <div class="avatar avatar-xs me-2">
-                <a href="{{ route('user.profile', ['id' => $user->id]) }}"> <img class="avatar-img rounded-circle" src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}"
+                <a href="{{ route('user.profile.data', ['id' => $user->id]) }}"> <img class="avatar-img rounded-circle" src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}"
                         alt="" loading="lazy" decoding="async"> </a>
             </div>
             <!-- Post input -->
@@ -73,7 +73,7 @@
 
         // Group post ke liye
         $profileImage = $post->group_image
-            ? asset('storage/' . $post->group_image)
+            ? asset('storage/uploads/images/grp_img/' . $post->group_image)
             : asset('feed_assets/images/avatar/07.jpg'); // fallback image
 
         $displayName = $post->group_name ?? 'Unknown Group';
@@ -81,7 +81,7 @@
         $created_by = $post->member->name;
 
         // Optional: if you have a group detail page
-        $profileLink =  route('user.profile', ['id' => $post->member->id]);
+        $profileLink =  route('user.profile.data', ['id' => $post->member->id]);
 
         $groupLink = route('user.group-post',['id' =>$post->group_id]);
     } else {
@@ -94,7 +94,7 @@
 
         $displayName = $member->name ?? 'Unknown';
         $designation = $member->designation ?? 'Unknown';
-        $profileLink = route('user.profile', ['id' => $member->id]);
+        $profileLink = route('user.profile.data', ['id' => $member->id]);
 
     }
 @endphp
@@ -329,7 +329,7 @@
             <div class="d-flex mb-3">
                 <!-- Avatar -->
                <div class="avatar avatar-xs me-2">
-    <a href="{{ route('user.profile', ['id' => auth()->guard('user')->id()]) }}">
+    <a href="{{ route('user.profile.data', ['id' => auth()->guard('user')->id()]) }}">
         <img class="avatar-img rounded-circle"
              src="{{ auth()->guard('user')->user()->profile_pic
                     ? asset('storage/' . auth()->guard('user')->user()->profile_pic)
@@ -759,7 +759,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                 <div class="d-flex position-relative">
                                     <div class="avatar avatar-xs">
                                         <a href="#!"><img class="avatar-img rounded-circle"
-                                            src="${comment.member && comment.member.profile_pic ? '/storage/' + comment.member.profile_pic : '/feed_assets/images/avatar/12.jpg'}"
+                                            src="${comment.member && comment.member.profile_pic ? '/storage/' + comment.member.profile_pic : '/feed_assets/images/avatar/07.jpg'}"
                                             alt="" loading="lazy" decoding="async"></a>
                                     </div>
                                     <div class="ms-2 w-100">
@@ -861,7 +861,7 @@ document.addEventListener("DOMContentLoaded", function () {
 @endphp
         {
             id: "member-{{ $myUserId }}",
-            photo: "{{ asset($myStoryImage ? 'storage/' . $myStoryImage : 'feed_assets/images/avatar/08.jpg') }}",
+            photo: "{{ asset($myStoryImage ? 'storage/' . $myStoryImage : 'feed_assets/images/avatar/07.jpg') }}",
             name: "{{ addslashes($myUser->name) }}",
             // link: "#", // REMOVE
             items: [
@@ -901,7 +901,7 @@ document.addEventListener("DOMContentLoaded", function () {
 @endphp
         {
             id: "member-{{ $memberId }}",
-            photo: "{{ asset($storyImage ? 'storage/' . $storyImage : 'feed_assets/images/avatar/08.jpg') }}",
+            photo: "{{ asset($storyImage ? 'storage/' . $storyImage : 'feed_assets/images/avatar/07.jpg') }}",
             name: "{{ addslashes($user->name) }}",
             // link: "#", // REMOVE
             items: [

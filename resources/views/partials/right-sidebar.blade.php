@@ -23,17 +23,12 @@
 
         <div class="col-sm-6 col-lg-12">
         <div class="card">
-            <!-- Card header START -->
-            <div class="card-header pb-0 border-0">
-                <h5 class="card-title mb-0">Newsletter</h5>
-            </div>
-            <!-- Card header END -->
-            <!-- Card body START -->
-            <div class="card-body">
-                <a href="https://www.lbsnaa.gov.in/lbsnaa-newsletter" class="text-decoration-none" style="color:#af2910;" target="_blank">Newsletter</a>
-            </div>
-            <!-- Card body END -->
-        </div>
+                        <div class="h-80px rounded-top" style="background-image:url({{asset('user_assets/images/login/login-bg.jpg')}}); background-position: center; background-size: cover; background-repeat: no-repeat;"></div>
+                        <div class="card-footer text-center">
+                          <a class="btn btn-success-soft btn-sm" href="https://www.lbsnaa.gov.in/lbsnaa-newsletter"> View Newsletter </a>
+                        </div>
+                        <!-- Card Footer END -->
+                      </div>
     </div>
     <!-- Card News END -->
     <!-- Card News START -->
@@ -52,6 +47,7 @@
                 <div class="mb-3">
 
                     <div class="d-flex align-items-center gap-2 mb-2">
+                        <a href="{{ route('user.broadcastDetails', $broadcast->id) }}">
                         @if($broadcast->image_url)
                         <img class="avatar-img rounded" src="{{ asset('storage/' . $broadcast->image_url) }}" alt=""
                             height="45" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $broadcast->title }}"
@@ -61,6 +57,7 @@
                             data-bs-toggle="tooltip" data-bs-placement="top" title="No image available" alt="No image"
                             loading="lazy">
                         @endif
+                        </a>
 
                     </div>
 
@@ -103,9 +100,11 @@
                 <div class="hstack gap-3 mb-3 align-items-center">
                     <!-- Group Image -->
                     <div class="avatar avatar-md">
-                        <img src="{{asset('storage/uploads/images/grp_img/' . ($recent->image ?? 'default-group.png')) }}"
-                            alt="Group Image" class="rounded-circle img-fluid"
-                            style="width: 48px; height: 48px; object-fit: cover;">
+                        <a href="{{ route('user.group-post', $recent->id) }}">
+                            <img src="{{asset('storage/uploads/images/grp_img/' . ($recent->image ?? 'default-group.png')) }}"
+                                alt="Group Image" class="rounded-circle img-fluid"
+                                style="width: 48px; height: 48px; object-fit: cover;">
+                        </a>
                     </div>
 
                     <!-- Title + End Date -->

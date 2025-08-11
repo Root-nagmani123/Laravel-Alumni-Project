@@ -25,7 +25,7 @@ class NotificationController extends Controller
         })
         ->orderBy('created_at', 'desc')
         ->get(['id', 'message', 'created_at','source_id','source_type']);
-dd($notifications);
+
         return response()->json($notifications);
     }
 
@@ -47,10 +47,30 @@ dd($notifications);
     public function notificationstatus($id)
     {
         $member = Member::find($id);
-
         $member->is_notification = 1;
         $updated = $member->save();
         return redirect()->back();
+    }
+
+    public function clearNotifications(Request $request, $id)
+    {
+      $member = Member::find($id);
+
+        // Check if the user is authenticated and the ID matches
+        if (!$member || $member->id != $id) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized or invalid user ID',
+            ], 401);
+        }
+
+        $member->is_notification = 1;
+        $updated = $member->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Notifications cleared successfully',
+        ]);
     }
 
 }

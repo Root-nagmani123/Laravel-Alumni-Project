@@ -191,7 +191,7 @@
 
         <!-- Body -->
         <div class="toast-body collapse show" id="collapseChat-{{ $selectChat->id }}">
-            <div class="chat-conversation-content custom-scrollbar h-200px" style="overflow-y:auto;" id="chat-container">
+            <div class="chat-conversation-content custom-scrollbar h-200px" style="overflow-y:auto;" id="chat-container-{{ $selectChat->id }}">
 
                 @php
                     $groupedMessages = $messages->groupBy(fn($m) => \Carbon\Carbon::parse($m->created_at)->format('Y-m-d'));
