@@ -19,15 +19,14 @@ class Kernel extends ConsoleKernel
     /**
      * Define the application's command schedule.
      *
-     * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
+     * @par am  \Illuminate\Console\Scheduling\Schedule  $schedule
      * @return void
      */
     protected function schedule(Schedule $schedule)
     {
        $schedule->command('send:birthday-notifications')
-                   ->dailyAt('16:00') // send at 4:00 PM
+                   ->dailyAt('05:30') // send at 9:00 AM
                    ->timezone('Asia/Kolkata');
-
     }
 
     /**
