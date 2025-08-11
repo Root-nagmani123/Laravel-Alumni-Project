@@ -5,6 +5,7 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use LdapRecord\Container;
 
 class AuthController extends Controller
 {
@@ -17,27 +18,7 @@ class AuthController extends Controller
 
 
 
-    public function login_807205(Request $request)
-    {
-		//$name = Auth::guard('user')->user()->name;
-
-        $credentials = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
-//dd($request);
-        if (Auth::guard('user')->attempt($credentials)) {
-            $request->session()->regenerate();
-            return redirect()->intended('/user/feed');
-        }
-
-        return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
-        ]);
-    }
-
-
-    public function login_ldap(Request $request)
+ public function login_bkp(Request $request)
 {
     $request->validate([
         'username' => 'required|string',
@@ -61,8 +42,9 @@ class AuthController extends Controller
                 return redirect()->intended('/user/feed');
             }
         } else {
+            $connection = Container::getDefaultConnection();
+if ($connection->auth()->attempt($username, $password)) {
             // 🌐 Production: LDAP authentication
-            if (Ldap::auth()->attempt($username, $password)) {
                 $user = \App\Models\Member::where('username', $username)
                             ->where('status', 1)
                             ->first();
@@ -82,6 +64,7 @@ class AuthController extends Controller
         'username' => 'Invalid username or password.',
     ]);
 }
+
 
     public function login(Request $request)
 {

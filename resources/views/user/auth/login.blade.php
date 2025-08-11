@@ -17,10 +17,9 @@
     <link href="../../css2-1?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
     <!-- Theme css -->
-    <link id="change-link" rel="stylesheet" type="text/css" href="{{asset('user_assets/css/style.css')}}">
-
     <!-- Add CSRF token meta -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link id="change-link" rel="stylesheet" type="text/css" href="{{asset('user_assets/css/style.css')}}">
     <style>
     .flip-card {
         position: relative;
@@ -181,17 +180,17 @@
                                             </div>
                                             <hr>
                                             <div class="login-title">
-                                                <h2>Login with LDAP</h2>
+                                                <h2>Login</h2>
                                             </div>
                                             <div class="login-discription mb-4">
-                                                <h4>Welcome to LBSNAA Alumni, please login using LDAP credentials.</h4>
+                                                <h4>Welcome to LBSNAA Alumni, please login using credentials..</h4>
                                             </div>
                                             <form method="POST" action="{{ route('user.login.submit') }}">
                                                 @csrf
                                                 <div class="form-group mb-3">
-                                                    <label class="form-label fw-bold">Email Address</label>
+                                                    <label class="form-label fw-bold">Email Name</label>
                                                     <input type="email" name="email" class="form-control"
-                                                        placeholder="Enter your email">
+                                                        placeholder="Enter your email address" required>
                                                 </div>
                                                 <div class="form-group mb-3">
                                                     <label class="form-label fw-bold">Password</label>
@@ -394,6 +393,37 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
     </script>
+
+    <!-- latest jquery-->
+    <script src="{{asset('user_assets/js/jquery-3.6.0.min.js')}}"></script>
+
+    <!-- popper js-->
+    <script src="{{asset('user_assets/js/popper.min.js')}}"></script>
+
+    <!-- slick slider js -->
+    <script src="{{asset('user_assets/js/slick.js')}}"></script>
+    <script src="{{asset('user_assets/js/custom-slick.js')}}"></script>
+
+    <!-- feather icon js-->
+    <script src="{{asset('user_assets/js/feather.min.js')}}"></script>
+
+    <!-- emoji picker js-->
+    <script src="{{asset('user_assets/js/emojionearea.min.js')}}"></script>
+
+    <!-- Bootstrap js-->
+    <script src="{{asset('user_assets/js/bootstrap.js')}}"></script>
+
+    <!-- chatbox js -->
+    <script src="{{asset('user_assets/js/chatbox.js')}}"></script>
+
+    <!-- lazyload js-->
+    <script src="{{asset('user_assets/js/lazysizes.min.js')}}"></script>
+
+    <!-- theme setting js-->
+    <script src="{{asset('user_assets/js/theme-setting.js')}}"></script>
+
+    <!-- Theme js-->
+    <script src="{{asset('user_assets/js/script.js')}}"></script>
 
     <script>
     feather.replace();
