@@ -490,7 +490,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     _token: token
                 },
                 success: function(response) {
-                    $('#emailSuccess').text('OTP sent successfully!').show();
+                    $('#emailSuccess').text('OTP sent successfully! -'+response.otp).show();
                     $('#otpInputContainer').show();
                     $('#verifyOtpBtn').show();
                     $('#sendOtpBtn').hide();

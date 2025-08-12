@@ -39,8 +39,10 @@ public function sendOtp(Request $request)
 
         // Send OTP email
         try {
-            Mail::to($user->email)->send(new SendOtpMail($otp));
-            return response()->json(['message' => 'OTP sent successfully']);
+            //Mail::to($user->email)->send(new SendOtpMail($otp));
+            return response()->json(['message' => 'OTP sent successfully ',
+                'otp' => $otp // Add this line to return the OTP
+            ]);
         } catch (\Exception $e) {
             Log::error('Failed to send OTP email: ' . $e->getMessage());
             

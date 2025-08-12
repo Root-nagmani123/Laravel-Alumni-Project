@@ -132,7 +132,7 @@ Header START -->
 
 <a class="small clear-all-notifications"
    href="{{ route('user.notifications.clear', ['id' => Auth::guard('user')->user()->id]) }}"
-   onclick="clearNotifications(event)">Clear all</a>
+   onclick="clearNotifications(event)">Mark all as read</a>
 
                             </div>
                             <div class="card-body p-0" style="max-height: 300px; overflow-y: auto;">
@@ -184,8 +184,10 @@ Header START -->
                                                     ]);
                                                 }
                                             @endphp
-                                            <div class="notification-card bg-white border rounded shadow-sm p-3 mb-3"
-             style="min-width: 300px; max-width: 340px; scroll-snap-align: start;">
+                                          <div class="notification-card bg-white border rounded shadow-sm p-3 mb-3"
+     style="min-width: 300px; max-width: 340px; scroll-snap-align: start;"
+     data-id="{{ $notification->id }}"
+     data-created-at="{{ $notification->created_at }}">
             
             <!-- Avatar + Content -->
             <div class="d-flex align-items-start">
@@ -473,6 +475,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <script>
 function clearNotifications(event) {
     event.preventDefault();
+    
 
     const url = event.currentTarget.href;
 
