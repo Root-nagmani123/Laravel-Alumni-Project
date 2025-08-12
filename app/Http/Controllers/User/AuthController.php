@@ -100,7 +100,7 @@ public function login_ldap(Request $request)
     $password = $request->input('password');
  $serverHost = $request->getHost(); 
      try {
-        if (in_array($serverHost, ['localhost', '127.0.0.1', 'dev.local'])) {
+        if (in_array($serverHost, ['localhost', '127.0.0.1', 'dev.local','52.140.75.46'])) {
             // 👨‍💻 Localhost: Normal DB-based login
             $user = \App\Models\Member::where('username', $username)
                         ->where('status', 1) // only active users
