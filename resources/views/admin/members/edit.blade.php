@@ -103,8 +103,18 @@
                                     <div class="mb-3">
                                         <label class="form-label">Service<span class="required text-danger text-danger" >*</span></label>
                                         <input type="text" name="service" id="service" class="form-control"
-                                            value="{{ old('service', $member->service) }}">
+                                            value="{{ old('service', $member->Service) }}">
                                               @error('service')
+                                        <div class="text-danger">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Sector<span class="required text-danger text-danger" >*</span></label>
+                                        <input type="text" name="sector" id="sector" class="form-control"
+                                            value="{{ old('sector', $member->sector) }}">
+                                              @error('sector')
                                         <div class="text-danger">{{ $message }}</div>
                                         @enderror
                                     </div>

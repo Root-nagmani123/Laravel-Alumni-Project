@@ -19,7 +19,7 @@ class MemberController extends Controller
             //$members = Member::all();
            
            $members = Member::orderBy('id', 'desc')
-    ->select('id', 'name', 'username', 'mobile', 'email', 'cader', 'designation', 'batch', 'Service','status');
+    ->select('id', 'name', 'username', 'mobile', 'email', 'cader', 'designation', 'batch', 'Service','status','sector');
      if ($request->filled('search')) {
         $search = $request->search;
         $members->where(function ($q) use ($search) {
@@ -51,6 +51,8 @@ class MemberController extends Controller
             'cader' => 'required|string|max:255',
             'designation' => 'required|string|max:255',
             'batch' => 'required|integer',
+            'sector' => 'nullable|string',
+            'service' => 'nullable|string',
         ]);
         // Check if validation fails
         if ($validator->fails()) {
@@ -68,6 +70,8 @@ class MemberController extends Controller
             'cader' => $request->cader,
             'designation' => $request->designation,
             'batch' => $request->batch,
+            'sector' => $request->sector,
+            'Service' => $request->service,
         ]);
        return redirect()->route('members.index')->with('success', 'Member added successfully.');
         }
@@ -90,6 +94,8 @@ class MemberController extends Controller
             'cader' => 'required|string|max:255',
             'designation' => 'required|string|max:255',
             'batch' => 'required|integer',
+            'sector' => 'nullable|string',
+            'service' => 'nullable|string',
         ]);
         //  if validation fails
         if ($validator->fails()) {
@@ -108,6 +114,8 @@ class MemberController extends Controller
         $member->designation = $request->designation;
         $member->batch = $request->batch;
         $member->username = $request->username;
+        $member->Service = $request->service;
+        $member->sector = $request->sector;
         $member->save();
        return redirect()->route('members.index')->with('success', 'Member updated successfully.');
 

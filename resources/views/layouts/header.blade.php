@@ -9,6 +9,18 @@ Header START -->
 .dropdown-menu {
     z-index: 1100 !important;
 }
+/* New notification (unread) - highlight color */
+.notification-unread p {
+  color: #0d6efd; /* Bootstrap primary blue */
+  font-weight: 600; /* Slightly bold */
+}
+
+/* Read notification - lighter gray */
+.notification-read p {
+  color: #6c757d; /* Bootstrap muted text */
+  font-weight: normal;
+}
+
 
 
 </style>
@@ -132,7 +144,7 @@ Header START -->
 
 <a class="small clear-all-notifications"
    href="{{ route('user.notifications.clear', ['id' => Auth::guard('user')->user()->id]) }}"
-   onclick="clearNotifications(event)">Clear all</a>
+   onclick="clearNotifications(event)">Mark all as read</a>
 
                             </div>
                             <div class="card-body p-0" style="max-height: 300px; overflow-y: auto;">
@@ -169,7 +181,7 @@ Header START -->
                                                             $notificationUrl = route('user.group-post', ['id' => $notification->source_id]);
                                                             break;
                                                         case 'birthday':
-                                                            $notificationUrl = url('/profile/' . $notification->source_id);
+                                                            $notificationUrl = route('user.profile.data', ['id' => $notification->source_id]);
                                                             break;
                                                         default:
                                                             $notificationUrl = '#';
@@ -184,40 +196,33 @@ Header START -->
                                                     ]);
                                                 }
                                             @endphp
-                                            <div class="notification-card bg-white border rounded shadow-sm p-3 mb-3"
-             style="min-width: 300px; max-width: 340px; scroll-snap-align: start;">
+                                            <div class="notification-card rounded shadow-sm p-3 mb-1 
+     {{ $notification->is_read ? 'notification-read' : 'notification-unread' }}"
+     style="min-width: 300px; max-width: 340px; scroll-snap-align: start;"
+     data-id="{{ $notification->id }}"
+     data-created-at="{{ $notification->created_at }}">
             
-            <!-- Avatar + Content -->
-            <div class="d-flex align-items-start">
-                <!-- Avatar -->
-                <div class="flex-shrink-0">
-                    <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center"
-                         style="width: 40px; height: 40px;">
-                        <strong>{{ strtoupper(substr($notification->title ?? 'B', 0, 1)) }}</strong>
-                    </div>
-                </div>
+            <!-- Message -->
+                <div class="flex-grow-1 ms-3 notification-item mb-2" style="max-width: calc(100% - 60px);">
+    <div class="d-flex justify-content-between align-items-center">
+        <!-- Message -->
+        <a href="{{ $notificationUrl }}" 
+           class="text-decoration-none flex-grow-1" 
+           data-url="{{ $notificationUrl }}" 
+           data-source-type="{{ $notification->source_type ?? '' }}" 
+           data-source-id="{{ $notification->source_id ?? '' }}"
+           onclick="handleNotificationClick(event, '{{ $notificationUrl }}', '{{ $notification->source_type ?? '' }}', '{{ $notification->source_id ?? '' }}')">
+            <p class="small mb-0 text-primary">
+                {{ \Illuminate\Support\Str::words($notification->message, 20, '...') }}
+            </p>
+        </a>
 
-                <!-- Message -->
-                <div class="flex-grow-1 ms-3 notification-item mb-2"
-                     style="max-width: calc(100% - 60px);">
-                    <div class="d-flex justify-content-between">
-                                                        <a href="{{ $notificationUrl }}" class="text-decoration-none notification-link" 
-                                                           data-url="{{ $notificationUrl }}" 
-                                                           data-source-type="{{ $notification->source_type ?? '' }}" 
-                                                           data-source-id="{{ $notification->source_id ?? '' }}"
-                                                           onclick="handleNotificationClick(event, '{{ $notificationUrl }}', '{{ $notification->source_type ?? '' }}', '{{ $notification->source_id ?? '' }}')">
-                                                            <p class="small mb-2 text-primary">
-    {{ \Illuminate\Support\Str::words($notification->message, 20, '...') }}
-</p>
+        <!-- Time -->
+        <p class="small ms-3 mb-0 text-muted text-nowrap">
+            {{ \Carbon\Carbon::parse($notification->created_at)->setTimezone('Asia/Kolkata')->diffForHumans(null, null, true) }}
+        </p>
+    </div>
 
-                                                        </a>
-                                                        <p class="small ms-3 mb-0 text-muted text-nowrap">
-                                                             {{ \Carbon\Carbon::parse($notification->created_at)->setTimezone('Asia/Kolkata')->diffForHumans(null, null, true) }}
-                                                        </p>
-                                                    </div>
-                </div>
-            </div>
-        </div>
                                         </li>
                                         @endforeach
                                         @else
@@ -237,14 +242,14 @@ Header START -->
                     </div>
                 </li>
                 <!-- Notification dropdown END -->
-
+ @php
+                        $user = Auth::guard('user')->user();
+                        @endphp
                 <li class="nav-item ms-2 dropdown" style="z-index:1060 !important;">
                     <a class="nav-link btn icon-md p-0" href="{{ route('user.profile.data', ['id' => $user->id]) }}" id="profileDropdown" role="button"
                         data-bs-auto-close="outside" data-bs-display="static" data-bs-toggle="dropdown"
                         aria-expanded="false">
-                        @php
-                        $user = Auth::guard('user')->user();
-                        @endphp
+                       
                         <img class="avatar-img rounded-2"
                             src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}"
                             alt="" loading="lazy" decoding="async">
@@ -416,79 +421,7 @@ Header START -->
 </style>
 
 <script>
-    $(document).ready(function () {
-       
-
-        $('#searchMemberInput').on('input', function () {
-            let query = $(this).val();
-
-            if (query.length >= 3) {
-                $.ajax({
-                    url: '{{ route('user.member.search') }}',
-                    type: 'GET',
-                    data: { q: query },
-                    success: function (response) {
-                        let html = '';
-                        if (response.length > 0) {
-                            response.forEach(item => {
-                                const favClass = item.is_favourite ? 'text-danger' : 'text-muted';
-                                html += `<a href="/user/profile/id/${item.encrypted_id}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-    <span>${item.name}</span></a>
-    <button class="btn btn-sm p-0 border-0 bg-transparent favorite-user" data-id="${item.encrypted_id}" type="button">
-        <i class="bi bi-star-fill ${favClass}"></i>
-    </button>
-
-`;
-                            });
-                        } else {
-                            html = '<li class="list-group-item">No results found</li>';
-                        }
-                        $('#searchResults').html(html);
-                    }
-                });
-            } else {
-                $('#searchResults').html('');
-            }
-            success: function (response) {
-    const icon = button.find('i');
-    if (response.status === 'added') {
-        icon.removeClass('bi-star text-muted text-danger').addClass('bi-star-fill text-warning');
-        showFavoriteToast('Added to favorites', 'success');
-    } else if (response.status === 'removed') {
-        icon.removeClass('bi-star-fill text-warning').addClass('bi-star text-muted');
-        showFavoriteToast('Removed from favorites', 'danger');
-    }
-}
-
-        });
-        $('#searchMemberInput').on('focus', function () {
-    let resultsHtml = ''; // ✅ Define before using it
-    resultsHtml += `<a href="/user/profile/Alumni" class="list-group-item list-group-item-action">Alumni</a>`;
-    $('#searchResults').html(resultsHtml).show();
-    });
-    
-    });
-       $(document).on('click', '.favorite-user', function (e) {
-    e.preventDefault();
-    e.stopPropagation(); // prevent triggering parent link
-    const userId = $(this).data('id');
-let button = $(this);
-    $.ajax({
-         url: '{{ route('user.favorite.user.toggle') }}',
-        type: 'POST',
-        data: {
-            id: userId,
-            _token: '{{ csrf_token() }}'
-        },
-         success: function(response) {
-            if (response.status === 'added') {
-                button.find('i').addClass('text-warning').removeClass('text-danger');
-            } else if (response.status === 'removed') {
-                button.find('i').addClass('text-danger').removeClass('text-warning');
-            }
-        }
-    });
-});
+   
     
     document.getElementById('uw-widget-custom-trigger2').addEventListener('click', function() {
     // openMain();
@@ -501,35 +434,35 @@ function handleNotificationClick(event, url, sourceType, sourceId) {
     event.preventDefault();
     event.stopPropagation();
     
-    console.log('Notification clicked:', {
-        url: url,
-        sourceType: sourceType,
-        sourceId: sourceId
-    });
+    // console.log('Notification clicked:', {
+    //     url: url,
+    //     sourceType: sourceType,
+    //     sourceId: sourceId
+    // });
     
     // Only redirect if we have a valid URL (not '#')
     if (url && url !== '#') {
         window.location.href = url;
     } else {
-        console.log('No valid URL for notification type:', sourceType);
+        // console.log('No valid URL for notification type:', sourceType);
     }
 }
 
 // Add event listeners for notification links
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('DOM loaded, looking for notification links...');
+    // console.log('DOM loaded, looking for notification links...');
     const notificationLinks = document.querySelectorAll('.notification-link');
-    console.log('Found notification links:', notificationLinks.length);
+    // console.log('Found notification links:', notificationLinks.length);
     
     notificationLinks.forEach((link, index) => {
-        console.log(`Link ${index}:`, {
-            url: link.getAttribute('data-url'),
-            sourceType: link.getAttribute('data-source-type'),
-            sourceId: link.getAttribute('data-source-id')
-        });
+        // console.log(`Link ${index}:`, {
+        //     url: link.getAttribute('data-url'),
+        //     sourceType: link.getAttribute('data-source-type'),
+        //     sourceId: link.getAttribute('data-source-id')
+        // });
         
         link.addEventListener('click', function(e) {
-            console.log('Notification link clicked!');
+            // console.log('Notification link clicked!');
             const url = this.getAttribute('data-url');
             const sourceType = this.getAttribute('data-source-type');
             const sourceId = this.getAttribute('data-source-id');
@@ -545,6 +478,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <script>
 function clearNotifications(event) {
     event.preventDefault();
+    
 
     const url = event.currentTarget.href;
 
@@ -643,4 +577,24 @@ document.getElementById('searchMemberInput').addEventListener('input', function 
         searchResults.style.display = 'none';
     }
 });
+</script>
+<script>
+    function markAsRead(notificationId) {
+    let card = document.querySelector(`[data-id="${notificationId}"]`);
+    if (card) {
+        card.classList.remove('notification-unread');
+        card.classList.add('notification-read');
+    }
+}
+
+</script>
+<script>
+    function addNewNotification(htmlContent) {
+    let container = document.querySelector('#notification-container');
+    container.insertAdjacentHTML('afterbegin', htmlContent);
+
+    let newCard = container.firstElementChild;
+    newCard.classList.add('notification-unread');
+}
+
 </script>

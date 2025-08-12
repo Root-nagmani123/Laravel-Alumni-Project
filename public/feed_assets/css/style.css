@@ -17889,44 +17889,63 @@ a.badge:hover {
 /*# sourceMappingURL=style.css.map */
 
 
-/* Default for large screens */
+/* Sidebar base style */
 .left-sidebar,
 .right-sidebar {
   position: sticky;
   top: 100px;
   height: 90vh;
+  overflow-y: auto; /* Always scrollable */
+  scrollbar-gutter: stable overlay;
+
+  /* WebKit scrollbars hidden by default */
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent; /* Firefox */
+}
+.middle-sidebar{
+  margin-top:125px;
 }
 
-.middle-sidebar {
-  margin-top: 125px;
+/* Hide scrollbar in WebKit by default */
+.left-sidebar::-webkit-scrollbar,
+.right-sidebar::-webkit-scrollbar {
+  width: 6px;
+  background: transparent;
 }
 
+.left-sidebar::-webkit-scrollbar-thumb,
+.right-sidebar::-webkit-scrollbar-thumb {
+  background-color: transparent; /* Invisible by default */
+  border-radius: 10px;
+  transition: background-color 0.3s ease;
+}
+
+/* Show scrollbar on hover */
+.left-sidebar:hover::-webkit-scrollbar-thumb,
+.right-sidebar:hover::-webkit-scrollbar-thumb {
+  background-color: #af2910; /* Visible thumb on hover */
+}
+
+.left-sidebar:hover::-webkit-scrollbar-thumb:hover,
+.right-sidebar:hover::-webkit-scrollbar-thumb:hover {
+  background-color: #a0a0a0; /* Darker on hover over thumb */
+}
+
+/* Firefox hover scroll effect */
 .left-sidebar:hover,
 .right-sidebar:hover {
-  overflow-y: auto;
+  scrollbar-color: #af2910 transparent;
 }
 
-/* Scrollbar hidden until hover */
-.left-sidebar,
-.right-sidebar {
-  overflow-y: hidden;
-}
-
-/* Responsive adjustments */
-@media (max-width: 991px) { /* Bootstrap lg breakpoint */
+/* Responsive fix */
+@media (max-width: 991px) {
   .left-sidebar,
   .right-sidebar {
-    position: static;  /* No sticky on small screens */
-    height: auto;      /* Full height based on content */
-    overflow-y: visible;
+    position: static;
+    height: auto;
     top: auto;
   }
-
-  .left-sidebar {
-    margin-top: 125px;
-  }
-
-  .middle-sidebar {
-    margin-top: 0; /* Remove extra spacing on small screens */
+  .middle-sidebar{
+    margin-top: 0;
   }
 }

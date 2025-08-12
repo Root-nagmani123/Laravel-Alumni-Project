@@ -82,12 +82,18 @@ Route::get('/', function () {
 });
 
 Route::prefix('user')->name('user.')->group(function () {
+
     Route::middleware('guest:user')->group(function () {
+        // print_r(Auth::guard('user')->check());die;
+        if (Auth::guard('user')->check()) {
+            return redirect()->route('user.feed');
+        }
         Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
         Route::get('/loginldap', [AuthController::class, 'showLoginForm_ldap'])->name('loginldap');
         Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
         Route::post('/login_ldap', [AuthController::class, 'login_ldap'])->name('login.submit_ldap');
     });
+    Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 
       Route::middleware(UserAuthMiddleware::class)->group(function () {
         Route::get('/feed', [FeedController::class, 'index'])->name('feed');

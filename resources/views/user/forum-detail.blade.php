@@ -360,7 +360,7 @@
 										<!-- Comment by -->
 										<div class="bg-light rounded-start-top-0 p-3 rounded">
 											<div class="d-flex justify-content-between">
-												<h6 class="mb-1"> <a href="#!">{{ $comment->user ? $comment->user->name : 'Unknown User' }}</a></h6>
+												<h6 class="mb-1"> <a href="{{ route('user.profile.data', ['id' => $comment->user->id]) }}">{{ $comment->user ? $comment->user->name : 'Unknown User' }}</a></h6>
 												@php
     $createdAt = \Carbon\Carbon::parse($comment->created_at)->setTimezone('Asia/Kolkata');
     $now = \Carbon\Carbon::now('Asia/Kolkata');

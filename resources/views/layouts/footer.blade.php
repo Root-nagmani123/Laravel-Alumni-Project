@@ -154,6 +154,48 @@
 }
 </style>
 
+
+<!-- =======================
+JS libraries, plugins and custom scripts -->
+
+<!-- Bootstrap JS -->
+<script src="{{asset('feed_assets/vendor/bootstrap/dist/js/bootstrap.bundle.min.js')}}"></script>
+
+<!-- Vendors -->
+<script src="{{asset('feed_assets/vendor/tiny-slider/dist/tiny-slider.js')}}"></script>
+<script src="{{asset('feed_assets/vendor/OverlayScrollbars-master/js/OverlayScrollbars.min.js')}}"></script>
+<script src="{{asset('feed_assets/vendor/choices.js/public/assets/scripts/choices.min.js')}}"></script>
+<script src="{{asset('feed_assets/vendor/glightbox-master/dist/js/glightbox.min.js')}}"></script>
+<script src="{{asset('feed_assets/vendor/flatpickr/dist/flatpickr.min.js')}}"></script>
+<script src="{{asset('feed_assets/vendor/plyr/plyr.js')}}"></script>
+<script src="{{asset('feed_assets/vendor/dropzone/dist/min/dropzone.min.js')}}"></script>
+<script src="{{asset('feed_assets/vendor/zuck.js/dist/zuck.min.js')}}"></script>
+<script src="{{asset('feed_assets/js/zuck-stories.js')}}"></script>
+<!-- Vendors -->
+<script src="{{asset('feed_assets/vendor/dropzone/dist/dropzone.js')}}"></script>
+
+<!-- Theme Functions -->
+<script src="{{asset('assets/js/functions.js')}}"></script>
+
+<!-- DataTables JS -->
+
+<script src="{{asset('feed_assets/js/vendor/bootstrap/dist/js/dataTables.min.js')}}"></script>
+<script src="{{asset('feed_assets/js/vendor/bootstrap/dist/js/dataTables.bootstrap5.min.js')}}"></script>
+
+
+<!-- Accessibility JS -->
+<script src="{{asset('feed_assets/js/weights-v1.js')}}"></script>
+
+<script src="{{asset('feed_assets/js/jquery-3.6.0.min.js')}}"></script>
+
+<!-- Select2 CSS -->
+<link rel="stylesheet" href="{{asset('feed_assets/css/select2.min.css')}}">
+
+<!-- Select2 JS -->
+<script src="{{asset('feed_assets/js/select2.min.js')}}"></script>
+
+
+
 <script>
     function showFavoriteToast(message, type = 'primary') {
         const toastEl = document.getElementById('favoriteToast');
@@ -207,13 +249,9 @@
                 data: { search: query },
                 success: function (response) {
                     let resultsHtml = '';
-                    if (response.length > 0) {
-                        response.forEach(function (item) {
-                            resultsHtml += '<li class="list-group-item d-flex justify-content-between align-items-center"><a href="/user/profile/id/${item.encrypted_id}" class="text-decoration-none text-dark flex-grow-1">Alumni</a><button class="btn btn-sm p-0 border-0 bg-transparent favorite-user" data-id="${item.encrypted_id}" type="button"><i class="bi bi-star-fill text-warning" style="font-size: 1.2rem;"></i></button></li>';
-                        });
-                    } else {
-                        resultsHtml = `<div class="list-group-item">No results found</div>`;
-                    }
+                            resultsHtml += '<li class="list-group-item d-flex justify-content-between align-items-center"><a href="/user/profile/Alumni" class="text-decoration-none text-dark flex-grow-1">Alumni</a><button class="btn btn-sm p-0 border-0 bg-transparent favorite-user" data-id="Alumni" type="button"><i class="bi bi-star-fill text-warning" style="font-size: 1.2rem;"></i></button></li>';
+
+                   
 
             if (response.length > 0) {
                 response.forEach(function (member) {
@@ -265,131 +303,6 @@
             });
         });
     });
-</script>
-
-<!-- =======================
-JS libraries, plugins and custom scripts -->
-
-<!-- Bootstrap JS -->
-<script src="{{asset('feed_assets/vendor/bootstrap/dist/js/bootstrap.bundle.min.js')}}"></script>
-
-<!-- Vendors -->
-<script src="{{asset('feed_assets/vendor/tiny-slider/dist/tiny-slider.js')}}"></script>
-<script src="{{asset('feed_assets/vendor/OverlayScrollbars-master/js/OverlayScrollbars.min.js')}}"></script>
-<script src="{{asset('feed_assets/vendor/choices.js/public/assets/scripts/choices.min.js')}}"></script>
-<script src="{{asset('feed_assets/vendor/glightbox-master/dist/js/glightbox.min.js')}}"></script>
-<script src="{{asset('feed_assets/vendor/flatpickr/dist/flatpickr.min.js')}}"></script>
-<script src="{{asset('feed_assets/vendor/plyr/plyr.js')}}"></script>
-<script src="{{asset('feed_assets/vendor/dropzone/dist/min/dropzone.min.js')}}"></script>
-<script src="{{asset('feed_assets/vendor/zuck.js/dist/zuck.min.js')}}"></script>
-<script src="{{asset('feed_assets/js/zuck-stories.js')}}"></script>
-<!-- Vendors -->
-<script src="{{asset('feed_assets/vendor/dropzone/dist/dropzone.js')}}"></script>
-
-<!-- Theme Functions -->
-<script src="{{asset('assets/js/functions.js')}}"></script>
-
-<!-- DataTables JS -->
-
-<script src="{{asset('feed_assets/js/vendor/bootstrap/dist/js/dataTables.min.js')}}"></script>
-<script src="{{asset('feed_assets/js/vendor/bootstrap/dist/js/dataTables.bootstrap5.min.js')}}"></script>
-
-
-<!-- Accessibility JS -->
-<script src="{{asset('feed_assets/js/weights-v1.js')}}"></script>
-
-<script src="{{asset('feed_assets/js/jquery-3.6.0.min.js')}}"></script>
-
-<!-- Select2 CSS -->
-<link rel="stylesheet" href="{{asset('feed_assets/css/select2.min.css')}}">
-
-<!-- Select2 JS -->
-<script src="{{asset('feed_assets/js/select2.min.js')}}"></script>
-
-
-
-<script>
-    $(document).ready(function () {
-       
-
-        $('#searchMemberInput').on('input', function () {
-            let query = $(this).val();
-
-            if (query.length >= 3) {
-                $.ajax({
-                    url: '{{ route('user.member.search') }}',
-                    type: 'GET',
-                    data: { q: query },
-                    success: function (response) {
-                        let html = '';
-                        if (response.length > 0) {
-                            response.forEach(item => {
-                                const favClass = item.is_favourite ? 'text-danger' : 'text-muted';
-                                html += `<a href="/user/profile/id/${item.encrypted_id}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-    <span>${item.name}</span></a>
-    <button class="btn btn-sm p-0 border-0 bg-transparent favorite-user" data-id="${item.encrypted_id}" type="button">
-        <i class="bi bi-star-fill ${favClass}"></i>
-    </button>
-
-`;
-                            });
-                        } else {
-                            html = '<li class="list-group-item">No results found</li>';
-                        }
-                        $('#searchResults').html(html);
-                    }
-                });
-            } else {
-                $('#searchResults').html('');
-            }
-            success: function (response) {
-    const icon = button.find('i');
-    if (response.status === 'added') {
-        icon.removeClass('bi-star text-muted text-danger').addClass('bi-star-fill text-warning');
-        showFavoriteToast('Added to favorites', 'success');
-    } else if (response.status === 'removed') {
-        icon.removeClass('bi-star-fill text-warning').addClass('bi-star text-muted');
-        showFavoriteToast('Removed from favorites', 'danger');
-    }
-}
-
-        });
-        $('#searchMemberInput').on('focus', function () {
-    let resultsHtml = ''; // ✅ Define before using it
-    resultsHtml += `<a href="/user/profile/Alumni" class="list-group-item list-group-item-action">Alumni</a>`;
-    $('#searchResults').html(resultsHtml).show();
-    });
-    
-    });
-       $(document).on('click', '.favorite-user', function (e) {
-    e.preventDefault();
-    e.stopPropagation(); // prevent triggering parent link
-    const userId = $(this).data('id');
-let button = $(this);
-    $.ajax({
-         url: '{{ route('user.favorite.user.toggle') }}',
-        type: 'POST',
-        data: {
-            id: userId,
-            _token: '{{ csrf_token() }}'
-        },
-         success: function(response) {
-            if (response.status === 'added') {
-                button.find('i').addClass('text-warning').removeClass('text-danger');
-            } else if (response.status === 'removed') {
-                button.find('i').addClass('text-danger').removeClass('text-warning');
-            }
-        }
-    });
-});
-    
-    document.getElementById('uw-widget-custom-trigger2').addEventListener('click', function() {
-    // openMain();
-    });
-   
-
- 
-
 </script>
 <script>
     function showFavoriteToast(message, type = 'primary') {

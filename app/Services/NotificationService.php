@@ -93,8 +93,8 @@ class NotificationService
                 'from_user_id' => null,
                 'type'         => 'birthday',
                 'user_id'      => json_encode([$member->id]),
-                'message'      => "Happy Birthday, {$member->name}!",
-                'source_id'    => null,
+                'message'      => "🎉 Wishing {$member->name} a very Happy Birthday! May the year ahead be filled with success, good health, and happiness.",
+                'source_id'    => $member->id,
                 'source_type'  => 'birthday',
                 'is_read'      => false,
             ]);
