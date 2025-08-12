@@ -30,7 +30,7 @@ Header START -->
     <nav class="navbar navbar-expand-lg">
         <div class="container">
             <!-- Logo START -->
-<a class="navbar-brand d-flex align-items-center gap-2" href="https://www.lbsnaa.gov.in/" target="_blank">
+<a class="navbar-brand d-flex align-items-center gap-2" href="{{ url('user/feed') }}">
     <img src="{{ asset('admin_assets/images/logos/lbsnaa_logo.jpg') }}" alt="LBSNAA Logo"
         class="navbar-brand-item" style="height: 60px; object-fit: contain;" loading="lazy" decoding="async">
 

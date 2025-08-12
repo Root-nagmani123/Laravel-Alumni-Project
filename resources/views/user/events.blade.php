@@ -170,7 +170,41 @@
                                                         N/A
                                                     @endif
                                                 </p>
-                                                <p>{{ \Illuminate\Support\Str::words($event->description, 20, '...') }}</p>
+                                                <p>{{ \Illuminate\Support\Str::words($event->description, 10, '...') }}</p>@php
+    $fullText = strip_tags($event->description);
+    $shortText = \Illuminate\Support\Str::words($fullText, 10, '');
+@endphp
+
+<p class="event-description" data-full="{{ $fullText }}">
+    {{ $shortText }}<span class="dots">...</span>
+    <a href="javascript:void(0);" class="read-more">Read More</a>
+</p>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll(".event-description").forEach(function (desc) {
+        let fullText = desc.getAttribute("data-full");
+        let shortText = desc.innerText.trim().replace("Read More", "").trim();
+
+        let dots = desc.querySelector(".dots");
+        let link = desc.querySelector(".read-more");
+        let isExpanded = false;
+
+        link.addEventListener("click", function () {
+            if (!isExpanded) {
+                desc.innerHTML = fullText + ' <a href="javascript:void(0);" class="read-more">View Less</a>';
+                isExpanded = true;
+                desc.querySelector(".read-more").addEventListener("click", arguments.callee);
+            } else {
+                desc.innerHTML = shortText + '<span class="dots">...</span> <a href="javascript:void(0);" class="read-more">Read More</a>';
+                isExpanded = false;
+                desc.querySelector(".read-more").addEventListener("click", arguments.callee);
+            }
+        });
+    });
+});
+</script>
+
 
                                                 </div>
                                                 <div class="card-footer" style="border-top: 0;">
