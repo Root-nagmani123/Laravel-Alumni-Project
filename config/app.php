@@ -10,7 +10,7 @@ return [
 
     'url' => env('APP_URL', 'http://localhost'),
 
-    'timezone' => 'UTC',
+    'timezone' => 'Asia/Kolkata',
 
     'locale' => env('APP_LOCALE', 'en'),
 
@@ -69,7 +69,7 @@ return [
         /*
          * Package Service Providers...
          */
-        LdapRecord\Laravel\LdapServiceProvider::class,
+        // LdapRecord\Laravel\LdapServiceProvider::class,
 
         /*
          * Application Service Providers...
