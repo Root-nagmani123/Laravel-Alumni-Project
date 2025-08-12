@@ -351,15 +351,15 @@
                             @foreach($topic->comments as $comment)
                                <!-- Comment item START -->
 							<li class="comment-item mb-3">
-								<div class="d-flex position-relative">
+								<div class="d-flex w-100 position-relative">
 									<!-- Avatar -->
-									<div class="avatar avatar-xs">
+									<div class="avatar avatar-xs flex-shrink-0">
 										<a href="{{ route('user.profile.data', ['id' => $comment->user->id]) }}"><img class="avatar-img rounded-circle" src="{{ $comment->user && $comment->user->profile_pic ? asset('storage/' . $comment->user->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}" alt=""></a>
 									</div>
-									<div class="ms-2">
+									<div class="ms-2 flex-grow-1">
 										<!-- Comment by -->
-										<div class="bg-light rounded-start-top-0 p-3 rounded">
-											<div class="d-flex justify-content-between">
+										<div class="bg-light p-3 rounded">
+											<div class="d-flex justify-content-between align-items-center">
 												<h6 class="mb-1"> <a href="{{ route('user.profile.data', ['id' => $comment->user->id]) }}">{{ $comment->user ? $comment->user->name : 'Unknown User' }}</a></h6>
 												@php
     $createdAt = \Carbon\Carbon::parse($comment->created_at)->setTimezone('Asia/Kolkata');

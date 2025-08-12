@@ -208,7 +208,7 @@ class ChatList extends Component
         $results = DB::table('mentor_mentee_connection')
         ->join('members as mentors', 'mentor_mentee_connection.mentee_id', '=', 'mentors.id')
         ->where('mentor_mentee_connection.mentor_id', $user_id)
-        ->select('mentors.id as member_id', 'mentors.name as name', 'mentors.cader as cadre', 'mentors.batch', 'mentors.sector')
+        ->select('mentors.id as member_id', 'mentors.name as name', 'mentors.cader as cadre', 'mentors.batch', 'mentors.sector', 'mentors.profile_pic')
         ->get();
 
         return $results;
@@ -221,7 +221,7 @@ class ChatList extends Component
         $results = DB::table('mentor_mentee_connection')
             ->join('members as mentors', 'mentor_mentee_connection.mentor_id', '=', 'mentors.id')
             ->where('mentor_mentee_connection.mentee_id', $user_id)
-            ->select('mentors.id as member_id', 'mentors.name as name', 'mentors.cader as cadre', 'mentors.batch', 'mentors.sector')
+            ->select('mentors.id as member_id', 'mentors.name as name', 'mentors.cader as cadre', 'mentors.batch', 'mentors.sector', 'mentors.profile_pic')
             ->get();
 
         return $results;

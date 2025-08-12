@@ -117,19 +117,16 @@
                 $isExpired = Carbon::parse($forum->end_date)->lt($now);
                 @endphp
 
-                <div class="col-sm-6 col-lg-4">
-                    <div class="card border {{ $isExpired ? 'border-danger' : '' }}">
+                <div class="col-sm-6 col-lg-4 d-flex">
+                    <div class="card border flex-fill {{ $isExpired ? 'border-danger' : '' }}">
                         <div class="h-80px rounded-top"
                             style="background-image:url({{ asset('storage/uploads/images/forums_img/' . ($forum->images ?? 'default-forum.jpg')) }}); background-position: center; background-size: cover;">
                         </div>
 
-                        <div class="card-body text-center pt-2">
+                        <div class="card-body text-center pt-2 d-flex flex-column">
                             <h5 class="mb-0">
                                 <a href="{{ route('user.forum.show', $forum->id) }}">{{ $forum->name }}</a>
                             </h5>
-                        </div>
-
-                        <div class="card-body">
                             <p class="mb-0 small text-muted">Start Date:
                                 {{ \Carbon\Carbon::parse($forum->created_at)->format('d M Y') }}</p>
                             <p class="mb-0 small text-muted">End Date:
