@@ -572,7 +572,7 @@
                         </li>
                         <li class="list-inline-item"><i class="bi bi-backpack me-1"></i> {{ $user->batch }}</li>
                         <li class="list-inline-item"><i class="bi bi-calendar2-plus me-1"></i>
-                            {{ $user->created_at->format('F j, Y') }}</li>
+                            {{ $user->cader }}</li>
                         </li>
                     </ul>
                 </div>
@@ -661,7 +661,7 @@
                                         <!-- Date -->
                                         <p class="mb-0">
                                             <i class="bi bi-briefcase fa-fw me-2"></i> Current Designation:<strong>
-                                                {{ $user->current_designation }}
+                                                @if($user->current_designation != '') {{ $user->current_designation }} @else N/A @endif
                                             </strong>
                                         </p>
                                     </div>
@@ -673,24 +673,13 @@
                                         <!-- Date -->
                                         <p class="mb-0">
                                             <i class="bi bi-geo-alt fa-fw me-2"></i> Current Location: <strong>
-                                                {{ $user->current_location }}
+                                                @if($user->current_location != '') {{ $user->current_location }} @else N/A @endif
                                             </strong>
                                         </p>
                                     </div>
                                     <!-- Lives END -->
                                 </div>
-                                <div class="col-sm-6">
-                                    <!-- Joined on START -->
-                                    <div class="d-flex align-items-center rounded border px-3 py-2">
-                                        <!-- Date -->
-                                        <p class="mb-0">
-                                            <i class="bi bi-geo-alt fa-fw me-2"></i> Joined on: <strong>
-                                                {{$user->created_at->format('F j, Y')}}
-                                            </strong>
-                                        </p>
-                                    </div>
-                                    <!-- Joined on END -->
-                                </div>
+                                
                                 <div class="col-sm-6">
                                     <!-- Joined on START -->
                                     <div class="d-flex align-items-center rounded border px-3 py-2">
@@ -707,7 +696,7 @@
                                         <!-- Date -->
                                         <p class="mb-0">
                                             <i class="bi bi-envelope fa-fw me-2"></i> Year of Graduation: <strong>
-                                                {{ $user->undergrad_year }} </strong>
+                                                  @if($user->undergrad_year != '') {{ $user->undergrad_year }} @else N/A @endif </strong>
                                         </p>
                                     </div>
                                 </div>
@@ -716,7 +705,7 @@
                                         <!-- Date -->
                                         <p class="mb-0">
                                             <i class="bi bi-envelope fa-fw me-2"></i> Year of Post Graduation: <strong>
-                                                {{ $user->postgrad_year }} </strong>
+                                                @if($user->postgrad_year != '') {{ $user->postgrad_year }} @else N/A @endif </strong>
                                         </p>
                                     </div>
                                 </div>
@@ -725,7 +714,7 @@
                                         <!-- Date -->
                                         <p class="mb-0">
                                             <i class="bi bi-envelope fa-fw me-2"></i> Current Department: <strong>
-                                                {{ $user->current_department }} </strong>
+                                                @if($user->current_department != '') {{ $user->current_department }} @else N/A @endif </strong>
                                         </p>
                                     </div>
                                 </div>
@@ -734,7 +723,7 @@
                                         <!-- Date -->
                                         <p class="mb-0">
                                             <i class="bi bi-envelope fa-fw me-2"></i> Previous Posting: <strong>
-                                                {{ $user->previous_postings }} </strong>
+                                                @if($user->previous_postings != '') {{ $user->previous_postings }} @else N/A @endif </strong>
                                         </p>
                                     </div>
                                 </div>
