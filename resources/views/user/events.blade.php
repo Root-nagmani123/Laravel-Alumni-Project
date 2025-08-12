@@ -170,7 +170,7 @@
                                                         N/A
                                                     @endif
                                                 </p>
-                                                <p>{{ \Illuminate\Support\Str::words($event->description, 10, '...') }}</p>@php
+                                                @php
     $fullText = strip_tags($event->description);
     $shortText = \Illuminate\Support\Str::words($fullText, 10, '');
 @endphp
