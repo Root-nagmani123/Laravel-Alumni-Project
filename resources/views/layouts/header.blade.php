@@ -9,6 +9,18 @@ Header START -->
 .dropdown-menu {
     z-index: 1100 !important;
 }
+/* New notification (unread) - highlight color */
+.notification-unread p {
+  color: #0d6efd; /* Bootstrap primary blue */
+  font-weight: 600; /* Slightly bold */
+}
+
+/* Read notification - lighter gray */
+.notification-read p {
+  color: #6c757d; /* Bootstrap muted text */
+  font-weight: normal;
+}
+
 
 
 </style>
@@ -184,42 +196,33 @@ Header START -->
                                                     ]);
                                                 }
                                             @endphp
-                                          <div class="notification-card bg-white border rounded shadow-sm p-3 mb-3"
+                                            <div class="notification-card rounded shadow-sm p-3 mb-1 
+     {{ $notification->is_read ? 'notification-read' : 'notification-unread' }}"
      style="min-width: 300px; max-width: 340px; scroll-snap-align: start;"
      data-id="{{ $notification->id }}"
      data-created-at="{{ $notification->created_at }}">
             
-            <!-- Avatar + Content -->
-            <div class="d-flex align-items-start">
-                <!-- Avatar -->
-                <div class="flex-shrink-0">
-                    <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center"
-                         style="width: 40px; height: 40px;">
-                        <strong>{{ strtoupper(substr($notification->title ?? 'B', 0, 1)) }}</strong>
-                    </div>
-                </div>
+            <!-- Message -->
+                <div class="flex-grow-1 ms-3 notification-item mb-2" style="max-width: calc(100% - 60px);">
+    <div class="d-flex justify-content-between align-items-center">
+        <!-- Message -->
+        <a href="{{ $notificationUrl }}" 
+           class="text-decoration-none flex-grow-1" 
+           data-url="{{ $notificationUrl }}" 
+           data-source-type="{{ $notification->source_type ?? '' }}" 
+           data-source-id="{{ $notification->source_id ?? '' }}"
+           onclick="handleNotificationClick(event, '{{ $notificationUrl }}', '{{ $notification->source_type ?? '' }}', '{{ $notification->source_id ?? '' }}')">
+            <p class="small mb-0 text-primary">
+                {{ \Illuminate\Support\Str::words($notification->message, 20, '...') }}
+            </p>
+        </a>
 
-                <!-- Message -->
-                <div class="flex-grow-1 ms-3 notification-item mb-2"
-                     style="max-width: calc(100% - 60px);">
-                    <div class="d-flex justify-content-between">
-                                                        <a href="{{ $notificationUrl }}" class="text-decoration-none notification-link" 
-                                                           data-url="{{ $notificationUrl }}" 
-                                                           data-source-type="{{ $notification->source_type ?? '' }}" 
-                                                           data-source-id="{{ $notification->source_id ?? '' }}"
-                                                           onclick="handleNotificationClick(event, '{{ $notificationUrl }}', '{{ $notification->source_type ?? '' }}', '{{ $notification->source_id ?? '' }}')">
-                                                            <p class="small mb-2 text-primary">
-    {{ \Illuminate\Support\Str::words($notification->message, 20, '...') }}
-</p>
+        <!-- Time -->
+        <p class="small ms-3 mb-0 text-muted text-nowrap">
+            {{ \Carbon\Carbon::parse($notification->created_at)->setTimezone('Asia/Kolkata')->diffForHumans(null, null, true) }}
+        </p>
+    </div>
 
-                                                        </a>
-                                                        <p class="small ms-3 mb-0 text-muted text-nowrap">
-                                                             {{ \Carbon\Carbon::parse($notification->created_at)->setTimezone('Asia/Kolkata')->diffForHumans(null, null, true) }}
-                                                        </p>
-                                                    </div>
-                </div>
-            </div>
-        </div>
                                         </li>
                                         @endforeach
                                         @else
@@ -574,4 +577,24 @@ document.getElementById('searchMemberInput').addEventListener('input', function 
         searchResults.style.display = 'none';
     }
 });
+</script>
+<script>
+    function markAsRead(notificationId) {
+    let card = document.querySelector(`[data-id="${notificationId}"]`);
+    if (card) {
+        card.classList.remove('notification-unread');
+        card.classList.add('notification-read');
+    }
+}
+
+</script>
+<script>
+    function addNewNotification(htmlContent) {
+    let container = document.querySelector('#notification-container');
+    container.insertAdjacentHTML('afterbegin', htmlContent);
+
+    let newCard = container.firstElementChild;
+    newCard.classList.add('notification-unread');
+}
+
 </script>
