@@ -320,21 +320,21 @@ Header START -->
                         <!-- Dropdown with collapsible Social Media list -->
                         <!-- <li><a class="dropdown-item" href="{{ route('user.change-password.form') }}"><i
                                     class="bi bi-file-earmark-bar-graph-fill fa-fw me-2"></i>Change Password</a></li> -->
-                        <li>
+                        <!-- <li>
                             <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#grievanceModal">
                                 <i class="bi bi-chat-dots-fill fa-fw me-2"></i>Grievance / Feedback
                             </a>
-                        </li>
+                        </li> -->
                         <!-- <li>
                             <a class="dropdown-item" href="https://www.lbsnaa.gov.in/lbsnaa-newsletter" target="_blank">
                                 <i class="bi bi-newspaper fa-fw me-2"></i>Newsletter
                             </a>
                         </li> -->
-                        <li>
-                            <a class="dropdown-item" href="https://www.lbsnaa.gov.in/footer_menu/contact-us" target="_blank">
+                        <!-- <li>
+                            <a class="dropdown-item" href="" target="_blank">
                                 <i class="bi bi-person-lines-fill fa-fw me-2"></i>Contact Us
                             </a>
-                        </li>
+                        </li> -->
 
                         <li>
                             <form action="{{ route('user.logout') }}" method="POST" style="display: inline;">
