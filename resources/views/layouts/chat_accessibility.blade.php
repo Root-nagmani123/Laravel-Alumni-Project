@@ -152,7 +152,7 @@
                Options</span></button><!-- accessibility panel end-->
 
                <div class="d-none d-lg-block position-relative">
-    <a class="icon-md btn btn-primary position-fixed end-0 bottom-0" style="margin-right: 2rem !important; background-color: #792421; color: #fff; border-radius: 50%; box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2);" href="https://www.lbsnaa.gov.in/footer_menu/contact-us">
+    <a class="icon-md btn btn-primary position-fixed end-0 bottom-0" style="margin-right: 2rem !important; background-color: #792421; color: #fff; border-radius: 50%; box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2);" href="https://www.lbsnaa.gov.in/footer_menu/contact-us" target="_blank">
 
         <i class="bi bi-person-lines-fill" style="color: #fff;"></i>
     </a>
