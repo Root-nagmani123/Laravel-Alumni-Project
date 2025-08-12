@@ -18,7 +18,7 @@ Header START -->
     <nav class="navbar navbar-expand-lg">
         <div class="container">
             <!-- Logo START -->
-<a class="navbar-brand d-flex align-items-center gap-2" href="https://www.lbsnaa.gov.in/" target="_blank">
+<a class="navbar-brand d-flex align-items-center gap-2" href="{{ url('user/feed') }}">
     <img src="{{ asset('admin_assets/images/logos/lbsnaa_logo.jpg') }}" alt="LBSNAA Logo"
         class="navbar-brand-item" style="height: 60px; object-fit: contain;" loading="lazy" decoding="async">
 
@@ -315,8 +315,8 @@ Header START -->
                         <!-- <li><a class="dropdown-item" href="{{ route('user.directory') }}"><i
                                     class="bi bi-gear-fill fa-fw me-2"></i>Directory</a></li> -->
                         <!-- Dropdown with collapsible Social Media list -->
-                        <li><a class="dropdown-item" href="{{ route('user.change-password.form') }}"><i
-                                    class="bi bi-file-earmark-bar-graph-fill fa-fw me-2"></i>Change Password</a></li>
+                        <!-- <li><a class="dropdown-item" href="{{ route('user.change-password.form') }}"><i
+                                    class="bi bi-file-earmark-bar-graph-fill fa-fw me-2"></i>Change Password</a></li> -->
                         <!-- <li>
                             <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#grievanceModal">
                                 <i class="bi bi-chat-dots-fill fa-fw me-2"></i>Grievance / Feedback
@@ -327,11 +327,11 @@ Header START -->
                                 <i class="bi bi-newspaper fa-fw me-2"></i>Newsletter
                             </a>
                         </li> -->
-                        <li>
-                            <a class="dropdown-item" href="https://www.lbsnaa.gov.in/footer_menu/contact-us" target="_blank">
+                        <!-- <li>
+                            <a class="dropdown-item" href="" target="_blank">
                                 <i class="bi bi-person-lines-fill fa-fw me-2"></i>Contact Us
                             </a>
-                        </li>
+                        </li> -->
 
                         <li>
                             <form action="{{ route('user.logout') }}" method="POST" style="display: inline;">

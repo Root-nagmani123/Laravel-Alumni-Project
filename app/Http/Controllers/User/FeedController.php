@@ -124,7 +124,7 @@ class FeedController extends Controller
         ->get();
 
     $forums = DB::table('forums as f')
-    ->join('forums_member as fm', 'fm.forums_id', '=', 'f.id')
+    // ->join('forums_member as fm', 'fm.forums_id', '=', 'f.id')
     ->select(
         'f.id', 
         'f.name',
@@ -140,6 +140,7 @@ class FeedController extends Controller
     })
       ->orderBy('f.id', 'desc') 
     ->get();
+    // print_r($forums);die;
 
 
     $groupIds = DB::table('group_member')

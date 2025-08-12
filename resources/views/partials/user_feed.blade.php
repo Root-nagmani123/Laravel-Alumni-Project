@@ -92,8 +92,8 @@
             ? asset('storage/' . $member->profile_pic)
             : asset('feed_assets/images/avatar/07.jpg');
 
-        $displayName = $member->name ?? 'Unknown';
-        $designation = $member->designation ?? 'Unknown';
+        $displayName = $member->name ?? 'N/A';
+        $designation = $member->designation ?? 'N/A';
         $profileLink = route('user.profile.data', ['id' => $member->id]);
 
     }
@@ -256,7 +256,7 @@
                     <a href="{{ asset('storage/' . $media->file_path) }}" class="glightbox"
                         data-gallery="post-gallery-{{ $post->id }}">
                         <img src="{{ asset('storage/' . $media->file_path) }}" alt="Post Image" loading="lazy"
-                            class="w-100">
+                            class="w-100 rounded" decoding="async" style="height: 250px; object-fit: cover;">
                     </a>
                     @if($index === 3 && $totalImages > 4)
                     {{-- Hidden extra images --}}
