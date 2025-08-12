@@ -7,458 +7,516 @@
 .select2-results__option {
     padding-left: 10px !important;
 }
-.select2-container{
-    z-index:1050 !important;
+
+.select2-container {
+    z-index: 1050 !important;
 }
 </style>
 
 <div class="container">
     <div class="row g-4" style="margin-top:5rem !important;">
-        <div class="col-3">
-            <!-- Advanced filter responsive toggler START -->
-            <div class="d-flex align-items-center d-lg-none">
-                <button class="border-0 bg-transparent" type="button" data-bs-toggle="offcanvas"
-                    data-bs-target="#offcanvasSideNavbar" aria-controls="offcanvasSideNavbar">
-                    <span class="btn btn-primary"><i class="fa-solid fa-sliders-h"></i></span>
-                    <span class="h6 mb-0 fw-bold d-lg-none ms-2">My profile</span>
-                </button>
+        <div class="bg-mode p-4 rounded shadow-sm">
+            <h1 class="h4 mb-4">Mentor / Mentee</h1>
+
+            <!-- Tabs Navigation -->
+            <div class="overflow-auto">
+                <ul class="nav nav-tabs mb-3 flex-nowrap" id="mentorMenteeTabs" role="tablist"
+                    style="white-space: nowrap;">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="mentor-tab" data-bs-toggle="tab" data-bs-target="#mentor"
+                            type="button" role="tab">Wants to become Mentor</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="mentee-tab" data-bs-toggle="tab" data-bs-target="#mentee"
+                            type="button" role="tab">Wants to become Mentee</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="Incoming-requests-tab" data-bs-toggle="tab"
+                            data-bs-target="#requests_incoming" type="button" role="tab">Incoming Requests</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="Outgoging-requests-tab" data-bs-toggle="tab"
+                            data-bs-target="#requests_outgoing" type="button" role="tab">Outgoing Requests</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="connections-tab" data-bs-toggle="tab" data-bs-target="#connections"
+                            type="button" role="tab">My Connections</button>
+                    </li>
+                </ul>
             </div>
-            <!-- Advanced filter responsive toggler END -->
 
-            <!-- Navbar START-->
-            <nav class="navbar navbar-expand-lg mx-0">
-                <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasSideNavbar">
-                    <!-- Offcanvas header -->
-                    <div class="offcanvas-header">
-                        <button type="button" class="btn-close text-reset ms-auto" data-bs-dismiss="offcanvas"
-                            aria-label="Close"></button>
-                    </div>
 
-                    <!-- Offcanvas body -->
-                    <div class="offcanvas-body d-block px-2 px-lg-0">
-                        <!-- Card START -->
-                        <div class="card overflow-hidden">
-                            <!-- Cover image -->
-                            <div class="h-50px"
-                                style="background-image:url({{asset('feed_assets/images/bg/01.jpg')}}); background-position: center; background-size: cover; background-repeat: no-repeat;">
-                            </div>
-                            <!-- Card body START -->
-                            <div class="card-body pt-0">
-                                <div class="text-center">
-                                    <!-- Avatar -->
-                                    @php
-                                    $profileImage = '';
-                                    $displayName = '';
-                                    $designation = '';
-                                    $profileLink = '#';
+            <!-- Tabs Content -->
+            <div class="tab-content" id="mentorMenteeTabsContent">
 
-                                    if (Auth::guard('user')->check()) {
-                                    // Member/user post
-                                    $member = $post->member ?? null;
-
-                                    $profileImage = $member && $member->profile_image
-                                    ? asset('storage/' . $member->profile_image)
-                                    : asset('feed_assets/images/avatar/07.jpg');
-
-                                    $displayName = $member->name ?? 'Unknown';
-                                    $designation = $member->designation ?? 'Unknown';
-                                    $profileLink = url('/user/profile/' . ($member->id ?? 0));
-                                    }
-                                    else {
-                                    // Default user profile
-                                    $user = Auth::guard('user')->user();
-                                    $profileImage = $user->profile_pic
-                                    ? asset('storage/' . $user->profile_pic)
-                                    : asset('feed_assets/images/avatar-1.png');
-
-                                    $displayName = $user->name ?? 'Guest User';
-                                    $designation = $user->designation ?? 'Guest';
-                                    $profileLink = url('/user/profile/' . ($user->id ?? 0));
-                                    }
-                                    $user = Auth::guard('user')->user();
-                                    $profileImage = $user->profile_pic ? asset('storage/' . $user->profile_pic) :
-                                    asset('feed_assets/images/avatar-1.png');
-                                    $displayName = $user->name ?? 'Guest User';
-                                    $designation = $user->designation ?? 'Guest';
-                                    $profileLink = url('/user/profile/' . ($user->id ?? 0));
-                                    @endphp
-                                    <div class="avatar avatar-lg mt-n5 mb-3">
-                                        <a href="#!"><img class="avatar-img rounded-circle"
-                                                src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar-1.png') }}"
-                                                alt="" loading="lazy" decoding="async"></a>
-                                    </div>
-                                    <!-- Info -->
-                                    @if(Auth::guard('user')->check())
-                                    <h5 class="mb-0"> <a href="#!">{{ Auth::guard('user')->user()->name }} </a> </h5>
-                                    @endif
-                                    <small>{{ Auth::guard('user')->user()->designation }}</small>
-                                    <ul class="list-inline mb-0 text-center text-sm-start mt-3 mt-sm-0">
-                                        <li class="list-inline-item"><i class="bi bi-briefcase me-1"></i>
-                                            {{ $user->current_designation }}
-                                        </li>
-                                        <li class="list-inline-item"><i class="bi bi-backpack me-1"></i>
-                                            {{ $user->batch }}</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <!-- Card body END -->
-                            <!-- Card footer -->
-                            <div class="card-footer text-center py-2">
-                                <a class="btn btn-link btn-sm"
-                                    href="{{ route('user.profile.data', ['id' => $user->id]) }}">View Profile </a>
-                            </div>
+                <!-- Tab 1: Mentor Form -->
+                <div class="tab-pane fade show active" id="mentor" role="tabpanel">
+                    <form action="{{ route('user.mentor.want_become_mentor') }}" method="POST">
+                        @csrf
+                        <div class="mb-3">
+                            <label class="form-label">Service</label>
+                            <select class="form-select service" name="service" id="service" data-id="want_become_mentor"
+                                required>
+                                <option value=''>Select Service</option>
+                                @if($members->isEmpty())
+                                <option disabled>No Services Available</option>
+                                @else
+                                @foreach($members as $member)
+                                @if($member->Service != '')
+                                <option value="{{ $member->Service }}">{{ $member->Service }}</option>
+                                @endif
+                                @endforeach
+                                @endif
+                            </select>
                         </div>
-                        <!-- Card END -->
-                    </div>
+                        <div class="mb-3">
+                            <label class="form-label">Year</label>
+
+                            <select class="form-select year-select" name="year[]" multiple="multiple"
+                                data-id="want_become_mentor" required>
+                                <!-- Options will be added dynamically -->
+                            </select>
+                        </div>
+
+
+                        <div class="mb-3">
+                            <label class="form-label">Cadre</label>
+                            <select class="form-select select2 cadre" name="cadre[]" multiple="multiple"
+                                data-id="want_become_mentor" required>
+
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Sector</label>
+                            <select class="form-select select2 sector" name="sector[]" multiple="multiple"
+                                data-id="want_become_mentor" required>
+                                <option value="" disabled>Select Sector</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Select Mentee</label>
+                            <select class="form-select select2 mentees" multiple="multiple" id="mentees"
+                                name="mentees[]" data-id="want_become_mentor" required>
+                                <option value="" disabled>Select Mentees</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit Mentor Request</button>
+                    </form>
                 </div>
-            </nav>
-        </div>
-        <div class="col-lg-9">
-            <div class="bg-mode p-4">
-                <h1 class="h4 mb-4">Mentor / Mentee</h1>
 
-                <!-- Tabs Navigation -->
-               <div class="overflow-auto">
-    <ul class="nav nav-tabs mb-3 flex-nowrap" id="mentorMenteeTabs" role="tablist" style="white-space: nowrap;">
-        <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="mentor-tab" data-bs-toggle="tab" data-bs-target="#mentor"
-                type="button" role="tab">Wants to become Mentor</button>
-        </li>
-        <li class="nav-item" role="presentation">
-            <button class="nav-link" id="mentee-tab" data-bs-toggle="tab" data-bs-target="#mentee"
-                type="button" role="tab">Wants to become Mentee</button>
-        </li>
-        <li class="nav-item" role="presentation">
-            <button class="nav-link" id="Incoming-requests-tab" data-bs-toggle="tab" data-bs-target="#requests_incoming"
-                type="button" role="tab">Incoming Requests</button>
-        </li>
-        <li class="nav-item" role="presentation">
-            <button class="nav-link" id="Outgoging-requests-tab" data-bs-toggle="tab" data-bs-target="#requests_outgoing"
-                type="button" role="tab">Outgoing Requests</button>
-        </li>
-        <li class="nav-item" role="presentation">
-            <button class="nav-link" id="connections-tab" data-bs-toggle="tab" data-bs-target="#connections"
-                type="button" role="tab">My Connections</button>
-        </li>
-    </ul>
-</div>
+                <!-- Tab 2: Mentee Form -->
+                <div class="tab-pane fade" id="mentee" role="tabpanel">
+                    <form action="{{ route('user.mentor.want_become_mentee') }}" method="POST">
+                        @csrf
+                        <div class="mb-3">
+                            <label class="form-label">Service</label>
+                            <select class="form-select service" name="service" id="service" data-id="want_become_mentee"
+                                required>
+                                <option value=''>Select Service</option>
+                                @if($members->isEmpty())
+                                <option disabled>No Services Available</option>
+                                @else
+                                @foreach($members as $member)
+                                @if($member->Service != '')
+                                <option value="{{ $member->Service }}">{{ $member->Service }}</option>
+                                @endif
+                                @endforeach
+                                @endif
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Year</label>
+                            <select class="form-select year-select" name="year[]" multiple="multiple"
+                                data-id="want_become_mentee" required>
+                            </select>
+                        </div>
 
+                        <div class="mb-3">
+                            <label class="form-label">Cadre</label>
+                            <select class="form-select select2 cadre" name="cadre[]" multiple="multiple"
+                                data-id="want_become_mentee" required>
 
-                <!-- Tabs Content -->
-                <div class="tab-content" id="mentorMenteeTabsContent">
+                            </select>
+                        </div>
 
-                    <!-- Tab 1: Mentor Form -->
-                    <div class="tab-pane fade show active" id="mentor" role="tabpanel">
-                        <form action="{{ route('user.mentor.want_become_mentor') }}" method="POST">
-                            @csrf
-                            <div class="mb-3">
-                                <label class="form-label">Service</label>
-                               <select class="form-select service" name="service" id="service" data-id="want_become_mentor" required>
-                                    <option  value=''>Select Service</option>
-                                    @if($members->isEmpty())
-                                        <option disabled>No Services Available</option>
-                                    @else
-                                        @foreach($members as $member)
-                                        @if($member->Service != '')
-                                            <option value="{{ $member->Service }}">{{ $member->Service }}</option>
-                                        @endif
-                                        @endforeach
-                                    @endif
-                                </select>
-                            </div>
-                           <div class="mb-3">
-                                <label class="form-label">Year</label>
-                                
-                                <select class="form-select year-select" name="year[]" multiple="multiple" data-id="want_become_mentor" required>
-                                    <!-- Options will be added dynamically -->
-                                </select>
-                            </div>
+                        <div class="mb-3">
+                            <label class="form-label">Sector</label>
+                            <select class="form-select select2 sector" name="sector[]" multiple="multiple"
+                                data-id="want_become_mentee" required>
+                            </select>
+                        </div>
 
+                        <div class="mb-3">
+                            <label class="form-label">Select Mentor</label>
+                            <select class="form-select select2 mentees" multiple="multiple" id="mentees"
+                                name="mentees[]" data-id="want_become_mentee" required>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-success">Submit Mentee Request</button>
+                    </form>
+                </div>
 
-                                <div class="mb-3">
-                                    <label class="form-label">Cadre</label>
-                                    <select class="form-select select2 cadre"  name="cadre[]" multiple="multiple" data-id="want_become_mentor" required>
-                                     
-                                    </select>
-                                </div>
+                <!-- Tab 3: Requests -->
+                <div class="tab-pane fade" id="requests_incoming" role="tabpanel">
+                    <h5>Mentor Requests</h5>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Cadre</th>
+                                <th>Year</th>
+                                <th>Sector</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
 
-                                <div class="mb-3">
-                                    <label class="form-label">Sector</label>
-                                    <select class="form-select select2 sector" name="sector[]" multiple="multiple" data-id="want_become_mentor" required>
-                                        <option value="" disabled>Select Sector</option>
-                                    </select>
-                                </div>
+                            @php
+                            $filteredmentorRequests = $mentor_requests->filter(function($request) {
+                            return $request->status == 2;
+                            });
+                            @endphp
 
-                                <div class="mb-3">
-                                    <label class="form-label">Select Mentee</label>
-                                    <select class="form-select select2 mentees" multiple="multiple" id="mentees" name="mentees[]" data-id="want_become_mentor" required>
-                                        <option value="" disabled>Select Mentees</option>
-                                    </select>
-                                </div>
-                            <button type="submit" class="btn btn-primary">Submit Mentor Request</button>
-                        </form>
-                    </div>
+                            @forelse ($filteredmentorRequests as $request)
+                            <tr>
+                                <td>{{ $request->name }}</td>
+                                <td>{{ $request->cadre }}</td>
+                                <td>{{ $request->batch }}</td>
+                                <td>{{ $request->sector }}</td>
+                                <td>
+                                    <form method="POST" action="{{ route('user.request.update') }}" class="d-inline">
+                                        @csrf
+                                        <input type="hidden" name="id" value="{{ $request->request_id }}">
+                                        <input type="hidden" name="type" value="mentor">
+                                        <input type="hidden" name="status" value="1">
+                                        <button type="submit" class="btn btn-sm btn-success">Accept</button>
+                                    </form>
+                                    <form method="POST" action="{{ route('user.request.update') }}" class="d-inline">
+                                        @csrf
+                                        <input type="hidden" name="id" value="{{ $request->request_id }}">
+                                        <input type="hidden" name="type" value="mentor">
+                                        <input type="hidden" name="status" value="3">
+                                        <button type="submit" class="btn btn-sm btn-danger">Reject</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            @empty
+                            <tr>
+                                <td colspan="5" class="text-center">No mentee requests</td>
+                            </tr>
+                            @endforelse
 
-                    <!-- Tab 2: Mentee Form -->
-                    <div class="tab-pane fade" id="mentee" role="tabpanel">
-                        <form action="{{ route('user.mentor.want_become_mentee') }}" method="POST">
-                            @csrf
-                            <div class="mb-3">
-                                <label class="form-label">Service</label>
-                               <select class="form-select service" name="service" id="service" data-id="want_become_mentee" required>
-                                    <option  value=''>Select Service</option>
-                                    @if($members->isEmpty())
-                                        <option disabled>No Services Available</option>
-                                    @else
-                                        @foreach($members as $member)
-                                         @if($member->Service != '')
-                                            <option value="{{ $member->Service }}">{{ $member->Service }}</option>
-                                         @endif
-                                        @endforeach
-                                    @endif
-                                </select>
-                            </div>
-                            <div class="mb-3">
-                                    <label class="form-label">Year</label>
-                             <select class="form-select year-select" name="year[]" multiple="multiple" data-id="want_become_mentee" required>
-                               </select>
-                                </div>
+                        </tbody>
+                    </table>
 
-                                <div class="mb-3">
-                                    <label class="form-label">Cadre</label>
-                                    <select class="form-select select2 cadre"  name="cadre[]" multiple="multiple" data-id="want_become_mentee" required>
+                    <h5 class="mt-4">Mentee Requests</h5>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Cadre</th>
+                                <th>Year</th>
+                                <th>Sector</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @php
+                            $filteredMenteeRequests = $mentee_requests->filter(function($request) {
+                            return $request->status == 2;
+                            });
+                            @endphp
 
-                                    </select>
-                                </div>
+                            @forelse ($filteredMenteeRequests as $request)
+                            <tr>
+                                <td>{{ $request->name }}</td>
+                                <td>{{ $request->cadre }}</td>
+                                <td>{{ $request->batch }}</td>
+                                <td>{{ $request->sector }}</td>
+                                <td>
+                                    <form method="POST" action="{{ route('user.request.update') }}" class="d-inline">
+                                        @csrf
+                                        <input type="hidden" name="id" value="{{ $request->request_id }}">
+                                        <input type="hidden" name="type" value="mentee">
+                                        <input type="hidden" name="status" value="1">
+                                        <button type="submit" class="btn btn-sm btn-success">Accept</button>
+                                    </form>
+                                    <form method="POST" action="{{ route('user.request.update') }}" class="d-inline">
+                                        @csrf
+                                        <input type="hidden" name="id" value="{{ $request->request_id }}">
+                                        <input type="hidden" name="type" value="mentee">
+                                        <input type="hidden" name="status" value="3">
+                                        <button type="submit" class="btn btn-sm btn-danger">Reject</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            @empty
+                            <tr>
+                                <td colspan="5" class="text-center">No mentee requests</td>
+                            </tr>
+                            @endforelse
 
-                                <div class="mb-3">
-                                    <label class="form-label">Sector</label>
-                                    <select class="form-select select2 sector" name="sector[]" multiple="multiple" data-id="want_become_mentee" required>
-                                        </select>
-                                </div>
+                        </tbody>
+                    </table>
 
-                                <div class="mb-3">
-                                    <label class="form-label">Select Mentor</label>
-                                    <select class="form-select select2 mentees" multiple="multiple" id="mentees" name="mentees[]" data-id="want_become_mentee" required>
-                                       </select>
-                                </div>
-                            <button type="submit" class="btn btn-success">Submit Mentee Request</button>
-                        </form>
-                    </div>
-                    
-                    <!-- Tab 3: Requests -->
-                    <div class="tab-pane fade" id="requests_incoming" role="tabpanel">
-                        <h5>Mentor Requests</h5>
-                            <table class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th>Name</th>
-                                        <th>Cadre</th>
-                                        <th>Year</th>
-                                        <th>Sector</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                  
-                                    @php
-                                    $filteredmentorRequests = $mentor_requests->filter(function($request) {
-                                        return $request->status == 2;
-                                    });
-                                @endphp
+                </div>
+                <div class="tab-pane fade" id="requests_outgoing" role="tabpanel">
+                    <h5>Outgoing Requests</h5>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Cadre</th>
+                                <th>Year</th>
+                                <th>Sector</th>
+                                <th>Type</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                        @php
+                        $filteredMentorRequests = $mentor_connections_outgoing->filter(function($request) {
+                        $request->type = 'mentor';
+                        return $request->status == 2 || $request->status == 3;
+                        });
+                        $filteredMenteeRequests = $mentee_connections_outgoing->filter(function($request) {
+                        $request->type = 'mentee';
+                        return $request->status == 2 || $request->status == 3;
 
-                                @forelse ($filteredmentorRequests as $request)
-                                    <tr>
-                                        <td>{{ $request->name }}</td>
-                                        <td>{{ $request->cadre }}</td>
-                                        <td>{{ $request->batch }}</td>
-                                        <td>{{ $request->sector }}</td>
-                                        <td>
-                                            <form method="POST" action="{{ route('user.request.update') }}" class="d-inline">
-                                                @csrf
-                                                <input type="hidden" name="id" value="{{ $request->request_id }}">
-                                                <input type="hidden" name="type" value="mentor"> 
-                                                <input type="hidden" name="status" value="1">
-                                                <button type="submit" class="btn btn-sm btn-success">Accept</button>
-                                            </form>
-                                            <form method="POST" action="{{ route('user.request.update') }}" class="d-inline">
-                                                @csrf
-                                                <input type="hidden" name="id" value="{{ $request->request_id }}">
-                                                <input type="hidden" name="type" value="mentor"> 
-                                                <input type="hidden" name="status" value="3">
-                                                <button type="submit" class="btn btn-sm btn-danger">Reject</button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="5" class="text-center">No mentee requests</td>
-                                    </tr>
-                                @endforelse
+                        });
+                        $mergedRequests = array_merge($filteredMentorRequests->toArray(),
+                        $filteredMenteeRequests->toArray());
+                        @endphp
 
-                                </tbody>
-                            </table>
+                        @forelse ($mergedRequests as $request)
+                        <tr>
+                            <td>{{ $request->name }}</td>
+                            <td>{{ $request->cadre }}</td>
+                            <td>{{ $request->batch }}</td>
+                            <td>{{ $request->sector }}</td>
+                            <td>{{ $request->type }}</td>
+                            <td>
+                                @if ($request->status == 2)
+                                Pending
+                                @elseif ($request->status == 3)
+                                Rejected
+                                @endif
+                            </td>
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="6" class="text-center">No outgoing requests</td>
+                        </tr>
+                        @endforelse
+                    </table>
 
-                            <h5 class="mt-4">Mentee Requests</h5>
-                            <table class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th>Name</th>
-                                        <th>Cadre</th>
-                                        <th>Year</th>
-                                        <th>Sector</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @php
-                                    $filteredMenteeRequests = $mentee_requests->filter(function($request) {
-                                        return $request->status == 2;
-                                    });
-                                @endphp
+                </div>
 
-                                @forelse ($filteredMenteeRequests as $request)
-                                    <tr>
-                                        <td>{{ $request->name }}</td>
-                                        <td>{{ $request->cadre }}</td>
-                                        <td>{{ $request->batch }}</td>
-                                        <td>{{ $request->sector }}</td>
-                                        <td>
-                                            <form method="POST" action="{{ route('user.request.update') }}" class="d-inline">
-                                                @csrf
-                                                <input type="hidden" name="id" value="{{ $request->request_id }}">
-                                                <input type="hidden" name="type" value="mentee"> 
-                                                <input type="hidden" name="status" value="1">
-                                                <button type="submit" class="btn btn-sm btn-success">Accept</button>
-                                            </form>
-                                            <form method="POST" action="{{ route('user.request.update') }}" class="d-inline">
-                                                @csrf
-                                                <input type="hidden" name="id" value="{{ $request->request_id }}">
-                                                <input type="hidden" name="type" value="mentee"> 
-                                                <input type="hidden" name="status" value="3">
-                                                <button type="submit" class="btn btn-sm btn-danger">Reject</button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="5" class="text-center">No mentee requests</td>
-                                    </tr>
-                                @endforelse
-
-                                </tbody>
-                            </table>
-
-                    </div>
-                    <div class="tab-pane fade" id="requests_outgoing" role="tabpanel">
-                        <h5>Outgoing Requests</h5>
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Cadre</th>
-                                    <th>Year</th>
-                                    <th>Sector</th>
-                                    <th>Type</th>
-                                    <th>Status</th>
-                                    </tr>
-                            </thead>
-                            <tbody>
-                              </tbody>
+                <!-- Tab 4: Connections -->
+                <div class="tab-pane fade" id="connections" role="tabpanel">
+                    <h5>Mentors</h5>
+                    <div class="row mb-3">
+                        <div class="col-3">
+                            <label for="serviceFilter" class="form-label">Filter by Service:</label>
+                            <select id="serviceFilter" class="form-select">
+                                <option value="">All</option>
                                 @php
-                                    $filteredMentorRequests = $mentor_connections_outgoing->filter(function($request) {
-                                        $request->type = 'mentor';
-                                        return $request->status == 2 || $request->status == 3;
-                                    });
-                                    $filteredMenteeRequests = $mentee_connections_outgoing->filter(function($request) {
-                                        $request->type = 'mentee';
-                                        return $request->status == 2 || $request->status == 3;
+                                $services = $members->pluck('Service')->unique()->filter();
+                                @endphp
+                                @foreach ($services as $Service)
+                                <option value="{{ $Service }}">{{ $Service }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-3">
+                            <label for="batchFilter" class="form-label">Filter by Batch:</label>
+                            <select id="batchFilter" name="batch" class="form-select">
+                                <option value="">All</option>
+                                @php
+                                $batches = $members->pluck('batch')
+                                ->filter(function($value) {
+                                return !is_null($value) && $value !== '' && $value != 0;
+                                })
+                                ->unique()
+                                ->sort(); // Sort numerically (ascending)
+                                @endphp
+                                @foreach ($batches as $batch)
+                                <option value="{{ $batch }}">{{ $batch }}</option>
+                                @endforeach
+                            </select>
 
-                                    });
-                                    $mergedRequests = array_merge($filteredMentorRequests->toArray(), $filteredMenteeRequests->toArray());
-                                   @endphp
+                        </div>
+                        <div class="col-3">
+                            <label for="cadreFilter" class="form-label">Filter by Cadre:</label>
+                            <select id="cadreFilter" class="form-select">
+                                <option value="">All</option>
+                                @php
+                                $cadres = $members->pluck('cader')
+                                ->filter(fn($value) => !is_null($value) && trim($value) !== '')
+                                ->unique()
+                                ->sort();
+                                @endphp
+                                @foreach ($cadres as $cadre)
+                                <option value="{{ $cadre }}">{{ $cadre }}</option>
+                                @endforeach
+                            </select>
 
-                                @forelse ($mergedRequests as $request)
-                                    <tr>
-                                        <td>{{ $request->name }}</td>
-                                        <td>{{ $request->cadre }}</td>
-                                        <td>{{ $request->batch }}</td>
-                                        <td>{{ $request->sector }}</td>
-                                        <td>{{ $request->type }}</td>
-                                        <td>
-                                            @if ($request->status == 2)
-                                                Pending
-                                            @elseif ($request->status == 3)
-                                                Rejected
-                                            @endif
-                                        </td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="6" class="text-center">No outgoing requests</td>
-                                    </tr>
-                                @endforelse
-                              </table>
+                        </div>
+                        <div class="col-3">
+                            <label for="sectorFilter" class="form-label">Filter by Sector:</label>
+                            <select id="sectorFilter" name="sector" class="form-select">
+                                <option value="">All</option>
+                                @php
+                                use Illuminate\Support\Str;
 
-                                </div>
-
-                    <!-- Tab 4: Connections -->
-                   <div class="tab-pane fade" id="connections" role="tabpanel">
-                        <h5>Mentors</h5>
-                            <ul class="list-group mb-3">
-                                
-                                 @php
-                                    $hasMentee = false;
+                                $sectors = $members->pluck('sector')
+                                ->map(function($value) {
+                                return Str::of($value)->trim(); // remove leading/trailing spaces
+                                })
+                                ->filter(function($value) {
+                                return !is_null($value) && $value !== '' && $value != '0';
+                                })
+                                ->unique()
+                                ->sort(); // Sort alphabetically
                                 @endphp
 
-                                @foreach ($mentee_connections as $mentee)
-                                    @if ($mentee->status == 1)
-                                        <li class="list-group-item d-flex justify-content-between">
-                                            <span>{{ $mentee->name }}</span>
-                                            <small>{{ $mentee->cadre }} | {{ $mentee->batch }}</small>
-                                        </li>
-                                        @php $hasMentee = true; @endphp
-                                    @endif
+                                @foreach ($sectors as $sector)
+                                <option value="{{ $sector }}">{{ $sector }}</option>
                                 @endforeach
+                            </select>
 
-                                @unless($hasMentee)
-                                    <li class="list-group-item text-center">No mentees added</li>
-                                @endunless
-                            </ul>
-
-
-                        <h5>Mentees</h5>
-                            <ul class="list-group">
-                               @php
-                                    $hasMentor = false;
-                                @endphp
-
-                                @foreach ($mentor_connections as $mentor)
-                                    @if ($mentor->status == 1)
-                                        <li class="list-group-item d-flex justify-content-between">
-                                            <span>{{ $mentor->name }}</span>
-                                            <small>{{ $mentor->cadre }} | {{ $mentor->batch }}</small>
-                                        </li>
-                                        @php $hasMentor = true; @endphp
-                                    @endif
-                                @endforeach
-
-                                @unless($hasMentor)
-                                    <li class="list-group-item text-center">No mentors added</li>
-                                @endunless
-                            </ul>
-
+                        </div>
                     </div>
+                    <table class="table" id="mentorTable">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Service</th>
+                                <th>Sector</th>
+                                <th>Cadre</th>
+                                <th>Batch</th>
+                                <th>Type</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($mentor_connections as $mentor)
+                            <tr>
+                                <td>{{ $mentor->name }}</td>
+                                <td></td>
+                                <td></td>
+                                <td>{{ $mentor->sector }}</td>
+                                <td>{{ $mentor->cadre }}</td>
+                                <td>{{ $mentor->batch }}</td>
+                                <td>Mentor</td>
+                                <td>
+                                    @if ($mentor->status == 1)
+                                    Active
+                                    @elseif ($mentor->status == 2)
+                                    Pending
+                                    @elseif ($mentor->status == 3)
+                                    Rejected
+                                    @endif
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+
+                    @php
+                    $hasMentee = false;
+                    @endphp
+
+                    @foreach ($mentee_connections as $mentee)
+                    @if ($mentee->status == 1)
+                    <tr>
+                        <td>{{ $mentee->name }}</td>
+                        <td>{{ $mentee->cadre }}</td>
+                        <td>{{ $mentee->batch }}</td>
+                        <td>{{ $mentee->sector }}</td>
+                        <td>Mentee</td>
+                        <td>
+                            @if ($mentee->status == 1)
+                            Active
+                            @elseif ($mentee->status == 2)
+                            Pending
+                            @elseif ($mentee->status == 3)
+                            Rejected
+                            @endif
+                        </td>
+                    </tr>
+                    @php $hasMentee = true; @endphp
+                    @endif
+                    @endforeach
+
+                    @unless($hasMentee)
+                    <li class="list-group-item text-center">No mentees added</li>
+                    @endunless
+                    </ul>
+
+
+                    <h5>Mentees</h5>
+                    <ul class="list-group">
+                        @php
+                        $hasMentor = false;
+                        @endphp
+
+                        @foreach ($mentor_connections as $mentor)
+                        @if ($mentor->status == 1)
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span>{{ $mentor->name }}</span>
+                            <small>{{ $mentor->cadre }} | {{ $mentor->batch }}</small>
+                        </li>
+                        @php $hasMentor = true; @endphp
+                        @endif
+                        @endforeach
+
+                        @unless($hasMentor)
+                        <li class="list-group-item text-center">No mentors added</li>
+                        @endunless
+                    </ul>
 
                 </div>
+
             </div>
         </div>
-
-
-
     </div>
 </div>
 <!-- Select2 -->
- @endsection
- 
- 
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+<!-- Bootstrap Bundle (with Popper) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-7qAoOXltbVP82dhxHAUje59V5r2YsVfBafyUDxEdApLPmcdhBPg1DKg1ERo0BZlK" crossorigin="anonymous">
+</script>
+
+<!-- Filter Logic -->
+<script>
+$(document).ready(function() {
+    var table = $('#mentorTable').DataTable();
+
+    // Filter by Service
+    $('#serviceFilter').on('change', function() {
+        table.column(3).search(this.value).draw(); // 3 = Service column index
+    });
+    $('#sectorFilter').on('change', function() {
+        table.column(6).search(this.value).draw(); // 4 = Sector column index
+    });
+
+    // Filter by Cadre
+    $('#cadreFilter').on('change', function() {
+        table.column(5).search(this.value).draw(); // 5 = Cadre column index
+    });
+
+    // Filter by Batch
+    $('#batchFilter').on('change', function() {
+        table.column(4).search(this.value).draw(); // 6 = Batch column index
+    });
+});
+</script>
+@endsection
