@@ -216,17 +216,18 @@ $groupedPosts = $rawPosts->groupBy('post_id')->map(function ($group) {
 
     if ($role === 'mentor') {
          $results = DB::table('mentor_mentee_connection')
-        ->join('members as mentors', 'mentor_mentee_connection.mentee_id', '=', 'mentors.id')
-        ->where('mentor_mentee_connection.mentor_id', $id)
-        ->select('mentors.name as name', 'mentors.cader as cadre', 'mentors.batch', 'mentors.sector')
-        ->get();
-       
-    }else{
-         $results = DB::table('mentor_mentee_connection')
         ->join('members as mentors', 'mentor_mentee_connection.mentor_id', '=', 'mentors.id')
         ->where('mentor_mentee_connection.mentee_id', $id)
          ->select('mentors.name as name', 'mentors.cader as cadre', 'mentors.batch', 'mentors.sector')
          ->get();
+       
+    }else{
+        
+          $results = DB::table('mentor_mentee_connection')
+        ->join('members as mentors', 'mentor_mentee_connection.mentee_id', '=', 'mentors.id')
+        ->where('mentor_mentee_connection.mentor_id', $id)
+        ->select('mentors.name as name', 'mentors.cader as cadre', 'mentors.batch', 'mentors.sector')
+        ->get();
     }
    
     $html = view('admin.mentorship.result_table', compact('results', 'role'))->render();
