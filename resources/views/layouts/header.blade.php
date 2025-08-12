@@ -237,14 +237,14 @@ Header START -->
                     </div>
                 </li>
                 <!-- Notification dropdown END -->
-
+ @php
+                        $user = Auth::guard('user')->user();
+                        @endphp
                 <li class="nav-item ms-2 dropdown" style="z-index:1060 !important;">
                     <a class="nav-link btn icon-md p-0" href="{{ route('user.profile.data', ['id' => $user->id]) }}" id="profileDropdown" role="button"
                         data-bs-auto-close="outside" data-bs-display="static" data-bs-toggle="dropdown"
                         aria-expanded="false">
-                        @php
-                        $user = Auth::guard('user')->user();
-                        @endphp
+                       
                         <img class="avatar-img rounded-2"
                             src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}"
                             alt="" loading="lazy" decoding="async">

@@ -113,6 +113,16 @@
                                         @enderror
                                     </div>
                                 </div>
+                                 <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Sector<span class="required text-danger text-danger" >*</span></label>
+                                        <input type="text" name="sector" id="sector" class="form-control"
+                                            value="{{ old('sector') }}">
+                                              @error('sector')
+                                        <div class="text-danger">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <label class="form-label">Cadre<span class="required text-danger text-danger" >*</span></label>
