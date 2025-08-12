@@ -12,7 +12,10 @@ class AuthController extends Controller
 {
     public function showLoginForm()
     {
-        //if (Auth::guard('user')->check()) {
+
+        if (Auth::guard('user')->check()) {
+            return redirect()->route('user.feed');
+        }
        /*  return redirect()->route('user.feed1'); */
 		 return view('user.auth.login');
     }

@@ -44,19 +44,19 @@ $members = DB::table('members')
         ->get();
         // print_r($mentee_requests);die;
 
-        //  $mentee_connections = DB::table('mentee_requests')
-        // ->join('members', 'mentee_requests.mentees_ids', '=', 'members.id')
-        // ->where('mentee_requests.mentor', $user_id)
-        // ->select('mentee_requests.id as request_id', 'members.name', 'members.cader as cadre', 'members.batch', 'members.sector','mentee_requests.status')
-        // ->get();
+         $mentee_connections_outgoing = DB::table('mentee_requests')
+        ->join('members', 'mentee_requests.mentees_ids', '=', 'members.id')
+        ->where('mentee_requests.mentor', $user_id)
+        ->select('mentee_requests.id as request_id', 'members.name', 'members.cader as cadre', 'members.batch', 'members.sector','mentee_requests.status')
+        ->get();
 
        
 
-    // $mentor_connections = DB::table('mentor_requests')
-    //     ->join('members', 'mentor_requests.Mentor_ids', '=', 'members.id')
-    //     ->where('mentor_requests.mentees', $user_id)
-    //     ->select('mentor_requests.id as request_id', 'members.name', 'members.cader as cadre', 'members.batch', 'members.sector','mentor_requests.status')
-    //     ->get();
+    $mentor_connections_outgoing = DB::table('mentor_requests')
+        ->join('members', 'mentor_requests.Mentor_ids', '=', 'members.id')
+        ->where('mentor_requests.mentees', $user_id)
+        ->select('mentor_requests.id as request_id', 'members.name', 'members.cader as cadre', 'members.batch', 'members.sector','mentor_requests.status')
+        ->get();
         $mentor_connections = DB::table('mentor_mentee_connection')
         ->join('members as mentors', 'mentor_mentee_connection.mentee_id', '=', 'mentors.id')
         ->where('mentor_mentee_connection.mentor_id', $user_id)
@@ -69,7 +69,7 @@ $members = DB::table('members')
         ->get();
 
         // print_r($members);die;
-        return view('user.mentor_mentee', compact('members', 'mentee_requests', 'mentor_requests', 'mentor_connections', 'mentee_connections'));
+        return view('user.mentor_mentee', compact('members', 'mentee_requests', 'mentor_requests', 'mentor_connections', 'mentee_connections', 'mentee_connections_outgoing', 'mentor_connections_outgoing'));
     }
     function getYears(Request $request) {
         $service = $request->input('service'); 

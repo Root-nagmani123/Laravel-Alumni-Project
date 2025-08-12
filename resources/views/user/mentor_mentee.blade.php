@@ -366,11 +366,11 @@
                             <tbody>
                               </tbody>
                                 @php
-                                    $filteredMentorRequests = $mentor_connections->filter(function($request) {
+                                    $filteredMentorRequests = $mentor_connections_outgoing->filter(function($request) {
                                         $request->type = 'mentor';
                                         return $request->status == 2 || $request->status == 3;
                                     });
-                                    $filteredMenteeRequests = $mentee_connections->filter(function($request) {
+                                    $filteredMenteeRequests = $mentee_connections_outgoing->filter(function($request) {
                                         $request->type = 'mentee';
                                         return $request->status == 2 || $request->status == 3;
 
