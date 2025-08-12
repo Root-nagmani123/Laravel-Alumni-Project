@@ -1,6 +1,6 @@
 <!-- Main content START -->
      <!-- Story START -->
-    <div class="d-flex gap-2 mb-3" style="margin-left:-.5rem;">
+    <div class="d-flex gap-2 mb-4" style="margin-left:-.5rem;">
       <div class="position-relative" id="openAddStoryModal">
   <div class="card border border-2 border-dashed h-150px px-4 px-sm-5 shadow-none d-flex align-items-center justify-content-center text-center">
     <div>
@@ -17,8 +17,8 @@
     </div>
     <!-- Story END -->
         <!-- Share feed START -->
-    <div class="card card-body mb-3">
-        <div class="d-flex mb-3">
+    <div class="card card-body mb-4">
+        <div class="d-flex">
             <!-- Avatar -->
             <div class="avatar avatar-xs me-2">
                 <a href="{{ route('user.profile.data', ['id' => $user->id]) }}"> <img class="avatar-img rounded-circle" src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}"
@@ -57,7 +57,7 @@
 
     <!-- Card feed item START -->
     @foreach($posts as $post)
-    <div class="card mb-3">
+    <div class="card mb-4">
         <!-- Card header START -->
         <div class="card-header border-0 pb-0">
             <div class="d-flex align-items-center justify-content-between">

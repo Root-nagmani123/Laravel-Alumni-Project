@@ -3,7 +3,7 @@
     <!-- Card follow START -->
     <!-- Card News START -->
     <div class="col-sm-6 col-lg-12">
-        <div class="card" style="height: 145px;">
+        <div class="card" style="height: 152px;">
             <!-- Card header START -->
             <div class="card-header pb-0 border-0">
                 <h5 class="card-title mb-0">Mentorship Program</h5>
@@ -23,7 +23,7 @@
 
         <div class="col-sm-6 col-lg-12">
         <div class="card">
-                        <div class="h-80px rounded-top" style="background-image:url({{asset('user_assets/images/login/login-bg.jpg')}}); background-position: center; background-size: cover; background-repeat: no-repeat;"></div>
+                        <div class="rounded-top" style="background-image:url({{asset('user_assets/images/login/login-bg.jpg')}}); background-position: center; background-size: cover; background-repeat: no-repeat;height:55px;"></div>
                         <div class="card-footer text-center">
                           <a class="btn btn-success-soft btn-sm" href="https://www.lbsnaa.gov.in/lbsnaa-newsletter"> View Newsletter </a>
                         </div>
@@ -40,7 +40,7 @@
             </div>
             <!-- Card header END -->
             <!-- Card body START -->
-            <div class="card-body  overflow-auto" style="max-height: 500px;">
+            <div class="card-body  overflow-auto" style="max-height: 500px; scrollbar-width: thin; scrollbar-color: #af2910 transparent;">
                 <!-- News item -->
                 @if((isset($broadcast)) && ($broadcast->count() > 0))
                 @foreach($broadcast as $index => $broadcast)
