@@ -22,8 +22,8 @@ public function sendOtp(Request $request)
         ]);
 
         // Check if email exists in members table
-        $user = Member::where('email', $request->otp_email)->first();
-        
+        $user = Member::where('email', $request->otp_email)->where('status', 1)->first();
+
         if (!$user) {
             return response()->json(['error' => 'Email not found in our records'], 422);
         }
