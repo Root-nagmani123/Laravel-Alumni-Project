@@ -97,45 +97,114 @@ public function loginAuth(Request $request)
         return redirect('http://127.0.0.1:8000/admin/login');*/
 
     }
-    public function socialwall(){
+
+
+//     public function socialwall(){
+//     $rawPosts = DB::table('posts')
+//     ->join('members', 'posts.member_id', '=', 'members.id')
+//     ->leftJoin('post_media', 'posts.id', '=', 'post_media.post_id')
+//     ->select(
+//         'posts.id as post_id',
+//         'posts.content',
+//         'posts.media_type',
+//         'posts.created_at as post_created_at',
+//         'post_media.file_path',
+//         'post_media.file_type',
+//         'members.name as member_name',
+//         'members.profile_pic as member_profile_pic'
+//     )
+//     ->whereNull('posts.group_id')// Assuming 0 is the group ID for social wall posts
+//     ->orderBy('posts.created_at', 'desc')
+//     ->get();
+// $groupedPosts = $rawPosts->groupBy('post_id')->map(function ($group) {
+//     $first = $group->first();
+//     return [
+//         'post_id' => $first->post_id,
+//         'member_name' => $first->member_name,
+//         'member_profile_pic' => $first->member_profile_pic,
+//         'content' => $first->content,
+//         'media_type' => $first->media_type,
+//         'created_at' => $first->post_created_at, 
+//         'media' => $group->map(function ($item) {
+//             return [
+//                 'file_path' => $item->file_path,
+//                 'file_type' => $item->file_type
+//             ];
+//         })->filter(fn($media) => !empty($media['file_path']))->values()
+//     ];
+// })->values();
+
+// // print_r($groupedPosts);die;
+//         return view('admin.socialwall.index',compact('groupedPosts'));
+
+//     }
+
+
+public function socialwall()
+{
+    // Fetch posts + media
     $rawPosts = DB::table('posts')
-    ->join('members', 'posts.member_id', '=', 'members.id')
-    ->leftJoin('post_media', 'posts.id', '=', 'post_media.post_id')
-    ->select(
-        'posts.id as post_id',
-        'posts.content',
-        'posts.media_type',
-        'posts.created_at as post_created_at',
-        'post_media.file_path',
-        'post_media.file_type',
-        'members.name as member_name',
-        'members.profile_pic as member_profile_pic'
-    )
-    ->whereNull('posts.group_id')// Assuming 0 is the group ID for social wall posts
-    ->orderBy('posts.created_at', 'desc')
-    ->get();
-$groupedPosts = $rawPosts->groupBy('post_id')->map(function ($group) {
-    $first = $group->first();
-    return [
-        'post_id' => $first->post_id,
-        'member_name' => $first->member_name,
-        'member_profile_pic' => $first->member_profile_pic,
-        'content' => $first->content,
-        'media_type' => $first->media_type,
-        'created_at' => $first->post_created_at,
-        'media' => $group->map(function ($item) {
-            return [
-                'file_path' => $item->file_path,
-                'file_type' => $item->file_type
-            ];
-        })->filter(fn($media) => !empty($media['file_path']))->values()
-    ];
-})->values();
+        ->join('members', 'posts.member_id', '=', 'members.id')
+        ->leftJoin('post_media', 'posts.id', '=', 'post_media.post_id')
+        ->select(
+            'posts.id as post_id',
+            'posts.content',
+            'posts.media_type',
+            'posts.created_at as post_created_at',
+            'post_media.file_path',
+            'post_media.file_type',
+            'members.name as member_name',
+            'members.profile_pic as member_profile_pic'
+        )
+        ->whereNull('posts.group_id')
+        ->orderBy('posts.created_at', 'desc')
+        ->get();
 
-// print_r($groupedPosts);die;
-        return view('admin.socialwall.index',compact('groupedPosts'));
+    // Bulk fetch likes counts
+    $likesCounts = DB::table('likes')
+        ->select('post_id', DB::raw('COUNT(*) as total_likes'))
+        ->groupBy('post_id')
+        ->pluck('total_likes', 'post_id');
 
-    }
+    // Bulk fetch comments
+    $comments = DB::table('comments')
+        ->join('members', 'comments.member_id', '=', 'members.id')
+        ->select(
+            'comments.id',
+            'comments.post_id',
+            'comments.comment',
+            'comments.created_at',
+            'members.name as member_name',
+            'members.profile_pic as member_profile_pic'
+        )
+        ->orderBy('comments.created_at', 'asc')
+        ->get()
+        ->groupBy('post_id');
+
+    $groupedPosts = $rawPosts->groupBy('post_id')->map(function ($group) use ($likesCounts, $comments) {
+        $first = $group->first();
+        return [
+            'post_id' => $first->post_id,
+            'member_name' => $first->member_name,
+            'member_profile_pic' => $first->member_profile_pic,
+            'content' => $first->content,
+            'media_type' => $first->media_type,
+            'created_at' => $first->post_created_at, 
+            'media' => $group->map(function ($item) {
+                return [
+                    'file_path' => $item->file_path,
+                    'file_type' => $item->file_type
+                ];
+            })->filter(fn($media) => !empty($media['file_path']))->values(),
+            'likes_count' => $likesCounts[$first->post_id] ?? 0,
+            'comments' => $comments[$first->post_id] ?? collect(),
+        ];
+    })->values();
+
+    return view('admin.socialwall.index', compact('groupedPosts'));
+}
+
+
 
   public function socialwall_delete($id)
 {

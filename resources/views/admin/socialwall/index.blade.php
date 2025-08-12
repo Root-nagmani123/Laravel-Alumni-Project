@@ -37,12 +37,13 @@
         <div class="card-header">
             <div class="d-flex align-items-center gap-6">
                 @php
+              
                 $profilePath = public_path('storage/' .
                 $post['member_profile_pic']);
                 $profilePic = !empty( $post['member_profile_pic']) &&
                 file_exists($profilePath)
                 ? asset('storage/' . $post['member_profile_pic'])
-                : asset('feed_assets/images/avatar-7.png');
+                : asset('feed_assets/images/avatar-default.png');
                 @endphp
 
                 <img src="{{ $profilePic }}" alt="prd1" width="48" class="rounded">
@@ -95,48 +96,33 @@
             @endif
         </div>
         <!-- Comments Section -->
-        <div class="card-footer border-top">
-            <div class="d-flex gap-2">
-                <h6>Likes (2)</h6>
-            <h6 class="mb-3">Comments (2)</h6>
-            </div>
-            <div class="d-flex mb-3">
-                <img src="https://i.pinimg.com/originals/00/28/c7/0028c71f6fe9fce5f87d117f5c5aeeee.jpg" alt="commenter" width="36" height="36" class="rounded me-2">
-                <div class="bg-light rounded p-2 w-100">
-                    <strong>Nibhash Mishra</strong>
-                    <span
-                        class="text-muted float-end" style="font-size:12px;">19th July, 2025</span>
-                    <p class="mb-1">Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis accusantium accusamus facilis dolorum dolore dolorem eaque, ea exercitationem praesentium mollitia. Necessitatibus, dignissimos reiciendis quasi temporibus ad autem repudiandae adipisci amet?</p>
+<div class="card-footer border-top">
+    <div class="d-flex gap-4 mb-3">
+        <h6>Likes ({{ $post['likes_count'] }})</h6>
+        <h6>Comments ({{ count($post['comments']) }})</h6>
+    </div>
 
-                    {{-- Replies --}}
-                    
-                    <div class="ms-4 border-start ps-3">
-                       
-                        <div class="d-flex mt-2">
-                            <img src="https://i.pinimg.com/originals/00/28/c7/0028c71f6fe9fce5f87d117f5c5aeeee.jpg" alt="replier" width="32"  height="32" class="rounded me-2">
-                            <div class="bg-white rounded p-2 w-100 border">
-                                <strong>Mayank Mishra</strong>
-                                <span
-                                    class="text-muted float-end" style="font-size:12px;">19th July, 2025</span>
-                                <p class="mb-0">Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis accusantium accusamus facilis dolorum dolore dolorem eaque, ea exercitationem praesentium mollitia. Necessitatibus, dignissimos reiciendis quasi temporibus ad autem repudiandae adipisci amet?</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="ms-4 border-start ps-3">
-                       
-                        <div class="d-flex mt-2">
-                            <img src="https://i.pinimg.com/originals/00/28/c7/0028c71f6fe9fce5f87d117f5c5aeeee.jpg" alt="replier" width="32"  height="32" class="rounded me-2">
-                            <div class="bg-white rounded p-2 w-100 border">
-                                <strong>Mayank Mishra</strong>
-                                <span
-                                    class="text-muted float-end" style="font-size:12px;">19th July, 2025</span>
-                                <p class="mb-0">Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis accusantium accusamus facilis dolorum dolore dolorem eaque, ea exercitationem praesentium mollitia. Necessitatibus, dignissimos reiciendis quasi temporibus ad autem repudiandae adipisci amet?</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    @foreach($post['comments'] as $comment)
+    @php
+        $commentProfilePath = public_path('storage/' . $comment->member_profile_pic);
+        $commentProfilePic = !empty($comment->member_profile_pic) && file_exists($commentProfilePath)
+            ? asset('storage/' . $comment->member_profile_pic)
+            : asset('feed_assets/images/avatar-default.png');
+    @endphp
+
+    <div class="d-flex mb-3">
+        <img src="{{ $commentProfilePic }}" alt="commenter" width="36" height="36" class="rounded me-2">
+        <div class="bg-light rounded p-2 w-100">
+            <strong>{{ $comment->member_name }}</strong>
+            <span class="text-muted float-end" style="font-size:12px;">
+                {{ \Carbon\Carbon::parse($comment->created_at)->format('d M Y') }}
+            </span>
+            <p class="mb-1">{{ $comment->comment }}</p>
         </div>
+    </div>
+    @endforeach
+</div>
+
 
     </div>
     @endforeach
