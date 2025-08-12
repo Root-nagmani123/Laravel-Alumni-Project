@@ -92,8 +92,8 @@
             ? asset('storage/' . $member->profile_pic)
             : asset('feed_assets/images/avatar/07.jpg');
 
-        $displayName = $member->name ?? 'Unknown';
-        $designation = $member->designation ?? 'Unknown';
+        $displayName = $member->name ?? 'N/A';
+        $designation = $member->designation ?? 'N/A';
         $profileLink = route('user.profile.data', ['id' => $member->id]);
 
     }

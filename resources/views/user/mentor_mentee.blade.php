@@ -406,29 +406,8 @@
                    <div class="tab-pane fade" id="connections" role="tabpanel">
                         <h5>Mentors</h5>
                             <ul class="list-group mb-3">
-                                @php
-                                    $hasMentor = false;
-                                @endphp
-
-                                @foreach ($mentor_connections as $mentor)
-                                    @if ($mentor->status == 1)
-                                        <li class="list-group-item d-flex justify-content-between">
-                                            <span>{{ $mentor->name }}</span>
-                                            <small>{{ $mentor->cadre }} | {{ $mentor->batch }}</small>
-                                        </li>
-                                        @php $hasMentor = true; @endphp
-                                    @endif
-                                @endforeach
-
-                                @unless($hasMentor)
-                                    <li class="list-group-item text-center">No mentors added</li>
-                                @endunless
-                            </ul>
-
-
-                        <h5>Mentees</h5>
-                            <ul class="list-group">
-                                @php
+                                
+                                 @php
                                     $hasMentee = false;
                                 @endphp
 
@@ -444,6 +423,28 @@
 
                                 @unless($hasMentee)
                                     <li class="list-group-item text-center">No mentees added</li>
+                                @endunless
+                            </ul>
+
+
+                        <h5>Mentees</h5>
+                            <ul class="list-group">
+                               @php
+                                    $hasMentor = false;
+                                @endphp
+
+                                @foreach ($mentor_connections as $mentor)
+                                    @if ($mentor->status == 1)
+                                        <li class="list-group-item d-flex justify-content-between">
+                                            <span>{{ $mentor->name }}</span>
+                                            <small>{{ $mentor->cadre }} | {{ $mentor->batch }}</small>
+                                        </li>
+                                        @php $hasMentor = true; @endphp
+                                    @endif
+                                @endforeach
+
+                                @unless($hasMentor)
+                                    <li class="list-group-item text-center">No mentors added</li>
                                 @endunless
                             </ul>
 
