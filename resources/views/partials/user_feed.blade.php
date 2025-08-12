@@ -256,7 +256,7 @@
                     <a href="{{ asset('storage/' . $media->file_path) }}" class="glightbox"
                         data-gallery="post-gallery-{{ $post->id }}">
                         <img src="{{ asset('storage/' . $media->file_path) }}" alt="Post Image" loading="lazy"
-                            class="w-100">
+                            class="w-100 rounded" decoding="async" style="height: 250px; object-fit: cover;">
                     </a>
                     @if($index === 3 && $totalImages > 4)
                     {{-- Hidden extra images --}}

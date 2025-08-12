@@ -74,48 +74,39 @@
 
                 <hr>
                 <div class="dataTables_wrapper">
-                    <div class="table-responsive">
-                        <table
-                            class="table table-striped table-bordered text-nowrap align-middle dataTable w-100  text-wrap">
-                            <thead>
-                                <!-- start row -->
+                    <div class="table-responsive-sm table-responsive-md table-responsive-lg">
+                        <table class="table table-striped table-bordered align-middle dataTable w-100 text-nowwrap mb-0">
+                            <thead class="table-light">
                                 <tr>
-                                    <th class="col">S.No.</th>
-                                    <th class="col">Name</th>
-                                    <th class="col">User Name</th>
-                                    <th class="col">Email</th>
-                                    <th class="col">Mobile</th>
-                                    <th class="col">Service</th>
-                                    <th class="col">Sector</th>
-                                    <th class="col">Cadre, Batch</th>
-                                    <th class="col">Action</th>
-                                    <th class="col">Status</th>
+                                    <th scope="col">S.No.</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">User Name</th>
+                                    <th scope="col">Email</th>
+                                    <th scope="col">Mobile</th>
+                                    <th scope="col">Service</th>
+                                    <th scope="col">Sector</th>
+                                    <th scope="col">Cadre, Batch</th>
+                                    <th scope="col">Action</th>
+                                    <th scope="col">Status</th>
                                 </tr>
-                                <!-- end row -->
                             </thead>
                             <tbody>
                                 @foreach($members as $member)
-                                <tr class="odd">
-                                    <td>{{ $loop ->iteration }}</td>
-                                    <td>{{ $member->name }}</td>
-                                    <td>{{ $member->username }}</td>
-                                    <td>{{ $member->email }}</td>
-                                    <td>{{ $member->mobile }}</td>
-                                    <td>{{ $member->Service }}</td>
-                                    <td>{{ $member->sector }}</td>
-                                    <td>{{ $member->cader }}, {{ $member->batch }}</td>
+                                <tr>
+                                    <td>{{ $loop->iteration }}</td>
+                                    <td class="text-break">{{ $member->name }}</td>
+                                    <td class="text-break">{{ $member->username }}</td>
+                                    <td class="text-break">{{ $member->email }}</td>
+                                    <td class="text-break">{{ $member->mobile }}</td>
+                                    <td class="text-break">{{ $member->Service }}</td>
+                                    <td class="text-break">{{ $member->sector }}</td>
+                                    <td class="text-break">{{ $member->cader }}, {{ $member->batch }}</td>
                                     <td>
-                                        <a href="{{route('members.edit', $member->id) }}"
-                                            class="btn btn-success text-white btn-sm">Edit</a>
-
-                                        <form action="{{ route('members.destroy', $member->id) }}" method="POST"
-                                            style="display:inline;">
+                                        <a href="{{ route('members.edit', $member->id) }}" class="btn btn-success text-white btn-sm mb-1">Edit</a>
+                                        <form action="{{ route('members.destroy', $member->id) }}" method="POST" style="display:inline;">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-danger text-white btn-sm"
-                                                onclick="return confirm('Are you sure you want to delete?')">
-                                                Delete
-                                            </button>
+                                            <button type="submit" class="btn btn-danger text-white btn-sm mb-1" onclick="return confirm('Are you sure you want to delete?')">Delete</button>
                                         </form>
                                     </td>
                                     <td>
