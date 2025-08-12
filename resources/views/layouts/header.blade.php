@@ -59,41 +59,37 @@ Header START -->
             <!-- Main navbar START -->
             <div class="collapse navbar-collapse" id="navbarCollapse">
                 <ul class="navbar-nav navbar-nav-scroll mx-auto">
-                    <!-- <li class="nav-item">
+    <li class="nav-item">
+        <a class="nav-link {{ request()->is('user/feed') ? 'active' : '' }}" 
+           href="{{ url('user/feed') }}">Home</a>
+    </li>
 
-                        <a class="nav-link" href="{{ route('user.profile.name', ['name' => 'Alumni']) }}">Home</a>
-                    </li> -->
-                    <!-- Nav item 1 Demos -->
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url('user/feed') }}">Home</a>
-                    </li>
-                    <!-- Nav item: Dropdown for Library -->
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="libraryDropdown" role="button"
-                            data-bs-toggle="dropdown" aria-expanded="false">
-                            Library
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="libraryDropdown">
-                            <li>
-                                <a class="dropdown-item" href="https://gsl.lbsnaa.gov.in/" target="_blank">
-                                    Gandhi Smriti Library Online Catalogue (OPAC)
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item"
-                                    href="https://idpbridge.myloft.xyz/simplesaml/module.php/core/loginuserpass?AuthState=_13df360546d97777e748e8ded7bf639c5c8c45d3d7%3Ahttps%3A%2F%2Fidpbridge.myloft.xyz%2Fsimplesaml%2Fmodule.php%2Fsaml%2Fidp%2FsingleSignOnService%3Fspentityid%3Dhttps%253A%252F%252Felibrarylbsnaa.myloft.xyz%26cookieTime%3D1688360911"
-                                    target="_blank">
-                                    e-Library (MyLOFT)
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle {{ request()->is('library*') ? 'active' : '' }}"
+           href="#" id="libraryDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+           Library
+        </a>
+        <ul class="dropdown-menu" aria-labelledby="libraryDropdown">
+            <li><a class="dropdown-item" href="https://gsl.lbsnaa.gov.in/" target="_blank">Gandhi Smriti Library</a></li>
+            <li><a class="dropdown-item" href="https://idpbridge.myloft.xyz/" target="_blank">e-Library (MyLOFT)</a></li>
+        </ul>
+    </li>
 
-                    <!-- Nav item 3 Mega menu -->
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url('user/all-events') }}">Events</a>
-                    </li>
-                </ul>
+    <li class="nav-item">
+        <a class="nav-link {{ request()->is('user/all-events') ? 'active' : '' }}" 
+           href="{{ url('user/all-events') }}">Events</a>
+    </li>
+
+    <li class="nav-item">
+        <a class="nav-link {{ request()->is('user/directory') ? 'active' : '' }}" 
+           href="{{ route('user.directory') }}">Directory</a>
+    </li>
+
+    <li class="nav-item">
+        <a class="nav-link" data-bs-toggle="modal" data-bs-target="#grievanceModal">Feedback</a>
+    </li>
+</ul>
+
                 <!-- Search Input Group with Dropdown -->
                 <!-- SEARCH BOX -->
                 <div class="position-relative">
@@ -319,16 +315,16 @@ Header START -->
                             @endif
                         </li>
                         <!-- Links -->
-                        <li><a class="dropdown-item" href="{{ route('user.directory') }}"><i
-                                    class="bi bi-gear-fill fa-fw me-2"></i>Directory</a></li>
+                        <!-- <li><a class="dropdown-item" href="{{ route('user.directory') }}"><i
+                                    class="bi bi-gear-fill fa-fw me-2"></i>Directory</a></li> -->
                         <!-- Dropdown with collapsible Social Media list -->
                         <li><a class="dropdown-item" href="{{ route('user.change-password.form') }}"><i
                                     class="bi bi-file-earmark-bar-graph-fill fa-fw me-2"></i>Change Password</a></li>
-                        <li>
+                        <!-- <li>
                             <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#grievanceModal">
                                 <i class="bi bi-chat-dots-fill fa-fw me-2"></i>Grievance / Feedback
                             </a>
-                        </li>
+                        </li> -->
                         <!-- <li>
                             <a class="dropdown-item" href="https://www.lbsnaa.gov.in/lbsnaa-newsletter" target="_blank">
                                 <i class="bi bi-newspaper fa-fw me-2"></i>Newsletter
