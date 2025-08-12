@@ -45,12 +45,13 @@ class GroupController extends Controller
 
   $groupNames = DB::table('groups as g')
     ->join('group_member as gm', 'g.id', '=', 'gm.group_id')
+    ->leftJoin('posts as p', 'g.id', '=', 'p.group_id')
     ->whereIn('g.id', $groupIds)
     ->where('g.status', 1)
     ->where(function($query) use ($userId) {
         $query->where(function($q) {
             $q->whereNull('g.end_date')
-            ->orWhere('g.end_date', '>', now());
+              ->orWhere('g.end_date', '>', now());
         })
         ->orWhere(function($q) use ($userId) {
             $q->where('g.member_type', '2')
@@ -63,11 +64,22 @@ class GroupController extends Controller
         'g.image',
         'g.end_date',
         'g.created_by',
-        'g.member_type'
+        'g.member_type',
+        DB::raw('1 + JSON_LENGTH(gm.mentiee) as member_count'), // 1 mentor + mentee count
+         DB::raw('COUNT(p.id) as total_posts') 
+    )
+    ->groupBy(
+        'g.id',
+        'g.name',
+        'g.image',
+        'g.end_date',
+        'g.created_by',
+        'g.member_type',
+        'gm.mentiee'
     )
     ->orderBy('g.id', 'desc')
-    ->distinct()
     ->get();
+    // print_r($groupNames);
 
     
 
