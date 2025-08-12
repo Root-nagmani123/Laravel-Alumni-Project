@@ -154,8 +154,8 @@
                                 <div class="mb-3">
                                     <label class="form-label">Status <span class="required text-danger">*</span></label>
                                     <select name="status" id="status" class="form-control">
-                                        <option value="1" {{ old('status') == 1 ? 'selected' : '' }}>Active</option>
-                                        <option value="0" {{ old('status') == 0 ? 'selected' : '' }}>Inactive</option>
+                                        <option value="1" {{ old('status',1) == 1 ? 'selected' : '' }}>Active</option>
+                                        <option value="0" {{ old('status',1) == 0 ? 'selected' : '' }}>Inactive</option>
                                     </select>
                                     @error('status')
                                     <div class="text-danger">{{ $message }}</div>

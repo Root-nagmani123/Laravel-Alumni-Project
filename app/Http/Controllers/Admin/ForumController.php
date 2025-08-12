@@ -388,7 +388,23 @@ class ForumController extends Controller
         // $topic->video_caption = $request->input('video_caption');
         // $topic->video_link = $request->input('video_link');
         $topic->status = $request->input('status');
-        $topic->save();
+       $result = $topic->save();
+
+        if ($result && $topic->status == 1) {
+            $forumName = Forum::find($topic->forum_id)->name;
+            // Notify all members about the topic update
+            $notification = $this->notificationService->notifyAllMembers(
+                'forum_topic',
+                'A topic has been updated in the forum: ' . $forumName,
+                $topic->forum_id,
+                'forum'
+            );
+            if ($notification) {
+                Member::query()->update(['is_notification' => 0]);
+                $topic->notified_at = 1;
+                $topic->save();
+            }
+        }
 
         return back()->with('success', 'Topic updated successfully.');
     }
@@ -416,7 +432,17 @@ class ForumController extends Controller
     }
 
     // Delete the topic record
-    $topic->delete();
+     $result = $topic->delete();
+
+    if($result){
+        // Notify all members about the topic deletion
+        $this->notificationService->notifyAllMembers(
+            'forum_topic',
+            'A topic has been deleted from the forum: ' . $topic->description,
+            $topic->forum_id,
+            'forum_deleted'
+        );
+    }
 
     // ✅ Redirect back to the same forum’s topic list
     return redirect()->to('/admin/forums/forums/' . $topic->forum_id . '/topics')
@@ -442,12 +468,22 @@ class ForumController extends Controller
         }
         $forum->images = $data['images'];
     }
-    $forum->update([
+    $result = $forum->update([
         'name' => $request->forumname,
         'status' => $request->forumstatus,
         'end_date' => $request->end_date, // Update end date
         'images' => $forum->images ?? null, // Keep existing image if not updated
     ]);
+
+     if ($result && $forum->status == 1) {
+        
+        $notification = $this->notificationService->notifyAllMembers('forum_admin', $forum->name . ' forum has been updated.', $forum->id, 'forum');
+        if ($notification) {
+            Member::query()->update(['is_notification' => 0]);
+            $forum->notified_at = 1;
+            $forum->save();
+        }
+    }
     return redirect()->route('forums.index')->with('success', 'Forum updated successfully!');
 }
 public function destroyforum(Forum $forum)
@@ -476,7 +512,7 @@ public function destroyforum(Forum $forum)
         'forum_admin',
         $forumName . ' forum has been deleted.',
         $forumId,
-        'forum'
+        'forum_deleted'
     );
     return redirect()->route('forums.index')->with('success', 'Forum and all associated data deleted successfully.');
 }
@@ -489,7 +525,8 @@ public function toggleStatus(Request $request)
     $forum->save();
     
    // Notify only when activated and not yet notified
-   if ($oldStatus == 0 && $forum->status == 1 && $forum->notified_at == 0) {
+   if ($oldStatus == 0 && $forum->status == 1 ) {
+
     $notification = $this->notificationService->notifyAllMembers(
         'forum_admin',
         $forum->name . ' forum has been activated.',
@@ -503,6 +540,19 @@ public function toggleStatus(Request $request)
     }
 }
 
+ if ($oldStatus == 1 && $forum->status == 0 && now()->lt($forum->end_date)) {
+        $notification = $this->notificationService->notifyAllMembers(
+            'forum_admin',
+            $forum->name . ' forum has been cancelled before the scheduled end date.',
+            $forum->id,
+            'forum'
+        );
+
+        if ($notification) {
+            Member::query()->update(['is_notification' => 0]);
+        }
+    }
+
     return response()->json(['message' => 'Forum status updated successfully.']);
 }
 public function TopictoggleStatus(Request $request)
@@ -513,7 +563,7 @@ public function TopictoggleStatus(Request $request)
     $topic->save();
 
     // Notify only when activated and not yet notified
-    if ($oldStatus == 0 && $topic->status == 1 && $topic->notified_at == 0) {
+    if ($oldStatus == 0 && $topic->status == 1 ) {
         $forum = Forum::find($topic->forum_id);
         $message = $forum->name . ' - New topic activated: ' . $topic->description;
 
@@ -528,6 +578,23 @@ public function TopictoggleStatus(Request $request)
             Member::query()->update(['is_notification' => 0]);
             $topic->notified_at = 1;
             $topic->save();
+        }
+    }
+
+      // Deactivation before end date: send cancellation notification
+            $forum = Forum::find($topic->forum_id);
+    if ($oldStatus == 1 && $topic->status == 0 && now()->lt($forum->end_date)) {
+        $message = $forum->name . ' - Topic deactivated: ' . $topic->description;
+
+        $notification = $this->notificationService->notifyAllMembers(
+            'forum_topic',
+            $message,
+            $forum->id,
+            'forum'
+        );
+
+        if ($notification) {
+            Member::query()->update(['is_notification' => 0]);
         }
     }
 

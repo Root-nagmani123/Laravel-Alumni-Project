@@ -169,11 +169,23 @@ return redirect()->route('events.index')->with('error', 'Event not found!');retu
 			$data = $event->delete();
             if ($data) {
                 // Notify members about the event deletion
-                $notification = $this->notificationService->notifyAllMembers('Event', $event->title . ' event has been deleted.', $event->id, 'event');
+                $notification = $this->notificationService->notifyAllMembers('Event', $event->title . ' event has been deleted.', $event->id, 'event_deleted');
                 if ($notification) {
                     Member::query()->update(['is_notification' => 0]);
                 }
             }
+             if ($oldStatus == 1 && $event->status == 0 && now()->lt($event->end_datetime)) {
+        $notification = $this->notificationService->notifyAllMembers(
+            'Event',
+            $event->title . ' event has been cancelled before the scheduled end date.',
+            $event->id,
+            'event'
+        );
+
+        if ($notification) {
+            Member::query()->update(['is_notification' => 0]);
+        }
+    }
 
 			return redirect()->route('events.index')
 							->with('success', 'Event deleted successfully.');

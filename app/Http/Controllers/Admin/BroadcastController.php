@@ -115,11 +115,19 @@ public function toggleStatus(Request $request)
     $broadcast->save();
 
     if ($oldStatus == 0 && $broadcast->status == 1 && $broadcast->notified_at == 0) {
-        $notification = $this->notificationService->notifyAllMembers('event', $event->title . ' Event has been activated.', $event->id, 'event');
+        $notification = $this->notificationService->notifyAllMembers('broadcast', $broadcast->title . ' Broadcast has been activated.', $broadcast->id, 'broadcast');
         if ($notification) {
             Member::query()->update(['is_notification' => 0]);
             $broadcast->notified_at = 1;
             $broadcast->save();
+        }
+    }
+
+    if ($oldStatus == 1 && $broadcast->status == 0 && now()->lt($broadcast->end_datetime)) {
+        // Notify members about deactivation
+        $notification = $this->notificationService->notifyAllMembers('broadcast', $broadcast->title . ' Broadcast has been deactivated.', $broadcast->id, 'broadcast');
+        if ($notification) {
+            Member::query()->update(['is_notification' => 0]);
         }
     }
 
@@ -138,7 +146,8 @@ public function destroybroadcast(Broadcast $broadcast)
 
         if($data){
             // Notify members about the broadcast deletion
-            $notification = $this->notificationService->notifyAllMembers('broadcast', $broadcast->title . ' broadcast has been deleted.', $broadcast->id, 'broadcast');
+            $notification = $this->notificationService->notifyAllMembers('broadcast', $broadcast->title . ' broadcast has been deleted.', $broadcast->id, 'broadcast_deleted');
+
             if ($notification) {
                 Member::query()->update(['is_notification' => 0]);
             }

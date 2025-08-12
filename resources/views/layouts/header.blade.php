@@ -169,7 +169,7 @@ Header START -->
                                                             $notificationUrl = route('user.group-post', ['id' => $notification->source_id]);
                                                             break;
                                                         case 'birthday':
-                                                            $notificationUrl = url('/profile/' . $notification->source_id);
+                                                            $notificationUrl = route('user.profile.data', ['id' => $notification->source_id]);
                                                             break;
                                                         default:
                                                             $notificationUrl = '#';
