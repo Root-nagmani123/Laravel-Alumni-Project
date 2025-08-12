@@ -39,13 +39,10 @@
             <!-- Chat action END -->
 
             <!-- Close  -->
-            <a href="#" 
-   class="btn btn-secondary-soft-hover d-flex align-items-center justify-content-center p-0" 
-   style="width:32px; height:32px;" 
-   data-bs-dismiss="offcanvas" 
-   aria-label="Close">
-    <i class="fa-solid fa-xmark"></i>
-</a>
+            <a href="#" class="btn btn-secondary-soft-hover d-flex align-items-center justify-content-center p-0"
+                style="width:32px; height:32px;" data-bs-dismiss="offcanvas" aria-label="Close">
+                <i class="fa-solid fa-xmark"></i>
+            </a>
 
 
         </div>
@@ -72,52 +69,67 @@
 
                     <!-- Search contact END -->
                     @if($chats && $chats->isNotEmpty())
-                        <ul class="list-unstyled">
-                            @foreach ($chats as $key => $chat)
+                    <ul class="list-unstyled">
+                        @foreach ($chats as $key => $chat)
 
-                                <!-- Contact item -->
-                                <li class="mt-3 hstack gap-3 align-items-center position-relative toast-btn"
-                                    style=" {{ $selectedChat == $chat->member_id ? 'background-color: #af2910' : '' }}"
-                                    data-target="chatToast-{{ $chat->member_id }}"
-                                    wire:click="selectChat({{ $chat->member_id }})" wire:key="chat-{{ $chat->member_id }}"
-                                    style="cursor: pointer;">
+                        <!-- Contact item -->
+                        <li class="mt-3 hstack gap-3 align-items-center position-relative toast-btn"
+                            style=" {{ $selectedChat == $chat->member_id ? 'background-color: #af2910' : '' }}"
+                            data-target="chatToast-{{ $chat->member_id }}"
+                            wire:click="selectChat({{ $chat->member_id }})" wire:key="chat-{{ $chat->member_id }}"
+                            style="cursor: pointer;">
 
-                                    {{-- new code needed to test --}}
+                            {{-- new code needed to test --}}
 
-                                    {{--
+                            {{--
                                 <li class="mt-3 hstack gap-3 align-items-center position-relative toast-btn"
                                     style="cursor: pointer; {{ $selectedChat == $chat->member_id ? 'background-color: #af2910;' : '' }}"
-                                    data-target="chatToast-{{ $chat->member_id }}"
-                                    wire:click="selectChat({{ $chat->member_id }})" wire:key="chat-{{ $chat->member_id }}"> --}}
+                            data-target="chatToast-{{ $chat->member_id }}"
+                            wire:click="selectChat({{ $chat->member_id }})" wire:key="chat-{{ $chat->member_id }}"> --}}
 
-                                    <!-- Avatar -->
-                                    <div class="avatar status-online">
-                                        <img class="avatar-img rounded-circle" src="{{asset('feed_assets/images/avatar/07.jpg')}}" alt="">
-                                    </div>
-                                    <!-- Info -->
-                                    <div class="overflow-hidden">
-                                        <a class="h6 mb-0 stretched-link {{ $selectedChat == $chat->member_id ? 'text-white' : '' }}"
-                                            href="#!">{{ $chat->name }}
-                                            {{-- @if ($selectedChat != $chat->member_id)
+                            <!-- Avatar -->
+                            <div class="avatar ">
+                                <!--status-online-->
+                                @php
+                                $profileImage = '';
+                                $user = App\Models\Member::find($chat->member_id);
+
+                                if ($user && !empty($user->profile_pic) &&
+                                Storage::disk('public')->exists($user->profile_pic)) {
+                                $profileImage = asset('storage/' . $user->profile_pic);
+                                } else {
+                                $profileImage = asset('feed_assets/images/avatar/07.jpg');
+                                }
+
+
+                                @endphp
+
+                                <img class="avatar-img rounded-circle" src="{{ $profileImage }}" alt="">
+                            </div>
+                            <!-- Info -->
+                            <div class="overflow-hidden">
+                                <a class="h6 mb-0 stretched-link {{ $selectedChat == $chat->member_id ? 'text-white' : '' }}"
+                                    href="#!">{{ $chat->name }}
+                                    {{-- @if ($selectedChat != $chat->member_id)
                                                 <span id="unread-count-{{ $chat->member_id }}">
-                                                    {{ App\Models\Member::find($chat->member_id)->unreadMessages->count() > 0 ? '(' . App\Models\Member::find($chat->member_id)->unreadMessages->count() . ')' : null }}
-                                                </span>
-                                            @endif --}}
+                                    {{ App\Models\Member::find($chat->member_id)->unreadMessages->count() > 0 ? '(' . App\Models\Member::find($chat->member_id)->unreadMessages->count() . ')' : null }}
+                                    </span>
+                                    @endif --}}
 
-                                        </a>
-                                        {{-- <div class="small text-secondary text-truncate">Frances sent a photo.</div> --}}
-                                    </div>
-                                    <!-- Chat time -->
-                                    {{-- <div class="small ms-auto text-nowrap"> Just now </div> --}}
-                                </li>
-                            @endforeach
-                        </ul>
+                                </a>
+                                {{-- <div class="small text-secondary text-truncate">Frances sent a photo.</div> --}}
+                            </div>
+                            <!-- Chat time -->
+                            {{-- <div class="small ms-auto text-nowrap"> Just now </div> --}}
+                        </li>
+                        @endforeach
+                    </ul>
                     @else
-                        <ul class="list-unstyled">
-                            <li class="text-center mt-5">
-                                <p class="text-danger">No user found.</p>
-                            </li>
-                        </ul>
+                    <ul class="list-unstyled">
+                        <li class="text-center mt-5">
+                            <p class="text-danger">No user found.</p>
+                        </li>
+                    </ul>
                     @endif
 
                 </div>
@@ -145,135 +157,145 @@
 
 
 
-@if($selectedChat)
-<div class="toast-container toast-chat d-flex gap-3 align-items-end">
+    @if($selectedChat)
+    <div class="toast-container toast-chat d-flex gap-3 align-items-end">
 
-    <!-- Chat toast START -->
-    <div id="chatToast-{{ $selectChat->id }}" class="toast mb-0 bg-mode fade show" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
+        <!-- Chat toast START -->
+        <div id="chatToast-{{ $selectChat->id }}" class="toast mb-0 bg-mode fade show" role="alert"
+            aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
 
-        <!-- Header -->
-        <div class="toast-header bg-mode">
-            <div class="d-flex justify-content-between align-items-center w-100">
-                <div class="d-flex">
-                    <div class="flex-shrink-0 avatar me-2 position-relative">
-                        <img class="avatar-img rounded-circle" src="{{ asset('feed_assets/images/avatar/07.jpg') }}" alt="">
-                        <span class="position-absolute bottom-0 end-0 p-1 bg-success border border-light rounded-circle"></span>
-                    </div>
-                    <div class="flex-grow-1">
-                        <h6 class="mb-0 mt-1">{{ $selectChat->name }}</h6>
-                        <div class="small text-secondary">
-                            <i class="fa-solid fa-circle text-success me-1"></i>Online
+            <!-- Header -->
+            <div class="toast-header bg-mode">
+                <div class="d-flex justify-content-between align-items-center w-100">
+                    <div class="d-flex">
+                        <div class="flex-shrink-0 avatar me-2 position-relative">
+
+                            @php
+                            $profileImage = '';
+                            $user = App\Models\Member::find($selectChat->id);
+                            if ($user && !empty($user->profile_pic) &&
+                            Storage::disk('public')->exists($user->profile_pic)) {
+                            $profileImage = asset('storage/' . $user->profile_pic);
+                            } else {
+                            $profileImage = asset('feed_assets/images/avatar/07.jpg');
+                            }
+                            @endphp
+                            <img class="avatar-img rounded-circle" src="{{ $profileImage }}" alt="">
+                            <!-- <span
+                                class="position-absolute bottom-0 end-0 p-1 bg-success border border-light rounded-circle"></span> -->
+                        </div>
+                        <div class="flex-grow-1">
+                            <h6 class="mb-0 mt-1">{{ $selectChat->name }}</h6>
+                            <!-- <div class="small text-secondary">
+                                <i class="fa-solid fa-circle text-success me-1"></i>Online
+                            </div> -->
                         </div>
                     </div>
+
+                    <div class="d-flex gap-1">
+                        <!-- Collapse -->
+                        <a class="btn btn-secondary-soft-hover d-flex align-items-center justify-content-center p-0"
+                            style="width:32px; height:32px;" data-bs-toggle="collapse"
+                            href="#collapseChat-{{ $selectChat->id }}">
+                            <i class="bi bi-dash-lg"></i>
+                        </a>
+
+                        <!-- Close -->
+                        <button type="button"
+                            class="btn btn-secondary-soft-hover d-flex align-items-center justify-content-center p-0"
+                            style="width:32px; height:32px;" data-bs-dismiss="toast"
+                            wire:click="closeChat({{ $selectChat->id }})">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+
                 </div>
-
-                <div class="d-flex gap-1">
-    <!-- Collapse -->
-    <a class="btn btn-secondary-soft-hover d-flex align-items-center justify-content-center p-0" 
-       style="width:32px; height:32px;" 
-       data-bs-toggle="collapse" 
-       href="#collapseChat-{{ $selectChat->id }}">
-        <i class="bi bi-dash-lg"></i>
-    </a>
-
-    <!-- Close -->
-    <button type="button" 
-            class="btn btn-secondary-soft-hover d-flex align-items-center justify-content-center p-0" 
-            style="width:32px; height:32px;" 
-            data-bs-dismiss="toast" 
-            wire:click="closeChat({{ $selectChat->id }})">
-        <i class="fa-solid fa-xmark"></i>
-    </button>
-</div>
-
             </div>
-        </div>
 
-        <!-- Body -->
-        <div class="toast-body collapse show" id="collapseChat-{{ $selectChat->id }}">
-            <div class="chat-conversation-content custom-scrollbar h-200px" style="overflow-y:auto;" id="chat-container-{{ $selectChat->id }}">
+            <!-- Body -->
+            <div class="toast-body collapse show" id="collapseChat-{{ $selectChat->id }}">
+                <div class="chat-conversation-content custom-scrollbar h-200px" style="overflow-y:auto;"
+                    id="chat-container-{{ $selectChat->id }}">
 
-                @php
-                    $groupedMessages = $messages->groupBy(fn($m) => \Carbon\Carbon::parse($m->created_at)->format('Y-m-d'));
-                @endphp
+                    @php
+                    $groupedMessages = $messages->groupBy(fn($m) =>
+                    \Carbon\Carbon::parse($m->created_at)->format('Y-m-d'));
+                    @endphp
 
-                @foreach ($groupedMessages as $date => $dailyMessages)
+                    @foreach ($groupedMessages as $date => $dailyMessages)
                     <!-- Date separator -->
                     <div class="text-center small my-2">
                         {{ \Carbon\Carbon::parse($date)->isToday() ? 'Today' : \Carbon\Carbon::parse($date)->format('M j, Y') }}
                     </div>
 
                     @foreach ($dailyMessages as $message)
-                        @if ($message->sender_id != auth()->guard('user')->id())
-                            <!-- Received -->
-                            <div class="d-flex mb-1">
-                                <div class="flex-shrink-0 avatar avatar-xs me-2">
-                                    <img class="avatar-img rounded-circle" src="{{ asset('feed_assets/images/avatar/07.jpg') }}" alt="">
+                    @if ($message->sender_id != auth()->guard('user')->id())
+                    <!-- Received -->
+                    <div class="d-flex mb-1">
+                        <div class="flex-shrink-0 avatar avatar-xs me-2">
+                            <img class="avatar-img rounded-circle" src="{{ asset('feed_assets/images/avatar/07.jpg') }}"
+                                alt="">
+                        </div>
+                        <div class="flex-grow-1">
+                            <div class="d-flex flex-column align-items-start">
+                                <div class="bg-light text-secondary p-2 px-3 rounded-2">
+                                    {{ $message->message }}
                                 </div>
-                                <div class="flex-grow-1">
-                                    <div class="d-flex flex-column align-items-start">
-                                        <div class="bg-light text-secondary p-2 px-3 rounded-2">
-                                            {{ $message->message }}
-                                        </div>
-                                        <div class="small my-1">{{ $message->created_at->format('g:i A') }}</div>
-                                    </div>
-                                </div>
+                                <div class="small my-1">{{ $message->created_at->format('g:i A') }}</div>
                             </div>
-                        @else
-                            <!-- Sent -->
-                            <div class="d-flex justify-content-end text-end mb-1">
-                                <div class="d-flex flex-column align-items-end">
-                                    <div class="text-white p-2 px-3 rounded-2" style="background:#af2910;">
-                                        {{ $message->message }}
-                                    </div>
-                                    <div class="small my-1 text-secondary">{{ $message->created_at->format('g:i A') }}</div>
-                                </div>
+                        </div>
+                    </div>
+                    @else
+                    <!-- Sent -->
+                    <div class="d-flex justify-content-end text-end mb-1">
+                        <div class="d-flex flex-column align-items-end">
+                            <div class="text-white p-2 px-3 rounded-2" style="background:#af2910;">
+                                {{ $message->message }}
                             </div>
-                        @endif
+                            <div class="small my-1 text-secondary">{{ $message->created_at->format('g:i A') }}</div>
+                        </div>
+                    </div>
+                    @endif
                     @endforeach
-                @endforeach
+                    @endforeach
+
+                </div>
+
+                <!-- Message input -->
+                <div class="mt-2">
+                    <form wire:submit.prevent="submit">
+                        <div class="position-relative">
+                            <textarea class="form-control pe-5" rows="1" wire:model.defer="newMessage"
+                                wire:key="message-input-{{ now() }}" wire:keydown.enter="submit"
+                                placeholder="Type your message..."></textarea>
+
+                            <!-- Send button inside textarea -->
+                            <button type="submit"
+                                class="btn btn-primary btn-sm position-absolute top-50 end-0 translate-middle-y me-2"
+                                style="padding: 4px 8px;">
+                                <i class="fa-solid fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
 
             </div>
 
-            <!-- Message input -->
-           <div class="mt-2">
-    <form wire:submit.prevent="submit">
-        <div class="position-relative">
-            <textarea 
-                class="form-control pe-5" 
-                rows="1"
-                wire:model.defer="newMessage"
-                wire:key="message-input-{{ now() }}" 
-                wire:keydown.enter="submit"
-                placeholder="Type your message..."></textarea>
-
-            <!-- Send button inside textarea -->
-            <button type="submit" 
-                class="btn btn-primary btn-sm position-absolute top-50 end-0 translate-middle-y me-2"
-                style="padding: 4px 8px;">
-                <i class="fa-solid fa-paper-plane"></i>
-            </button>
         </div>
-    </form>
-</div>
-
-        </div>
+        <!-- Chat toast END -->
 
     </div>
-    <!-- Chat toast END -->
-
+    @endif
+    <!-- Chat END -->
 </div>
-@endif
-        <!-- Chat END -->
-    </div>
 
-   <script>
-    document.addEventListener('livewire:load', function () {
-        Livewire.hook('message.processed', () => {
-            const chat = document.getElementById('chat-container');
-            if (chat) {
-                chat.scrollTop = chat.scrollHeight; // Jump to latest message
-            }
-        });
+<script>
+document.addEventListener('livewire:load', function() {
+    Livewire.hook('message.processed', () => {
+        const chat = document.getElementById('chat-container');
+        if (chat) {
+            chat.scrollTop = chat.scrollHeight;
+        }
     });
+});
 </script>
