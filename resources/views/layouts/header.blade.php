@@ -11,22 +11,8 @@ Header START -->
 .dropdown-menu {
     z-index: 1100 !important;
 }
-.dropdown-menu {
-    max-width: 100vw;
-    overflow-x: hidden;
-}
 
-/* Make notification card content wrap nicely */
-.notification-card p.small {
-    white-space: normal;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-}
 
-/* Ensure the card doesn't expand beyond dropdown */
-.notification-card {
-    max-width: 100%;
-}
 </style>
 <header class="navbar-light fixed-top header-static bg-mode">
 
