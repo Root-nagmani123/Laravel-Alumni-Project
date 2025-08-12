@@ -1,21 +1,21 @@
-<div class="d-none d-lg-block position-relative">
-    <a class="icon-md btn btn-primary position-fixed end-0 bottom-0"
-       data-bs-toggle="offcanvas"
-       href="#offcanvasChat"
-       role="button"
-       aria-controls="offcanvasChat"
-       style="margin-right: 2rem !important; margin-bottom: 10rem !important; background-color: #792421; color: #fff; border-radius: 50%; box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2);">
-        
-        <!-- Green Dot -->
-        <span class="chat-dot d-none" id="unread-count-{{ auth()->guard('user')->id() }}"></span>
+<div class="position-relative">
+   <a data-bs-toggle="offcanvas"
+   href="#offcanvasChat"
+   role="button"
+   aria-controls="offcanvasChat"
+   class="floating-chat-btn">
+    
+    <!-- Green Dot -->
+    <span class="chat-dot d-none" id="unread-count-{{ auth()->guard('user')->id() }}"></span>
 
-        <i class="bi bi-chat-left-text-fill" style="color: #fff;"></i>
-    </a>
+    <i class="bi bi-chat-left-text-fill"></i>
+    <span>Mentor/Mentee Conversation</span>
+</a>
 
-    <div class="offcanvas offcanvas-end" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1"
-         id="offcanvasChat">
-        <livewire:chat.chat-list />
-    </div>
+<div class="offcanvas offcanvas-end" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1"
+     id="offcanvasChat">
+    <livewire:chat.chat-list />
+</div>
 </div>
 
 
@@ -152,8 +152,99 @@
                Options</span></button><!-- accessibility panel end-->
 
                <div class="d-none d-lg-block position-relative">
-    <a class="icon-md btn btn-primary position-fixed end-0 bottom-0" style="margin-right: 2rem !important; background-color: #792421; color: #fff; border-radius: 50%; box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2);" href="https://www.lbsnaa.gov.in/footer_menu/contact-us" target="_blank">
-
-        <i class="bi bi-person-lines-fill" style="color: #fff;"></i>
-    </a>
+    <a href="https://www.lbsnaa.gov.in/footer_menu/contact-us" target="_blank" 
+   class="floating-btn d-none d-lg-flex" style="margin-right: 0.5rem !important;margin-bottom:-1rem;">
+    <i class="bi bi-person-lines-fill"></i>
+    <span>Contact Us</span>
+</a>
 </div>
+   <style>
+    .floating-btn {
+        display: flex;
+        align-items: center;
+        height: 50px;
+        border-radius: 50px;
+        background-color: #792421;
+        color: #fff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        overflow: hidden;
+        white-space: nowrap;
+        width: 50px; /* Only icon visible initially */
+        transition: width 0.3s ease;
+        text-decoration: none;
+    }
+
+    .floating-btn i {
+        font-size: 20px;
+        margin: 0 auto; /* icon center in small state */
+        min-width: 50px; /* icon area stays visible */
+        text-align: center;
+    }
+
+    .floating-btn span {
+        opacity: 0;
+        transition: opacity 0.2s ease;
+        padding-right: 15px;
+        font-size: 14px;
+    }
+
+    .floating-btn:hover {
+        width: 150px; /* expand on hover */
+    }
+
+    .floating-btn:hover span {
+        opacity: 1;
+    }
+    .floating-chat-btn {
+        display: flex;
+        align-items: center;
+        background-color: #792421;
+        color: #fff;
+        border-radius: 50px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        position: fixed;
+        bottom: 10rem;
+        right: 2rem;
+        overflow: hidden;
+        white-space: nowrap;
+        width: 50px; /* enough to show icon fully */
+        height: 50px;
+        transition: width 0.3s ease;
+        text-decoration: none;
+    }
+
+    .floating-chat-btn i {
+        font-size: 20px;
+        min-width: 50px; /* reserve space for icon */
+        text-align: center;
+    }
+
+    .floating-chat-btn span {
+        opacity: 0;
+        transition: opacity 0.2s ease;
+        padding-right: 15px;
+        font-size: 14px;
+    }
+
+    .floating-chat-btn:hover {
+        width: 230px;
+    }
+
+    .floating-chat-btn:hover span {
+        opacity: 1;
+    }
+
+    /* Green dot notification */
+    .chat-dot {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        background-color: green;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+    }
+</style>

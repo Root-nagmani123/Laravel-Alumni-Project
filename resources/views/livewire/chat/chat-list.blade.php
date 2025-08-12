@@ -233,7 +233,17 @@
                     <!-- Received -->
                     <div class="d-flex mb-1">
                         <div class="flex-shrink-0 avatar avatar-xs me-2">
-                            <img class="avatar-img rounded-circle" src="{{ asset('feed_assets/images/avatar/07.jpg') }}"
+                            @php
+                            $profileImage = '';
+                            $user = App\Models\Member::find($selectChat->id);
+                            if ($user && !empty($user->profile_pic) &&
+                            Storage::disk('public')->exists($user->profile_pic)) {
+                            $profileImage = asset('storage/' . $user->profile_pic);
+                            } else {
+                            $profileImage = asset('feed_assets/images/avatar/07.jpg');
+                            }
+                            @endphp
+                            <img class="avatar-img rounded-circle" src="{{ $profileImage }}"
                                 alt="">
                         </div>
                         <div class="flex-grow-1">
@@ -263,21 +273,25 @@
 
                 <!-- Message input -->
                 <div class="mt-2">
-                    <form wire:submit.prevent="submit">
-                        <div class="position-relative">
-                            <textarea class="form-control pe-5" rows="1" wire:model.defer="newMessage"
-                                wire:key="message-input-{{ now() }}" wire:keydown.enter="submit"
-                                placeholder="Type your message..."></textarea>
+    <form wire:submit.prevent="submit">
+        <div class="position-relative">
+            <textarea class="form-control pe-5"
+                rows="1"
+                wire:model.defer="newMessage"
+                wire:key="message-input-{{ now() }}"
+                wire:keydown.enter="submit"
+                placeholder="Type your message..."></textarea>
 
-                            <!-- Send button inside textarea -->
-                            <button type="submit"
-                                class="btn btn-primary btn-sm position-absolute top-50 end-0 translate-middle-y me-2"
-                                style="padding: 4px 8px;">
-                                <i class="fa-solid fa-paper-plane"></i>
-                            </button>
-                        </div>
-                    </form>
-                </div>
+            <!-- Send button -->
+            <button type="submit"
+                class="btn btn-primary btn-sm position-absolute top-50 end-0 translate-middle-y me-2 d-flex align-items-center justify-content-center"
+                style="padding: 6px; width: 32px; height: 32px; border-radius: 8px;">
+                <i class="fa-solid fa-paper-plane"></i>
+            </button>
+        </div>
+    </form>
+</div>
+
 
             </div>
 
