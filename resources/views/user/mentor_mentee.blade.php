@@ -11,6 +11,10 @@
 .select2-container {
     z-index: 1050 !important;
 }
+
+.backdrop-blur {
+    backdrop-filter: blur(4px);
+}
 </style>
 
 <div class="container">
@@ -51,93 +55,91 @@
 
                 <!-- Tab 1: Mentor Form -->
                 <div class="tab-pane fade show active" id="mentor" role="tabpanel">
-                    <div class="row">
+                    <div class="row align-items-end g-3 mb-4">
                         <div class="col-2">
                             <label class="form-label">Service</label>
-                            <div class="mb-3">
-                                <select name="service[]" id="service-mentor" class="form-select Service" multiple data-id="mentor">
-                                    @if($members->isEmpty())
-                                        <option disabled>No Services Available</option>
-                                    @else
-                                        @foreach($members as $member)
-                                            @if($member->Service != '')
-                                                <option value="{{ $member->Service }}">{{ $member->Service }}</option>
-                                            @endif
-                                        @endforeach
-                                    @endif
-                                </select>
-                            </div>
+                            <select name="service[]" id="service-mentor" class="form-select Service" multiple
+                                data-id="mentor">
+                                @if($members->isEmpty())
+                                <option disabled>No Services Available</option>
+                                @else
+                                @foreach($members as $member)
+                                @if($member->Service != '')
+                                <option value="{{ $member->Service }}">{{ $member->Service }}</option>
+                                @endif
+                                @endforeach
+                                @endif
+                            </select>
                         </div>
 
                         <div class="col-2">
                             <label class="form-label">Batch</label>
-                            <div class="mb-3">
-                                <select name="year[]" id="year-mentor" class="form-select year" multiple data-id="mentor">
-                                    @if($members->isEmpty())
-                                        <option disabled>No Batches Available</option>
-                                    @else
-                                        @foreach($members as $member)
-                                            @if(!empty($member->batches))
-                                                @php $batches = explode(',', $member->batches); @endphp
-                                                @foreach($batches as $batch)
-                                                    <option value="{{ trim($batch) }}">{{ trim($batch) }}</option>
-                                                @endforeach
-                                            @endif
-                                        @endforeach
-                                    @endif
-                                </select>
-                            </div>
+                            <select name="year[]" id="year-mentor" class="form-select year" multiple data-id="mentor">
+                                @if($members->isEmpty())
+                                <option disabled>No Batches Available</option>
+                                @else
+                                @foreach($members as $member)
+                                @if(!empty($member->batches))
+                                @php $batches = explode(',', $member->batches); @endphp
+                                @foreach($batches as $batch)
+                                <option value="{{ trim($batch) }}">{{ trim($batch) }}</option>
+                                @endforeach
+                                @endif
+                                @endforeach
+                                @endif
+                            </select>
                         </div>
 
                         <div class="col-3">
                             <label class="form-label">Cadre</label>
-                            <div class="mb-3">
-                                <select name="cadre[]" id="cadre-mentor" class="form-select cadre" multiple data-id="mentor">
-                                    @if($members->isEmpty())
-                                        <option disabled>No Cadres Available</option>
-                                    @else
-                                        @foreach($members as $member)
-                                            @if(!empty($member->cader_list))
-                                                @php $cader_list = explode(',', $member->cader_list); @endphp
-                                                @foreach($cader_list as $cadre)
-                                                    <option value="{{ trim($cadre) }}">{{ trim($cadre) }}</option>
-                                                @endforeach
-                                            @endif
-                                        @endforeach
-                                    @endif
-                                </select>
-                            </div>
+                            <select name="cadre[]" id="cadre-mentor" class="form-select cadre" multiple
+                                data-id="mentor">
+                                @if($members->isEmpty())
+                                <option disabled>No Cadres Available</option>
+                                @else
+                                @foreach($members as $member)
+                                @if(!empty($member->cader_list))
+                                @php $cader_list = explode(',', $member->cader_list); @endphp
+                                @foreach($cader_list as $cadre)
+                                <option value="{{ trim($cadre) }}">{{ trim($cadre) }}</option>
+                                @endforeach
+                                @endif
+                                @endforeach
+                                @endif
+                            </select>
                         </div>
 
                         <div class="col-3">
                             <label class="form-label">Sector</label>
-                            <div class="mb-3">
-                                <select name="sector[]" id="sector-mentor" class="form-select sector" multiple data-id="mentor">
-                                    @if($members->isEmpty())
-                                        <option disabled>No Sector Available</option>
-                                    @else
-                                        @foreach($members as $member)
-                                            @if(!empty($member->sector_list))
-                                                @php $sector_list = explode(',', $member->sector_list); @endphp
-                                                @foreach($sector_list as $sector)
-                                                    <option value="{{ trim($sector) }}">{{ trim($sector) }}</option>
-                                                @endforeach
-                                            @endif
-                                        @endforeach
-                                    @endif
-                                </select>
-                            </div>
+                            <select name="sector[]" id="sector-mentor" class="form-select sector" multiple
+                                data-id="mentor">
+                                @if($members->isEmpty())
+                                <option disabled>No Sector Available</option>
+                                @else
+                                @foreach($members as $member)
+                                @if(!empty($member->sector_list))
+                                @php $sector_list = explode(',', $member->sector_list); @endphp
+                                @foreach($sector_list as $sector)
+                                <option value="{{ trim($sector) }}">{{ trim($sector) }}</option>
+                                @endforeach
+                                @endif
+                                @endforeach
+                                @endif
+                            </select>
                         </div>
-                        <div class="col-2">
-                            
-                            <button class="btn btn-primary" id="filterbecomeMentor">Filter</button>
+
+                        <div class="col-2 d-flex gap-2">
+                            <button class="btn btn-primary w-100" id="filterbecomeMentor">Filter</button>
+                            <a href="{{ url()->current() }}"
+                                class="text-decoration-none btn btn-secondary w-100">Reset</a>
                         </div>
                     </div>
+
 
                     <form action="{{ route('user.mentor.want_become_mentor') }}" method="POST">
                         @csrf
                         <div class="table-responsive">
-                            <table class="bg-light table">
+                            <table class="bg-light table mb-0 position-relative">
                                 <thead>
                                     <tr>
                                         <th><input type="checkbox" id="selectAll"></th>
@@ -150,100 +152,103 @@
                                         <th>Sector</th>
                                     </tr>
                                 </thead>
-                                <tbody id="mentorTableBody">
-                               
-                            </tbody>
+                                <tbody id="mentorTableBody" class="position-relative" style="min-height:150px;">
+                                    
+                                </tbody>
                             </table>
+
+
+
                         </div>
-                        <button type="submit" class="btn btn-primary">Submit Mentor Request</button>
+                        <div class="text-end mt-2">
+                            <button type="submit" class="btn btn-primary">Submit Mentor Request</button>
+                        </div>
                     </form>
                 </div>
 
                 <!-- Tab 2: Mentee Form -->
                 <div class="tab-pane fade" id="mentee" role="tabpanel">
-                    <div class="row">
+                    <div class="row align-items-end g-3 mb-4">
                         <div class="col-2">
                             <label class="form-label">Service</label>
-                            <div class="mb-3">
-                                <select name="service[]" id="service-mentee" class="form-select Service" multiple data-id="mentee">
-                                    @if($members->isEmpty())
-                                        <option disabled>No Services Available</option>
-                                    @else
-                                        @foreach($members as $member)
-                                            @if($member->Service != '')
-                                                <option value="{{ $member->Service }}">{{ $member->Service }}</option>
-                                            @endif
-                                        @endforeach
-                                    @endif
-                                </select>
-                            </div>
+                            <select name="service[]" id="service-mentee" class="form-select Service" multiple
+                                data-id="mentee">
+                                @if($members->isEmpty())
+                                <option disabled>No Services Available</option>
+                                @else
+                                @foreach($members as $member)
+                                @if($member->Service != '')
+                                <option value="{{ $member->Service }}">{{ $member->Service }}</option>
+                                @endif
+                                @endforeach
+                                @endif
+                            </select>
                         </div>
 
                         <div class="col-2">
                             <label class="form-label">Batch</label>
-                            <div class="mb-3">
-                                <select name="year[]" id="year-mentee" class="form-select year" multiple data-id="mentee">
-                                    @if($members->isEmpty())
-                                        <option disabled>No Batches Available</option>
-                                    @else
-                                        @foreach($members as $member)
-                                            @if(!empty($member->batches))
-                                                @php $batches = explode(',', $member->batches); @endphp
-                                                @foreach($batches as $batch)
-                                                    <option value="{{ trim($batch) }}">{{ trim($batch) }}</option>
-                                                @endforeach
-                                            @endif
-                                        @endforeach
-                                    @endif
-                                </select>
-                            </div>
+                            <select name="year[]" id="year-mentee" class="form-select year" multiple data-id="mentee">
+                                @if($members->isEmpty())
+                                <option disabled>No Batches Available</option>
+                                @else
+                                @foreach($members as $member)
+                                @if(!empty($member->batches))
+                                @php $batches = explode(',', $member->batches); @endphp
+                                @foreach($batches as $batch)
+                                <option value="{{ trim($batch) }}">{{ trim($batch) }}</option>
+                                @endforeach
+                                @endif
+                                @endforeach
+                                @endif
+                            </select>
                         </div>
 
                         <div class="col-3">
                             <label class="form-label">Cadre</label>
-                            <div class="mb-3">
-                                <select name="cadre[]" id="cadre-mentee" class="form-select cadre" multiple data-id="mentee">
-                                    @if($members->isEmpty())
-                                        <option disabled>No Cadres Available</option>
-                                    @else
-                                        @foreach($members as $member)
-                                            @if(!empty($member->cader_list))
-                                                @php $cader_list = explode(',', $member->cader_list); @endphp
-                                                @foreach($cader_list as $cadre)
-                                                    <option value="{{ trim($cadre) }}">{{ trim($cadre) }}</option>
-                                                @endforeach
-                                            @endif
-                                        @endforeach
-                                    @endif
-                                </select>
-                            </div>
+                            <select name="cadre[]" id="cadre-mentee" class="form-select cadre" multiple
+                                data-id="mentee">
+                                @if($members->isEmpty())
+                                <option disabled>No Cadres Available</option>
+                                @else
+                                @foreach($members as $member)
+                                @if(!empty($member->cader_list))
+                                @php $cader_list = explode(',', $member->cader_list); @endphp
+                                @foreach($cader_list as $cadre)
+                                <option value="{{ trim($cadre) }}">{{ trim($cadre) }}</option>
+                                @endforeach
+                                @endif
+                                @endforeach
+                                @endif
+                            </select>
                         </div>
 
                         <div class="col-3">
                             <label class="form-label">Sector</label>
-                            <div class="mb-3">
-                                <select name="sector[]" id="sector-mentee" class="form-select sector" multiple data-id="mentee">
-                                    @if($members->isEmpty())
-                                        <option disabled>No Sector Available</option>
-                                    @else
-                                        @foreach($members as $member)
-                                            @if(!empty($member->sector_list))
-                                                @php $sector_list = explode(',', $member->sector_list); @endphp
-                                                @foreach($sector_list as $sector)
-                                                    <option value="{{ trim($sector) }}">{{ trim($sector) }}</option>
-                                                @endforeach
-                                            @endif
-                                        @endforeach
-                                    @endif
-                                </select>
-                            </div>
+                            <select name="sector[]" id="sector-mentee" class="form-select sector" multiple
+                                data-id="mentee">
+                                @if($members->isEmpty())
+                                <option disabled>No Sector Available</option>
+                                @else
+                                @foreach($members as $member)
+                                @if(!empty($member->sector_list))
+                                @php $sector_list = explode(',', $member->sector_list); @endphp
+                                @foreach($sector_list as $sector)
+                                <option value="{{ trim($sector) }}">{{ trim($sector) }}</option>
+                                @endforeach
+                                @endif
+                                @endforeach
+                                @endif
+                            </select>
                         </div>
-                        <div class="col-2">
-                            
-                            <button class="btn btn-primary" id="filterbecomeMentee">Filter</button>
+
+                        <div class="col-2 d-flex gap-2">
+                            <button class="btn btn-primary w-100" id="filterbecomeMentee">Filter</button>
+                            <a href="{{ url()->current() }}"
+                                class="text-decoration-none btn btn-secondary w-100">Reset</a>
                         </div>
                     </div>
-                   <form action="{{ route('user.mentor.want_become_mentee') }}" method="POST">
+
+                    <form action="{{ route('user.mentor.want_become_mentee') }}" method="POST">
                         @csrf
                         <div class="table-responsive">
                             <table class="bg-light table">
@@ -259,16 +264,16 @@
                                         <th>Sector</th>
                                     </tr>
                                 </thead>
-                               <tbody id="menteeTableBody">
-                               
-                            </tbody>
+                                <tbody id="menteeTableBody">
+
+                                </tbody>
                             </table>
                         </div>
                         <button type="submit" class="btn btn-primary">Submit Mentee Request</button>
                     </form>
                 </div>
 
-                <!-- Tab 3: Requests -->
+                <!-- Tab 3: Incoming Requests -->
                 <div class="tab-pane fade" id="requests_incoming" role="tabpanel">
                     <h5>Mentor Requests</h5>
                     <table class="table table-bordered">
@@ -372,6 +377,9 @@
                     </table>
 
                 </div>
+
+                <!-- Tab 4 : Outgoing Requests -->
+
                 <div class="tab-pane fade" id="requests_outgoing" role="tabpanel">
                     <h5>Outgoing Requests</h5>
                     <table class="table table-bordered">
@@ -425,7 +433,7 @@
 
                 </div>
 
-                <!-- Tab 4: Connections -->
+                <!-- Tab 5: Connections -->
                 <div class="tab-pane fade" id="connections" role="tabpanel">
                     <h5>Mentors</h5>
                     <ul class="list-group mb-3">
@@ -477,20 +485,20 @@
 </div>
 @endsection
 <!-- Select2 -->
- @section('scripts')
+@section('scripts')
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
 
 <!-- Filter Logic -->
 <script>
-$(document).ready(function () {
+$(document).ready(function() {
     // Mentor Filter
-    $(document).on('click', '#filterbecomeMentor', function (e) {
+    $(document).on('click', '#filterbecomeMentor', function(e) {
         e.preventDefault();
         let tabId = 'mentor';
 
         $.ajax({
-           url: "{{ route('user.filter.mentors_mentee_data') }}",
+            url: "{{ route('user.filter.mentors_mentee_data') }}",
             method: "post",
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -501,14 +509,14 @@ $(document).ready(function () {
                 cadre: $('.cadre[data-id="' + tabId + '"]').val(),
                 sector: $('.sector[data-id="' + tabId + '"]').val()
             },
-            success: function (response) {
+            success: function(response) {
                 $('#mentorTableBody').html(response);
             }
         });
     });
 
     // Mentee Filter
-    $(document).on('click', '#filterbecomeMentee', function (e) {
+    $(document).on('click', '#filterbecomeMentee', function(e) {
         e.preventDefault();
         let tabId = 'mentee';
 
@@ -524,7 +532,7 @@ $(document).ready(function () {
                 cadre: $('.cadre[data-id="' + tabId + '"]').val(),
                 sector: $('.sector[data-id="' + tabId + '"]').val()
             },
-            success: function (response) {
+            success: function(response) {
                 $('#menteeTableBody').html(response);
             }
         });
@@ -552,17 +560,17 @@ $(document).ready(function () {
 });
 </script>
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", function() {
     const selectAll = document.getElementById("selectAll");
-    selectAll.addEventListener("change", function () {
+    selectAll.addEventListener("change", function() {
         document.querySelectorAll('.row-checkbox').forEach(cb => {
             cb.checked = selectAll.checked;
         });
     });
 });
-  document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", function() {
     const selectAll = document.getElementById("selectAll_mentee");
-    selectAll.addEventListener("change", function () {
+    selectAll.addEventListener("change", function() {
         document.querySelectorAll('.row-checkbox').forEach(cb => {
             cb.checked = selectAll.checked;
         });

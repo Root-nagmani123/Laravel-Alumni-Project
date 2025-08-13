@@ -179,11 +179,9 @@
                                                           
                                             </div>
                                             <hr>
-                                            <div class="login-title">
-                                               <h2>Login with LDAP</h2>
-                                            </div>
-                                            <div class="login-discription mb-4">
-                                         <h4>Welcome to LBSNAA Alumni, please login using LDAP credentials..</h4>
+                                            <div class="login-title mb-4">
+                                               <h3 class="text-center fw-bold" style="font-size: 20px;
+    line-height: inherit;">Welcome to the Official Alumni platform of the Lal Bahadur Shastri National Academy of Administration, Mussoorie</h3>
                                             </div>
                                            <form method="POST" action="{{ route('user.login.submit_ldap') }}">
                                                 @csrf
@@ -214,7 +212,7 @@
                                                 <div class="marquee-container flex-grow-1 d-flex align-items-center ms-2"
                                                     style="overflow: hidden; height: 100%;">
                                                     <div class="marquee-text">
-                                                        Helpdesk : Phone: 135-2222346 (Mon–Fri, 9:00 AM–5:30 PM) Email:
+                                                        Inquiry regarding user credentials: Phone: 135-2222346 (Mon–Fri, 9:00 AM–5:30 PM) Email:
                                                         ithelpdesk.lbsnaa@nic.in
                                                     </div>
                                                 </div>
@@ -243,11 +241,9 @@
                                                           
                                             </div>
                                             <hr>
-                                            <div class="login-title">
-                                                <h2>Login with Email OTP</h2>
-                                            </div>
-                                            <div class="login-discription mb-4">
-                                                <h4>Enter your email to receive a one-time password.</h4>
+                                            <div class="login-title mb-4">
+                                                <h3 class="text-center fw-bold" style="font-size: 20px;
+    line-height: inherit;">Welcome to the Official Alumni platform of the Lal Bahadur Shastri National Academy of Administration, Mussoorie</h3>
                                             </div>
                                             <form id="otpForm">
                                                 @csrf
@@ -290,7 +286,7 @@
                                                         <div id="resendOtp">Didn't receive OTP? Resend</div>
                                                     </div>
                                                 </div>
-                                                <button type="button" id="sendOtpBtn" class="btn btn-success w-100">Send
+                                                <button type="button" id="sendOtpBtn" class="btn btn-primary w-100">Send
                                                     OTP</button>
                                                 <button type="button" id="verifyOtpBtn"
                                                     class="btn btn-primary w-100 mt-2">Verify OTP</button>
@@ -303,14 +299,14 @@
                                                 <div class="position-relative d-flex align-items-center">
                                                     <button class="btn btn-sm btn-danger position-relative z-1"
                                                         style="min-width: 120px;">
-                                                        What's New
+                                                       Alert
                                                     </button>
                                                 </div>
 
                                                 <div class="marquee-container flex-grow-1 d-flex align-items-center ms-2"
                                                     style="overflow: hidden; height: 100%;">
                                                     <div class="marquee-text">
-                                                        Helpdesk : Phone: 135-2222346 (Mon–Fri, 9:00 AM–5:30 PM) Email:
+                                                        Inquiry regarding user credentials: Phone: 135-2222346 (Mon–Fri, 9:00 AM–5:30 PM) Email:
                                                         ithelpdesk.lbsnaa@nic.in
                                                     </div>
                                                 </div>
