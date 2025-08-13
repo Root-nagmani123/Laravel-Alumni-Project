@@ -250,6 +250,16 @@
             if (unreadCountElement) {
                 unreadCountElement.textContent = event.unreadCount > 0 ? `(${event.unreadCount})` : '';
             }
+            // Toggle global chat dot
+            const chatDot = document.getElementById('unread-dot');
+            if (chatDot) {
+                const anyUnread = document.querySelectorAll('[id^="unread-count-"]').length && Array.from(document.querySelectorAll('[id^="unread-count-"]')).some(el => (el.textContent || '').trim() !== '');
+                if (anyUnread) {
+                    chatDot.classList.remove('d-none');
+                } else {
+                    chatDot.classList.add('d-none');
+                }
+            }
         });
 
 

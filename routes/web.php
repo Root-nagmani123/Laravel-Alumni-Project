@@ -202,6 +202,12 @@ Route::prefix('user')->name('user.')->group(function () {
         Route::get('user/forum', [MemberForumController::class, 'index'])->name('forum');
         Route::post('user/forum/activate', [MemberForumController::class, 'activateForum'])->name('forum.activate');
         Route::get('user/forum/{id}', [MemberForumController::class, 'show'])->name('forum.show');
+        // Forum-level like/unlike/comment
+        Route::post('user/forum/{id}/like', [MemberForumController::class, 'likeForum'])->name('forum.like');
+        Route::post('user/forum/{id}/unlike', [MemberForumController::class, 'unlikeForum'])->name('forum.unlike');
+        Route::post('user/forum/{id}/comment', [MemberForumController::class, 'commentForum'])->name('forum.comment');
+        Route::put('user/forum/comment/{commentId}', [MemberForumController::class, 'updateForumComment'])->name('forum.comment.update');
+        Route::delete('user/forum/comment/{commentId}', [MemberForumController::class, 'deleteForumComment'])->name('forum.comment.delete');
         Route::post('user/forum/topic/{id}/like', [MemberForumController::class, 'like'])->name('forum.topic.like');
         Route::post('user/forum/topic/{id}/unlike', [MemberForumController::class, 'unlike'])->name('forum.topic.unlike');
         Route::post('user/forum/topic/{id}/comment', [MemberForumController::class, 'comment'])->name('forum.topic.comment');

@@ -119,12 +119,12 @@
 
                                     <!-- <td>{{ \Carbon\Carbon::parse($forum->created_at)->timezone('Asia/Kolkata')->format('l, d M Y, h:i A') }} -->
                                     <td>
-                                        {{ $forum->created_at }}
+                                        {{ $forum->created_at ? \Carbon\Carbon::parse($forum->created_at)->format('d M Y') : '' }}
                                     </td>
                                     <td>
                                         @if($forum->end_date != null)
                                             <!-- {{ \Carbon\Carbon::parse($forum->end_date)->timezone('Asia/Kolkata')->format('l, d M Y') }} -->
-                                              {{ $forum->end_date }}
+                                              {{ \Carbon\Carbon::parse($forum->end_date)->format('d M Y') }}
                                         @endif
                                     </td>
 

@@ -105,63 +105,75 @@
             </nav>
         </div>
         <div class="col-lg-9">
-            @php
-            use Carbon\Carbon;
-            $now = Carbon::now();
-            @endphp
+    @php
+        use Carbon\Carbon;
+        $now = Carbon::now();
+    @endphp
 
-            <div class="row g-4">
-                @if(isset($forums) && count($forums) > 0)
-                @foreach($forums as $forum)
+    <div class="row g-3">
+        @if(isset($forums) && count($forums) > 0)
+            @foreach($forums as $forum)
                 @php
-                $isExpired = Carbon::parse($forum->end_date)->lt($now);
+                    $isExpired = Carbon::parse($forum->end_date)->lt($now);
                 @endphp
 
-                <div class="col-sm-6 col-lg-4 d-flex">
-                    <div class="card border flex-fill {{ $isExpired ? 'border-danger' : '' }}">
-                        <div class="h-80px rounded-top"
-                            style="background-image:url({{ asset('storage/uploads/images/forums_img/' . ($forum->images ?? 'default-forum.jpg')) }}); background-position: center; background-size: cover;">
-                        </div>
-
-                        <div class="card-body text-center pt-2 d-flex flex-column">
-                            <h5 class="mb-0">
-                                <a href="{{ route('user.forum.show', $forum->id) }}">{{ $forum->name }}</a>
-                            </h5>
-                            <p class="mb-0 small text-muted">Start Date:
-                                {{ \Carbon\Carbon::parse($forum->created_at)->format('d M Y') }}</p>
-                            <p class="mb-0 small text-muted">End Date:
-                                {{ \Carbon\Carbon::parse($forum->end_date)->format('d M Y') }}</p>
-                        </div>
-
-                        <div class="card-footer text-center">
-                            @if($isExpired)
-                            <span class="badge bg-danger-soft text-danger mb-2 d-block">Forum Expired</span>
-                            <button class="btn btn-outline-danger btn-sm" data-bs-toggle="modal"
-                                data-bs-target="#activateForumModal" data-forum-id="{{ $forum->id }}"
-                                data-forum-name="{{ $forum->name }}">
-                                Activate Forum
-                            </button>
-                            @else
-                            <a class="btn btn-success-soft btn-sm"
-                                href="{{ route('user.forum.show', $forum->id) }}">View Topics</a>
-                            @endif
-                        </div>
-                    </div>
-                </div>
-                @endforeach
-                @else
                 <div class="col-12">
-                    <div class="card">
-                        <div class="card-body text-center">
-                            <h5 class="text-muted">No forums available</h5>
-                            <p class="text-muted mb-0">You don't have access to any forums yet.</p>
+                    <div class="card p-3 border-0 shadow-sm">
+                        <div class="d-flex">
+                            <!-- Thumbnail -->
+                            <div class="flex-shrink-0 me-3">
+                                <a href="{{ route('user.forum.show', $forum->id) }}">
+                                    <img src="{{ asset('storage/uploads/images/forums_img/' . ($forum->images ?? 'default-forum.jpg')) }}"
+                                         alt="Forum Image"
+                                         class="rounded"
+                                         style="width:60px; height:60px; object-fit:cover;">
+                                </a>
+                            </div>
+
+                            <!-- Content -->
+                            <div class="flex-grow-1">
+                                <!-- Title -->
+                                <h6 class="mb-1 fw-semibold">
+                                    <a href="{{ route('user.forum.show', $forum->id) }}" class="text-decoration-none">
+                                        {{ $forum->name }}
+                                    </a>
+                                </h6>
+                                <!-- Snippet -->
+                                <p class="mb-2 text-muted small">
+                                    {{ Str::limit($forum->description ?? 'No description available.', 120) }}
+                                </p>
+
+                                <!-- Author & Date -->
+                                <div class="small text-muted mb-2">
+                                    {{ \Carbon\Carbon::parse($forum->created_at)->format('d M, Y') }}
+                                </div>
+
+                                <!-- Tags & Stats -->
+                                <div class="d-flex justify-content-between align-items-center flex-wrap">
+                                    <!-- Stats -->
+                                    <div class="d-flex align-items-center gap-3 small text-muted">
+                                        <span><i class="bi bi-hand-thumbs-up"></i> {{ $forum->like_count ?? 0 }}</span>
+                                        <span><i class="bi bi-chat"></i> {{ $forum->comment_count ?? 0 }}</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-                @endif
+            @endforeach
+        @else
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h5 class="text-muted">No forums available</h5>
+                        <p class="text-muted mb-0">You don't have access to any forums yet.</p>
+                    </div>
+                </div>
             </div>
+        @endif
+    </div>
+</div>
 
-        </div>
     </div>
 </div>
 <!-- Activate Forum Modal -->

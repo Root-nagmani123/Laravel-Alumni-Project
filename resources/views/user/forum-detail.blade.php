@@ -61,7 +61,7 @@
                                     $user = Auth::guard('user')->user();
                                     $profileImage = $user->profile_pic
                                     ? asset('storage/' . $user->profile_pic)
-                                    : asset('feed_assets/images/avatar-1.png');
+                                    : asset('feed_assets/images/07.png');
 
                                     $displayName = $user->name ?? 'Guest User';
                                     $designation = $user->designation ?? 'Guest';
@@ -75,13 +75,16 @@
                                     $profileLink = route('user.profile.data', ['id' => $user->id ?? 0]);
                                     @endphp
                                     <div class="avatar avatar-lg mt-n5 mb-3">
-                                        <a href="{{route('user.profile.data', ['id' => $user->id ?? 0])}}"><img class="avatar-img rounded-circle qwetyu"
+                                        <a href="{{route('user.profile.data', ['id' => $user->id ?? 0])}}"><img
+                                                class="avatar-img rounded-circle qwetyu"
                                                 src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}"
                                                 alt=""></a>
                                     </div>
                                     <!-- Info -->
                                     @if(Auth::guard('user')->check())
-                                    <h5 class="mb-0"> <a href="{{route('user.profile.data', ['id' => Auth::guard('user')->user()->id])}}">{{ Auth::guard('user')->user()->name }} </a> </h5>
+                                    <h5 class="mb-0"> <a
+                                            href="{{route('user.profile.data', ['id' => Auth::guard('user')->user()->id])}}">{{ Auth::guard('user')->user()->name }}
+                                        </a> </h5>
                                     @endif
                                     <small>{{ Auth::guard('user')->user()->designation }}</small>
                                     <ul class="list-inline mb-0 text-center text-sm-start mt-3 mt-sm-0">
@@ -108,339 +111,243 @@
 
         <!-- Main Content -->
         <div class="col-lg-9">
-            <!-- Forum Header -->
-            <div class="card mb-4">
-                <div class="card-body border-0">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <div class="d-flex align-items-center">
-                            <!-- Forum Info -->
-                            <div>
-                                <h5 class="card-title mb-0">{{ $forum->name }}</h5>
-                                <p class="mb-0 small text-muted mb-2">{{ $topics->count() }} topics</p>
-                                @if($forum->end_date)
-                                <p class="mb-0 small text-muted">End Date:
-                                    {{ \Carbon\Carbon::parse($forum->end_date)->format('d M Y') }} </p>
-                                @endif
-                            </div>
-                        </div>
-                        <!-- Back Button -->
 
-                        <div class="d-flex align-items-center gap-2">
-                            @if($forum->created_by == Auth::guard('user')->user()->id)
-                            <button type="button" class="btn btn-outline-success btn-sm" data-bs-toggle="modal"
-                                data-bs-target="#addTopicModal" title="Add Topic" data-bs-placement="top" data-bs-html="true"
-                                data-bs-custom-class="tooltip-text-start">
-                                <i class="bi bi-plus me-1"></i>
-                            </button>
-                            @endif
-                            @if($forum->created_by == Auth::guard('user')->user()->id )
-                            <form method="POST" action="{{ route('user.forum.delete') }}">
-                                @csrf
-                                <input type="hidden" name="forum_id" value="{{ $forum->id }}">
-                                <input type="hidden" name="action" value="delete">
-                                <button type="button" class="btn btn-outline-primary btn-sm"
-                                    onclick="if(confirm('Are you sure you want to delete this forum?')) { this.form.submit(); }" title="Delete Forum" data-bs-placement="top" data-bs-html="true"
-                                data-bs-custom-class="tooltip-text-start">
-                                    <i class="bi bi-trash me-1"></i>
-                                </button>
-                            </form>
-                            @endif
-                            <a href="{{ route('user.forum') }}" class="btn btn-outline-secondary btn-sm" title="Back to Forum" data-bs-placement="top" data-bs-html="true"
-                                data-bs-custom-class="tooltip-text-start">
-                                <i class="bi bi-arrow-left me-1"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <div class="card card-body">
 
-            <!-- Topics/Posts -->
-            @if($topics->count() > 0)
-            @foreach($topics as $topic)
-            <div class="card mb-4">
-                <!-- Card header START -->
-                <div class="card-header border-0 pb-0">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <div class="d-flex align-items-center">
-                            <!-- Avatar -->
-                            <div class="avatar me-2">
-                                <a href="{{ route('user.profile.data', ['id' => $topic->member->id]) }}">
-                                    <img class="avatar-img rounded-circle"
-                                        src="{{ $user->profile_pic && $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}"
-                                        alt="">
-                                </a>
-                            </div>
-                            <!-- Info -->
-                            <div>
-                                <div class="nav nav-divider">
-                                    <h6 class="nav-item card-title mb-0">
-                                        <a
-                                            href="{{ route('user.profile.data', ['id' => $topic->member->id]) }}">{{ $topic->creator_name ? $topic->creator_name : $topic->member->name }}</a>
-                                    </h6>
-                                        @php
-    $createdAt = \Carbon\Carbon::parse($topic->created_date)->setTimezone('Asia/Kolkata');
-    $now = \Carbon\Carbon::now('Asia/Kolkata');
-    $diff = $createdAt->diff($now);
-
-    if ($diff->y > 0) {
-        $timeDiff = $diff->y . 'y';
-    } elseif ($diff->m > 0) {
-        $timeDiff = $diff->m . 'mo';
-    } elseif ($diff->d > 0) {
-        $timeDiff = $diff->d . 'd';
-    } elseif ($diff->h > 0) {
-        $timeDiff = $diff->h . 'h';
-    } elseif ($diff->i > 0) {
-        $timeDiff = $diff->i . 'min';
-    } else {
-        $timeDiff = 'Just now';
-    }
-@endphp
-
-<small class="ms-2">{{ $timeDiff }}</small>
-
-                                </div>
-                                <p class="mb-0 small">{{ $topic->creator ? $topic->creator->designation : 'Member' }}
-                                </p>
-                            </div>
-                        </div>
-                        <!-- Card feed action dropdown START -->
-                        <div class="dropdown">
-                            <a href="#" class="text-secondary btn btn-secondary-soft-hover py-1 px-2"
-                                id="cardFeedAction{{ $topic->id }}" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="bi bi-three-dots"></i>
-                            </a>
-                            <!-- Card feed action dropdown menu -->
-                            <ul class="dropdown-menu dropdown-menu-end"
-                                aria-labelledby="cardFeedAction{{ $topic->id }}">
-                                <li><a class="dropdown-item" href="#"><i class="bi bi-bookmark fa-fw pe-2"></i>Save
-                                        post</a></li>
-                                <li><a class="dropdown-item" href="#"><i class="bi bi-share fa-fw pe-2"></i>Share</a>
-                                </li>
-                                <li><a class="dropdown-item" href="#"><i class="bi bi-flag fa-fw pe-2"></i>Report
-                                        post</a></li>
-                            </ul>
-                        </div>
-                        <!-- Card feed action dropdown END -->
-                    </div>
-                </div>
-                <!-- Card header END -->
-
-                <!-- Card body START -->
-                <div class="card-body">
-                    <!-- Topic Title -->
-                    <h5 class="mb-3">{{ $topic->title }}</h5>
-
-                    <!-- Topic Description -->
-                    <p class="mb-3">{{ $topic->description }}</p>
-
-                    <!-- Topic Image -->
-                    @if($topic->images)
-                    <div class="mb-3">
-                        <img class="card-img rounded" src="{{ asset('storage/' . $topic->images) }}" alt="Topic Image">
-                        @if($topic->image_caption)
-                        <p class="small text-muted mt-2">{{ $topic->image_caption }}</p>
-                        @endif
-                    </div>
-                    @endif
-
-                    <!-- Topic Video -->
-                    @if($topic->video_link)
-                    <div class="mb-3">
-                        <div class="ratio ratio-16x9">
-                            <iframe src="{{ $topic->video_link }}" title="Video" frameborder="0"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                allowfullscreen></iframe>
-                        </div>
-                        @if($topic->video_caption)
-                        <p class="small text-muted mt-2">{{ $topic->video_caption }}</p>
-                        @endif
-                    </div>
-                    @endif
-
-                    <!-- Topic File -->
-                    @if($topic->files)
-                    <div class="mb-3">
-                        <a href="{{ asset('storage/' . $topic->files) }}" class="btn btn-outline-primary btn-sm"
-                            target="_blank">
-                            <i class="bi bi-file-earmark-text me-1"></i>View Document
-                        </a>
-                    </div>
-                    @endif
-
-                        <!-- Feed react START -->
-                        <ul class="nav nav-stack py-3 small">
-                        <li class="nav-item">
-                            @if($user && $topic->isLikedBy($user->id))
-                                <form action="{{ route('user.forum.topic.unlike', $topic->id) }}" method="POST" style="display: inline;">
-                                    @csrf
-                                    <button type="submit" class="nav-link active border-0 bg-transparent" 
-                                           data-bs-container="body" data-bs-toggle="tooltip"
-                                           data-bs-placement="top" data-bs-html="true" data-bs-custom-class="tooltip-text-start"
-                                           data-bs-title="Unlike this topic">
-                                        <i class="bi bi-hand-thumbs-up-fill pe-1"></i>Liked ({{ $topic->likes->count() }})
-                                    </button>
-                                </form>
-                            @else
-                                @if($user)
-                                    <form action="{{ route('user.forum.topic.like', $topic->id) }}" method="POST" style="display: inline;">
-                                        @csrf
-                                        <button type="submit" class="nav-link border-0 bg-transparent" 
-                                               data-bs-container="body" data-bs-toggle="tooltip"
-                                               data-bs-placement="top" data-bs-html="true" data-bs-custom-class="tooltip-text-start"
-                                               data-bs-title="Like this topic">
-                                            <i class="bi bi-hand-thumbs-up pe-1"></i>Like ({{ $topic->likes->count() }})
-                                        </button>
-                                    </form>
-                                @else
-                                    <a class="nav-link" href="{{ route('user.login') }}" 
-                                       data-bs-container="body" data-bs-toggle="tooltip"
-                                       data-bs-placement="top" data-bs-html="true" data-bs-custom-class="tooltip-text-start"
-                                       data-bs-title="Login to like this topic">
-                                        <i class="bi bi-hand-thumbs-up pe-1"></i>Like ({{ $topic->likes->count() }})
-                                    </a>
-                                @endif
-                            @endif
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#!" onclick="toggleComments({{ $topic->id }})">
-                                <i class="bi bi-chat-fill pe-1"></i>Comments ({{ $topic->comments->count() }})</a>
-                        </li>
-                    </ul>
-                        <!-- Feed react END -->
-
-                        <!-- Add comment -->
-                        @if($user)
-                    <div class="d-flex mb-3">
-                        <!-- Avatar -->
-                        <div class="avatar avatar-xs me-2">
-                            <a href="{{ route('user.profile.data', ['id' => $user->id]) }}">
-                                
-                                <img class="avatar-img rounded-circle"
-                                    src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}"
-                                    
-
-                                    alt=""> 
-                            </a>
-                        </div>
-                        <!-- Comment box -->
-                        <form action="{{ route('user.forum.topic.comment', $topic->id) }}" method="POST" class="nav nav-item w-100 position-relative">
-                            @csrf
-                            <textarea name="comment" data-autoresize="" class="form-control pe-5 bg-light" rows="1"
-                                placeholder="Add a comment..." required></textarea>
-                            <button
-                                class="nav-link bg-transparent px-3 position-absolute top-50 end-0 translate-middle-y border-0"
-                                type="submit">
-                                <i class="bi bi-send-fill"></i>
-                            </button>
-                        </form>
-                    </div>
-                    @else
-                    <div class="d-flex mb-3">
-                        <div class="w-100 text-center">
-                            <a href="{{ route('user.login') }}" class="btn btn-outline-primary btn-sm">
-                                <i class="bi bi-person-plus me-1"></i>Login to comment
-                            </a>
-                        </div>
-                    </div>
-                    @endif
-
-                        <!-- Comment wrap START -->
-                        <ul class="comment-wrap list-unstyled">
-                        @if($topic->comments->count() > 0)
-                            @foreach($topic->comments as $comment)
-                               <!-- Comment item START -->
-							<li class="comment-item mb-3">
-								<div class="d-flex w-100 position-relative">
-									<!-- Avatar -->
-									<div class="avatar avatar-xs flex-shrink-0">
-										<a href="{{ route('user.profile.data', ['id' => $comment->user->id]) }}"><img class="avatar-img rounded-circle" src="{{ $comment->user && $comment->user->profile_pic ? asset('storage/' . $comment->user->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}" alt=""></a>
-									</div>
-									<div class="ms-2 flex-grow-1">
-										<!-- Comment by -->
-										<div class="bg-light p-3 rounded">
-											<div class="d-flex justify-content-between align-items-center">
-												<h6 class="mb-1"> <a href="{{ route('user.profile.data', ['id' => $comment->user->id]) }}">{{ $comment->user ? $comment->user->name : 'Unknown User' }}</a></h6>
-												@php
-    $createdAt = \Carbon\Carbon::parse($comment->created_at)->setTimezone('Asia/Kolkata');
-    $now = \Carbon\Carbon::now('Asia/Kolkata');
-    $diff = $createdAt->diff($now);
-
-    if ($diff->y > 0) {
-        $timeDiff = $diff->y . 'y';
-    } elseif ($diff->m > 0) {
-        $timeDiff = $diff->m . 'mo';
-    } elseif ($diff->d > 0) {
-        $timeDiff = $diff->d . 'd';
-    } elseif ($diff->h > 0) {
-        $timeDiff = $diff->h . 'h';
-    } elseif ($diff->i > 0) {
-        $timeDiff = $diff->i . 'min';
-    } else {
-        $timeDiff = 'Just now';
-    }
-@endphp
-
-<small class="ms-2">{{ $timeDiff }}</small>
-
-											</div>
-											<p class="small mb-0">{{ $comment->comment }}</p>
-										</div>
-									</div>
-								</div>
-                                </li>
-                            @endforeach
-                        @else
-                            <!-- No comments yet -->
-                            <li class="text-center text-muted small py-3">
-                                No comments yet. Be the first to comment!
-                            </li>
-                            @endif
-                    </ul>
-                    <!-- Comment wrap END -->
-                    </div>
-                    <!-- Card body END -->
-                </div>
-                @endforeach
-            @else
-            <!-- No Topics -->
-            <div class="card">
-                <div class="card-body text-center py-5">
-                    <div class="mb-3">
-                        <i class="bi bi-chat-dots display-4 text-muted"></i>
-                    </div>
-                    <h5 class="mb-2">No topics yet</h5>
-                    <p class="text-muted mb-0">This forum doesn't have any topics yet. Topics will appear here once they
-                        are created by forum administrators.</p>
-                </div>
-            </div>
-            @endif
-        </div>
+                <!-- Main Question -->
+                <div class="d-flex align-items-center mb-3">
+  <img src="{{ asset($forum->member_profile_image ?? 'feed_assets/images/avatar/07.jpg') }}" 
+                 class="rounded-circle me-3" 
+                 alt="User" 
+                 style="width:60px;">
+    <div class="d-flex flex-column justify-content-center">
+        <h6 class="mb-0 fw-bold">{{ $forum->member_name }}</h6>
+        <small class="text-muted">{{ \Carbon\Carbon::parse($forum->created_at)->format('d M, Y') }}
+</small>
     </div>
 </div>
-<!-- Add Topic Modal -->
-<div class="modal fade" id="addTopicModal" tabindex="-1" aria-labelledby="addTopicModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="addTopicModalLabel">Add a Topic</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+                <h4 class="fw-bold mb-3">{{ $forum->name }}</h4>
+                <p>{{ $forum->description }}</p>
+
+                 <!-- Actions -->
+        <div class="d-flex justify-content-between align-items-center mt-3">
+            <div class="d-flex gap-3 text-muted small align-items-center">
+                <span class="d-inline-flex align-items-center gap-1">
+                    <i id="likeThumb" class="bi bi-hand-thumbs-up" style="cursor:pointer; {{ !empty($forum->has_liked) ? 'color:#dc3545' : '' }}"></i>
+                    <span id="likeCount">{{ $forum->likes->count() ?? 0 }}</span> Like
+                </span>
+                <span class="d-inline-flex align-items-center gap-1">
+                    <i class="bi bi-reply me-1"></i>
+                    <span id="commentCount">{{ $forum->comments->count() ?? 0 }}</span> Reply
+                </span>
             </div>
-            <form method="POST" action="{{ route('user.forum.topic.store', $forum->id) }}">
-                @csrf
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="topicDescription" class="form-label">Description</label>
-                        <textarea class="form-control" id="topicDescription" name="description" rows="4"
-                            placeholder="Enter topic description" required></textarea>
+        </div>
+
+                <hr class="my-4">
+
+                 <!-- Comments (simple list, no dropdown) -->
+                 @php $currentUserId = Auth::guard('user')->id(); @endphp
+                 <div id="commentsList" data-update-url-template="{{ route('user.forum.comment.update', ['commentId' => 'COMMENT_ID']) }}" data-delete-url-template="{{ route('user.forum.comment.delete', ['commentId' => 'COMMENT_ID']) }}">
+            @foreach($forum->comments as $index => $comment)
+                <div class="d-flex align-items-start gap-3 mb-3 comment-item" data-comment-id="{{ $comment->id }}">
+                    <img src="{{ asset($comment->profile_pic ?? 'feed_assets/images/avatar/07.jpg') }}" class="rounded-circle" alt="User" style="width:40px; height:40px; object-fit:cover;">
+                    <div class="flex-grow-1">
+                        <div class="d-flex align-items-center justify-content-between mb-1">
+                            <div class="d-flex align-items-center gap-2">
+                                <h6 class="mb-0 fw-bold">{{ $comment->member_name }}</h6>
+                                <small class="text-muted">{{ \Carbon\Carbon::parse($comment->created_at)->format('d M, Y') }}</small>
+                            </div>
+                            @if((int)$currentUserId === (int)$comment->user_id)
+                            <div class="d-flex align-items-center gap-2">
+                                <button class="btn btn-sm btn-link text-secondary p-0 comment-edit" data-id="{{ $comment->id }}" title="Edit"><i class="bi bi-pencil-square"></i></button>
+                                <button class="btn btn-sm btn-link text-danger p-0 comment-delete" data-id="{{ $comment->id }}" title="Delete"><i class="bi bi-trash"></i></button>
+                            </div>
+                            @endif
+                        </div>
+                        <div class="comment-text">{{ $comment->comment }}</div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Add Topic</button>
+            @endforeach
+        </div>
+
+        <!-- Add Comment -->
+        <div class="mt-4">
+            <form id="commentForm">
+                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                <div class="input-group">
+                    <input id="commentInput" type="text" name="comment" class="form-control" placeholder="Write a comment..." required>
+                    <button type="submit" class="btn btn-primary" title="Post"><i class="bi bi-send"></i></button>
                 </div>
             </form>
         </div>
+
+        <script>
+            (function(){
+                const likeThumb = document.getElementById('likeThumb');
+                const likeCountEl = document.getElementById('likeCount');
+                const commentCountEl = document.getElementById('commentCount');
+                const forumId = {{ $forum->id }};
+                const csrf = '{{ csrf_token() }}';
+                let liked = {{ !empty($forum->has_liked) ? 'true' : 'false' }};
+
+                function toggleThumbColor(isLiked){
+                    likeThumb.style.color = isLiked ? '#dc3545' : '';
+                }
+
+                likeThumb?.addEventListener('click', async function(){
+                    const url = liked ? '{{ route('user.forum.unlike', $forum->id) }}' : '{{ route('user.forum.like', $forum->id) }}';
+                    try{
+                        const res = await fetch(url, {
+                            method: 'POST',
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest',
+                                'X-CSRF-TOKEN': csrf,
+                                'Accept': 'application/json'
+                            },
+                            body: new URLSearchParams({})
+                        });
+                        if(!res.ok) throw new Error('Request failed');
+                        const data = await res.json();
+                        if(data && data.success){
+                            liked = data.status === 'liked';
+                            toggleThumbColor(liked);
+                            if(typeof data.like_count !== 'undefined'){
+                                likeCountEl.textContent = data.like_count;
+                            }
+                        }
+                    }catch(e){ console.error(e); }
+                });
+
+                const form = document.getElementById('commentForm');
+                const input = document.getElementById('commentInput');
+                const commentsListEl = document.getElementById('commentsList');
+                const updateTpl = commentsListEl?.getAttribute('data-update-url-template') || '';
+                const deleteTpl = commentsListEl?.getAttribute('data-delete-url-template') || '';
+                form?.addEventListener('submit', async function(ev){
+                    ev.preventDefault();
+                    const comment = input.value.trim();
+                    if(!comment) return;
+                    try{
+                        const res = await fetch('{{ route('user.forum.comment', $forum->id) }}', {
+                            method: 'POST',
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest',
+                                'X-CSRF-TOKEN': csrf,
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/x-www-form-urlencoded'
+                            },
+                            body: new URLSearchParams({ comment })
+                        });
+                        if(!res.ok) throw new Error('Request failed');
+                        const data = await res.json();
+                        if(data && data.success){
+                            // Prepend simple comment item
+                            const list = commentsListEl;
+                            const profile = data.comment?.profile_pic ? data.comment.profile_pic : 'feed_assets/images/avatar/07.jpg';
+                            const created = (new Date(data.comment.created_at)).toLocaleDateString(undefined, { month:'short', day:'2-digit', year:'numeric' });
+                            const item = document.createElement('div');
+                            item.className = 'd-flex align-items-start gap-3 mb-3 comment-item';
+                            item.dataset.commentId = data.comment.id;
+                            const imgSrc = profile.startsWith('http') ? profile : `{{ asset('') }}` + profile;
+                            item.innerHTML = `
+                                <img src="${imgSrc}" class="rounded-circle" alt="User" style="width:40px; height:40px; object-fit:cover;">
+                                <div class="flex-grow-1">
+                                    <div class="d-flex align-items-center justify-content-between mb-1">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <h6 class="mb-0 fw-bold">${data.comment.member_name ?? 'You'}</h6>
+                                            <small class="text-muted">${created}</small>
+                                        </div>
+                                        <div class="d-flex align-items-center gap-2">
+                                            <button class="btn btn-sm btn-link text-secondary p-0 comment-edit" data-id="${data.comment.id}" title="Edit"><i class="bi bi-pencil-square"></i></button>
+                                            <button class="btn btn-sm btn-link text-danger p-0 comment-delete" data-id="${data.comment.id}" title="Delete"><i class="bi bi-trash"></i></button>
+                                        </div>
+                                    </div>
+                                    <div class="comment-text">${data.comment.comment}</div>
+                                </div>`;
+                            list?.prepend(item);
+                            if(typeof data.comment_count !== 'undefined'){
+                                commentCountEl.textContent = data.comment_count;
+                            }
+                            input.value = '';
+                        }
+                    }catch(e){ console.error(e); }
+                });
+
+                // Edit/Delete handlers via event delegation
+                commentsListEl?.addEventListener('click', async function(ev){
+                    const editBtn = ev.target.closest('.comment-edit');
+                    const delBtn = ev.target.closest('.comment-delete');
+                    if(editBtn){
+                        const commentId = editBtn.dataset.id;
+                        const item = editBtn.closest('.comment-item');
+                        const textEl = item.querySelector('.comment-text');
+                        if(item.querySelector('.comment-editing')) return;
+                        const original = textEl.textContent.trim();
+                        const editor = document.createElement('div');
+                        editor.className = 'comment-editing mt-2';
+                        editor.innerHTML = `
+                            <div class="input-group input-group-sm">
+                                <input type="text" class="form-control" value="${original.replace(/"/g,'&quot;')}">
+                                <button class="btn btn-success btn-save" type="button" title="Save"><i class="bi bi-check2"></i></button>
+                                <button class="btn btn-outline-secondary btn-cancel" type="button" title="Cancel"><i class="bi bi-x"></i></button>
+                            </div>`;
+                        textEl.style.display = 'none';
+                        textEl.after(editor);
+                        const saveBtn = editor.querySelector('.btn-save');
+                        const cancelBtn = editor.querySelector('.btn-cancel');
+                        const inputEl = editor.querySelector('input');
+                        saveBtn.addEventListener('click', async function(){
+                            const newText = inputEl.value.trim();
+                            if(!newText) return;
+                            try{
+                                const url = updateTpl.replace('COMMENT_ID', commentId);
+                                const res = await fetch(url, {
+                                    method: 'PUT',
+                                    headers: { 'X-Requested-With': 'XMLHttpRequest', 'X-CSRF-TOKEN': csrf, 'Accept': 'application/json', 'Content-Type': 'application/x-www-form-urlencoded' },
+                                    body: new URLSearchParams({ comment: newText })
+                                });
+                                if(!res.ok) throw new Error('Update failed');
+                                const data = await res.json();
+                                if(data && data.success){
+                                    textEl.textContent = newText;
+                                }
+                            }catch(e){ console.error(e); }
+                            textEl.style.display = '';
+                            editor.remove();
+                        });
+                        cancelBtn.addEventListener('click', function(){
+                            textEl.style.display = '';
+                            editor.remove();
+                        });
+                    }
+                    if(delBtn){
+                        const commentId = delBtn.dataset.id;
+                        const item = delBtn.closest('.comment-item');
+                        if(!confirm('Delete this comment?')) return;
+                        try{
+                            const url = deleteTpl.replace('COMMENT_ID', commentId);
+                            const res = await fetch(url, {
+                                method: 'DELETE',
+                                headers: { 'X-Requested-With': 'XMLHttpRequest', 'X-CSRF-TOKEN': csrf, 'Accept': 'application/json' }
+                            });
+                            if(!res.ok) throw new Error('Delete failed');
+                            const data = await res.json();
+                            if(data && data.success){
+                                item.remove();
+                                if(typeof data.comment_count !== 'undefined'){
+                                    commentCountEl.textContent = data.comment_count;
+                                }
+                            }
+                        }catch(e){ console.error(e); }
+                    }
+                });
+            })();
+        </script>
+   </div>
+
+        </div>
+
     </div>
 </div>
 @endsection

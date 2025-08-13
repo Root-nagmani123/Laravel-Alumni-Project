@@ -28,14 +28,20 @@
                                 <h5 class="mb-0"> <a href="#!"> {{ Auth::guard('user')->user()->name }} </a> </h5>
                                 @endif
                                 <small>{{ Auth::guard('user')->user()->designation }}</small>
-                                <ul class="list-inline mb-0 text-center text-sm-start mt-3 mt-sm-0 mb-sm-3">
-                                    <li class="list-inline-item"><i class="bi bi-briefcase me-1"></i>
+                                <div class="hstack gap-2 gap-xl-3 justify-content-center mt-3">
+											<!-- User stat item -->
+											<div>
+												<li class="list-inline-item"><i class="bi bi-briefcase me-1"></i>
                                         {{ $user->cader }}
-                                    </li>
-                                    <li class="list-inline-item"><i class="bi bi-backpack me-1"></i>
+											</div>
+											<!-- Divider -->
+											<div class="vr"></div>
+											<!-- User stat item -->
+											<div>
+												<i class="bi bi-backpack me-1"></i>
                                         {{ $user->batch }}
-                                    </li>
-                                </ul>
+											</div>
+										</div>
                             </div>
                             <!-- Side Nav END -->
                         </div>
@@ -77,7 +83,7 @@
                             {{ \Illuminate\Support\Str::limit($event->title, 20) }}</a>
                         <p class="mb-0 small text-truncate">
                             <!-- {{ \Carbon\Carbon::parse($event->start_datetime)->format('D, M d, Y \a\t h:i A') }}</p> -->
-                                  {{ \Carbon\Carbon::parse($event->start_datetime)->format('d-m-Y') }}
+                                  {{ \Carbon\Carbon::parse($event->start_datetime)->format('d M Y') }}
                         </p>
                     </div>
 

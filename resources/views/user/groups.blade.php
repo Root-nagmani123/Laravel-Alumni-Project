@@ -135,15 +135,15 @@
                 <div class="hstack gap-2 gap-xl-3 justify-content-center mt-3">
                               <!-- Group stat item -->
                               <div>
-                                <h6 class="mb-0">250</h6>
+                                <h6 class="mb-0">{{ $recent->member_count ? $recent->member_count : 0 }}</h6>
                                 <small>Members</small>
                               </div>
                               <!-- Divider -->
                               <div class="vr"></div>
                               <!-- Group stat item -->
                               <div>
-                                <h6 class="mb-0">2</h6>
-                                <small>Post per day</small>
+                                <h6 class="mb-0">{{ $recent->total_posts ? $recent->total_posts : 0 }}</h6>
+                                <small>Total Post</small>
                               </div>
                             </div>
             </div>
