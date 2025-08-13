@@ -10,7 +10,6 @@
 
 .select2-container {
     z-index: 1050 !important;
-    display: inline !important;
 }
 
 .backdrop-blur {
