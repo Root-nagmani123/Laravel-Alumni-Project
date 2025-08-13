@@ -619,3 +619,40 @@ Route::post('/manual-broadcasting-auth', function(\Illuminate\Http\Request $requ
         'user_id' => $user->id
     ]);
 })->middleware('web');
+
+
+// routes/web.php में add करें
+Route::post('/broadcasting/auth', function(\Illuminate\Http\Request $request) {
+    \Log::info('Broadcasting auth called', [
+        'socket_id' => $request->socket_id,
+        'channel_name' => $request->channel_name,
+        'user_id' => auth('user')->id()
+    ]);
+    
+    if (!auth('user')->check()) {
+        return response()->json(['error' => 'Unauthorized'], 401);
+    }
+    
+    $user = auth('user')->user();
+    $socketId = $request->socket_id;
+    $channel = $request->channel_name;
+    
+    // Channel authorization logic
+    if (strpos($channel, 'private-chat-channel.') === 0) {
+        $userId = str_replace('private-chat-channel.', '', $channel);
+        if ((int)$user->id !== (int)$userId) {
+            return response()->json(['error' => 'Forbidden'], 403);
+        }
+    }
+    
+    if (strpos($channel, 'private-unread-channel.') === 0) {
+        $receiverId = str_replace('private-unread-channel.', '', $channel);
+        if ((int)$user->id !== (int)$receiverId) {
+            return response()->json(['error' => 'Forbidden'], 403);
+        }
+    }
+    
+    return response()->json([
+        'auth' => hash('sha256', $socketId . ':' . $channel . ':' . $user->id)
+    ]);
+})->middleware('web');
