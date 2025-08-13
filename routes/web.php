@@ -494,7 +494,7 @@ Route::post('/otp/send', [OtpLoginController::class, 'sendOtp'])->name('otp.send
 Route::post('/otp/verify', [OtpLoginController::class, 'verifyOtp'])->name('otp.verify');
 
 // routes/web.php में
-Route::post('/broadcasting/auth', function(\Illuminate\Http\Request $request) {
+Route::get('/broadcasting/auth', function(\Illuminate\Http\Request $request) {
     // Manual auth check
     if (!auth()->check()) {
         return response()->json(['error' => 'Unauthorized'], 401);
