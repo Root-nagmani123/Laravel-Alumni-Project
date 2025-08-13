@@ -20,7 +20,10 @@ window.Echo = new Echo({
                     socket_id: socketId,
                     channel_name: channel.name
                 }, {
-                    withCredentials: true
+                    withCredentials: true,
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    }
                 })
                 .then(response => {
                     callback(false, response.data);
