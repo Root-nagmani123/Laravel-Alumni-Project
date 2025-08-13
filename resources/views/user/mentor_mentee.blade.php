@@ -70,12 +70,12 @@
                             </div>
                         </div>
                         <div class="col-3">
-                            <label for="" class="form-label">Year</label>
+                            <label for="" class="form-label">Batch</label>
                             <div class="mb-3">
-                                <select name="year" id="year" class="form-select">
-                                    <option value=''>Select Year</option>
+                                <select name="batch" id="batch" class="form-select">
+                                    <option value=''>Select Batch</option>
                                     @if($members->isEmpty())
-                                    <option disabled>No Years Available</option>
+                                    <option disabled>No Batches Available</option>
                                     @else
                                     @foreach($members as $member)
                                     @if($member->Year != '')
