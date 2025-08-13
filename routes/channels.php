@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Broadcast;
 //     return (int) $user->id === (int) $id;
 // });
 
-
+Broadcast::routes(['middleware' => ['web', 'auth']]);
 Broadcast::channel('chat-channel.{userId}', function ($user, $userId) {
     \Log::info('Chat channel accessed by user: ' . $user->id . ' for userId: ' . $userId);
     return (int) $user->id === (int) $userId;
