@@ -115,7 +115,7 @@
                                     {{ App\Models\Member::find($chat->member_id)->unreadMessages->count() > 0 ? '(' . App\Models\Member::find($chat->member_id)->unreadMessages->count() . ')' : null }}
                                     </span>
                                     @endif --}}
-
+                                    <div class="small text-secondary text-truncate">{{ $chat->role_type ?? '' }}</div>
                                 </a>
                                 {{-- <div class="small text-secondary text-truncate">Frances sent a photo.</div> --}}
                             </div>
