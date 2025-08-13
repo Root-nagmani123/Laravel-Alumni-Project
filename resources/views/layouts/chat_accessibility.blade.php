@@ -13,7 +13,7 @@
 </a>
 
 <div class="offcanvas offcanvas-end" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1"
-     id="offcanvasChat">
+     id="offcanvasChat" style="z-index: 1060;">
     <livewire:chat.chat-list />
 </div>
 </div>
