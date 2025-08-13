@@ -501,9 +501,29 @@ $(document).ready(function () {
                 cadre: $('.cadre[data-id="' + tabId + '"]').val(),
                 sector: $('.sector[data-id="' + tabId + '"]').val()
             },
+             beforeSend: function () {
+            $('#mentorTableBody').html(`
+                <tr>
+                    <td colspan="8" class="text-center">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </td>
+                </tr>
+            `);
+        },
             success: function (response) {
                 $('#mentorTableBody').html(response);
-            }
+            },
+            error: function () {
+            $('#mentorTableBody').html(`
+                <tr>
+                    <td colspan="8" class="text-center text-danger">
+                        Error loading data.
+                    </td>
+                </tr>
+            `);
+        }
         });
     });
 
@@ -524,9 +544,29 @@ $(document).ready(function () {
                 cadre: $('.cadre[data-id="' + tabId + '"]').val(),
                 sector: $('.sector[data-id="' + tabId + '"]').val()
             },
+             beforeSend: function () {
+            $('#menteeTableBody').html(`
+                <tr>
+                    <td colspan="8" class="text-center">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </td>
+                </tr>
+            `);
+        },
             success: function (response) {
                 $('#menteeTableBody').html(response);
-            }
+            },
+             error: function () {
+            $('#menteeTableBody').html(`
+                <tr>
+                    <td colspan="8" class="text-center text-danger">
+                        Error loading data.
+                    </td>
+                </tr>
+            `);
+        }
         });
     });
 
