@@ -61,7 +61,7 @@
                                     $user = Auth::guard('user')->user();
                                     $profileImage = $user->profile_pic
                                     ? asset('storage/' . $user->profile_pic)
-                                    : asset('feed_assets/images/avatar-1.png');
+                                    : asset('feed_assets/images/07.png');
 
                                     $displayName = $user->name ?? 'Guest User';
                                     $designation = $user->designation ?? 'Guest';

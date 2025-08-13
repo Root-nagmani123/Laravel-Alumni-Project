@@ -8,8 +8,6 @@ Header START -->
 .dropdown-menu {
     z-index: 1100 !important;
 }
-
-
 </style>
 <header class="navbar-light fixed-top header-static bg-mode">
 

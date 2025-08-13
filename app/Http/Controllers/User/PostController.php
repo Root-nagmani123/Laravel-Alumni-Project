@@ -350,7 +350,8 @@ function forum_store(Request $request)
    $validator = Validator::make($request->all(), [
         'forum_name' => 'required|string|max:255',
         'forum_end_date' => 'required|date|after_or_equal:today',
-        'forum_image' => 'nullable|image|mimes:jpeg,png,jpg|max:1028', // Optional image validation
+        'forum_image' => 'nullable|image|mimes:jpeg,png,jpg|max:1028', 
+        'forum_description' => 'nullable|string|max:5000', // Add description validation
 
       ]);
     // Check if validation fails
@@ -370,6 +371,7 @@ function forum_store(Request $request)
             'created_by' => auth()->guard('user')->id(),
             'end_date' => $request->input('forum_end_date'),
             'images' =>  isset($data['images']) ? $data['images'] : null,
+            'description' => $request->input('forum_description'), // Save description
             'notified_at' => 0,
         ]);
 

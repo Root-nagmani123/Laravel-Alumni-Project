@@ -122,10 +122,12 @@
                         <div class="d-flex">
                             <!-- Thumbnail -->
                             <div class="flex-shrink-0 me-3">
-                                <img src="{{ asset('storage/uploads/images/forums_img/' . ($forum->images ?? 'default-forum.jpg')) }}"
-                                     alt="Forum Image"
-                                     class="rounded"
-                                     style="width:60px; height:60px; object-fit:cover;">
+                                <a href="{{ route('user.forum.show', $forum->id) }}">
+                                    <img src="{{ asset('storage/uploads/images/forums_img/' . ($forum->images ?? 'default-forum.jpg')) }}"
+                                         alt="Forum Image"
+                                         class="rounded"
+                                         style="width:60px; height:60px; object-fit:cover;">
+                                </a>
                             </div>
 
                             <!-- Content -->
@@ -138,22 +140,20 @@
                                 </h6>
                                 <!-- Snippet -->
                                 <p class="mb-2 text-muted small">
-                                    {{ Str::limit($topic->description ?? 'No description available.', 120) }}
+                                    {{ Str::limit($forum->description ?? 'No description available.', 120) }}
                                 </p>
 
                                 <!-- Author & Date -->
                                 <div class="small text-muted mb-2">
-                                    {{ $forum->created_by ?? 'Unknown Author' }} |
-                                    {{ \Carbon\Carbon::parse($forum->created_at)->format('M d, Y') }}
+                                    {{ \Carbon\Carbon::parse($forum->created_at)->format('d M, Y') }}
                                 </div>
 
                                 <!-- Tags & Stats -->
                                 <div class="d-flex justify-content-between align-items-center flex-wrap">
                                     <!-- Stats -->
                                     <div class="d-flex align-items-center gap-3 small text-muted">
-                                        <span><i class="bi bi-eye"></i> {{ $forum->views ?? 0 }}</span>
-                                        <span><i class="bi bi-hand-thumbs-up"></i> {{ $forum->likes ?? 0 }}</span>
-                                        <span><i class="bi bi-chat"></i> {{ $forum->comments ?? 0 }}</span>
+                                        <span><i class="bi bi-hand-thumbs-up"></i> {{ $forum->like_count ?? 0 }}</span>
+                                        <span><i class="bi bi-chat"></i> {{ $forum->comment_count ?? 0 }}</span>
                                     </div>
                                 </div>
                             </div>

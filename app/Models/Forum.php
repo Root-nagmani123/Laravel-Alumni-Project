@@ -7,7 +7,9 @@ class Forum extends Model
 
     use HasFactory;
 	protected $fillable =
-			['name',
+			[
+			'name',
+			'description',
 			'cat_id',
 			'status',
 			'created_by',
