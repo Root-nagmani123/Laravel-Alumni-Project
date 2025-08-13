@@ -181,10 +181,7 @@ Header START -->
                                                 }
                                             @endphp
                                           <div class="notification-card bg-white border rounded shadow-sm p-3 mb-3"
-     style="min-width: 300px; max-width: 340px; scroll-snap-align: start;"
-     data-id="{{ $notification->id }}"
-     data-created-at="{{ $notification->created_at }}">
-            
+     style="min-width: 300px; max-width: 340px; scroll-snap-align: start;" data-created-at="{{ $notification->created_at }}">          
             <!-- Avatar + Content -->
             <div class="d-flex align-items-start">
                 <!-- Avatar -->
@@ -469,11 +466,53 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 <script>
+// function clearNotifications(event) {
+//     event.preventDefault();
+    
+
+//     const url = event.currentTarget.href;
+
+//     fetch(url, {
+//         method: 'POST',
+//         headers: {
+//             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+//             'Accept': 'application/json',
+//             'Content-Type': 'application/json',
+//         },
+//     })
+//     .then(response => {
+//         if (!response.ok) {
+//             throw new Error('Network response was not ok');
+//         }
+//         return response.json();
+//     })
+//     .then(data => {
+//         console.log('Clear all route called:', data);
+
+//         // ✅ Hide the red dot
+//         const notifBadge = document.querySelector('.badge-notif');
+//         if (notifBadge) {
+//             notifBadge.remove();
+//         }
+
+//         // ✅ Optionally also set count to 0 in header
+//         const notifCount = document.querySelector('.card-header h6 .badge');
+//         if (notifCount) {
+//             notifCount.textContent = '0';
+//         }
+//     })
+//     .catch(error => {
+//         console.error('Error calling clear notifications route:', error);
+//     });
+// }
+
+
+// Update the clearNotifications function to add timestamps and change colors
 function clearNotifications(event) {
     event.preventDefault();
     
-
     const url = event.currentTarget.href;
+    const now = new Date().toISOString(); // Current timestamp
 
     fetch(url, {
         method: 'POST',
@@ -492,17 +531,45 @@ function clearNotifications(event) {
     .then(data => {
         console.log('Clear all route called:', data);
 
-        // ✅ Hide the red dot
+        // Hide the red dot
         const notifBadge = document.querySelector('.badge-notif');
         if (notifBadge) {
             notifBadge.remove();
         }
 
-        // ✅ Optionally also set count to 0 in header
+        // Update notification count to 0
         const notifCount = document.querySelector('.card-header h6 .badge');
         if (notifCount) {
             notifCount.textContent = '0';
         }
+
+        // Add timestamp and change color for all notifications
+        const notificationCards = document.querySelectorAll('.notification-card');
+        notificationCards.forEach(card => {
+            // Remove inline background color if it exists
+            card.style.removeProperty('background-color');
+            
+            // Add the read class
+            card.classList.add('notification-read');
+            
+            // Add border left
+            card.style.borderLeft = '3px solid #6c757d';
+            
+            // Add timestamp
+            const existingTimestamp = card.querySelector('.read-timestamp');
+            if (!existingTimestamp) {
+                const timestamp = document.createElement('div');
+                timestamp.className = 'small text-muted text-end read-timestamp';
+                timestamp.textContent = 'Read: Just now';
+                card.appendChild(timestamp);
+            }
+            
+            // Update text color
+            const textElement = card.querySelector('.text-primary');
+            if (textElement) {
+                textElement.style.color = '#6c757d';
+            }
+        });
     })
     .catch(error => {
         console.error('Error calling clear notifications route:', error);
@@ -549,6 +616,32 @@ function clearNotifications(event) {
         width: 90vw;
     }
 }
+
+/* Add this to your existing styles */
+.notification-card.notification-read {
+    background-color: #f8f9fa !important;
+    border-left: 3px solid #6c757d !important;
+    opacity: 0.9;
+}
+
+.notification-card.notification-read .text-primary {
+    color: #6c757d !important;
+}
+
+.notification-card.notification-read .notification-item {
+    color: #6c757d !important;
+}
+
+/* Animation for marking as read */
+@keyframes fadeRead {
+    from { background-color: white; }
+    to { background-color: #f8f9fa; }
+}
+
+.notification-card {
+    transition: all 0.3s ease;
+}
+
 </style>
 <script>
 document.addEventListener('click', function (event) {

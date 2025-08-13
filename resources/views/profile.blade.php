@@ -476,6 +476,33 @@
                                                                         placeholder="List previous postings (comma-separated)">
                                                                 </div>
                                                             </div>
+                                                            <div class="row mb-3">
+                                                                <div class="col-3">
+                                                                    <label for="service">Service:<span
+                                                                            style="color: red">*</span></label>
+                                                                </div>
+                                                                <div class="col-9">
+                                                                    <input type="text" id="service"
+                                                                        name="service"
+                                                                        value="{{ old('service', $user->service) }}"
+                                                                        class="form-control"
+                                                                        placeholder="Enter your Service">
+                                                                </div>
+                                                            </div>
+                                                            <div class="row mb-3">
+                                                                <div class="col-3">
+                                                                    <label for="sector">Sector
+                                                                        <span
+                                                                            style="color: red">*</span></label>
+                                                                </div>
+                                                                <div class="col-9">
+                                                                    <input type="text" id=""
+                                                                        name="previous_postings"
+                                                                        value="{{ old('previous_postings', $user->previous_postings) }}"
+                                                                        class="form-control"
+                                                                        placeholder="Enter your Sector">
+                                                                </div>
+                                                            </div>
                                                         </div>
 
                                                         <button type="submit" class="btn btn-primary">Update</button>
@@ -627,6 +654,34 @@
                                 <p>{{$user->bio}}</p>
                             </div>
                             <div class="row g-4">
+                                <div class="col-sm-6">
+                                    <!-- Service START -->
+                                    <div class="d-flex align-items-center rounded border px-3 py-2">
+                                       
+                                        <p class="mb-0">
+                                            <i class="fas fa-landmark fa-fw me-2"></i> Service Area: <strong>
+                                                @if($user->Service != '') {{ $user->Service }} @else N/A @endif
+                                            </strong>
+                                        </p>
+                                    </div>
+                                    <!-- Service END -->
+                                </div>
+                                <div class="col-sm-6">
+                                    <!-- sector START -->
+                                    <div class="d-flex align-items-center rounded border px-3 py-2">
+                                       
+                                        <p class="mb-0">
+                                            <i class="fas fa-draw-polygon fa-fw me-2"></i> Sector: <strong>
+                                                @if($user->sector != '') {{ $user->sector }} @else N/A @endif
+                                            </strong>
+                                        </p>
+                                    </div>
+                                    <!-- sector END -->
+                                </div>
+
+
+
+
                                 <div class="col-sm-6">
                                     <!-- Birthday START -->
                                     <div class="d-flex align-items-center rounded border px-3 py-2">

@@ -1,12 +1,13 @@
-<div class="position-relative">
-   <a data-bs-toggle="offcanvas"
-   href="#offcanvasChat"
-   role="button"
-   aria-controls="offcanvasChat"
-   class="floating-chat-btn">
-    
-    <!-- Green Dot -->
-    <span class="chat-dot d-none" id="unread-count-{{ auth()->guard('user')->id() }}"></span>
+<div class="d-none d-lg-block position-relative">
+    <a class="icon-md btn btn-primary position-fixed end-0 bottom-0"
+       data-bs-toggle="offcanvas"
+       href="#offcanvasChat"
+       role="button"
+       aria-controls="offcanvasChat"
+       style="margin-right: 2rem !important; margin-bottom: 10rem !important; background-color: #792421; color: #fff; border-radius: 50%; box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2);">
+        
+        <!-- Green Dot -->
+         <span class="chat-dot d-none" id="unread-dot"></span>
 
     <i class="bi bi-chat-left-text-fill"></i>
     <span>Mentor/Mentee Conversation</span>
