@@ -195,8 +195,8 @@ Route::prefix('user')->name('user.')->group(function () {
 		Route::post('/get-cadres', [MentorMenteeController::class, 'getCadres'])->name('get.cadres');
 		Route::post('/get-sectors', [MentorMenteeController::class, 'getSectors'])->name('get.sectors');
 		Route::post('/get-mentees', [MentorMenteeController::class, 'getMentees'])->name('get.mentees');
-
-		Route::post('/mentor/want_become_mentor', [MentorMenteeController::class, 'want_become_mentor'])->name('mentor.want_become_mentor');
+        Route::post('/filter/mentors_mentee_data', [MentorMenteeController::class, 'filterMentorsData'])->name('filter.mentors_mentee_data');
+        Route::post('/mentor/want_become_mentor', [MentorMenteeController::class, 'want_become_mentor'])->name('mentor.want_become_mentor');
 		Route::post('/mentor/want_become_mentee', [MentorMenteeController::class, 'want_become_mentee'])->name('mentor.want_become_mentee');
 		Route::post('/request/update', [MentorMenteeController::class, 'updateRequest'])->name('request.update');
         Route::get('user/forum', [MemberForumController::class, 'index'])->name('forum');
