@@ -27,9 +27,22 @@ class MentorMenteeController extends Controller
      
 $user_id = auth()->guard('user')->user()->id;    
 $members = DB::table('members')
-->select('Service', DB::raw('COUNT(*) as count'))
-->groupBy('Service') 
-->get();
+    ->select(
+        DB::raw('TRIM(Service) as Service'),
+        DB::raw('GROUP_CONCAT(DISTINCT TRIM(batch) ORDER BY batch ASC SEPARATOR ",") as batches'),
+        DB::raw('GROUP_CONCAT(DISTINCT TRIM(cader) ORDER BY cader ASC SEPARATOR ",") as cader_list'),
+        DB::raw('GROUP_CONCAT(DISTINCT TRIM(sector) ORDER BY sector ASC SEPARATOR ",") as sector_list')
+    )
+    ->groupBy(DB::raw('TRIM(Service)'))
+    ->orderBy('Service')
+    ->get();
+
+// print_r($members);
+
+// die;
+
+
+    // Fetch mentee and mentor requests
 
  $mentee_requests = DB::table('mentee_requests')
         ->join('members', 'mentee_requests.mentor', '=', 'members.id')
@@ -204,20 +217,20 @@ return response()->json($mentees);
 function want_become_mentor(Request $request)  {
     // print_r($request->all());die;
    $request->validate([
-'service' => 'required',
-'year' => 'required',
-'cadre' => 'required',
-'sector' => 'required',
-'mentees' => 'required|array',
+// 'service' => 'required',
+// 'year' => 'required',
+// 'cadre' => 'required',
+// 'sector' => 'required',
+'selected_members' => 'required|array',
 ]);
 $user = auth()->guard('user')->user()->id;
-foreach ($request->input('mentees') as $menteeId) {
+foreach ($request->input('selected_members') as $menteeId) {
     // Validate each mentee ID
     $requestId = DB::table('mentor_requests')->insertGetId([
-    'service'      => $request->input('service'),
-    'batch'        => json_encode($request->input('year')),
-    'cadre'        => json_encode($request->input('cadre')),
-    'sector'       => json_encode($request->input('sector')),
+    // 'service'      => $request->input('service'),
+    // 'batch'        => json_encode($request->input('year')),
+    // 'cadre'        => json_encode($request->input('cadre')),
+    // 'sector'       => json_encode($request->input('sector')),
     'Mentor_ids'  => $menteeId, // assuming mentee_id is the ID of the mentee
     'mentees'       => $user, // assuming the logged-in user is the mentor
     'status'       => 2, // default status
@@ -239,21 +252,21 @@ return redirect()->back()->with('success', 'Your request to become a mentor has 
 function want_become_mentee(Request $request)  {
     // print_r($request->all());die;
    $request->validate([
-       'service' => 'required',
-       'year' => 'required',
-       'cadre' => 'required',
-       'sector' => 'required',
-       'mentees' => 'required|array',
+    //    'service' => 'required',
+    //    'year' => 'required',
+    //    'cadre' => 'required',
+    //    'sector' => 'required',
+       'selected_members' => 'required|array',
    ]);
 
    $user = auth()->guard('user')->user()->id;
-   foreach ($request->input('mentees') as $menteeId) {
+   foreach ($request->input('selected_members') as $menteeId) {
        // Validate each mentee ID
        $requestId = DB::table('mentee_requests')->insertGetId([
-           'service'      => $request->input('service'),
-           'batch'        => json_encode($request->input('year')),
-           'cadre'        => json_encode($request->input('cadre')),
-           'sector'       => json_encode($request->input('sector')),
+        //    'service'      => $request->input('service'),
+        //    'batch'        => json_encode($request->input('year')),
+        //    'cadre'        => json_encode($request->input('cadre')),
+        //    'sector'       => json_encode($request->input('sector')),
            'mentees_ids'   => $menteeId, // assuming mentee_id is the ID of the mentee
            'mentor'     => $user, // assuming the logged-in user is the mentee
            'status'       => 2, // default status
@@ -331,5 +344,29 @@ function updateRequest(Request $request) : \Illuminate\Http\RedirectResponse {
     }
 
     return back()->with('success', 'Request ' . $message . ' successfully.');
+}
+function filterMentorsData(Request $request) {
+     $query = DB::table('members');
+
+    if ($request->filled('service')) {
+        $query->whereIn('Service', $request->service);
+    }
+
+    if ($request->filled('year')) {
+        $query->whereIn('batch', $request->year);
+    }
+
+    if ($request->filled('cadre')) {
+        $query->whereIn('cader', $request->cadre);
+    }
+
+    if ($request->filled('sector')) {
+        $query->whereIn('sector', $request->sector);
+    }
+
+    $members = $query->get();
+
+
+    return view('partials.mentor_table', compact('members'));
 }
 }
