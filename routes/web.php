@@ -524,3 +524,27 @@ Route::get('/check-auth', function() {
         'guards' => array_keys(config('auth.guards')),
     ]);
 })->middleware('web');
+
+// routes/web.php में add करें
+Route::get('/debug-user', function() {
+    $authSessionKey = 'login_user_59ba36addc2b2f9401580f014c7f58ea4e30989d';
+    $userId = session($authSessionKey); // 8215
+    
+    try {
+        $user = \App\Models\User::find($userId);
+        
+        return response()->json([
+            'session_user_id' => $userId,
+            'user_exists' => $user ? true : false,
+            'user_data' => $user,
+            'user_model' => \App\Models\User::class,
+            'auth_model' => config('auth.providers.users.model'),
+            'table_exists' => \Schema::hasTable('users'),
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'error' => $e->getMessage(),
+            'session_user_id' => $userId,
+        ]);
+    }
+})->middleware('web');
