@@ -180,7 +180,7 @@
                                             </div>
                                             <hr>
                                             <div class="login-title mb-4">
-                                               <h3 class="text-center fw-bold" style="font-size: 20px;
+                                               <h3 class="text-center" style="font-size: 20px;
     line-height: inherit;">Welcome to the Official Alumni platform of the Lal Bahadur Shastri National Academy of Administration, Mussoorie</h3>
                                             </div>
                                            <form method="POST" action="{{ route('user.login.submit_ldap') }}">
@@ -242,7 +242,7 @@
                                             </div>
                                             <hr>
                                             <div class="login-title mb-4">
-                                                <h3 class="text-center fw-bold" style="font-size: 20px;
+                                                <h3 class="text-center" style="font-size: 20px;
     line-height: inherit;">Welcome to the Official Alumni platform of the Lal Bahadur Shastri National Academy of Administration, Mussoorie</h3>
                                             </div>
                                             <form id="otpForm">
