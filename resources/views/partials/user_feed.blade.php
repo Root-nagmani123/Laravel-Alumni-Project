@@ -851,6 +851,14 @@ document.addEventListener("DOMContentLoaded", function () {
             $myFirst = $storiesByMember[$myUserId]->first();
             $myUser = $myFirst->user;
             $myStoryImage = $myFirst->story_image ?? null;
+            $profileImage = '';
+        $user = App\Models\Member::find($memberId);
+        if ($user && !empty($user->profile_pic) &&
+        Storage::disk('public')->exists($user->profile_pic)) {
+        $profileImage = asset('storage/' . $user->profile_pic);
+        } else {
+        $profileImage = asset('feed_assets/images/avatar/07.jpg');
+        }
         @endphp
 
         @php
@@ -861,7 +869,7 @@ document.addEventListener("DOMContentLoaded", function () {
 @endphp
         {
             id: "member-{{ $myUserId }}",
-            photo: "{{ asset($myStoryImage ? 'storage/' . $myStoryImage : 'feed_assets/images/avatar/07.jpg') }}",
+            photo: "{{ $profileImage }}",
             name: "{{ addslashes($myUser->name) }}",
             // link: "#", // REMOVE
             items: [
@@ -891,6 +899,15 @@ document.addEventListener("DOMContentLoaded", function () {
             $first = $memberStories->first();
             $user = $first->user;
             $storyImage = $first->story_image ?? null;
+        
+        $profileImage = '';
+        $user = App\Models\Member::find($memberId);
+        if ($user && !empty($user->profile_pic) &&
+        Storage::disk('public')->exists($user->profile_pic)) {
+        $profileImage = asset('storage/' . $user->profile_pic);
+        } else {
+        $profileImage = asset('feed_assets/images/avatar/07.jpg');
+        }
         @endphp
 
 @php
@@ -901,7 +918,7 @@ document.addEventListener("DOMContentLoaded", function () {
 @endphp
         {
             id: "member-{{ $memberId }}",
-            photo: "{{ asset($storyImage ? 'storage/' . $storyImage : 'feed_assets/images/avatar/07.jpg') }}",
+            photo: "{{ $profileImage }}",
             name: "{{ addslashes($user->name) }}",
             // link: "#", // REMOVE
             items: [
