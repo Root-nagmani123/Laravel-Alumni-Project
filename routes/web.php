@@ -513,3 +513,14 @@ Route::get('/debug-session', function() {
         'user_id' => auth()->id(),
     ]);
 });
+
+// routes/web.php में add करें
+Route::get('/check-auth', function() {
+    return response()->json([
+        'auth_check' => auth()->check(),
+        'auth_guard' => config('auth.defaults.guard'),
+        'user' => auth()->user(),
+        'session_data' => session()->all(),
+        'guards' => array_keys(config('auth.guards')),
+    ]);
+})->middleware('web');
