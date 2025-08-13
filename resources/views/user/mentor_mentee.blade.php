@@ -150,7 +150,6 @@
                                         <th style="background: #f8f9fa;"><input type="checkbox" id="selectAll"></th>
                                         <th style="background: #f8f9fa;">#</th>
                                         <th style="background: #f8f9fa;">Name</th>
-                                        <th style="background: #f8f9fa;">Email</th>
                                         <th style="background: #f8f9fa;">Service</th>
                                         <th style="background: #f8f9fa;">Batch</th>
                                         <th style="background: #f8f9fa;">Cadre</th>
@@ -266,7 +265,6 @@
                                         <th><input type="checkbox" id="selectAll_mentee"></th>
                                         <th>#</th>
                                         <th>Name</th>
-                                        <th>Email</th>
                                         <th>Service</th>
                                         <th>Batch</th>
                                         <th>Cadre</th>
