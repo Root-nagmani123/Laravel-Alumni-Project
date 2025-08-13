@@ -23,6 +23,14 @@
                         <input type="file" class="form-control" id="forum_image" name="forum_image" accept="image/*" required>
                     </div>
 
+                    <!-- Description -->
+                    <div class="mb-3">
+                        <label for="forum_description" class="form-label">Description<span
+                                class="required text-danger ">*</span></label>
+                        <textarea class="form-control" id="forum_description" name="forum_description" rows="3"
+                            required></textarea>
+                    </div>
+
                     <!-- End Date -->
                     <div class="mb-3">
                         <label for="forum_end_date" class="form-label">End Date<span
