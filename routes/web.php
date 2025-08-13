@@ -597,3 +597,25 @@ Route::get('/find-active-guard', function() {
         'session_keys' => array_keys($sessionData),
     ]);
 })->middleware('web');
+
+// routes/web.php में add करें (channels.php के अलावा)
+Route::post('/manual-broadcasting-auth', function(\Illuminate\Http\Request $request) {
+    \Log::info('Manual broadcasting auth called', [
+        'request_data' => $request->all(),
+        'headers' => $request->headers->all()
+    ]);
+    
+    if (!auth('user')->check()) {
+        \Log::error('User guard auth failed');
+        return response()->json(['error' => 'User not authenticated'], 401);
+    }
+    
+    $user = auth('user')->user();
+    \Log::info('User authenticated', ['user_id' => $user->id]);
+    
+    return response()->json([
+        'success' => true,
+        'auth' => 'manual-auth-token',
+        'user_id' => $user->id
+    ]);
+})->middleware('web');
