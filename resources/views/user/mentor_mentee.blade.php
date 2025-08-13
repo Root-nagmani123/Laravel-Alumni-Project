@@ -509,6 +509,17 @@ $(document).ready(function() {
                 cadre: $('.cadre[data-id="' + tabId + '"]').val(),
                 sector: $('.sector[data-id="' + tabId + '"]').val()
             },
+             beforeSend: function () {
+            $('#mentorTableBody').html(`
+                <tr>
+                    <td colspan="8" class="text-center">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </td>
+                </tr>
+            `);
+        },
             success: function(response) {
                 $('#mentorTableBody').html(response);
             },
@@ -541,6 +552,18 @@ $(document).ready(function() {
                 cadre: $('.cadre[data-id="' + tabId + '"]').val(),
                 sector: $('.sector[data-id="' + tabId + '"]').val()
             },
+             beforeSend: function () {
+            // Table body में loader डालना
+            $('#menteeTableBody').html(`
+                <tr>
+                    <td colspan="8" class="text-center">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </td>
+                </tr>
+            `);
+        },
             success: function(response) {
                 $('#menteeTableBody').html(response);
             },
