@@ -492,25 +492,3 @@ Route::middleware(['auth:user'])->group(function () {
 
 Route::post('/otp/send', [OtpLoginController::class, 'sendOtp'])->name('otp.send');
 Route::post('/otp/verify', [OtpLoginController::class, 'verifyOtp'])->name('otp.verify');
-
-// routes/web.php में
-Route::get('/broadcasting/auth', function(\Illuminate\Http\Request $request) {
-    // Manual auth check
-    if (!auth()->check()) {
-        return response()->json(['error' => 'Unauthorized'], 401);
-    }
-    
-    $socketId = $request->socket_id;
-    $channel = $request->channel_name;
-    
-    // Channel name को parse करें
-    if (strpos($channel, 'private-user.') === 0) {
-        $userId = str_replace('private-user.', '', $channel);
-        if ((int)auth()->id() === (int)$userId) {
-            $auth = auth()->user()->createToken($socketId)->plainTextToken ?? hash('sha256', $socketId . ':' . $channel);
-            return response()->json(['auth' => $auth]);
-        }
-    }
-    
-    return response()->json(['error' => 'Unauthorized'], 401);
-})->middleware(['web']);
