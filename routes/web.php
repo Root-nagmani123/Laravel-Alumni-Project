@@ -548,3 +548,23 @@ Route::get('/debug-user', function() {
         ]);
     }
 })->middleware('web');
+
+// routes/web.php में add करें
+Route::get('/debug-all-guards', function() {
+    $guards = ['web', 'admin', 'user', 'member'];
+    $result = [];
+    
+    foreach ($guards as $guard) {
+        $result[$guard] = [
+            'check' => auth($guard)->check(),
+            'user' => auth($guard)->user(),
+            'id' => auth($guard)->id(),
+        ];
+    }
+    
+    return response()->json([
+        'current_guard' => config('auth.defaults.guard'),
+        'all_guards' => $result,
+        'session_data' => session()->all(),
+    ]);
+})->middleware('web');
