@@ -503,4 +503,4 @@ Route::post('/custom-broadcasting-auth', function(\Illuminate\Http\Request $requ
     return response()->json([
         'auth' => hash('sha256', $request->socket_id . ':' . $request->channel_name . ':bypass')
     ]);
-}); 
+})->withoutMiddleware(\Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class); 
