@@ -34,20 +34,66 @@ class ForumController extends Controller
     
     public function show($id)
     {
-        // $user = $this->forumService->getCurrentUser();
-        
-        // Get forum details
-        $forum = $this->forumService->getForumById($id);
-        // print_r($forum);die;
-       
-        // Get topics for this forum
-        $topics = $this->forumService->getForumTopics($id);
-            //  print_r($topics);die;
-        // Get forums data for left sidebar
-        $forums = $this->forumService->getForumsForSidebar();
-       
+     $forum = DB::table('forums')
+            ->join('members', 'members.id', '=', 'forums.created_by')
+            ->select(
+                'forums.id',
+                'forums.name',
+                'forums.description',
+                'forums.images',
+                'forums.created_at',
+                'forums.end_date',
+                'forums.created_by',
+                'members.name as member_name',
+                'members.profile_pic as member_profile_image'
+            )
+            ->where('forums.id', $id)
+            ->first();
+
+        if (!$forum) {
+            abort(404, 'Forum not found');
+        }
+
+        // Likes list with member details
+        $forum->likes = DB::table('forum_like')
+            ->join('members', 'members.id', '=', 'forum_like.user_id')
+            ->select(
+                'forum_like.id',
+                'forum_like.user_id',
+                'members.name as member_name',
+                'members.profile_pic',
+                'forum_like.created_at'
+            )
+            ->where('forum_like.forum_id', $id)
+            ->get();
+
+        // Comments list with member details
+        $forum->comments = DB::table('forum_comment')
+            ->join('members', 'members.id', '=', 'forum_comment.user_id')
+            ->select(
+                'forum_comment.id',
+                'forum_comment.user_id',
+                'members.name as member_name',
+                'members.profile_pic',
+                'forum_comment.comment',
+                'forum_comment.created_at'
+            )
+            ->where('forum_comment.forum_id', $id)
+            ->orderBy('forum_comment.created_at', 'asc')
+            ->get();
+
+		// Is forum liked by current user
+		$userId = Auth::guard('user')->id();
+		$forum->has_liked = false;
+		if ($userId) {
+			$forum->has_liked = DB::table('forum_like')
+				->where('forum_id', $id)
+				->where('user_id', $userId)
+				->exists();
+		}
+
             
-        return view('user.forum-detail', compact('forum', 'topics', 'forums'));
+        return view('user.forum-detail', compact('forum'));
     }
 
     public function like($id)
@@ -75,6 +121,181 @@ class ForumController extends Controller
 
         return back();
     }
+	/**
+	 * Forum-level like (not topic like)
+	 */
+	public function likeForum(Request $request, $id)
+	{
+		$userId = Auth::guard('user')->id();
+		if (!$userId) {
+			return $request->expectsJson()
+				? response()->json(['success' => false, 'message' => 'Unauthorized'], 401)
+				: back();
+		}
+
+		$already = DB::table('forum_like')
+			->where('forum_id', $id)
+			->where('user_id', $userId)
+			->exists();
+
+		if (!$already) {
+			DB::table('forum_like')->insert([
+				'forum_id' => $id,
+				'user_id' => $userId,
+				'created_at' => now(),
+				'updated_at' => now(),
+			]);
+		}
+
+		$likeCount = DB::table('forum_like')->where('forum_id', $id)->count();
+
+		if ($request->expectsJson()) {
+			return response()->json([
+				'success' => true,
+				'status' => 'liked',
+				'like_count' => $likeCount,
+			]);
+		}
+
+		return back();
+	}
+
+	/**
+	 * Forum-level unlike (not topic unlike)
+	 */
+	public function unlikeForum(Request $request, $id)
+	{
+		$userId = Auth::guard('user')->id();
+		if ($userId) {
+			DB::table('forum_like')
+				->where('forum_id', $id)
+				->where('user_id', $userId)
+				->delete();
+		}
+
+		$likeCount = DB::table('forum_like')->where('forum_id', $id)->count();
+
+		if ($request->expectsJson()) {
+			return response()->json([
+				'success' => true,
+				'status' => 'unliked',
+				'like_count' => $likeCount,
+			]);
+		}
+
+		return back();
+	}
+
+	/**
+	 * Forum-level comment create (not topic comment)
+	 */
+	public function commentForum(Request $request, $id)
+	{
+		$request->validate([
+			'comment' => 'required|string',
+		]);
+		$userId = Auth::guard('user')->id();
+		if (!$userId) {
+			return $request->expectsJson()
+				? response()->json(['success' => false, 'message' => 'Unauthorized'], 401)
+				: back();
+		}
+
+		$insertedId = DB::table('forum_comment')->insertGetId([
+			'forum_id' => $id,
+			'user_id' => $userId,
+			'comment' => $request->input('comment'),
+			'created_at' => now(),
+			'updated_at' => now(),
+		]);
+
+		$comment = DB::table('forum_comment')
+			->join('members', 'members.id', '=', 'forum_comment.user_id')
+			->select(
+				'forum_comment.id',
+				'forum_comment.user_id',
+				'members.name as member_name',
+				'members.profile_pic',
+				'forum_comment.comment',
+				'forum_comment.created_at'
+			)
+			->where('forum_comment.id', $insertedId)
+			->first();
+
+		$commentCount = DB::table('forum_comment')->where('forum_id', $id)->count();
+
+		if ($request->expectsJson()) {
+			return response()->json([
+				'success' => true,
+				'comment' => $comment,
+				'comment_count' => $commentCount,
+			]);
+		}
+
+		return back();
+	}
+
+	/**
+	 * Update a forum-level comment (owner only)
+	 */
+	public function updateForumComment(Request $request, $commentId)
+	{
+		$request->validate([
+			'comment' => 'required|string',
+		]);
+		$userId = Auth::guard('user')->id();
+		$record = DB::table('forum_comment')->where('id', $commentId)->first();
+		if (!$record) {
+			return $request->expectsJson()
+				? response()->json(['success' => false, 'message' => 'Not found'], 404)
+				: back();
+		}
+		if ((int)$record->user_id !== (int)$userId) {
+			return $request->expectsJson()
+				? response()->json(['success' => false, 'message' => 'Forbidden'], 403)
+				: back();
+		}
+		DB::table('forum_comment')->where('id', $commentId)->update([
+			'comment' => $request->input('comment'),
+			'updated_at' => now(),
+		]);
+		$updated = DB::table('forum_comment')->where('id', $commentId)->first();
+		if ($request->expectsJson()) {
+			return response()->json([
+				'success' => true,
+				'comment' => $updated,
+			]);
+		}
+		return back();
+	}
+
+	/**
+	 * Delete a forum-level comment (owner only)
+	 */
+	public function deleteForumComment(Request $request, $commentId)
+	{
+		$userId = Auth::guard('user')->id();
+		$record = DB::table('forum_comment')->where('id', $commentId)->first();
+		if (!$record) {
+			return $request->expectsJson()
+				? response()->json(['success' => false, 'message' => 'Not found'], 404)
+				: back();
+		}
+		if ((int)$record->user_id !== (int)$userId) {
+			return $request->expectsJson()
+				? response()->json(['success' => false, 'message' => 'Forbidden'], 403)
+				: back();
+		}
+		DB::table('forum_comment')->where('id', $commentId)->delete();
+		$commentCount = DB::table('forum_comment')->where('forum_id', $record->forum_id)->count();
+		if ($request->expectsJson()) {
+			return response()->json([
+				'success' => true,
+				'comment_count' => $commentCount,
+			]);
+		}
+		return back();
+	}
     public function member_search(Request $request)
     {
 

@@ -158,7 +158,7 @@
                                                     </h6>
                                                     <p class="mb-0 small">
                                                         <i class="bi bi-calendar-check pe-1"></i>
-                                                        {{ \Carbon\Carbon::parse($event->start_datetime)->format('D, M d, Y \a\t h:i A') }}
+                                                        {{ \Carbon\Carbon::parse($event->start_datetime)->format('d M Y') }}
                                                     </p>
                                                    <p class="small">
                                                     <i class="bi bi-geo-alt pe-1"></i>
@@ -246,7 +246,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                                     </h6>
                                                     <p class="mb-0 small">
                                                         <i class="bi bi-calendar-check pe-1"></i>
-                                                        {{ \Carbon\Carbon::parse($event->start_datetime)->format('D, M d, Y \a\t h:i A') }}
+                                                        {{ \Carbon\Carbon::parse($event->start_datetime)->format('d M Y') }}
                                                     </p>
                                                     <p class="small">
                                                         <i class="bi bi-geo-alt pe-1"></i>
@@ -290,7 +290,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                                     </h6>
                                                     <p class="mb-0 small">
                                                         <i class="bi bi-calendar-check pe-1"></i>
-                                                        {{ \Carbon\Carbon::parse($event->start_datetime)->format('D, M d, Y \a\t h:i A') }}
+                                                        {{ \Carbon\Carbon::parse($event->start_datetime)->format('d M Y') }}
                                                     </p>
                                                     <p class="small">
                                                         <i class="bi bi-geo-alt pe-1"></i>
@@ -329,7 +329,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                                     </h6>
                                                     <p class="mb-0 small">
                                                         <i class="bi bi-calendar-check pe-1"></i>
-                                                        {{ \Carbon\Carbon::parse($event->start_datetime)->format('D, M d, Y \a\t h:i A') }}
+                                                        {{ \Carbon\Carbon::parse($event->start_datetime)->format('d M Y') }}
                                                     </p>
                                                     <p class="small">
                                                         <i class="bi bi-geo-alt pe-1"></i>

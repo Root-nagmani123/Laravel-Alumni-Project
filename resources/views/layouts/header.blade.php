@@ -9,8 +9,6 @@ Header START -->
 .dropdown-menu {
     z-index: 1100 !important;
 }
-
-
 </style>
 <header class="navbar-light fixed-top header-static bg-mode">
 
@@ -181,7 +179,10 @@ Header START -->
                                                 }
                                             @endphp
                                           <div class="notification-card bg-white border rounded shadow-sm p-3 mb-3"
-     style="min-width: 300px; max-width: 340px; scroll-snap-align: start;" data-created-at="{{ $notification->created_at }}">          
+     style="min-width: 300px; max-width: 340px; scroll-snap-align: start;"
+     data-id="{{ $notification->id }}"
+     data-created-at="{{ $notification->created_at }}">
+            
             <!-- Avatar + Content -->
             <div class="d-flex align-items-start">
                 <!-- Avatar -->
