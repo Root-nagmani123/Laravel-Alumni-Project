@@ -1,4 +1,3 @@
-Header START -->
 <style>
     .notification-item:hover {
     background-color: #f8f9fa; /* Light gray on hover */
@@ -132,6 +131,65 @@ Header START -->
                                 <ul class="list-group list-group-flush list-unstyled p-2">
                                         @if(isset($notifications) && $notifications->count() > 0)
                                         @php
+                                        $latestNotifications = $notifications->sortByDesc('created_at');
+                                        @endphp
+                                        @foreach($latestNotifications as $notification)
+                                        <!-- Notif item -->
+                                        <li>
+                                            @php
+                    
+                                                $notificationUrl = '#';
+                                                // Debug: Log notification data
+                                                if (isset($notification->source_id) && isset($notification->source_type)) {
+                                                    switch ($notification->source_type) {
+                                                        case 'event':
+                                                            $notificationUrl = route('user.allevents');
+                                                            break;
+                                                        case 'broadcast':
+                                                            $notificationUrl = route('user.broadcastDetails', ['id' => $notification->source_id]);
+                                                            break;
+                                                        case 'forum':
+                                                                $notificationUrl = route('user.forum.show', ['id' => $notification->source_id]);
+                                                                break;
+                                                        case 'profile':
+                                                            $notificationUrl = url('/profile/' . $notification->source_id);
+                                                            break;
+                                                        case 'post':
+                                                            $notificationUrl = url('user/group-post/' . $notification->source_id);
+                                                            break;
+                                                        case 'group':
+                                                            $notificationUrl = route('user.group-post', ['id' => $notification->source_id]);
+                                                            break;
+                                                        case 'birthday':
+                                                            $notificationUrl = route('user.profile.data', ['id' => $notification->source_id]);
+                                                            break;
+                                                        default:
+                                                            $notificationUrl = '#';
+                                                    }
+                                                }
+                                                // Debug: Log the generated URL
+                                                if (app()->environment('local')) {
+                                                    \Log::info('Notification URL generated:', [
+                                                        'source_id' => $notification->source_id ?? 'null',
+                                                        'source_type' => $notification->source_type ?? 'null',
+                                                        'url' => $notificationUrl
+                                                    ]);
+                                                }
+                                            @endphp
+                                          <div class="notification-card bg-white border rounded shadow-sm p-3 mb-3"
+     style="min-width: 300px; max-width: 340px; scroll-snap-align: start;"
+     data-id="{{ $notification->id }}"
+     data-created-at="{{ $notification->created_at }}">
+            
+            <!-- Avatar + Content -->
+            <div class="d-flex align-items-start">
+                <!-- Avatar -->
+                <div class="flex-shrink-0">
+                    <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center"
+                         style="width: 40px; height: 40px;">
+                        <strong>{{ strtoupper(substr($notification->title ?? 'B', 0, 1)) }}</strong>
+                    </div>
+                </div>
 
                 <!-- Message -->
                 <div class="flex-grow-1 ms-3 notification-item mb-2"
