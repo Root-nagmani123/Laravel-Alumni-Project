@@ -29,7 +29,7 @@ $user_id = auth()->guard('user')->user()->id;
 $members = DB::table('members')
     ->select(
         DB::raw('TRIM(Service) as Service'),
-        DB::raw('GROUP_CONCAT(DISTINCT TRIM(batch) ORDER BY batch ASC SEPARATOR ",") as batches'),
+          DB::raw('GROUP_CONCAT(DISTINCT TRIM(batch) ORDER BY batch ASC SEPARATOR ",") as batches'),
         DB::raw('GROUP_CONCAT(DISTINCT TRIM(cader) ORDER BY cader ASC SEPARATOR ",") as cader_list'),
         DB::raw('GROUP_CONCAT(DISTINCT TRIM(sector) ORDER BY sector ASC SEPARATOR ",") as sector_list')
     )
@@ -347,6 +347,7 @@ function updateRequest(Request $request) : \Illuminate\Http\RedirectResponse {
 }
 function filterMentorsData(Request $request) {
      $query = DB::table('members');
+     $query->select('id', 'name', 'email', 'cader', 'batch', 'sector', 'Service');
 
     if ($request->filled('service')) {
         $query->whereIn('Service', $request->service);

@@ -511,7 +511,16 @@ $(document).ready(function() {
             },
             success: function(response) {
                 $('#mentorTableBody').html(response);
-            }
+            },
+            error: function () {
+            $('#mentorTableBody').html(`
+                <tr>
+                    <td colspan="8" class="text-center text-danger">
+                        Error loading data.
+                    </td>
+                </tr>
+            `);
+        }
         });
     });
 
@@ -534,7 +543,16 @@ $(document).ready(function() {
             },
             success: function(response) {
                 $('#menteeTableBody').html(response);
-            }
+            },
+             error: function () {
+            $('#menteeTableBody').html(`
+                <tr>
+                    <td colspan="8" class="text-center text-danger">
+                        Error loading data.
+                    </td>
+                </tr>
+            `);
+        }
         });
     });
 
