@@ -15,20 +15,41 @@ window.Echo = new Echo({
 
     authorizer: (channel, options) => {
         return {
+            // authorize: (socketId, callback) => {
+            //     axios.post('/custom-broadcasting-auth', {
+            //         socket_id: socketId,
+            //         channel_name: channel.name
+            //     }, {
+            //         withCredentials: true,
+            //         headers: {
+            //             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            //         }
+            //     })
+            //     .then(response => {
+            //         callback(false, response.data);
+            //     })
+            //     .catch(error => {
+            //         callback(true, error);
+            //     });
+            // }
             authorize: (socketId, callback) => {
-                axios.post('/broadcasting/auth', {
-                    socket_id: socketId,
-                    channel_name: channel.name
-                }, {
-                    withCredentials: true,
+                fetch('/custom-broadcasting-auth', {  
+                    method: 'POST',
                     headers: {
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                    }
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        socket_id: socketId,
+                        channel_name: channel.name
+                    })
                 })
-                .then(response => {
-                    callback(false, response.data);
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Auth success:', data);
+                    callback(false, data);
                 })
                 .catch(error => {
+                    console.error('Auth failed:', error);
                     callback(true, error);
                 });
             }
