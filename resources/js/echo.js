@@ -12,6 +12,25 @@ window.Echo = new Echo({
     forceTLS: (import.meta.env.VITE_REVERB_SCHEME ?? 'https') === 'https',
     enabledTransports: ['ws', 'wss'],
     withCredentials: true,
+
+    authorizer: (channel, options) => {
+        return {
+            authorize: (socketId, callback) => {
+                axios.post('/broadcasting/auth', {
+                    socket_id: socketId,
+                    channel_name: channel.name
+                }, {
+                    withCredentials: true
+                })
+                .then(response => {
+                    callback(false, response.data);
+                })
+                .catch(error => {
+                    callback(true, error);
+                });
+            }
+        };
+    }
 });
 
 // console.log('Echo initialized:', window.Echo);
