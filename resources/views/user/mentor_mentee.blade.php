@@ -150,7 +150,6 @@
                                         <th style="background: #f8f9fa;"><input type="checkbox" id="selectAll"></th>
                                         <th style="background: #f8f9fa;">#</th>
                                         <th style="background: #f8f9fa;">Name</th>
-                                        <th style="background: #f8f9fa;">Email</th>
                                         <th style="background: #f8f9fa;">Service</th>
                                         <th style="background: #f8f9fa;">Batch</th>
                                         <th style="background: #f8f9fa;">Cadre</th>
@@ -266,7 +265,6 @@
                                         <th><input type="checkbox" id="selectAll_mentee"></th>
                                         <th>#</th>
                                         <th>Name</th>
-                                        <th>Email</th>
                                         <th>Service</th>
                                         <th>Batch</th>
                                         <th>Cadre</th>
@@ -452,7 +450,7 @@
                         $hasMentor = false;
                         @endphp
 
-                        @foreach (array_merge($mentor_requests->toArray(), $mentor_connections->toArray()) as $mentor)
+                        @foreach ($mentee_connections->toArray() as $mentor)
                         @if ($mentor->status == 1)
                         <li class="list-group-item d-flex justify-content-between">
                             <span>{{ $mentor->name }}</span>
@@ -473,7 +471,7 @@
                         $hasMentee = false;
                         @endphp
 
-                        @foreach (array_merge($mentee_requests->toArray(), $mentee_connections->toArray()) as $mentee)
+                        @foreach ($mentor_connections->toArray() as $mentee)
                         @if ($mentee->status == 1)
                         <li class="list-group-item d-flex justify-content-between">
                             <span>{{ $mentee->name }}</span>
