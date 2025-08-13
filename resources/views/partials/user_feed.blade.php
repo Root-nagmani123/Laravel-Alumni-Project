@@ -93,7 +93,7 @@
             : asset('feed_assets/images/avatar/07.jpg');
 
         $displayName = $member->name ?? 'N/A';
-        $designation = $member->current_designation ?? 'N/A';
+        $designation = $member->Service ?? 'N/A';
         $profileLink = route('user.profile.data', ['id' => $member->id]);
 
     }

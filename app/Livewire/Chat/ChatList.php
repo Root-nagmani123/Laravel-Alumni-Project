@@ -43,7 +43,7 @@ class ChatList extends Component
                 ->where('is_read', 0)
                 ->update(['is_read' => 1]);
 
-            broadcast(new UnreadMessage(auth()->guard('user')->id(), $this->selectedChat, 0))->toOthers();
+            broadcast(new UnreadMessage(auth()->guard('user')->id(), $this->selectedChat, 0));
         }
         
         $this->selectedChat = $chatId;
@@ -59,7 +59,7 @@ class ChatList extends Component
             ->update(['is_read' => 1]);
 
         # Broadcast unread message count
-        broadcast(new UnreadMessage(auth()->guard('user')->id(), $this->selectedChat, 0))->toOthers();
+        broadcast(new UnreadMessage(auth()->guard('user')->id(), $this->selectedChat, 0));
     }
 
     public function loadMessages()
@@ -150,6 +150,7 @@ class ChatList extends Component
     public function getUnreadMessagesCount()
     {
         return Message::where('receiver_id', $this->selectedChat)
+            ->where('sender_id', auth()->guard('user')->id())
             ->where('is_read', 0)
             ->count();
     }
