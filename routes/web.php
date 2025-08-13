@@ -492,3 +492,24 @@ Route::middleware(['auth:user'])->group(function () {
 
 Route::post('/otp/send', [OtpLoginController::class, 'sendOtp'])->name('otp.send');
 Route::post('/otp/verify', [OtpLoginController::class, 'verifyOtp'])->name('otp.verify');
+
+// routes/web.php में add करें
+Route::get('/debug-session', function() {
+    // Force session to start
+    session()->start();
+    session()->put('test', 'working');
+    session()->save();
+    
+    return response()->json([
+        'session_id' => session()->getId(),
+        'session_name' => config('session.cookie'),
+        'session_config' => [
+            'driver' => config('session.driver'),
+            'domain' => config('session.domain'),
+            'secure' => config('session.secure'),
+            'same_site' => config('session.same_site'),
+        ],
+        'auth_check' => auth()->check(),
+        'user_id' => auth()->id(),
+    ]);
+});
