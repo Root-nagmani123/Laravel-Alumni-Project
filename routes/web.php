@@ -568,3 +568,32 @@ Route::get('/debug-all-guards', function() {
         'session_data' => session()->all(),
     ]);
 })->middleware('web');
+
+
+// routes/web.php में
+Route::get('/find-active-guard', function() {
+    $sessionData = session()->all();
+    $activeGuard = null;
+    $userId = null;
+    
+    // Check for login session keys
+    foreach ($sessionData as $key => $value) {
+        if (strpos($key, 'login_') === 0 && strpos($key, '_59ba36addc2b2f9401580f014c7f58ea4e30989d') !== false) {
+            // Extract guard name from session key
+            $guardPart = str_replace(['login_', '_59ba36addc2b2f9401580f014c7f58ea4e30989d'], '', $key);
+            if (empty($guardPart)) {
+                $activeGuard = 'web'; // default guard
+            } else {
+                $activeGuard = $guardPart;
+            }
+            $userId = $value;
+            break;
+        }
+    }
+    
+    return response()->json([
+        'active_guard' => $activeGuard,
+        'user_id' => $userId,
+        'session_keys' => array_keys($sessionData),
+    ]);
+})->middleware('web');
