@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\Broadcast;
 
 
 // Correct middleware with user guard
-Broadcast::routes(['middleware' => ['web', 'auth:user']]);
+// Broadcast::routes(['middleware' => ['web', 'auth:user']]);
 
 // Channels without guards array - Laravel automatically uses the guard from routes
 Broadcast::channel('chat-channel.{userId}', function ($user, $userId) {
