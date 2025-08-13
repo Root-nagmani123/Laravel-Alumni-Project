@@ -61,7 +61,7 @@
                                     $user = Auth::guard('user')->user();
                                     $profileImage = $user->profile_pic
                                     ? asset('storage/' . $user->profile_pic)
-                                    : asset('feed_assets/images/avatar-1.png');
+                                    : asset('feed_assets/images/07.png');
 
                                     $displayName = $user->name ?? 'Guest User';
                                     $designation = $user->designation ?? 'Guest';
@@ -116,79 +116,235 @@
 
                 <!-- Main Question -->
                 <div class="d-flex align-items-center mb-3">
-    <img src="{{ asset('feed_assets/images/avatar/07.jpg') }}" 
-         class="rounded-circle me-3" 
-         alt="User" 
-         style="width:60px;">
+  <img src="{{ asset($forum->member_profile_image ?? 'feed_assets/images/avatar/07.jpg') }}" 
+                 class="rounded-circle me-3" 
+                 alt="User" 
+                 style="width:60px;">
     <div class="d-flex flex-column justify-content-center">
-        <h6 class="mb-0 fw-bold">Mrchtopherrr</h6>
-        <small class="text-muted">Aug 13, 2025</small>
+        <h6 class="mb-0 fw-bold">{{ $forum->member_name }}</h6>
+        <small class="text-muted">{{ \Carbon\Carbon::parse($forum->created_at)->format('d M, Y') }}
+</small>
     </div>
 </div>
 
+                <h4 class="fw-bold mb-3">{{ $forum->name }}</h4>
+                <p>{{ $forum->description }}</p>
 
-
-                <h4 class="fw-bold mb-3">How to free up space in C drive in Windows 10 or Windows 11?</h4>
-                <p>
-                    I have two budget PCs at my home and both of them only have 128 SSD. Now, the C drive is almost full
-                    and the devices are running very slow.
-                    I already deleted the large files from the computer and still need help to <strong>free up space in
-                        C drive</strong> in Windows 10 and Windows 11.
-                    Please share the steps on how to do this efficiently and quickly.
-                </p>
-
-                <!-- Actions -->
-                <div class="d-flex justify-content-end gap-3 text-muted small mt-3">
-                    <a href="#" class="text-decoration-none text-dark"><i class="bi bi-hand-thumbs-up me-1"></i>Like</a>
-                    <a href="#" class="text-decoration-none text-dark"><i class="bi bi-reply me-1"></i>Reply</a>
-                </div>
+                 <!-- Actions -->
+        <div class="d-flex justify-content-between align-items-center mt-3">
+            <div class="d-flex gap-3 text-muted small align-items-center">
+                <span class="d-inline-flex align-items-center gap-1">
+                    <i id="likeThumb" class="bi bi-hand-thumbs-up" style="cursor:pointer; {{ !empty($forum->has_liked) ? 'color:#dc3545' : '' }}"></i>
+                    <span id="likeCount">{{ $forum->likes->count() ?? 0 }}</span> Like
+                </span>
+                <span class="d-inline-flex align-items-center gap-1">
+                    <i class="bi bi-reply me-1"></i>
+                    <span id="commentCount">{{ $forum->comments->count() ?? 0 }}</span> Reply
+                </span>
+            </div>
+        </div>
 
                 <hr class="my-4">
 
-                <!-- Replies Header -->
-                <!-- <div class="d-flex justify-content-between align-items-center mb-3">
-                    <span class="fw-semibold">2 Replies</span>
-                    <div class="dropdown">
-                        <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button"
-                            data-bs-toggle="dropdown">
-                            Newest
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Newest</a></li>
-                            <li><a class="dropdown-item" href="#">Oldest</a></li>
-                        </ul>
-                    </div>
-                </div> -->
-
-                <!-- Reply 1 -->
-                <div class="accordion" id="repliesAccordion">
-
-                    <div class="accordion-item border-0">
-                        <h2 class="accordion-header" id="headingReply1">
-                            <button class="accordion-button collapsed bg-white px-0" type="button"
-                                data-bs-toggle="collapse" data-bs-target="#collapseReply1" aria-expanded="false"
-                                aria-controls="collapseReply1">
-                                <div class="d-flex align-items-center w-100">
-                                    <img src="https://via.placeholder.com/40" class="rounded-circle me-3" alt="User">
-                                    <div class="flex-grow-1">
-                                        <h6 class="mb-0 fw-bold">Stella-kei</h6>
-                                        <small class="text-muted">Aug 13, 2025</small>
-                                    </div>
-                                </div>
-                            </button>
-                        </h2>
-                        <div id="collapseReply1" class="accordion-collapse collapse" aria-labelledby="headingReply1"
-                            data-bs-parent="#repliesAccordion">
-                            <div class="accordion-body ps-5">
-                                Clearing your browser cache can help free up some space in C drive on Windows 11/10,
-                                especially if you browse a lot and store many temporary files.
-                                Here's how to clear cache in the most common browsers:
+                 <!-- Comments (simple list, no dropdown) -->
+                 @php $currentUserId = Auth::guard('user')->id(); @endphp
+                 <div id="commentsList" data-update-url-template="{{ route('user.forum.comment.update', ['commentId' => 'COMMENT_ID']) }}" data-delete-url-template="{{ route('user.forum.comment.delete', ['commentId' => 'COMMENT_ID']) }}">
+            @foreach($forum->comments as $index => $comment)
+                <div class="d-flex align-items-start gap-3 mb-3 comment-item" data-comment-id="{{ $comment->id }}">
+                    <img src="{{ asset($comment->profile_pic ?? 'feed_assets/images/avatar/07.jpg') }}" class="rounded-circle" alt="User" style="width:40px; height:40px; object-fit:cover;">
+                    <div class="flex-grow-1">
+                        <div class="d-flex align-items-center justify-content-between mb-1">
+                            <div class="d-flex align-items-center gap-2">
+                                <h6 class="mb-0 fw-bold">{{ $comment->member_name }}</h6>
+                                <small class="text-muted">{{ \Carbon\Carbon::parse($comment->created_at)->format('d M, Y') }}</small>
                             </div>
+                            @if((int)$currentUserId === (int)$comment->user_id)
+                            <div class="d-flex align-items-center gap-2">
+                                <button class="btn btn-sm btn-link text-secondary p-0 comment-edit" data-id="{{ $comment->id }}" title="Edit"><i class="bi bi-pencil-square"></i></button>
+                                <button class="btn btn-sm btn-link text-danger p-0 comment-delete" data-id="{{ $comment->id }}" title="Delete"><i class="bi bi-trash"></i></button>
+                            </div>
+                            @endif
                         </div>
+                        <div class="comment-text">{{ $comment->comment }}</div>
                     </div>
-
                 </div>
-            </div>
+            @endforeach
+        </div>
+
+        <!-- Add Comment -->
+        <div class="mt-4">
+            <form id="commentForm">
+                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                <div class="input-group">
+                    <input id="commentInput" type="text" name="comment" class="form-control" placeholder="Write a comment..." required>
+                    <button type="submit" class="btn btn-primary" title="Post"><i class="bi bi-send"></i></button>
+                </div>
+            </form>
+        </div>
+
+        <script>
+            (function(){
+                const likeThumb = document.getElementById('likeThumb');
+                const likeCountEl = document.getElementById('likeCount');
+                const commentCountEl = document.getElementById('commentCount');
+                const forumId = {{ $forum->id }};
+                const csrf = '{{ csrf_token() }}';
+                let liked = {{ !empty($forum->has_liked) ? 'true' : 'false' }};
+
+                function toggleThumbColor(isLiked){
+                    likeThumb.style.color = isLiked ? '#dc3545' : '';
+                }
+
+                likeThumb?.addEventListener('click', async function(){
+                    const url = liked ? '{{ route('user.forum.unlike', $forum->id) }}' : '{{ route('user.forum.like', $forum->id) }}';
+                    try{
+                        const res = await fetch(url, {
+                            method: 'POST',
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest',
+                                'X-CSRF-TOKEN': csrf,
+                                'Accept': 'application/json'
+                            },
+                            body: new URLSearchParams({})
+                        });
+                        if(!res.ok) throw new Error('Request failed');
+                        const data = await res.json();
+                        if(data && data.success){
+                            liked = data.status === 'liked';
+                            toggleThumbColor(liked);
+                            if(typeof data.like_count !== 'undefined'){
+                                likeCountEl.textContent = data.like_count;
+                            }
+                        }
+                    }catch(e){ console.error(e); }
+                });
+
+                const form = document.getElementById('commentForm');
+                const input = document.getElementById('commentInput');
+                const commentsListEl = document.getElementById('commentsList');
+                const updateTpl = commentsListEl?.getAttribute('data-update-url-template') || '';
+                const deleteTpl = commentsListEl?.getAttribute('data-delete-url-template') || '';
+                form?.addEventListener('submit', async function(ev){
+                    ev.preventDefault();
+                    const comment = input.value.trim();
+                    if(!comment) return;
+                    try{
+                        const res = await fetch('{{ route('user.forum.comment', $forum->id) }}', {
+                            method: 'POST',
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest',
+                                'X-CSRF-TOKEN': csrf,
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/x-www-form-urlencoded'
+                            },
+                            body: new URLSearchParams({ comment })
+                        });
+                        if(!res.ok) throw new Error('Request failed');
+                        const data = await res.json();
+                        if(data && data.success){
+                            // Prepend simple comment item
+                            const list = commentsListEl;
+                            const profile = data.comment?.profile_pic ? data.comment.profile_pic : 'feed_assets/images/avatar/07.jpg';
+                            const created = (new Date(data.comment.created_at)).toLocaleDateString(undefined, { month:'short', day:'2-digit', year:'numeric' });
+                            const item = document.createElement('div');
+                            item.className = 'd-flex align-items-start gap-3 mb-3 comment-item';
+                            item.dataset.commentId = data.comment.id;
+                            const imgSrc = profile.startsWith('http') ? profile : `{{ asset('') }}` + profile;
+                            item.innerHTML = `
+                                <img src="${imgSrc}" class="rounded-circle" alt="User" style="width:40px; height:40px; object-fit:cover;">
+                                <div class="flex-grow-1">
+                                    <div class="d-flex align-items-center justify-content-between mb-1">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <h6 class="mb-0 fw-bold">${data.comment.member_name ?? 'You'}</h6>
+                                            <small class="text-muted">${created}</small>
+                                        </div>
+                                        <div class="d-flex align-items-center gap-2">
+                                            <button class="btn btn-sm btn-link text-secondary p-0 comment-edit" data-id="${data.comment.id}" title="Edit"><i class="bi bi-pencil-square"></i></button>
+                                            <button class="btn btn-sm btn-link text-danger p-0 comment-delete" data-id="${data.comment.id}" title="Delete"><i class="bi bi-trash"></i></button>
+                                        </div>
+                                    </div>
+                                    <div class="comment-text">${data.comment.comment}</div>
+                                </div>`;
+                            list?.prepend(item);
+                            if(typeof data.comment_count !== 'undefined'){
+                                commentCountEl.textContent = data.comment_count;
+                            }
+                            input.value = '';
+                        }
+                    }catch(e){ console.error(e); }
+                });
+
+                // Edit/Delete handlers via event delegation
+                commentsListEl?.addEventListener('click', async function(ev){
+                    const editBtn = ev.target.closest('.comment-edit');
+                    const delBtn = ev.target.closest('.comment-delete');
+                    if(editBtn){
+                        const commentId = editBtn.dataset.id;
+                        const item = editBtn.closest('.comment-item');
+                        const textEl = item.querySelector('.comment-text');
+                        if(item.querySelector('.comment-editing')) return;
+                        const original = textEl.textContent.trim();
+                        const editor = document.createElement('div');
+                        editor.className = 'comment-editing mt-2';
+                        editor.innerHTML = `
+                            <div class="input-group input-group-sm">
+                                <input type="text" class="form-control" value="${original.replace(/"/g,'&quot;')}">
+                                <button class="btn btn-success btn-save" type="button" title="Save"><i class="bi bi-check2"></i></button>
+                                <button class="btn btn-outline-secondary btn-cancel" type="button" title="Cancel"><i class="bi bi-x"></i></button>
+                            </div>`;
+                        textEl.style.display = 'none';
+                        textEl.after(editor);
+                        const saveBtn = editor.querySelector('.btn-save');
+                        const cancelBtn = editor.querySelector('.btn-cancel');
+                        const inputEl = editor.querySelector('input');
+                        saveBtn.addEventListener('click', async function(){
+                            const newText = inputEl.value.trim();
+                            if(!newText) return;
+                            try{
+                                const url = updateTpl.replace('COMMENT_ID', commentId);
+                                const res = await fetch(url, {
+                                    method: 'PUT',
+                                    headers: { 'X-Requested-With': 'XMLHttpRequest', 'X-CSRF-TOKEN': csrf, 'Accept': 'application/json', 'Content-Type': 'application/x-www-form-urlencoded' },
+                                    body: new URLSearchParams({ comment: newText })
+                                });
+                                if(!res.ok) throw new Error('Update failed');
+                                const data = await res.json();
+                                if(data && data.success){
+                                    textEl.textContent = newText;
+                                }
+                            }catch(e){ console.error(e); }
+                            textEl.style.display = '';
+                            editor.remove();
+                        });
+                        cancelBtn.addEventListener('click', function(){
+                            textEl.style.display = '';
+                            editor.remove();
+                        });
+                    }
+                    if(delBtn){
+                        const commentId = delBtn.dataset.id;
+                        const item = delBtn.closest('.comment-item');
+                        if(!confirm('Delete this comment?')) return;
+                        try{
+                            const url = deleteTpl.replace('COMMENT_ID', commentId);
+                            const res = await fetch(url, {
+                                method: 'DELETE',
+                                headers: { 'X-Requested-With': 'XMLHttpRequest', 'X-CSRF-TOKEN': csrf, 'Accept': 'application/json' }
+                            });
+                            if(!res.ok) throw new Error('Delete failed');
+                            const data = await res.json();
+                            if(data && data.success){
+                                item.remove();
+                                if(typeof data.comment_count !== 'undefined'){
+                                    commentCountEl.textContent = data.comment_count;
+                                }
+                            }
+                        }catch(e){ console.error(e); }
+                    }
+                });
+            })();
+        </script>
+   </div>
 
         </div>
 

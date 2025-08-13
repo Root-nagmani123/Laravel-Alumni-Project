@@ -77,8 +77,8 @@
                                 <tr class="odd">
                                     <td>{{ $event->title }}</td>
                                     <td>{{ \Illuminate\Support\Str::words(strip_tags($event->description), 20, '...') }}</td>
-                                    <td>{{ $event->start_datetime }}</td>
-                                    <td>{{ $event->end_datetime }}</td>
+                                    <td>{{ $event->start_datetime ? \Carbon\Carbon::parse($event->start_datetime)->format('d M Y') : '' }}</td>
+                                    <td>{{ $event->end_datetime ? \Carbon\Carbon::parse($event->end_datetime)->format('d M Y') : '' }}</td>
                                     <td>
                                         @if($event->venue === 'online')
                                             Online : <a href="{{ $event->url }}" target="_blank">{{ $event->url }}</a>

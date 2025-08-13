@@ -26,25 +26,27 @@ class ForumService
      * @param int $userId
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function getUserForums()
-    {
-       $userId = Auth::guard('user')->id();
+  public function getUserForums()
+{
+    $userId = Auth::guard('user')->id();
 
-return DB::table('forums')
-  // ->leftJoin('forum_topics', 'forum_topics.forum_id', '=', 'forums.id')
-    ->select(
-        'forums.id',
-        'forums.name',
-        'forums.id as forum_id',
-        'forums.name',
-        'forums.images',
-        'forums.created_at',
-        'forums.end_date',
-        'forums.created_by'
-    )
-    ->where('forums.status', 1)
-     // ->where('forums_member.user_id', $userId)
-  ->where(function ($query) use ($userId) {
+    return DB::table('forums')
+        ->leftJoin('forum_like', 'forum_like.forum_id', '=', 'forums.id')
+        ->leftJoin('forum_comment', 'forum_comment.forum_id', '=', 'forums.id')
+        ->select(
+            'forums.id',
+            'forums.name',
+            'forums.id as forum_id',
+            'forums.description',
+            'forums.images',
+            'forums.created_at',
+            'forums.end_date',
+            'forums.created_by',
+            DB::raw('COUNT(DISTINCT forum_like.id) as like_count'),
+            DB::raw('COUNT(DISTINCT forum_comment.id) as comment_count')
+        )
+        ->where('forums.status', 1)
+        ->where(function ($query) use ($userId) {
             $query->where('forums.created_by', $userId)
                   ->orWhere(function ($q) use ($userId) {
                       $q->where('forums.created_by', '!=', $userId)
@@ -52,10 +54,19 @@ return DB::table('forums')
                         ->where('forums.end_date', '>=', now());
                   });
         })
-    ->orderBy('forums.id', 'desc')
-    ->get();
-
+        ->groupBy(
+            'forums.id',
+            'forums.name',
+            'forums.description',
+            'forums.images',
+            'forums.created_at',
+            'forums.end_date',
+            'forums.created_by'
+        )
+        ->orderBy('forums.id', 'desc')
+        ->get();
 }
+
 
 
     /**
@@ -67,20 +78,7 @@ return DB::table('forums')
     public function getForumById($forumId)
     {
         return Forum::findOrFail($forumId);
-    //      return DB::table('forums')
-    //     // ->leftJoin('forum_topics', 'forum_topics.forum_id', '=', 'forums.id')
-    //          ->select('forums.id', 'forums.name', 'forums.id as forum_id', 'forums.name', 'forums.images', 'forums.created_at','forums.end_date')
-    //         // ->where('forums_member.user_id', $userId)
-    //         ->where('forums.id', $forumId)
-    //         ->where('forums.status', 1)
-    //          ->whereNot('forums.end_date', null)
-    // ->where(function($query) {
-    //     $query->whereNull('forums.end_date')
-    //           ->orWhere('forums.end_date', '>=', now());
-    // })
-    //         ->orderBy('forums.id', 'desc')
-    //         ->where('forums.end_date', '>=', now())
-    //         ->get();
+
     }
 
     /**

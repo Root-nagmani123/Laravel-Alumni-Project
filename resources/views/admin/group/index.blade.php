@@ -84,11 +84,11 @@
                                      </div>
                                      </td>
                                    <!-- <td>{{ \Carbon\Carbon::parse($group->created_at)->timezone('Asia/Kolkata')->format('l, d M Y, h:i A') }}</td> -->
-                                   <td>{{ $group->created_at }}</td>
-                                   <td>
+                                   <td>{{ $group->created_at ? \Carbon\Carbon::parse($group->created_at)->format('d M Y') : '' }}</td>
+                                    <td>
                                         @if($group->end_date != null)
                                             <!-- {{ \Carbon\Carbon::parse($group->end_date)->timezone('Asia/Kolkata')->format('l, d M Y') }} -->
-                                            {{ $group->end_date }}
+                                            {{ \Carbon\Carbon::parse($group->end_date)->format('d M Y') }}
                                         @endif
                                     </td>
                                    <td>
