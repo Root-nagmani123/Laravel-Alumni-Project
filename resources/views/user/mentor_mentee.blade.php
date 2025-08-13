@@ -121,87 +121,155 @@
                             </div>
                         </div>
                     </div>
-                    <div class="table-responsive">
-                        <table class="bg-light table">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Name</th>
-                                    <th>Email</th>
-                                    <th>Service</th>
-                                    <th>Year</th>
-                                    <th>Cadre</th>
-                                    <th>Sector</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @if($members->isEmpty())
-                                <tr>
-                                    <td colspan="3" class="text-center">No Members Found</td>
-                                </tr>
-                                @else
-                                @foreach($members as $member)
-                                <tr>
-                                    <td>{{ $member->Year }}</td>
-                                    <td>{{ $member->Cadre }}</td>
-                                    <td>{{ $member->Sector }}</td>
-                                </tr>
-                                @endforeach
-                                @endif
-                            </tbody>
-                        </table>
-                    </div>
+                    <form action="" method="POST">
+                        <div class="table-responsive">
+                            <table class="bg-light table">
+                                <thead>
+                                    <tr>
+                                        <th><input type="checkbox" id="selectAll"></th>
+                                        <th>#</th>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Service</th>
+                                        <th>Batch</th>
+                                        <th>Cadre</th>
+                                        <th>Sector</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if($members->isEmpty())
+                                    <tr>
+                                        <td colspan="3" class="text-center">No Members Found</td>
+                                    </tr>
+                                    @else
+                                    @foreach($members as $member)
+                                    <tr>
+                                        <td> <input type="checkbox" class="row-checkbox"></td>
+                                        <td>{{ $member->Name }}</td>
+                                        <td>{{ $member->Email }}</td>
+                                        <td>{{ $member->Service }}</td>
+                                        <td>{{ $member->Batch }}</td>
+                                        <td>{{ $member->Cadre }}</td>
+                                        <td>{{ $member->Sector }}</td>
+                                    </tr>
+                                    @endforeach
+                                    @endif
+                                </tbody>
+                            </table>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit Mentor Request</button>
+                    </form>
                 </div>
 
                 <!-- Tab 2: Mentee Form -->
                 <div class="tab-pane fade" id="mentee" role="tabpanel">
-                    <form action="{{ route('user.mentor.want_become_mentee') }}" method="POST">
-                        @csrf
-                        <div class="mb-3">
-                            <label class="form-label">Service</label>
-                            <select class="form-select service" name="service" id="service" data-id="want_become_mentee"
-                                required>
-                                <option value=''>Select Service</option>
-                                @if($members->isEmpty())
-                                <option disabled>No Services Available</option>
-                                @else
-                                @foreach($members as $member)
-                                @if($member->Service != '')
-                                <option value="{{ $member->Service }}">{{ $member->Service }}</option>
-                                @endif
-                                @endforeach
-                                @endif
-                            </select>
+                    <div class="row">
+                        <div class="col-3">
+                            <label for="" class="form-label">Service</label>
+                            <div class="mb-3">
+                                <select name="service" id="service" class="form-select">
+                                    <option value=''>Select Service</option>
+                                    @if($members->isEmpty())
+                                    <option disabled>No Services Available</option>
+                                    @else
+                                    @foreach($members as $member)
+                                    @if($member->Service != '')
+                                    <option value="{{ $member->Service }}">{{ $member->Service }}</option>
+                                    @endif
+                                    @endforeach
+                                    @endif
+                                </select>
+                            </div>
                         </div>
-                        <div class="mb-3">
-                            <label class="form-label">Year</label>
-                            <select class="form-select year-select" name="year[]" multiple="multiple"
-                                data-id="want_become_mentee" required>
-                            </select>
+                        <div class="col-3">
+                            <label for="" class="form-label">Year</label>
+                            <div class="mb-3">
+                                <select name="year" id="year" class="form-select">
+                                    <option value=''>Select Year</option>
+                                    @if($members->isEmpty())
+                                    <option disabled>No Years Available</option>
+                                    @else
+                                    @foreach($members as $member)
+                                    @if($member->Year != '')
+                                    <option value="{{ $member->Year }}">{{ $member->Year }}</option>
+                                    @endif
+                                    @endforeach
+                                    @endif
+                                </select>
+                            </div>
                         </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Cadre</label>
-                            <select class="form-select select2 cadre" name="cadre[]" multiple="multiple"
-                                data-id="want_become_mentee" required>
-
-                            </select>
+                        <div class="col-3">
+                            <label for="" class="form-label">Cadre</label>
+                            <div class="mb-3">
+                                <select name="cadre" id="cadre" class="form-select">
+                                    <option value=''>Select Cadre</option>
+                                    @if($members->isEmpty())
+                                    <option disabled>No Cadres Available</option>
+                                    @else
+                                    @foreach($members as $member)
+                                    @if($member->Cadre != '')
+                                    <option value="{{ $member->Cadre }}">{{ $member->Cadre }}</option>
+                                    @endif
+                                    @endforeach
+                                    @endif
+                                </select>
+                            </div>
                         </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Sector</label>
-                            <select class="form-select select2 sector" name="sector[]" multiple="multiple"
-                                data-id="want_become_mentee" required>
-                            </select>
+                        <div class="col-3">
+                            <label for="" class="form-label">Sector</label>
+                            <div class="mb-3">
+                                <select name="sector" id="sector" class="form-select">
+                                    <option value=''>Select Sector</option>
+                                    @if($members->isEmpty())
+                                    <option disabled>No Sectors Available</option>
+                                    @else
+                                    @foreach($members as $member)
+                                    @if($member->Sector != '')
+                                    <option value="{{ $member->Sector }}">{{ $member->Sector }}</option>
+                                    @endif
+                                    @endforeach
+                                    @endif
+                                </select>
+                            </div>
                         </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Select Mentor</label>
-                            <select class="form-select select2 mentees" multiple="multiple" id="mentees"
-                                name="mentees[]" data-id="want_become_mentee" required>
-                            </select>
+                    </div>
+                    <form action="" method="POST">
+                        <div class="table-responsive">
+                            <table class="bg-light table">
+                                <thead>
+                                    <tr>
+                                        <th><input type="checkbox" id="selectAll"></th>
+                                        <th>#</th>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Service</th>
+                                        <th>Batch</th>
+                                        <th>Cadre</th>
+                                        <th>Sector</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if($members->isEmpty())
+                                    <tr>
+                                        <td colspan="3" class="text-center">No Members Found</td>
+                                    </tr>
+                                    @else
+                                    @foreach($members as $member)
+                                    <tr>
+                                        <td> <input type="checkbox" class="row-checkbox"></td>
+                                        <td>{{ $member->Name }}</td>
+                                        <td>{{ $member->Email }}</td>
+                                        <td>{{ $member->Service }}</td>
+                                        <td>{{ $member->Batch }}</td>
+                                        <td>{{ $member->Cadre }}</td>
+                                        <td>{{ $member->Sector }}</td>
+                                    </tr>
+                                    @endforeach
+                                    @endif
+                                </tbody>
+                            </table>
                         </div>
-                        <button type="submit" class="btn btn-success">Submit Mentee Request</button>
+                        <button type="submit" class="btn btn-primary">Submit Mentee Request</button>
                     </form>
                 </div>
 
@@ -364,47 +432,47 @@
 
                 <!-- Tab 4: Connections -->
                 <div class="tab-pane fade" id="connections" role="tabpanel">
-                     <h5>Mentors</h5>
-                            <ul class="list-group mb-3">
-                                @php
-                                    $hasMentor = false;
-                                @endphp
+                    <h5>Mentors</h5>
+                    <ul class="list-group mb-3">
+                        @php
+                        $hasMentor = false;
+                        @endphp
 
-                                @foreach (array_merge($mentor_requests->toArray(), $mentor_connections->toArray()) as $mentor)
-                                    @if ($mentor->status == 1)
-                                        <li class="list-group-item d-flex justify-content-between">
-                                            <span>{{ $mentor->name }}</span>
-                                            <small>{{ $mentor->cadre }} | {{ $mentor->batch }}</small>
-                                        </li>
-                                        @php $hasMentor = true; @endphp
-                                    @endif
-                                @endforeach
+                        @foreach (array_merge($mentor_requests->toArray(), $mentor_connections->toArray()) as $mentor)
+                        @if ($mentor->status == 1)
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span>{{ $mentor->name }}</span>
+                            <small>{{ $mentor->cadre }} | {{ $mentor->batch }}</small>
+                        </li>
+                        @php $hasMentor = true; @endphp
+                        @endif
+                        @endforeach
 
-                                @unless($hasMentor)
-                                    <li class="list-group-item text-center">No mentors added</li>
-                                @endunless
-                            </ul>
+                        @unless($hasMentor)
+                        <li class="list-group-item text-center">No mentors added</li>
+                        @endunless
+                    </ul>
 
                     <h5>Mentees</h5>
-                            <ul class="list-group">
-                                @php
-                                    $hasMentee = false;
-                                @endphp
+                    <ul class="list-group">
+                        @php
+                        $hasMentee = false;
+                        @endphp
 
-                                @foreach (array_merge($mentee_requests->toArray(), $mentee_connections->toArray()) as $mentee)
-                                    @if ($mentee->status == 1)
-                                        <li class="list-group-item d-flex justify-content-between">
-                                            <span>{{ $mentee->name }}</span>
-                                            <small>{{ $mentee->cadre }} | {{ $mentee->batch }}</small>
-                                        </li>
-                                        @php $hasMentee = true; @endphp
-                                    @endif
-                                @endforeach
+                        @foreach (array_merge($mentee_requests->toArray(), $mentee_connections->toArray()) as $mentee)
+                        @if ($mentee->status == 1)
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span>{{ $mentee->name }}</span>
+                            <small>{{ $mentee->cadre }} | {{ $mentee->batch }}</small>
+                        </li>
+                        @php $hasMentee = true; @endphp
+                        @endif
+                        @endforeach
 
-                                @unless($hasMentee)
-                                    <li class="list-group-item text-center">No mentees added</li>
-                                @endunless
-                            </ul>
+                        @unless($hasMentee)
+                        <li class="list-group-item text-center">No mentees added</li>
+                        @endunless
+                    </ul>
 
                 </div>
 
@@ -442,6 +510,16 @@ $(document).ready(function() {
     // Filter by Batch
     $('#batchFilter').on('change', function() {
         table.column(4).search(this.value).draw(); // 6 = Batch column index
+    });
+});
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+    const selectAll = document.getElementById("selectAll");
+    selectAll.addEventListener("change", function () {
+        document.querySelectorAll('.row-checkbox').forEach(cb => {
+            cb.checked = selectAll.checked;
+        });
     });
 });
 </script>
