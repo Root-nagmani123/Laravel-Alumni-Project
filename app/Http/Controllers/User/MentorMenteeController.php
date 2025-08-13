@@ -347,7 +347,7 @@ function updateRequest(Request $request) : \Illuminate\Http\RedirectResponse {
 }
 function filterMentorsData(Request $request) {
      $query = DB::table('members');
-     $query->select('id', 'name', 'email', 'cader', 'batch', 'sector', 'Service');
+     $query->select('id', 'name', 'cader', 'batch', 'sector', 'Service');
 
     if ($request->filled('service')) {
         $query->whereIn('Service', $request->service);
