@@ -63,6 +63,7 @@
                                     <th>S.No.</th>
                                     <th>Name</th>
                                     <!-- <th>Members</th> -->
+                                    <th>Topics</th>
                                     <th>Created At</th>
                                     <th>Forum End Date</th>
                                     <th>Action</th>
@@ -73,7 +74,7 @@
                             <tbody>
                                 @foreach($forums as $forum)
                                 <tr class="odd">
-                                    <td>{{ $loop->iteration }}</td>
+                                <td>{{ $loop->iteration }}</td>
                                     <td>{{ $forum->name }}</td>
                                     <!-- <td>
                                         <div class="d-flex gap-2">
