@@ -37,9 +37,11 @@ $members = DB::table(DB::raw("(
 ->select(
     'service as Service',
     DB::raw("GROUP_CONCAT(DISTINCT batch ORDER BY CAST(batch AS UNSIGNED) SEPARATOR ',') AS batches"),
-    DB::raw("GROUP_CONCAT(DISTINCT cader ORDER BY cader SEPARATOR ',') AS cader_list"),
-    DB::raw("GROUP_CONCAT(DISTINCT sector ORDER BY sector SEPARATOR ',') AS sector_list")
+    DB::raw("GROUP_CONCAT(DISTINCT NULLIF(cader,'NA') ORDER BY cader SEPARATOR ',') AS cader_list"),
+    DB::raw("GROUP_CONCAT(DISTINCT NULLIF(sector,'NA') ORDER BY sector SEPARATOR ',') AS sector_list")
 )
+->whereNotNull('service')
+->where('service', '!=', '')
 ->groupBy('service')
 ->orderBy('service', 'ASC')
 ->get();
