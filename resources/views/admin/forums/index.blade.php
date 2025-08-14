@@ -74,7 +74,7 @@
                             <tbody>
                                 @foreach($forums as $forum)
                                 <tr class="odd">
-                                    <td>{{ $loop->iteration }}</td>
+                                <td>{{ $loop->iteration }}</td>
                                     <td>{{ $forum->name }}</td>
                                     <!-- <td>
                                         <div class="d-flex gap-2">

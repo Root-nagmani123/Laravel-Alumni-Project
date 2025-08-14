@@ -202,6 +202,7 @@ Route::prefix('user')->name('user.')->group(function () {
         Route::get('user/forum', [MemberForumController::class, 'index'])->name('forum');
         Route::post('user/forum/activate', [MemberForumController::class, 'activateForum'])->name('forum.activate');
         Route::get('user/forum/{id}', [MemberForumController::class, 'show'])->name('forum.show');
+        Route::put('user/forum/{id}', [MemberForumController::class, 'updateForum'])->name('forum.update');
         // Forum-level like/unlike/comment
         Route::post('user/forum/{id}/like', [MemberForumController::class, 'likeForum'])->name('forum.like');
         Route::post('user/forum/{id}/unlike', [MemberForumController::class, 'unlikeForum'])->name('forum.unlike');

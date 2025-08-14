@@ -12,15 +12,90 @@
     <link rel="shortcut icon" type="image/png" href="{{ asset('admin_assets/images/logos/favicon.ico') }}">
     <title>User Login - Alumni | Lal Bahadur Shastri National Academy of Administration</title>
 
-    <!--Google font-->
-    <link href="../../css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
-    <link href="../../css2-1?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-
     <!-- Theme css -->
     <!-- Add CSRF token meta -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link id="change-link" rel="stylesheet" type="text/css" href="{{asset('user_assets/css/style.css')}}">
     <style>
+    body {
+        background-color: #fff;
+        color: #af2910;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    .login-card {
+        background: #af2910;
+        border-radius: 0.75rem;
+        padding: 2rem;
+        text-align: center;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        transition: transform 0.2s;
+        color: #fff;
+    }
+
+    .login-card:hover {
+        transform: translateY(-3px);
+    }
+
+    .login-card button {
+        min-width: 180px;
+    }
+
+    .or-divider {
+        font-weight: 500;
+        margin: 1.5rem 0;
+        color: #ccc;
+    }
+
+    .img-section img {
+        max-width: 100%;
+        border-radius: 0.75rem;
+    }
+
+    .marquee-container {
+        height: 100%;
+    }
+
+    .marquee-text {
+        white-space: nowrap;
+        animation: scrollMarquee 20s linear infinite;
+    }
+
+    .marquee-container:hover .marquee-text {
+        animation-play-state: paused;
+    }
+
+    @keyframes scrollMarquee {
+        0% {
+            left: 100%;
+        }
+
+        100% {
+            left: -100%;
+        }
+    }
+
+    .marquee-text {
+        white-space: nowrap;
+        display: inline-block;
+        animation: marquee 15s linear infinite;
+        color: #af2910;
+    }
+
+    .marquee-container:hover .marquee-text {
+        animation-play-state: paused;
+    }
+
+    @keyframes marquee {
+        0% {
+            transform: translateX(100%);
+        }
+
+        100% {
+            transform: translateX(-100%);
+        }
+    }
+
     .flip-card {
         position: relative;
         width: 100%;
@@ -135,6 +210,84 @@
         border-radius: 5px;
         text-align: center;
     }
+
+    /* Card style to match screenshot */
+    .card.login-card {
+        position: relative;
+        background: transparent;
+        border: 1px solid #af2910;
+        border-radius: 10px;
+        padding-top: 2.5rem !important;
+        text-align: center;
+        color: #af2910;
+        transition: all 0.3s ease-in-out;
+    }
+
+    .card.login-card:hover {
+        border-color: #af2910;
+        box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+    }
+
+    /* Floating label pill */
+    .card.login-card .card-label {
+        position: absolute;
+        top: -15px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #5a5a5a;
+        color: #fff;
+        padding: 3px 14px;
+        border-radius: 30px;
+        font-size: 0.85rem;
+        font-weight: 500;
+    }
+
+    /* Inside content link */
+    .card.login-card .login-form2 p {
+        color: #af2910;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 1rem;
+    }
+
+    .card.login-card .login-form2 p:hover {
+        color: #004a93;
+    }
+    </style>
+    <style>
+    body {
+        background: url('your-bg-image.jpg') no-repeat center center;
+        background-size: cover;
+    }
+
+    .login-card {
+        background-color: rgba(255, 255, 255, 0.9);
+        border-radius: 10px;
+        padding: 20px;
+        text-align: center;
+        transition: 0.3s;
+    }
+
+    .login-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .card-label {
+        font-weight: 500;
+        margin-bottom: 5px;
+    }
+
+    .btn-custom {
+        background-color: #a6261f;
+        color: #fff;
+        font-weight: bold;
+    }
+
+    .btn-custom:hover {
+        background-color: #8b201a;
+        color: #fff;
+    }
     </style>
 </head>
 
@@ -147,150 +300,58 @@
         </div>
     </div>
 
+    <div class="container-fluid">
+      <div class="row">
+    <!-- Left Section -->
+    <div class="col-lg-4 p-5 d-flex flex-column justify-content-center">
+        <!-- Logo -->
+        <div class="logo-sec text-center mb-4">
+            <a href="#!"
+               class="d-flex align-items-center gap-3 text-decoration-none justify-content-center flex-wrap">
+                <img src="{{ asset('admin_assets/images/logos/lbsnaa_logo.jpg') }}" alt="LBSNAA Logo"
+                     style="height: 60px; object-fit: contain;">
+                <div class="d-flex flex-column text-start">
+                    <span style="color: #000;font-weight: bold;font-size: 24px;">Alumni</span>
+                    <span style="font-size: 16px; font-weight: 500;color: #af2910;">
+                        Lal Bahadur Shastri National Academy of Administration
+                    </span>
+                </div>
+            </a>
+        </div>
 
-    <!-- Registration Modal -->
-    <div class="modal fade" id="registrationModal" tabindex="-1" aria-labelledby="registrationModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content">
-                <form id="registrationForm" method="POST" action="" enctype="multipart/form-data">
-                    @csrf
-                    <div class="modal-header">
-                        <div class="logo-sec text-center">
-                            <a href="#!"
-                                class="d-flex align-items-center gap-3 text-decoration-none justify-content-center flex-wrap">
-                                <!-- Logo Image -->
-                                <img src="{{ asset('admin_assets/images/logos/lbsnaa_logo.jpg') }}" alt="LBSNAA Logo"
-                                    style="height: 60px; object-fit: contain;">
+        <h1 class="fw-bold mb-3">ABOUT LBSNAA Alumni</h1>
+        <p>The LBSNAA Alumni Portal is an online platform to connect, collaborate, and provide
+            end-to-end services to Academy alumni.</p>
 
-                                <!-- Text Block -->
-                                <div class="d-flex flex-column text-start">
-                                    <span class="mb-0"
-                                        style="color: #000000;font-weight: bold;font-size: 24px;">Alumni</span>
-                                    <span style="font-size: 16px; font-weight: 500;color: #af2910;">
-                                        Lal Bahadur Shastri National Academy of Administration
-                                    </span>
-                                </div>
-                            </a>
-                                      
-                        </div>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        <hr>
-
-                    </div>
-                    <div class="modal-body">
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold">Name</label>
-                                <input type="text" name="name" class="form-control" required>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold">Email <span class="text-muted"
-                                        style="font-size:12px;">(.gov or .nic only)</span></label>
-                                <input type="email" name="email" class="form-control"
-                                    pattern="^[^@\s]+@(?:[^@\s]+\.)?(gov|nic)\.in$" required>
-                                <div class="form-text text-danger" id="emailMsg" style="display:none;">Only .gov.in or
-                                    .nic.in email IDs are allowed.</div>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold">Mobile Number</label>
-                                <input type="text" name="mobile" class="form-control" pattern="^[6-9]\d{9}$"
-                                    maxlength="10" required>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold">Service</label>
-                                <input type="text" name="service" class="form-control" required>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold">Batch</label>
-                                <input type="text" name="batch" class="form-control" required>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold">Cadre <span
-                                        class="text-muted">(Optional)</span></label>
-                                <input type="text" name="cadre" class="form-control">
-                            </div>
-                            <div class="col-md-12">
-                                <label class="form-label fw-bold">Course Attended in LBSNAA</label>
-                                <input type="text" name="course_attended" class="form-control" required>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold">Upload Photo</label>
-                                <input type="file" name="photo" class="form-control" accept="image/*" required>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold">Upload Govt. ID</label>
-                                <input type="file" name="govt_id" class="form-control" accept="image/*,.pdf" required>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Register</button>
-                    </div>
-                </form>
+        <!-- Login Buttons -->
+        <div class="row mt-5">
+            <div class="col-sm-5 col-8 mb-2 p-0">
+                <div class="card login-card p-3">
+                    <a href="#" class="text-decoration-none open-panel" data-panel="ldap">
+                        <span class="card-label">Login as</span>
+                        <p class="text-center m-0 fw-bold">LDAP</p>
+                    </a>
+                </div>
+            </div>
+            <div class="col-sm-2 col-8 align-self-center p-0">
+                <p class="text-center">or</p>
+            </div>
+            <div class="col-sm-5 col-8 mb-2 p-0">
+                <div class="card login-card p-3">
+                    <a href="#" class="text-decoration-none open-panel" data-panel="otp">
+                        <span class="card-label">Login as</span>
+                        <p class="text-center m-0 fw-bold">Email OTP</p>
+                    </a>
+                </div>
             </div>
         </div>
-    </div>
-    <section class="login-section" style="background-image: url({{asset('user_assets/images/login/login-bg.jpg')}});">
-        <div class="container">
-            <div class="row">
-                <div class="col-xl-6 col-lg-6 col-md-6 col-12 mx-auto">
-                    <div class="login-form" style="background-color:transparent !important;">
-                        <div>
-                            <div class="d-flex justify-content-center align-items-center min-vh-100">
-                                <div class="flip-card" id="loginCard">
-                                    <div class="flip-card-inner">
-                                        <!-- Front Side - LDAP Login -->
-                                        <div class="flip-card-front p-4">
-                                            <div class="logo-sec text-center">
-                                                <a href="#!"
-                                                    class="d-flex align-items-center gap-3 text-decoration-none justify-content-center flex-wrap">
-                                                    <!-- Logo Image -->
-                                                    <img src="{{ asset('admin_assets/images/logos/lbsnaa_logo.jpg') }}"
-                                                        alt="LBSNAA Logo" style="height: 60px; object-fit: contain;">
 
-                                                    <!-- Text Block -->
-                                                    <div class="d-flex flex-column text-start">
-                                                        <span class="mb-0"
-                                                            style="color: #000000;font-weight: bold;font-size: 24px;">Alumni</span>
-                                                        <span style="font-size: 16px; font-weight: 500;color: #af2910;">
-                                                            Lal Bahadur Shastri National Academy of Administration
-                                                        </span>
-                                                    </div>
-                                                </a>
-                                                          
-                                            </div>
-                                            @error('username')
-    <div class="alert alert-danger">{{ $message }}</div>
-@enderror
-                                            <hr>
-                                            <div class="login-title mb-4">
-                                                <h3 class="text-center" style="font-size: 20px;
-    line-height: inherit;">Welcome to the Official Alumni platform of the Lal Bahadur Shastri National Academy of
-                                                    Administration, Mussoorie</h3>
-                                            </div>
-                                            <form method="POST" action="{{ route('user.login.submit_ldap') }}">
-                                                @csrf
-                                                <div class="form-group mb-3">
-                                                    <label class="form-label fw-bold">User Name</label>
-                                                    <input type="username" name="username" class="form-control"
-                                                        placeholder="Enter your username">
-                                                </div>
-                                                <div class="form-group mb-3">
-                                                    <label class="form-label fw-bold">Password</label>
-                                                    <input type="password" name="password" class="form-control"
-                                                        placeholder="Enter your password">
-                                                </div>
-                                                <button type="submit" class="btn btn-primary w-100">Login</button>
-                                            </form>
-                                            <div class="text-center mt-3">
-                                                <a href="#" onclick="flipCard(event)">Login with Email OTP</a>
-                                                <br>
-                                                <a href="#" data-bs-toggle="modal" data-bs-target="#registrationModal"
-                                                    class="mt-2 d-inline-block">New User? Register Here</a>
-                                            </div>
-                                            <div class="position-relative w-100 bg-light d-flex align-items-center px-3"
+        <div class="mt-3">
+            <a href="#" class="btn btn-outline-danger open-panel" data-panel="register">
+                For Registration Click Here
+            </a>
+        </div>
+        <div class="position-relative w-100 bg-light d-flex align-items-center px-3 mt-4"
                                                 style="height: 40px; overflow: hidden; z-index: 1040;">
                                                 <div class="position-relative d-flex align-items-center">
                                                     <button class="btn btn-sm btn-danger position-relative z-1"
@@ -308,36 +369,40 @@
                                                     </div>
                                                 </div>
                                             </div>
+    </div>
 
+    <!-- Right Section (Background + Overlay Forms) -->
+    <div class="col-8 p-0 position-relative" style="height: 100vh;">
+        <!-- Background image -->
+        <img src="{{ asset('user_assets/images/login/login-bg.jpg') }}" 
+             alt="Employee Services Graphic"
+             class="w-100 h-100" style="object-fit: cover;">
 
-                                        </div>
-                                        <!-- Back Side - OTP Login -->
-                                        <div class="flip-card-back p-4">
-                                            <div class="logo-sec text-center">
-                                                <a href="#!"
-                                                    class="d-flex align-items-center gap-3 text-decoration-none justify-content-center flex-wrap">
-                                                    <!-- Logo Image -->
-                                                    <img src="{{ asset('admin_assets/images/logos/lbsnaa_logo.jpg') }}"
-                                                        alt="LBSNAA Logo" style="height: 60px; object-fit: contain;">
+        <!-- Overlay Container -->
+        <div class="position-absolute top-50 start-50 translate-middle w-50" style="z-index: 2;">
+            <!-- LDAP Login -->
+            <div id="ldap-panel" class="card shadow-lg p-4 d-none">
+                <h4 class="mb-3 fw-bold text-center">LDAP Login</h4>
+                <hr class="my-2">
+                <form method="POST" action="{{ route('user.login.submit_ldap') }}">
+                    @csrf
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">User Name</label>
+                        <input type="text" name="username" class="form-control" placeholder="Enter your username">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Password</label>
+                        <input type="password" name="password" class="form-control" placeholder="Enter your password">
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Login</button>
+                </form>
+            </div>
 
-                                                    <!-- Text Block -->
-                                                    <div class="d-flex flex-column text-start">
-                                                        <span class="mb-0"
-                                                            style="color: #000000;font-weight: bold;font-size: 24px;">Alumni</span>
-                                                        <span style="font-size: 16px; font-weight: 500;color: #af2910;">
-                                                            Lal Bahadur Shastri National Academy of Administration
-                                                        </span>
-                                                    </div>
-                                                </a>
-                                                          
-                                            </div>
-                                            <hr>
-                                            <div class="login-title mb-4">
-                                                <h3 class="text-center" style="font-size: 20px;
-    line-height: inherit;">Welcome to the Official Alumni platform of the Lal Bahadur Shastri National Academy of
-                                                    Administration, Mussoorie</h3>
-                                            </div>
-                                            <form id="otpForm">
+            <!-- OTP Login -->
+            <div id="otp-panel" class="card shadow-lg p-4 d-none">
+                <h4 class="mb-3 fw-bold text-center">Email OTP Login</h4>
+                <hr class="my-2">
+                <form id="otpForm">
                                                 @csrf
                                                 <div class="form-group mb-3">
                                                     <label class="form-label fw-bold">Email Address</label>
@@ -383,63 +448,152 @@
                                                 <button type="button" id="verifyOtpBtn"
                                                     class="btn btn-primary w-100 mt-2">Verify OTP</button>
                                             </form>
-                                            <div class="text-center mt-3">
-                                                <a href="#" onclick="flipCard(event)">Login with LDAP</a>
-                                                <br>
-                                                <a href="#" data-bs-toggle="modal" data-bs-target="#registrationModal"
-                                                    class="mt-2 d-inline-block">New User? Register Here</a>
-                                            </div>
-                                            </script>
-                                            <script>
-                                            // Email validation for .gov.in or .nic.in
-                                            document.addEventListener('DOMContentLoaded', function() {
-                                                const emailInput = document.querySelector(
-                                                    '#registrationForm input[name="email"]');
-                                                const emailMsg = document.getElementById('emailMsg');
-                                                if (emailInput) {
-                                                    emailInput.addEventListener('input', function() {
-                                                        const val = emailInput.value.trim();
-                                                        if (val && !val.match(
-                                                                /^[^@\s]+@(?:[^@\s]+\.)?(gov|nic)\.in$/
-                                                                )) {
-                                                            emailMsg.style.display = 'block';
-                                                        } else {
-                                                            emailMsg.style.display = 'none';
-                                                        }
-                                                    });
-                                                }
-                                            });
-                                            </script>
-                                            <div class="position-relative w-100 bg-light d-flex align-items-center px-3"
-                                                style="height: 40px; overflow: hidden; z-index: 1040;">
-                                                <div class="position-relative d-flex align-items-center">
-                                                    <button class="btn btn-sm btn-danger position-relative z-1"
-                                                        style="min-width: 120px;">
-                                                        Helpdesk
-                                                    </button>
-                                                </div>
+            </div>
 
-                                                <div class="marquee-container flex-grow-1 d-flex align-items-center ms-2"
-                                                    style="overflow: hidden; height: 100%;">
-                                                    <div class="marquee-text">
-                                                        Inquiry regarding user credentials: Phone: 135-2222346 (Mon–Fri,
-                                                        9:00 AM–5:30 PM) Email:
-                                                        ithelpdesk.lbsnaa@nic.in
-                                                    </div>
-                                                </div>
-                                            </div>
+            <!-- Registration -->
+            <div id="register-panel" class="card shadow-lg p-4 d-none">
+                <h4 class="mb-3 fw-bold text-center">Registration</h4>
+                <hr class="my-2">
+                <form>
+                    <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Name</label>
+                                <input type="text" name="name" class="form-control" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Email <span class="text-muted"
+                                        style="font-size:12px;">(.gov or .nic only)</span></label>
+                                <input type="email" name="email" class="form-control"
+                                    pattern="^[^@\s]+@(?:[^@\s]+\.)?(gov|nic)\.in$" required>
+                                <div class="form-text text-danger" id="emailMsg" style="display:none;">Only .gov.in or
+                                    .nic.in email IDs are allowed.</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Mobile Number</label>
+                                <input type="text" name="mobile" class="form-control" pattern="^[6-9]\d{9}$"
+                                    maxlength="10" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Service</label>
+                                <input type="text" name="service" class="form-control" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Batch</label>
+                                <input type="text" name="batch" class="form-control" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Cadre <span
+                                        class="text-muted">(Optional)</span></label>
+                                <input type="text" name="cadre" class="form-control">
+                            </div>
+                            <div class="col-md-12">
+                                <label class="form-label fw-bold">Course Attended in LBSNAA</label>
+                                <input type="text" name="course_attended" class="form-control" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Upload Photo</label>
+                                <input type="file" name="photo" class="form-control" accept="image/*" required>
+                            </div>
+                            <div class="col-md-6 ">
+                                <label class="form-label fw-bold">Upload Govt. ID</label>
+                                <input type="file" name="govt_id" class="form-control" accept="image/*,.pdf" required>
+                            </div>
+                        </div>
+                    <button type="submit" class="btn btn-primary w-100 mt-3">Register</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
-                                        </div>
-                                    </div>
+
+    </div>
+
+    <!-- Registration Modal -->
+    <div class="modal fade" id="registrationModal" tabindex="-1" aria-labelledby="registrationModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <form id="registrationForm" method="POST" action="" enctype="multipart/form-data">
+                    @csrf
+                    <div class="modal-header">
+                        <div class="logo-sec text-center">
+                            <a href="#!"
+                                class="d-flex align-items-center gap-3 text-decoration-none justify-content-center flex-wrap">
+                                <!-- Logo Image -->
+                                <img src="{{ asset('admin_assets/images/logos/lbsnaa_logo.jpg') }}" alt="LBSNAA Logo"
+                                    style="height: 60px; object-fit: contain;">
+
+                                <!-- Text Block -->
+                                <div class="d-flex flex-column text-start">
+                                    <span class="mb-0"
+                                        style="color: #000000;font-weight: bold;font-size: 24px;">Alumni</span>
+                                    <span style="font-size: 16px; font-weight: 500;color: #af2910;">
+                                        Lal Bahadur Shastri National Academy of Administration
+                                    </span>
                                 </div>
+                            </a>
+                                      
+                        </div>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <hr>
+
+                    </div>
+                    <div class="modal-body">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Name</label>
+                                <input type="text" name="name" class="form-control" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Email <span class="text-muted"
+                                        style="font-size:12px;">(.gov or .nic only)</span></label>
+                                <input type="email" name="email" class="form-control"
+                                    pattern="^[^@\s]+@(?:[^@\s]+\.)?(gov|nic)\.in$" required>
+                                <div class="form-text text-danger" id="emailMsg" style="display:none;">Only .gov.in
+                                    or
+                                    .nic.in email IDs are allowed.</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Mobile Number</label>
+                                <input type="text" name="mobile" class="form-control" pattern="^[6-9]\d{9}$"
+                                    maxlength="10" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Service</label>
+                                <input type="text" name="service" class="form-control" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Batch</label>
+                                <input type="text" name="batch" class="form-control" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Cadre <span
+                                        class="text-muted">(Optional)</span></label>
+                                <input type="text" name="cadre" class="form-control">
+                            </div>
+                            <div class="col-md-12">
+                                <label class="form-label fw-bold">Course Attended in LBSNAA</label>
+                                <input type="text" name="course_attended" class="form-control" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Upload Photo</label>
+                                <input type="file" name="photo" class="form-control" accept="image/*" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Upload Govt. ID</label>
+                                <input type="file" name="govt_id" class="form-control" accept="image/*,.pdf" required>
                             </div>
                         </div>
                     </div>
-                </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Register</button>
+                    </div>
+                </form>
             </div>
         </div>
-    </section>
-    <!-- login section end -->
+    </div>
 
     <script src="{{ asset('user_assets/js/jquery-3.6.0.min.js') }}"></script>
     <script src="{{ asset('user_assets/js/popper.min.js') }}"></script>
@@ -452,6 +606,23 @@
     <script src="{{ asset('user_assets/js/lazysizes.min.js') }}"></script>
     <script src="{{ asset('user_assets/js/theme-setting.js') }}"></script>
     <script src="{{ asset('user_assets/js/script.js') }}"></script>
+    <script>
+        document.querySelectorAll('.open-panel').forEach(btn => {
+    btn.addEventListener('click', e => {
+        e.preventDefault();
+        let target = btn.getAttribute('data-panel');
+
+        // Hide all
+        document.querySelectorAll('#ldap-panel, #otp-panel, #register-panel')
+                .forEach(p => p.classList.add('d-none'));
+
+        // Show selected
+        document.getElementById(target + '-panel').classList.remove('d-none');
+    });
+});
+
+
+    </script>
     <script>
     document.addEventListener("DOMContentLoaded", function() {
         const inputs = document.querySelectorAll(".otp-input");
@@ -604,7 +775,7 @@
                 },
                 success: function(response) {
                     $('#emailSuccess').text('OTP sent successfully! -' + response.otp)
-                    .show();
+                        .show();
                     $('#otpInputContainer').show();
                     $('#verifyOtpBtn').show();
                     $('#sendOtpBtn').hide();
@@ -647,7 +818,8 @@
                     window.location.href = response.redirect;
                 },
                 error: function(xhr) {
-                    const errorMsg = xhr.responseJSON?.error || 'Invalid or expired OTP';
+                    const errorMsg = xhr.responseJSON?.error ||
+                        'Invalid or expired OTP';
                     $('#otpError').text(errorMsg).show();
                     $('#verifyOtpBtn').prop('disabled', false).text('Verify OTP');
                 }
