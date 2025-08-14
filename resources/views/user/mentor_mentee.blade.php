@@ -135,7 +135,7 @@
                         </div>
 
                         <div class="col-md-2 d-flex flex-column gap-2">
-                            <button class="btn btn-primary w-100" id="filterbecomeMentor">Filter</button>
+                            <button class="btn btn-primary w-100" id="filterbecomeMentor">Search</button>
                             <a href="{{ url()->current() }}" class="btn btn-secondary w-100">Reset</a>
                         </div>
                     </div>
@@ -251,7 +251,7 @@
                         </div>
 
                         <div class="col-md-2 d-flex flex-column gap-2">
-                            <button class="btn btn-primary w-100" id="filterbecomeMentee">Filter</button>
+                            <button class="btn btn-primary w-100" id="filterbecomeMentee">Search</button>
                             <a href="{{ url()->current() }}" class="btn btn-secondary w-100">Reset</a>
                         </div>
                     </div>

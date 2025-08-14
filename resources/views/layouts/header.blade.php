@@ -385,6 +385,13 @@
                             placeholder="Enter your email" value="{{ auth()->guard('user')->user()->email }}" required
                             readonly>
                     </div>
+                    <!-- Sector -->
+                    <div class="mb-3">
+                        <label for="userSector" class="form-label">Sector <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="userSector" name="userSector"
+                            placeholder="Enter your sector" value="{{ auth()->guard('user')->user()->sector }}" required
+                            readonly>
+                    </div>
 
                     <!-- Message -->
                     <div class="mb-3">
