@@ -36,7 +36,7 @@
                                     <select id="serviceFilter" class="form-select">
                                         <option value="">All</option>
                                         @php
-                                        $services = $members->pluck('Service')->unique()->filter();
+                                        $services = $members->pluck('Service')->unique()->filter()->sort();
                                         @endphp
                                         @foreach ($services as $Service)
                                         <option value="{{ $Service }}">{{ $Service }}</option>
@@ -82,21 +82,26 @@
                                     <select id="sectorFilter" name="sector" class="form-select">
                                         <option value="">All</option>
                                         @php
-                                        use Illuminate\Support\Str;
+                                            use Illuminate\Support\Str;
 
-                                        $sectors = $members->pluck('sector')
-                                        ->map(function($value) {
-                                        return Str::of($value)->trim(); // remove leading/trailing spaces
-                                        })
-                                        ->filter(function($value) {
-                                        return !is_null($value) && $value !== '' && $value != '0';
-                                        })
-                                        ->unique()
-                                        ->sort(); // Sort alphabetically
-                                        @endphp
+                                            $sectors = $members->pluck('sector')
+                                                ->map(function($value) {
+                                                    return Str::of($value)->trim(); // trim spaces
+                                                })
+                                                ->filter(function($value) {
+                                                    return !is_null($value) 
+                                                        && $value !== '' 
+                                                        && strtoupper($value) !== 'NA' 
+                                                        && $value != '0';
+                                                })
+                                                ->unique()
+                                                ->sort(); // Sort alphabetically
+                                            @endphp
 
                                         @foreach ($sectors as $sector)
+                                        @if (Str::of($sector)->isNotEmpty() && Str::of($sector)->upper() !== 'NA' && $sector != '0')
                                         <option value="{{ $sector }}">{{ $sector }}</option>
+                                        @endif
                                         @endforeach
                                     </select>
 
