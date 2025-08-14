@@ -10,7 +10,7 @@
 
 .select2-container {
     z-index: 1050 !important;
-    display:block !important;
+    display: block !important;
 }
 
 .backdrop-blur {
@@ -259,7 +259,7 @@
 
                     <form action="{{ route('user.mentor.want_become_mentee') }}" method="POST">
                         @csrf
-                         <div class="table-responsive" style="max-height: 600px; overflow-y: auto;">
+                        <div class="table-responsive" style="max-height: 600px; overflow-y: auto;">
                             <table class="bg-light table mb-0">
                                 <thead class="table-light" style="position: sticky; top: 0; z-index: 2;">
                                     <tr>
@@ -456,6 +456,8 @@
                         <li class="list-group-item d-flex justify-content-between">
                             <span>{{ $mentor->name }}</span>
                             <small>{{ $mentor->cadre }} | {{ $mentor->batch }}</small>
+                            <span><i class="bi bi-chat-circle fa-fw me-2"></i></span>
+
                         </li>
                         @php $hasMentor = true; @endphp
                         @endif
@@ -477,6 +479,13 @@
                         <li class="list-group-item d-flex justify-content-between">
                             <span>{{ $mentee->name }}</span>
                             <small>{{ $mentee->cadre }} | {{ $mentee->batch }}</small>
+                            <div class="text-end">
+                                <a href="" class="text-decoration-none ">
+                                <div class="chat-icon">
+                                    <i class="bi bi-chat-left-text-fill text-white"></i>
+                                </div>
+                            </a>
+                            </div>
                         </li>
                         @php $hasMentee = true; @endphp
                         @endif
