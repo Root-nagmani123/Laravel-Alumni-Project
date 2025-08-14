@@ -259,25 +259,25 @@
 
                     <form action="{{ route('user.mentor.want_become_mentee') }}" method="POST">
                         @csrf
-                        <div class="table-responsive">
-                            <table class="bg-light table">
-                                <thead>
+                         <div class="table-responsive" style="max-height: 600px; overflow-y: auto;">
+                            <table class="bg-light table mb-0">
+                                <thead class="table-light" style="position: sticky; top: 0; z-index: 2;">
                                     <tr>
-                                        <th><input type="checkbox" id="selectAll_mentee"></th>
-                                        <th>#</th>
-                                        <th>Name</th>
-                                        <th>Service</th>
-                                        <th>Batch</th>
-                                        <th>Cadre</th>
-                                        <th>Sector</th>
+                                        <th style="background: #f8f9fa;"><input type="checkbox" id="selectAll"></th>
+                                        <th style="background: #f8f9fa;">#</th>
+                                        <th style="background: #f8f9fa;">Name</th>
+                                        <th style="background: #f8f9fa;">Service</th>
+                                        <th style="background: #f8f9fa;">Batch</th>
+                                        <th style="background: #f8f9fa;">Cadre</th>
+                                        <th style="background: #f8f9fa;">Sector</th>
                                     </tr>
                                 </thead>
                                 <tbody id="menteeTableBody">
-
+                                    <!-- Rows will be injected here -->
                                 </tbody>
                             </table>
                         </div>
-                        <div class="text-end">
+                        <div class="text-end mt-2">
                             <button type="submit" class="btn btn-primary">Submit Mentee Request</button>
                         </div>
                     </form>
