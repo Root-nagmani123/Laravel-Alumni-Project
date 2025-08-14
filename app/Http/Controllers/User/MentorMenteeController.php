@@ -30,8 +30,8 @@ $members = DB::table('members')
     ->select(
         DB::raw('TRIM(Service) as Service'),
           DB::raw('GROUP_CONCAT(DISTINCT TRIM(batch) ORDER BY batch ASC SEPARATOR ",") as batches'),
-        DB::raw('GROUP_CONCAT(DISTINCT TRIM(cader) ORDER BY cader ASC SEPARATOR ",") as cader_list'),
-        DB::raw('GROUP_CONCAT(DISTINCT TRIM(sector) ORDER BY sector ASC SEPARATOR ",") as sector_list')
+         DB::raw('GROUP_CONCAT(DISTINCT TRIM(cader) ORDER BY TRIM(cader) ASC SEPARATOR ",") as cader_list'),
+        DB::raw('GROUP_CONCAT(DISTINCT TRIM(sector) ORDER BY TRIM(sector) ASC SEPARATOR ",") as sector_list')
     )
     ->groupBy(DB::raw('TRIM(Service)'))
     ->orderBy('Service')
@@ -345,9 +345,33 @@ function updateRequest(Request $request) : \Illuminate\Http\RedirectResponse {
 
     return back()->with('success', 'Request ' . $message . ' successfully.');
 }
-function filterMentorsData(Request $request) {
-     $query = DB::table('members');
-     $query->select('id', 'name', 'cader', 'batch', 'sector', 'Service');
+function filterMentorsData(Request $request) 
+{
+    $Type = $request->Type ?? 'mentor';
+
+    $already_mentors = DB::table('mentor_requests')
+        ->select('Mentor_ids')
+        ->whereIn('status', [1, 2])
+        ->where('mentees', auth()->guard('user')->user()->id)
+        ->pluck('Mentor_ids')
+        ->toArray();
+
+    $already_mentees = DB::table('mentor_requests')
+        ->select('mentees')
+        ->whereIn('status', [1, 2, 3])
+        ->where('Mentor_ids', auth()->guard('user')->user()->id)
+        ->pluck('mentees')
+        ->toArray();
+
+    $already_from_mentee_requests = DB::table('mentee_requests')
+        ->select('mentees_ids')
+        ->whereIn('status', [1, 2])
+        ->where('mentor', auth()->guard('user')->user()->id)
+        ->pluck('mentees_ids')
+        ->toArray();
+
+    $query = DB::table('members')
+        ->select('id', 'name', 'cader', 'batch', 'sector', 'Service');
 
     if ($request->filled('service')) {
         $query->whereIn('Service', $request->service);
@@ -365,9 +389,23 @@ function filterMentorsData(Request $request) {
         $query->whereIn('sector', $request->sector);
     }
 
-    $members = $query->get();
+    if ($Type === 'mentor') {
+        $query->whereNotIn('id', $already_mentors);
+        $query->whereNotIn('id', $already_mentees);
+    } 
+    elseif ($Type === 'mentee') {
+        $query->whereNotIn('id', $already_from_mentee_requests);
+    }
 
+    $members = $query
+        ->whereNotNull('name')
+        ->where('name', '!=', 'NA')
+        ->where('status', 1)
+        ->orderBy('name')
+        ->get();
 
     return view('partials.mentor_table', compact('members'));
 }
+
+
 }

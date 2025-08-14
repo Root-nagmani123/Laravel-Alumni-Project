@@ -261,6 +261,9 @@
                                                 </a>
                                                           
                                             </div>
+                                            @error('username')
+    <div class="alert alert-danger">{{ $message }}</div>
+@enderror
                                             <hr>
                                             <div class="login-title mb-4">
                                                 <h3 class="text-center" style="font-size: 20px;
