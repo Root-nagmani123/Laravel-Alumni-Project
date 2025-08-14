@@ -116,7 +116,7 @@
 
                 <!-- Main Question -->
                 <div class="d-flex align-items-center mb-3">
-  <img src="{{ asset($forum->member_profile_image ?? 'feed_assets/images/avatar/07.jpg') }}" 
+  <img src="{{ asset($forum->member_profile_image ? (\Illuminate\Support\Str::startsWith($forum->member_profile_image, 'storage/') ? $forum->member_profile_image : 'storage/' . ltrim($forum->member_profile_image, '/')) : 'feed_assets/images/avatar/07.jpg') }}" 
                  class="rounded-circle me-3" 
                  alt="User" 
                  style="width:60px;">
@@ -150,8 +150,15 @@
                  @php $currentUserId = Auth::guard('user')->id(); @endphp
                  <div id="commentsList" data-update-url-template="{{ route('user.forum.comment.update', ['commentId' => 'COMMENT_ID']) }}" data-delete-url-template="{{ route('user.forum.comment.delete', ['commentId' => 'COMMENT_ID']) }}">
             @foreach($forum->comments as $index => $comment)
+                @php
+                    $commentPicPath = $comment->profile_pic
+                        ? (\Illuminate\Support\Str::startsWith($comment->profile_pic, 'storage/')
+                            ? $comment->profile_pic
+                            : 'storage/' . ltrim($comment->profile_pic, '/'))
+                        : 'feed_assets/images/avatar/07.jpg';
+                @endphp
                 <div class="d-flex align-items-start gap-3 mb-3 comment-item" data-comment-id="{{ $comment->id }}">
-                    <img src="{{ asset($comment->profile_pic ?? 'feed_assets/images/avatar/07.jpg') }}" class="rounded-circle" alt="User" style="width:40px; height:40px; object-fit:cover;">
+                    <img src="{{ asset($commentPicPath) }}" class="rounded-circle" alt="User" style="width:40px; height:40px; object-fit:cover;">
                     <div class="flex-grow-1">
                         <div class="d-flex align-items-center justify-content-between mb-1">
                             <div class="d-flex align-items-center gap-2">
@@ -249,7 +256,16 @@
                             const item = document.createElement('div');
                             item.className = 'd-flex align-items-start gap-3 mb-3 comment-item';
                             item.dataset.commentId = data.comment.id;
-                            const imgSrc = profile.startsWith('http') ? profile : `{{ asset('') }}` + profile;
+                            let imgSrc;
+                            if (/^https?:\/\//i.test(profile)) {
+                                imgSrc = profile;
+                            } else {
+                                let p = profile.replace(/^\/+/, '');
+                                if (!p.startsWith('storage/')) {
+                                    p = 'storage/' + p;
+                                }
+                                imgSrc = `{{ asset('') }}` + p;
+                            }
                             item.innerHTML = `
                                 <img src="${imgSrc}" class="rounded-circle" alt="User" style="width:40px; height:40px; object-fit:cover;">
                                 <div class="flex-grow-1">
