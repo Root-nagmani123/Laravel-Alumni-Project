@@ -13,6 +13,7 @@ window.Echo = new Echo({
     // forceTLS: true,
     enabledTransports: ['ws', 'wss'],
     withCredentials: true,
+    disableStats: true,
 
     authorizer: (channel, options) => {
         return {
