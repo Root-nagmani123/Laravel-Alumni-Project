@@ -234,7 +234,7 @@
         top: -15px;
         left: 50%;
         transform: translateX(-50%);
-        background: #5a5a5a;
+        background: #004a93;
         color: #fff;
         padding: 3px 14px;
         border-radius: 30px;
@@ -288,6 +288,25 @@
         background-color: #8b201a;
         color: #fff;
     }
+    .bg-top-bottom {
+    position: relative;
+    background: url('{{ asset('feed_assets/images/bg/Group.svg') }}') top center no-repeat;
+    background-size: contain;
+    background-color: linear-gradient(to bottom, #af2910 40%, #fff 60%);
+}
+
+.bg-top-bottom::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 250px; /* adjust to match image height */
+    background: url('{{ asset('feed_assets/images/bg/Group.svg') }}') center no-repeat;
+    background-size: contain;
+    transform: rotate(180deg);
+}
+
     </style>
 </head>
 
@@ -303,7 +322,8 @@
     <div class="container-fluid">
       <div class="row">
     <!-- Left Section -->
-    <div class="col-lg-4 p-5 d-flex flex-column justify-content-center">
+    <div class="col-lg-4 p-5 d-flex flex-column justify-content-center bg-top-bottom">
+    <!-- Your left column content here -->
         <!-- Logo -->
         <div class="logo-sec text-center mb-4">
             <a href="#!"
@@ -319,9 +339,11 @@
             </a>
         </div>
 
-        <h1 class="fw-bold mb-3">ABOUT LBSNAA Alumni</h1>
+        <div class="mt-4">
+            <h1 class="fw-bold mb-3">ABOUT LBSNAA Alumni</h1>
         <p>The LBSNAA Alumni Portal is an online platform to connect, collaborate, and provide
             end-to-end services to Academy alumni.</p>
+        </div>
 
         <!-- Login Buttons -->
         <div class="row mt-5">
