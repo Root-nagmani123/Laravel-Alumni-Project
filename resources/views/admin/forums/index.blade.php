@@ -63,6 +63,7 @@
                                     <th>S.No.</th>
                                     <th>Name</th>
                                     <!-- <th>Members</th> -->
+                                    <th>Topics</th>
                                     <th>Created At</th>
                                     <th>Forum End Date</th>
                                     <th>Action</th>

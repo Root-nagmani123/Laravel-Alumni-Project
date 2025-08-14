@@ -53,6 +53,7 @@ class ProfileController extends Controller
 
     return view('profile', compact('user','posts'));
 }
+
 public function showById_data(Request $request, $id): View
 {
     //$user = auth()->guard('user')->user();
@@ -145,6 +146,8 @@ public function showById_data(Request $request, $id): View
         'current_department'  => 'required|string|max:255',
         'current_location'   => 'required|string|max:255',
         'previous_postings'     => 'required|string|max:255',
+        'service' => 'required|string|max:255',
+        'sector' => 'required|string|max:255',
 
     ]);
 
@@ -152,6 +155,11 @@ public function showById_data(Request $request, $id): View
 
         // Update user fields
         $user->fill($validatedData);
+        // Ensure service and sector are explicitly set even if not fillable
+        // Handle potential fillable/case mismatch for `service`
+        $user->Service = $validatedData['service'];
+        $user->sector = $validatedData['sector'];
+
         $user->save();
 
         return redirect()->back()->with('success', 'Professional info updated successfully.');
