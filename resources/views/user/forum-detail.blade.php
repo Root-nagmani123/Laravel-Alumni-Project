@@ -127,8 +127,9 @@
     </div>
 </div>
 
-                <h4 class="fw-bold mb-3">{{ $forum->name }}</h4>
-                <p>{{ $forum->description }}</p>
+                @php $isOwner = (int) (Auth::guard('user')->id()) === (int) ($forum->created_by ?? 0); @endphp
+                <h4 id="forumTitle" class="fw-bold mb-2">{{ $forum->name }}</h4>
+                <p id="forumDescription">{{ $forum->description }}</p>
 
                  <!-- Actions -->
         <div class="d-flex justify-content-between align-items-center mt-3">
@@ -142,6 +143,16 @@
                     <span id="commentCount">{{ $forum->comments->count() ?? 0 }}</span> Reply
                 </span>
             </div>
+            @if($isOwner)
+            <div class="d-flex align-items-center gap-2">
+                <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editForumModal"><i class="bi bi-pencil-square me-1"></i>Edit</button>
+                <form id="deleteForumForm" action="{{ route('user.forum.delete') }}" method="POST" class="m-0 p-0">
+                    @csrf
+                    <input type="hidden" name="forum_id" value="{{ $forum->id }}">
+                    <button type="button" class="btn btn-sm btn-outline-danger" id="deleteForumBtn"><i class="bi bi-trash me-1"></i>Delete</button>
+                </form>
+            </div>
+            @endif
         </div>
 
                 <hr class="my-4">
@@ -151,11 +162,11 @@
                  <div id="commentsList" data-update-url-template="{{ route('user.forum.comment.update', ['commentId' => 'COMMENT_ID']) }}" data-delete-url-template="{{ route('user.forum.comment.delete', ['commentId' => 'COMMENT_ID']) }}">
             @foreach($forum->comments as $index => $comment)
                 @php
-                    $commentPicPath = $comment->profile_pic
-                        ? (\Illuminate\Support\Str::startsWith($comment->profile_pic, 'storage/')
-                            ? $comment->profile_pic
-                            : 'storage/' . ltrim($comment->profile_pic, '/'))
-                        : 'feed_assets/images/avatar/07.jpg';
+                       $commentPicPath = $comment->profile_pic
+        ? (Str::startsWith($comment->profile_pic, 'storage/')
+            ? $comment->profile_pic
+            : 'storage/' . ltrim($comment->profile_pic, '/'))
+        : 'feed_assets/images/avatar/07.jpg';
                 @endphp
                 <div class="d-flex align-items-start gap-3 mb-3 comment-item" data-comment-id="{{ $comment->id }}">
                     <img src="{{ asset($commentPicPath) }}" class="rounded-circle" alt="User" style="width:40px; height:40px; object-fit:cover;">
@@ -191,6 +202,14 @@
 
         <script>
             (function(){
+                // Delete forum
+                const delBtn = document.getElementById('deleteForumBtn');
+                delBtn?.addEventListener('click', function(){
+                    if(confirm('Delete this forum? This action cannot be undone.')){
+                        document.getElementById('deleteForumForm').submit();
+                    }
+                });
+
                 const likeThumb = document.getElementById('likeThumb');
                 const likeCountEl = document.getElementById('likeCount');
                 const commentCountEl = document.getElementById('commentCount');
@@ -358,8 +377,47 @@
                         }catch(e){ console.error(e); }
                     }
                 });
+
+                // Edit Forum: standard form submission handles update
             })();
         </script>
+   
+   @if($isOwner)
+   <!-- Edit Forum Modal -->
+   <div class="modal fade" id="editForumModal" tabindex="-1" aria-hidden="true">
+       <div class="modal-dialog">
+           <div class="modal-content">
+               <div class="modal-header">
+                   <h5 class="modal-title">Edit Forum</h5>
+                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+               </div>
+               <form id="editForumForm" method="POST" action="{{ route('user.forum.update', $forum->id) }}">
+                   @csrf
+                   <input type="hidden" name="_method" value="PUT">
+                   <div class="modal-body">
+                       <div id="editForumAlert" class="alert alert-danger d-none" role="alert"></div>
+                       <div class="mb-3">
+                           <label class="form-label">Title</label>
+                           <input type="text" name="name" class="form-control" value="{{ $forum->name }}" required>
+                       </div>
+                       <div class="mb-3">
+                           <label class="form-label">Description</label>
+                           <textarea name="description" class="form-control" rows="4" required>{{ $forum->description }}</textarea>
+                       </div>
+                       <div class="mb-3">
+                           <label class="form-label">End date</label>
+                           <input type="date" name="end_date" class="form-control" value="{{ $forum->end_date ? \Carbon\Carbon::parse($forum->end_date)->format('Y-m-d') : '' }}">
+                       </div>
+                   </div>
+                   <div class="modal-footer">
+                       <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                       <button type="submit" class="btn btn-primary">Save changes</button>
+                   </div>
+               </form>
+           </div>
+       </div>
+   </div>
+   @endif
    </div>
 
         </div>
