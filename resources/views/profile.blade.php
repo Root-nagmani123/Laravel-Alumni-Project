@@ -484,7 +484,7 @@
                                                                 <div class="col-9">
                                                                     <input type="text" id="service"
                                                                         name="service"
-                                                                        value="{{ old('service', $user->service) }}"
+                                                                        value="{{ old('service', $user->Service) }}"
                                                                         class="form-control"
                                                                         placeholder="Enter your Service">
                                                                 </div>
@@ -496,11 +496,11 @@
                                                                             style="color: red">*</span></label>
                                                                 </div>
                                                                 <div class="col-9">
-                                                                    <input type="text" id=""
-                                                                        name="previous_postings"
-                                                                        value="{{ old('previous_postings', $user->previous_postings) }}"
-                                                                        class="form-control"
-                                                                        placeholder="Enter your Sector">
+                                                                     <input type="text" id="sector"
+                                                                         name="sector"
+                                                                         value="{{ old('sector', $user->sector) }}"
+                                                                         class="form-control"
+                                                                         placeholder="Enter your Sector">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -573,9 +573,9 @@
                                                                     <label for="twitter">e-HRMS URL:</label>
                                                                 </div>
                                                                 <div class="col-9">
-                                                                    <input type="text" id="e-HREMS" name="e-HREMS"
-                                                                        value="" class="form-control"
-                                                                        placeholder="Enter your e-HREMS link">
+                                                                    <input type="text" id="ehrms" name="ehrms"
+                                                                        value="{{ old('ehrms', $user->ehrms) }}" class="form-control"
+                                                                        placeholder="Enter your e-HRMS link">
                                                                 </div>
                                                             </div>
                                                         </div>
