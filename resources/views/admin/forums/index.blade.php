@@ -63,7 +63,6 @@
                                     <th>S.No.</th>
                                     <th>Name</th>
                                     <!-- <th>Members</th> -->
-                                    <th>Topics</th>
                                     <th>Created At</th>
                                     <th>Forum End Date</th>
                                     <th>Action</th>
@@ -119,12 +118,12 @@
 
                                     <!-- <td>{{ \Carbon\Carbon::parse($forum->created_at)->timezone('Asia/Kolkata')->format('l, d M Y, h:i A') }} -->
                                     <td>
-                                        {{ $forum->created_at ? \Carbon\Carbon::parse($forum->created_at)->format('d M Y') : '' }}
+                                        {{ $forum->created_at ? \Carbon\Carbon::parse($forum->created_at)->format('d-m-Y') : '' }}
                                     </td>
                                     <td>
                                         @if($forum->end_date != null)
                                             <!-- {{ \Carbon\Carbon::parse($forum->end_date)->timezone('Asia/Kolkata')->format('l, d M Y') }} -->
-                                              {{ \Carbon\Carbon::parse($forum->end_date)->format('d M Y') }}
+                                              {{ \Carbon\Carbon::parse($forum->end_date)->format('d-m-Y') }}
                                         @endif
                                     </td>
 
