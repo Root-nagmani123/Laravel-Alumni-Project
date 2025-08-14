@@ -456,7 +456,13 @@
                         <li class="list-group-item d-flex justify-content-between">
                             <span>{{ $mentor->name }}</span>
                             <small>{{ $mentor->cadre }} | {{ $mentor->batch }}</small>
-                            <span><i class="bi bi-chat-circle fa-fw me-2"></i></span>
+                            <div class="text-end">
+                                <a href="" class="text-decoration-none ">
+                                <div class="chat-icon">
+                                    <i class="bi bi-chat-left-text-fill text-white"></i>
+                                </div>
+                            </a>
+                            </div>
 
                         </li>
                         @php $hasMentor = true; @endphp
