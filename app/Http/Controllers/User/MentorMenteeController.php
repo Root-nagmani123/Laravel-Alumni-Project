@@ -26,28 +26,19 @@ class MentorMenteeController extends Controller
     {
      
 $user_id = auth()->guard('user')->user()->id;    
-$members = DB::table(DB::raw("(
-    SELECT
-      TRIM(REPLACE(REPLACE(REPLACE(CONVERT(Service USING latin1), UNHEX('C2A0'), ' '), CHAR(160), ' '), '\t', '')) AS service,
-      NULLIF(TRIM(REPLACE(REPLACE(REPLACE(CONVERT(batch  USING latin1), UNHEX('C2A0'), ' '), CHAR(160), ' '), '\t', '')), '') AS batch,
-      NULLIF(TRIM(REPLACE(REPLACE(REPLACE(CONVERT(cader  USING latin1), UNHEX('C2A0'), ' '), CHAR(160), ' '), '\t', '')), '') AS cader,
-      NULLIF(TRIM(REPLACE(REPLACE(REPLACE(CONVERT(sector USING latin1), UNHEX('C2A0'), ' '), CHAR(160), ' '), '\t', '')), '') AS sector
-    FROM members
-) as cleaned"))
-->select(
-    'service as Service',
-    DB::raw("GROUP_CONCAT(DISTINCT batch ORDER BY CAST(batch AS UNSIGNED) SEPARATOR ',') AS batches"),
-    DB::raw("GROUP_CONCAT(DISTINCT cader ORDER BY cader SEPARATOR ',') AS cader_list"),
-    DB::raw("GROUP_CONCAT(DISTINCT sector ORDER BY sector SEPARATOR ',') AS sector_list")
-)
-->groupBy('service')
-->orderBy('service', 'ASC')
-->get();
+$members = DB::table('members')
+    ->select(
+        DB::raw('TRIM(Service) as Service'),
+          DB::raw('GROUP_CONCAT(DISTINCT TRIM(batch) ORDER BY batch ASC SEPARATOR ",") as batches'),
+         DB::raw('GROUP_CONCAT(DISTINCT TRIM(cader) ORDER BY TRIM(cader) ASC SEPARATOR ",") as cader_list'),
+        DB::raw('GROUP_CONCAT(DISTINCT TRIM(sector) ORDER BY TRIM(sector) ASC SEPARATOR ",") as sector_list')
+    )
+    ->where('Service', '=', 'IAS')
+    ->groupBy(DB::raw('TRIM(Service)'))
+    ->orderBy('Service')
+    ->get();
+   
 
-
-// print_r($members);
-
-// die;
 
 
     // Fetch mentee and mentor requests
