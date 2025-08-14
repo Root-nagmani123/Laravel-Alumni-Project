@@ -102,17 +102,25 @@ public function login_ldap(Request $request)
     $username = trim($request->input('username'));
     $password = $request->input('password');
  $serverHost = $request->getHost(); 
+
      try {
         if (in_array($serverHost, ['localhost', '127.0.0.1', 'dev.local','52.140.75.46'])) {
+           
             // 👨‍💻 Localhost: Normal DB-based login
             $user = \App\Models\Member::where('username', $username)
                         ->where('status', 1) // only active users
                         ->first();
+                        // print_r($user);die;
+                       
 
             if ($user) {
                 Auth::guard('user')->login($user);
                 $request->session()->regenerate();
                 return redirect()->intended('/user/feed');
+            }else{
+                return back()->withErrors([
+                    'username' => 'Invalid username or password.',
+                ]);
             }
         } else {
         

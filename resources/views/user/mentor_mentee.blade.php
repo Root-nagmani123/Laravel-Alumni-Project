@@ -532,7 +532,8 @@ $(document).ready(function() {
                 service: $('.Service[data-id="' + tabId + '"]').val(),
                 year: $('.year[data-id="' + tabId + '"]').val(),
                 cadre: $('.cadre[data-id="' + tabId + '"]').val(),
-                sector: $('.sector[data-id="' + tabId + '"]').val()
+                sector: $('.sector[data-id="' + tabId + '"]').val(),
+                Type: tabId
             },
             beforeSend: function() {
                 $('#mentorTableBody').html(`
@@ -575,7 +576,8 @@ $(document).ready(function() {
                 service: $('.Service[data-id="' + tabId + '"]').val(),
                 year: $('.year[data-id="' + tabId + '"]').val(),
                 cadre: $('.cadre[data-id="' + tabId + '"]').val(),
-                sector: $('.sector[data-id="' + tabId + '"]').val()
+                sector: $('.sector[data-id="' + tabId + '"]').val(),
+                Type: tabId
             },
             beforeSend: function() {
                 // Table body में loader डालना
