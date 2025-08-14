@@ -46,7 +46,7 @@
                 @foreach($broadcast as $index => $broadcast)
                 <div class="mb-3">
 
-                    <div class="d-flex align-items-center gap-2 mb-2">
+                    <div class="mb-2">
                         <a href="{{ route('user.broadcastDetails', $broadcast->id) }}">
                         @if($broadcast->image_url)
                         <img class="avatar-img rounded" src="{{ asset('storage/' . $broadcast->image_url) }}" alt=""
