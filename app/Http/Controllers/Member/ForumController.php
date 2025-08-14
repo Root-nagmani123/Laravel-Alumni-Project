@@ -121,6 +121,53 @@ class ForumController extends Controller
 
         return back();
     }
+    
+    /**
+     * Update forum (user-owned)
+     */
+    public function updateForum(Request $request, $id)
+    {
+      
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'required|string',
+            'end_date' => 'nullable|date',
+        ]);
+        
+        $userId = Auth::guard('user')->id();
+        $forum = DB::table('forums')->where('id', $id)->first();
+        if (!$forum) {
+            return $request->expectsJson()
+                ? response()->json(['success' => false, 'message' => 'Forum not found'], 404)
+                : back()->with('error', 'Forum not found');
+        }
+        if ((int)$forum->created_by !== (int)$userId) {
+            return $request->expectsJson()
+                ? response()->json(['success' => false, 'message' => 'Forbidden'], 403)
+                : back()->with('error', 'You are not allowed to update this forum');
+        }
+
+       $updated = DB::table('forums')->where('id', $id)->update([
+            'name' => $request->input('name'),
+            'description' => $request->input('description'),
+            'end_date' => $request->input('end_date') ?: null,
+            'updated_at' => now(),
+        ]);
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'forum' => [
+                    'id' => (int)$id,
+                    'name' => $request->input('name'),
+                    'description' => $request->input('description'),
+                    'end_date' => $request->input('end_date'),
+                ],
+            ]);
+        }
+
+        return back()->with('success', 'Forum updated successfully');
+    }
 	/**
 	 * Forum-level like (not topic like)
 	 */
