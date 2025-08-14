@@ -25,17 +25,37 @@ class MentorMenteeController extends Controller
     public function index()
     {
      
-$user_id = auth()->guard('user')->user()->id;    
-$members = DB::table('members')
+    $user_id = auth()->guard('user')->user()->id;    
+
+    $members = DB::table('members')
     ->select(
         DB::raw('TRIM(Service) as Service'),
-          DB::raw('GROUP_CONCAT(DISTINCT TRIM(batch) ORDER BY batch ASC SEPARATOR ",") as batches'),
-         DB::raw('GROUP_CONCAT(DISTINCT TRIM(cader) ORDER BY TRIM(cader) ASC SEPARATOR ",") as cader_list'),
-        DB::raw('GROUP_CONCAT(DISTINCT TRIM(sector) ORDER BY TRIM(sector) ASC SEPARATOR ",") as sector_list')
+
+        DB::raw('(SELECT GROUP_CONCAT(val ORDER BY CAST(val AS UNSIGNED) ASC SEPARATOR ",")
+                  FROM (
+                      SELECT DISTINCT TRIM(batch) AS val 
+                      FROM members 
+                      WHERE TRIM(Service) = TRIM(Service)
+                  ) t) as batches'),
+
+        DB::raw('(SELECT GROUP_CONCAT(val ORDER BY val ASC SEPARATOR ",")
+                  FROM (
+                      SELECT DISTINCT TRIM(cader) AS val 
+                      FROM members 
+                      WHERE TRIM(Service) = TRIM(Service)
+                  ) t) as cader_list'),
+
+        DB::raw('(SELECT GROUP_CONCAT(val ORDER BY val ASC SEPARATOR ",")
+                  FROM (
+                      SELECT DISTINCT TRIM(sector) AS val 
+                      FROM members 
+                      WHERE TRIM(Service) = TRIM(Service)
+                  ) t) as sector_list')
     )
     ->groupBy(DB::raw('TRIM(Service)'))
     ->orderBy('Service')
     ->get();
+
 
 // print_r($members);
 
