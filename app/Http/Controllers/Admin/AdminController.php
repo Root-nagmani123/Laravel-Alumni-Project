@@ -313,7 +313,9 @@ public function socialwall()
         ->where(function($q) use ($query) {
             $q->where('name', 'like', "%{$query}%");
         })
+        ->orderby('name', 'asc')
         ->limit(20)
+
         ->get();
 
     return response()->json($results);
