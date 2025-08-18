@@ -160,7 +160,7 @@ class NotificationService
             'type'         => 'mentor_request_accepted',
             'message'      => $message,
             'source_id'    => $requestId,
-            'source_type'  => 'request',
+            'source_type'  => 'request_accept',
             'user_id'      => json_encode([$mentorId]),
         ]);
     }
@@ -172,7 +172,7 @@ class NotificationService
             'type'         => 'mentee_request_accepted',
             'message'      => $message,
             'source_id'    => $requestId,
-            'source_type'  => 'request',
+            'source_type'  => 'request_accept',
             'user_id'      => json_encode([$menteeId]),
         ]);
     }
@@ -184,7 +184,7 @@ class NotificationService
             'type'         => 'mentor_request_rejected',
             'message'      => $message,
             'source_id'    => $requestId,
-            'source_type'  => 'request',
+            'source_type'  => 'request_reject',
             'user_id'      => json_encode([$mentorId]),
         ]);
     }
@@ -196,7 +196,7 @@ class NotificationService
             'type'         => 'mentee_request_rejected',
             'message'      => $message,
             'source_id'    => $requestId,
-            'source_type'  => 'request',
+            'source_type'  => 'request_reject',
             'user_id'      => json_encode([$menteeId]),
         ]);
     }

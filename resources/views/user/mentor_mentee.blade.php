@@ -657,3 +657,39 @@ $(document).ready(function() {
 });
 </script>
 @endsection
+
+@section('scripts')
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script>
+$(document).ready(function() {
+    // ========== Filter Logic (Existing Code - Keep as is) ========== //
+    $(document).on('click', '#filterbecomeMentor', function(e) { ... });
+    $(document).on('click', '#filterbecomeMentee', function(e) { ... });
+
+    // ========== Tab Switching Logic (NEW IMPROVED CODE) ========== //
+    function activateTab(tabName) {
+        // Hide all tabs first
+        $('.tab-pane').removeClass('show active');
+        $('.nav-link').removeClass('active');
+
+        // Activate the target tab
+        $(`#${tabName}-tab`).addClass('active');
+        $(`#${tabName}`).addClass('show active');
+    }
+
+    // Check URL for ?tab=incoming or ?tab=outgoing
+    const urlParams = new URLSearchParams(window.location.search);
+    const activeTab = urlParams.get('tab');
+
+    if (activeTab === 'incoming') {
+        activateTab('Incoming-requests-tab');
+    } 
+    else if (activeTab === 'outgoing') {
+        activateTab('requests_outgoing');
+    }
+
+    // ========== Select2 Initialization (Keep Existing) ========== //
+    $('.Service, .year, .cadre, .sector').select2({ placeholder: "Select options", allowClear: true });
+});
+</script>
+@endsection
