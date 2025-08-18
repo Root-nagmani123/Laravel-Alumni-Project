@@ -3,6 +3,12 @@
 @section('title', 'Group - Alumni | Lal Bahadur')
 
 @section('content')
+<style>
+    .select2-container--default .select2-results>.select2-results__options{
+        max-height: 400px !important;
+        overflow-y: auto;
+    }
+</style>
 
 <div class="container-fluid">
     <x-breadcrum title="Group" />
