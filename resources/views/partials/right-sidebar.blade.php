@@ -93,7 +93,7 @@
             </div>
             <!-- Card header END -->
             <!-- Card body START -->
-            <div class="card-body">
+            <div class="card-body" style="max-height: 300px; overflow-y: auto;">
                 <!-- Connection item START -->
                 @if(isset($groupNames) && $groupNames->count() > 0)
                 @foreach($groupNames as $index => $recent)
