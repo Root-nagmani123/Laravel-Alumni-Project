@@ -160,6 +160,15 @@
                                                         case 'group':
                                                             $notificationUrl = route('user.group-post', ['id' => $notification->source_id]);
                                                             break;
+                                                        case 'request':
+                                                            $notificationUrl = route('user.mentor_mentee', ['tab' => 'incoming']);
+                                                            break;
+                                                        case 'request_accept':
+                                                            $notificationUrl = route('user.mentor_mentee', ['tab' => 'outgoing']);
+                                                            break;
+                                                        case 'request_reject':
+                                                            $notificationUrl = route('user.mentor_mentee', ['tab' => 'outgoing']);
+                                                            break;
                                                         case 'birthday':
                                                             $notificationUrl = route('user.profile.data', ['id' => $notification->source_id]);
                                                             break;
