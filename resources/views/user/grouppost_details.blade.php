@@ -92,7 +92,7 @@
 <!-- Member Count Trigger -->
 <div class="mt-2">
   <a href="#membersCard-{{ $group->id }}" class="text-white small" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="membersCard-{{ $group->id }}">
-    {{ $group->members_count ?? 0 }} Members
+    {{ count($grp_members) }} Members
   </a>
 </div>
 
@@ -109,13 +109,24 @@
     </div>
     <div class="card-body">
 
-      @foreach($group->members as $member)
+      @foreach($grp_members as $member)
       <!-- Member Item -->
       <div class="d-md-flex align-items-center mb-4">
         <!-- Avatar -->
         <div class="avatar me-3 mb-3 mb-md-0">
+             @php
+    $defaultImage = asset('feed_assets/images/avatar/07.jpg');
+    $profileImage = $defaultImage;
+
+    if ($member->profile_pic && file_exists(public_path('storage/' . $member->profile_pic))) {
+        $profilePicPath = public_path('storage/' . $member->profile_pic);
+        if (file_exists($profilePicPath)) {
+            $profileImage = asset('storage/' . $member->profile_pic);
+        }
+    }
+@endphp
           <a href="#!">
-            <img class="avatar-img rounded-circle" src="{{ $member->profile_photo_url ?? asset('assets/images/avatar/default.jpg') }}" alt="">
+            <img class="avatar-img rounded-circle" src="{{ $profileImage }}" alt="">
           </a>
         </div>
         <!-- Info -->
@@ -129,10 +140,10 @@
           </ul>
         </div>
         <!-- Action Buttons -->
-        <div class="ms-md-auto d-flex">
+        <!-- <div class="ms-md-auto d-flex">
           <button class="btn btn-danger-soft btn-sm mb-0 me-2">Remove</button>
           <button class="btn btn-primary-soft btn-sm mb-0">View</button>
-        </div>
+        </div> -->
       </div>
       @endforeach
     </div>
