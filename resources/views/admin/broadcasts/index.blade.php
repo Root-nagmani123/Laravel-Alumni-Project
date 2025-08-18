@@ -93,7 +93,7 @@
 
                                         <div class="form-check form-switch">
                                             <input class="form-check-input status-toggle" type="checkbox" role="switch"
-                                                data-table="news" data-column="status" checked=""
+                                                data-table="news" data-column="status"
                                                 data-id="{{ $broadcast->id }}"
                                                 {{ $broadcast->status == 1 ? 'checked' : '' }}>
                                         </div>
