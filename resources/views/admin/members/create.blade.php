@@ -85,7 +85,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="mb-3">
-                                        <label class="form-label">Password<span class="required text-danger text-danger" >*</span></label>
+                                        <label class="form-label">Password</label>
                                         <input type="password" name="password" id="password" class="form-control">
                                         @error('password')
                                         <div class="text-danger">{{ $message }}</div>
@@ -94,7 +94,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="mb-3">
-                                        <label class="form-label">Confirm Password:<span class="required text-danger text-danger" >*</span></label>
+                                        <label class="form-label">Confirm Password</label>
                                         <input type="password" name="password_confirmation" id="confirm_password"
                                             class="form-control">
                                                @error('password_confirmation')
@@ -106,8 +106,20 @@
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <label class="form-label">Service<span class="required text-danger text-danger" >*</span></label>
-                                        <input type="text" name="service" id="service" class="form-control"
-                                            value="{{ old('service') }}">
+                                       
+                                            <select name="service" id="service-mentee" class="form-control Service"
+                                        data-id="mentee">
+                                        @if($members->isEmpty())
+                                        <option disabled>No Services Available</option>
+                                        @else
+                                         <option value="">Select Service</option>
+                                        @foreach($members as $member)
+                                        @if($member->Service != '')
+                                        <option value="{{ $member->Service }}">{{ $member->Service }}</option>
+                                        @endif
+                                        @endforeach
+                                        @endif
+                                    </select>
                                               @error('service')
                                         <div class="text-danger">{{ $message }}</div>
                                         @enderror
@@ -116,8 +128,22 @@
                                  <div class="col-md-6">
                                     <div class="mb-3">
                                         <label class="form-label">Sector<span class="required text-danger text-danger" >*</span></label>
-                                        <input type="text" name="sector" id="sector" class="form-control"
-                                            value="{{ old('sector') }}">
+                                        
+                                             <select name="sector" id="sector" class="form-control " >
+                                        @if($members->isEmpty())
+                                        <option disabled>No Sector Available</option>
+                                        @else
+                                        <option value="">Select Sector</option>
+                                        @foreach($members as $member)
+                                        @if(!empty($member->sector_list))
+                                        @php $sector_list = explode(',', $member->sector_list); @endphp
+                                        @foreach($sector_list as $sector)
+                                        <option value="{{ trim($sector) }}">{{ trim($sector) }}</option>
+                                        @endforeach
+                                        @endif
+                                        @endforeach
+                                        @endif
+                                    </select>
                                               @error('sector')
                                         <div class="text-danger">{{ $message }}</div>
                                         @enderror
@@ -126,29 +152,60 @@
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <label class="form-label">Cadre<span class="required text-danger text-danger" >*</span></label>
-                                        <input type="text" name="cader" id="cader" class="form-control"
-                                            value="{{ old('cader') }}">
+                                      
+                                            <select name="cader" class="form-control " >
+                                        @if($members->isEmpty())
+                                        <option disabled>No Cadres Available</option>
+                                        @else
+                                        <option value="">Select Cadre</option>
+                                        @foreach($members as $member)
+                                        @if(!empty($member->cader_list))
+                                        @php $cader_list = explode(',', $member->cader_list); @endphp
+                                        @foreach($cader_list as $cadre)
+                                        <option value="{{ trim($cadre) }}">{{ trim($cadre) }}</option>
+                                        @endforeach
+                                        @endif
+                                        @endforeach
+                                        @endif
+                                    </select>
                                               @error('cader')
                                         <div class="text-danger">{{ $message }}</div>
                                         @enderror
                                     </div>
                                 </div>
+                              
                                 <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Batch<span class="required text-danger text-danger" >*</span></label>
+                                        <!-- <input type="number" name="batch" id="batch" class="form-control"
+                                            value="{{ old('batch') }}"> -->
+                                             <select name="batch" id="batch" class="form-control batch" >
+                                        @if($members->isEmpty())
+                                        <option disabled>No Batches Available</option>
+                                        @else
+                                        <option value="">Select Batche</option>
+
+                                        @foreach($members as $member)
+                                        @if(!empty($member->batches))
+                                        @php $batches = explode(',', $member->batches); @endphp
+                                        @foreach($batches as $batch)
+                                        <option value="{{ trim($batch) }}">{{ trim($batch) }}</option>
+                                        @endforeach
+                                        @endif
+                                        @endforeach
+                                        @endif
+                                    </select>
+                                            @error('batch')
+                                        <div class="text-danger">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+                                  <div class="col-md-6">
                                     <div class="mb-3">
                                         <label class="form-label">Designation<span class="required text-danger text-danger" >*</span></label>
                                         <input type="text" name="designation" id="designation" class="form-control"
                                             value="{{ old('designation') }}">
                                              @error('designation')
-                                        <div class="text-danger">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">Batch<span class="required text-danger text-danger" >*</span></label>
-                                        <input type="number" name="batch" id="batch" class="form-control"
-                                            value="{{ old('batch') }}">
-                                            @error('batch')
                                         <div class="text-danger">{{ $message }}</div>
                                         @enderror
                                     </div>
