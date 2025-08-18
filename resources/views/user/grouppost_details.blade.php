@@ -56,42 +56,100 @@
         <div class="col-9">
             <div class="post-list p-3 rounded mb-4" style="background-color: #af2910; color: #fff;">
                 <div class="d-flex justify-content-between align-items-center">
-                    <h1 class="h5 mb-0 text-white">Group Posts : {{ $group->name }}</h1>
-                 
-                    <div class="dropdown">
-                        <a href="#" class="text-white btn btn-sm btn-transparent py-0 px-2" data-bs-toggle="dropdown">
-                            <i class="bi bi-three-dots-vertical"></i>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            @if($isMentee)
-                            <li>
-                               <form action="{{ route('user.group.destroy', $group->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this group?');">
-                                    @csrf
-                                    @method('DELETE') {{-- This is the key to spoof DELETE --}}
-                                    <input type="hidden" name="group_id" value="{{ $group->id }}">
-                                    <button type="submit" class="dropdown-item text-danger">
-                                        <i class="bi bi-trash fa-fw pe-2"></i>Delete Group
-                                    </button>
-                                </form>
+  <h1 class="h5 mb-0 text-white">Group Posts : {{ $group->name }}</h1>
 
-                            </li>
-                            @else
-                            <li>
-                                <form action="{{ route('user.groups.leave') }}" method="POST" onsubmit="return confirm('Are you sure you want to leave this group?');">
-                                    @csrf
-                                    <input type="hidden" name="group_id" value="{{ $group->id }}">
-                                    <button type="submit" class="dropdown-item text-danger">
-                                        <i class="bi bi-arrow-bar-right fa-fw pe-2"></i>Leave Group
-                                    </button>
-                                </form>
-                            </li>
-                            
-                            @endif
-                        </ul>
-                    </div>
-                   
-                </div>
+  <div class="dropdown">
+    <a href="#" class="text-white btn btn-sm btn-transparent py-0 px-2" data-bs-toggle="dropdown">
+      <i class="bi bi-three-dots-vertical"></i>
+    </a>
+    <ul class="dropdown-menu dropdown-menu-end">
+      @if($isMentee)
+      <li>
+        <form action="{{ route('user.group.destroy', $group->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this group?');">
+          @csrf
+          @method('DELETE')
+          <input type="hidden" name="group_id" value="{{ $group->id }}">
+          <button type="submit" class="dropdown-item text-danger">
+            <i class="bi bi-trash fa-fw pe-2"></i>Delete Group
+          </button>
+        </form>
+      </li>
+      @else
+      <li>
+        <form action="{{ route('user.groups.leave') }}" method="POST" onsubmit="return confirm('Are you sure you want to leave this group?');">
+          @csrf
+          <input type="hidden" name="group_id" value="{{ $group->id }}">
+          <button type="submit" class="dropdown-item text-danger">
+            <i class="bi bi-arrow-bar-right fa-fw pe-2"></i>Leave Group
+          </button>
+        </form>
+      </li>
+      @endif
+    </ul>
+  </div>
+</div>
+
+<!-- Member Count Trigger -->
+<div class="mt-2">
+  <a href="#membersCard-{{ $group->id }}" class="text-white small" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="membersCard-{{ $group->id }}">
+    {{ count($grp_members) }} Members
+  </a>
+</div>
+
+
+
+
             </div>
+            <!-- group member details -->
+
+<div class="collapse mt-3 mb-3" id="membersCard-{{ $group->id }}">
+  <div class="card">
+    <div class="card-header border-0 pb-0">
+      <h5 class="card-title">Group Members</h5>
+    </div>
+    <div class="card-body" style="max-height: 400px; overflow-y: auto;">
+
+      @foreach($grp_members as $member)
+      <!-- Member Item -->
+      <div class="d-md-flex align-items-center mb-4">
+        <!-- Avatar -->
+        <div class="avatar me-3 mb-3 mb-md-0">
+             @php
+    $defaultImage = asset('feed_assets/images/avatar/07.jpg');
+    $profileImage = $defaultImage;
+
+    if ($member->profile_pic && file_exists(public_path('storage/' . $member->profile_pic))) {
+        $profilePicPath = public_path('storage/' . $member->profile_pic);
+        if (file_exists($profilePicPath)) {
+            $profileImage = asset('storage/' . $member->profile_pic);
+        }
+    }
+@endphp
+          <a href="#!">
+            <img class="avatar-img rounded-circle" src="{{ $profileImage }}" alt="">
+          </a>
+        </div>
+        <!-- Info -->
+        <div class="w-100">
+          <div class="d-sm-flex align-items-start">
+            <h6 class="mb-0"><a href="#!">{{ $member->name }}</a></h6>
+            <p class="small ms-sm-2 mb-0">{{ $member->designation ?? 'Member' }}</p>
+          </div>
+          <ul class="avatar-group mt-1 list-unstyled align-items-sm-center">
+            <li class="small">{{ $member->email ?? '' }}</li>
+          </ul>
+        </div>
+        <!-- Action Buttons -->
+        <!-- <div class="ms-md-auto d-flex">
+          <button class="btn btn-danger-soft btn-sm mb-0 me-2">Remove</button>
+          <button class="btn btn-primary-soft btn-sm mb-0">View</button>
+        </div> -->
+      </div>
+      @endforeach
+    </div>
+  </div>
+</div>
+
 
             @forelse($posts as $post)
             @php
@@ -495,5 +553,6 @@ document.addEventListener("DOMContentLoaded", function () {
     GLightbox({ selector: '.glightbox' });
 });
 </script>
-@endsection
+
+
 @endsection

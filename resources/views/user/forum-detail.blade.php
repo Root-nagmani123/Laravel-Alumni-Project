@@ -117,9 +117,8 @@
                 <!-- Main Question -->
                 <div class="d-flex align-items-center mb-3">
   <img src="{{ asset($forum->member_profile_image ? (\Illuminate\Support\Str::startsWith($forum->member_profile_image, 'storage/') ? $forum->member_profile_image : 'storage/' . ltrim($forum->member_profile_image, '/')) : 'feed_assets/images/avatar/07.jpg') }}" 
-                 class="rounded-circle me-3" 
-                 alt="User" 
-                 style="width:60px;">
+                 class="avatar rounded-circle me-3" 
+                 alt="User">
     <div class="d-flex flex-column justify-content-center">
         <h6 class="mb-0 fw-bold">{{ $forum->member_name }}</h6>
         <small class="text-muted">{{ \Carbon\Carbon::parse($forum->created_at)->format('d M, Y') }}
@@ -190,7 +189,7 @@
         </div>
 
         <!-- Add Comment -->
-        <div class="mt-4">
+        <div class="mb-4">
             <form id="commentForm">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                 <div class="input-group">

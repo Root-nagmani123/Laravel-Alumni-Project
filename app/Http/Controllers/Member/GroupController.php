@@ -79,7 +79,7 @@ class GroupController extends Controller
     )
     ->orderBy('g.id', 'desc')
     ->get();
-    // print_r($groupNames);
+    // print_r($groupNames);die;
 
     
 
