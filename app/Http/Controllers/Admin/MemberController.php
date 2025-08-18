@@ -10,6 +10,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Models\Topic;
 use Maatwebsite\Excel\Validators\ValidationException;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\DB;
 
 class MemberController extends Controller
 {
@@ -36,23 +37,35 @@ class MemberController extends Controller
 
     public function create()
         {
-            return view('admin.members.create');
+            $members = DB::table('members')
+    ->select(
+        DB::raw('TRIM(Service) as Service'),
+          DB::raw('GROUP_CONCAT(DISTINCT TRIM(batch) ORDER BY batch ASC SEPARATOR ",") as batches'),
+         DB::raw('GROUP_CONCAT(DISTINCT TRIM(cader) ORDER BY TRIM(cader) ASC SEPARATOR ",") as cader_list'),
+        DB::raw('GROUP_CONCAT(DISTINCT TRIM(sector) ORDER BY TRIM(sector) ASC SEPARATOR ",") as sector_list')
+    )
+    ->where('Service', '=', 'IAS')
+    ->groupBy(DB::raw('TRIM(Service)'))
+    ->orderBy('Service')
+    ->get();
+            return view('admin.members.create', compact('members'));
         }
 
     public function store(Request $request)
         {
+           
         // Validate the incoming request
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'username' => 'required|string|max:255|unique:members',
             'mobile' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:members',
-            'password' => 'required|string|min:8|confirmed',
+            
             'cader' => 'required|string|max:255',
             'designation' => 'required|string|max:255',
-            'batch' => 'required|integer',
-            'sector' => 'nullable|string',
-            'service' => 'nullable|string',
+            'batch' => 'required',
+            'sector' => 'nullable',
+            'service' => 'nullable',
         ]);
         // Check if validation fails
         if ($validator->fails()) {
@@ -60,25 +73,43 @@ class MemberController extends Controller
                 ->withErrors($validator)
                 ->withInput();
         }
+        
         // Create a new member
-        Member::create([
-            'name' => $request->name,
-            'username' => $request->username,
-            'mobile' => $request->mobile,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'cader' => $request->cader,
-            'designation' => $request->designation,
-            'batch' => $request->batch,
-            'sector' => $request->sector,
-            'Service' => $request->service,
-        ]);
+      $data = [
+    'name'        => $request->name,
+    'username'    => $request->username,
+    'mobile'      => $request->mobile,
+    'email'       => $request->email,
+    'cader'       => $request->cader,
+    'designation' => $request->designation,
+    'batch'       => $request->batch,
+    'sector'      => $request->sector,
+    'service'     => $request->service,
+];
+
+// Agar password filled hai to add karo
+if ($request->filled('password')) {
+    $data['password'] = Hash::make($request->password);
+}
+
+Member::create($data);
        return redirect()->route('members.index')->with('success', 'Member added successfully.');
         }
 
     public function edit(Member $member)
         {
-            return view('admin.members.edit', compact('member'));
+              $members = DB::table('members')
+    ->select(
+        DB::raw('TRIM(Service) as Service'),
+          DB::raw('GROUP_CONCAT(DISTINCT TRIM(batch) ORDER BY batch ASC SEPARATOR ",") as batches'),
+         DB::raw('GROUP_CONCAT(DISTINCT TRIM(cader) ORDER BY TRIM(cader) ASC SEPARATOR ",") as cader_list'),
+        DB::raw('GROUP_CONCAT(DISTINCT TRIM(sector) ORDER BY TRIM(sector) ASC SEPARATOR ",") as sector_list')
+    )
+    ->where('Service', '=', 'IAS')
+    ->groupBy(DB::raw('TRIM(Service)'))
+    ->orderBy('Service')
+    ->get();
+            return view('admin.members.edit', compact('member', 'members'));
         }
 
     public function update(Request $request, Member $member)
@@ -90,7 +121,6 @@ class MemberController extends Controller
             'mobile' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:members,email,' . $member->id,
             'password' => 'nullable|string|min:8',
-            'password_confirmation' => 'required_with:password|same:password',
             'cader' => 'required|string|max:255',
             'designation' => 'required|string|max:255',
             'batch' => 'required|integer',

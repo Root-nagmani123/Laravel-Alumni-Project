@@ -394,12 +394,12 @@
                             placeholder="Enter your email" value="{{ auth()->guard('user')->user()->email }}" required
                             readonly>
                     </div>
-                    <!-- Sector -->
+
+                    <!-- Subject -->
                     <div class="mb-3">
-                        <label for="userSector" class="form-label">Sector <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" id="userSector" name="userSector"
-                            placeholder="Enter your sector" value="{{ auth()->guard('user')->user()->sector }}" required
-                            readonly>
+                        <label for="userSubject" class="form-label">Subject <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="userSubject" name="userSubject"
+                            placeholder="Enter subject" required>
                     </div>
 
                     <!-- Message -->
@@ -407,6 +407,13 @@
                         <label for="userMessage" class="form-label">Message <span class="text-danger">*</span></label>
                         <textarea class="form-control" id="userMessage" name="userMessage" rows="4" maxlength="1000"
                             placeholder="Write your message (max 1000 characters)" required></textarea>
+                    </div>
+
+                    <!-- Attachment -->
+
+                    <div class="mb-3">
+                        <label for="userAttachment" class="form-label">Attachment</label>
+                        <input type="file" class="form-control" id="userAttachment" name="userAttachment">
                     </div>
 
                 </div>

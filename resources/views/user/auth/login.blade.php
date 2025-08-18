@@ -391,6 +391,17 @@
                         </div>
                     </div>
                 </div>
+                <div class="card mt-5 w-100" style="background:transparent !important; border:none !important;">
+        <div class="card-body">
+            <p class="text-center mb-0">
+                © {{ date("Y") }}
+                <a href="https://www.lbsnaa.gov.in/">
+                    Lal Bahadur Shastri National Academy of Administration Mussoorie
+                </a>,<br>
+                Govt of India. All Rights Reserved
+            </p>
+        </div>
+    </div>
             </div>
 
             <!-- Right Section (Background + Overlay Forms) -->
