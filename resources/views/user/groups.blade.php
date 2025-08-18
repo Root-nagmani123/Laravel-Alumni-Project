@@ -149,11 +149,12 @@
             </div>
         </div>
 @php
-    $now = \Carbon\Carbon::now();
-    $isExpired = \Carbon\Carbon::parse($recent->end_date)->lt($now);
+$isExpired = false;
+    $isExpired = \Carbon\Carbon::parse($recent->end_date)->lt(\Carbon\Carbon::today());
+
 @endphp
         <div class="card-footer text-center mt-auto">
-            @if($isExpired)
+            @if($isExpired == false)
                 <span class="badge bg-success-soft text-success mb-2 d-block">Group Active</span>
                 <a href="{{ route('user.group-post', $recent->id) }}" class="btn btn-primary btn-sm">View Group</a>
             @else
