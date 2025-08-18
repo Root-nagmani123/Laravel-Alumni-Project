@@ -103,11 +103,11 @@
             <!-- group member details -->
 
 <div class="collapse mt-3 mb-3" id="membersCard-{{ $group->id }}">
-  <div class="card" style="background-color: #f8f9fa; max-height: 600px; overflow-y: auto;">
+  <div class="card">
     <div class="card-header border-0 pb-0">
       <h5 class="card-title">Group Members</h5>
     </div>
-    <div class="card-body">
+    <div class="card-body" style="max-height: 400px; overflow-y: auto;">
 
       @foreach($grp_members as $member)
       <!-- Member Item -->
