@@ -288,25 +288,26 @@
         background-color: #8b201a;
         color: #fff;
     }
+
     .bg-top-bottom {
-    position: relative;
-    background: url('{{ asset('feed_assets/images/bg/Group.svg') }}') top center no-repeat;
-    background-size: contain;
-    background-color: linear-gradient(to bottom, #af2910 40%, #fff 60%);
-}
+        position: relative;
+        background: url('{{ asset('feed_assets/images/bg/Group.svg') }}') top center no-repeat;
+        background-size: contain;
+        background-color: linear-gradient(to bottom, #af2910 40%, #fff 60%);
+    }
 
-.bg-top-bottom::after {
-    content: "";
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 250px; /* adjust to match image height */
-    background: url('{{ asset('feed_assets/images/bg/Group.svg') }}') center no-repeat;
-    background-size: contain;
-    transform: rotate(180deg);
-}
-
+    .bg-top-bottom::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 250px;
+        /* adjust to match image height */
+        background: url('{{ asset('feed_assets/images/bg/Group.svg') }}') center no-repeat;
+        background-size: contain;
+        transform: rotate(180deg);
+    }
     </style>
 </head>
 
@@ -320,213 +321,209 @@
     </div>
 
     <div class="container-fluid">
-      <div class="row">
-    <!-- Left Section -->
-    <div class="col-lg-4 p-5 d-flex flex-column justify-content-center bg-top-bottom">
-    <!-- Your left column content here -->
-        <!-- Logo -->
-        <div class="logo-sec text-center mb-4">
-            <a href="#!"
-               class="d-flex align-items-center gap-3 text-decoration-none justify-content-center flex-wrap">
-                <img src="{{ asset('admin_assets/images/logos/lbsnaa_logo.jpg') }}" alt="LBSNAA Logo"
-                     style="height: 60px; object-fit: contain;">
-                <div class="d-flex flex-column text-start">
-                    <span style="color: #000;font-weight: bold;font-size: 24px;">Alumni</span>
-                    <span style="font-size: 16px; font-weight: 500;color: #af2910;">
-                        Lal Bahadur Shastri National Academy of Administration
-                    </span>
-                </div>
-            </a>
-        </div>
-
-        <div class="mt-4">
-            <h1 class="fw-bold mb-3">ABOUT LBSNAA Alumni</h1>
-        <p>The LBSNAA Alumni Portal is an online platform to connect, collaborate, and provide
-            end-to-end services to Academy alumni.</p>
-        </div>
-
-        <!-- Login Buttons -->
-        <div class="row mt-5">
-            <div class="col-sm-5 col-8 mb-2 p-0">
-                <div class="card login-card p-3">
-                    <a href="#" class="text-decoration-none open-panel" data-panel="ldap">
-                        <span class="card-label">Login as</span>
-                        <p class="text-center m-0 fw-bold">LDAP</p>
-                    </a>
-                </div>
-            </div>
-            <div class="col-sm-2 col-8 align-self-center p-0">
-                <p class="text-center">or</p>
-            </div>
-            <div class="col-sm-5 col-8 mb-2 p-0">
-                <div class="card login-card p-3">
-                    <a href="#" class="text-decoration-none open-panel" data-panel="otp">
-                        <span class="card-label">Login as</span>
-                        <p class="text-center m-0 fw-bold">Email OTP</p>
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <div class="mt-3">
-            <a href="#" class="btn btn-outline-danger open-panel" data-panel="register">
-                For Registration Click Here
-            </a>
-        </div>
-        <div class="position-relative w-100 bg-light d-flex align-items-center px-3 mt-4"
-                                                style="height: 40px; overflow: hidden; z-index: 1040;">
-                                                <div class="position-relative d-flex align-items-center">
-                                                    <button class="btn btn-sm btn-danger position-relative z-1"
-                                                        style="min-width: 120px;">
-                                                        Helpdesk
-                                                    </button>
-                                                </div>
-
-                                                <div class="marquee-container flex-grow-1 d-flex align-items-center ms-2"
-                                                    style="overflow: hidden; height: 100%;">
-                                                    <div class="marquee-text">
-                                                        Inquiry regarding user credentials: Phone: 135-2222346 (Mon–Fri,
-                                                        9:00 AM–5:30 PM) Email:
-                                                        ithelpdesk.lbsnaa@nic.in
-                                                    </div>
-                                                </div>
-                                            </div>
-    </div>
-
-    <!-- Right Section (Background + Overlay Forms) -->
-    <div class="col-8 p-0 position-relative" style="height: 100vh;">
-        <!-- Background image -->
-        <img src="{{ asset('user_assets/images/login/login-bg.jpg') }}" 
-             alt="Employee Services Graphic"
-             class="w-100 h-100" style="object-fit: cover;">
-
-        <!-- Overlay Container -->
-        <div class="position-absolute top-50 start-50 translate-middle w-50" style="z-index: 2;">
-            <!-- LDAP Login -->
-            <div id="ldap-panel" class="card shadow-lg p-4 d-none">
-                <h4 class="mb-3 fw-bold text-center">LDAP Login</h4>
-                <hr class="my-2">
-                <form method="POST" action="{{ route('user.login.submit_ldap') }}">
-                    @csrf
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">User Name</label>
-                        <input type="text" name="username" class="form-control" placeholder="Enter your username">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Password</label>
-                        <input type="password" name="password" class="form-control" placeholder="Enter your password">
-                    </div>
-                    <button type="submit" class="btn btn-primary w-100">Login</button>
-                </form>
-            </div>
-
-            <!-- OTP Login -->
-            <div id="otp-panel" class="card shadow-lg p-4 d-none">
-                <h4 class="mb-3 fw-bold text-center">Email OTP Login</h4>
-                <hr class="my-2">
-                <form id="otpForm">
-                                                @csrf
-                                                <div class="form-group mb-3">
-                                                    <label class="form-label fw-bold">Email Address</label>
-                                                    <input type="email" name="otp_email" id="otp_email"
-                                                        class="form-control" placeholder="Enter your email" required>
-                                                    <div id="emailError" class="error-message"></div>
-                                                    <div id="emailSuccess" class="success-message"></div>
-                                                </div>
-                                                <div id="otpInputContainer">
-                                                    <div class="form-group mb-3">
-                                                        <label class="form-label fw-bold">Enter OTP</label>
-                                                        <div class="d-flex gap-2">
-                                                            <input type="text"
-                                                                class="form-control text-center otp-input" maxlength="1"
-                                                                pattern="[0-9]*" inputmode="numeric">
-                                                            <input type="text"
-                                                                class="form-control text-center otp-input" maxlength="1"
-                                                                pattern="[0-9]*" inputmode="numeric">
-                                                            <input type="text"
-                                                                class="form-control text-center otp-input" maxlength="1"
-                                                                pattern="[0-9]*" inputmode="numeric">
-                                                            <input type="text"
-                                                                class="form-control text-center otp-input" maxlength="1"
-                                                                pattern="[0-9]*" inputmode="numeric">
-                                                            <input type="text"
-                                                                class="form-control text-center otp-input" maxlength="1"
-                                                                pattern="[0-9]*" inputmode="numeric">
-                                                            <input type="text"
-                                                                class="form-control text-center otp-input" maxlength="1"
-                                                                pattern="[0-9]*" inputmode="numeric">
-                                                        </div>
-
-                                                        <!-- Hidden field to store the final OTP -->
-                                                        <input type="hidden" name="otp_code" id="otp_code">
-
-                                                        <div id="otpError" class="error-message"></div>
-                                                        <div id="otpSuccess" class="success-message"></div>
-                                                        <div id="resendOtp">Didn't receive OTP? Resend</div>
-                                                    </div>
-                                                </div>
-                                                <button type="button" id="sendOtpBtn" class="btn btn-primary w-100">Send
-                                                    OTP</button>
-                                                <button type="button" id="verifyOtpBtn"
-                                                    class="btn btn-primary w-100 mt-2">Verify OTP</button>
-                                            </form>
-            </div>
-
-            <!-- Registration -->
-            <div id="register-panel" class="card shadow-lg p-4 d-none">
-                <h4 class="mb-3 fw-bold text-center">Registration</h4>
-                <hr class="my-2">
-                <form>
-                    <div class="row g-3">
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold">Name</label>
-                                <input type="text" name="name" class="form-control" required>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold">Email <span class="text-muted"
-                                        style="font-size:12px;">(.gov or .nic only)</span></label>
-                                <input type="email" name="email" class="form-control"
-                                    pattern="^[^@\s]+@(?:[^@\s]+\.)?(gov|nic)\.in$" required>
-                                <div class="form-text text-danger" id="emailMsg" style="display:none;">Only .gov.in or
-                                    .nic.in email IDs are allowed.</div>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold">Mobile Number</label>
-                                <input type="text" name="mobile" class="form-control" pattern="^[6-9]\d{9}$"
-                                    maxlength="10" required>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold">Service</label>
-                                <input type="text" name="service" class="form-control" required>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold">Batch</label>
-                                <input type="text" name="batch" class="form-control" required>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold">Cadre <span
-                                        class="text-muted">(Optional)</span></label>
-                                <input type="text" name="cadre" class="form-control">
-                            </div>
-                            <div class="col-md-12">
-                                <label class="form-label fw-bold">Course Attended in LBSNAA</label>
-                                <input type="text" name="course_attended" class="form-control" required>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold">Upload Photo</label>
-                                <input type="file" name="photo" class="form-control" accept="image/*" required>
-                            </div>
-                            <div class="col-md-6 ">
-                                <label class="form-label fw-bold">Upload Govt. ID</label>
-                                <input type="file" name="govt_id" class="form-control" accept="image/*,.pdf" required>
-                            </div>
+        <div class="row">
+            <!-- Left Section -->
+            <div class="col-lg-4 p-5 d-flex flex-column justify-content-center bg-top-bottom">
+                <!-- Your left column content here -->
+                <!-- Logo -->
+                <div class="logo-sec text-center mb-4">
+                    <a href="#!"
+                        class="d-flex align-items-center gap-3 text-decoration-none justify-content-center flex-wrap">
+                        <img src="{{ asset('admin_assets/images/logos/lbsnaa_logo.jpg') }}" alt="LBSNAA Logo"
+                            style="height: 60px; object-fit: contain;">
+                        <div class="d-flex flex-column text-start">
+                            <span style="color: #000;font-weight: bold;font-size: 24px;">Alumni</span>
+                            <span style="font-size: 16px; font-weight: 500;color: #af2910;">
+                                Lal Bahadur Shastri National Academy of Administration
+                            </span>
                         </div>
-                    <button type="submit" class="btn btn-primary w-100 mt-3">Register</button>
-                </form>
+                    </a>
+                </div>
+
+                <div class="mt-4">
+                    <h1 class="fw-bold mb-3">ABOUT LBSNAA Alumni</h1>
+                    <p>The LBSNAA Alumni Portal is an online platform to connect, collaborate, and provide
+                        end-to-end services to Academy alumni.</p>
+                </div>
+
+                <!-- Login Buttons -->
+                <div class="row mt-5">
+                    <div class="col-sm-5 col-8 mb-2 p-0">
+                        <a href="#" class="text-decoration-none open-panel" data-panel="ldap">
+                            <div class="card login-card p-3">
+                                <span class="card-label">Login as</span>
+                                <p class="text-center m-0 fw-bold">LDAP</p>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-sm-2 col-8 align-self-center p-0">
+                        <p class="text-center">or</p>
+                    </div>
+                    <div class="col-sm-5 col-8 mb-2 p-0">
+                        <a href="#" class="text-decoration-none open-panel" data-panel="otp">
+                            <div class="card login-card p-3">
+                                <span class="card-label">Login as</span>
+                                <p class="text-center m-0 fw-bold">Email OTP</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="mt-3">
+                    <a href="#" class="btn btn-outline-danger open-panel" data-panel="register">
+                        For Registration Click Here
+                    </a>
+                </div>
+                <div class="position-relative w-100 bg-light d-flex align-items-center px-3 mt-4"
+                    style="height: 40px; overflow: hidden; z-index: 1040;">
+                    <div class="position-relative d-flex align-items-center">
+                        <button class="btn btn-sm btn-danger position-relative z-1" style="min-width: 120px;">
+                            Helpdesk
+                        </button>
+                    </div>
+
+                    <div class="marquee-container flex-grow-1 d-flex align-items-center ms-2"
+                        style="overflow: hidden; height: 100%;">
+                        <div class="marquee-text">
+                            Inquiry regarding user credentials: Phone: 135-2222346 (Mon–Fri,
+                            9:00 AM–5:30 PM) Email:
+                            ithelpdesk.lbsnaa@nic.in
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Section (Background + Overlay Forms) -->
+            <div class="col-8 p-0 position-relative" style="height: 100vh;">
+                <!-- Background image -->
+                <img src="{{ asset('user_assets/images/login/login-bg.jpg') }}" alt="Employee Services Graphic"
+                    class="w-100 h-100" style="object-fit: cover;">
+
+                <!-- Overlay Container -->
+                <div class="position-absolute top-50 start-50 translate-middle w-50" style="z-index: 2;">
+                    <!-- LDAP Login -->
+                    <div id="ldap-panel" class="card shadow-lg p-4 d-none">
+                        <h4 class="mb-3 fw-bold text-center">LDAP Login</h4>
+                        <hr class="my-2">
+                        <form method="POST" action="{{ route('user.login.submit_ldap') }}">
+                            @csrf
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">User Name</label>
+                                <input type="text" name="username" class="form-control"
+                                    placeholder="Enter your username">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Password</label>
+                                <input type="password" name="password" class="form-control"
+                                    placeholder="Enter your password">
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">Login</button>
+                        </form>
+                    </div>
+
+                    <!-- OTP Login -->
+                    <div id="otp-panel" class="card shadow-lg p-4 d-none">
+                        <h4 class="mb-3 fw-bold text-center">Email OTP Login</h4>
+                        <hr class="my-2">
+                        <form id="otpForm">
+                            @csrf
+                            <div class="form-group mb-3">
+                                <label class="form-label fw-bold">Email Address</label>
+                                <input type="email" name="otp_email" id="otp_email" class="form-control"
+                                    placeholder="Enter your email" required>
+                                <div id="emailError" class="error-message"></div>
+                                <div id="emailSuccess" class="success-message"></div>
+                            </div>
+                            <div id="otpInputContainer">
+                                <div class="form-group mb-3">
+                                    <label class="form-label fw-bold">Enter OTP</label>
+                                    <div class="d-flex gap-2">
+                                        <input type="text" class="form-control text-center otp-input" maxlength="1"
+                                            pattern="[0-9]*" inputmode="numeric">
+                                        <input type="text" class="form-control text-center otp-input" maxlength="1"
+                                            pattern="[0-9]*" inputmode="numeric">
+                                        <input type="text" class="form-control text-center otp-input" maxlength="1"
+                                            pattern="[0-9]*" inputmode="numeric">
+                                        <input type="text" class="form-control text-center otp-input" maxlength="1"
+                                            pattern="[0-9]*" inputmode="numeric">
+                                        <input type="text" class="form-control text-center otp-input" maxlength="1"
+                                            pattern="[0-9]*" inputmode="numeric">
+                                        <input type="text" class="form-control text-center otp-input" maxlength="1"
+                                            pattern="[0-9]*" inputmode="numeric">
+                                    </div>
+
+                                    <!-- Hidden field to store the final OTP -->
+                                    <input type="hidden" name="otp_code" id="otp_code">
+
+                                    <div id="otpError" class="error-message"></div>
+                                    <div id="otpSuccess" class="success-message"></div>
+                                    <div id="resendOtp">Didn't receive OTP? Resend</div>
+                                </div>
+                            </div>
+                            <button type="button" id="sendOtpBtn" class="btn btn-primary w-100">Send
+                                OTP</button>
+                            <button type="button" id="verifyOtpBtn" class="btn btn-primary w-100 mt-2">Verify
+                                OTP</button>
+                        </form>
+                    </div>
+
+                    <!-- Registration -->
+                    <div id="register-panel" class="card shadow-lg p-4 d-none">
+                        <h4 class="mb-3 fw-bold text-center">Registration</h4>
+                        <hr class="my-2">
+                        <form>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Name</label>
+                                    <input type="text" name="name" class="form-control" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Email <span class="text-muted"
+                                            style="font-size:12px;">(.gov or .nic only)</span></label>
+                                    <input type="email" name="email" class="form-control"
+                                        pattern="^[^@\s]+@(?:[^@\s]+\.)?(gov|nic)\.in$" required>
+                                    <div class="form-text text-danger" id="emailMsg" style="display:none;">Only .gov.in
+                                        or
+                                        .nic.in email IDs are allowed.</div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Mobile Number</label>
+                                    <input type="text" name="mobile" class="form-control" pattern="^[6-9]\d{9}$"
+                                        maxlength="10" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Service</label>
+                                    <input type="text" name="service" class="form-control" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Batch</label>
+                                    <input type="text" name="batch" class="form-control" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Cadre <span
+                                            class="text-muted">(Optional)</span></label>
+                                    <input type="text" name="cadre" class="form-control">
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="form-label fw-bold">Course Attended in LBSNAA</label>
+                                    <input type="text" name="course_attended" class="form-control" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Upload Photo</label>
+                                    <input type="file" name="photo" class="form-control" accept="image/*" required>
+                                </div>
+                                <div class="col-md-6 ">
+                                    <label class="form-label fw-bold">Upload Govt. ID</label>
+                                    <input type="file" name="govt_id" class="form-control" accept="image/*,.pdf"
+                                        required>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100 mt-3">Register</button>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</div>
 
 
     </div>
@@ -629,21 +626,19 @@
     <script src="{{ asset('user_assets/js/theme-setting.js') }}"></script>
     <script src="{{ asset('user_assets/js/script.js') }}"></script>
     <script>
-        document.querySelectorAll('.open-panel').forEach(btn => {
-    btn.addEventListener('click', e => {
-        e.preventDefault();
-        let target = btn.getAttribute('data-panel');
+    document.querySelectorAll('.open-panel').forEach(btn => {
+        btn.addEventListener('click', e => {
+            e.preventDefault();
+            let target = btn.getAttribute('data-panel');
 
-        // Hide all
-        document.querySelectorAll('#ldap-panel, #otp-panel, #register-panel')
+            // Hide all
+            document.querySelectorAll('#ldap-panel, #otp-panel, #register-panel')
                 .forEach(p => p.classList.add('d-none'));
 
-        // Show selected
-        document.getElementById(target + '-panel').classList.remove('d-none');
+            // Show selected
+            document.getElementById(target + '-panel').classList.remove('d-none');
+        });
     });
-});
-
-
     </script>
     <script>
     document.addEventListener("DOMContentLoaded", function() {
