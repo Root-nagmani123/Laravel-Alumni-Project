@@ -400,8 +400,52 @@ class FeedController extends Controller
 
         return view('user.grouppost_details', compact('posts', 'group'));
     }
+public function getPostByGroup($group_id)
+{
+    $userId = auth()->guard('user')->id();
 
-    public function getPostByGroup($group_id)
+    // Posts with relations
+    $posts = Post::with(['member', 'media'])
+        ->where('group_id', $group_id)
+        ->latest()
+        ->get();
+
+    // Group
+    $group = Group::find($group_id);
+
+    // Mentee check (one-liner)
+    $isMentee = ($group->member_type == 2 && $group->created_by == $userId) ? 1 : 0;
+
+    // Mentor + mentees direct members fetch
+    $groupMember = DB::table('group_member')
+        ->where('group_id', $group_id)
+        ->first();
+
+    // Collect all members (mentor + mentees)
+    $memberIds = [];
+    if ($groupMember) {
+        if (!empty($groupMember->mentor)) {
+            $memberIds[] = $groupMember->mentor;
+        }
+
+        if (!empty($groupMember->mentiee)) {
+            $mentieeIds = json_decode($groupMember->mentiee, true);
+            if (is_array($mentieeIds)) {
+                $memberIds = array_merge($memberIds, $mentieeIds);
+            }
+        }
+    }
+
+    // Fetch member details from members table
+    $grp_members = DB::table('members')
+        ->whereIn('id', $memberIds)
+        ->select('id', 'name', 'designation','profile_pic' )
+        ->get();
+        // print_r($grp_members);die;
+
+    return view('user.grouppost_details', compact('posts','group','isMentee','grp_members'));
+}
+    public function getPostByGroup_bkp($group_id)
     {
        $userId = auth()->guard('user')->id();
         $posts = Post::with(['member', 'media'])
