@@ -241,43 +241,91 @@
 
             {{-- Image Display (your current logic) --}}
 
-            @if($totalImages === 1)
-            <div class="post-img mt-2">
-                <a href="{{ asset('storage/' . $imageMedia[0]->file_path) }}" class="glightbox"
+           @if($totalImages === 1)
+    {{-- Single Image --}}
+    <div class="post-img mt-2">
+        <a href="{{ asset('storage/' . $imageMedia[0]->file_path) }}" class="glightbox"
+            data-gallery="post-gallery-{{ $post->id }}">
+            <img src="{{ asset('storage/' . $imageMedia[0]->file_path) }}"
+                 class="w-100 rounded"
+                 alt="Post Image"
+                 style="width: 100%; height: 400px; object-fit: cover;"
+                 loading="lazy" decoding="async">
+        </a>
+    </div>
+
+@elseif($totalImages === 2)
+    {{-- Two Side by Side --}}
+    <div class="post-img d-flex gap-2 mt-2">
+        @foreach($imageMedia as $media)
+            <a href="{{ asset('storage/' . $media->file_path) }}" class="glightbox flex-fill"
+                data-gallery="post-gallery-{{ $post->id }}">
+                <img src="{{ asset('storage/' . $media->file_path) }}"
+                     class="w-100 rounded"
+                     alt="Post Image"
+                     style="height: 250px; object-fit: cover;"
+                     loading="lazy" decoding="async">
+            </a>
+        @endforeach
+    </div>
+
+@elseif($totalImages === 3)
+    {{-- One Large Left, Two Stacked Right --}}
+    <div class="post-img d-flex gap-2 mt-2">
+        <a href="{{ asset('storage/' . $imageMedia[0]->file_path) }}" class="glightbox flex-fill"
+            data-gallery="post-gallery-{{ $post->id }}">
+            <img src="{{ asset('storage/' . $imageMedia[0]->file_path) }}"
+                 class="w-100 rounded"
+                 alt="Post Image"
+                 style="height: 400px; object-fit: cover;"
+                 loading="lazy" decoding="async">
+        </a>
+        <div class="d-flex flex-column gap-2" style="width: 50%;">
+            @foreach($imageMedia->slice(1, 2) as $media)
+                <a href="{{ asset('storage/' . $media->file_path) }}" class="glightbox flex-fill"
                     data-gallery="post-gallery-{{ $post->id }}">
-                    <img src="{{ asset('storage/' . $imageMedia[0]->file_path) }}" class="w-100 rounded"
-                        alt="Post Image" style="width: 100%; height: 400px;object-fit: cover;" loading="lazy" decoding="async">
+                    <img src="{{ asset('storage/' . $media->file_path) }}"
+                         class="w-100 rounded"
+                         alt="Post Image"
+                         style="height: 195px; object-fit: cover;"
+                         loading="lazy" decoding="async">
                 </a>
-            </div>
-            @elseif($totalImages > 1)
-            <div class="post-img d-flex justify-content-between flex-wrap gap-2 gap-lg-3 mt-2">
-                @foreach($imageMedia->take(4) as $index => $media)
-                <div class="position-relative" style="width: 48%;">
-                    <a href="{{ asset('storage/' . $media->file_path) }}" class="glightbox"
-                        data-gallery="post-gallery-{{ $post->id }}">
-                        <img src="{{ asset('storage/' . $media->file_path) }}" alt="Post Image" loading="lazy"
-                            class="w-100 rounded" decoding="async" style="height: 250px; object-fit: cover;">
-                    </a>
-                    @if($index === 3 && $totalImages > 4)
-                    {{-- Hidden extra images --}}
+            @endforeach
+        </div>
+    </div>
+
+@else
+    {{-- Four or More Images --}}
+    <div class="post-img d-grid gap-2 mt-2" style="grid-template-columns: repeat(2, 1fr); grid-auto-rows: 200px;">
+        @foreach($imageMedia->take(4) as $index => $media)
+            <div class="position-relative">
+                <a href="{{ asset('storage/' . $media->file_path) }}" class="glightbox"
+                    data-gallery="post-gallery-{{ $post->id }}">
+                    <img src="{{ asset('storage/' . $media->file_path) }}"
+                         alt="Post Image"
+                         loading="lazy"
+                         class="w-100 h-100 rounded"
+                         style="object-fit: cover;">
+                </a>
+
+                {{-- Overlay for extra images --}}
+                @if($index === 3 && $totalImages > 4)
                     @foreach($imageMedia->slice(4) as $extra)
-                    <a href="{{ asset('storage/' . $extra->file_path) }}" class="glightbox d-none"
-                        data-gallery="post-gallery-{{ $post->id }}"></a>
+                        <a href="{{ asset('storage/' . $extra->file_path) }}" class="glightbox d-none"
+                            data-gallery="post-gallery-{{ $post->id }}"></a>
                     @endforeach
 
-                    {{-- Overlay link to trigger the rest of the images --}}
-                    <a href="{{ asset('storage/' . $imageMedia[4]->file_path) }}"
-                        class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center text-white glightbox"
-                        style="background-color: rgba(0,0,0,0.6); font-size: 2rem; cursor: pointer;"
-                        data-gallery="post-gallery-{{ $post->id }}">
+                    <div class="position-absolute top-0 start-0 w-100 h-100 d-flex 
+                                align-items-center justify-content-center text-white"
+                         style="background: rgba(0,0,0,0.6); font-size: 2rem; border-radius: 0.5rem;">
                         +{{ $totalImages - 4 }}
-                    </a>
-                    @endif
-                </div>
-
-                @endforeach
+                    </div>
+                @endif
             </div>
-            @endif
+        @endforeach
+    </div>
+@endif
+
             <ul class="nav nav-stack py-3 small">
                 @php
                 $likeUserList = $post->likes->pluck('member.name')->filter();
