@@ -80,7 +80,7 @@
                                      <td>
                                      <div class="d-flex gap-2">
                                         <a href="{{route('group.add_topic', ['id' => $group->id]) }}" class="btn btn-sm btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Add Group Topics"><i class="bi bi-plus"></i></a>
-                                        <a href="{{ route('group.topic.view' , ['id' => $group->id] )}}" class="btn btn-sm btn-success" data-bs-toggle="tooltip" data-bs-placement="top" title="View Group Topics"><i class="bi bi-eye"></i></a>
+                                        <a href="{{ route('group.topic.view', ['id' => Crypt::encryptString($group->id)]) }}"  class="btn btn-sm btn-success" data-bs-toggle="tooltip" data-bs-placement="top" title="View Group Topics"><i class="bi bi-eye"></i></a>
                                      </div>
                                      </td>
                                    <!-- <td>{{ \Carbon\Carbon::parse($group->created_at)->timezone('Asia/Kolkata')->format('l, d M Y, h:i A') }}</td> -->
@@ -97,11 +97,12 @@
                                                 data-table="group" data-column="active_inactive" data-id="{{ $group->id }}"
                                                 {{ $group->status == 1 ? 'checked' : '' }}>
                                         </div>
-                                    </td>
+                                    </td> 
 
                                     <td>
-                                        <a href="{{ route('group.edit', $group->id) }}"
-                                            class="btn btn-success btn-sm">Edit</a>
+                                        <a href="{{ route('group.edit', encrypt($group->id)) }}" 
+   class="btn btn-success btn-sm">Edit</a>
+
                                 <!--<form action="{{-- route('group.destroy', $group->id) --}}" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete?');">
                                     @csrf
                                     @method('DELETE')

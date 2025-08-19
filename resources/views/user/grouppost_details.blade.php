@@ -227,7 +227,7 @@
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li>
-                                <form action="{{ route('user.group.post.destroy', $post->id) }}" method="POST">
+                                <form action="{{ route('user.group.post.destroy', $post->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this post?');">
                     @csrf
                     @method('DELETE')
                     <button type="submit" class="text-decoration-none ms-2 border-0 bg-transparent d-flex align-items-center gap-2 text-danger">

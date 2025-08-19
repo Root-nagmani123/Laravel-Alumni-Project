@@ -24,13 +24,13 @@
                 <div class="row">
                     <div class="col-6">
                         <div class="mb-3">
-                            <label class="form-label">Name</label>
+                            <label class="form-label">Name <span class="text-danger">*</span></label>
                             <input type="text" name="name" class="form-control" value="{{ $group->name }}" required>
                         </div>
                     </div>
                     <div class="col-6">
                         <div class="mb-3">
-                            <label class="form-label">Mentor Name</label>
+                            <label class="form-label">Mentor Name <span class="text-danger">*</span></label>
                             <select name="mentor_id" class="form-control" required>
                                 <option value="">Select Mentor</option>
                                 @foreach($users as $user)
@@ -69,14 +69,14 @@
                     </div>
                      <div class="col-md-6">
                                     <div class="mb-3">
-                                        <label class="form-label">Group End Date</label>
-                                        <input type="date" class="form-control" name="end_date" id="end_date" value="{{ $group->end_date }}">
+                                        <label class="form-label">Group End Date <span class="text-danger">*</span></label>
+                                        <input type="date" class="form-control" name="end_date" id="end_date" value="{{ $group->end_date }}" required>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
    <div class="mb-3">
-    <label class="form-label">Group Image</label>
-    <input type="file" class="form-control" name="image" id="image" accept="image/*">
+    <label class="form-label">Group Image </label>
+    <input type="file" class="form-control" name="image" id="image" accept="image/*" >
 
     <!-- Preview -->
     <div class="mt-2">

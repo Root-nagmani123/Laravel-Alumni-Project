@@ -15,6 +15,8 @@
     <!-- Theme css -->
     <!-- Add CSRF token meta -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+
     <link id="change-link" rel="stylesheet" type="text/css" href="{{asset('user_assets/css/style.css')}}">
     <style>
     body {
@@ -308,6 +310,11 @@
         background-size: contain;
         transform: rotate(180deg);
     }
+    /* Error toast ka background red karne ke liye */
+    #toast-container > .toast-error {
+        background-color: red !important;
+        color: #fff !important;  /* text white */
+    }
     </style>
 </head>
 
@@ -343,8 +350,9 @@
                 <div class="mt-4">
                     <h1 class="fw-bold mb-3">ABOUT LBSNAA Alumni</h1>
                     <p>The LBSNAA Alumni Portal is an online platform to connect, collaborate, and provide
-                        end-to-end services to Academy alumni.</p>
+                        end-to-end services to Academy alumni</p>
                 </div>
+               
 
                 <!-- Login Buttons -->
                 <div class="row mt-5">
@@ -416,17 +424,17 @@
                     <div id="ldap-panel" class="card shadow-lg p-4 d-none">
                         <h4 class="mb-3 fw-bold text-center">LDAP Login</h4>
                         <hr class="my-2">
-                        <form method="POST" action="{{ route('user.login.submit_ldap') }}">
+                        <form method="POST" action="{{ route('user.login.submit_ldap') }}" id="loginForm">
                             @csrf
                             <div class="mb-3">
                                 <label class="form-label fw-bold">User Name</label>
                                 <input type="text" name="username" class="form-control"
-                                    placeholder="Enter your username">
+                                    placeholder="Enter your username" required>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label fw-bold">Password</label>
-                                <input type="password" name="password" class="form-control"
-                                    placeholder="Enter your password">
+                                <input type="password" name="password" id="password" class="form-control"
+                                    placeholder="Enter your password" required>
                             </div>
                             <button type="submit" class="btn btn-primary w-100">Login</button>
                         </form>
@@ -482,7 +490,7 @@
                     <div id="register-panel" class="card shadow-lg p-4 d-none">
                         <h4 class="mb-3 fw-bold text-center">Registration</h4>
                         <hr class="my-2">
-                        <form>
+                        <form >
                             <div class="row g-3">
                                 <div class="col-md-6">
                                     <label class="form-label fw-bold">Name</label>
@@ -736,8 +744,28 @@
 
     <!-- Theme js-->
     <script src="{{asset('user_assets/js/script.js')}}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+@if(session('success'))
+<script>
+toastr.success("{{ session('success') }}");
+</script>
+@endif
+@if(session('error'))
+<script>
+    toastr.options = {
+        "closeButton": true,
+        "progressBar": true,
+        "positionClass": "toast-top-center", // 👈 Center top
+        "timeOut": "5000"
+    };
+    toastr.error("{{ session('error') }}");
+</script>
+@endif
 
-    <script>
+      
+<script>
+   
     feather.replace();
     $(".emojiPicker").emojioneArea({
         inline: true,
@@ -902,6 +930,27 @@
             }, 1000);
         }
     });
+
+async function encryptPassword(password) {
+    
+    let key = CryptoJS.enc.Base64.parse("{{ substr(config('app.key'), 7) }}");
+    const iv = CryptoJS.enc.Utf8.parse("1234567890123456"); 
+    const encrypted = CryptoJS.AES.encrypt(password, key, {
+        iv: iv,
+        mode: CryptoJS.mode.CBC,
+        padding: CryptoJS.pad.Pkcs7
+    });
+    return encrypted.toString(); 
+}
+
+document.getElementById("loginForm").addEventListener("submit", async function (e) {
+    e.preventDefault();
+    let passwordField = document.getElementById("password");
+    let encryptedPassword = await encryptPassword(passwordField.value);
+    passwordField.value = encryptedPassword; // Send encrypted password
+    this.submit(); // Now submit the form
+});
+
     </script>
 </body>
 

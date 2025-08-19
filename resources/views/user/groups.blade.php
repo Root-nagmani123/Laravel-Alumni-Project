@@ -127,7 +127,7 @@
                 </div> -->
 
                 <h5 class="mb-0 mt-3">
-                    <a href="{{ route('user.group-post', $recent->id) }}">{{ $recent->name }}</a>
+                    <a href="{{ route('user.group-post', $recent->enc_id) }}">{{ $recent->name }}</a>
                 </h5>
 
                 <p class="small text-muted mb-1">End Date: {{ \Carbon\Carbon::parse($recent->end_date ?? now())->format('d-m-Y') }}</p>
@@ -156,7 +156,7 @@ $isExpired = false;
         <div class="card-footer text-center mt-auto">
             @if($isExpired == false)
                 <span class="badge bg-success-soft text-success mb-2 d-block">Group Active</span>
-                <a href="{{ route('user.group-post', $recent->id) }}" class="btn btn-primary btn-sm">View Group</a>
+                <a href="{{ route('user.group-post', $recent->enc_id) }}" class="btn btn-primary btn-sm">View Group</a>
             @else
                 <span class="badge bg-danger-soft text-danger mb-2 d-block">Group Expired</span>
                 @if($recent->member_type == '2' && $recent->created_by == Auth::guard('user')->user()->id)

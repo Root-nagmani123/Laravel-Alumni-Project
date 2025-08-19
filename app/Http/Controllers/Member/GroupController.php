@@ -15,6 +15,8 @@ use App\Models\GroupMember;
 use App\Models\Notification;
 use App\Models\Member;
 use App\Services\NotificationService;
+use Illuminate\Support\Facades\Crypt;
+
 
 
 class GroupController extends Controller
@@ -78,7 +80,17 @@ class GroupController extends Controller
         'gm.mentiee'
     )
     ->orderBy('g.id', 'desc')
-    ->get();
+    ->get()
+   ->map(function ($item) {
+        $item->enc_id =  Crypt::encryptString($item->id); // yaha id encrypt ho rahi hai
+        return $item;
+    });
+
+    
+        // Fetch group names and other details
+        // $groupNames = $this->groupService->getGroupNamesByUserId($userId);
+        
+        // dd($groupNames);
     // print_r($groupNames);die;
 
     

@@ -101,7 +101,24 @@ public function login_ldap(Request $request)
 
     $username = trim($request->input('username'));
     $password = $request->input('password');
- $serverHost = $request->getHost(); 
+     $encodedKey = config('app.key'); // Get APP_KEY
+   if (strpos($encodedKey, 'base64:') === 0) {
+       $encodedKey = substr($encodedKey, 7); // Remove "base64:" prefix
+   }
+   $secretKey = base64_decode($encodedKey); // Decode Key
+   if (strlen($secretKey) !== 32) {
+       return response()->json(["error" => "Invalid key length!"], 400);
+   }
+   $iv = "1234567890123456"; // Must be exactly 16 bytes
+   $encryptedPassword = base64_decode($request->password); // Decode from Base64
+   $password = openssl_decrypt(
+       $encryptedPassword,
+       'AES-256-CBC',
+       $secretKey,
+       OPENSSL_RAW_DATA,
+       $iv
+   );
+ $serverHost = $request->getHost();
 
      try {
         if (in_array($serverHost, ['localhost', '127.0.0.1', 'dev.local','52.140.75.46'])) {
@@ -118,9 +135,8 @@ public function login_ldap(Request $request)
                 $request->session()->regenerate();
                 return redirect()->intended('/user/feed');
             }else{
-                return back()->withErrors([
-                    'username' => 'Invalid username or password.',
-                ]);
+                return back()->with('error', 'Invalid username or password.');
+
             }
         } else {
         
@@ -137,7 +153,7 @@ public function login_ldap(Request $request)
 
         if (! $ldapUser) {
             logger("LDAP: User '{$username}' not found.");
-            return back()->withErrors(['username' => 'User not found in LDAP directory.']);
+            return back()->with('error', 'User not found in LDAP directory.');
         }
 
         // 2️⃣ Prepare possible bind usernames
@@ -161,7 +177,7 @@ public function login_ldap(Request $request)
 
         if (! $bindSuccess) {
             logger("LDAP: Invalid credentials for '{$username}'. Tried formats: " . implode(', ', $bindAttempts));
-            return back()->withErrors(['username' => 'Invalid username or password.']);
+            return back()->with('error', 'Invalid username or password.');
         }
 
         // 4️⃣ If LDAP auth succeeded, log into local app
@@ -171,7 +187,7 @@ public function login_ldap(Request $request)
 
         if (! $localUser) {
             logger("LDAP auth passed but no local Member found for '{$username}'.");
-            return back()->withErrors(['username' => 'LDAP auth passed, but user not registered locally.']);
+            return back()->with('error', 'LDAP auth passed, but user not registered locally.');
         }
 
         Auth::guard('user')->login($localUser);
@@ -182,7 +198,7 @@ public function login_ldap(Request $request)
     }
     } catch (\Exception $e) {
         logger('LDAP login error: ' . $e->getMessage());
-        return back()->withErrors(['username' => 'LDAP connection or authentication failed.']);
+        return back()->with('error', 'LDAP connection or authentication failed.');
     }
 }
 

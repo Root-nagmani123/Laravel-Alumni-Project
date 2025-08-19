@@ -357,7 +357,7 @@ function filterMentorsData(Request $request)
 
     $already_mentees = DB::table('mentor_requests')
         ->select('mentees')
-        ->whereIn('status', [1, 2, 3])
+        ->whereIn('status', [1, 2])
         ->where('Mentor_ids', auth()->guard('user')->user()->id)
         ->pluck('mentees')
         ->toArray();
@@ -368,6 +368,7 @@ function filterMentorsData(Request $request)
         ->where('mentor', auth()->guard('user')->user()->id)
         ->pluck('mentees_ids')
         ->toArray();
+   
 
     $query = DB::table('members')
         ->select('id', 'name', 'cader', 'batch', 'sector', 'Service');
@@ -393,7 +394,8 @@ function filterMentorsData(Request $request)
         $query->whereNotIn('id', $already_mentees);
     } 
     elseif ($Type === 'mentee') {
-        $query->whereNotIn('id', $already_from_mentee_requests);
+        $query->whereNotIn('id', $already_mentors);
+        $query->whereNotIn('id', $already_mentees);
     }
 
     $members = $query

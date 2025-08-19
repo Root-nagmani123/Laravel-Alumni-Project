@@ -122,7 +122,7 @@
                         <div class="d-flex">
                             <!-- Thumbnail -->
                             <div class="flex-shrink-0 me-3">
-                                <a href="{{ route('user.forum.show', $forum->id) }}">
+                                <a href="{{ route('user.forum.show', $forum->enc_id) }}">
                                     <img src="{{ asset('storage/uploads/images/forums_img/' . ($forum->images ?? 'default-forum.jpg')) }}"
                                          alt="Forum Image"
                                          class="rounded"
@@ -134,7 +134,7 @@
                             <div class="flex-grow-1">
                                 <!-- Title -->
                                 <h6 class="mb-1 fw-semibold">
-                                    <a href="{{ route('user.forum.show', $forum->id) }}" class="text-decoration-none">
+                                    <a href="{{ route('user.forum.show', $forum->enc_id) }}" class="text-decoration-none">
                                         {{ $forum->name }}
                                     </a>
                                 </h6>
