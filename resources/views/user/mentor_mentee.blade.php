@@ -30,19 +30,19 @@
                     style="white-space: nowrap;">
                     <li class="nav-item" role="presentation">
                         <button class="nav-link active" id="mentor-tab" data-bs-toggle="tab" data-bs-target="#mentor"
-                            type="button" role="tab">Wants to become Mentor</button>
+                            type="button" role="tab">Become a Mentor</button>
                     </li>
                     <li class="nav-item" role="presentation">
                         <button class="nav-link" id="mentee-tab" data-bs-toggle="tab" data-bs-target="#mentee"
-                            type="button" role="tab">Wants to become Mentee</button>
+                            type="button" role="tab">Find a Mentor</button>
                     </li>
                     <li class="nav-item" role="presentation">
                         <button class="nav-link" id="Incoming-requests-tab" data-bs-toggle="tab"
-                            data-bs-target="#requests_incoming" type="button" role="tab">Incoming Requests</button>
+                            data-bs-target="#requests_incoming" type="button" role="tab">Received Requests</button>
                     </li>
                     <li class="nav-item" role="presentation">
                         <button class="nav-link" id="Outgoging-requests-tab" data-bs-toggle="tab"
-                            data-bs-target="#requests_outgoing" type="button" role="tab">Outgoing Requests</button>
+                            data-bs-target="#requests_outgoing" type="button" role="tab">Sent Requests</button>
                     </li>
                     <li class="nav-item" role="presentation">
                         <button class="nav-link" id="connections-tab" data-bs-toggle="tab" data-bs-target="#connections"
@@ -77,7 +77,7 @@
                                 </div>
 
                                 <div class="col-md-6">
-                                    <label class="form-label">Batch</label>
+                                    <label class="form-label">Batch/Year</label>
                                     <select name="year[]" id="year-mentor" class="form-select year" multiple
                                         data-id="mentor">
                                         @if($members->isEmpty())
@@ -115,7 +115,7 @@
                                 </div>
 
                                 <div class="col-md-6">
-                                    <label class="form-label">Sector</label>
+                                    <label class="form-label">Sector/Area of Expertise</label>
                                     <select name="sector[]" id="sector-mentor" class="form-select sector" multiple
                                         data-id="mentor">
                                         @if($members->isEmpty())
@@ -149,13 +149,13 @@
                             <table class="bg-light table mb-0">
                                 <thead class="table-light" style="position: sticky; top: 0; z-index: 2;">
                                     <tr>
-                                        <th style="background: #f8f9fa;"><input type="checkbox" id="selectAll"></th>
-                                        <th style="background: #f8f9fa;">#</th>
+                                        <th style="background: #f8f9fa;">Select</th>
+                                        <th style="background: #f8f9fa;">S.No.</th>
                                         <th style="background: #f8f9fa;">Name</th>
                                         <th style="background: #f8f9fa;">Service</th>
-                                        <th style="background: #f8f9fa;">Batch</th>
+                                        <th style="background: #f8f9fa;">Batch/Year</th>
                                         <th style="background: #f8f9fa;">Cadre</th>
-                                        <th style="background: #f8f9fa;">Sector</th>
+                                        <th style="background: #f8f9fa;">Sector/Area of Expertise</th>
                                     </tr>
                                 </thead>
                                 <tbody id="mentorTableBody">
@@ -166,7 +166,7 @@
 
 
                         <div class="text-end mt-2">
-                            <button type="submit" class="btn btn-primary">Submit Mentor Request</button>
+                            <button type="submit" class="btn btn-primary">Send Connection Request</button>
                         </div>
                     </form>
                 </div>
@@ -193,7 +193,7 @@
                                 </div>
 
                                 <div class="col-md-6">
-                                    <label class="form-label">Batch</label>
+                                    <label class="form-label">Batch/Year</label>
                                     <select name="year[]" id="year-mentee" class="form-control year" multiple
                                         data-id="mentee">
                                         @if($members->isEmpty())
@@ -231,7 +231,7 @@
                                 </div>
 
                                 <div class="col-md-6">
-                                    <label class="form-label">Sector</label>
+                                    <label class="form-label">Sector/Area of Expertise</label>
                                     <select name="sector[]" id="sector-mentee" class="form-control sector" multiple
                                         data-id="mentee">
                                         @if($members->isEmpty())
@@ -263,14 +263,14 @@
                         <div class="table-responsive" style="max-height: 600px; overflow-y: auto;">
                             <table class="bg-light table mb-0">
                                 <thead class="table-light" style="position: sticky; top: 0; z-index: 2;">
-                                    <tr>
-                                        <th style="background: #f8f9fa;"><input type="checkbox" id="selectAll"></th>
-                                        <th style="background: #f8f9fa;">#</th>
+                                   <tr>
+                                        <th style="background: #f8f9fa;">Select</th>
+                                        <th style="background: #f8f9fa;">S.No.</th>
                                         <th style="background: #f8f9fa;">Name</th>
                                         <th style="background: #f8f9fa;">Service</th>
-                                        <th style="background: #f8f9fa;">Batch</th>
+                                        <th style="background: #f8f9fa;">Batch/Year</th>
                                         <th style="background: #f8f9fa;">Cadre</th>
-                                        <th style="background: #f8f9fa;">Sector</th>
+                                        <th style="background: #f8f9fa;">Sector/Area of Expertise</th>
                                     </tr>
                                 </thead>
                                 <tbody id="menteeTableBody">
@@ -279,7 +279,7 @@
                             </table>
                         </div>
                         <div class="text-end mt-2">
-                            <button type="submit" class="btn btn-primary">Submit Mentee Request</button>
+                            <button type="submit" class="btn btn-primary">Send Connection Request</button>
                         </div>
                     </form>
                 </div>
@@ -454,18 +454,22 @@
 
                         @foreach ($mentee_connections->toArray() as $mentor)
                         @if ($mentor->status == 1)
-                        <li class="list-group-item d-flex justify-content-between">
-                            <span>{{ $mentor->name }}</span>
-                            <small>{{ $mentor->cadre }} | {{ $mentor->batch }}</small>
-                            <div class="text-end">
-                                <a href="" class="text-decoration-none ">
-                                <div class="chat-icon">
-                                    <i class="bi bi-chat-left-text-fill text-white"></i>
-                                </div>
-                            </a>
-                            </div>
+                        <li class="list-group-item d-flex align-items-center justify-content-between">
+    <!-- Left side: Name + details -->
+    <div>
+        <span class="fw-semibold d-block">{{ $mentor->name }}</span>
+        <small class="text-muted">{{ $mentor->cadre }} | {{ $mentor->batch }}</small>
+    </div>
 
-                        </li>
+    <!-- Right side: Chat button -->
+    <div>
+        <a href="#" class="btn btn-sm btn-primary rounded-circle d-flex align-items-center justify-content-center"
+           style="width: 32px; height: 32px;">
+            <i class="bi bi-chat-left-text-fill"></i>
+        </a>
+    </div>
+</li>
+
                         @php $hasMentor = true; @endphp
                         @endif
                         @endforeach
@@ -483,17 +487,22 @@
 
                         @foreach ($mentor_connections->toArray() as $mentee)
                         @if ($mentee->status == 1)
-                        <li class="list-group-item d-flex justify-content-between">
-                            <span>{{ $mentee->name }}</span>
-                            <small>{{ $mentee->cadre }} | {{ $mentee->batch }}</small>
-                            <div class="text-end">
-                                <a href="" class="text-decoration-none ">
-                                <div class="chat-icon">
-                                    <i class="bi bi-chat-left-text-fill text-white"></i>
-                                </div>
-                            </a>
-                            </div>
-                        </li>
+                       <li class="list-group-item d-flex align-items-center justify-content-between">
+    <!-- Left side: Name + details -->
+    <div>
+        <span class="fw-semibold d-block">{{ $mentee->name }}</span>
+        <small class="text-muted">{{ $mentee->cadre }} | {{ $mentee->batch }}</small>
+    </div>
+
+    <!-- Right side: Chat button -->
+    <div>
+        <a href="#" class="btn btn-sm btn-primary rounded-circle d-flex align-items-center justify-content-center"
+           style="width: 32px; height: 32px;">
+            <i class="bi bi-chat-left-text-fill"></i>
+        </a>
+    </div>
+</li>
+
                         @php $hasMentee = true; @endphp
                         @endif
                         @endforeach
