@@ -33,4 +33,10 @@ class Forum extends Model
 				{
     				return storage_path('app/' . $this->file); // adjust as per your path column
 				}
+
+			public function creator()
+{
+    return $this->belongsTo(Member::class, 'created_by', 'id');
+}
+
 }

@@ -63,6 +63,7 @@
                                     <th class="col">S.No.</th>
                                     <th class="col">Name</th>
                                     <th class="col">Description</th>
+                                    <th class="col">Created By</th>
                                     <th class="col">Created At</th>
                                     <th class="col">Forum End Date</th>
                                     <th class="col">Action</th>
@@ -92,6 +93,9 @@
 
                                     <td>
                                         {{ $forum->description }}
+                                    </td>
+                                    <td>
+                                        {{ $forum->creator->name ?? 'Unknown' }}
                                     </td>
 
                                     <!-- <td>{{ \Carbon\Carbon::parse($forum->created_at)->timezone('Asia/Kolkata')->format('l, d M Y, h:i A') }} -->
