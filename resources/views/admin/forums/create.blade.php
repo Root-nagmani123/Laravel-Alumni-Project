@@ -60,15 +60,23 @@
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <label class="form-label">Forum End Date<span
-                                            class="required text-danger ">*</span></label>
-                                        
+                                                class="required text-danger ">*</span></label>
+
                                         <input type="date" class="form-control" name="end_date" id="end_date" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="mb-3">
+                                        <label class="form-label">Forum Description<span
+                                                class="required text-danger ">*</span></label>
+                                        <textarea class="form-control" name="forumdescription" id="forumdescription" rows="4"
+                                            placeholder="Enter forum description" required>{{ old('forumdescription') }}</textarea>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <label class="form-label">Forum Image<span
-                                            class="required text-danger ">*</span></label>
+                                                class="required text-danger ">*</span></label>
                                         <input type="file" class="form-control" name="image" id="forum-image"
                                             accept="image/*" required>
 
@@ -86,20 +94,20 @@
 
                                 <div class="col-md-6">
                                     <div class="mb-3">
-                                       <form class="needs-validation" novalidate>
-    <div class="mb-3">
-        <label for="status" class="form-label">Status<span
-                                            class="required text-danger ">*</span></label>
-        <select class="form-select" name="status" id="status" required>
-            <option value="" disabled selected>Select Status</option>
-            <option value="1">Active</option>
-            <option value="0">Inactive</option>
-        </select>
-        <div class="invalid-feedback">
-            Please select a status.
-        </div>
-    </div>
-</form>
+                                        <form class="needs-validation" novalidate>
+                                            <div class="mb-3">
+                                                <label for="status" class="form-label">Status<span
+                                                        class="required text-danger ">*</span></label>
+                                                <select class="form-select" name="status" id="status" required>
+                                                    <option value="" disabled selected>Select Status</option>
+                                                    <option value="1">Active</option>
+                                                    <option value="0">Inactive</option>
+                                                </select>
+                                                <div class="invalid-feedback">
+                                                    Please select a status.
+                                                </div>
+                                            </div>
+                                        </form>
 
                                     </div>
                                 </div>
@@ -138,10 +146,10 @@ document.getElementById('forum-image').addEventListener('change', function(event
         reader.readAsDataURL(input.files[0]);
     }
 });
-document.addEventListener('DOMContentLoaded', function () {
-        const today = new Date().toISOString().split('T')[0];
-        document.getElementById("end_date").setAttribute('min', today);
-    });
+document.addEventListener('DOMContentLoaded', function() {
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById("end_date").setAttribute('min', today);
+});
 </script>
 
 @endsection
