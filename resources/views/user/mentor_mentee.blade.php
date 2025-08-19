@@ -656,40 +656,64 @@ $(document).ready(function() {
     });
 });
 </script>
-@endsection
-
-@section('scripts')
-<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <script>
 $(document).ready(function() {
-    // ========== Filter Logic (Existing Code - Keep as is) ========== //
-    $(document).on('click', '#filterbecomeMentor', function(e) { ... });
-    $(document).on('click', '#filterbecomeMentee', function(e) { ... });
 
-    // ========== Tab Switching Logic (NEW IMPROVED CODE) ========== //
-    function activateTab(tabName) {
-        // Hide all tabs first
+    // ===== TAB MAPPING DEFINITION ===== //
+    const tabMap = {
+        'incoming': { contentId: 'requests_incoming', buttonId: 'Incoming-requests-tab' },
+        'outgoing': { contentId: 'requests_outgoing', buttonId: 'Outgoing-requests-tab' },
+        'mentor': { contentId: 'mentor', buttonId: 'mentor-tab' },
+        'mentee': { contentId: 'mentee', buttonId: 'mentee-tab' },
+        'connections': { contentId: 'connections', buttonId: 'connections-tab' }
+    };
+
+    // ===== TAB SWITCHING BASED ON URL PARAMETER ===== //
+    const urlParams = new URLSearchParams(window.location.search);
+    
+    const activeTab = urlParams.get('tab');
+   
+
+    if (activeTab && tabMap[activeTab]) {
+        const { contentId, buttonId } = tabMap[activeTab];
+        
+        // Remove active classes from all tabs and buttons
         $('.tab-pane').removeClass('show active');
         $('.nav-link').removeClass('active');
-
-        // Activate the target tab
-        $(`#${tabName}-tab`).addClass('active');
-        $(`#${tabName}`).addClass('show active');
+        
+        // Add active classes to the target tab and button
+        $(`#${contentId}`).addClass('show active');
+        $(`#${buttonId}`).addClass('active');
+        
+        // Initialize Bootstrap tab component
+        const tabElement = document.querySelector(`#${buttonId}`);
+        if (tabElement) {
+            const bsTab = new bootstrap.Tab(tabElement);
+            bsTab.show();
+        }
     }
 
-    // Check URL for ?tab=incoming or ?tab=outgoing
-    const urlParams = new URLSearchParams(window.location.search);
-    const activeTab = urlParams.get('tab');
+    // ===== EXISTING FILTER LOGIC ===== //
+    // Mentor Filter
+    $(document).on('click', '#filterbecomeMentor', function(e) {
+        // ... your existing filter code ...
+    });
 
-    if (activeTab === 'incoming') {
-        activateTab('Incoming-requests-tab');
-    } 
-    else if (activeTab === 'outgoing') {
-        activateTab('requests_outgoing');
-    }
+    // Mentee Filter
+    $(document).on('click', '#filterbecomeMentee', function(e) {
+        // ... your existing filter code ...
+    });
 
-    // ========== Select2 Initialization (Keep Existing) ========== //
-    $('.Service, .year, .cadre, .sector').select2({ placeholder: "Select options", allowClear: true });
+    // ===== EXISTING SELECT2 AND CHECKBOX LOGIC ===== //
+    $('.Service, .year, .cadre, .sector').select2({
+        placeholder: "Select options",
+        allowClear: true
+    });
+
+    // Select All Checkbox for Mentor Table
+    $('#selectAll').on('change', function() {
+        $('.row-checkbox').prop('checked', this.checked);
+    });
 });
 </script>
 @endsection
