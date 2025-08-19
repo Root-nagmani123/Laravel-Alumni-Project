@@ -121,7 +121,7 @@
                  alt="User">
     <div class="d-flex flex-column justify-content-center">
         <h6 class="mb-0 fw-bold">{{ $forum->member_name }}</h6>
-        <small class="text-muted">{{ \Carbon\Carbon::parse($forum->created_at)->format('d M, Y') }}
+        <small class="text-muted">{{ \Carbon\Carbon::parse($forum->created_at)->format('d-m-y') }}
 </small>
     </div>
 </div>
@@ -167,10 +167,10 @@
             @foreach($forum->comments as $index => $comment)
                 @php
                        $commentPicPath = $comment->profile_pic
-        ? (Str::startsWith($comment->profile_pic, 'storage/')
-            ? $comment->profile_pic
-            : 'storage/' . ltrim($comment->profile_pic, '/'))
-        : 'feed_assets/images/avatar/07.jpg';
+    ? asset($comment->profile_pic)
+    : asset('feed_assets/images/avatar/07.jpg');
+
+
                 @endphp
                 <div class="d-flex align-items-start gap-3 mb-3 comment-item" data-comment-id="{{ $comment->id }}">
                     <img src="{{ asset($commentPicPath) }}" class="rounded-circle" alt="User" style="width:40px; height:40px; object-fit:cover;">
@@ -178,7 +178,7 @@
                         <div class="d-flex align-items-center justify-content-between mb-1">
                             <div class="d-flex align-items-center gap-2">
                                 <h6 class="mb-0 fw-bold">{{ $comment->member_name }}</h6>
-                                <small class="text-muted">{{ \Carbon\Carbon::parse($comment->created_at)->format('d M, Y') }}</small>
+                                <small class="text-muted">{{ \Carbon\Carbon::parse($comment->created_at)->format('d-m-y') }}</small>
                             </div>
                             @if((int)$currentUserId === (int)$comment->user_id)
                             <div class="d-flex align-items-center gap-2">
@@ -275,7 +275,11 @@
                             // Prepend simple comment item
                             const list = commentsListEl;
                             const profile = data.comment?.profile_pic ? data.comment.profile_pic : 'feed_assets/images/avatar/07.jpg';
-                            const created = (new Date(data.comment.created_at)).toLocaleDateString(undefined, { month:'short', day:'2-digit', year:'numeric' });
+                            const date = new Date(data.comment.created_at);
+                            const day = String(date.getDate()).padStart(2, '0');
+                            const month = String(date.getMonth() + 1).padStart(2, '0');
+                            const year = String(date.getFullYear()).slice(-2); // last 2 digits
+                            const created = `${day}-${month}-${year}`;
                             const item = document.createElement('div');
                             item.className = 'd-flex align-items-start gap-3 mb-3 comment-item';
                             item.dataset.commentId = data.comment.id;
@@ -283,11 +287,7 @@
                             if (/^https?:\/\//i.test(profile)) {
                                 imgSrc = profile;
                             } else {
-                                let p = profile.replace(/^\/+/, '');
-                                if (!p.startsWith('storage/')) {
-                                    p = 'storage/' + p;
-                                }
-                                imgSrc = `{{ asset('') }}` + p;
+                                   imgSrc = `{{ asset('') }}` + profile.replace(/^\/+/, ''); 
                             }
                             item.innerHTML = `
                                 <img src="${imgSrc}" class="rounded-circle" alt="User" style="width:40px; height:40px; object-fit:cover;">
