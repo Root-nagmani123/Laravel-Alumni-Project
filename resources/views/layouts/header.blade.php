@@ -164,7 +164,7 @@
                                                             $notificationUrl = route('user.mentor_mentee', ['tab' => 'incoming']);
                                                             break;
                                                         case 'request_accept':
-                                                            $notificationUrl = route('user.mentor_mentee', ['tab' => 'outgoing']);
+                                                            $notificationUrl = route('user.mentor_mentee', ['tab' => 'connections']);
                                                             break;
                                                         case 'request_reject':
                                                             $notificationUrl = route('user.mentor_mentee', ['tab' => 'outgoing']);
