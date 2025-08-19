@@ -11,6 +11,7 @@ use App\Models\Topic;
 use Maatwebsite\Excel\Validators\ValidationException;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Crypt;
 
 class MemberController extends Controller
 {
@@ -95,8 +96,31 @@ if ($request->filled('password')) {
 Member::create($data);
        return redirect()->route('members.index')->with('success', 'Member added successfully.');
         }
+public function edit($id)
+{
+    try {
+        $decryptedId = decrypt($id); // 👈 id decrypt ki
 
-    public function edit(Member $member)
+        $member = Member::findOrFail($decryptedId);
+
+        $members = DB::table('members')
+            ->select(
+                DB::raw('TRIM(Service) as Service'),
+                DB::raw('GROUP_CONCAT(DISTINCT TRIM(batch) ORDER BY batch ASC SEPARATOR ",") as batches'),
+                DB::raw('GROUP_CONCAT(DISTINCT TRIM(cader) ORDER BY TRIM(cader) ASC SEPARATOR ",") as cader_list'),
+                DB::raw('GROUP_CONCAT(DISTINCT TRIM(sector) ORDER BY TRIM(sector) ASC SEPARATOR ",") as sector_list')
+            )
+            ->where('Service', '=', 'IAS')
+            ->groupBy(DB::raw('TRIM(Service)'))
+            ->orderBy('Service')
+            ->get();
+
+        return view('admin.members.edit', compact('member', 'members'));
+    } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
+        abort(404); // agar id valid nhi hai
+    }
+}
+    public function edit_bkp_s(Member $member)
         {
               $members = DB::table('members')
     ->select(

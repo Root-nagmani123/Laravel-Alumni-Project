@@ -46,7 +46,8 @@
                                                 </div>
 
 
-                                                <form action="{{ url('admin/authlogin') }}" method="post">
+                                                <form action="{{ url('admin/authlogin') }}" method="post" id="loginForm">
+                                                    {{-- CSRF Token --}}
                                                     @csrf
 
                                                     {{-- Email Field --}}
@@ -56,7 +57,7 @@
                                                         <input type="email"
                                                             class="form-control @error('email') is-invalid @enderror"
                                                             id="exampleInputEmail1" placeholder="Enter your email"
-                                                            name="email" value="{{ old('email') }}">
+                                                            name="email" value="{{ old('email') }}" required>
                                                         @error('email')
                                                         <div class="invalid-feedback">
                                                             {{ $message }}
@@ -76,7 +77,7 @@
                                                             <input type="password"
                                                                 class="form-control @error('password') is-invalid @enderror"
                                                                 id="password" placeholder="Enter your password"
-                                                                name="password">
+                                                                name="password" required>
                                                             <span toggle="#password"
                                                                 class="toggle-password position-absolute end-0 top-50 translate-middle-y me-3"
                                                                 style="cursor: pointer;">
@@ -127,25 +128,33 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 
     <script>
     @if(session('success'))
     toastr.success("{{ session('success') }}");
     @endif
     // JS to make password visible
-
-    document.addEventListener('DOMContentLoaded', function() {
-        const togglePassword = document.querySelector('.toggle-password');
-        const passwordField = document.querySelector('#password');
-
-        togglePassword.addEventListener('click', function() {
-            const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
-            passwordField.setAttribute('type', type);
-
-            // Optionally toggle icon appearance
-            this.textContent = type === 'password' ? '👁️' : '🙈';
-        });
+async function encryptPassword(password) {
+    
+    let key = CryptoJS.enc.Base64.parse("{{ substr(config('app.key'), 7) }}");
+    const iv = CryptoJS.enc.Utf8.parse("1234567890123456"); 
+    const encrypted = CryptoJS.AES.encrypt(password, key, {
+        iv: iv,
+        mode: CryptoJS.mode.CBC,
+        padding: CryptoJS.pad.Pkcs7
     });
+    return encrypted.toString(); 
+}
+
+document.getElementById("loginForm").addEventListener("submit", async function (e) {
+    e.preventDefault();
+    let passwordField = document.getElementById("password");
+    let encryptedPassword = await encryptPassword(passwordField.value);
+    passwordField.value = encryptedPassword; // Send encrypted password
+    this.submit(); // Now submit the form
+});
+
     </script>
 </body>
 

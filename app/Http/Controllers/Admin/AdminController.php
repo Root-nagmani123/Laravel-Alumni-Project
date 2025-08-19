@@ -37,15 +37,32 @@ public function loginAuth(Request $request)
     // Validation rules
     $rules = [
         'email' => 'required|email',
-        'password' => 'required|string|min:8',
+        'password' => 'required|string',
     ];
+     $encodedKey = config('app.key'); // Get APP_KEY
+   if (strpos($encodedKey, 'base64:') === 0) {
+       $encodedKey = substr($encodedKey, 7); // Remove "base64:" prefix
+   }
+   $secretKey = base64_decode($encodedKey); // Decode Key
+   if (strlen($secretKey) !== 32) {
+       return response()->json(["error" => "Invalid key length!"], 400);
+   }
+   $iv = "1234567890123456"; // Must be exactly 16 bytes
+   $encryptedPassword = base64_decode($request->password); // Decode from Base64
+   $decryptedPassword = openssl_decrypt(
+       $encryptedPassword,
+       'AES-256-CBC',
+       $secretKey,
+       OPENSSL_RAW_DATA,
+       $iv
+   );
 
     $request->validate($rules, $messages);
 
     // Credentials
     $credentials = [
         'email' => $request->input('email'),
-        'password' => $request->input('password'),
+        'password' => $decryptedPassword,
         'isAdmin' => 1,
     ];
 
