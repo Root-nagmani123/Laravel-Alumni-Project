@@ -433,15 +433,6 @@
 </style>
 
 <script>
-   
-    
-    document.getElementById('uw-widget-custom-trigger2').addEventListener('click', function() {
-    // openMain();
-    });
-   
-</script>
-
-<script>
 function handleNotificationClick(event, url, sourceType, sourceId) {
     event.preventDefault();
     event.stopPropagation();

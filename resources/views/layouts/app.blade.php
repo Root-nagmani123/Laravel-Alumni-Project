@@ -103,29 +103,29 @@
 
         const maxSize = 10 * 1024 * 1024; // 10MB
 
-        fileInput.addEventListener('change', function() {
-            fileError.innerText = '';
-            fileInfo.innerText = 'Max 10MB. Allowed types: JPG, PNG, WebP, GIF, SVG, MP4, MOV.';
+        // fileInput.addEventListener('change', function() {
+        //     fileError.innerText = '';
+        //     fileInfo.innerText = 'Max 10MB. Allowed types: JPG, PNG, WebP, GIF, SVG, MP4, MOV.';
 
-            const file = this.files[0];
-            if (!file) return;
+        //     const file = this.files[0];
+        //     if (!file) return;
 
-            if (!allowedTypes.includes(file.type)) {
-                fileError.innerText = 'Invalid file type. Allowed: JPG, PNG, WebP, GIF, SVG.';
-                this.value = ''; // Reset file input
-                return;
-            }
+        //     if (!allowedTypes.includes(file.type)) {
+        //         fileError.innerText = 'Invalid file type. Allowed: JPG, PNG, WebP, GIF, SVG.';
+        //         this.value = ''; // Reset file input
+        //         return;
+        //     }
 
-            if (file.size > maxSize) {
-                fileError.innerText = 'File too large. Maximum size is 10MB.';
-                this.value = '';
-                return;
-            }
+        //     if (file.size > maxSize) {
+        //         fileError.innerText = 'File too large. Maximum size is 10MB.';
+        //         this.value = '';
+        //         return;
+        //     }
 
-            const info =
-                `✅ Selected: ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB, ${file.type})`;
-            fileInfo.innerText = info;
-        });
+        //     const info =
+        //         `✅ Selected: ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB, ${file.type})`;
+        //     fileInfo.innerText = info;
+        // });
 
         // Prevent form submit if file is invalid
         /*form.addEventListener('submit', function (e) {
@@ -291,7 +291,7 @@
                 chatContainer.scrollTo(0, chatContainer.scrollHeight);
             }
         }
-    </script>
+</script>
 </body>
 
 </html>
