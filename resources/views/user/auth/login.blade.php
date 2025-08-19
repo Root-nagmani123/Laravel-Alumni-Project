@@ -369,15 +369,15 @@
                     </div>
                 </div>
 
-                <div class="mt-3">
-                    <a href="#" class="btn btn-outline-danger open-panel" data-panel="register">
+                <div class="mt-3 text-center">
+                    <a href="#" class="btn btn-outline-danger open-panel" data-panel="register" style="background-color:#af2910; border: #af2910 1px solid;color:#fff;">
                         For Registration Click Here
                     </a>
                 </div>
                 <div class="position-relative w-100 bg-light d-flex align-items-center px-3 mt-4"
                     style="height: 40px; overflow: hidden; z-index: 1040;">
                     <div class="position-relative d-flex align-items-center">
-                        <button class="btn btn-sm btn-danger position-relative z-1" style="min-width: 120px;">
+                        <button class="btn btn-sm btn-danger position-relative z-1" style="background-color:#af2910; border: #af2910 1px solid;color:#fff;min-width: 120px;">
                             Helpdesk
                         </button>
                     </div>

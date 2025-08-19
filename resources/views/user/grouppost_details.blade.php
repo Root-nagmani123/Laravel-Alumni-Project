@@ -131,19 +131,14 @@
         </div>
         <!-- Info -->
         <div class="w-100">
-          <div class="d-sm-flex align-items-start">
-            <h6 class="mb-0"><a href="#!">{{ $member->name }}</a></h6>
-            <p class="small ms-sm-2 mb-0">{{ $member->designation ?? 'Member' }}</p>
-          </div>
-          <ul class="avatar-group mt-1 list-unstyled align-items-sm-center">
-            <li class="small">{{ $member->email ?? '' }}</li>
-          </ul>
-        </div>
-        <!-- Action Buttons -->
-        <!-- <div class="ms-md-auto d-flex">
-          <button class="btn btn-danger-soft btn-sm mb-0 me-2">Remove</button>
-          <button class="btn btn-primary-soft btn-sm mb-0">View</button>
-        </div> -->
+  <h6 class="mb-0">
+    <a href="#!">{{ $member->name }}</a>
+  </h6>
+  <p class="small text-muted mb-0">
+    {{ $member->designation ?? 'N/A' }}
+  </p>
+</div>
+
       </div>
       @endforeach
     </div>
