@@ -136,9 +136,9 @@
                 @endphp
                  <!-- Actions -->
         <div class="d-flex justify-content-between align-items-center mt-3">
-            <div class="d-flex gap-3 text-muted small align-items-center">
+            <div class="d-flex gap-3 small align-items-center">
                 <span class="d-inline-flex align-items-center gap-1">
-                    <i id="likeThumb" class="bi bi-hand-thumbs-up {{ !empty($forum->has_liked) ? 'text-danger' : '' }}" style="cursor:pointer; ">Like</i>
+                    <i id="likeThumb" class="bi bi-hand-thumbs-up " style="cursor:pointer;{{ !empty($forum->has_liked) ? 'color:#004a93;' : '' }}; ">Like</i>
                     <span id="likeCount">{{ $forum->likes->count() ? '('.$forum->likes->count().')' : '' }}</span>
                     
                 </span>
