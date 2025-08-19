@@ -55,26 +55,25 @@
                     <div id="zero_config_wrapper" class="dataTables_wrapper">
 
 
-                        <table id="zero_config" class="table table-striped table-bordered align-middle dataTable"
+                        <table id="zero_config" class="table table-striped table-bordered align-middle text-wrap"
                             aria-describedby="zero_config_info">
                             <thead>
                                 <!-- start row -->
                                 <tr>
-                                    <th>S.No.</th>
-                                    <th>Name</th>
-                                    <!-- <th>Members</th> -->
-                                    <th>Topics</th>
-                                    <th>Created At</th>
-                                    <th>Forum End Date</th>
-                                    <th>Action</th>
-                                    <th>Status</th>
+                                    <th class="col">S.No.</th>
+                                    <th class="col">Name</th>
+                                    <th class="col">Description</th>
+                                    <th class="col">Created At</th>
+                                    <th class="col">Forum End Date</th>
+                                    <th class="col">Action</th>
+                                    <th class="col">Status</th>
                                 </tr>
                                 <!-- end row -->
                             </thead>
                             <tbody>
                                 @foreach($forums as $forum)
                                 <tr class="odd">
-                                <td>{{ $loop->iteration }}</td>
+                                    <td>{{ $loop->iteration }}</td>
                                     <td>{{ $forum->name }}</td>
                                     <!-- <td>
                                         <div class="d-flex gap-2">
@@ -92,29 +91,7 @@
                                     </td> -->
 
                                     <td>
-                                        <div class="d-flex gap-2">
-                                            @if($forum->status == 1)
-                                            <a class="btn btn-sm btn-primary"
-                                                href="{{ route('forums.add_topic', ['id' => $forum->id]) }}"
-                                                title="Add Topic" data-bs-toggle="tooltip" data-bs-placement="top">
-                                                <i class="bi bi-plus"></i>
-                                            </a>
-                                            <a class="btn btn-sm btn-success"
-                                                href="{{ route('forums.view_topic', ['id' => $forum->id]) }}"
-                                                title="View Topic" data-bs-toggle="tooltip" data-bs-placement="top">
-                                                <i class="bi bi-eye"></i>
-                                            </a>
-                                            @else
-                                            <button class="btn btn-sm btn-primary" disabled
-                                                title="Add Topic (Inactive)">
-                                                <i class="bi bi-plus"></i>
-                                            </button>
-                                            <button class="btn btn-sm btn-success" disabled
-                                                title="View Topic (Inactive)">
-                                                <i class="bi bi-eye"></i>
-                                            </button>
-                                            @endif
-                                        </div>
+                                        {{ $forum->description }}
                                     </td>
 
                                     <!-- <td>{{ \Carbon\Carbon::parse($forum->created_at)->timezone('Asia/Kolkata')->format('l, d M Y, h:i A') }} -->
@@ -123,8 +100,8 @@
                                     </td>
                                     <td>
                                         @if($forum->end_date != null)
-                                            <!-- {{ \Carbon\Carbon::parse($forum->end_date)->timezone('Asia/Kolkata')->format('l, d M Y') }} -->
-                                              {{ \Carbon\Carbon::parse($forum->end_date)->format('d-m-Y') }}
+                                        <!-- {{ \Carbon\Carbon::parse($forum->end_date)->timezone('Asia/Kolkata')->format('l, d M Y') }} -->
+                                        {{ \Carbon\Carbon::parse($forum->end_date)->format('d-m-Y') }}
                                         @endif
                                     </td>
 
