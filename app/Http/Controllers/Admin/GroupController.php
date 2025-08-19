@@ -16,6 +16,7 @@ use App\Models\Notification;
 use Illuminate\Support\Str;
 use App\Models\Post;
 use App\Models\PostMedia;
+use Illuminate\Support\Facades\Crypt;
 class GroupController extends Controller
 {
 
@@ -144,12 +145,26 @@ class GroupController extends Controller
         return redirect()->route('group.index')->with('success', 'Group created successfully.');
     }
     
-    public function edit(Group $group)
+    public function edit_bkp(Group $group)
     {
         $users = Member::all();
         $group->load('groupMember');
         return view('admin.group.edit', compact('group', 'users'));
     }
+    public function edit($id)
+{
+    try {
+        $decryptedId = decrypt($id); // 👈 encrypted id ko decrypt kiya
+        $group = Group::findOrFail($decryptedId);
+
+        $users = Member::all();
+        $group->load('groupMember');
+
+        return view('admin.group.edit', compact('group', 'users'));
+    } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
+        abort(404); // agar id galat ho to 404
+    }
+}
     public function update(Request $request, Group $group)
     {
          
@@ -418,9 +433,10 @@ class GroupController extends Controller
 }
     public function view_topic($id)
         {
+            $groupId = Crypt::decryptString($id); 
             $pageName = 'Group';
-            $group = Group::findOrFail($id);
-            $topics = Post::where('group_id', $id)->with('member', 'media')->get();
+            $group = Group::findOrFail($groupId);
+            $topics = Post::where('group_id', $groupId)->with('member', 'media')->get();
             // print_r($topics);die;
             return view('admin.group.topics_list', compact('group', 'topics','pageName'));
         }

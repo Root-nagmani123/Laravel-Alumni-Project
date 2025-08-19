@@ -12,6 +12,7 @@ use App\Models\Topic;
 use App\Models\Broadcast;
 use App\Models\Member;
 use App\Services\NotificationService;
+use Illuminate\Support\Facades\Crypt;
 
 use App\Models\Group;
 
@@ -115,7 +116,11 @@ class FeedController extends Controller
          $broadcast = DB::table('broadcasts')
                 ->where('status',1)
             ->orderBy('broadcasts.id', 'desc')
-            ->get();
+            ->get()
+            ->map(function($item) {
+        $item->enc_id = Crypt::encryptString($item->id); // extra field add
+        return $item;
+    });
 
           $events = DB::table('events')
         ->where('status', 1)
@@ -139,7 +144,11 @@ class FeedController extends Controller
               ->orWhere('f.end_date', '>=', now()->toDateString());
     })
       ->orderBy('f.id', 'desc') 
-    ->get();
+    ->get()
+    ->map(function($item) {
+        $item->enc_id = Crypt::encryptString($item->id); // extra field add
+        return $item;
+    });
     // print_r($forums);die;
 
 
@@ -167,7 +176,12 @@ class FeedController extends Controller
     )
     ->orderBy('g.id', 'desc') // or 'end_date', 'desc' if you prefer
     ->distinct()
-    ->get();
+    ->get()
+    ->map(function($item) {
+        $item->enc_id = Crypt::encryptString($item->id); // extra field add
+        return $item;
+    });
+
 
 
    $members = DB::table('members')
@@ -375,6 +389,8 @@ class FeedController extends Controller
 
     public function broadcastDetails($id)
     {
+        $id = Crypt::decryptString($id); // Decrypt the ID
+
         $broadcast = Broadcast::findOrFail($id);
 
         return view('user.broadcast_details', compact('broadcast'));
@@ -402,6 +418,7 @@ class FeedController extends Controller
     }
 public function getPostByGroup($group_id)
 {
+    echo $group_id = Crypt::decryptString($group_id); // Decrypt the group ID
     $userId = auth()->guard('user')->id();
 
     // Posts with relations

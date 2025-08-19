@@ -47,7 +47,7 @@
                 <div class="mb-3">
 
                     <div class="mb-2">
-                        <a href="{{ route('user.broadcastDetails', $broadcast->id) }}">
+                        <a href="{{ route('user.broadcastDetails', $broadcast->enc_id) }}">
                         @if($broadcast->image_url)
                         <img class="avatar-img rounded" src="{{ asset('storage/' . $broadcast->image_url) }}" alt=""
                             height="45" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $broadcast->title }}"
@@ -100,7 +100,7 @@
                 <div class="hstack gap-3 mb-3 align-items-center">
                     <!-- Group Image -->
                     <div class="avatar avatar-md">
-                        <a href="{{ route('user.group-post', $recent->id) }}">
+                        <a href="{{ route('user.group-post', $recent->enc_id) }}">
                             <img src="{{asset('storage/uploads/images/grp_img/' . ($recent->image ?? 'default-group.png')) }}"
                                 alt="Group Image" class="rounded-circle img-fluid"
                                 style="width: 48px; height: 48px; object-fit: cover;">
@@ -110,7 +110,7 @@
                     <!-- Title + End Date -->
                     <div class="overflow-hidden">
                         <a class="mb-0 fw-semibold d-block text-truncate"
-                            href="{{ route('user.group-post', $recent->id) }}">
+                            href="{{ route('user.group-post', $recent->enc_id) }}">
                             
                             {{ ($recent->name) }}
                         </a>

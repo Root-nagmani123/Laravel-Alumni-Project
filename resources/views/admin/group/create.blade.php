@@ -23,13 +23,13 @@
                 <div class="row">
                     <div class="col-6">
                         <div class="mb-3">
-                            <label class="form-label">Group Name</label>
+                            <label class="form-label">Group Name <span class="text-danger">*</span></label>
                             <input type="text" name="name" class="form-control" required>
                         </div>
                     </div>
                     <div class="col-6">
                         <div class="mb-3">
-                            <label class="form-label">Mentor Name</label>
+                            <label class="form-label">Mentor Name <span class="text-danger">*</span></label>
                             <!--<select id="" class="form-control" name="mentor_id" required="" tabindex="-1"
                                 aria-hidden="true">-->
                             @php
@@ -62,14 +62,14 @@
                     </div>
                       <div class="col-md-6">
                                     <div class="mb-3">
-                                        <label class="form-label">Group End Date</label>
-                                        <input type="date" class="form-control" name="end_date" id="end_date">
+                                        <label class="form-label">Group End Date <span class="text-danger">*</span></label>
+                                        <input type="date" class="form-control" name="end_date" id="end_date" required>
                                     </div>
                                 </div>
                                <div class="col-md-6">
     <div class="mb-3">
-        <label class="form-label">Group Image</label>
-        <input type="file" class="form-control" name="image" id="image" accept="image/*">
+        <label class="form-label">Group Image <span class="text-danger">*</span></label>
+        <input type="file" class="form-control" name="image" id="image" accept="image/*" required>
         <!-- Preview -->
         <div class="mt-2">
             <img id="preview-image" src="#" alt="Image Preview" class="img-fluid rounded d-none" style="max-height: 200px;" />
@@ -80,7 +80,7 @@
                     
                     <div class="col-6">
                         <div class="mb-3">
-                            <label class="form-label">Status</label>
+                            <label class="form-label">Status <span class="text-danger">*</span></label>
                             <select class="form-select" aria-label="Default select" name="status" required="">
                                 <option selected="">Select Status</option>
                                 <option value="1">Active</option>

@@ -143,7 +143,7 @@
                 <div class="hstack gap-2 mb-3">
                     <!-- Avatar -->
                     <div class="avatar">
-                        <a href="{{ route('user.forum.show', ['id' => $forum->id]) }}"><img
+                        <a href="{{ route('user.forum.show', ['id' => $forum->enc_id]) }}"><img
                                 class="avatar-img rounded-circle"
                                src="{{ isset($forum->images) && $forum->images 
         ? asset('storage/uploads/images/forums_img/' . $forum->images) 
@@ -154,7 +154,7 @@
                     <!-- Title -->
                     <div class="overflow-hidden">
                         <a class="h6 mb-0"
-                            href="{{ route('user.forum.show', ['id' => $forum->id]) }}">{{ $forum->name }} </a> <br>
+                            href="{{ route('user.forum.show', ['id' => $forum->enc_id]) }}">{{ $forum->name }} </a> <br>
 
                         <!-- <small class="text-muted"><b>Start Date:</b> {{ \Carbon\Carbon::parse($forum->created_date ?? now())->format('d-m-Y') }}</small><br> -->
                         <small class="text-muted"><b>End Date:</b>

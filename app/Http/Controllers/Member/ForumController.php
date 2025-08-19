@@ -25,15 +25,27 @@ class ForumController extends Controller
         $this->notificationService = $notificationService;
     }
 
-    public function index()
-    {
-        $forums = $this->forumService->getUserForums();
-            // print_r($forums);die;
-        return view('user.forum', compact('forums'));
-    }
-    
+  public function index()
+{
+    $forums = $this->forumService->getUserForums()
+        ->map(function ($item) {
+            // ID ko encrypt karke naya key banaya
+            $item->enc_id = Crypt::encryptString($item->id);
+            return $item;
+        });
+
+    return view('user.forum', compact('forums'));
+}
     public function show($id)
     {
+        // Decrypt the forum ID
+        try {
+            $id = Crypt::decryptString($id);
+        } catch (\Exception $e) {
+            abort(404, 'Invalid forum ID');
+        }
+
+        // Fetch forum details with member info
      $forum = DB::table('forums')
             ->join('members', 'members.id', '=', 'forums.created_by')
             ->select(
