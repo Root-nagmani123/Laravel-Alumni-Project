@@ -65,7 +65,7 @@
                                 <label class="form-label">Forum Description<span
                                         class="required text-danger ">*</span></label>
                                 <textarea class="form-control" name="forumdescription" id="forumdescription" rows="4"
-                                    placeholder="Enter forum description" required>{{ old('forumdescription', $forum->forumdescription) }}</textarea>
+                                    placeholder="Enter forum description" required>{{ old('description', $forum->description) }}</textarea>
                             </div>
                         </div>
                         <div class="col-6">

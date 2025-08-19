@@ -58,6 +58,7 @@ class ForumController extends Controller
     
         $forum = Forum::create([
             'name' => $request->input('name'),
+            'description' => $request->input('forumdescription'),
             'status' => $request->input('status'),
             'created_by' => session('LoginID'),
             'end_date' => $request->input('end_date'),
@@ -474,7 +475,7 @@ class ForumController extends Controller
     $result = $forum->update([
         'name' => $request->forumname,
         'status' => $request->forumstatus,
-        'forumdescription' => $request->forumdescription,
+        'description' => $request->forumdescription,
         'end_date' => $request->end_date, // Update end date
         'images' => $forum->images ?? null, // Keep existing image if not updated
     ]);

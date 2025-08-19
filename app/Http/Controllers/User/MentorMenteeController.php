@@ -280,6 +280,7 @@ function want_become_mentee(Request $request)  {
 
    return redirect()->back()->with('success', 'Your request to become a mentee has been submitted successfully.');
 }
+
 function updateRequest(Request $request) : \Illuminate\Http\RedirectResponse {
   
     $table = $request->type === 'mentor' ? 'mentor_requests' : 'mentee_requests';
@@ -332,7 +333,7 @@ function updateRequest(Request $request) : \Illuminate\Http\RedirectResponse {
             Member::where('id', $requestData->mentees)->update(['is_notification' => 0]);
        
         } else {
-            $notification = $this->notificationService->notifyMenteeRequestRejected($requestData->mentees_ids, $user, 'Your mentee request has been rejected.', $request->id);
+            $notification = $this->notificationService->notifyMenteeRequestRejected($requestData->mentor, $user, 'Your mentee request has been rejected.', $request->id);
         
             Member::where('id', $requestData->mentees_ids)->update(['is_notification' => 0]);
         }
