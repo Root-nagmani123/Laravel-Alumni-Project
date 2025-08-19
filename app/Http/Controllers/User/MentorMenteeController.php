@@ -280,6 +280,7 @@ function want_become_mentee(Request $request)  {
 
    return redirect()->back()->with('success', 'Your request to become a mentee has been submitted successfully.');
 }
+
 function updateRequest(Request $request) : \Illuminate\Http\RedirectResponse {
   
     $table = $request->type === 'mentor' ? 'mentor_requests' : 'mentee_requests';
