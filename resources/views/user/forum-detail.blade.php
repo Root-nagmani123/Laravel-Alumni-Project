@@ -129,17 +129,22 @@
                 @php $isOwner = (int) (Auth::guard('user')->id()) === (int) ($forum->created_by ?? 0); @endphp
                 <h4 id="forumTitle" class="fw-bold mb-2">{{ $forum->name }}</h4>
                 <p id="forumDescription">{{ $forum->description }}</p>
-
+@php
+                $likeUserList = $forum->likes->pluck('member.name')->filter();
+                $likeUsersTooltip = $likeUserList->implode('<br>');
+                $hasLiked = $forum->likes->contains('member_id', auth('user')->id());
+                @endphp
                  <!-- Actions -->
         <div class="d-flex justify-content-between align-items-center mt-3">
             <div class="d-flex gap-3 text-muted small align-items-center">
                 <span class="d-inline-flex align-items-center gap-1">
-                    <i id="likeThumb" class="bi bi-hand-thumbs-up" style="cursor:pointer; {{ !empty($forum->has_liked) ? 'color:#dc3545' : '' }}"></i>
-                    <span id="likeCount">{{ $forum->likes->count() ?? 0 }}</span> Like
+                    <i id="likeThumb" class="bi bi-hand-thumbs-up {{ !empty($forum->has_liked) ? 'text-danger' : '' }}" style="cursor:pointer; ">Like</i>
+                    <span id="likeCount">{{ $forum->likes->count() ? '('.$forum->likes->count().')' : '' }}</span>
+                    
                 </span>
                 <span class="d-inline-flex align-items-center gap-1">
-                    <i class="bi bi-reply me-1"></i>
-                    <span id="commentCount">{{ $forum->comments->count() ?? 0 }}</span> Reply
+                    <i class="bi bi-reply me-1">Reply</i>
+                    <span id="commentCount">{{ $forum->comments->count() ? '('.$forum->comments->count().')' : '' }}</span>
                 </span>
             </div>
             @if($isOwner)

@@ -149,7 +149,7 @@
                                         @enderror
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <div class="mb-3">
                                         <label class="form-label">Cadre<span class="required text-danger text-danger" >*</span></label>
                                       
@@ -174,14 +174,14 @@
                                     </div>
                                 </div>
                               
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <div class="mb-3">
                                         <label class="form-label">Batch<span class="required text-danger text-danger" >*</span></label>
                                         <!-- <input type="number" name="batch" id="batch" class="form-control"
                                             value="{{ old('batch') }}"> -->
                                              <select name="batch" id="batch" class="form-control batch" >
                                         @if($members->isEmpty())
-                                        <option disabled>No Batches Available</option>
+                                        <option disabled>No Batch Available</option>
                                         @else
                                         <option value="">Select Batche</option>
 
@@ -200,7 +200,7 @@
                                         @enderror
                                     </div>
                                 </div>
-                                  <div class="col-md-6">
+                                  <div class="col-md-4">
                                     <div class="mb-3">
                                         <label class="form-label">Designation<span class="required text-danger text-danger" >*</span></label>
                                         <input type="text" name="designation" id="designation" class="form-control"
