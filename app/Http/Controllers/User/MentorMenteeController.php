@@ -38,9 +38,6 @@ $members = DB::table('members')
     ->orderBy('Service')
     ->get();
    
-
-
-
     // Fetch mentee and mentor requests
 
  $mentee_requests = DB::table('mentee_requests')
@@ -275,6 +272,7 @@ function want_become_mentee(Request $request)  {
        
        $userName = auth()->guard('user')->user()->name;
        $notification = $this->notificationService->notifyMenteeRequest($menteeId, $user, $userName . ' sent you a new mentee request', $requestId);
+
        if($notification){
         Member::where('id', $menteeId)->update(['is_notification' => 0]);
        }
@@ -310,7 +308,7 @@ function updateRequest(Request $request) : \Illuminate\Http\RedirectResponse {
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);
-            $notification = $this->notificationService->notifyMentorRequestAccepted($requestData->mentees, $user, 'Your mentor request has been accepted!', $request->id);
+            $notification = $this->notificationService->notifyMentorRequestAccepted($requestData->mentees, $user, 'your mentor request has been accepted!', $request->id);
             Member::where('id', $requestData->mentees)->update(['is_notification' => 0]);
 
         } else {
@@ -322,7 +320,7 @@ function updateRequest(Request $request) : \Illuminate\Http\RedirectResponse {
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);
-            $notification = $this->notificationService->notifyMenteeRequestAccepted($requestData->mentees_ids, $user, 'Your mentee request has been accepted!', $request->id);
+            $notification = $this->notificationService->notifyMenteeRequestAccepted($requestData->mentor, $user, 'Your mentee request has been accepted!', $request->id);
             Member::where('id', $requestData->mentees_ids)->update(['is_notification' => 0]);
 
         }
