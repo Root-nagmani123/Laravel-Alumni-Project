@@ -182,14 +182,6 @@ JS libraries, plugins and custom scripts -->
 <!-- Vendors -->
 <script src="{{asset('feed_assets/vendor/dropzone/dist/dropzone.js')}}"></script>
 
-<!-- Theme Functions -->
-<script src="{{asset('assets/js/functions.js')}}"></script>
-
-<!-- DataTables JS -->
-
-<script src="{{asset('feed_assets/js/vendor/bootstrap/dist/js/dataTables.min.js')}}"></script>
-<script src="{{asset('feed_assets/js/vendor/bootstrap/dist/js/dataTables.bootstrap5.min.js')}}"></script>
-
 
 <!-- Accessibility JS -->
 <script src="{{asset('feed_assets/js/weights-v1.js')}}"></script>

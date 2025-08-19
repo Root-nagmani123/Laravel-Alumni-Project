@@ -9,7 +9,7 @@
 }
 
 .select2-container {
-    z-index: 1050 !important;
+    z-index: 1020 !important;
     display: block !important;
     display: block !important;
 }
@@ -637,14 +637,14 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 });
-document.addEventListener("DOMContentLoaded", function() {
-    const selectAll = document.getElementById("selectAll_mentee");
-    selectAll.addEventListener("change", function() {
-        document.querySelectorAll('.row-checkbox').forEach(cb => {
-            cb.checked = selectAll.checked;
-        });
-    });
-});
+// document.addEventListener("DOMContentLoaded", function() {
+//     const selectAll = document.getElementById("selectAll_mentee");
+//     selectAll.addEventListener("change", function() {
+//         document.querySelectorAll('.row-checkbox').forEach(cb => {
+//             cb.checked = selectAll.checked;
+//         });
+//     });
+// });
 $(document).ready(function() {
     $('.Service, .year, .cadre, .sector').select2({
         placeholder: "Select options",
