@@ -51,12 +51,21 @@
 
                             </div>
                         </div>
+
                         <div class="col-6">
                             <div class="mb-3">
                                 <label class="form-label">Forum End Date<span
                                             class="required text-danger ">*</span></label>
                                 <input type="date" class="form-control" name="end_date" id="end_date"
                                     value="{{ old('end_date', $forum->end_date) }}">
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="mb-3">
+                                <label class="form-label">Forum Description<span
+                                        class="required text-danger ">*</span></label>
+                                <textarea class="form-control" name="forumdescription" id="forumdescription" rows="4"
+                                    placeholder="Enter forum description" required>{{ old('forumdescription', $forum->forumdescription) }}</textarea>
                             </div>
                         </div>
                         <div class="col-6">
