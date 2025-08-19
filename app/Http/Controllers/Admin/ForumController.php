@@ -39,6 +39,7 @@ class ForumController extends Controller
         {
     $validator = Validator::make($request->all(), [
         'name' => 'required|string|max:255',
+        'forumdescription' => 'required|string|max:1000',
         'end_date' => 'required|date|after_or_equal:today',
         'images' => 'nullable|image|mimes:jpeg,png,jpg|max:1028', 
         'status' => 'required|in:1,0',
@@ -91,6 +92,7 @@ class ForumController extends Controller
     
     $validator = Validator::make($request->all(), [
         'name' => 'required|string|max:255',
+        'forumdescription' => 'required|string|max:1000',
         'cat_id' => 'nullable|integer',
         'status' => 'required|integer',
         'forum_image' => 'nullable|forum_image|mimes:jpeg,png,jpg|max:1048', // Optional image validation
@@ -453,6 +455,7 @@ class ForumController extends Controller
     {
     $request->validate([
         'forumname' => 'required|string|max:255',
+        'forumdescription' => 'required|string|max:1000',
         'forumstatus' => 'required|in:0,1',
         'end_date' => 'required|date|after_or_equal:today', // Ensure end date is valid
         'forum_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048', // Optional image validation
@@ -471,6 +474,7 @@ class ForumController extends Controller
     $result = $forum->update([
         'name' => $request->forumname,
         'status' => $request->forumstatus,
+        'forumdescription' => $request->forumdescription,
         'end_date' => $request->end_date, // Update end date
         'images' => $forum->images ?? null, // Keep existing image if not updated
     ]);
