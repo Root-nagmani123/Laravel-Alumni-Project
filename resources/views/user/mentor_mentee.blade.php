@@ -456,16 +456,19 @@
                         @if ($mentor->status == 1)
                         <li class="list-group-item d-flex justify-content-between">
                             <span>{{ $mentor->name }}</span>
-                            <small>{{ $mentor->cadre }} | {{ $mentor->batch }}</small>
-                            <div class="text-end">
-                                <a href="" class="text-decoration-none ">
-                                <div class="chat-icon">
-                                    <i class="bi bi-chat-left-text-fill text-white"></i>
-                                </div>
-                            </a>
-                            </div>
+              <div class="text-end">
+   <a data-bs-toggle="offcanvas"
+      href="#offcanvasChat"
+      role="button"
+      class="text-decoration-none open-chat"
+      data-userid="{{ $mentor->id }}">   <!-- dynamic mentor id -->
+        <div class="chat-icon">
+            <i class="bi bi-chat-left-text-fill text-white"></i>
+        </div>
+   </a>
+</div>
 
-                        </li>
+     </li>
                         @php $hasMentor = true; @endphp
                         @endif
                         @endforeach
@@ -487,12 +490,16 @@
                             <span>{{ $mentee->name }}</span>
                             <small>{{ $mentee->cadre }} | {{ $mentee->batch }}</small>
                             <div class="text-end">
-                                <a href="" class="text-decoration-none ">
-                                <div class="chat-icon">
-                                    <i class="bi bi-chat-left-text-fill text-white"></i>
-                                </div>
-                            </a>
-                            </div>
+   <a data-bs-toggle="offcanvas"
+      href="#offcanvasChat"
+      role="button"
+      class="text-decoration-none open-chat"
+      data-userid="{{ $mentee->id }}">   <!-- dynamic mentor id -->
+        <div class="chat-icon">
+            <i class="bi bi-chat-left-text-fill text-white"></i>
+        </div>
+   </a>
+</div>
                         </li>
                         @php $hasMentee = true; @endphp
                         @endif
@@ -715,5 +722,15 @@ $(document).ready(function() {
         $('.row-checkbox').prop('checked', this.checked);
     });
 });
+</script>
+
+<script>
+function openDirectChat(userId) {
+    setTimeout(() => {
+        const el = $('.user-' + userId);
+        console.log('Element found:', el.length > 0);
+        if (el.length) el.trigger('click');
+    }, 300);
+}
 </script>
 @endsection
