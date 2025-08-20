@@ -204,6 +204,27 @@ class ForumController extends Controller
 				'created_at' => now(),
 				'updated_at' => now(),
 			]);
+
+			// Send notification to forum owner
+			$forum = DB::table('forums')
+				->join('members', 'members.id', '=', 'forums.created_by')
+				->select('forums.created_by', 'forums.name', 'members.name as owner_name')
+				->where('forums.id', $id)
+				->first();
+
+			if ($forum && $forum->created_by != $userId) {
+				$currentUser = DB::table('members')->where('id', $userId)->first();
+				$message = ($currentUser->name ?? 'Someone') . ' liked your forum: ' . $forum->name;
+				
+				$this->notificationService->notifyPostOwner(
+					$forum->created_by,
+					$userId,
+					'forum_like',
+					$message,
+					$id,
+					'forum'
+				);
+			}
 		}
 
 		$likeCount = DB::table('forum_like')->where('forum_id', $id)->count();
@@ -267,6 +288,30 @@ class ForumController extends Controller
 			'created_at' => now(),
 			'updated_at' => now(),
 		]);
+
+		// Send notification to forum owner
+		$forum = DB::table('forums')
+			->join('members', 'members.id', '=', 'forums.created_by')
+			->select('forums.created_by', 'forums.name', 'members.name as owner_name')
+			->where('forums.id', $id)
+			->first();
+
+		if ($forum && $forum->created_by != $userId) {
+			$currentUser = DB::table('members')->where('id', $userId)->first();
+			$commentText = strlen($request->input('comment')) > 50 
+				? substr($request->input('comment'), 0, 50) . '...'
+				: $request->input('comment');
+			$message = ($currentUser->name ?? 'Someone') . ' commented on your forum "' . $forum->name . '": ' . $commentText;
+			
+			$this->notificationService->notifyPostOwner(
+				$forum->created_by,
+				$userId,
+				'forum_comment',
+				$message,
+				$id,
+				'forum'
+			);
+		}
 
 		$comment = DB::table('forum_comment')
 			->join('members', 'members.id', '=', 'forum_comment.user_id')

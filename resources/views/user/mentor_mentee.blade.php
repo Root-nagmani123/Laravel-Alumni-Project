@@ -454,22 +454,21 @@
 
                         @foreach ($mentee_connections->toArray() as $mentor)
                         @if ($mentor->status == 1)
-                        <li class="list-group-item d-flex align-items-center justify-content-between">
-    <!-- Left side: Name + details -->
-    <div>
-        <span class="fw-semibold d-block">{{ $mentor->name }}</span>
-        <small class="text-muted">{{ $mentor->cadre }} | {{ $mentor->batch }}</small>
-    </div>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span>{{ $mentor->name }}</span>
+              <div class="text-end">
+   <a data-bs-toggle="offcanvas"
+      href="#offcanvasChat"
+      role="button"
+      class="text-decoration-none open-chat"
+      data-userid="{{ $mentor->id }}">   <!-- dynamic mentor id -->
+        <div class="chat-icon">
+            <i class="bi bi-chat-left-text-fill text-white"></i>
+        </div>
+   </a>
+</div>
 
-    <!-- Right side: Chat button -->
-    <div>
-        <a href="#" class="btn btn-sm btn-primary rounded-circle d-flex align-items-center justify-content-center"
-           style="width: 32px; height: 32px;">
-            <i class="bi bi-chat-left-text-fill"></i>
-        </a>
-    </div>
-</li>
-
+     </li>
                         @php $hasMentor = true; @endphp
                         @endif
                         @endforeach
@@ -487,22 +486,21 @@
 
                         @foreach ($mentor_connections->toArray() as $mentee)
                         @if ($mentee->status == 1)
-                       <li class="list-group-item d-flex align-items-center justify-content-between">
-    <!-- Left side: Name + details -->
-    <div>
-        <span class="fw-semibold d-block">{{ $mentee->name }}</span>
-        <small class="text-muted">{{ $mentee->cadre }} | {{ $mentee->batch }}</small>
-    </div>
-
-    <!-- Right side: Chat button -->
-    <div>
-        <a href="#" class="btn btn-sm btn-primary rounded-circle d-flex align-items-center justify-content-center"
-           style="width: 32px; height: 32px;">
-            <i class="bi bi-chat-left-text-fill"></i>
-        </a>
-    </div>
-</li>
-
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span>{{ $mentee->name }}</span>
+                            <small>{{ $mentee->cadre }} | {{ $mentee->batch }}</small>
+                            <div class="text-end">
+   <a data-bs-toggle="offcanvas"
+      href="#offcanvasChat"
+      role="button"
+      class="text-decoration-none open-chat"
+      data-userid="{{ $mentee->id }}">   <!-- dynamic mentor id -->
+        <div class="chat-icon">
+            <i class="bi bi-chat-left-text-fill text-white"></i>
+        </div>
+   </a>
+</div>
+                        </li>
                         @php $hasMentee = true; @endphp
                         @endif
                         @endforeach
@@ -724,5 +722,15 @@ $(document).ready(function() {
         $('.row-checkbox').prop('checked', this.checked);
     });
 });
+</script>
+
+<script>
+function openDirectChat(userId) {
+    setTimeout(() => {
+        const el = $('.user-' + userId);
+        console.log('Element found:', el.length > 0);
+        if (el.length) el.trigger('click');
+    }, 300);
+}
 </script>
 @endsection
