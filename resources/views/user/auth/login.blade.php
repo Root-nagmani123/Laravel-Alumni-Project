@@ -310,10 +310,12 @@
         background-size: contain;
         transform: rotate(180deg);
     }
+
     /* Error toast ka background red karne ke liye */
-    #toast-container > .toast-error {
+    #toast-container>.toast-error {
         background-color: red !important;
-        color: #fff !important;  /* text white */
+        color: #fff !important;
+        /* text white */
     }
     </style>
 </head>
@@ -352,7 +354,7 @@
                     <p>The LBSNAA Alumni Portal is an online platform to connect, collaborate, and provide
                         end-to-end services to Academy alumni</p>
                 </div>
-               
+
 
                 <!-- Login Buttons -->
                 <div class="row mt-5">
@@ -378,14 +380,16 @@
                 </div>
 
                 <div class="mt-3 text-center">
-                    <a href="#" class="btn btn-outline-danger open-panel" data-panel="register" style="background-color:#af2910; border: #af2910 1px solid;color:#fff;">
+                    <a href="#" class="btn btn-outline-danger open-panel" data-panel="register"
+                        style="background-color:#af2910; border: #af2910 1px solid;color:#fff;">
                         For Registration Click Here
                     </a>
                 </div>
                 <div class="position-relative w-100 bg-light d-flex align-items-center px-3 mt-4"
                     style="height: 40px; overflow: hidden; z-index: 1040;">
                     <div class="position-relative d-flex align-items-center">
-                        <button class="btn btn-sm btn-danger position-relative z-1" style="background-color:#af2910; border: #af2910 1px solid;color:#fff;min-width: 120px;">
+                        <button class="btn btn-sm btn-danger position-relative z-1"
+                            style="background-color:#af2910; border: #af2910 1px solid;color:#fff;min-width: 120px;">
                             Helpdesk
                         </button>
                     </div>
@@ -400,16 +404,16 @@
                     </div>
                 </div>
                 <div class="card mt-5 w-100" style="background:transparent !important; border:none !important;">
-        <div class="card-body">
-            <p class="text-center mb-0">
-                © {{ date("Y") }}
-                <a href="https://www.lbsnaa.gov.in/">
-                    Lal Bahadur Shastri National Academy of Administration Mussoorie
-                </a>,<br>
-                Govt of India. All Rights Reserved
-            </p>
-        </div>
-    </div>
+                    <div class="card-body">
+                        <p class="text-center mb-0">
+                            © {{ date("Y") }}
+                            <a href="https://www.lbsnaa.gov.in/">
+                                Lal Bahadur Shastri National Academy of Administration Mussoorie
+                            </a>,<br>
+                            Govt of India. All Rights Reserved
+                        </p>
+                    </div>
+                </div>
             </div>
 
             <!-- Right Section (Background + Overlay Forms) -->
@@ -422,6 +426,7 @@
                 <div class="position-absolute top-50 start-50 translate-middle w-50" style="z-index: 2;">
                     <!-- LDAP Login -->
                     <div id="ldap-panel" class="card shadow-lg p-4 d-none">
+                        <button type="button" class="btn-close position-absolute top-0 end-0 m-3 close-panel"></button>
                         <h4 class="mb-3 fw-bold text-center">LDAP Login</h4>
                         <hr class="my-2">
                         <form method="POST" action="{{ route('user.login.submit_ldap') }}" id="loginForm">
@@ -442,6 +447,7 @@
 
                     <!-- OTP Login -->
                     <div id="otp-panel" class="card shadow-lg p-4 d-none">
+                        <button type="button" class="btn-close position-absolute top-0 end-0 m-3 close-panel"></button>
                         <h4 class="mb-3 fw-bold text-center">Email OTP Login</h4>
                         <hr class="my-2">
                         <form id="otpForm">
@@ -488,9 +494,10 @@
 
                     <!-- Registration -->
                     <div id="register-panel" class="card shadow-lg p-4 d-none">
+                        <button type="button" class="btn-close position-absolute top-0 end-0 m-3 close-panel"></button>
                         <h4 class="mb-3 fw-bold text-center">Registration</h4>
                         <hr class="my-2">
-                        <form >
+                        <form>
                             <div class="row g-3">
                                 <div class="col-md-6">
                                     <label class="form-label fw-bold">Name</label>
@@ -645,6 +652,9 @@
     <script src="{{ asset('user_assets/js/theme-setting.js') }}"></script>
     <script src="{{ asset('user_assets/js/script.js') }}"></script>
     <script>
+        $(document).on('click', '.close-panel', function () {
+    $(this).closest('.card').addClass('d-none'); // hide the panel
+});
     document.querySelectorAll('.open-panel').forEach(btn => {
         btn.addEventListener('click', e => {
             e.preventDefault();
@@ -744,15 +754,15 @@
 
     <!-- Theme js-->
     <script src="{{asset('user_assets/js/script.js')}}"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-@if(session('success'))
-<script>
-toastr.success("{{ session('success') }}");
-</script>
-@endif
-@if(session('error'))
-<script>
+    @if(session('success'))
+    <script>
+    toastr.success("{{ session('success') }}");
+    </script>
+    @endif
+    @if(session('error'))
+    <script>
     toastr.options = {
         "closeButton": true,
         "progressBar": true,
@@ -760,12 +770,11 @@ toastr.success("{{ session('success') }}");
         "timeOut": "5000"
     };
     toastr.error("{{ session('error') }}");
-</script>
-@endif
+    </script>
+    @endif
 
-      
-<script>
-   
+
+    <script>
     feather.replace();
     $(".emojiPicker").emojioneArea({
         inline: true,
@@ -931,26 +940,25 @@ toastr.success("{{ session('success') }}");
         }
     });
 
-async function encryptPassword(password) {
-    
-    let key = CryptoJS.enc.Base64.parse("{{ substr(config('app.key'), 7) }}");
-    const iv = CryptoJS.enc.Utf8.parse("1234567890123456"); 
-    const encrypted = CryptoJS.AES.encrypt(password, key, {
-        iv: iv,
-        mode: CryptoJS.mode.CBC,
-        padding: CryptoJS.pad.Pkcs7
+    async function encryptPassword(password) {
+
+        let key = CryptoJS.enc.Base64.parse("{{ substr(config('app.key'), 7) }}");
+        const iv = CryptoJS.enc.Utf8.parse("1234567890123456");
+        const encrypted = CryptoJS.AES.encrypt(password, key, {
+            iv: iv,
+            mode: CryptoJS.mode.CBC,
+            padding: CryptoJS.pad.Pkcs7
+        });
+        return encrypted.toString();
+    }
+
+    document.getElementById("loginForm").addEventListener("submit", async function(e) {
+        e.preventDefault();
+        let passwordField = document.getElementById("password");
+        let encryptedPassword = await encryptPassword(passwordField.value);
+        passwordField.value = encryptedPassword; // Send encrypted password
+        this.submit(); // Now submit the form
     });
-    return encrypted.toString(); 
-}
-
-document.getElementById("loginForm").addEventListener("submit", async function (e) {
-    e.preventDefault();
-    let passwordField = document.getElementById("password");
-    let encryptedPassword = await encryptPassword(passwordField.value);
-    passwordField.value = encryptedPassword; // Send encrypted password
-    this.submit(); // Now submit the form
-});
-
     </script>
 </body>
 
