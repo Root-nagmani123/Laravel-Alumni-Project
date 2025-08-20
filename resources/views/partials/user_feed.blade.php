@@ -834,57 +834,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-/*
-
-     document.addEventListener("DOMContentLoaded", function () {
-    let currentTime = Math.floor(Date.now() / 1000); // current time in seconds
-
-    let storiesData = [
-        @foreach($storiesByMember as $memberId => $memberStories)
-            @php
-                $first = $memberStories->first();
-                $user = $first->user;
-                 $storyImage = $first->story_image ?? null;
-                $lastTimestamp = \Carbon\Carbon::parse($memberStories->max('created_at'))->timestamp;
-
-            @endphp
-        {
-            id: "member-{{ $memberId }}",
-            //photo: "{{ asset($user->profile_pic ? 'storage/' . $user->profile_pic : 'feed_assets/images/avatar/08.jpg') }}",
-           photo: "{{ asset($storyImage ? 'storage/' . $storyImage : 'feed_assets/images/avatar/08.jpg') }}",
-            name: "{{ addslashes($user->name) }}",
-            link: "#",
-            lastUpdated: {{ $lastTimestamp }},
-            items: [
-                @foreach($memberStories as $story)
-                {
-                    id: "story-{{ $story->id }}",
-                    type: "photo",
-                    length: 5,
-                    src: "{{ asset('storage/' . $story->story_image) }}",
-                    preview: "{{ asset('storage/' . $story->story_image) }}",
-                    link: "#",
-                    linkText: "View",
-                    time: {{ \Carbon\Carbon::parse($story->created_at)->timestamp }}
-                }@if(!$loop->last),@endif
-                @endforeach
-            ]
-        }@if(!$loop->last),@endif
-        @endforeach
-    ];
-
-    // Filter stories created within the last 24 hours
-   let filteredStories = storiesData.filter(story => {
-        return currentTime - story.lastUpdated <= 86400;
-    });
-
-
-
-
-    initZuckStories(filteredStories);
-});
-*/
-
 document.addEventListener("DOMContentLoaded", function () {
     let currentTime = Math.floor(Date.now() / 1000); // current time in seconds
 
