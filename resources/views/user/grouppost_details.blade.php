@@ -87,7 +87,7 @@
         <!-- Info -->
         <div class="w-100">
   <h6 class="mb-0">
-    <a href="#!">{{ $member->name }}</a>
+    <a href="{{ $member->id ? route('user.profile.data', ['id' => $member->id]) : '#' }}">{{ $member->name }}</a>
   </h6>
   <p class="small text-muted mb-0">
     {{ $member->designation ?? 'N/A' }}
@@ -267,10 +267,14 @@
                     <!-- Comment box -->
                     <div class="d-flex mb-3">
                         <div class="avatar avatar-xs me-2">
-                            <a href="{{ route('user.profile', ['id' => $user->id]) }}">
-                                <img class="avatar-img rounded-circle"
-                                    src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}" alt="" loading="lazy" decoding="async">
-                            </a>
+                            <a href="{{ route('user.profile', ['id' => Auth::guard('user')->id()]) }}">
+    <img class="avatar-img rounded-circle"
+         src="{{ Auth::guard('user')->user()->profile_pic 
+                ? asset('storage/' . Auth::guard('user')->user()->profile_pic) 
+                : asset('feed_assets/images/avatar/07.jpg') }}"
+         alt="User" loading="lazy" decoding="async">
+</a>
+
                         </div>
                         <form class="nav nav-item w-100 position-relative commentForm" id="commentForm-{{ $post->id }}"
                             action="{{ route('user.comments.store') }}" method="POST" data-post-id="{{ $post->id }}">
@@ -287,69 +291,69 @@
                         </form>
                     </div>
                     <ul class="comment-wrap list-unstyled">
-                        @foreach ($post->comments->take(2) as $comment)
-                        <li class="comment-item mb-3" id="comment-{{ $comment->id }}">
-                            <div class="d-flex position-relative">
-                                <div class="avatar avatar-xs">
-                                    <a href="{{ $comment->member ? url('/user/profile/' . $comment->member->id) : '#' }}">
-                                        <img class="avatar-img rounded-circle"
-                                            src="{{ $comment->member && $comment->member->profile_pic ? asset('storage/' . $comment->member->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}"
-                                            alt="" loading="lazy" decoding="async">
-                                    </a>
-                                </div>
-                                <div class="ms-2 w-100">
-                                    <div class="bg-light rounded-start-top-0 p-3 rounded">
-                                        <div class="d-flex justify-content-between">
-                                            <h6 class="mb-1">
-                                                <a href="{{ $comment->member ? url('/user/profile/' . $comment->member->id) : '#' }}">
-                                                    {{ $comment->member->name ?? 'Anonymous' }}
-                                                </a>
-                                            </h6>
-                                              @php
-    $createdAt =  \Carbon\Carbon::parse($comment->created_at)->setTimezone('Asia/Kolkata');
-    $now = \Carbon\Carbon::now('Asia/Kolkata');
-    $diff = $createdAt->diff($now);
+    @foreach ($post->comments as $comment)
+        <li class="comment-item mb-3" id="comment-{{ $comment->id }}">
+            <div class="d-flex position-relative">
+                <div class="avatar avatar-xs">
+                    <a href="{{ $comment->member ? url('/user/profile/' . $comment->member->id) : '#' }}">
+                        <img class="avatar-img rounded-circle"
+                            src="{{ $comment->member && $comment->member->profile_pic ? asset('storage/' . $comment->member->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}"
+                            alt="" loading="lazy" decoding="async">
+                    </a>
+                </div>
+                <div class="ms-2 w-100">
+                    <div class="bg-light rounded-start-top-0 p-3 rounded">
+                        <div class="d-flex justify-content-between">
+                            <h6 class="mb-1">
+                                <a href="{{ $comment->member ? url('/user/profile/' . $comment->member->id) : '#' }}">
+                                    {{ $comment->member->name ?? 'Anonymous' }}
+                                </a>
+                            </h6>
+                            @php
+                                $createdAt = \Carbon\Carbon::parse($comment->created_at)->setTimezone('Asia/Kolkata');
+                                $now = \Carbon\Carbon::now('Asia/Kolkata');
+                                $diff = $createdAt->diff($now);
 
-    if ($diff->y > 0) {
-        $timeDiff = $diff->y . 'y';
-    } elseif ($diff->m > 0) {
-        $timeDiff = $diff->m . 'mo';
-    } elseif ($diff->d > 0) {
-        $timeDiff = $diff->d . 'd';
-    } elseif ($diff->h > 0) {
-        $timeDiff = $diff->h . 'h';
-    } elseif ($diff->i > 0) {
-        $timeDiff = $diff->i . 'min';
-    } else {
-        $timeDiff = 'Just now';
-    }
-@endphp
+                                if ($diff->y > 0) {
+                                    $timeDiff = $diff->y . 'y';
+                                } elseif ($diff->m > 0) {
+                                    $timeDiff = $diff->m . 'mo';
+                                } elseif ($diff->d > 0) {
+                                    $timeDiff = $diff->d . 'd';
+                                } elseif ($diff->h > 0) {
+                                    $timeDiff = $diff->h . 'h';
+                                } elseif ($diff->i > 0) {
+                                    $timeDiff = $diff->i . 'min';
+                                } else {
+                                    $timeDiff = 'Just now';
+                                }
+                            @endphp
 
-<span class="nav-item small">{{ $timeDiff }}</span>
-                                           
-                                        </div>
-                                        <p class="small mb-0" id="comment-text-{{ $comment->id }}">{{ $comment->comment }}</p>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-6">
-                                            <a href="#!" class="text-secondary small me-2">Like</a>
-                                            <a href="#!" class="text-secondary small">Reply</a>
-                                        </div>
-                                        <div class="col-6 text-end">
-                                            @if(auth()->guard('user')->id() === $comment->member_id)
-                                            <button class="btn btn-sm btn-link p-0 text-primary edit-comment-btn"
-                                                data-comment-id="{{ $comment->id }}" data-comment="{{ $comment->comment }}"
-                                                type="button"><i class="bi bi-pencil-fill"></i></button>
-                                            <button class="btn btn-sm btn-link p-0 text-danger delete-comment-btn"
-                                                data-comment-id="{{ $comment->id }}" type="button"><i class="bi bi-trash-fill"></i></button>
-                                            @endif
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                        @endforeach
-                    </ul>
+                            <span class="nav-item small">{{ $timeDiff }}</span>
+                        </div>
+                        <p class="small mb-0" id="comment-text-{{ $comment->id }}">{{ $comment->comment }}</p>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <a href="#!" class="text-secondary small me-2">Like</a>
+                            <a href="#!" class="text-secondary small">Reply</a>
+                        </div>
+                        <div class="col-6 text-end">
+                            @if(auth()->guard('user')->id() === $comment->member_id)
+                                <button class="btn btn-sm btn-link p-0 text-primary edit-comment-btn"
+                                    data-comment-id="{{ $comment->id }}" data-comment="{{ $comment->comment }}"
+                                    type="button"><i class="bi bi-pencil-fill"></i></button>
+                                <button class="btn btn-sm btn-link p-0 text-danger delete-comment-btn"
+                                    data-comment-id="{{ $comment->id }}" type="button"><i class="bi bi-trash-fill"></i></button>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </li>
+    @endforeach
+</ul>
+
                 </div>
             </div>
             @empty
@@ -502,6 +506,74 @@ $(document).ready(function () {
 document.addEventListener("DOMContentLoaded", function () {
     GLightbox({ selector: '.glightbox' });
 });
+$(document).on('submit', '.comment-form', function(e) {
+    e.preventDefault();
+
+    let form = $(this);
+    let postId = form.data('post-id');
+    let input = form.find('input[name="comment"]');
+    let commentText = input.val();
+
+    $.ajax({
+        url: '/post/' + postId + '/comment',
+        type: 'POST',
+        data: {
+            _token: $('meta[name="csrf-token"]').attr('content'),
+            comment: commentText
+        },
+        success: function(response) {
+            if (response.success) {
+                // Build comment HTML
+                let newComment = `
+                <li class="comment-item mb-3" id="comment-${response.comment.id}">
+                    <div class="d-flex position-relative">
+                        <div class="avatar avatar-xs">
+                            <a href="/user/profile/${response.comment.member.id}">
+                                <img class="avatar-img rounded-circle"
+                                    src="${response.comment.member.profile_pic ? '/storage/' + response.comment.member.profile_pic : '/feed_assets/images/avatar/07.jpg'}"
+                                    alt="">
+                            </a>
+                        </div>
+                        <div class="ms-2 w-100">
+                            <div class="bg-light rounded-start-top-0 p-3 rounded">
+                                <div class="d-flex justify-content-between">
+                                    <h6 class="mb-1">
+                                        <a href="/user/profile/${response.comment.member.id}">
+                                            ${response.comment.member.name}
+                                        </a>
+                                    </h6>
+                                    <span class="nav-item small">${response.timeDiff}</span>
+                                </div>
+                                <p class="small mb-0">${response.comment.comment}</p>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <a href="#!" class="text-secondary small me-2">Like</a>
+                                    <a href="#!" class="text-secondary small">Reply</a>
+                                </div>
+                                <div class="col-6 text-end">
+                                    <button class="btn btn-sm btn-link p-0 text-primary edit-comment-btn"
+                                        data-comment-id="${response.comment.id}" 
+                                        data-comment="${response.comment.comment}"
+                                        type="button"><i class="bi bi-pencil-fill"></i></button>
+                                    <button class="btn btn-sm btn-link p-0 text-danger delete-comment-btn"
+                                        data-comment-id="${response.comment.id}" type="button"><i class="bi bi-trash-fill"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>`;
+
+                // Append new comment right below post comments
+                form.closest('.post').find('.comment-wrap').append(newComment);
+
+                // Clear input
+                input.val('');
+            }
+        }
+    });
+});
+
 </script>
 
 

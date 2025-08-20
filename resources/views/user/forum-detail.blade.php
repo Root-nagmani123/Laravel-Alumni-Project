@@ -64,21 +64,25 @@
                  @php $currentUserId = Auth::guard('user')->id(); @endphp
                  <div id="commentsList" data-update-url-template="{{ route('user.forum.comment.update', ['commentId' => 'COMMENT_ID']) }}" data-delete-url-template="{{ route('user.forum.comment.delete', ['commentId' => 'COMMENT_ID']) }}">
             @foreach($forum->comments as $index => $comment)
-                @php
-                       $commentPicPath = $comment->profile_pic
-    ? asset($comment->profile_pic)
-    : asset('feed_assets/images/avatar/07.jpg');
+                    @php
+                        $commentPicPath = $comment->profile_pic
+                            ? asset($comment->profile_pic)
+                            : asset('feed_assets/images/avatar/07.jpg');
 
 
-                @endphp
+                    @endphp
                 <div class="d-flex align-items-start gap-3 mb-3 comment-item" data-comment-id="{{ $comment->id }}">
-                    <img src="{{ asset($commentPicPath) }}" class="rounded-circle" alt="User" style="width:40px; height:40px; object-fit:cover;">
-                    <div class="flex-grow-1">
-                        <div class="d-flex align-items-center justify-content-between mb-1">
-                            <div class="d-flex align-items-center gap-2">
-                                <h6 class="mb-0 fw-bold">{{ $comment->member_name }}</h6>
-                                <small class="text-muted">{{ \Carbon\Carbon::parse($comment->created_at)->format('d-m-y') }}</small>
-                            </div>
+                  <a href="{{ route('user.profile.data', ['id' => $comment->user_id]) }}">
+    <img src="{{ $commentPicPath }}" class="rounded-circle" alt="User" style="width:40px; height:40px; object-fit:cover;">
+</a>
+<div class="flex-grow-1">
+    <div class="d-flex align-items-center justify-content-between mb-1">
+        <div class="d-flex align-items-center gap-2">
+            <a href="{{ route('user.profile.data', ['id' => $comment->user_id]) }}">
+                <h6 class="mb-0 fw-bold">{{ $comment->member_name }}</h6>
+            </a>
+            <small class="text-muted">{{ \Carbon\Carbon::parse($comment->created_at)->format('d-m-y') }}</small>
+        </div>
                             @if((int)$currentUserId === (int)$comment->user_id)
                             <div class="d-flex align-items-center gap-2">
                                 <button class="btn btn-sm btn-link text-secondary p-0 comment-edit" data-id="{{ $comment->id }}" title="Edit"><i class="bi bi-pencil-square"></i></button>
