@@ -424,7 +424,7 @@
                             <!-- Comment by -->
                             <div class="bg-light rounded-start-top-0 p-3 rounded">
                                 <div class="d-flex justify-content-between">
-                                    <h6 class="mb-1"> <a href="#!"> {{ $comment->member->name ?? 'Anonymous' }} </a>
+                                    <h6 class="mb-1"> <a href="{{ $comment->member ? route('user.profile.data', ['id' => $comment->member->id]) : '#' }}"> {{ $comment->member->name ?? 'Anonymous' }} </a>
                                     </h6>
                                     <small class="ms-2">{{$comment->created_at->diffForHumans()}}</small>
                                 </div>
