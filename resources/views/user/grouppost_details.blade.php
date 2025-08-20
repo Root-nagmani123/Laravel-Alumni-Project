@@ -7,52 +7,7 @@
 
 <div class="container">
     <div class="row g-4" style="margin-top: 100px;">
-        <div class="col-3">
-            <!-- Profile Sidebar START -->
-            <nav class="navbar navbar-expand-lg mx-0">
-                <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasSideNavbar">
-                    <div class="offcanvas-header">
-                        <button type="button" class="btn-close text-reset ms-auto" data-bs-dismiss="offcanvas"
-                            aria-label="Close"></button>
-                    </div>
-                    <div class="offcanvas-body d-block px-2 px-lg-0">
-                        <div class="card overflow-hidden">
-                            <div class="h-50px"
-                                style="background-image:url({{asset('feed_assets/images/bg/01.jpg')}}); background-position: center; background-size: cover; background-repeat: no-repeat;">
-                            </div>
-                            <div class="card-body pt-0">
-                                <div class="text-center">
-                                    @php
-                                        $user = Auth::guard('user')->user();
-                                        $profileImage = $user && $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar-1.png');
-                                        $displayName = $user->name ?? 'Guest User';
-                                        $designation = $user->designation ?? 'Guest';
-                                        $profileLink = url('/user/profile/' . ($user->id ?? 0));
-                                    @endphp
-                                    <div class="avatar avatar-lg mt-n5 mb-3">
-                                        <a href="{{ $profileLink }}"><img class="avatar-img rounded-circle"
-                                                src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}" alt="" loading="lazy" decoding="async"></a>
-                                    </div>
-                                    <h5 class="mb-0"><a href="{{ $profileLink }}">{{ $displayName }}</a></h5>
-                                    <small>{{ $designation }}</small>
-                                    <ul class="list-inline mb-0 text-center text-sm-start mt-3 mt-sm-0">
-                                        <li class="list-inline-item"><i class="bi bi-briefcase me-1"></i>
-                                            {{ $user->current_designation ?? '' }}
-                                        </li>
-                                        <li class="list-inline-item"><i class="bi bi-backpack me-1"></i>
-                                            {{ $user->batch ?? '' }}</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="card-footer text-center py-2">
-                                <a class="btn btn-link btn-sm" href="{{ route('user.profile.data', ['id' => $user->id]) }}">View Profile </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </nav>
-            <!-- Profile Sidebar END -->
-        </div>
+        @include('partials.left_sidebar')
         <div class="col-9">
             <div class="post-list p-3 rounded mb-4" style="background-color: #af2910; color: #fff;">
                 <div class="d-flex justify-content-between align-items-center">
