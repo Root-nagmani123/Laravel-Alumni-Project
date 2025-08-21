@@ -499,6 +499,10 @@ Route::middleware(['auth:user'])->group(function () {
     });
 });
 
+Route::prefix('topic')->name('recent.topics.')->group(function(){
+    Route::get('/', [DashboardController::class, 'recentTopics'])->name('index');
+});
+
 
 Route::post('/otp/send', [OtpLoginController::class, 'sendOtp'])->name('otp.send');
 Route::post('/otp/verify', [OtpLoginController::class, 'verifyOtp'])->name('otp.verify');

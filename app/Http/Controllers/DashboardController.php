@@ -22,6 +22,7 @@ class DashboardController extends Controller
 
 namespace App\Http\Controllers;
 
+use App\DataTables\TopicsDataTable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
@@ -204,5 +205,10 @@ class DashboardController extends Controller
 
         return view('user.events',compact('events', 'accept_events', 'maybe_events', 'decline_events'));
 
+    }
+
+    public function recentTopics(TopicsDataTable $topicsDataTable)
+    {
+        return $topicsDataTable->render('admin.topics.index');
     }
 }

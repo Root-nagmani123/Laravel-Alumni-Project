@@ -87,6 +87,12 @@
                             </a>
                         </li>
                         <li class="sidebar-item">
+                            <a class="sidebar-link" href="{{ route('recent.topics.index') }}">
+                                <iconify-icon icon="solar:document-bold-duotone"></iconify-icon>
+                                <span class="icon-small"></span> Recent Topics
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
                             <a class="sidebar-link" href="{{ route('grievance.list') }}">
                                 <iconify-icon icon="solar:document-bold-duotone"></iconify-icon>
                                 <span class="icon-small"></span> Grievance/Feedback
