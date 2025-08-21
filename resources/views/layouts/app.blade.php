@@ -292,6 +292,28 @@
             }
         }
 </script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    var myCollapsible = document.getElementById('offcanvasChat');
+
+    myCollapsible.addEventListener('shown.bs.offcanvas', function (event) {
+        // Get the button that triggered the offcanvas
+        let triggerBtn = event.relatedTarget; 
+        let userId = triggerBtn ? triggerBtn.getAttribute('data-userid') : null;
+
+        console.log("Opening chat with:", userId);
+
+        if (userId) {
+            $('.user-id' + userId).trigger('click'); 
+        }
+    });
+});
+</script>
+
+
+
+
 </body>
 
 </html>
