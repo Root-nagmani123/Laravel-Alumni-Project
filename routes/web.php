@@ -501,6 +501,7 @@ Route::middleware(['auth:user'])->group(function () {
 Route::post('/otp/send', [OtpLoginController::class, 'sendOtp'])->name('otp.send');
 Route::post('/otp/verify', [OtpLoginController::class, 'verifyOtp'])->name('otp.verify');
 
+Route::get('/user-search', [MemberController::class, 'user_search'])->name('user.search');
 Route::post('/custom-broadcasting-auth', function(\Illuminate\Http\Request $request) {
     return response()->json([
         'auth' => hash('sha256', $request->socket_id . ':' . $request->channel_name . ':bypass')
