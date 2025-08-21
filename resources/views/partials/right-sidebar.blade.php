@@ -44,10 +44,11 @@
                 <!-- News item -->
                 @if((isset($broadcast)) && ($broadcast->count() > 0))
                 @foreach($broadcast as $index => $broadcast)
+                
                 <div class="mb-3">
 
                     <div class="mb-2">
-                        <a href="{{ route('user.broadcastDetails', $broadcast->enc_id) }}">
+                        <a class="testing" href="{{ route('user.broadcastDetails', $broadcast->enc_id) }}">
                         @if($broadcast->image_url)
                         <img class="avatar-img rounded" src="{{ asset('storage/' . $broadcast->image_url) }}" alt=""
                             height="45" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $broadcast->title }}"
@@ -62,10 +63,10 @@
                     </div>
 
                     <h6 class="mb-0"><a
-                            href="{{ route('user.broadcastDetails', $broadcast->id) }}">{{ $broadcast->title }}</a>
+                            href="{{ route('user.broadcastDetails', $broadcast->enc_id) }}">{{ $broadcast->title }}</a>
                     </h6>
                     <small>{{ \Illuminate\Support\Str::limit($broadcast->description, 50) }} <span><a
-                                href="{{ route('user.broadcastDetails', $broadcast->id) }}" class="text-danger">View
+                                href="{{ route('user.broadcastDetails', $broadcast->enc_id) }}" class="text-danger">View
                                 more</a></span></small>
                 </div>
                 <hr>
