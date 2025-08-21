@@ -139,26 +139,27 @@
                                             @php
                     
                                                 $notificationUrl = '#';
+                                                $enc_source_id = Crypt::encryptString($notification->source_id);
                                                 // Debug: Log notification data
-                                                if (isset($notification->source_id) && isset($notification->source_type)) {
+                                                if (isset($enc_source_id) && isset($notification->source_type)) {
                                                     switch ($notification->source_type) {
                                                         case 'event':
                                                             $notificationUrl = route('user.allevents');
                                                             break;
                                                         case 'broadcast':
-                                                            $notificationUrl = route('user.broadcastDetails', ['id' => $notification->source_id]);
+                                                            $notificationUrl = route('user.broadcastDetails', ['id' => $enc_source_id]);
                                                             break;
                                                         case 'forum':
-                                                                $notificationUrl = route('user.forum.show', ['id' => $notification->source_id]);
+                                                                $notificationUrl = route('user.forum.show', ['id' => $enc_source_id]);
                                                                 break;
                                                         case 'profile':
-                                                            $notificationUrl = url('/profile/' . $notification->source_id);
+                                                            $notificationUrl = url('/profile/' . $enc_source_id);
                                                             break;
                                                         case 'post':
-                                                            $notificationUrl = url('user/group-post/' . $notification->source_id);
+                                                            $notificationUrl = url('user/group-post/' . $enc_source_id);
                                                             break;
                                                         case 'group':
-                                                            $notificationUrl = route('user.group-post', ['id' => $notification->source_id]);
+                                                            $notificationUrl = route('user.group-post', ['id' => $enc_source_id]);
                                                             break;
                                                         case 'request':
                                                             $notificationUrl = route('user.mentor_mentee', ['tab' => 'incoming']);
@@ -170,7 +171,7 @@
                                                             $notificationUrl = route('user.mentor_mentee', ['tab' => 'outgoing']);
                                                             break;
                                                         case 'birthday':
-                                                            $notificationUrl = route('user.profile.data', ['id' => $notification->source_id]);
+                                                            $notificationUrl = route('user.profile.data', ['id' => $enc_source_id]);
                                                             break;
                                                         default:
                                                             $notificationUrl = '#';
@@ -179,7 +180,7 @@
                                                 // Debug: Log the generated URL
                                                 if (app()->environment('local')) {
                                                     \Log::info('Notification URL generated:', [
-                                                        'source_id' => $notification->source_id ?? 'null',
+                                                        'source_id' => $enc_source_id ?? 'null',
                                                         'source_type' => $notification->source_type ?? 'null',
                                                         'url' => $notificationUrl
                                                     ]);
