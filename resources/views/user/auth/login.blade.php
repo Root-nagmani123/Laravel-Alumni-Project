@@ -350,7 +350,7 @@
                 </div>
 
                 <div class="mt-4">
-                    <h1 class="fw-bold mb-3">ABOUT LBSNAA Alumni</h1>
+                    <h1 class="fw-bold mb-3">Welcome to Alumni Portal!</h1>
                     <p>The LBSNAA Alumni Portal is an online platform to connect, collaborate, and provide
                         end-to-end services to Academy alumni</p>
                 </div>

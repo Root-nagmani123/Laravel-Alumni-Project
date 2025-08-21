@@ -115,6 +115,12 @@
                                 </li>
                             </ul>
                         </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="{{ route('admin.topics.index') }}">
+                                <iconify-icon icon="solar:document-bold-duotone"></iconify-icon>
+                                <span class="icon-small"></span> Recents Topics
+                            </a>
+                        </li>
                     </ul>
                 </nav>
             </div>
