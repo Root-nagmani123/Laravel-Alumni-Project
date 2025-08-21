@@ -53,7 +53,7 @@
                             </div>
                             <div class="col-6">
                                 <div class="mb-3">
-                                    <label class="form-label">User Name</label>
+                                    <label class="form-label">UserName (LDAP) <span class="required text-danger">*</span></label>
                                     <input type="text" name="username" class="form-control"
                                         value="{{ old('username', $member->username) }}">
                                     @error('username')

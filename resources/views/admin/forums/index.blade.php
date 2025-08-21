@@ -51,103 +51,80 @@
                             </div>
                         </div>
                     </div>
-                    <hr>
-                    <div id="zero_config_wrapper" class="dataTables_wrapper">
-
-
-                        <table id="zero_config" class="table table-striped table-bordered align-middle text-wrap"
-                            aria-describedby="zero_config_info">
-                            <thead>
-                                <!-- start row -->
-                                <tr>
-                                    <th class="col">S.No.</th>
-                                    <th class="col">Name</th>
-                                    <th class="col">Description</th>
-                                    <th class="col">Created By</th>
-                                    <th class="col">Created At</th>
-                                    <th class="col">Forum End Date</th>
-                                    <th class="col">Action</th>
-                                    <th class="col">Status</th>
-                                </tr>
-                                <!-- end row -->
-                            </thead>
-                            <tbody>
-                                @foreach($forums as $forum)
-                                <tr class="odd">
-                                    <td>{{ $loop->iteration }}</td>
-                                    <td>{{ $forum->name }}</td>
-                                    <!-- <td>
-                                        <div class="d-flex gap-2">
-                                            <a class="btn btn-sm btn-primary"
-                                                href="{{ route('forums.add_member', ['id' => $forum->id]) }}"
-                                                data-bs-toggle="tooltip" data-bs-placement="top" title="Add Members">
-                                                <i class="bi bi-plus"></i>
-                                            </a>
-                                            <a class="btn btn-sm btn-success"
-                                                href="{{ route('forums.view_member', ['id' => $forum->id]) }}"
-                                                data-bs-toggle="tooltip" data-bs-placement="top" title="View Members">
-                                                <i class="bi bi-eye"></i>
-                                            </a>
-                                        </div>
-                                    </td> -->
-
-                                    <td>
-                                        {{ $forum->description }}
-                                    </td>
-                                    <td>
-                                        {{ $forum->creator->name ?? 'Unknown' }}
-                                    </td>
-
-                                    <!-- <td>{{ \Carbon\Carbon::parse($forum->created_at)->timezone('Asia/Kolkata')->format('l, d M Y, h:i A') }} -->
-                                    <td>
-                                        {{ $forum->created_at ? \Carbon\Carbon::parse($forum->created_at)->format('d-m-Y') : '' }}
-                                    </td>
-                                    <td>
-                                        @if($forum->end_date != null)
-                                        <!-- {{ \Carbon\Carbon::parse($forum->end_date)->timezone('Asia/Kolkata')->format('l, d M Y') }} -->
-                                        {{ \Carbon\Carbon::parse($forum->end_date)->format('d-m-Y') }}
-                                        @endif
-                                    </td>
-
-
-                                    <!-- <td>
-                                        <input class="form-check-input status-toggle" type="checkbox" role="switch" data-table="forum" data-column="active_inactive" data-id="1" checked="">
-                                    </td> -->
-                                    <td>
-                                        <div class="d-flex gap-2">
-                                            <a href="{{route('forums.forum.edit', $forum->id) }}"
-                                                class="btn btn-success btn-sm">Edit</a>
-                                            <form action="{{ route('forums.forum.destroy', $forum->id) }}" method="POST"
-                                                style="display:inline;">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-danger text-white btn-sm"
-                                                    onclick="return confirm('Are you sure you want to delete?')">
-                                                    Delete
-                                                </button>
-                                            </form>
-                                        </div>
-                                    </td>
-                                    <td>
-
-                                        <div class="form-check form-switch d-inline-block">
-                                            <input class="form-check-input status-toggle" type="checkbox" role="switch"
-                                                data-table="forums" data-column="active_inactive"
-                                                data-id="{{ $forum->id }}" {{ $forum->status == 1 ? 'checked' : '' }}>
-                                        </div>
-                                    </td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-
-
-                    </div>
                 </div>
             </div>
         </div>
         <!-- end Zero Configuration -->
     </div>
+
+
+    <div class="row g-4">
+        @foreach($forums as $forum)
+        <div class="col-md-12 ">
+            <div class="card rounded shadow-sm h-100">
+
+                <!-- Card Header -->
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <div>
+                        <h5 class="mb-0">{{ $forum->name }}</h5>
+                        <small class="text-muted">
+                            Created By: {{ $forum->creator->name ?? 'Unknown' }} |
+                            {{ $forum->created_at ? \Carbon\Carbon::parse($forum->created_at)->format('d-m-Y') : '' }}
+                        </small>
+                    </div>
+                    <div class="form-check form-switch ms-3">
+                        <input class="form-check-input status-toggle" type="checkbox" role="switch" data-table="forums"
+                            data-column="active_inactive" data-id="{{ $forum->id }}"
+                            {{ $forum->status == 1 ? 'checked' : '' }}>
+                    </div>
+                </div>
+
+                <!-- Card Body -->
+                <div class="card-body">
+                    <p class="mb-3">{{ $forum->description }}</p>
+                    <div class="d-flex justify-content-between small text-muted">
+                        <img src="{{ $forum->image_url }}" alt="">
+                    </div>
+
+                    <div class="d-flex justify-content-between small text-muted">
+                        <span>
+                            <strong>End Date:</strong>
+                            @if($forum->end_date != null)
+                            {{ \Carbon\Carbon::parse($forum->end_date)->format('d-m-Y') }}
+                            @else
+                            N/A
+                            @endif
+                        </span>
+                        <span><strong>S.No:</strong> {{ $loop->iteration }}</span>
+                    </div>
+                </div>
+
+                <!-- Card Footer -->
+                <div class="card-footer border-top">
+                    <div class="d-flex gap-4 mb-3">
+                        <h6 class="mb-0">Likes ({{ $forum->likes_count ?? 0 }})</h6>
+                        <h6 class="mb-0">Comments ({{ $forum->comments_count ?? 0 }})</h6>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2">
+                        <a href="{{ route('forums.forum.edit', $forum->id) }}" class="btn btn-sm btn-success">Edit</a>
+                        <form action="{{ route('forums.forum.destroy', $forum->id) }}" method="POST"
+                            style="display:inline;">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-sm btn-danger"
+                                onclick="return confirm('Are you sure you want to delete?')">
+                                Delete
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        @endforeach
+    </div>
+
 </div>
 
 
@@ -168,7 +145,8 @@ $(document).on('change', '.status-toggle', function() {
     let forumId = checkbox.data('id');
 
     // Confirmation prompt
-    let confirmMessage = status ? "Are you sure you want to activate?" : "Are you sure you want to deactivate?";
+    let confirmMessage = status ? "Are you sure you want to activate?" :
+        "Are you sure you want to deactivate?";
 
     if (!confirm(confirmMessage)) {
         // Revert the checkbox if cancelled

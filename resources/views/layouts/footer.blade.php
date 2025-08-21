@@ -45,7 +45,7 @@
                 </div>
             </form>
         </div>
-    </div>
+</div>
 <style>
 .select2-results__option {
     padding-left: 10px !important;
