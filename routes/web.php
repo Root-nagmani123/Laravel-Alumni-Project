@@ -469,6 +469,9 @@ Route::get('/user_login', function () {
         Route::get('/user/home', function () {
             return view('user.home');
         })->name('user.home');
+        Route::get('/admin/topics', function () {
+            return view('admin.topics.index');
+        })->name('admin.topics.index');
 
 require __DIR__.'/auth.php';
 

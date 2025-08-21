@@ -56,7 +56,7 @@
                                 </div>
                                  <div class="col-md-6">
                                     <div class="mb-3">
-                                        <label class="form-label">User Name</label>
+                                        <label class="form-label">UserName (LDAP)</label>
                                         <input type="text" name="username" id="username" class="form-control"
                                             value="{{ old('username') }}">
                                         @error('username')

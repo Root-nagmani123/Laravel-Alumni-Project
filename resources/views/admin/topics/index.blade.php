@@ -1,7 +1,6 @@
 @extends('admin.layouts.master')
 
-@section('title', 'Dashboard - Alumni | Lal Bahadur Shastri National Academy of Administration')
-
+@section('title', 'Recents Topics - Alumni | Lal Bahadur Shastri National Academy of Administration')
 @section('content')
     <div class="container-fluid">
         

@@ -67,6 +67,7 @@
     $profileImage = '';
     $displayName = '';
     $designation = '';
+    $Service = '';
     $profileLink = '#';
 
     if ($post->type === 'group_post') {
@@ -158,7 +159,7 @@
         @else
         <!-- Designation -->
         <p class="mb-0">
-            {{ $designation }}
+            {{ $user->Service }} | {{ $user->current_designation }}
         </p>
         @endif
     </div>
