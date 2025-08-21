@@ -166,7 +166,7 @@
                         <hr>
                         <!-- Submit and Back -->
                         <div class="mb-3 gap-2 float-end">
-                            <button class="btn btn-primary" type="submit">Save</button>
+                            <button class="btn btn-primary" type="submit">Add Events</button>
                             <a href="{{ route('events.index') }}" class="btn btn-secondary">Back</a>
                         </div>
                     </div>
