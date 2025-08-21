@@ -2,84 +2,117 @@
 
 @section('title', 'Member Bulk upload - Alumni | Lal Bahadur Shastri National Academy of Administration')
 @section('content')
-<div class="container-fluid">
-    <div class="card card-body py-3">
-        <div class="row align-items-center">
-            <div class="col-12">
-                <div class="d-sm-flex align-items-center justify-space-between">
-                    <h4 class="mb-4 mb-sm-0 card-title">Bulk Upload Members</h4>
-                         <nav aria-label="breadcrumb" class="ms-auto">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item d-flex align-items-center">
-                                <a class="text-muted text-decoration-none d-flex" href="../main/index.html">
-                                    <iconify-icon icon="solar:home-2-line-duotone" class="fs-6"></iconify-icon>
-                                </a>
-                            </li>
-                            <li class="breadcrumb-item" aria-current="page">
-                                <span class="badge fw-medium fs-2 bg-primary-subtle text-primary">
-                                    Member List
-                                </span>
-                            </li>
-                        </ol>
-                    </nav>
+    <div class="container-fluid">
+        <div class="card card-body py-3">
+            <div class="row align-items-center">
+                <div class="col-12">
+                    <div class="d-sm-flex align-items-center justify-space-between">
+                        <h4 class="mb-4 mb-sm-0 card-title">Bulk Upload Members</h4>
+                        <nav aria-label="breadcrumb" class="ms-auto">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item d-flex align-items-center">
+                                    <a class="text-muted text-decoration-none d-flex" href="../main/index.html">
+                                        <iconify-icon icon="solar:home-2-line-duotone" class="fs-6"></iconify-icon>
+                                    </a>
+                                </li>
+                                <li class="breadcrumb-item" aria-current="page">
+                                    <span class="badge fw-medium fs-2 bg-primary-subtle text-primary">
+                                        Member List
+                                    </span>
+                                </li>
+                            </ol>
+                        </nav>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    @if(session('failures'))
-    <div class="alert alert-danger">
-        <h4>Upload failed errors:</h4>
-        @foreach(session('failures') as $failure)
+        {{-- @if(session('failures'))
+        <div class="alert alert-danger">
+            <h4>Upload failed errors:</h4>
+            @foreach(session('failures') as $failure)
             <div class="mb-2">
                 <strong>Row {{ $failure['row'] }}:</strong>
                 <ul>
                     @foreach($failure['errors'] as $error)
-                        <li>{{ $error }}</li>
+                    <li>{{ $error }}</li>
                     @endforeach
                 </ul>
             </div>
-        @endforeach
-    </div>
-    @endif
-   <div class="row">
-        <div class="col-12">
+            @endforeach
+        </div>
+        @endif --}}
+        <div class="row">
+            <div class="col-12">
 
-            <div class="card">
-                <form action="{{ route('members.bulk_upload') }}" method="POST" enctype="multipart/form-data">
-                    @csrf
-                    <div class="card-body">
-                        <h4 class="card-title">Bulk Upload Members</h4>
-                        <hr>
-                        <div class="mb-2">
-                    <a href="{{ asset('sample-members.csv') }}" class="btn btn-sm btn-link">
-                        <i class="bi bi-download"></i> Download Sample CSV
-                    </a>
-                </div>
-                       <div class="mb-3">
-                    <label class="form-label">Choose Excel or CSV file</label>
-                            <input type="file" name="file" class="form-control" required>
-                            <small class="form-text text-muted">
-                                Supported file types: .csv, .xls, .xlsx | Max file size: 3MB
-                            </small>
-                            @error('file')
-                                <div class="text-danger mt-1">{{ $message }}</div>
-                            @enderror
+                <div class="card">
+                    <form action="{{ route('members.bulk_upload') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <div class="card-body">
+                            <h4 class="card-title">Bulk Upload Members</h4>
+                            <hr>
+                            <div class="mb-2">
+                                <a href="{{ asset('sample-members.csv') }}" class="btn btn-sm btn-link">
+                                    <i class="bi bi-download"></i> Download Sample CSV
+                                </a>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Choose Excel or CSV file</label>
+                                <input type="file" name="file" class="form-control" required>
+                                <small class="form-text text-muted">
+                                    Supported file types: .csv, .xls, .xlsx | Max file size: 3MB
+                                </small>
+                                @error('file')
+                                    <div class="text-danger mt-1">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <hr>
+                            <div class="mb-3 gap-2 float-end">
+                                <button class="btn btn-primary" type="submit">
+                                    Upload
+                                </button>
+                                <a href="{{ route('members.index') }}" class="btn btn-secondary">
+                                    Cancel
+                                </a>
+                            </div>
                         </div>
-                        <hr>
-                        <div class="mb-3 gap-2 float-end">
-                            <button class="btn btn-primary" type="submit">
-                                Upload
-                            </button>
-                            <a href="{{ route('members.index') }}" class="btn btn-secondary">
-                                Cancel
-                            </a>
+                    </form>
+                </div>
+
+
+                @if(session('failures'))
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="text-danger">Upload Failed Errors:</h4>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped align-middle">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th class="text-danger">Row</th>
+                                            <th class="text-danger">Errors</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach(session('failures') as $failure)
+                                            <tr>
+                                                <td class="text-danger">{{ $failure['row'] }}</td>
+                                                <td>
+                                                    <ul class="mb-0 ps-3">
+                                                        @foreach($failure['errors'] as $error)
+                                                            <li class="text-danger">{{ $error }}</li>
+                                                        @endforeach
+                                                    </ul>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
-                </form>
-            </div>
+                @endif
 
+            </div>
         </div>
     </div>
-</div>
 
 @endsection

@@ -209,21 +209,24 @@ public function edit($id)
             'file' => 'required|file|mimes:xlsx,xls,csv|max:3072',
         ]);
 
-         $import = new MembersImport();
+        $import = new MembersImport();
 
         try {
-        Excel::import($import, $request->file('file'));
-
-        if (!empty($import->failures)) {
-            return back()->with([
-                'failures' => $import->failures
+            Excel::import($import, $request->file('file'));
+        } catch (\Exception $e) {
+            return back()->with('failures', [
+                [
+                    'row' => 'System',
+                    'errors' => [$e->getMessage()],
+                ]
             ]);
         }
 
-       return redirect()->route('members.index')->with('success', 'Members uploaded successfully!');
-        } catch (ValidationException $e) {
-            return back()->withErrors($e->errors());
+        if (!empty($import->failures)) {
+            return back()->with('failures', $import->failures);
         }
+
+        return back()->with('success', 'Members uploaded successfully!');
     }
 
    public function bulk_upload_form()

@@ -14,7 +14,7 @@ class MembersImport implements ToCollection, WithHeadingRow
     public $failures = [];
 
     protected $requiredHeaders = [
-        'name', 'mobile', 'email', 'password',
+        'name', 'username', 'mobile', 'email', 'password',
         'password_confirmation', 'cader', 'designation', 'batch'
     ];
 
@@ -25,12 +25,12 @@ class MembersImport implements ToCollection, WithHeadingRow
         foreach ($rows as $index => $row) {
             $row = array_change_key_case($row->toArray(), CASE_LOWER);
 
-            //  Skip empty rows
+            // Skip empty rows
             if (empty(array_filter($row))) {
                 continue;
             }
 
-            //  Validate header once
+            // Validate header once
             if (!$this->headerValidated) {
                 $headers = array_keys($row);
                 $missingHeaders = array_diff($this->requiredHeaders, $headers);
@@ -49,6 +49,7 @@ class MembersImport implements ToCollection, WithHeadingRow
             // Validate data
             $validator = Validator::make($row, [
                 'name' => 'required|string|max:255',
+                'username' => 'required|string|max:255|unique:members,username',
                 'mobile' => ['required', 'integer', 'regex:/^[0-9]{10,20}$/'],
                 'email' => 'required|email|unique:members,email',
                 'password' => 'required|string|min:8',
@@ -56,7 +57,6 @@ class MembersImport implements ToCollection, WithHeadingRow
                 'cader' => 'required|string|max:255',
                 'designation' => 'required|string|max:255',
                 'batch' => 'required|numeric',
-
             ], $this->validationMessages());
 
             if ($validator->fails()) {
@@ -67,6 +67,7 @@ class MembersImport implements ToCollection, WithHeadingRow
             // Save member
             Member::create([
                 'name' => $row['name'],
+                'username' => $row['username'],
                 'mobile' => $row['mobile'],
                 'email' => $row['email'],
                 'password' => Hash::make($row['password']),

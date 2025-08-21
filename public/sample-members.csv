@@ -1,5 +1,5 @@
-name,mobile,email,password,password_confirmation,cader,designation,batch
-John tik,9814789658,johntik@example.com,password123,password123,Admin,Manager,2022
-Smith,9214789498,smith@example.com,password123,password123,Support,Developer,2011
-Alice Johnson,9414789648,alicejohnson@example.com,password123,password123,Support,Executive,2004
-Bob Brown,9514789648,bobbrown@example.com,password123,password123,HR,Team Lead,2006
+name,UserName,mobile,email,password,password_confirmation,cader,designation,batch
+John tik,johntik,9814789658,johntik@example.com,password123,password123,Admin,Manager,2022
+Smith,smith,9214789498,smith@example.com,password123,password123,Support,Developer,2011
+Alice Johnson,alicejohnson,9414789648,alicejohnson@example.com,password123,password123,Support,Executive,2004
+Bob Brown,bobbrown,9514789648,bobbrown@example.com,password123,password123,HR,Team Lead,2006
