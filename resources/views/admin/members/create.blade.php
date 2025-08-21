@@ -34,7 +34,8 @@
         <div class="col-12">
             <!-- start Person Info -->
             <div class="card">
-                <form action="{{ route('members.store') }}" method="POST">
+                
+                <form action="{{ route('members.store') }}" method="POST" enctype="multipart/form-data">
 
                     @csrf
                     <div>
@@ -211,6 +212,22 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Profile Photo</label>
+                                    <input type="file" name="profile_pic" id="profile_pic" class="form-control" accept="image/*">
+                                    @error('profile_pic')
+                                    <div class="text-danger">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mt-2">
+                                    <img id="preview-image" src="#" alt="Image Preview" class="img-fluid rounded d-none"
+                                        style="max-height: 200px;" />
+                                </div>
+                            </div>
                             <hr>
                             <div class="mb-3 gap-2 float-end">
                                 <button class="btn btn-primary" type="submit">
@@ -261,3 +278,25 @@
         </div>
     </div>
 </div>
+
+
+@push('scripts')
+    <script>
+        document.getElementById('profile_pic').addEventListener('change', function(event) {
+            const preview = document.getElementById('preview-image');
+            const file = event.target.files[0];
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.classList.remove('d-none');
+                }
+                reader.readAsDataURL(file);
+            } else {
+                preview.src = '#';
+                preview.classList.add('d-none');
+            }
+        });
+    </script>
+@endpush

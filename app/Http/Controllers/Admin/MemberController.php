@@ -54,7 +54,7 @@ class MemberController extends Controller
 
     public function store(Request $request)
         {
-           
+        
         // Validate the incoming request
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
@@ -67,7 +67,9 @@ class MemberController extends Controller
             'batch' => 'required',
             'sector' => 'nullable',
             'service' => 'nullable',
+            'profile_pic' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
+        
         // Check if validation fails
         if ($validator->fails()) {
             return redirect()->back()
@@ -87,7 +89,13 @@ class MemberController extends Controller
     'sector'      => $request->sector,
     'service'     => $request->service,
 ];
+if ($request->hasFile('profile_pic')) {
+        $file = $request->file('profile_pic');
+        $path = $file->store('profile_pic', 'public'); 
 
+        $data['profile_pic'] = $path;
+    }
+    
 // Agar password filled hai to add karo
 if ($request->filled('password')) {
     $data['password'] = Hash::make($request->password);
@@ -157,6 +165,13 @@ public function edit($id)
                 ->withErrors($validator)
                 ->withInput();
         }
+        $profile_path = '';
+        if ($request->hasFile('profile_pic')) {
+            $file = $request->file('profile_pic');
+            $path = $file->store('profile_pic', 'public'); 
+
+            $profile_path = $path;
+        }
 
         $member->name = $request->name;
         $member->mobile = $request->mobile;
@@ -170,6 +185,7 @@ public function edit($id)
         $member->username = $request->username;
         $member->Service = $request->service;
         $member->sector = $request->sector;
+        $member->profile_pic = $profile_path ? $profile_path : $member->profile_pic;
         $member->save();
        return redirect()->route('members.index')->with('success', 'Member updated successfully.');
 
