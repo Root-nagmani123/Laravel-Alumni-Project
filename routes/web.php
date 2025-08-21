@@ -221,6 +221,8 @@ Route::prefix('user')->name('user.')->group(function () {
      ->name('notifications.clear');
        
         Route::put('/notifications/{id}/read', [App\Http\Controllers\Member\NotificationController::class, 'markAsRead'])->name('notifications.read');
+        Route::get('/get-members', [MemberController::class, 'getMembers'])->name('members.list');
+
         
     });
 

@@ -117,26 +117,41 @@
     @endif
   </p>
 
-  {{-- Countdown --}}
-  <p class="countdown">Redirecting Home in <span id="timer">00:00:10</span></p>
+  @php
+    $previousUrl = url()->previous();
+    $currentUrl = url()->current();
+    // if previous page is same as current (direct visit / refresh), fallback to home
+    $goBackUrl = ($previousUrl && $previousUrl !== $currentUrl) ? $previousUrl : url('/');
+    $isHome = $goBackUrl === url('/');
+    $redirectText = $isHome ? 'Home' : 'Previous Page';
+    $buttonText = $isHome ? 'Back to Home' : 'Back to Previous Page';
+@endphp
 
-  {{-- Home Button --}}
-  <a href="{{ url('/') }}" class="btn btn-dark btn-home shadow">Back to Home</a>
+{{-- Countdown --}}
+<p class="countdown">
+  Redirecting to <strong>{{ $redirectText }}</strong> in <span id="timer">00:00:10</span>
+</p>
 
-  {{-- Script --}}
-  <script>
-    let seconds = 10;
-    const timer = document.getElementById("timer");
+{{-- Back Button --}}
+<a href="{{ $goBackUrl }}" class="btn btn-dark btn-home shadow">
+  {{ $buttonText }}
+</a>
 
-    const countdown = setInterval(() => {
-      seconds--;
-      timer.textContent = `00:00:${seconds.toString().padStart(2, '0')}`;
-      if (seconds <= 0) {
-        clearInterval(countdown);
-        window.location.href = "{{ url('/') }}";
-      }
-    }, 1000);
-  </script>
+{{-- Script --}}
+<script>
+  let seconds = 10;
+  const timer = document.getElementById("timer");
+
+  const countdown = setInterval(() => {
+    seconds--;
+    timer.textContent = `00:00:${seconds.toString().padStart(2, '0')}`;
+    if (seconds <= 0) {
+      clearInterval(countdown);
+      window.location.href = "{{ $goBackUrl }}"; 
+    }
+  }, 1000);
+</script>
+
 
 </body>
 </html>

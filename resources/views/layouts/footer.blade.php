@@ -95,7 +95,7 @@
                                 </select>
                             </div>
                            <div class="mb-3">
-                                <label class="form-label">Year <span class="text-danger">*</span></label>
+                                <label class="form-label">Year/Batch <span class="text-danger">*</span></label>
 
                                 <select class="form-select year-select" name="year[]" multiple="multiple" data-id="new_group_create" required>
                                     <!-- Options will be added dynamically -->
@@ -110,21 +110,21 @@
                                     </select>
                                 </div>
 
-                                <div class="mb-3">
-                                    <label class="form-label">Sector <span class="text-danger">*</span></label>
-                                    <select class="form-select select2 sector" name="sector[]" multiple="multiple" data-id="new_group_create" required>
-                                        <option selected disabled>Select Sector</option>
-                                    </select>
-                                </div>
+                               <div class="mb-3">
+    <label class="form-label">Select Group Members <span class="text-danger">*</span></label>
+    <select class="form-select" multiple="multiple" id="mentees" name="mentees[]" required>
+        <option value="1">John Doe</option>
+        <option value="2">Jane Smith</option>
+        <option value="3">Rahul Sharma</option>
+        <option value="4">Anita Verma</option>
+        <option value="5">David Johnson</option>
+    </select>
+</div>
 
-                                <div class="mb-3">
-                                    <label class="form-label">Select Mentee <span class="text-danger">*</span></label>
-                                    <select class="form-select select2 mentees" multiple="multiple" id="mentees" name="mentees[]" data-id="new_group_create" required>
-                                        <option value="" disabled>Select Mentees</option>
-                                    </select>
-                                </div>
+
+
                          <div class="mb-3">
-                        <label for="groupName" class="form-label">Group image<span class="text-danger">*</span></label>
+                        <label for="groupName" class="form-label">Upload Group image<span class="text-danger">*</span></label>
                         <input type="file" class="form-control" name="grp_image" id="grp_image" accept="image/*" required>
                     </div>       
                     <div class="mb-3">
@@ -165,6 +165,9 @@
 
 <!-- =======================
 JS libraries, plugins and custom scripts -->
+<!-- Bootstrap Dual Listbox CSS & JS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-duallistbox/4.0.2/bootstrap-duallistbox.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-duallistbox/4.0.2/jquery.bootstrap-duallistbox.min.js"></script>
 
 <!-- Bootstrap JS -->
 <script src="{{asset('feed_assets/vendor/bootstrap/dist/js/bootstrap.bundle.min.js')}}"></script>
@@ -193,6 +196,40 @@ JS libraries, plugins and custom scripts -->
 
 <!-- Select2 JS -->
 <script src="{{asset('feed_assets/js/select2.min.js')}}"></script>
+
+<script>
+    $(document).ready(function () {
+        // Fetch members via AJAX
+        $.ajax({
+            url: "",
+            type: "GET",
+            success: function (data) {
+                // Populate select options
+                let $select = $('#mentees');
+                $select.empty(); // clear old
+
+                $.each(data, function (index, member) {
+                    $select.append(`<option value="${member.id}">${member.name}</option>`);
+                });
+
+                // Initialize Dual Listbox
+                $select.bootstrapDualListbox({
+                    nonSelectedListLabel: 'Available Members',
+                    selectedListLabel: 'Selected Members',
+                    preserveSelectionOnMove: 'moved',
+                    moveOnSelect: false,
+                    filterPlaceHolder: 'Search',
+                    infoText: 'Showing {0}',
+                    infoTextEmpty: 'No members available',
+                    infoTextFiltered: '<span class="badge bg-warning">Filtered</span> {0} from {1}'
+                });
+            },
+            error: function () {
+                alert('Failed to load members.');
+            }
+        });
+    });
+</script>
 
 
 

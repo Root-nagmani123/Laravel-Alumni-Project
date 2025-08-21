@@ -4,10 +4,10 @@
 
 @section('content')
 <style>
-    .select2-container--default .select2-results>.select2-results__options{
-        max-height: 400px !important;
-        overflow-y: auto;
-    }
+.select2-container--default .select2-results>.select2-results__options {
+    max-height: 400px !important;
+    overflow-y: auto;
+}
 </style>
 
 <div class="container-fluid">
@@ -33,51 +33,49 @@
                             <!--<select id="" class="form-control" name="mentor_id" required="" tabindex="-1"
                                 aria-hidden="true">-->
                             @php
-    $sortedMentors = $mentors->sortBy('name');
-@endphp
+                            $sortedMentors = $mentors->sortBy('name');
+                            @endphp
 
-<select id="mentor_id" class="form-control" name="mentor_id" required>
-   
-  
-</select>
+                            <select id="mentor_id" class="form-control" name="mentor_id" required>
+
+
+                            </select>
 
 
                         </div>
                     </div>
                     <div class="col-6">
                         <div class="mb-3">
-                            <label class="form-label">Member Name (Multiple Mentees) <span class="text-danger">*</span></label>
-                           @php
-    $sortedUsers = $users->sortBy('name');
-@endphp
-
-<select name="user_id[]" class="form-control js-example-basic-multiple" multiple="multiple" required>
-    @foreach($sortedUsers as $user)
-        <option value="{{ $user->id }}">{{ $user->name }}</option>
-    @endforeach
-</select>
-
-
-                        </div>
-                    </div>
-                      <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">Group End Date <span class="text-danger">*</span></label>
-                                        <input type="date" class="form-control" name="end_date" id="end_date" required>
-                                    </div>
-                                </div>
-                               <div class="col-md-6">
-    <div class="mb-3">
-        <label class="form-label">Group Image <span class="text-danger">*</span></label>
-        <input type="file" class="form-control" name="image" id="image" accept="image/*" required>
-        <!-- Preview -->
-        <div class="mt-2">
-            <img id="preview-image" src="#" alt="Image Preview" class="img-fluid rounded d-none" style="max-height: 200px;" />
-        </div>
-    </div>
+    <label class="form-label">Select Group Members <span class="text-danger">*</span></label>
+    <select class="form-select" multiple="multiple" id="mentees" name="mentees[]" required>
+        <option value="1">John Doe</option>
+        <option value="2">Jane Smith</option>
+        <option value="3">Rahul Sharma</option>
+        <option value="4">Anita Verma</option>
+        <option value="5">David Johnson</option>
+    </select>
 </div>
 
-                    
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Group End Date <span class="text-danger">*</span></label>
+                            <input type="date" class="form-control" name="end_date" id="end_date" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Group Image <span class="text-danger">*</span></label>
+                            <input type="file" class="form-control" name="image" id="image" accept="image/*" required>
+                            <!-- Preview -->
+                            <div class="mt-2">
+                                <img id="preview-image" src="#" alt="Image Preview" class="img-fluid rounded d-none"
+                                    style="max-height: 200px;" />
+                            </div>
+                        </div>
+                    </div>
+
+
                     <div class="col-6">
                         <div class="mb-3">
                             <label class="form-label">Status <span class="text-danger">*</span></label>
@@ -106,13 +104,13 @@
 <!-- image preview js -->
 @section('scripts')
 <script>
-document.getElementById('image').addEventListener('change', function (event) {
+document.getElementById('image').addEventListener('change', function(event) {
     const preview = document.getElementById('preview-image');
     const file = event.target.files[0];
 
     if (file) {
         const reader = new FileReader();
-        reader.onload = function (e) {
+        reader.onload = function(e) {
             preview.src = e.target.result;
             preview.classList.remove('d-none');
         }
@@ -125,15 +123,15 @@ document.getElementById('image').addEventListener('change', function (event) {
 $(document).ready(function() {
     $('.form-select').select2(); // Initialize Select2
     $('.js-example-basic-multiple').select2(); // Initialize Select2 for multiple select
-    
+
     // Filter out mentor from mentees dropdown
     $('#searchable-select').on('change', function() {
         var selectedMentor = $(this).val();
         var menteesSelect = $('.js-example-basic-multiple');
-        
+
         // Reset mentees selection
         menteesSelect.val(null).trigger('change');
-        
+
         // Hide the mentor option from mentees dropdown
         menteesSelect.find('option').show();
         if (selectedMentor) {
@@ -141,7 +139,7 @@ $(document).ready(function() {
         }
     });
 });
-$(document).ready(function () {
+$(document).ready(function() {
     $('#mentor_id').select2({
         placeholder: "-- Select Member --",
         minimumInputLength: 2, // start search after typing 2 chars
@@ -150,15 +148,15 @@ $(document).ready(function () {
             type: 'POST',
             dataType: 'json',
             delay: 250,
-            data: function (params) {
+            data: function(params) {
                 return {
                     q: params.term,
                     _token: '{{ csrf_token() }}'
                 };
             },
-            processResults: function (data) {
+            processResults: function(data) {
                 return {
-                    results: $.map(data, function (item) {
+                    results: $.map(data, function(item) {
                         return {
                             id: item.id,
                             text: item.name

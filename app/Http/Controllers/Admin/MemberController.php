@@ -223,6 +223,14 @@ public function edit($id)
         return response()->json(['message' => 'Status updated successfully.']);
 
     }
+    public function getMembers()
+{
+    // Example: Fetch users from DB (adjust table/model as per your schema)
+    $members = \App\Models\User::select('id', 'name')->get();
+
+    return response()->json($members);
+}
+
 
 
 }
