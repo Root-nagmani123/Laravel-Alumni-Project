@@ -17950,3 +17950,180 @@ a.badge:hover {
     margin-top: 0;
   }
 }
+
+
+.tribute-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: auto;
+  max-height: 320px;
+  width: 350px;
+  overflow-y: auto;
+  display: block;
+  z-index: 999999;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  font-family: "Segoe UI", Roboto, sans-serif;
+}
+
+.tribute-container ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tribute-container li {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background 0.15s ease-in-out;
+}
+
+.tribute-container li.highlight {
+  background: #f0f2f5;
+}
+
+.tribute-container li.no-match {
+  cursor: default;
+  text-align: center;
+  color: #777;
+  padding: 10px;
+}
+
+.tribute-container img {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 10px;
+}
+
+.tribute-container .info {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.tribute-container .info .name {
+  font-weight: 600;
+  font-size: 14px;
+  color: #050505;
+}
+
+.tribute-container .info .meta {
+  font-size: 12px;
+  color: #65676b;
+}
+.mention-badge {
+    display: inline-block;
+    background-color: #eaf4ff;
+    color: #0d6efd;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    font-size: 0.85rem;
+    cursor: pointer;
+}
+
+.mention-badge:hover {
+    background-color: #0d6efd;
+    color: #fff !important;
+    text-decoration: none;
+}
+.mention-suggestions {
+    position: absolute;
+    background: #fff;
+    max-height: 250px;
+    overflow-y: auto;
+    width: 300px;
+    z-index: 1050;
+    border-radius: 12px;
+    padding: 6px 0;
+}
+
+.mention-suggestions .mention-item {
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.mention-suggestions .mention-item:hover {
+    background: #f1f5ff;
+}
+
+.mention-suggestions .mention-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 10px;
+}
+
+.mention-suggestions .mention-name {
+    font-weight: 500;
+    color: #333;
+    font-size: 0.9rem;
+}
+
+.mention-suggestions .mention-service {
+    font-size: 0.75rem;
+    color: #6c757d;
+}
+.mention-suggestions {
+    position: absolute;
+    background: #fff;
+    max-height: 220px;
+    overflow-y: auto;
+    width: 280px;
+    z-index: 2000;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    padding: 4px 0;
+    font-family: system-ui, sans-serif;
+}
+
+.mention-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.mention-item:hover {
+    background: #f3f4f6;
+}
+
+.mention-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.mention-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+}
+
+.mention-name {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #111827;
+}
+
+.mention-service {
+    font-size: 0.75rem;
+    color: #6b7280;
+}

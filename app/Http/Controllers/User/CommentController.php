@@ -77,7 +77,7 @@ class CommentController extends Controller
     return response()->json(['success' => true, 'message' => 'Comment deleted.']);
     }
 
-public function loadComments($postId)
+public function loadComments_old_22_08_2025($postId)
     {
         $offset = request('offset', 0);
         $limit = 5; // or any number you want
@@ -108,6 +108,52 @@ public function loadComments($postId)
 ]);
 */
     }
+
+    public function loadComments($postId)
+{
+    $offset = request('offset', 0);
+    $limit = 5; // or any number you want
+
+    $comments = Comment::with('member')
+        ->where('post_id', $postId)
+        ->latest()
+        ->skip($offset)
+        ->take($limit)
+        ->get();
+
+    // Parse mentions in each comment text
+    $comments->transform(function ($comment) {
+        $commentText = $comment->comment;
+
+        $commentText = preg_replace_callback(
+            '/@([a-zA-Z0-9_.]+)/',
+            function ($matches) {
+                $username = $matches[1];
+                $user = \App\Models\Member::where('username', $username)->first();
+
+                if ($user) {
+                    $url = route('user.profile.data', ['id' => $user->id]);
+                    return "<a href='{$url}' 
+                        class='mention-badge text-primary fw-semibold text-decoration-none' 
+                        data-bs-toggle='tooltip' 
+                        data-bs-placement='top' 
+                        title='{$user->name} | {$user->designation}'>
+                        @{$username}
+                    </a>";
+                }
+
+                return $matches[0]; // if user not found, return plain text
+            },
+            $commentText
+        );
+
+        $comment->parsed_comment = $commentText;
+        return $comment;
+    });
+
+    return response()->json(['comments' => $comments]);
+}
+
 
 }
 
