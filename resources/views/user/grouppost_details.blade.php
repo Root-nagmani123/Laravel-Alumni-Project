@@ -48,7 +48,7 @@
                 <!-- Member Count Trigger -->
                 <!-- Member Count Trigger -->
 <div class="mt-2">
-    <a href="javascript:void(0);" class="text-white small" 
+    <a href="javascript:void(0);" class="text-white small popup-modal-open" 
        data-bs-toggle="modal" 
        data-bs-target="#membersModal-{{ $group->id }}">
         {{ count($grp_members) }} Members
@@ -612,6 +612,7 @@ $(document).on('submit', '.comment-form', function(e) {
         }
     });
 });
+
 document.addEventListener("input", function(e) {
     if (e.target.classList.contains("member-search")) {
         let searchValue = e.target.value.toLowerCase();
@@ -619,11 +620,20 @@ document.addEventListener("input", function(e) {
         let memberList = document.getElementById(targetId);
 
         memberList.querySelectorAll(".member-item").forEach(item => {
-            let text = item.innerText.toLowerCase();
-            item.style.display = text.includes(searchValue) ? "" : "none";
+            let name = item.querySelector("h6")?.innerText.toLowerCase() || "";
+            let matches = name.includes(searchValue);
+            if (matches) {
+                item.classList.remove("d-none");
+                item.classList.add("d-md-flex");
+            } else {
+                item.classList.remove("d-md-flex");
+                item.classList.add("d-none");
+            }
         });
     }
 });
+
+console.clear();
 
 </script>
 

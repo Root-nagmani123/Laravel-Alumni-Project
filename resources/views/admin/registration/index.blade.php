@@ -41,31 +41,46 @@
             <div class="card-body">
                 <div class="row align-items-center g-3 mb-4">
                     <!-- Title -->
-                    <div class="col-lg-3 col-md-6">
-                        <h4 class="card-title mb-0">Registration List</h4>
+                    <div class="row">
+                        <div class="col-6">
+                            <h4>Registration List</h4>
+                        </div>
+                        <div class="col-6">
+                            <!-- Incoming Requests Button -->
+                            <div class="float-end gap-2">
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                    data-bs-target="#incomingRequestsModal">
+                                    Incoming Requests
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
                 <hr>
                 <div class="dataTables_wrapper">
                     <div class="table-responsive-sm table-responsive-md table-responsive-lg">
-                        <table class="table table-striped table-bordered align-middle dataTable w-100 text-nowwrap mb-0">
+                        <table
+                            class="table table-striped table-bordered align-middle dataTable w-100 text-nowwrap mb-0">
                             <thead class="table-light">
                                 <tr>
                                     <th scope="col">S.No.</th>
                                     <th scope="col">Name</th>
-                                    <th scope="col">User Name</th>
                                     <th scope="col">Email</th>
                                     <th scope="col">Mobile</th>
                                     <th scope="col">Service</th>
-                                    <th scope="col">Sector</th>
-                                    <th scope="col">Cadre, Batch</th>
-                                    <th scope="col">Action</th>
+                                    <th scope="col">Batch</th>
+                                    <th scope="col">Cadre</th>
+                                    <th class="col">Course Attended in LBSNAA</th>
+                                    <th class="col">Profile Picture</th>
+                                    <th class="col">Government ID</th>
+                                    <th scope="col">Requested Date</th>
+                                    <th scope="col">Approved Date</th>
                                     <th scope="col">Status</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                
+
                                 <tr>
                                     <td></td>
                                     <td class="text-break"></td>
@@ -75,20 +90,11 @@
                                     <td class="text-break"></td>
                                     <td class="text-break"></td>
                                     <td class="text-break"></td>
-                                    <td>
-                                        <a href="" class="btn btn-success text-white btn-sm mb-1">Edit</a>
-                                        <form action="" method="POST" style="display:inline;">
-                                           
-                                            <button type="submit" class="btn btn-danger text-white btn-sm mb-1" onclick="return confirm('Are you sure you want to delete?')">Delete</button>
-                                        </form>
-                                    </td>
-                                    <td>
-                                        <div class="form-check form-switch d-inline-block">
-                                            <input class="form-check-input status-toggle" type="checkbox" role="switch"
-                                                data-table="members" data-column="active_inactive"
-                                                >
-                                        </div>
-                                    </td>
+                                    <td class="text-break"></td>
+                                    <td class="text-break"></td>
+                                    <td class="text-break"></td>
+                                    <td class="text-break"></td>
+                                    <td class="text-break"></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -97,6 +103,74 @@
             </div>
         </div>
         <!-- end Zero Configuration -->
+    </div>
+</div>
+<!-- Incoming Requests Modal -->
+<div class="modal fade" id="incomingRequestsModal" tabindex="-1" aria-labelledby="incomingRequestsLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="incomingRequestsLabel">Incoming Requests</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover align-middle text-nowrap">
+                        <thead class="table-light">
+                            <tr class="text-break">
+                                <th>S.No.</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Mobile</th>
+                                <th>Service</th>
+                                <th>Batch</th>
+                                <th>Cadre</th>
+                                <th>Course Attended in LBSNAA</th>
+                                <th>Profile Picture</th>
+                                <th>Government ID</th>
+                                <th>Requested Date</th>
+                                <th>Approved Date</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td><img src="" class="img-thumbnail" width="50"></td>
+                                <td><a href="" target="_blank" class="btn btn-sm btn-outline-info">View</a></td>
+                                <td></td>
+                                <td class="approved-date">-</td>
+                                <td class="status">
+                                    <span class="badge bg-warning">Pending</span>
+                                </td>
+                                <td>
+                                    <div class="d-flex gap-2">
+                                        <button class="btn btn-success btn-sm action-btn" data-id=""
+                                            data-action="approve">Approve</button>
+                                        <button class="btn btn-danger btn-sm action-btn" data-id=""
+                                            data-action="reject">Reject</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
     </div>
 </div>
 @endsection
