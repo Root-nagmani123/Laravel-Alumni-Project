@@ -472,6 +472,10 @@ Route::get('/user_login', function () {
         Route::get('/admin/topics', function () {
             return view('admin.topics.index');
         })->name('admin.topics.index');
+        Route::get('/admin/registration', function () {
+            return view('admin.registration.index');
+        })->name('admin.registration.index');
+
 
 require __DIR__.'/auth.php';
 
