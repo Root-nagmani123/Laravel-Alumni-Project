@@ -400,7 +400,12 @@
                         type="submit">
                         <i class="bi bi-send-fill"></i>
                     </button>
+                    
                 </form>
+                <!-- Mention Suggestion Box -->
+
+
+
 
             </div>
             <ul class="comment-wrap list-unstyled">
@@ -409,13 +414,19 @@
                 @foreach ($post->comments->take(2) as $comment)
                 @php
                 $commentText = preg_replace_callback(
-                    '/@([a-zA-Z0-9_]+)/',
+                    '/@([a-zA-Z0-9_.]+)/',
                     function ($matches) {
                         $username = $matches[1];
                         $user = \App\Models\Member::where('username', $username)->first();
                         if ($user) {
                             $url = route('user.profile.data', ['id' => $user->id]);
-                            return "<a href='{$url}' class='mention text-primary fw-bold'>@{$username}</a>";
+                           return "<a href='{$url}' 
+            class='mention-badge' 
+            data-bs-toggle='tooltip' 
+            data-bs-placement='top' 
+            title='{$user->name} | {$user->designation}'>
+            @{$username}
+        </a>";
                         }
                         return "@{$username}";
                     },
@@ -471,7 +482,7 @@
                 <!-- Comment item END -->
             </ul>
             <!-- Card body END -->
-            @if ($post->comments->count() > 2)
+            @if ($post->comments->count() > 5)
     <div class="card-footer border-0 pt-0">
         <a href="#!" class="btn btn-link btn-sm text-secondary load-more-comments"
            data-post-id="{{ $post->id }}" data-offset="2">
@@ -588,6 +599,8 @@
 <script>
     var tribute = new Tribute({
         trigger: '@',
+        itemClass: 'card',
+
         lookup: 'name',
         fillAttr: 'username',
         values: function (text, cb) {
@@ -840,6 +853,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     let commentHtml = '';
                     data.comments.forEach(comment => {
                         commentHtml += `
+                        <ul class="comment-wrap list-unstyled">
                             <li class="comment-item mb-3" id="comment-${comment.id}">
                                 <div class="d-flex position-relative">
                                     <div class="avatar avatar-xs">
@@ -851,13 +865,33 @@ document.addEventListener('DOMContentLoaded', function () {
                                         <div class="bg-light rounded-start-top-0 p-3 rounded">
                                             <div class="d-flex justify-content-between">
                                                 <h6 class="mb-1"><a href="#!">${comment.member?.name || 'Anonymous'}</a></h6>
-                                                <small class="ms-2">${comment.created_at_human || comment.created_at || ''}</small>
+                                                <small class="ms-2">{{$comment->created_at->diffForHumans()}}</small>
                                             </div>
-                                            <p class="small mb-0">${comment.comment}</p>
+                                            <p class="small mb-0">${comment.parsed_comment}</p>
                                         </div>
-                                    </div>
+                                        <div class="row">
+                                <div class="col-6">
+                                    <a href="#!" class="text-secondary small me-2">Like</a>
+                                    <a href="#!" class="text-secondary small">Reply</a>
                                 </div>
-                            </li>`;
+                                <div class="col-6 text-end">
+                                    @if(auth()->guard('user')->id() === $comment->member_id)
+                            <button class="btn btn-sm btn-link p-0 text-primary edit-comment-btn"
+                                data-comment-id="{{ $comment->id }}" data-comment="{{ $comment->comment }}"
+                                type="button"><i class="bi bi-pencil-fill"></i></button>
+                            @endif
+                            @if(auth()->guard('user')->id() === $comment->member_id)
+                            <button class="btn btn-sm btn-link p-0 text-danger delete-comment-btn"
+                                data-comment-id="{{ $comment->id }}" type="button"><i class="bi bi-trash-fill"></i></button>
+                            @endif
+                                </div>
+                            </div>
+                                    </div>
+                                    
+                                </div>
+                                
+                                
+                            </li></ul>`;
                     });
 
                     btn.closest('.card-footer').insertAdjacentHTML('beforebegin', commentHtml);
@@ -1163,9 +1197,59 @@ $(document).ready(function () {
         });
     });
 });
+document.addEventListener("DOMContentLoaded", function () {
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+});
+
 
 </script>
+<script>
+    function showMentionSuggestions(textarea, query) {
+    let suggestionsBox = document.getElementById("mention-suggestions");
 
+    // Dummy Data (replace with AJAX response)
+    let users = [
+        {id:1, name:"Sutanu Behria", service:"IAS", avatar:"/feed_assets/images/avatar/07.jpg", username:"sutanu"},
+        {id:2, name:"Virender Kumar", service:"IPS", avatar:"/feed_assets/images/avatar/06.jpg", username:"virender"}
+    ];
+
+    let filtered = users.filter(u => 
+        u.name.toLowerCase().includes(query.toLowerCase()) || 
+        u.username.toLowerCase().includes(query.toLowerCase())
+    );
+
+    let html = filtered.map(u => `
+        <div class="mention-item" data-username="${u.username}">
+            <img src="${u.avatar}" class="mention-avatar">
+            <div class="mention-text">
+                <span class="mention-name">${u.name}</span>
+                <span class="mention-service">${u.service}</span>
+            </div>
+        </div>
+    `).join("");
+
+    suggestionsBox.innerHTML = html || `<div class="px-3 py-2 text-muted small">No matches</div>`;
+
+    // Positioning: exactly below textarea
+    let rect = textarea.getBoundingClientRect();
+    suggestionsBox.style.top = rect.bottom + window.scrollY + "px";
+    suggestionsBox.style.left = rect.left + window.scrollX + "px";
+
+    suggestionsBox.classList.remove("d-none");
+
+    // Click insert
+    suggestionsBox.querySelectorAll(".mention-item").forEach(item => {
+        item.addEventListener("click", function() {
+            insertMention(textarea, this.dataset.username);
+            hideMentionSuggestions();
+        });
+    });
+}
+
+</script>
 
 
 
