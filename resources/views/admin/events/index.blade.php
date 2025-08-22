@@ -83,9 +83,9 @@
                                     </td>
                                     <td>
                                         @if($event->venue === 'online')
-                                        Online : <a href="{{ $event->url }}" target="_blank">{{ $event->url }}</a>
+                                        Online: <a href="{{ $event->url }}" target="_blank">{{ $event->url }}</a>
                                         @elseif($event->venue === 'physical')
-                                        Offline (physical): {{ $event->location }}
+                                        Offline: {{ $event->location }}
                                         @else
                                         N/A
                                         @endif
