@@ -250,6 +250,17 @@ public function edit($id)
     return response()->json($members);
 }
 
-
+    function user_search(Request $request)
+    {
+        $query = $request->get('q');
+        $users = Member::where(function ($q) use ($query) {
+                    $q->where('name', 'like', "%{$query}%")
+                    ->orWhere('username', 'like', "%{$query}%");
+                })
+                ->whereNotNull('username')
+                ->limit(20)
+                ->get(['id', 'name', 'username']);
+        return response()->json($users);
+    }
 
 }

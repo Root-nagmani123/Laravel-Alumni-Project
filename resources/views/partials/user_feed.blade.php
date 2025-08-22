@@ -392,7 +392,7 @@
                 <form class="nav nav-item w-100 position-relative" id="commentForm-{{ $post->id }}"
                     action="{{ route('user.comments.store') }}" method="POST" data-post-id="{{ $post->id }}">
                     @csrf
-                    <textarea name="comment" data-autoresize class="form-control pe-5 bg-light" rows="1"
+                    <textarea name="comment" data-autoresize class="form-control pe-5 bg-light user_feed_comment" rows="1"
                         placeholder="Add a comment..." id="comments-{{ $post->id }}"></textarea>
                     <input type="hidden" name="post_id" value="{{ $post->id }}">
                     <button
@@ -407,6 +407,21 @@
                 <!-- Comment item START -->
                 {{--@foreach ($post->comments as $comment)--}}
                 @foreach ($post->comments->take(2) as $comment)
+                @php
+                $commentText = preg_replace_callback(
+                    '/@([a-zA-Z0-9_]+)/',
+                    function ($matches) {
+                        $username = $matches[1];
+                        $user = \App\Models\Member::where('username', $username)->first();
+                        if ($user) {
+                            $url = route('user.profile.data', ['id' => $user->id]);
+                            return "<a href='{$url}' class='mention text-primary fw-bold'>@{$username}</a>";
+                        }
+                        return "@{$username}";
+                    },
+                    e($comment->comment)
+                );
+                @endphp
                 <li class="comment-item mb-3" id="comment-{{ $comment->id }}">
                     <div class="d-flex position-relative">
                         <!-- Avatar -->
@@ -429,7 +444,7 @@
                                     </h6>
                                     <small class="ms-2">{{$comment->created_at->diffForHumans()}}</small>
                                 </div>
-                                <p class="small mb-0" id="comment-text-{{ $comment->id }}">{{ $comment->comment }}</p>
+                                <p class="small mb-0" id="comment-text-{{ $comment->id }}">{!! $commentText !!}</p>
                             </div>
                             <div class="row">
                                 <div class="col-6">
@@ -571,6 +586,25 @@
 
 @section('scripts')
 <script>
+    var tribute = new Tribute({
+        trigger: '@',
+        lookup: 'name',
+        fillAttr: 'username',
+        values: function (text, cb) {
+            fetch(`/user-search?q=${text}`)
+                .then(res => res.json())
+                .then(data => cb(data));
+        }
+    });
+      function attachTributeTo(element) {
+        if (element && !element.hasAttribute('data-tribute-attached')) {
+            tribute.attach(element);
+            element.setAttribute('data-tribute-attached', 'true');
+        }
+    }
+    document.querySelectorAll('.user_feed_comment').forEach(el => {
+        attachTributeTo(el);
+    });
 $(document).on('click', '.like-button', function() {
 
     const $btn = $(this);
@@ -718,10 +752,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Replace text with input
             commentDiv.innerHTML = `
-                <input type="text" id="edit-input-${commentId}" class="form-control form-control-sm mb-1" value="${commentText}">
+                <input type="text" id="edit-input-${commentId}" class="form-control form-control-sm mb-1 user_feed_comment" value="${commentText}">
                 <button class="btn btn-sm btn-success" onclick="saveEditedComment(${commentId})">Update</button>
                <button class="btn btn-sm btn-danger" onclick="deleteComment(${commentId})">Delete</button>
             `;
+            const inputEl = document.getElementById(`edit-input-${commentId}`);
+            tribute.attach(inputEl);
         });
     });
 });

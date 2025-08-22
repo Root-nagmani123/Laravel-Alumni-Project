@@ -196,7 +196,7 @@ JS libraries, plugins and custom scripts -->
 
 <!-- Select2 JS -->
 <script src="{{asset('feed_assets/js/select2.min.js')}}"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/tributejs@5.1.3/dist/tribute.min.js"></script>
 <script>
     $(document).ready(function () {
         // Fetch members via AJAX
