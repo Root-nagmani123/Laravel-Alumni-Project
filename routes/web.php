@@ -231,7 +231,6 @@ Route::prefix('user')->name('user.')->group(function () {
 	Route::get('/member/search', [MemberForumController::class, 'member_search'])->name('member.search');
 
 
-
 });
 
 Route::get('/admin', function () {
@@ -283,6 +282,11 @@ Route::prefix('admin')->middleware('auth:admin')->controller(AdminController::cl
 
 
 	// });
+
+
+    Route::prefix('topic')->name('recent.topics.')->group(function(){
+        Route::get('/', [DashboardController::class, 'recentTopics'])->name('index');
+});
 		Route::get('socialwall', [AdminController::class, 'socialwall'])->name('socialwall.index');
 	Route::get('grievance/list', [AdminController::class, 'grievanceList'])->name('grievance.list');
 
@@ -505,9 +509,7 @@ Route::middleware(['auth:user'])->group(function () {
 
     });
 
-    Route::prefix('topic')->name('recent.topics.')->group(function(){
-        Route::get('/', [DashboardController::class, 'recentTopics'])->name('index');
-    });
+    
 });
 
 Route::get('/user-search', [MemberController::class, 'user_search'])->name('user.search');
