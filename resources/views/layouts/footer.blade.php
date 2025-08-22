@@ -61,84 +61,109 @@
     <!-- Group Modal -->
 <div class="modal fade" id="groupModal" tabindex="-1" aria-labelledby="groupModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
-        <form action="{{ route('user.group.store') }}" method="POST" enctype="multipart/form-data" class="form-horizontal">
+        <form action="{{ route('user.group.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="modal-content">
+                
+                <!-- Header -->
                 <div class="modal-header bg-danger text-white">
                     <h5 class="modal-title text-white" id="groupModalLabel">Create Group</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
-                        aria-label="Close"></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
 
+                <!-- Body -->
                 <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="groupName" class="form-label">Group Name <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" id="groupName" name="group_name"
-                            placeholder="Enter group name" required>
-                    </div>
-                    <div class="mb-3">
-                                <label class="form-label">Service <span class="text-danger">*</span></label>
-                               <select class="form-select service" name="service" id="service" data-id="new_group_create" required>
-                                   <option selected disabled>Select Service</option>
-                                  @if(isset($members) )
-                                    @if($members->isEmpty())
-                                        <option disabled>No Services Available</option>
-                                    @else
-                                    
-                                        @foreach($members as $member)
-                                        @if($member->Service != '')
+                    <div class="row g-3">
+
+                        <!-- Group Name -->
+                        <div class="col-md-6">
+                            <label for="groupName" class="form-label">Group Name <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="groupName" name="group_name" placeholder="Enter group name" required>
+                        </div>
+
+                        <!-- Service -->
+                        <div class="col-md-6">
+                            <label class="form-label">Service <span class="text-danger">*</span></label>
+                            <select class="form-select service" name="service" id="service" data-id="new_group_create" required>
+                                <option selected disabled>Select Service</option>
+                                @if(isset($members) && !$members->isEmpty())
+                                    @foreach($members as $member)
+                                        @if(!empty($member->Service))
                                             <option value="{{ $member->Service }}">{{ $member->Service }}</option>
                                         @endif
-                                        @endforeach
-                                    @endif
-                                    @endif
-                                </select>
-                            </div>
-                           <div class="mb-3">
-                                <label class="form-label">Year/Batch <span class="text-danger">*</span></label>
+                                    @endforeach
+                                @else
+                                    <option disabled>No Services Available</option>
+                                @endif
+                            </select>
+                        </div>
 
-                                <select class="form-select year-select" name="year[]" multiple="multiple" data-id="new_group_create" required>
-                                    <!-- Options will be added dynamically -->
-                                </select>
-                            </div>
+                        <!-- Year / Batch -->
+                        <div class="col-md-6">
+                            <label class="form-label">Year / Batch <span class="text-danger">*</span></label>
+                            <select class="form-select year-select" name="year[]" multiple="multiple" data-id="new_group_create" required>
+                                <!-- Options populated dynamically via AJAX -->
+                            </select>
+                        </div>
 
+                        <!-- Cadre -->
+                        <div class="col-md-6">
+                            <label class="form-label">Cadre <span class="text-danger">*</span></label>
+                            <select class="form-select cadre select2" name="cadre[]" multiple="multiple" data-id="new_group_create" required>
+                                <!-- Options populated dynamically via AJAX -->
+                            </select>
+                        </div>
 
-                                <div class="mb-3">
-                                    <label class="form-label">Cadre <span class="text-danger">*</span></label>
-                                    <select class="form-select select2 cadre"  name="cadre[]" multiple="multiple" data-id="new_group_create" required>
-
+                        <!-- Dual List Members -->
+                        <div class="col-12">
+                            <label class="form-label">Select Group Members <span class="text-danger">*</span></label>
+                            <div class="row">
+                                <!-- Available -->
+                                <div class="col-md-5">
+                                    <select id="availableMembers" class="form-select" size="10" multiple>
+                                        <!-- Members loaded dynamically by AJAX -->
                                     </select>
                                 </div>
 
-                               <div class="mb-3">
-    <label class="form-label">Select Group Members <span class="text-danger">*</span></label>
-    <select class="form-select" multiple="multiple" id="mentees" name="mentees[]" required>
-        <option value="1">John Doe</option>
-        <option value="2">Jane Smith</option>
-        <option value="3">Rahul Sharma</option>
-        <option value="4">Anita Verma</option>
-        <option value="5">David Johnson</option>
-    </select>
-</div>
+                                <!-- Controls -->
+                                <div class="col-md-2 d-flex flex-column justify-content-center align-items-center">
+                                    <button type="button" class="btn btn-outline-primary mb-2" id="addMemberBtn">&gt;&gt;</button>
+                                    <button type="button" class="btn btn-outline-danger" id="removeMemberBtn">&lt;&lt;</button>
+                                </div>
 
+                                <!-- Selected -->
+                                <div class="col-md-5">
+                                    <select id="selectedMembers" class="form-select" size="10" multiple name="mentees[]" required>
+                                        <!-- Selected members will appear here -->
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
 
+                        <!-- Group Image -->
+                        <div class="col-md-6">
+                            <label for="grp_image" class="form-label">Upload Group Image <span class="text-danger">*</span></label>
+                            <input type="file" class="form-control" name="grp_image" id="grp_image" accept="image/*" required>
+                        </div>
 
-                         <div class="mb-3">
-                        <label for="groupName" class="form-label">Upload Group image<span class="text-danger">*</span></label>
-                        <input type="file" class="form-control" name="grp_image" id="grp_image" accept="image/*" required>
-                    </div>       
-                    <div class="mb-3">
-                        <label for="groupName" class="form-label">Expiry Date</label>
-                        <input type="date" class="form-control" name="end_date" id="end_date" required>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary">Create Group</button>
+                        <!-- Expiry Date -->
+                        <div class="col-md-6">
+                            <label for="end_date" class="form-label">Expiry Date <span class="text-danger">*</span></label>
+                            <input type="date" class="form-control" name="end_date" id="end_date" required>
+                        </div>
                     </div>
                 </div>
+
+                <!-- Footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Create Group</button>
+                </div>
+            </div>
         </form>
     </div>
 </div>
+
 
     <!-- Toast for favorite actions -->
 <div class="position-fixed top-0 end-0 p-3" style="z-index: 1100;">
@@ -198,6 +223,27 @@ JS libraries, plugins and custom scripts -->
 <script src="{{asset('feed_assets/js/select2.min.js')}}"></script>
 <script src="https://cdn.jsdelivr.net/npm/tributejs@5.1.3/dist/tribute.min.js"></script>
 <script>
+    $(document).ready(function () {
+    // Move to selected
+    $('#addMemberBtn').click(function () {
+        $('#availableMembers option:selected').each(function () {
+            $(this).remove().appendTo('#selectedMembers');
+        });
+    });
+
+    // Move back to available
+    $('#removeMemberBtn').click(function () {
+        $('#selectedMembers option:selected').each(function () {
+            $(this).remove().appendTo('#availableMembers');
+        });
+    });
+
+    // On form submit: select all from "selectedMembers"
+    $('#groupModal form').submit(function () {
+        $('#selectedMembers option').prop('selected', true);
+    });
+});
+
     $(document).ready(function () {
         // Fetch members via AJAX
         $.ajax({

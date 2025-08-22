@@ -29,6 +29,12 @@
                                     </button>
                                 </form>
                             </li>
+                            <li>
+                                <a href="#" class="dropdown-item" data-bs-toggle="offcanvas"
+                                    data-bs-target="#addMembersOffcanvas">
+                                    <i class="bi bi-plus fa-fw pe-2"></i>Add Members
+                                </a>
+                            </li>
                             @else
                             <li>
                                 <form action="{{ route('user.groups.leave') }}" method="POST"
@@ -47,13 +53,12 @@
 
                 <!-- Member Count Trigger -->
                 <!-- Member Count Trigger -->
-<div class="mt-2">
-    <a href="javascript:void(0);" class="text-white small popup-modal-open" 
-       data-bs-toggle="modal" 
-       data-bs-target="#membersModal-{{ $group->id }}">
-        {{ count($grp_members) }} Members
-    </a>
-</div>
+                <div class="mt-2">
+                    <a href="javascript:void(0);" class="text-white small popup-modal-open" data-bs-toggle="modal"
+                        data-bs-target="#membersModal-{{ $group->id }}">
+                        {{ count($grp_members) }} Members
+                    </a>
+                </div>
 
 
 
@@ -63,59 +68,61 @@
             <!-- group member details -->
 
             <!-- Members Modal -->
-<div class="modal fade" id="membersModal-{{ $group->id }}" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-scrollable">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Group Members ({{ count($grp_members) }})</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            
-            <div class="modal-body">
-                <!-- Search Box -->
-                <div class="mb-3">
-                    <input type="text" class="form-control member-search" 
-                           placeholder="Search members..." 
-                           data-target="member-list-{{ $group->id }}">
-                </div>
-
-                <!-- Members List -->
-                <div id="member-list-{{ $group->id }}">
-                    @foreach($grp_members as $member)
-                    <div class="d-md-flex align-items-center mb-3 member-item">
-                        <!-- Avatar -->
-                        <div class="avatar me-3 mb-3 mb-md-0">
-                            @php
-                                $defaultImage = asset('feed_assets/images/avatar/07.jpg');
-                                $profileImage = $defaultImage;
-                                if ($member->profile_pic && file_exists(public_path('storage/' . $member->profile_pic))) {
-                                    $profileImage = asset('storage/' . $member->profile_pic);
-                                }
-                            @endphp
-                            <a href="{{ $member->id ? route('user.profile.data', ['id' => $member->id]) : '#' }}">
-                                <img class="avatar-img rounded-circle" src="{{ $profileImage }}" alt="">
-                            </a>
+            <div class="modal fade" id="membersModal-{{ $group->id }}" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Group Members ({{ count($grp_members) }})</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <!-- Info -->
-                        <div class="w-100">
-                            <h6 class="mb-0">
-                                <a href="{{ $member->id ? route('user.profile.data', ['id' => $member->id]) : '#' }}">
-                                    {{ $member->name }}
-                                </a>
-                            </h6>
-                            <p class="small text-muted mb-0">{{ $member->designation ?? 'N/A' }}</p>
+
+                        <div class="modal-body">
+                            <!-- Search Box -->
+                            <div class="mb-3">
+                                <input type="text" class="form-control member-search" placeholder="Search members..."
+                                    data-target="member-list-{{ $group->id }}">
+                            </div>
+
+                            <!-- Members List -->
+                            <div id="member-list-{{ $group->id }}">
+                                @foreach($grp_members as $member)
+                                <div class="d-md-flex align-items-center mb-3 member-item">
+                                    <!-- Avatar -->
+                                    <div class="avatar me-3 mb-3 mb-md-0">
+                                        @php
+                                        $defaultImage = asset('feed_assets/images/avatar/07.jpg');
+                                        $profileImage = $defaultImage;
+                                        if ($member->profile_pic && file_exists(public_path('storage/' .
+                                        $member->profile_pic))) {
+                                        $profileImage = asset('storage/' . $member->profile_pic);
+                                        }
+                                        @endphp
+                                        <a
+                                            href="{{ $member->id ? route('user.profile.data', ['id' => $member->id]) : '#' }}">
+                                            <img class="avatar-img rounded-circle" src="{{ $profileImage }}" alt="">
+                                        </a>
+                                    </div>
+                                    <!-- Info -->
+                                    <div class="w-100">
+                                        <h6 class="mb-0">
+                                            <a
+                                                href="{{ $member->id ? route('user.profile.data', ['id' => $member->id]) : '#' }}">
+                                                {{ $member->name }}
+                                            </a>
+                                        </h6>
+                                        <p class="small text-muted mb-0">{{ $member->designation ?? 'N/A' }}</p>
+                                    </div>
+                                </div>
+                                @endforeach
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         </div>
                     </div>
-                    @endforeach
                 </div>
             </div>
-            
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
 
 
 
@@ -398,9 +405,88 @@
         </div>
     </div>
 </div>
+<!-- Offcanvas (Right Side) -->
+<div class="offcanvas offcanvas-end" tabindex="-1" id="addMembersOffcanvas" aria-labelledby="addMembersLabel">
+    <div class="offcanvas-header bg-danger text-white">
+        <h5 class="offcanvas-title text-white" id="addMembersLabel">Add Members to Group</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
 
+    <div class="offcanvas-body">
+        <form action="" method="POST">
+            @csrf
+
+            <!-- Group Select -->
+            <div class="mb-3">
+                <label class="form-label">Select Group <span class="text-danger">*</span></label>
+                <select class="form-select" name="group_id" required>
+                    <option disabled selected>Choose group</option>
+                   
+                        <option value=""></option>
+                  
+                </select>
+            </div>
+
+            <!-- Dual List Members -->
+            <div class="mb-3">
+                <label class="form-label">Select Members <span class="text-danger">*</span></label>
+                <div class="row">
+                    <!-- Available -->
+                    <div class="col-md-5">
+                        <select id="availableMembers" class="form-select" size="10" multiple>
+                           
+                                <option value=""></option>
+                           
+                        </select>
+                    </div>
+
+                    <!-- Controls -->
+                    <div class="col-md-2 d-flex flex-column justify-content-center align-items-center">
+                        <button type="button" class="btn btn-outline-primary mb-2" id="addMemberBtn">&gt;&gt;</button>
+                        <button type="button" class="btn btn-outline-danger" id="removeMemberBtn">&lt;&lt;</button>
+                    </div>
+
+                    <!-- Selected -->
+                    <div class="col-md-5">
+                        <select id="selectedMembers" class="form-select" size="10" multiple name="members[]" required>
+                            <!-- Selected members will appear here -->
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Submit -->
+            <div class="d-flex justify-content-end">
+                <button type="button" class="btn btn-light me-2" data-bs-dismiss="offcanvas">Cancel</button>
+                <button type="submit" class="btn btn-primary">Add Members</button>
+            </div>
+        </form>
+    </div>
+</div>
 @section('scripts')
 <script>
+    $(document).ready(function () {
+    // Move to selected
+    $('#addMemberBtn').click(function () {
+        $('#availableMembers option:selected').each(function () {
+            $(this).remove().appendTo('#selectedMembers');
+        });
+    });
+
+    // Move back to available
+    $('#removeMemberBtn').click(function () {
+        $('#selectedMembers option:selected').each(function () {
+            $(this).remove().appendTo('#availableMembers');
+        });
+    });
+
+    // On form submit, select all in "selectedMembers"
+    $('#addMembersOffcanvas form').submit(function () {
+        $('#selectedMembers option').prop('selected', true);
+    });
+});
+
+
 $(document).on('click', '.like-button', function() {
     const $btn = $(this);
     const url = $btn.data('url');
@@ -634,7 +720,6 @@ document.addEventListener("input", function(e) {
 });
 
 console.clear();
-
 </script>
 
 
