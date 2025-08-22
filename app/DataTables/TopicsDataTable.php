@@ -92,9 +92,9 @@ class TopicsDataTable extends DataTable
     {
         return [
             Column::computed('DT_RowIndex')->title('S.No.')->searchable(false)->orderable(false)->addClass('text-center'),
-            Column::make('title')->title('title')->orderable(false)->addClass('text-center'),
-            Column::make(data: 'created_date')->title('Date & Time')->orderable(false)->addClass('text-center'),
+            Column::make('title')->title('Title')->orderable(false)->addClass('text-center'),
             Column::computed(data: 'description')->title('Description')->searchable(true)->orderable(false)->addClass('text-center'),
+            Column::make(data: 'created_date')->title('Date & Time')->orderable(false)->addClass('text-center'),
             Column::computed(data: 'created_by')->title('Created By')->searchable(true)->orderable(false)->addClass('text-center')
         ];
     }
