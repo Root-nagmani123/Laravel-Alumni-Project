@@ -35,6 +35,17 @@ class TopicsDataTable extends DataTable
             ->addColumn('created_by', function ($query) {
                 return $query->member ? $query->member->name : 'N/A';
             })
+            ->filterColumn('title', function ($query, $keyword) {
+                $query->where('title', 'like', "%{$keyword}%");
+            })
+            ->filterColumn('description', function ($query, $keyword) {
+                $query->where('description', 'like', "%{$keyword}%");
+            })
+            ->filterColumn('created_by', function ($query, $keyword) {
+                $query->whereHas('member', function ($q) use ($keyword) {
+                    $q->where('name', 'like', "%{$keyword}%");
+                });
+            })
             ->rawColumns(['description', 'created_by']);
             
     }
@@ -83,8 +94,8 @@ class TopicsDataTable extends DataTable
             Column::computed('DT_RowIndex')->title('S.No.')->searchable(false)->orderable(false)->addClass('text-center'),
             Column::make('title')->title('title')->orderable(false)->addClass('text-center'),
             Column::make(data: 'created_date')->title('Date & Time')->orderable(false)->addClass('text-center'),
-            Column::computed(data: 'description')->title('Description')->searchable(false)->orderable(false)->addClass('text-center'),
-            Column::computed(data: 'created_by')->title('Created By')->searchable(false)->orderable(false)->addClass('text-center')
+            Column::computed(data: 'description')->title('Description')->searchable(true)->orderable(false)->addClass('text-center'),
+            Column::computed(data: 'created_by')->title('Created By')->searchable(true)->orderable(false)->addClass('text-center')
         ];
     }
 
