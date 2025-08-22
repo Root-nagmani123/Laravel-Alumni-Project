@@ -3,12 +3,6 @@
 @section('title', 'Group - Alumni | Lal Bahadur')
 
 @section('content')
-<style>
-.select2-container--default .select2-results>.select2-results__options {
-    max-height: 400px !important;
-    overflow-y: auto;
-}
-</style>
 
 <div class="container-fluid">
     <x-breadcrum title="Group" />
@@ -21,52 +15,27 @@
             <form action="{{ route('group.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="row">
+                    <!-- Group Name -->
                     <div class="col-6">
                         <div class="mb-3">
-                            <label class="form-label">Group Name <span class="text-danger">*</span></label>
+                            <label class="form-label">Group Name</label>
                             <input type="text" name="name" class="form-control" required>
                         </div>
                     </div>
-                    <div class="col-6">
-                        <div class="mb-3">
-                            <label class="form-label">Mentor Name <span class="text-danger">*</span></label>
-                            <!--<select id="" class="form-control" name="mentor_id" required="" tabindex="-1"
-                                aria-hidden="true">-->
-                            @php
-                            $sortedMentors = $mentors->sortBy('name');
-                            @endphp
 
-                            <select id="mentor_id" class="form-control" name="mentor_id" required>
-
-
-                            </select>
-
-
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="mb-3">
-    <label class="form-label">Select Group Members <span class="text-danger">*</span></label>
-    <select class="form-select" multiple="multiple" id="mentees" name="mentees[]" required>
-        <option value="1">John Doe</option>
-        <option value="2">Jane Smith</option>
-        <option value="3">Rahul Sharma</option>
-        <option value="4">Anita Verma</option>
-        <option value="5">David Johnson</option>
-    </select>
-</div>
-
-                    </div>
+                    <!-- Group End Date -->
                     <div class="col-md-6">
                         <div class="mb-3">
-                            <label class="form-label">Group End Date <span class="text-danger">*</span></label>
-                            <input type="date" class="form-control" name="end_date" id="end_date" required>
+                            <label class="form-label">Group End Date</label>
+                            <input type="date" class="form-control" name="end_date">
                         </div>
                     </div>
+
+                    <!-- Group Image -->
                     <div class="col-md-6">
                         <div class="mb-3">
-                            <label class="form-label">Group Image <span class="text-danger">*</span></label>
-                            <input type="file" class="form-control" name="image" id="image" accept="image/*" required>
+                            <label class="form-label">Group Image</label>
+                            <input type="file" class="form-control" name="image" accept="image/*">
                             <!-- Preview -->
                             <div class="mt-2">
                                 <img id="preview-image" src="#" alt="Image Preview" class="img-fluid rounded d-none"
@@ -74,32 +43,140 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Service</label>
+                            <select name="service" id="service" class="form-control">
+                                <option value="">Select Service</option>
+                            </select>
+                        </div>
+                    </div>
+                    <!-- Batch/Year -->
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Batch/Year</label>
+                            <select name="batch_year" id="batch_year" class="form-control">
+                                <option value="">Select Batch/Year</option>
+                            </select>
+                        </div>
+                    </div>
 
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Cadre</label>
+                            <select name="cadre" id="cadre" class="form-control">
+                                <option value="">Select Cadre</option>
+                            </select>
+                        </div>
+                    </div>
+                    <!-- Members Dual List -->
+                    <div class="col-12 gap-3">
+                        <div class="mb-3">
+                            <label class="form-label">Add Members <span class="text-danger">*</span></label>
+                            <div class="row">
+                                <!-- All Members -->
+                                <div class="col-md-6 border p-2 rounded">
+                                    <h6>All Members</h6>
+                                    <input type="text" id="searchAll" class="form-control mb-2"
+                                        placeholder="Search members...">
+                                    <div id="allMembers" class="member-list" style="max-height:300px; overflow-y:auto;">
+                                        @foreach($users as $user)
+                                        <div class="form-check">
+                                            <input class="form-check-input member-checkbox" type="checkbox"
+                                                value="{{ $user->id }}" id="user-{{ $user->id }}">
+                                            <label class="form-check-label" for="user-{{ $user->id }}">
+                                                {{ $user->name }}
+                                            </label>
+                                        </div>
+                                        @endforeach
+                                    </div>
+                                </div>
 
+                                <!-- Selected Members -->
+                                <div class="col-md-6 border p-2 rounded">
+                                    <h6>Selected Members</h6>
+                                    <input type="text" id="searchSelected" class="form-control mb-2"
+                                        placeholder="Search selected...">
+                                    <div id="selectedMembers" class="member-list"
+                                        style="max-height:300px; overflow-y:auto;">
+                                        <!-- Checked members auto-move here -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Status -->
                     <div class="col-6">
                         <div class="mb-3">
-                            <label class="form-label">Status <span class="text-danger">*</span></label>
-                            <select class="form-select" aria-label="Default select" name="status" required="">
-                                <option selected="">Select Status</option>
+                            <label class="form-label">Status</label>
+                            <select class="form-select" name="status" required>
+                                <option value="">Select Status</option>
                                 <option value="1">Active</option>
-                                <option value="0">InActive</option>
+                                <option value="0">Inactive</option>
                             </select>
                         </div>
                     </div>
                 </div>
+
                 <hr>
                 <div class="mb-3 gap-2 float-end">
-                    <button class="btn btn-primary" type="submit">
-                        Save
-                    </button>
-                    <a href="{{ route('group.index') }}" class="btn btn-secondary">
-                        Cancel
-                    </a>
+                    <button class="btn btn-primary" type="submit">Create Group</button>
+                    <a href="{{ route('group.index') }}" class="btn btn-secondary">Cancel</a>
                 </div>
             </form>
         </div>
     </div>
-    <!-- end Vertical Steps Example -->
+</div>
+<!-- end Vertical Steps Example -->
+
+<!-- Script -->
+<script>
+const allMembers = document.getElementById('allMembers');
+const selectedMembers = document.getElementById('selectedMembers');
+
+// Move instantly on check/uncheck
+document.addEventListener('change', function(e) {
+    if (e.target.classList.contains('member-checkbox')) {
+        const wrapper = e.target.closest('.form-check');
+        if (e.target.checked) {
+            e.target.name = 'user_id[]';
+            selectedMembers.appendChild(wrapper);
+            sortList(selectedMembers);
+        } else {
+            e.target.removeAttribute('name');
+            allMembers.appendChild(wrapper);
+            sortList(allMembers);
+        }
+    }
+});
+
+// Sort alphabetically by label text
+function sortList(container) {
+    const items = Array.from(container.querySelectorAll('.form-check'));
+    items.sort((a, b) => {
+        const nameA = a.querySelector('label').textContent.trim().toLowerCase();
+        const nameB = b.querySelector('label').textContent.trim().toLowerCase();
+        return nameA.localeCompare(nameB);
+    });
+    items.forEach(item => container.appendChild(item));
+}
+
+// Search filtering
+function setupSearch(inputId, containerId) {
+    document.getElementById(inputId).addEventListener('keyup', function() {
+        const query = this.value.toLowerCase();
+        document.querySelectorAll(`#${containerId} .form-check`).forEach(item => {
+            const name = item.querySelector('label').textContent.toLowerCase();
+            item.style.display = name.includes(query) ? '' : 'none';
+        });
+    });
+}
+
+setupSearch('searchAll', 'allMembers');
+setupSearch('searchSelected', 'selectedMembers');
+</script>
+
 </div>
 <!-- image preview js -->
 @section('scripts')
