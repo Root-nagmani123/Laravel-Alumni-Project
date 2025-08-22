@@ -38,7 +38,12 @@
                                 <span class="icon-small"></span> Dashboard
                             </a>
                         </li>
-
+<li class="sidebar-item">
+                            <a class="sidebar-link" href="{{ route('admin.registration.index') }}">
+                                <iconify-icon icon="solar:document-bold-duotone"></iconify-icon>
+                                <span class="icon-small"></span> Registration
+                            </a>
+                        </li>
                         <li class="sidebar-item">
                             <a class="sidebar-link" href="{{ route('members.index') }}" >
                                 <iconify-icon icon="solar:user-bold-duotone"></iconify-icon>

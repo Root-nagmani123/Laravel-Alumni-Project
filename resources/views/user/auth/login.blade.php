@@ -361,7 +361,7 @@
                     <div class="col-sm-5 col-8 mb-2 p-0">
                         <a href="#" class="text-decoration-none open-panel" data-panel="ldap">
                             <div class="card login-card p-3">
-                                <span class="card-label">Login as</span>
+                                <span class="card-label">Login with</span>
                                 <p class="text-center m-0 fw-bold">LDAP</p>
                             </div>
                         </a>
@@ -372,7 +372,7 @@
                     <div class="col-sm-5 col-8 mb-2 p-0">
                         <a href="#" class="text-decoration-none open-panel" data-panel="otp">
                             <div class="card login-card p-3">
-                                <span class="card-label">Login as</span>
+                                <span class="card-label">Login with</span>
                                 <p class="text-center m-0 fw-bold">Email OTP</p>
                             </div>
                         </a>
