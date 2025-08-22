@@ -90,7 +90,31 @@
                             </div>
                             @endif
                         </div>
-                        <div class="comment-text">{{ $comment->comment }}</div>
+
+                        @php
+        
+        
+        $commentText = preg_replace_callback(   
+            '/@([a-zA-Z0-9_.]+)/',
+            function ($matches) {
+                $username = $matches[1];
+                $user = \App\Models\Member::where('username', $username)->first(); // 👈 username se search
+                if ($user) {
+                    $url = route('user.profile.data', ['id' => $user->id]);
+                    return "<a href='{$url}' 
+                        class='mention-badge text-primary fw-bold' 
+                        data-bs-toggle='tooltip' 
+                        data-bs-placement='top' 
+                        title='{$user->name} | {$user->designation}'>
+                        @{$username}
+                    </a>";
+                }
+                return "@{$username}";
+            },
+            e($comment->comment)
+        );
+    @endphp
+                        <div class="comment-text">{!! $commentText !!}</div>
                     </div>
                 </div>
             @endforeach

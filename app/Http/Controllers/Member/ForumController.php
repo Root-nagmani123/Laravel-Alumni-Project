@@ -269,75 +269,169 @@ class ForumController extends Controller
 	/**
 	 * Forum-level comment create (not topic comment)
 	 */
-	public function commentForum(Request $request, $id)
-	{
-		$request->validate([
-			'comment' => 'required|string',
-		]);
-		$userId = Auth::guard('user')->id();
-		if (!$userId) {
-			return $request->expectsJson()
-				? response()->json(['success' => false, 'message' => 'Unauthorized'], 401)
-				: back();
-		}
+	// public function commentForum(Request $request, $id)
+	// {
+	// 	$request->validate([
+	// 		'comment' => 'required|string',
+	// 	]);
+	// 	$userId = Auth::guard('user')->id();
+	// 	if (!$userId) {
+	// 		return $request->expectsJson()
+	// 			? response()->json(['success' => false, 'message' => 'Unauthorized'], 401)
+	// 			: back();
+	// 	}
 
-		$insertedId = DB::table('forum_comment')->insertGetId([
-			'forum_id' => $id,
-			'user_id' => $userId,
-			'comment' => $request->input('comment'),
-			'created_at' => now(),
-			'updated_at' => now(),
-		]);
+	// 	$insertedId = DB::table('forum_comment')->insertGetId([
+	// 		'forum_id' => $id,
+	// 		'user_id' => $userId,
+	// 		'comment' => $request->input('comment'),
+	// 		'created_at' => now(),
+	// 		'updated_at' => now(),
+	// 	]);
 
-		// Send notification to forum owner
-		$forum = DB::table('forums')
-			->join('members', 'members.id', '=', 'forums.created_by')
-			->select('forums.created_by', 'forums.name', 'members.name as owner_name')
-			->where('forums.id', $id)
-			->first();
+	// 	// Send notification to forum owner
+	// 	$forum = DB::table('forums')
+	// 		->join('members', 'members.id', '=', 'forums.created_by')
+	// 		->select('forums.created_by', 'forums.name', 'members.name as owner_name')
+	// 		->where('forums.id', $id)
+	// 		->first();
 
-		if ($forum && $forum->created_by != $userId) {
-			$currentUser = DB::table('members')->where('id', $userId)->first();
-			$commentText = strlen($request->input('comment')) > 50 
-				? substr($request->input('comment'), 0, 50) . '...'
-				: $request->input('comment');
-			$message = ($currentUser->name ?? 'Someone') . ' commented on your forum "' . $forum->name . '": ' . $commentText;
+	// 	if ($forum && $forum->created_by != $userId) {
+	// 		$currentUser = DB::table('members')->where('id', $userId)->first();
+	// 		$commentText = strlen($request->input('comment')) > 50 
+	// 			? substr($request->input('comment'), 0, 50) . '...'
+	// 			: $request->input('comment');
+	// 		$message = ($currentUser->name ?? 'Someone') . ' commented on your forum "' . $forum->name . '": ' . $commentText;
 			
-			$this->notificationService->notifyPostOwner(
-				$forum->created_by,
-				$userId,
-				'forum_comment',
-				$message,
-				$id,
-				'forum'
-			);
-		}
+	// 		$this->notificationService->notifyPostOwner(
+	// 			$forum->created_by,
+	// 			$userId,
+	// 			'forum_comment',
+	// 			$message,
+	// 			$id,
+	// 			'forum'
+	// 		);
+	// 	}
 
-		$comment = DB::table('forum_comment')
-			->join('members', 'members.id', '=', 'forum_comment.user_id')
-			->select(
-				'forum_comment.id',
-				'forum_comment.user_id',
-				'members.name as member_name',
-				'members.profile_pic',
-				'forum_comment.comment',
-				'forum_comment.created_at'
-			)
-			->where('forum_comment.id', $insertedId)
-			->first();
+	// 	$comment = DB::table('forum_comment')
+	// 		->join('members', 'members.id', '=', 'forum_comment.user_id')
+	// 		->select(
+	// 			'forum_comment.id',
+	// 			'forum_comment.user_id',
+	// 			'members.name as member_name',
+	// 			'members.profile_pic',
+	// 			'forum_comment.comment',
+	// 			'forum_comment.created_at'
+	// 		)
+	// 		->where('forum_comment.id', $insertedId)
+	// 		->first();
 
-		$commentCount = DB::table('forum_comment')->where('forum_id', $id)->count();
+	// 	$commentCount = DB::table('forum_comment')->where('forum_id', $id)->count();
 
-		if ($request->expectsJson()) {
-			return response()->json([
-				'success' => true,
-				'comment' => $comment,
-				'comment_count' => $commentCount,
-			]);
-		}
+	// 	if ($request->expectsJson()) {
+	// 		return response()->json([
+	// 			'success' => true,
+	// 			'comment' => $comment,
+	// 			'comment_count' => $commentCount,
+	// 		]);
+	// 	}
 
-		return back();
-	}
+	// 	return back();
+	// }
+
+    public function commentForum(Request $request, $id)
+    {
+        $request->validate([
+            'comment' => 'required|string',
+        ]);
+        $userId = Auth::guard('user')->id();
+        if (!$userId) {
+            return $request->expectsJson()
+                ? response()->json(['success' => false, 'message' => 'Unauthorized'], 401)
+                : back();
+        }
+
+        $insertedId = DB::table('forum_comment')->insertGetId([
+            'forum_id' => $id,
+            'user_id' => $userId,
+            'comment' => $request->input('comment'),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        // Send notification to forum owner
+        $forum = DB::table('forums')
+            ->join('members', 'members.id', '=', 'forums.created_by')
+            ->select('forums.created_by', 'forums.name', 'members.name as owner_name')
+            ->where('forums.id', $id)
+            ->first();
+
+        if ($forum && $forum->created_by != $userId) {
+            $currentUser = DB::table('members')->where('id', $userId)->first();
+            $commentText = strlen($request->input('comment')) > 50 
+                ? substr($request->input('comment'), 0, 50) . '...'
+                : $request->input('comment');
+            $message = ($currentUser->name ?? 'Someone') . ' commented on your forum "' . $forum->name . '": ' . $commentText;
+            
+            $this->notificationService->notifyPostOwner(
+                $forum->created_by,
+                $userId,
+                'forum_comment',
+                $message,
+                $id,
+                'forum'
+            );
+        }
+
+        $comment = DB::table('forum_comment')
+            ->join('members', 'members.id', '=', 'forum_comment.user_id')
+            ->select(
+                'forum_comment.id',
+                'forum_comment.user_id',
+                'members.name as member_name',
+                'members.username as member_username', // ensure you have username column
+                'members.profile_pic',
+                'forum_comment.comment',
+                'forum_comment.created_at'
+            )
+            ->where('forum_comment.id', $insertedId)
+            ->first();
+
+        
+        $commentText = preg_replace_callback(
+            '/@([a-zA-Z0-9_.]+)/',
+            function ($matches) {
+                $username = $matches[1];
+                $user = \App\Models\Member::where('username', $username)->first();
+                if ($user) {
+                    $url = route('user.profile.data', ['id' => $user->id]);
+                    return "<a href='{$url}' 
+                        class='mention-badge' 
+                        data-bs-toggle='tooltip' 
+                        data-bs-placement='top' 
+                        title='{$user->name} | {$user->designation}'>
+                        @{$username}
+                    </a>";
+                }
+                return "@{$username}";
+            },
+            e($comment->comment)
+        );
+              
+
+        // JSON me parsed text bhejo
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'comment' => $comment,
+                'comment_html' => $commentText, // 👈 yeh frontend me use karna
+                'comment_count' => DB::table('forum_comment')->where('forum_id', $id)->count(),
+            ]);
+        }
+
+        return back();
+    }
+
 
 	/**
 	 * Update a forum-level comment (owner only)

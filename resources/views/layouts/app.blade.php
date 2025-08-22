@@ -309,6 +309,26 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 });
+
+var tribute = new Tribute({
+        trigger: '@',
+        lookup: 'name',
+        fillAttr: 'username',
+        values: function (text, cb) {
+            fetch(`/user-search?q=${text}`)
+                .then(res => res.json())
+                .then(data => cb(data));
+        }
+    });
+      function attachTributeTo(element) {
+        if (element && !element.hasAttribute('data-tribute-attached')) {
+            tribute.attach(element);
+            element.setAttribute('data-tribute-attached', 'true');
+        }
+    }
+    document.querySelectorAll('.user_feed_comment').forEach(el => {
+        attachTributeTo(el);
+    });
 </script>
 
 
