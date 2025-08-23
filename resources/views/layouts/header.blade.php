@@ -94,37 +94,47 @@
             <ul class="nav flex-nowrap align-items-center ms-sm-3 list-unstyled">
                 <li class="nav-item dropdown ms-2">
                     <a class="nav-link bg-light icon-md btn btn-light p-0" href="#" id="notifDropdown" role="button"
-                        data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
-                        @php
-                        $showNotifBadge = false;
-                        if (Auth::guard('user')->check()) {
-                        $member = \App\Models\Member::find(Auth::guard('user')->id());
-                        if ($member && $member->is_notification == 0 && isset($notifications) && $notifications->count()
-                        > 0) {
-                        $showNotifBadge = true;
-                        }
-                        }
-                        @endphp
-                        @php
-                        $latestNotifications = $notifications->sortByDesc('created_at');
-                        @endphp
-                        @if($showNotifBadge)
-                        <span class="badge-notif animation-blink"></span>
-                        @endif
-                        <i class="bi bi-bell-fill fs-6"> </i>
-                    </a>
+   data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+    @php
+        $showNotifBadge = false;
+
+        if (Auth::guard('user')->check()) {
+            $unreadCount = \App\Models\Notification::where('user_id', Auth::guard('user')->id())
+                            ->where('is_read', 0)
+                            ->count();
+
+            $latestNotifications = \App\Models\Notification::where('user_id', Auth::guard('user')->id())
+                                ->orderBy('created_at', 'desc')
+                                ->take(10) // show last 10
+                                ->get();
+
+            if ($unreadCount > 0) {
+                $showNotifBadge = true;
+            }
+        }
+    @endphp
+
+    @if($showNotifBadge)
+        <span class="badge-notif animation-blink">{{ $unreadCount }}</span>
+    @endif
+
+    <i class="bi bi-bell-fill fs-6"></i>
+</a>
+
                     <div class="dropdown-menu dropdown-animation dropdown-menu-end dropdown-menu-size-md p-0 shadow-lg border-0"
                         aria-labelledby="notifDropdown">
                         <div class="card">
                             <div class="card-header d-flex justify-content-between align-items-center">
                                 <h6 class="m-0">Notifications <span
-                                        class="badge bg-danger bg-opacity-10 text-danger ms-2">{{ isset($notifications) ? $notifications->count() : 0 }}</span>
+                                        class="badge bg-danger bg-opacity-10 text-danger ms-2">     {{ \App\Models\Notification::where('user_id', Auth::guard('user')->id())->where('is_read', 0)->count() }}
+</span>
                                 </h6>
 
 
 <a class="small clear-all-notifications"
    href="{{ route('user.notifications.clear', ['id' => Auth::guard('user')->user()->id]) }}"
    onclick="clearNotifications(event)">Mark all as read</a>
+
 
                             </div>
                             <div class="card-body p-0" style="max-height: 300px; overflow-y: auto;">
@@ -137,7 +147,7 @@
                                         <!-- Notif item -->
                                         <li>
                                             @php
-                    
+                                            
                                                 $notificationUrl = '#';
                                                 // Debug: Log notification data
                                                 if (isset($notification->source_id) && isset($notification->source_type)) {
@@ -523,9 +533,8 @@ document.addEventListener('DOMContentLoaded', function() {
 // Update the clearNotifications function to add timestamps and change colors
 function clearNotifications(event) {
     event.preventDefault();
-    
+
     const url = event.currentTarget.href;
-    const now = new Date().toISOString(); // Current timestamp
 
     fetch(url, {
         method: 'POST',
@@ -535,59 +544,41 @@ function clearNotifications(event) {
             'Content-Type': 'application/json',
         },
     })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json();
-    })
+    .then(response => response.json())
     .then(data => {
+        if (!data.success) {
+            throw new Error(data.message || 'Failed to clear notifications');
+        }
+
         console.log('Clear all route called:', data);
 
-        // Hide the red dot
+        // Remove badge
         const notifBadge = document.querySelector('.badge-notif');
-        if (notifBadge) {
-            notifBadge.remove();
-        }
+        if (notifBadge) notifBadge.remove();
 
-        // Update notification count to 0
+        // Update count
         const notifCount = document.querySelector('.card-header h6 .badge');
-        if (notifCount) {
-            notifCount.textContent = '0';
-        }
+        if (notifCount) notifCount.textContent = '0';
 
-        // Add timestamp and change color for all notifications
-        const notificationCards = document.querySelectorAll('.notification-card');
-        notificationCards.forEach(card => {
-            // Remove inline background color if it exists
-            card.style.removeProperty('background-color');
-            
-            // Add the read class
+        // Mark all cards as read
+        document.querySelectorAll('.notification-card').forEach(card => {
             card.classList.add('notification-read');
-            
-            // Add border left
             card.style.borderLeft = '3px solid #6c757d';
-            
-            // Add timestamp
-            const existingTimestamp = card.querySelector('.read-timestamp');
-            if (!existingTimestamp) {
+
+            if (!card.querySelector('.read-timestamp')) {
                 const timestamp = document.createElement('div');
                 timestamp.className = 'small text-muted text-end read-timestamp';
                 timestamp.textContent = 'Read: Just now';
                 card.appendChild(timestamp);
             }
-            
-            // Update text color
+
             const textElement = card.querySelector('.text-primary');
-            if (textElement) {
-                textElement.style.color = '#6c757d';
-            }
+            if (textElement) textElement.style.color = '#6c757d';
         });
     })
-    .catch(error => {
-        console.error('Error calling clear notifications route:', error);
-    });
+    .catch(error => console.error('Error:', error));
 }
+
 
 
 </script>

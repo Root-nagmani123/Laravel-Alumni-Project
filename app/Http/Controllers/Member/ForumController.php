@@ -178,6 +178,10 @@ class ForumController extends Controller
             ]);
         }
 
+        if ($updated && $forum->status == 1) {
+            $notification = $this->notificationService->notifyAllMembers('Forum', $forum->name . ' forum has been updated.', $forum->id, 'forum', Auth::id());
+        }
+
         return back()->with('success', 'Forum updated successfully');
     }
 	/**
@@ -222,7 +226,8 @@ class ForumController extends Controller
 					'forum_like',
 					$message,
 					$id,
-					'forum'
+					'forum',
+					Auth::id()
 				);
 			}
 		}
@@ -269,6 +274,7 @@ class ForumController extends Controller
 	/**
 	 * Forum-level comment create (not topic comment)
 	 */
+    
 	public function commentForum(Request $request, $id)
 	{
 		$request->validate([
@@ -309,7 +315,8 @@ class ForumController extends Controller
 				'forum_comment',
 				$message,
 				$id,
-				'forum'
+				'forum',
+				Auth::id()
 			);
 		}
 
@@ -336,12 +343,15 @@ class ForumController extends Controller
 			]);
 		}
 
+        $member = Member::where('id', $userId)->select('name')->first();
+
 		return back();
 	}
 
 	/**
 	 * Update a forum-level comment (owner only)
 	 */
+    
 	public function updateForumComment(Request $request, $commentId)
 	{
 		$request->validate([
@@ -370,6 +380,25 @@ class ForumController extends Controller
 				'comment' => $updated,
 			]);
 		}
+
+        if ($updated) {
+               $forumId = $record->forum_id;
+               $forum   = Forum::find($forumId);
+
+			if ($forum && $forum->created_by != $userId) {
+				$currentUser = DB::table('members')->where('id', $userId)->first();
+				$message = ($currentUser->name ?? 'Someone') . ' updated their comment on your forum "' . $forum->name . '"';
+				$this->notificationService->notifyPostOwner(
+					$forum->created_by,
+					$userId,
+					'forum_comment_update',
+					$message,
+					$forumId,
+					'forum'
+				);
+			}
+		}
+
 		return back();
 	}
 
@@ -450,6 +479,7 @@ class ForumController extends Controller
                 $message,
                 $forumId,
                 'forum'
+                
             );
     
             if ($notification) {
@@ -506,13 +536,9 @@ public function deleteforum(Request $request)
             'forum_deleted',
             $message,
             $forumId,
-            'forum'
+            'forum_deleted',
+            Auth::id()
         );
-
-        if ($notification) {
-            Member::query()->update(['is_notification' => 0]);
-        }
-    
 
         DB::commit();
 

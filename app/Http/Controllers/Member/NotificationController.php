@@ -52,25 +52,27 @@ class NotificationController extends Controller
         return redirect()->back();
     }
 
-    public function clearNotifications(Request $request, $id)
-    {
-      $member = Member::find($id);
+    public function clearNotifications(Request $request, $userId)
+{
 
-        // Check if the user is authenticated and the ID matches
-        if (!$member || $member->id != $id) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Unauthorized or invalid user ID',
-            ], 401);
-        }
-
-        $member->is_notification = 1;
-        $updated = $member->save();
-
+    if (!$userId) {
         return response()->json([
-            'success' => true,
-            'message' => 'Notifications cleared successfully',
-        ]);
+            'success' => false,
+            'message' => 'Unauthorized',
+        ], 401);
     }
+
+    // Update all unread notifications for this user
+    $updated = Notification::where('user_id', $userId)
+                ->where('is_read', 0)
+                ->update(['is_read' => 1]);
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Notifications marked as read',
+        'updated_count' => $updated,
+    ]);
+}
+
 
 }

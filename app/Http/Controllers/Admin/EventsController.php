@@ -35,7 +35,6 @@ class EventsController extends Controller
 
     public function store(Request $request)
 	{
-		// Validate first
 		$validator = Validator::make($request->all(), [
 			'title'          => 'required|string|max:255',
 			'description'    => 'nullable|string',
@@ -81,22 +80,11 @@ class EventsController extends Controller
     'notified_at'    => 0,
 ]);
 
-   if($event->status == 1 && $event->notified_at == 0){
-    $notification = $this->notificationService->notifyAllMembers('event', $event->title . ' Event has been added.', $event->id, 'event');
-    if($notification){
-        Member::query()->update(['is_notification' => 0]);
-        $event->notified_at = 1;
-        $event->save();
-    }
+   if($event->status == 1){
+    $notification = $this->notificationService->notifyAllMembers('event', $event->title . ' Event has been added.', $event->id, 'event',Auth::id());
    }
 		return redirect()->route('events.index')->with('success', 'Event added successfully!');
 	}
-
-    /*public function edit(Events $event)
-		{
-			return view('admin.events.edit', compact('event'));
-		}
-            */
 
     public function edit($encodedId)
     {
@@ -148,12 +136,7 @@ return redirect()->route('events.index')->with('error', 'Event not found!');retu
       $result =  $event->update($data);
 
         if ($result && $event->status == 1) {
-            $notification = $this->notificationService->notifyAllMembers('Event', $event->title . ' event has been updated.', $event->id, 'event');
-            if ($notification) {
-                Member::query()->update(['is_notification' => 0]);
-                $event->notified_at = 1;
-                $event->save();
-            }
+            $notification = $this->notificationService->notifyAllMembers('Event', $event->title . ' event has been updated.', $event->id, 'event', Auth::id());
         }
 
         return redirect('/admin/events')->with('success', 'Event updated successfully!');
@@ -161,31 +144,19 @@ return redirect()->route('events.index')->with('error', 'Event not found!');retu
 
 	public function destroy(Events $event)
 		{
+            $oldStatus = $event->status;
 			if ($event->status == 1) {
 				return redirect()->route('events.index')
 								->with('error', 'Cannot delete an active events. Please deactivate it first.');
 			}
 
 			$data = $event->delete();
-            if ($data) {
+            if ($data && now()->lt($event->end_datetime)) {
                 // Notify members about the event deletion
-                $notification = $this->notificationService->notifyAllMembers('Event', $event->title . ' event has been deleted.', $event->id, 'event_deleted');
-                if ($notification) {
-                    Member::query()->update(['is_notification' => 0]);
-                }
+                $notification = $this->notificationService->notifyAllMembers('Event', $event->title . ' event has been cancelled before the scheduled end date.', $event->id, 'event_deleted', Auth::id());
+                
             }
-             if ($oldStatus == 1 && $event->status == 0 && now()->lt($event->end_datetime)) {
-        $notification = $this->notificationService->notifyAllMembers(
-            'Event',
-            $event->title . ' event has been cancelled before the scheduled end date.',
-            $event->id,
-            'event'
-        );
-
-        if ($notification) {
-            Member::query()->update(['is_notification' => 0]);
-        }
-    }
+        
 
 			return redirect()->route('events.index')
 							->with('success', 'Event deleted successfully.');
@@ -198,22 +169,13 @@ return redirect()->route('events.index')->with('error', 'Event not found!');retu
         $event->save();
         // If event is being activated and notification not sent
         if ($oldStatus == 0 && $event->status == 1 ) {
-            $notification = $this->notificationService->notifyAllMembers('Event', $event->title . ' event has been added.', $event->id, 'event');
-            if ($notification) {
-                Member::query()->update(['is_notification' => 0]);
-                $event->notified_at = 1;
-                $event->save();
-            }
+            $notification = $this->notificationService->notifyAllMembers('Event', $event->title . ' event has been added OR Activated.', $event->id, 'event', Auth::id());
+           
         }
 
         //Deactivate event
         if ($oldStatus == 1 && $event->status == 0) {
-            $notification = $this->notificationService->notifyAllMembers('Event', $event->title . ' event has been deactivated.', $event->id, 'event');
-            if ($notification) {
-                Member::query()->update(['is_notification' => 0]);
-                $event->notified_at = 0;
-                $event->save();
-            }
+            $notification = $this->notificationService->notifyAllMembers('Event', $event->title . ' event has been deactivated.', $event->id, 'event_deactivated', Auth::id());
         }   
         return response()->json(['message' => 'Status updated successfully.']);
     }
