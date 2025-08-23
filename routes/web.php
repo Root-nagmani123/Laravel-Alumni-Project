@@ -367,8 +367,7 @@ Route::prefix('members')->name('members.')->group(function () {
 		Route::get('/', [MemberController::class, 'index'])->name('index'); // List all members
 		Route::get('/create', [MemberController::class, 'create'])->name('create'); // Show create form
 		Route::post('/', [MemberController::class, 'store'])->name('store'); // Store new member
-        Route::get('/{id}/edit', [MemberController::class, 'edit'])->name('edit');
-
+		Route::get('/{member}/edit', [MemberController::class, 'edit'])->name('edit'); // Show edit form
 		Route::put('/{member}', [MemberController::class, 'update'])->name('update'); // Update member
 		Route::delete('/{member}', [MemberController::class, 'destroy'])->name('destroy'); // Delete member
 		Route::get('/bulk-upload', [MemberController::class, 'bulk_upload_form'])->name('bulk_upload_form'); // Show upload form
@@ -381,7 +380,7 @@ Route::prefix('group')->name('group.')->group(function () {
 		Route::get('/', [GroupController::class, 'index'])->name('index');
 		Route::get('/create', [GroupController::class, 'create'])->name('create');
 		Route::post('/', [GroupController::class, 'store'])->name('store');
-		Route::get('/{id}/edit', [GroupController::class, 'edit'])->name('edit');
+		Route::get('/{group}/edit', [GroupController::class, 'edit'])->name('edit');
 		Route::put('/{group}', [GroupController::class, 'update'])->name('update');
 		Route::delete('/{group}', [GroupController::class, 'destroy'])->name('destroy');
 		Route::post('toggle-status', [GroupController::class, 'toggleStatus'])->name('toggleStatus');

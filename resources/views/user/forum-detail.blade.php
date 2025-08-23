@@ -10,9 +10,7 @@
 
         <!-- Main Content -->
         <div class="col-lg-9">
-
             <div class="card card-body">
-
                 <!-- Main Question -->
                 <div class="d-flex align-items-center mb-3">
   <img src="{{ asset($forum->member_profile_image ? (\Illuminate\Support\Str::startsWith($forum->member_profile_image, 'storage/') ? $forum->member_profile_image : 'storage/' . ltrim($forum->member_profile_image, '/')) : 'feed_assets/images/avatar/07.jpg') }}" 

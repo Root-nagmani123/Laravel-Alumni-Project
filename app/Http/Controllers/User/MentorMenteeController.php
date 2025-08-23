@@ -235,10 +235,7 @@ foreach ($request->input('selected_members') as $menteeId) {
 ]);
 
    $userName=auth()->guard('user')->user()->name;
-   $notification = $this->notificationService->notifyMentorRequest($menteeId, $user, $userName. 'sent a new mentor request', $requestId);
-   if($notification){
-    Member::where('id', $menteeId)->update(['is_notification' => 0]);
-   }
+   $notification = $this->notificationService->notifyMentorRequest($menteeId, $user, $userName. ' sent a new mentor request', $requestId);
 
 }
 

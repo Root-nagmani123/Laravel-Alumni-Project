@@ -15,6 +15,7 @@ use App\Models\GroupMember;
 use App\Models\Notification;
 use App\Models\Member;
 use App\Services\NotificationService;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 
 
@@ -167,12 +168,9 @@ function activateGroup(Request $request) : RedirectResponse {
              'group_member',
              $memberMessage,
              $data_id,
-             'group'
+             'group',
+             Auth::id()
          );
-     }
- 
-     if($notificationMentiee){
-         Member::query()->whereIn('id', $userIds)->update(['is_notification' => 0]);
      }
      
         return redirect()->back()->with('success', 'Group created successfully.');
@@ -191,7 +189,9 @@ function activateGroup(Request $request) : RedirectResponse {
 
    public function destroy(Group $group)
 {
+    
     try { 
+        $this->notificationService->notifyGroupPost($group->id, auth('user')->id(), $group->name . ' group has been deleted.', 0, 'group_delete');
         $this->groupService->delete($group);
         return redirect()->route('user.group.index')->with('success', 'Group deleted successfully.');
     } catch (\Exception $e) {

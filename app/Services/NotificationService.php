@@ -9,33 +9,75 @@ use Carbon\Carbon; // Added this import
 
 class NotificationService
 {
-    
-    //notify all members for event, broadcast
-    public function notifyAllMembers(string $type, string $message, $sourceId, $sourceType, $fromUserId = null)
-    {
-            return $this->createNotification([
-                'from_user_id' => $fromUserId ,
-                'type'         => $type, // e.g., 'event', 'broadcast'
-                'message'      => $message,
-                'source_id'    => $sourceId,
-                'source_type'  => $sourceType,
-                'user_id'     => null, // Means: all users
-            ]);
-        }
+public function notifyAllMembers(string $type, string $message, $sourceId, $sourceType, $fromUserId)
+{
+    $activeMembers = Member::where('status', 1)->pluck('id');
 
-        //member add to group or forum
-        public function notifyMemberAdded(array $memberIds, string $type, string $message, $sourceId, string $sourceType, $fromUserId = null)
-        {
+    $notifications = [];
 
-            return $this->createNotification([
-                'from_user_id' => $fromUserId,
-                'type'         => $type,
-                'message'      => $message,
-                'source_id'    => $sourceId,
-                'source_type'  => $sourceType,
-                'user_id'      => json_encode(array_map('intval', $memberIds)), // int values
-            ]);
-        }
+    foreach ($activeMembers as $userId) {
+        $notifications[] = [
+            'from_user_id' => $fromUserId,
+            'type'         => $type,
+            'message'      => $message,
+            'source_id'    => $sourceId,
+            'source_type'  => $sourceType,
+            'user_id'      => $userId,
+            'is_read'      => false,
+            'created_at'   => now(),
+            'updated_at'   => now(),
+        ];
+    }
+
+    // insert in chunks of 500
+    foreach (array_chunk($notifications, 500) as $chunk) {
+        Notification::insert($chunk);
+    }
+
+    return true;
+}
+
+
+
+        //old member add to group or forum
+        // public function notifyMemberAdded(array $memberIds, string $type, string $message, $sourceId, string $sourceType, $fromUserId)
+        // {
+
+        //     return $this->createNotification([
+        //         'from_user_id' => $fromUserId,
+        //         'type'         => $type,
+        //         'message'      => $message,
+        //         'source_id'    => $sourceId,
+        //         'source_type'  => $sourceType,
+        //         'user_id'      =>  $memberIds, // int values
+        //     ]);
+        // }
+
+        public function notifyMemberAdded($memberIds, string $type, string $message, $sourceId, string $sourceType, $fromUserId)
+{
+    // Convert single ID → array
+    if (!is_array($memberIds)) {
+        $memberIds = [$memberIds];
+    }
+
+    $createdNotifications = [];
+
+    foreach ($memberIds as $memberId) {
+        $createdNotifications[] = $this->createNotification([
+            'from_user_id' => $fromUserId,
+            'type'         => $type,
+            'message'      => $message,
+            'source_id'    => $sourceId,
+            'source_type'  => $sourceType,
+            'user_id'      => (int) $memberId,
+        ]);
+    }
+
+    return $createdNotifications;
+}
+
+
+
 
 
         //topic added to group or forum
@@ -76,7 +118,7 @@ class NotificationService
             'message'      => $message,
             'source_id'    => $sourceId,
             'source_type'  => $sourceType,
-            'user_id'     => json_encode([$postOwnerId]),
+            'user_id'     => $postOwnerId,
         ]);
     }
 
@@ -103,31 +145,41 @@ class NotificationService
         Member::query()->update(['is_notification' => 0]);
     }
 
-    // Simple notification for group posts
-    public function notifyGroupPost(int $groupId, int $fromUserId, string $message, int $postId)
-    {
-        // Get group members
-        $groupMembers = GroupMember::where('group_id', $groupId)
-            ->where('status', 1) // Assuming status 1 means active
-            ->pluck('member_id')
-            ->toArray();
+public function notifyGroupPost(int $groupId, int $fromUserId, string $message, int $postId, string $sourceType)
+{
+    $group = GroupMember::where('group_id', $groupId)->where('status', 1)->first();
 
-        // Remove the post creator from notification list
-        $groupMembers = array_diff($groupMembers, [$fromUserId]);
-
-        if (!empty($groupMembers)) {
-            return $this->createNotification([
-                'from_user_id' => $fromUserId,
-                'type'         => 'group_post',
-                'message'      => $message,
-                'source_id'    => $postId,
-                'source_type'  => 'post',
-                'user_id'      => json_encode($groupMembers),
-            ]);
-        }
-
-        return null;
+    if (!$group) {
+        return;
     }
+
+    // Mentor (single int)
+    $mentorId = $group->mentor;
+
+    // Mentees (stored JSON/array in DB)
+    $mentees = is_string($group->mentiee) 
+        ? json_decode($group->mentiee, true) 
+        : (array) $group->mentiee;
+
+    // Combine mentor + mentees
+    $allMembers = array_merge([$mentorId], $mentees);
+
+    // Remove post creator
+    $notifyMembers = array_diff($allMembers, [$fromUserId]);
+
+    // Create notification per user
+    foreach ($notifyMembers as $memberId) {
+        $this->createNotification([
+            'from_user_id' => $fromUserId,
+            'type'         => 'group_post',
+            'message'      => $message,
+            'source_id'    => $postId,
+            'source_type'  => $sourceType,
+            'user_id'      => (int) $memberId, // ✅ single user per row
+        ]);
+    }
+}
+
 
     public function notifyMentorRequest(int $mentorId, int $fromUserId, string $message, int $requestId)
     {
@@ -137,7 +189,7 @@ class NotificationService
             'message'      => $message,
             'source_id'    => $requestId,
             'source_type'  => 'request',
-            'user_id'      => json_encode([$mentorId]),
+            'user_id'      => $mentorId,
         ]);
     }
 
@@ -149,7 +201,7 @@ class NotificationService
             'message'      => $message,
             'source_id'    => $requestId,
             'source_type'  => 'request',
-            'user_id'      => json_encode([$menteeId]),
+            'user_id'      => $menteeId,
         ]);
     }
 
@@ -161,7 +213,7 @@ class NotificationService
             'message'      => $message,
             'source_id'    => $requestId,
             'source_type'  => 'request_accept',
-            'user_id'      => json_encode([$mentorId]),
+            'user_id'      => $mentorId,
         ]);
     }
 
@@ -173,7 +225,7 @@ class NotificationService
             'message'      => $message,
             'source_id'    => $requestId,
             'source_type'  => 'request_accept',
-            'user_id'      => json_encode([$menteeId]),
+            'user_id'      => $menteeId,
         ]);
     }
 
@@ -185,7 +237,7 @@ class NotificationService
             'message'      => $message,
             'source_id'    => $requestId,
             'source_type'  => 'request_reject',
-            'user_id'      => json_encode([$mentorId]),
+            'user_id'      => $mentorId,
         ]);
     }
 
@@ -197,8 +249,8 @@ class NotificationService
             'message'      => $message,
             'source_id'    => $requestId,
             'source_type'  => 'request_reject',
-            'user_id'      => json_encode([$menteeId]),
+            'user_id'      => $menteeId,
         ]);
     }
 
-}
+}   

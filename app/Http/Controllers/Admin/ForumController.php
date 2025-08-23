@@ -66,18 +66,15 @@ class ForumController extends Controller
             'notified_at' => 0,
         ]);
 
-        if ($forum->status == 1 && $forum->notified_at == 0) {
+        if ($forum->status == 1 ) {
             $notification = $this->notificationService->notifyAllMembers(
                 'forum_admin',
                 $forum->name . ' forum has been added.',
                 $forum->id,
-                'forum'
+                'forum',
+                auth()->id()
             );
-            if ($notification) {
-                Member::query()->update(['is_notification' => 0]);
-                $forum->notified_at = 1;
-                $forum->save();
-            }
+           
         }
         
     // Redirect to the forum page
@@ -131,15 +128,11 @@ class ForumController extends Controller
 
     $result = $forum->save();
     if ($result && $forum->status == 1) {
-        $notification = $this->notificationService->notifyAllMembers('forum_admin', $forum->name . ' forum has been updated.', $forum->id, 'forum');
-        if ($notification) {
-            Member::query()->update(['is_notification' => 0]);
-            $forum->notified_at = 1;
-            $forum->save();
-        }
+        $notification = $this->notificationService->notifyAllMembers('forum_admin', $forum->name . ' forum has been updated.', $forum->id, 'forum', auth()->id());
     }
     return redirect()->route('forums.index')->with('success', 'Forum updated successfully.');
 }
+
 
     public function destroy(Forum $forum)
         {
@@ -153,7 +146,8 @@ class ForumController extends Controller
                    'forum_admin',
                    $forumName . ' forum has been deleted.',
                    $forumId,
-                   'forum'
+                   'forum_delete',
+                   auth()->id()
                );
            }
             return redirect()->route('forums.index')->with('success', 'Forum deleted successfully.');
@@ -480,14 +474,8 @@ class ForumController extends Controller
         'images' => $forum->images ?? null, // Keep existing image if not updated
     ]);
 
-     if ($result && $forum->status == 1) {
-        
-        $notification = $this->notificationService->notifyAllMembers('forum_admin', $forum->name . ' forum has been updated.', $forum->id, 'forum');
-        if ($notification) {
-            Member::query()->update(['is_notification' => 0]);
-            $forum->notified_at = 1;
-            $forum->save();
-        }
+     if ($result && $forum->status == 1) {  
+        $notification = $this->notificationService->notifyAllMembers('forum_admin', $forum->name . ' forum has been updated.', $forum->id, 'forum', auth()->id());
     }
     return redirect()->route('forums.index')->with('success', 'Forum updated successfully!');
 }
@@ -517,7 +505,8 @@ public function destroyforum(Forum $forum)
         'forum_admin',
         $forumName . ' forum has been deleted.',
         $forumId,
-        'forum_deleted'
+        'forum_deleted',
+        auth()->id()
     );
     return redirect()->route('forums.index')->with('success', 'Forum and all associated data deleted successfully.');
 }
@@ -530,32 +519,26 @@ public function toggleStatus(Request $request)
     $forum->save();
     
    // Notify only when activated and not yet notified
-   if ($oldStatus == 0 && $forum->status == 1 ) {
+   if ($oldStatus == 0 && $forum->status == 1 && now()->lt($forum->end_date)) {
 
     $notification = $this->notificationService->notifyAllMembers(
         'forum_admin',
-        $forum->name . ' forum has been activated.',
+        $forum->name . 'forum has been activated.',
         $forum->id,
-        'forum'
+        'forum',
+        auth()->id()
     );
-    if ($notification) {
-        Member::query()->update(['is_notification' => 0]);
-        $forum->notified_at = 1;
-        $forum->save();
-    }
+   
 }
 
  if ($oldStatus == 1 && $forum->status == 0 && now()->lt($forum->end_date)) {
         $notification = $this->notificationService->notifyAllMembers(
             'forum_admin',
-            $forum->name . ' forum has been cancelled before the scheduled end date.',
+            $forum->name . ' forum has been deactivated before the scheduled end date.',
             $forum->id,
-            'forum'
+            'forum_deactivated',
+            auth()->id()
         );
-
-        if ($notification) {
-            Member::query()->update(['is_notification' => 0]);
-        }
     }
 
     return response()->json(['message' => 'Forum status updated successfully.']);

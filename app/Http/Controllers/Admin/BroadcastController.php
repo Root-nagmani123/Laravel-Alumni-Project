@@ -18,7 +18,6 @@ class BroadcastController extends Controller
         $this->notificationService = $notificationService;
     }
 
-
     public function index()
 {
     $broadcasts = Broadcast::orderBy('id', 'desc')->get(); // Fetch all broadcasts
@@ -64,7 +63,6 @@ class BroadcastController extends Controller
 
 public function store(Request $request)
 {
- 
     // Validate request
     $validated = $request->validate([
         'title' => 'required|string|max:255',
@@ -90,19 +88,10 @@ public function store(Request $request)
         'createdBy' => auth()->id() ?? null,
         'is_deleted' => 0,
         'deleted_on' => null,
-        'notified_at'    => 0,
     ]);
 
-    //notification 
-    if($broadcast && $broadcast->notified_at == 0){
-       $notification = $this->notificationService->notifyAllMembers('broadcast', $broadcast->title . ' broadcast has been added.', $broadcast->id, 'broadcast');
-       
-       if($notification){
-        Member::query()->update(['is_notification' => 0]);
-        $broadcast->notified_at = 1;
-        $broadcast->save();
-
-       }
+    if($broadcast){
+       $notification = $this->notificationService->notifyAllMembers('broadcast', $broadcast->title . ' broadcast has been added.', $broadcast->id, 'broadcast', auth()->id());
     }
 
     return redirect()->route('broadcasts.index')->with('success', 'Broadcast added successfully!');
@@ -115,21 +104,13 @@ public function toggleStatus(Request $request)
     $broadcast->status = $request->status;
     $broadcast->save();
 
-    if ($oldStatus == 0 && $broadcast->status == 1 && $broadcast->notified_at == 0) {
-        $notification = $this->notificationService->notifyAllMembers('broadcast', $broadcast->title . ' Broadcast has been activated.', $broadcast->id, 'broadcast');
-        if ($notification) {
-            Member::query()->update(['is_notification' => 0]);
-            $broadcast->notified_at = 1;
-            $broadcast->save();
-        }
+    if ($oldStatus == 0 && $broadcast->status == 1) {
+        $notification = $this->notificationService->notifyAllMembers('broadcast', $broadcast->title . ' Broadcast has been activated.', $broadcast->id, 'broadcast', auth()->id());
     }
 
-    if ($oldStatus == 1 && $broadcast->status == 0 && now()->lt($broadcast->end_datetime)) {
+    if ($oldStatus == 1 && $broadcast->status == 0) {
         // Notify members about deactivation
-        $notification = $this->notificationService->notifyAllMembers('broadcast', $broadcast->title . ' Broadcast has been deactivated.', $broadcast->id, 'broadcast');
-        if ($notification) {
-            Member::query()->update(['is_notification' => 0]);
-        }
+        $notification = $this->notificationService->notifyAllMembers('broadcast', $broadcast->title . ' Broadcast has been deactivated.', $broadcast->id, 'broadcast_deactivated', auth()->id());
     }
 
     return response()->json(['message' => 'Status updated successfully.']);
@@ -147,11 +128,7 @@ public function destroybroadcast(Broadcast $broadcast)
 
         if($data){
             // Notify members about the broadcast deletion
-            $notification = $this->notificationService->notifyAllMembers('broadcast', $broadcast->title . ' broadcast has been deleted.', $broadcast->id, 'broadcast_deleted');
-
-            if ($notification) {
-                Member::query()->update(['is_notification' => 0]);
-            }
+            $notification = $this->notificationService->notifyAllMembers('broadcast', $broadcast->title . ' broadcast has been deleted.', $broadcast->id, 'broadcast_deleted', auth()->id());
         }
 
 
@@ -192,12 +169,7 @@ public function destroybroadcast(Broadcast $broadcast)
     $result = $broadcast->save();
 
     if ($result && $broadcast->status == 1) {
-        $notification = $this->notificationService->notifyAllMembers('broadcast', $broadcast->title . ' broadcast has been updated.', $broadcast->id, 'broadcast');
-        if ($notification) {
-            Member::query()->update(['is_notification' => 0]);
-            $broadcast->notified_at = 1;
-            $broadcast->save();
-        }
+        $notification = $this->notificationService->notifyAllMembers('broadcast', $broadcast->title . ' broadcast has been updated.', $broadcast->id, 'broadcast', auth()->id());
     }
 
     return redirect()->back()->with('success', 'Broadcast updated successfully.');

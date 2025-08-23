@@ -16,10 +16,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 
-
-
-
-
 class PostController extends Controller
 {
     protected $notificationService;
@@ -117,7 +113,11 @@ public function store_chnagefor_video_link(Request $request)
                 'file_type' => $fileType,
             ]);
         }
+
     }
+
+    //post redirection
+    $notification = $this->notificationService->notifyAllMembers('post', $post->content . ' post has been created.', $post->id, 'SinglePost',Auth::id());
 
     return redirect('/user/feed')->with('success', 'Post created successfully.');
 }
@@ -164,7 +164,7 @@ public function group_post_store(Request $request)
     $message = "$groupName - New post by " . auth('user')->user()->name;
 
 
-    $this->notificationService->notifyGroupPost($request->group_id, $fromUserId, $message, $post->id);
+    $this->notificationService->notifyGroupPost($request->group_id, $fromUserId, $message, $post->id, 'post');
 
     return redirect()->back()->with('success', 'Group Post created successfully.');
 }
@@ -222,7 +222,7 @@ public function toggleLike(Post $post)
     $likeUsersTooltip = $post->likes()->with('member')->get()->pluck('member.name')->implode('<br>');
 
     if($post->member_id !== $user->id){
-        $this->notificationService->notifyPostOwner($post->member_id, $user->id, 'like', "{$user->name} liked your post", $post->id, 'post');
+        $this->notificationService->notifyPostOwner($post->member_id, $user->id, 'like', "{$user->name} liked your post", $post->id, 'post',Auth::id());
     }
     return response()->json([
         'like_count' => $post->likes()->count(),
@@ -372,22 +372,12 @@ function forum_store(Request $request)
             'end_date' => $request->input('forum_end_date'),
             'images' =>  isset($data['images']) ? $data['images'] : null,
             'description' => $request->input('forum_description'), // Save description
-            'notified_at' => 0,
         ]);
 
-        
-        if ($forum->status == 1 && $forum->notified_at == 0) {
-            $notification = $this->notificationService->notifyAllMembers(
-                'forum_admin',
-                $forum->name . ' forum has been added.',
-                $forum->id,
-                'forum'
-            );
-            if ($notification) {
-                Member::query()->update(['is_notification' => 0]);
-                $forum->notified_at = 1;
-                $forum->save();
-            }
+
+        if ($forum->status == 1) {
+          $notification = $this->notificationService->notifyAllMembers('forum', $forum->name . ' forum has been added.', $forum->id, 'forum', auth('user')->id());
+
         }
 
     // Insert into forums_member

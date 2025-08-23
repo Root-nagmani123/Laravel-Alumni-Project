@@ -178,6 +178,10 @@ class ForumController extends Controller
             ]);
         }
 
+        if ($updated && $forum->status == 1) {
+            $notification = $this->notificationService->notifyAllMembers('Forum', $forum->name . ' forum has been updated.', $forum->id, 'forum', Auth::id());
+        }
+
         return back()->with('success', 'Forum updated successfully');
     }
 	/**
@@ -222,7 +226,8 @@ class ForumController extends Controller
 					'forum_like',
 					$message,
 					$id,
-					'forum'
+					'forum',
+					Auth::id()
 				);
 			}
 		}
@@ -269,87 +274,18 @@ class ForumController extends Controller
 	/**
 	 * Forum-level comment create (not topic comment)
 	 */
-	// public function commentForum(Request $request, $id)
-	// {
-	// 	$request->validate([
-	// 		'comment' => 'required|string',
-	// 	]);
-	// 	$userId = Auth::guard('user')->id();
-	// 	if (!$userId) {
-	// 		return $request->expectsJson()
-	// 			? response()->json(['success' => false, 'message' => 'Unauthorized'], 401)
-	// 			: back();
-	// 	}
-
-	// 	$insertedId = DB::table('forum_comment')->insertGetId([
-	// 		'forum_id' => $id,
-	// 		'user_id' => $userId,
-	// 		'comment' => $request->input('comment'),
-	// 		'created_at' => now(),
-	// 		'updated_at' => now(),
-	// 	]);
-
-	// 	// Send notification to forum owner
-	// 	$forum = DB::table('forums')
-	// 		->join('members', 'members.id', '=', 'forums.created_by')
-	// 		->select('forums.created_by', 'forums.name', 'members.name as owner_name')
-	// 		->where('forums.id', $id)
-	// 		->first();
-
-	// 	if ($forum && $forum->created_by != $userId) {
-	// 		$currentUser = DB::table('members')->where('id', $userId)->first();
-	// 		$commentText = strlen($request->input('comment')) > 50 
-	// 			? substr($request->input('comment'), 0, 50) . '...'
-	// 			: $request->input('comment');
-	// 		$message = ($currentUser->name ?? 'Someone') . ' commented on your forum "' . $forum->name . '": ' . $commentText;
-			
-	// 		$this->notificationService->notifyPostOwner(
-	// 			$forum->created_by,
-	// 			$userId,
-	// 			'forum_comment',
-	// 			$message,
-	// 			$id,
-	// 			'forum'
-	// 		);
-	// 	}
-
-	// 	$comment = DB::table('forum_comment')
-	// 		->join('members', 'members.id', '=', 'forum_comment.user_id')
-	// 		->select(
-	// 			'forum_comment.id',
-	// 			'forum_comment.user_id',
-	// 			'members.name as member_name',
-	// 			'members.profile_pic',
-	// 			'forum_comment.comment',
-	// 			'forum_comment.created_at'
-	// 		)
-	// 		->where('forum_comment.id', $insertedId)
-	// 		->first();
-
-	// 	$commentCount = DB::table('forum_comment')->where('forum_id', $id)->count();
-
-	// 	if ($request->expectsJson()) {
-	// 		return response()->json([
-	// 			'success' => true,
-	// 			'comment' => $comment,
-	// 			'comment_count' => $commentCount,
-	// 		]);
-	// 	}
-
-	// 	return back();
-	// }
-
-    public function commentForum(Request $request, $id)
-    {
-        $request->validate([
-            'comment' => 'required|string',
-        ]);
-        $userId = Auth::guard('user')->id();
-        if (!$userId) {
-            return $request->expectsJson()
-                ? response()->json(['success' => false, 'message' => 'Unauthorized'], 401)
-                : back();
-        }
+    
+	public function commentForum(Request $request, $id)
+	{
+		$request->validate([
+			'comment' => 'required|string',
+		]);
+		$userId = Auth::guard('user')->id();
+		if (!$userId) {
+			return $request->expectsJson()
+				? response()->json(['success' => false, 'message' => 'Unauthorized'], 401)
+				: back();
+		}
 
         $insertedId = DB::table('forum_comment')->insertGetId([
             'forum_id' => $id,
@@ -366,22 +302,23 @@ class ForumController extends Controller
             ->where('forums.id', $id)
             ->first();
 
-        if ($forum && $forum->created_by != $userId) {
-            $currentUser = DB::table('members')->where('id', $userId)->first();
-            $commentText = strlen($request->input('comment')) > 50 
-                ? substr($request->input('comment'), 0, 50) . '...'
-                : $request->input('comment');
-            $message = ($currentUser->name ?? 'Someone') . ' commented on your forum "' . $forum->name . '": ' . $commentText;
-            
-            $this->notificationService->notifyPostOwner(
-                $forum->created_by,
-                $userId,
-                'forum_comment',
-                $message,
-                $id,
-                'forum'
-            );
-        }
+		if ($forum && $forum->created_by != $userId) {
+			$currentUser = DB::table('members')->where('id', $userId)->first();
+			$commentText = strlen($request->input('comment')) > 50 
+				? substr($request->input('comment'), 0, 50) . '...'
+				: $request->input('comment');
+			$message = ($currentUser->name ?? 'Someone') . ' commented on your forum "' . $forum->name . '": ' . $commentText;
+			
+			$this->notificationService->notifyPostOwner(
+				$forum->created_by,
+				$userId,
+				'forum_comment',
+				$message,
+				$id,
+				'forum',
+				Auth::id()
+			);
+		}
 
         $comment = DB::table('forum_comment')
             ->join('members', 'members.id', '=', 'forum_comment.user_id')
@@ -436,6 +373,7 @@ class ForumController extends Controller
 	/**
 	 * Update a forum-level comment (owner only)
 	 */
+    
 	public function updateForumComment(Request $request, $commentId)
 	{
 		$request->validate([
@@ -464,6 +402,25 @@ class ForumController extends Controller
 				'comment' => $updated,
 			]);
 		}
+
+        if ($updated) {
+               $forumId = $record->forum_id;
+               $forum   = Forum::find($forumId);
+
+			if ($forum && $forum->created_by != $userId) {
+				$currentUser = DB::table('members')->where('id', $userId)->first();
+				$message = ($currentUser->name ?? 'Someone') . ' updated their comment on your forum "' . $forum->name . '"';
+				$this->notificationService->notifyPostOwner(
+					$forum->created_by,
+					$userId,
+					'forum_comment_update',
+					$message,
+					$forumId,
+					'forum'
+				);
+			}
+		}
+
 		return back();
 	}
 
@@ -544,6 +501,7 @@ class ForumController extends Controller
                 $message,
                 $forumId,
                 'forum'
+                
             );
     
             if ($notification) {
@@ -600,13 +558,9 @@ public function deleteforum(Request $request)
             'forum_deleted',
             $message,
             $forumId,
-            'forum'
+            'forum_deleted',
+            Auth::id()
         );
-
-        if ($notification) {
-            Member::query()->update(['is_notification' => 0]);
-        }
-    
 
         DB::commit();
 

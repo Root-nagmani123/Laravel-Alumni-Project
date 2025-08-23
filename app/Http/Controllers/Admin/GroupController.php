@@ -85,7 +85,7 @@ class GroupController extends Controller
             'member_type' => $request->input('member_type'),
             'end_date'    => $request->input('end_date'),
             'image'       => $imagePath ? basename($imagePath) : null,
-            'notified_at' => 0,
+    
         ]);
     
         // Create the group member
@@ -105,41 +105,33 @@ class GroupController extends Controller
             $notificationsSent = false;
     
             if ($mentorId) {
+
                 $mentorMessage = $group->name . ' group has been added as mentor';
-                $mentorNotification = $this->notificationService->notifyMemberAdded(
-                    [$mentorId],
-                    'group_member',
-                    $mentorMessage,
-                    $group->id,
-                    'group'
-                );
     
-                if ($mentorNotification) {
-                    Member::query()->whereIn('id', [$mentorId])->update(['is_notification' => 0]);
-                    $notificationsSent = true;
-                }
+                    $mentorNotification = $this->notificationService->notifyMemberAdded(
+                        $mentorId,
+                        'group_member',
+                        $mentorMessage,
+                        $group->id,
+                        'group',
+                        auth()->id()
+                    );
+                
             }
-    
+
             if (!empty($userIds)) {
                 $mentieeMessage = $group->name . ' group has been added as mentiee';
-                $mentieeNotification = $this->notificationService->notifyMemberAdded(
-                    $userIds,
-                    'group_member',
-                    $mentieeMessage,
-                    $group->id,
-                    'group'
+                    $mentieeNotification = $this->notificationService->notifyMemberAdded(
+                        $userIds,
+                        'group_member',
+                        $mentieeMessage,
+                        $group->id,
+                        'group',
+                        auth()->id()
                 );
-    
-                if ($mentieeNotification) {
-                    Member::query()->whereIn('id', $userIds)->update(['is_notification' => 0]);
-                    $notificationsSent = true;
-                }
+
             }
-    
-            if ($notificationsSent) {
-                $group->notified_at = 1;
-                $group->save();
-            }
+
         }
     
         return redirect()->route('group.index')->with('success', 'Group created successfully.');
@@ -165,62 +157,121 @@ class GroupController extends Controller
         abort(404); // agar id galat ho to 404
     }
 }
-    public function update(Request $request, Group $group)
-    {
-         
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'mentor_id' => 'required|integer',
-            'user_id' => 'required|array',
-            'status' => 'nullable|integer',
-            'end_date' => 'nullable|date|after_or_equal:today', // Ensure end date is valid
-            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048', // Validate image
-        ]);
-         if ($request->hasFile('image')) {
+
+public function update(Request $request, Group $group)
+{
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'mentor_id' => 'required|integer',
+        'user_id' => 'required|array',
+        'status' => 'nullable|integer',
+        'end_date' => 'nullable|date|after_or_equal:today',
+        'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+    ]);
+
+    // Handle image upload
+    if ($request->hasFile('image')) {
         $imagePath = $request->file('image')->store('uploads/images/grp_img', 'public');
-        $data['image'] = basename($imagePath);
-        // Delete old image if exists
         if ($group->image) {
             Storage::disk('public')->delete('uploads/images/grp_img/' . $group->image);
         }
-        $group->image = $data['image'];
+        $group->image = basename($imagePath);
     }
-        // Update the group
-        $group->update([
-            'name' => $request->input('name'),
-            'status' => $request->input('status'),
-            'end_date' => $request->input('end_date'),
-            'image' => $data['image'] ?? $group->image, // Use the new image if it exists, otherwise keep the old one
-        ]);
-        
-        // Update or create the group member
-        $groupMember = $group->groupMember;
-        if (!$groupMember) {
-            $groupMember = new GroupMember();
-            $groupMember->group_id = $group->id;
-        }
-        
-        $groupMember->mentor = $request->input('mentor_id');
-        $groupMember->mentiee = json_encode($request->input('user_id'));
-        $groupMember->status = $request->input('status');
-        $groupMember->save();
 
-        if($groupMember->status == 1){
-            $notification = $this->notificationService->notifyGroupOrForumMembers(
-                $request->input('user_id'),
-                'admin_group_member',
-                $request->input('name') . ' group has been added as mentiee',
-                $group->id,
-                'group',
-                Auth::id()
-            );
+    // Track if data has changed
+    $dataChanged = $group->isDirty(['name', 'status', 'end_date', 'image']);
 
-            if($notification){
-                Member::query()->whereIn('id', $request->input('user_id'))->update(['is_notification' => 0]);
-            }
-        }
-        return redirect()->route('group.index')->with('success', 'Group updated successfully.');
+    // Update the group
+    $group->update([
+        'name' => $request->input('name'),
+        'status' => $request->input('status'),
+        'end_date' => $request->input('end_date'),
+        'image' => $group->image,
+    ]);
+
+    // Update or create the group member
+    $groupMember = $group->groupMember ?? new GroupMember(['group_id' => $group->id]);
+
+    $previousMentor = $groupMember->mentor;
+    $previousMentees = json_decode($groupMember->mentiee ?? '[]', true);
+
+    $newMentor = $request->input('mentor_id');
+    $newMentees = $request->input('user_id');
+
+    $groupMember->mentor = $newMentor;
+    $groupMember->mentiee = json_encode($newMentees);
+    $groupMember->status = $request->input('status');
+    $groupMember->save();
+
+    // --- Notifications ---
+
+    // Mentor removed
+    if ($previousMentor && $previousMentor != $newMentor) {
+        $this->notificationService->notifyMemberAdded(
+            [$previousMentor],
+            'mentor_removed',
+            'You have been removed as mentor from ' . $group->name,
+            $group->id,
+            'group_remove',
+            Auth::id()
+        );
     }
+
+    // Mentor added
+    if ($previousMentor != $newMentor) {
+        $this->notificationService->notifyMemberAdded(
+            [$newMentor],
+            'mentor_added',
+            'You have been added as mentor to ' . $group->name,
+            $group->id,
+            'group',
+            Auth::id()
+        );
+    }
+
+    // Mentees removed
+    $removedMentees = array_diff($previousMentees, $newMentees);
+    if (!empty($removedMentees)) {
+        $this->notificationService->notifyMemberAdded(
+            $removedMentees,
+            'mentiee_removed',
+            'You have been removed as mentee from ' . $group->name,
+            $group->id,
+            'group_remove',
+            Auth::id()
+        );
+    }
+
+    // Mentees added
+    $addedMentees = array_diff($newMentees, $previousMentees);
+    if (!empty($addedMentees)) {
+        $this->notificationService->notifyMemberAdded(
+            $addedMentees,
+            'mentiee_added',
+            'You have been added as mentee to ' . $group->name,
+            $group->id,
+            'group',
+            Auth::id()
+        );
+    }
+
+    // Notify all current members if any changes happened (mentor/mentee or data)
+    if ($dataChanged || $previousMentor != $newMentor || !empty($addedMentees) || !empty($removedMentees)) {
+        $allCurrentMembers = array_merge([$newMentor], $newMentees);
+        $this->notificationService->notifyMemberAdded(
+            $allCurrentMembers,
+            'group_updated',
+            'Group details have been updated: ' . $group->name,
+            $group->id,
+            'group',
+            Auth::id()
+        );
+    }
+
+    return redirect()->route('group.index')->with('success', 'Group updated successfully.');
+}
+
+
 
       public function destroy(Group $group)
         {
@@ -233,10 +284,10 @@ class GroupController extends Controller
                 // Notify all members about group deletion
                 $this->notificationService->notifyAllMembers(
                     'group_admin',
-                    $group->name . ' group has been deleted.',
+                    $group->name . 'group has been deleted.',
                     $group->id,
-                    'group'
-                    
+                    'group_delete',
+                    auth()->id()
                 );
             }
 
@@ -244,63 +295,55 @@ class GroupController extends Controller
                             ->with('success', 'Group deleted successfully.');
         }
 
-        public function toggleStatus(Request $request)
-        {
-            $group = Group::findOrFail($request->id);
-            $oldStatus = $group->status;
-            $group->status = $request->status;
-            $group->save();
-        
-            if ($oldStatus == 0 && $group->status == 1 && $group->notified_at == 0) {
-                $groupMembers = GroupMember::where('group_id', $group->id)->first();
-                if ($groupMembers) {
-                    $mentorId = $groupMembers->mentor;
-                    $mentiees = json_decode($groupMembers->mentiee, true);
-        
-                    $notificationsSent = false;
-        
-                    if ($mentorId) {
-                        $mentorMessage = $group->name . ' group has been activated as mentor';
-                        $mentorNotification = $this->notificationService->notifyMemberAdded(
-                            [$mentorId],
-                            'group_member',
-                            $mentorMessage,
-                            $group->id,
-                            'group'
-                        );
-        
-                        if ($mentorNotification) {
-                            Member::query()->whereIn('id', [$mentorId])->update(['is_notification' => 0]);
-                            $notificationsSent = true;
-                        }
-                    }
-        
-                    if (!empty($mentiees)) {
-                        $mentieeMessage = $group->name . ' group has been activated as mentiee';
-                        $mentieeNotification = $this->notificationService->notifyMemberAdded(
-                            $mentiees,
-                            'group_member',
-                            $mentieeMessage,
-                            $group->id,
-                            'group'
-                        );
-        
-                        if ($mentieeNotification) {
-                            Member::query()->whereIn('id', $mentiees)->update(['is_notification' => 0]);
-                            $notificationsSent = true;
-                        }
-                    }
-        
-                    if ($notificationsSent) {
-                        $group->notified_at = 1;
-                        $group->save();
-                    }
-                }
+public function toggleStatus(Request $request)
+{
+    $group = Group::findOrFail($request->id);
+
+    $oldStatus = $group->status;
+    $group->status = $request->status;
+    $group->save();
+    if ($oldStatus != $group->status) {
+
+        $statusMessage = $group->status ? 'activated' : 'deactivated';
+        $SourceType = $group->status ? 'group' : 'group_deactivated';
+
+        $groupMembers = GroupMember::where('group_id', $group->id)->get();
+
+        foreach ($groupMembers as $member) {
+
+            $mentorId = $member->mentor;
+
+            $mentiees = json_decode($member->mentiee, true);
+
+            // Step 6a: Notify mentor if exists
+            if ($mentorId) {
+                $this->notificationService->notifyMemberAdded(
+                    [$mentorId],                     // member IDs as array
+                    'group_member',                  // notification type
+                    $group->name . " group has been $statusMessage as mentor", // message
+                    $group->id,                      // source ID
+                    $SourceType,                      // source type
+                    auth()->id()                     // who triggered this
+                );
             }
-        
-            return response()->json(['message' => 'Status updated successfully.']);
+
+            // Step 6b: Notify mentiees if exists
+            if (!empty($mentiees)) {
+                $this->notificationService->notifyMemberAdded(
+                    $mentiees,                       // mentiee IDs
+                    'group_member',                  // notification type
+                    $group->name . " group has been $statusMessage as mentiee",
+                    $group->id,
+                    $SourceType,
+                    auth()->id()
+                );
+            }
         }
-        
+    }
+
+    return response()->json(['message' => 'Status updated successfully.']);
+}
+
 
     public function add_topic($id)
     {
@@ -359,10 +402,81 @@ class GroupController extends Controller
         }
 
 
-        public function save_topic(Request $request, $group_id)
+//         public function save_topic(Request $request, $group_id)
+// {
+//     $request->validate([
+//          'description' => 'nullable|string',
+//         'video_link' => 'nullable|url',
+//         'video_caption' => 'nullable|string',
+//         'status' => 'required|integer',
+//         'doc' => 'nullable|file|mimes:pdf,jpg,png,gif',
+//         'topic_image' => 'nullable|file|mimes:jpg,png,gif',
+//         'video' => 'nullable|file|mimes:mp4,mov,avi,wmv|max:102400'
+//     ]);
+//     $imageFile = $request->hasFile('topic_image')
+//         ? $request->file('topic_image')->store('uploads/topics', 'public')
+//         : null;
+//     // Youtube embed link generate
+//     $embedLink = '';
+//     if ($request->video_link) {
+//         parse_str(parse_url($request->video_link, PHP_URL_QUERY), $query);
+//         $embedLink = isset($query['v']) ? "https://www.youtube.com/embed/" . $query['v'] : $request->video_link;
+//     }
+//     $media_type = null;
+//     if ($imageFile && $embedLink) {
+//         $media_type = 'photo_video';
+//     } elseif ($imageFile) {
+//         $media_type = 'photo_video';
+//     } elseif ($embedLink) {
+//         $media_type = 'photo_video';
+//     }
+//     // ✅ Save post (in posts table)
+//     $post = Post::create([
+//         'group_id'    => $group_id,
+//         'member_id'   => Auth::id(), // Or auth('user')->id() depending on your guard
+//         'content'     => $request->description,
+//         'media_type'  => $media_type,
+//         'video_link'  => $embedLink,
+//     ]);
+//     // ✅ Save image as PostMedia if exists
+//     if ($imageFile) {
+//         PostMedia::create([
+//             'post_id'   => $post->id,
+//             'file_path' => $imageFile,
+//             'file_type' => 'image',
+//         ]);
+//     }
+
+//     $memberIds = DB::table('group_member')
+//                     ->where('group_id', $group_id)
+//                     ->pluck('member_id')
+//                     ->toArray();
+
+//     if (!empty($memberIds)) {
+//         $groupName = DB::table('groups')->where('id', $group_id)->value('name');
+
+//          $message = $groupName . ' new topic has been posted: ' . Str::limit($request->description, 50);
+
+//         // Assuming you have notification service
+//        $notification = $this->notificationService->notifyMemberAdded(
+//             $memberIds,
+//             'admin_group_topic',
+//             $message,
+//             $group_id,
+//             'group_topic',
+//             Auth::id()
+//         );
+
+//     }
+
+//     return redirect()->route('group.index')->with('success', 'Group post (topic) added successfully.');
+// }
+
+public function save_topic(Request $request, $group_id)
 {
+    // 1️⃣ Validation
     $request->validate([
-         'description' => 'nullable|string',
+        'description' => 'nullable|string',
         'video_link' => 'nullable|url',
         'video_caption' => 'nullable|string',
         'status' => 'required|integer',
@@ -370,32 +484,40 @@ class GroupController extends Controller
         'topic_image' => 'nullable|file|mimes:jpg,png,gif',
         'video' => 'nullable|file|mimes:mp4,mov,avi,wmv|max:102400'
     ]);
+
+    // 2️⃣ Handle topic image
     $imageFile = $request->hasFile('topic_image')
         ? $request->file('topic_image')->store('uploads/topics', 'public')
         : null;
-    // Youtube embed link generate
+
+    // 3️⃣ Handle YouTube embed link
     $embedLink = '';
     if ($request->video_link) {
         parse_str(parse_url($request->video_link, PHP_URL_QUERY), $query);
         $embedLink = isset($query['v']) ? "https://www.youtube.com/embed/" . $query['v'] : $request->video_link;
     }
+
+    // 4️⃣ Determine media type
     $media_type = null;
     if ($imageFile && $embedLink) {
         $media_type = 'photo_video';
     } elseif ($imageFile) {
-        $media_type = 'photo_video';
+        $media_type = 'photo';
     } elseif ($embedLink) {
-        $media_type = 'photo_video';
+        $media_type = 'video';
     }
-    // ✅ Save post (in posts table)
+
+    // 5️⃣ Save post
     $post = Post::create([
         'group_id'    => $group_id,
-        'member_id'   => Auth::id(), // Or auth('user')->id() depending on your guard
+        'member_id'   => Auth::id(),
         'content'     => $request->description,
         'media_type'  => $media_type,
         'video_link'  => $embedLink,
+        'status'      => $request->status
     ]);
-    // ✅ Save image as PostMedia if exists
+
+    // 6️⃣ Save topic image as PostMedia
     if ($imageFile) {
         PostMedia::create([
             'post_id'   => $post->id,
@@ -404,18 +526,33 @@ class GroupController extends Controller
         ]);
     }
 
-    $memberIds = DB::table('group_member')
-                    ->where('group_id', $group_id)
-                    ->pluck('member_id')
-                    ->toArray();
+    // 7️⃣ Get group members (mentor + mentees)
+    $groupMember = DB::table('group_member')->where('group_id', $group_id)->first();
 
+    $memberIds = [];
+
+    if ($groupMember) {
+        // Add mentor
+        if ($groupMember->mentor) {
+            $memberIds[] = $groupMember->mentor;
+        }
+
+        // Add mentees
+        if ($groupMember->mentiee) {
+            $mentees = json_decode($groupMember->mentiee, true);
+            if (!empty($mentees)) {
+                $memberIds = array_merge($memberIds, $mentees);
+            }
+        }
+    }
+
+    // 8️⃣ Send notifications to all members
     if (!empty($memberIds)) {
         $groupName = DB::table('groups')->where('id', $group_id)->value('name');
 
-         $message = $groupName . ' new topic has been posted: ' . Str::limit($request->description, 50);
+        $message = $groupName . ' new topic has been posted: ' . Str::limit($request->description, 50);
 
-        // Assuming you have notification service
-       $notification = $this->notificationService->notifyGroupOrForumMembers(
+        $this->notificationService->notifyMemberAdded(
             $memberIds,
             'admin_group_topic',
             $message,
@@ -423,14 +560,12 @@ class GroupController extends Controller
             'group_topic',
             Auth::id()
         );
-
-        if($notification){
-            Member::query()->whereIn('id', $memberIds)->update(['is_notification' => 0]);
-        }
     }
 
-    return redirect()->route('group.index')->with('success', 'Group post (topic) added successfully.');
+    // 9️⃣ Redirect with success
+    return redirect()->route('group.index')->with('success', 'Group topic added successfully.');
 }
+
     public function view_topic($id)
         {
             $groupId = Crypt::decryptString($id); 
@@ -459,28 +594,92 @@ class GroupController extends Controller
         return back()->with('success', 'Topic added successfully.');
     //return redirect()->route('group.topics_list')->with('success', 'Topic added successfully.');
     }
-    public function deleteTopic($id) {
-        // print_r($id);die;
-    // post::destroy($id);
-    // return back()->with('success', 'Topic deleted.');
-     $post = DB::table('posts')->where('id', $id)->first();
+
+
+//     public function deleteTopic($id) {
+//     // post::destroy($id);
+//     // return back()->with('success', 'Topic deleted.');
+//      $post = DB::table('posts')->where('id', $id)->first();
+//     if (!$post) {
+//         return response()->json(['message' => 'Post not found'], 404);
+//     }
+//     // Step 2: Delete media files (optional: physical file also)
+//     $mediaItems = DB::table('post_media')->where('post_id', $id)->get();
+//     foreach ($mediaItems as $media) {
+//         $path = storage_path('app/public/' . $media->file_path);
+//         if (file_exists($path)) {
+//             unlink($path); // delete physical file
+//         }
+//     }
+//     // Step 3: Delete media from table
+//     DB::table('post_media')->where('post_id', $id)->delete();
+//     // Step 4: Delete post
+//     DB::table('posts')->where('id', $id)->delete();
+//      return back()->with('success', 'Group Post deleted successfully.');
+//  }
+
+
+public function deleteTopic($id)
+{
+    // 1️⃣ Get post
+    $post = DB::table('posts')->where('id', $id)->first();
     if (!$post) {
         return response()->json(['message' => 'Post not found'], 404);
     }
-    // Step 2: Delete media files (optional: physical file also)
+
+    $group_id = $post->group_id;
+
+    // 2️⃣ Delete media files (including physical files)
     $mediaItems = DB::table('post_media')->where('post_id', $id)->get();
     foreach ($mediaItems as $media) {
         $path = storage_path('app/public/' . $media->file_path);
         if (file_exists($path)) {
-            unlink($path); // delete physical file
+            unlink($path);
         }
     }
-    // Step 3: Delete media from table
+
+    // 3️⃣ Delete media + post
     DB::table('post_media')->where('post_id', $id)->delete();
-    // Step 4: Delete post
     DB::table('posts')->where('id', $id)->delete();
-     return back()->with('success', 'Group Post deleted successfully.');
- }
+
+    // 4️⃣ Prepare group members for notification
+    $groupMember = DB::table('group_member')->where('group_id', $group_id)->first();
+    $memberIds = [];
+
+    if ($groupMember) {
+        // Add mentor
+        if ($groupMember->mentor) {
+            $memberIds[] = $groupMember->mentor;
+        }
+        // Add mentees
+        if ($groupMember->mentiee) {
+            $mentees = json_decode($groupMember->mentiee, true);
+            if (!empty($mentees)) {
+                $memberIds = array_merge($memberIds, $mentees);
+            }
+        }
+    }
+
+    // 5️⃣ Send notification to members
+    if (!empty($memberIds)) {
+        $groupName = DB::table('groups')->where('id', $group_id)->value('name');
+
+        $message = $groupName . ' topic has been deleted: ' . Str::limit($post->content, 50);
+
+        $this->notificationService->notifyMemberAdded(
+            $memberIds,
+            'admin_group_topic_deleted',
+            $message,
+            $group_id,
+            'group_topic',
+            Auth::id()
+        );
+    }
+
+    // 6️⃣ Return response
+    return back()->with('success', 'Group Post deleted successfully.');
+}
+
   public function topicToggleStatus(Request $request)
     {
         $topic = Topic::findOrFail($request->id);
@@ -523,10 +722,6 @@ class GroupController extends Controller
                         'group_topic'
                     );
 
-                    if ($mentieeNotification) {
-                        Member::query()->whereIn('id', $mentiees)->update(['is_notification' => 0]);
-                        $notificationsSent = true;
-                    }
                 }
 
                 if ($notificationsSent) {
