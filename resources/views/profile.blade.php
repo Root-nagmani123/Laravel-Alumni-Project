@@ -27,6 +27,20 @@
                                     alt="" loading="lazy" decoding="async">
                             </div>
                         </div>
+                       @if(session('error'))
+
+        <div class="position-fixed top-0 end-0 p-3" style="z-index: 1100">
+            <div class="toast align-items-center text-bg-danger border-0 show" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="d-flex" style="display: flex !important;">
+                    <div class="toast-body">
+                      {{ session('error') }}
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+            </div>
+        </div>
+  @endif
+
                         <div class="ms-sm-4 mt-sm-3">
                             <!-- Info -->
                             @if(Auth::guard('user')->check())
@@ -694,39 +708,39 @@
                                 <!-- Card body START -->
                                 <div class="card-body position-relative pt-0">
                                     <div class="row g-3">
-    @if(!empty($posts) && $posts->count())
-        @php
-            // Collect all media images from all posts
-            $allPhotos = collect();
-            foreach ($posts as $post) {
-                if (!empty($post->media) && $post->media->count()) {
-                    foreach ($post->media as $media) {
-                        if ($media->file_type === 'image') {
-                            $allPhotos->push($media);
-                        }
-                    }
-                }
-            }
-            // Limit to 6 images total
-            $photos = $allPhotos->take(6);
-        @endphp
+                                @if(!empty($posts) && $posts->count())
+                                    @php
+                                        // Collect all media images from all posts
+                                        $allPhotos = collect();
+                                        foreach ($posts as $post) {
+                                            if (!empty($post->media) && $post->media->count()) {
+                                                foreach ($post->media as $media) {
+                                                    if ($media->file_type === 'image') {
+                                                        $allPhotos->push($media);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        // Limit to 6 images total
+                                        $photos = $allPhotos->take(6);
+                                    @endphp
 
-        @foreach($photos as $media)
-            @php
-                $relativePath = 'storage/' . str_replace(['app/public/', 'public/'], '', $media->file_path);
-                $file_path = public_path($relativePath);
-                $image_url = file_exists($file_path)
-                    ? asset($relativePath)
-                    : asset('feed_assets/images/avatar-1.png');
-            @endphp
-            <div class="col-6">
-                <a href="{{ $image_url }}" data-gallery="image-popup" data-glightbox="">
-                    <img class="rounded img-fluid" src="{{ $image_url }}" alt="">
-                </a>
-            </div>
-        @endforeach
-    @endif
-</div>
+                                    @foreach($photos as $media)
+                                        @php
+                                            $relativePath = 'storage/' . str_replace(['app/public/', 'public/'], '', $media->file_path);
+                                            $file_path = public_path($relativePath);
+                                            $image_url = file_exists($file_path)
+                                                ? asset($relativePath)
+                                                : asset('feed_assets/images/avatar-1.png');
+                                        @endphp
+                                        <div class="col-6">
+                                            <a href="{{ $image_url }}" data-gallery="image-popup" data-glightbox="">
+                                                <img class="rounded img-fluid" src="{{ $image_url }}" alt="">
+                                            </a>
+                                        </div>
+                                    @endforeach
+                                @endif
+                            </div>
 
                                 </div>
                                 <!-- Card body END -->
@@ -742,39 +756,39 @@
                         <!-- Post tab -->
                         <div class="tab-pane fade show active" id="post" role="tabpanel" aria-labelledby="post-tab">
                            @php
-    $authId = Auth::guard('user')->id();
-@endphp
+                                $authId = Auth::guard('user')->id();
+                            @endphp
 
-@if($authId === $user->id)
-    <div class="card card-body mb-4">
-        <div class="d-flex">
-            <!-- Avatar -->
-            <div class="avatar avatar-xs me-2">
-                <a href="{{ route('user.profile.data', ['id' => $user->id]) }}">
-                    <img class="avatar-img rounded-circle"
-                        src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}"
-                        alt="" loading="lazy" decoding="async">
-                </a>
-            </div>
-            <!-- Post input -->
-            <form class="w-100">
-                <textarea class="form-control pe-4 border-0" rows="2" data-autoresize=""
-                    placeholder="Share your thoughts..." data-bs-toggle="modal"
-                    data-bs-target="#feedActionPhoto"></textarea>
-            </form>
-        </div>
-        <!-- Share feed toolbar START -->
-        <ul class="nav nav-pills nav-stack small fw-normal">
-            <li class="nav-item">
-                <a class="nav-link bg-light py-1 px-2 mb-0" href="#!" data-bs-toggle="modal"
-                    data-bs-target="#feedActionPhoto">
-                    <i class="bi bi-image-fill text-success pe-2"></i>Photos/Videos
-                </a>
-            </li>
-        </ul>
-        <!-- Share feed toolbar END -->
-    </div>
-@endif
+                            @if($authId === $user->id)
+                                <div class="card card-body mb-4">
+                                    <div class="d-flex">
+                                        <!-- Avatar -->
+                                        <div class="avatar avatar-xs me-2">
+                                            <a href="{{ route('user.profile.data', ['id' => $user->id]) }}">
+                                                <img class="avatar-img rounded-circle"
+                                                    src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}"
+                                                    alt="" loading="lazy" decoding="async">
+                                            </a>
+                                        </div>
+                                        <!-- Post input -->
+                                        <form class="w-100">
+                                            <textarea class="form-control pe-4 border-0" rows="2" data-autoresize=""
+                                                placeholder="Share your thoughts..." data-bs-toggle="modal"
+                                                data-bs-target="#feedActionPhoto"></textarea>
+                                        </form>
+                                    </div>
+                                    <!-- Share feed toolbar START -->
+                                    <ul class="nav nav-pills nav-stack small fw-normal">
+                                        <li class="nav-item">
+                                            <a class="nav-link bg-light py-1 px-2 mb-0" href="#!" data-bs-toggle="modal"
+                                                data-bs-target="#feedActionPhoto">
+                                                <i class="bi bi-image-fill text-success pe-2"></i>Photos/Videos
+                                            </a>
+                                        </li>
+                                    </ul>
+                                    <!-- Share feed toolbar END -->
+                                </div>
+                            @endif
 
 
 
