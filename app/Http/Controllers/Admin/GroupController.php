@@ -734,4 +734,75 @@ public function deleteTopic($id)
         return response()->json(['message' => 'Status updated successfully.']);
     }
 
+    function store_ajax(Request $request)
+    {
+        $request->validate([
+            'group_name'  => 'required|string|max:255',
+            'service'     => 'required|string|max:255',
+            'year'        => 'required|array',
+            'cadre'       => 'required|array',
+            'mentees'     => 'required|array',
+            'grp_image'   => 'required|image|mimes:jpeg,png,jpg,avif|max:2048',
+            'end_date'    => 'required|date|after_or_equal:today',
+        ]);
+
+        // Image Upload
+        $imagePath = null;
+        if ($request->hasFile('grp_image')) {
+            $imagePath = $request->file('grp_image')->store('uploads/images/grp_img', 'public');
+        }
+
+        // Create Group
+        $group = Group::create([
+            'name'       => $request->input('group_name'),
+            'service'    => $request->input('service'),
+            'batch_year' => json_encode($request->input('year')),
+            'cadre'      => json_encode($request->input('cadre')),
+            'end_date'   => $request->input('end_date'),
+            'status'     => 1,
+            'created_by' => auth()->id(),
+            'image'      => $imagePath ? basename($imagePath) : null,
+        ]);
+
+        // Attach Members
+        foreach ($request->input('mentees') as $memberId) {
+            GroupMember::create([
+                'group_id'  => $group->id,
+                'member_id' => $memberId,
+                'status'    => 1,
+            ]);
+        }
+
+        // Return JSON for AJAX
+        return response()->json([
+            'success' => true,
+            'message' => 'Group created successfully!',
+        ]);
+    }
+
+    public function getMembers(Request $request)
+    {
+        $search = $request->get('search');
+        $service = $request->get('service');
+        $year = $request->get('year');
+        $cadre = $request->get('cadre');
+
+        $query = Member::query();
+        if ($search) {
+            $query->where('name', 'like', "%{$search}%");
+        }
+        if ($service) {
+            $query->where('service', $service);
+        }
+        if ($year) {
+            $query->whereIn('batch', (array)$year);
+        }
+        if ($cadre) {
+            $query->whereIn('cader', (array)$cadre);
+        }
+        $members = $query->limit(50)->get(['id','name']); // limit for performance
+        return response()->json($members);
+    }
+
+
 }

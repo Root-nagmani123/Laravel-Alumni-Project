@@ -61,7 +61,8 @@
     <!-- Group Modal -->
 <div class="modal fade" id="groupModal" tabindex="-1" aria-labelledby="groupModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
-        <form action="{{ route('user.group.store') }}" method="POST" enctype="multipart/form-data">
+        {{-- <form action="{{ route('user.group.store') }}" method="POST" enctype="multipart/form-data"> --}}
+        <form id="groupForm">
             @csrf
             <div class="modal-content">
                 
@@ -118,8 +119,11 @@
                         <div class="col-12">
                             <label class="form-label">Select Group Members <span class="text-danger">*</span></label>
                             <div class="row">
+                                
                                 <!-- Available -->
                                 <div class="col-md-5">
+                                    <input type="text" id="searchAll" class="form-control mb-2"
+                                        placeholder="Search members...">
                                     <select id="availableMembers" class="form-select" size="10" multiple>
                                         <!-- Members loaded dynamically by AJAX -->
                                     </select>
@@ -133,12 +137,22 @@
 
                                 <!-- Selected -->
                                 <div class="col-md-5">
+                                    <input type="text" id="searchSelected" class="form-control mb-2"
+                                        placeholder="Search selected...">
                                     <select id="selectedMembers" class="form-select" size="10" multiple name="mentees[]" required>
                                         <!-- Selected members will appear here -->
                                     </select>
                                 </div>
                             </div>
                         </div>
+                        {{-- <div class="col-12">
+    <label class="form-label">Select Group Members <span class="text-danger">*</span></label>
+    <select id="mentees" name="mentees[]" multiple="multiple" required>
+        <!-- Members AJAX se load honge -->
+    </select>
+</div> --}}
+
+
 
                         <!-- Group Image -->
                         <div class="col-md-6">
@@ -435,6 +449,7 @@ $('.service').on('change', function () {
             });
         }
     });
+    loadMembers();
 });
 
 
@@ -470,6 +485,7 @@ $('.service').on('change', function () {
             });
             }
         });
+        loadMembers();
     });
 
     // Cadre change
@@ -504,6 +520,7 @@ $('.service').on('change', function () {
                 });
             }
         });
+        loadMembers();
     });
 
     // Sector change
@@ -595,6 +612,103 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById("forum_end_date").setAttribute('min', today);
         document.getElementById("end_date").setAttribute('min', today);
     });
+
+
+$(document).ready(function () {
+    $('#groupForm').on('submit', function (e) {
+        e.preventDefault();
+
+        let formData = new FormData(this);
+        
+        $.ajax({
+            url: "{{ route('group.store_ajax') }}", // store route
+            type: "POST",
+            data: formData,
+            processData: false,
+            contentType: false,
+            beforeSend: function () {
+                // Disable submit button & show loading
+                $('#groupForm button[type="submit"]').prop('disabled', true).text('Saving...');
+            },
+            success: function (response) {
+                $('#groupForm button[type="submit"]').prop('disabled', false).text('Create Group');
+                console.log(response);
+                if (response.success) {
+                    alert(response.message);
+                    $('#groupForm')[0].reset();
+                    $('#groupModal').modal('hide');
+                    // reload table/list if needed
+                    if (typeof groupTable !== "undefined") groupTable.ajax.reload();
+                } else {
+                    alert('Something went wrong.');
+                }
+            },
+            error: function (xhr) {
+                $('#groupForm button[type="submit"]').prop('disabled', false).text('Create Group');
+                if (xhr.status === 422) {
+                    let errors = xhr.responseJSON.errors;
+                    $.each(errors, function (key, value) {
+                        toastr.error(value[0]);
+                    });
+                } else {
+                    toastr.error('Server error. Please try again.');
+                }
+            }
+        });
+    });
+});
+function loadMembers(query = '') {
+    let service = $('#service').val();
+    let year = $('.year-select').val();
+    let cadre = $('.cadre').val();
+    $.ajax({
+        url: "{{ route('admin.members.list') }}",
+        type: "GET",
+        data: { search: query, service: service, year: year, cadre: cadre },
+        success: function (data) {
+            let $select = $('#availableMembers');
+            $select.empty();
+
+            $.each(data, function (index, member) {
+                // agar pehle se selected me hai to skip karo
+                if ($("#selectedMembers option[value='"+member.id+"']").length === 0) {
+                    $select.append(`<option value="${member.id}">${member.name}</option>`);
+                }
+            });
+        },
+        error: function () {
+            alert('Failed to load members.');
+        }
+    });
+}
+$(document).ready(function () {
+    // Initial load of available members
+    loadMembers();
+    // Search in available members (server-side)
+    $('#searchAll').on('keyup', function () {
+        let query = $(this).val();
+        loadMembers(query);
+    });
+
+    // Local search in selected members
+    $('#searchSelected').on('keyup', function () {
+        let value = $(this).val().toLowerCase();
+        $("#selectedMembers option").filter(function () {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+    });
+
+    // Add members
+    $('#addMemberBtn').click(function () {
+        $('#availableMembers option:selected').appendTo('#selectedMembers');
+    });
+
+    // Remove members
+    $('#removeMemberBtn').click(function () {
+        $('#selectedMembers option:selected').appendTo('#availableMembers');
+    });
+});
+
 
 </script>
 <link rel="stylesheet"

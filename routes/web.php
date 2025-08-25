@@ -380,6 +380,7 @@ Route::prefix('group')->name('group.')->group(function () {
 		Route::get('/', [GroupController::class, 'index'])->name('index');
 		Route::get('/create', [GroupController::class, 'create'])->name('create');
 		Route::post('/', [GroupController::class, 'store'])->name('store');
+		Route::post('/store_ajax', [GroupController::class, 'store_ajax'])->name('store_ajax');
 		Route::get('/{group}/edit', [GroupController::class, 'edit'])->name('edit');
 		Route::put('/{group}', [GroupController::class, 'update'])->name('update');
 		Route::delete('/{group}', [GroupController::class, 'destroy'])->name('destroy');
@@ -515,6 +516,8 @@ Route::get('/user-search', [MemberController::class, 'user_search'])->name('user
 
 Route::post('/otp/send', [OtpLoginController::class, 'sendOtp'])->name('otp.send');
 Route::post('/otp/verify', [OtpLoginController::class, 'verifyOtp'])->name('otp.verify');
+Route::get('/admin/members/list', [App\Http\Controllers\Admin\GroupController::class, 'getMembers'])
+    ->name('admin.members.list');
 
 Route::post('/custom-broadcasting-auth', function(\Illuminate\Http\Request $request) {
     return response()->json([
