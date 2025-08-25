@@ -30,11 +30,10 @@
                                 </form>
                             </li>
                             <li>
-                                <a href="#" class="dropdown-item" data-bs-toggle="offcanvas"
-                                    data-bs-target="#addMembersOffcanvas">
-                                    <i class="bi bi-plus fa-fw pe-2"></i>Add Members
-                                </a>
-                            </li>
+  <a href="#" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#addMembersModal">
+    <i class="bi bi-plus fa-fw pe-2"></i>Add Members
+  </a>
+</li>
                             @else
                             <li>
                                 <form action="{{ route('user.groups.leave') }}" method="POST"
@@ -405,63 +404,67 @@
         </div>
     </div>
 </div>
-<!-- Offcanvas (Right Side) -->
-<div class="offcanvas offcanvas-end" tabindex="-1" id="addMembersOffcanvas" aria-labelledby="addMembersLabel">
-    <div class="offcanvas-header bg-danger text-white">
-        <h5 class="offcanvas-title text-white" id="addMembersLabel">Add Members to Group</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-    </div>
+<!-- Add Members Modal -->
+<div class="modal fade" id="addMembersModal" tabindex="-1" aria-labelledby="addMembersLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      
+      <!-- Header -->
+      <div class="modal-header bg-danger text-white">
+        <h5 class="modal-title" id="addMembersLabel">Add Members to Group</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
 
-    <div class="offcanvas-body">
+      <!-- Body -->
+      <div class="modal-body">
         <form action="" method="POST">
-            @csrf
+          @csrf
 
-            <!-- Group Select -->
-            <div class="mb-3">
-                <label class="form-label">Select Group <span class="text-danger">*</span></label>
-                <select class="form-select" name="group_id" required>
-                    <option disabled selected>Choose group</option>
-                   
-                        <option value=""></option>
-                  
+          <!-- Group Select -->
+          <div class="mb-3">
+            <label class="form-label">Select Group <span class="text-danger">*</span></label>
+            <select class="form-select" name="group_id" required>
+              <option disabled selected>Choose group</option>
+              <option value=""></option>
+            </select>
+          </div>
+
+          <!-- Dual List Members -->
+          <div class="mb-3">
+            <label class="form-label">Select Members <span class="text-danger">*</span></label>
+            <div class="row">
+              <!-- Available -->
+              <div class="col-md-5">
+                <select id="availableMembersModal" class="form-select" size="10" multiple>
+                  <option value=""></option>
                 </select>
+              </div>
+
+              <!-- Controls -->
+              <div class="col-md-2 d-flex flex-column justify-content-center align-items-center">
+                <button type="button" class="btn btn-outline-primary mb-2" id="addMemberBtnModal">&gt;&gt;</button>
+                <button type="button" class="btn btn-outline-danger" id="removeMemberBtnModal">&lt;&lt;</button>
+              </div>
+
+              <!-- Selected -->
+              <div class="col-md-5">
+                <select id="selectedMembersModal" class="form-select" size="10" multiple name="members[]" required>
+                  <!-- Selected members will appear here -->
+                </select>
+              </div>
             </div>
+          </div>
 
-            <!-- Dual List Members -->
-            <div class="mb-3">
-                <label class="form-label">Select Members <span class="text-danger">*</span></label>
-                <div class="row">
-                    <!-- Available -->
-                    <div class="col-md-5">
-                        <select id="availableMembers" class="form-select" size="10" multiple>
-                           
-                                <option value=""></option>
-                           
-                        </select>
-                    </div>
-
-                    <!-- Controls -->
-                    <div class="col-md-2 d-flex flex-column justify-content-center align-items-center">
-                        <button type="button" class="btn btn-outline-primary mb-2" id="addMemberBtn">&gt;&gt;</button>
-                        <button type="button" class="btn btn-outline-danger" id="removeMemberBtn">&lt;&lt;</button>
-                    </div>
-
-                    <!-- Selected -->
-                    <div class="col-md-5">
-                        <select id="selectedMembers" class="form-select" size="10" multiple name="members[]" required>
-                            <!-- Selected members will appear here -->
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Submit -->
-            <div class="d-flex justify-content-end">
-                <button type="button" class="btn btn-light me-2" data-bs-dismiss="offcanvas">Cancel</button>
-                <button type="submit" class="btn btn-primary">Add Members</button>
-            </div>
+          <!-- Submit -->
+          <div class="d-flex justify-content-end">
+            <button type="button" class="btn btn-light me-2" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-primary">Add Members</button>
+          </div>
         </form>
+      </div>
+
     </div>
+  </div>
 </div>
 @section('scripts')
 <script>
