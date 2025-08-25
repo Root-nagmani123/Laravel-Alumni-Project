@@ -27,6 +27,20 @@
                                     alt="" loading="lazy" decoding="async">
                             </div>
                         </div>
+                       @if(session('error'))
+
+        <div class="position-fixed top-0 end-0 p-3" style="z-index: 1100">
+            <div class="toast align-items-center text-bg-danger border-0 show" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="d-flex" style="display: flex !important;">
+                    <div class="toast-body">
+                      {{ session('error') }}
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+            </div>
+        </div>
+  @endif
+
                         <div class="ms-sm-4 mt-sm-3">
                             <!-- Info -->
                             @if(Auth::guard('user')->check())
