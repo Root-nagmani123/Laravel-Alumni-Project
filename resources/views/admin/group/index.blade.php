@@ -53,7 +53,8 @@
                     <hr>
                     <div id="zero_config_wrapper" class="dataTables_wrapper">
 
-                        <table id="zero_config" class="table table-striped table-bordered align-middle dataTable"
+                       <div class="table-responsive">
+                         <table id="zero_config" class="table table-striped table-bordered align-middle dataTable text-nowrap"
                             aria-describedby="zero_config_info">
                             <thead>
                                 <!-- start row -->
@@ -99,7 +100,7 @@
                                         @endif
                                     </td>
                                     <td>{{ $group->members_count }} | <a href="javascript:void(0)"
-                                            data-bs-toggle="modal" data-bs-target="#addMemberModal">
+                                            data-bs-toggle="modal" data-bs-target="#addMemberModal" class="btn btn-primary btn-sm">
                                             Add Members
                                         </a></td>
                                     <td>
@@ -131,6 +132,7 @@
                                 @endforeach
                             </tbody>
                         </table>
+                       </div>
                     </div>
                 </div>
             </div>
@@ -138,14 +140,19 @@
         <!-- end Zero Configuration -->
     </div>
 </div>
+@foreach($groups as $group)
 <div class="modal fade" id="addMemberModal" tabindex="-1" aria-labelledby="addMemberModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
 
             <div class="modal-header">
-                <h5 class="modal-title" id="addMemberModalLabel">Add Members to Group</h5>
+                 
+                <h5 class="modal-title" id="addMemberModalLabel">
+                    Add Members to Group : <span class="text-primary">{{ $group->name }}</span>
+                </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
+
 
             <form id="addMemberForm" method="POST" action="">
                 @csrf
@@ -219,6 +226,8 @@
         </div>
     </div>
 </div>
+
+@endforeach
 <script>
 $(document).ready(function () {
 

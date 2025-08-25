@@ -29,48 +29,6 @@
                         <input type="text" name="name" class="form-control" value="{{ $group->name }}" required>
                     </div>
                 </div>
-
-                <!-- Mentor -->
-                <div class="col-6">
-                    <div class="mb-3">
-                        <label class="form-label">Mentor Name <span class="text-danger">*</span></label>
-                        <select name="mentor_id" class="form-control" required>
-                            <option value="">Select Mentor</option>
-                            @foreach($users as $user)
-                                <option value="{{ $user->id }}"
-                                    {{ $group->groupMember && $group->groupMember->mentor == $user->id ? 'selected' : '' }}>
-                                    {{ $user->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                        <div class="mb-3">
-                            <label class="form-label">Service</label>
-                            <select name="service" id="service" class="form-control">
-                                <option value="">Select Service</option>
-                            </select>
-                        </div>
-                    </div>
-                    <!-- Batch/Year -->
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label class="form-label">Batch/Year</label>
-                            <select name="batch_year" id="batch_year" class="form-control">
-                                <option value="">Select Batch/Year</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label class="form-label">Cadre</label>
-                            <select name="cadre" id="cadre" class="form-control">
-                                <option value="">Select Cadre</option>
-                            </select>
-                        </div>
-                    </div>
                     <!-- Group End Date -->
                 <div class="col-md-6">
                     <div class="mb-3">
@@ -79,43 +37,6 @@
                                value="{{ $group->end_date }}" required>
                     </div>
                 </div>
-
-                 <!-- Members Dual List -->
-                    <div class="col-12 gap-3">
-                        <div class="mb-3">
-                            <label class="form-label">Add Members <span class="text-danger">*</span></label>
-                            <div class="row">
-                                <!-- All Members -->
-                                <div class="col-md-6 border p-2 rounded">
-                                    <h6>All Members</h6>
-                                    <input type="text" id="searchAll" class="form-control mb-2"
-                                        placeholder="Search members...">
-                                    <div id="allMembers" class="member-list" style="max-height:300px; overflow-y:auto;">
-                                        @foreach($users as $user)
-                                        <div class="form-check">
-                                            <input class="form-check-input member-checkbox" type="checkbox"
-                                                value="{{ $user->id }}" id="user-{{ $user->id }}">
-                                            <label class="form-check-label" for="user-{{ $user->id }}">
-                                                {{ $user->name }}
-                                            </label>
-                                        </div>
-                                        @endforeach
-                                    </div>
-                                </div>
-
-                                <!-- Selected Members -->
-                                <div class="col-md-6 border p-2 rounded">
-                                    <h6>Selected Members</h6>
-                                    <input type="text" id="searchSelected" class="form-control mb-2"
-                                        placeholder="Search selected...">
-                                    <div id="selectedMembers" class="member-list"
-                                        style="max-height:300px; overflow-y:auto;">
-                                        <!-- Checked members auto-move here -->
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
 
                 
 
