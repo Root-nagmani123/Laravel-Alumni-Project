@@ -20,6 +20,7 @@ use App\Http\Controllers\User\AuthController;
 use App\Http\Controllers\User\FeedController;
 use App\Http\Controllers\User\PostController;
 use App\Http\Middleware\UserAuthMiddleware;
+use App\Http\Middleware\CheckProfile;
 use App\Http\Controllers\User\ProfileController;
 use App\Http\Controllers\User\MentorMenteeController;
 
@@ -93,16 +94,20 @@ Route::prefix('user')->name('user.')->group(function () {
         Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
         Route::post('/login_ldap', [AuthController::class, 'login_ldap'])->name('login.submit_ldap');
     });
-    Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+        Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 
-      Route::middleware(UserAuthMiddleware::class)->group(function () {
-        Route::get('/feed', [FeedController::class, 'index'])->name('feed');
+    Route::middleware(UserAuthMiddleware::class)->group(function () {
+        Route::middleware(CheckProfile::class)->group(function () {
+            Route::get('/feed', [FeedController::class, 'index'])->name('feed');
+
+            });
+        
         Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 		Route::put('/post/update/{id}', [PostController::class, 'update'])->name('post.update');
 		Route::post('/post', [PostController::class, 'store'])->name('post.store');
         Route::get('/posts/{id}/edit', [PostController::class, 'edit']);
-  Route::put('/posts/{id}', [PostController::class, 'update']);
-  Route::delete('/posts/{id}', [PostController::class, 'destroy']);
+        Route::put('/posts/{id}', [PostController::class, 'update']);
+        Route::delete('/posts/{id}', [PostController::class, 'destroy']);
 
 
 		Route::post('/group-post', [PostController::class, 'group_post_store'])->name('group.post');
@@ -123,10 +128,7 @@ Route::prefix('user')->name('user.')->group(function () {
 		//Route::post('/user/comments', [CommentController::class, 'store'])->name('user.comments.store');
 		//Route::put('/user/comments/{id}', [CommentController::class, 'update'])->name('user.comments.update');
 		//Route::delete('/user/comments/{id}', [CommentController::class, 'destroy'])->name('user.comments.destroy');
-		Route::middleware('auth')->group(function () {
-    //Route::put('/user/profile/update', [UserController::class, 'update'])->name('user.profile.update');
-    // other protected routes
-  });
+	
 
 
 
