@@ -1,5 +1,5 @@
     <!-- Navbar START-->
-    <div class="mb-4">
+    <div class="mb-4 mt-lg-0" style="margin-top:7rem;">
 <!-- Card START -->
                     <div class="card">
                         <!-- Cover image -->

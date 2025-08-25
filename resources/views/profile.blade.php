@@ -642,7 +642,7 @@
             </div>
             <div class="row">
                 <!-- Right sidebar START -->
-                <div class="col-lg-4 left-sidebar">
+                <div class="col-lg-4 col-md-12 col-sm-12 left-sidebar">
 
                     <div class="row g-4">
 
@@ -736,7 +736,7 @@
 
                 </div>
                 <!-- Right sidebar END -->
-                <div class="col-8">
+                <div class="col-lg-8 col-sm-12">
                     <!-- My profile END -->
                     <div class="tab-content" id="profileTabContent" role="tabpanel" aria-labelledby="profileTab">
                         <!-- Post tab -->
@@ -781,7 +781,7 @@
 
                             <!-- Card feed item START -->
                             @foreach($posts as $post)
-                            <div class="card mb-4">
+                            <div class="card mb-4 mx-auto">
                                 <!-- Card header START -->
                                 <div class="card-header border-0 pb-0">
                                     <div class="d-flex align-items-center justify-content-between">

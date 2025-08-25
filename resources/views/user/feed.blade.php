@@ -5,16 +5,14 @@
    @section('content')
    <div class="container">
        <div class="row g-4">
-           <div class="col-lg-3 left-sidebar col-12">
+           <div class="col-lg-3 left-sidebar col-12 mx-auto">
                     @include('partials.left-sidebar')
            </div>
 
-           <div class="col-lg-6 vstack gap-4 mx-auto col-12 middle-sidebar">
-               <div class="row">
+           <div class="col-md-8 col-lg-6 vstack gap-4 middle-sidebar">
                    @include('partials.user_feed')
-               </div>
            </div>
-           <div class="col-lg-3 right-sidebar col-12" >
+           <div class="col-lg-3 right-sidebar col-12 mx-auto" >
                        @include('partials.right-sidebar')
            </div>
        </div>
