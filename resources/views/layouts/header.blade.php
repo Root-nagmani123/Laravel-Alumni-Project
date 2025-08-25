@@ -141,11 +141,7 @@
         }
     @endphp
 
-  @if($unreadCount > 0)
-        <span class="badge-circle animation-blink">
-            {{ $unreadCount > 99 ? '99+' : $unreadCount }}
-        </span>
-    @endif
+    @if($showNotifBadge) <span class="badge-circle animation-blink">{{ $unreadCount }}</span>@endif
 
     <i class="bi bi-bell-fill fs-6"></i>
 </a>
@@ -583,7 +579,7 @@ function clearNotifications(event) {
         console.log('Clear all route called:', data);
 
         // Remove badge
-        const notifBadge = document.querySelector('.badge-notif');
+        const notifBadge = document.querySelector('.badge-circle');
         if (notifBadge) notifBadge.remove();
 
         // Update count
