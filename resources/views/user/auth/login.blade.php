@@ -351,7 +351,6 @@
 
                 <div class="mt-4">
                     <h1 class="fw-bold mb-3">Welcome to Alumni Portal!</h1>
-                    <h4 class="fw-bold mb-2">About Alumni Portal</h4>
                     <p>The LBSNAA Alumni Portal connects officer trainees across batches, fostering lifelong bonds, knowledge sharing, and collaboration. It preserves the Academy’s heritage while offering alumni a platform to stay engaged, contribute, and celebrate their shared journey.</p>
                 </div>
 
