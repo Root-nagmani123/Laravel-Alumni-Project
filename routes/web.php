@@ -20,6 +20,7 @@ use App\Http\Controllers\User\AuthController;
 use App\Http\Controllers\User\FeedController;
 use App\Http\Controllers\User\PostController;
 use App\Http\Middleware\UserAuthMiddleware;
+use App\Http\Middleware\CheckProfile;
 use App\Http\Controllers\User\ProfileController;
 use App\Http\Controllers\User\MentorMenteeController;
 
@@ -93,16 +94,21 @@ Route::prefix('user')->name('user.')->group(function () {
         Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
         Route::post('/login_ldap', [AuthController::class, 'login_ldap'])->name('login.submit_ldap');
     });
-    Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+        Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 
-      Route::middleware(UserAuthMiddleware::class)->group(function () {
-        Route::get('/feed', [FeedController::class, 'index'])->name('feed');
+  Route::middleware(UserAuthMiddleware::class)->group(function () {
+    // Profile check sirf feed par chahiye
+    Route::get('/feed', [FeedController::class, 'index'])
+        ->middleware(CheckProfile::class)
+        ->name('feed');
+
+        
         Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 		Route::put('/post/update/{id}', [PostController::class, 'update'])->name('post.update');
 		Route::post('/post', [PostController::class, 'store'])->name('post.store');
         Route::get('/posts/{id}/edit', [PostController::class, 'edit']);
-  Route::put('/posts/{id}', [PostController::class, 'update']);
-  Route::delete('/posts/{id}', [PostController::class, 'destroy']);
+        Route::put('/posts/{id}', [PostController::class, 'update']);
+        Route::delete('/posts/{id}', [PostController::class, 'destroy']);
 
 
 		Route::post('/group-post', [PostController::class, 'group_post_store'])->name('group.post');
@@ -123,10 +129,7 @@ Route::prefix('user')->name('user.')->group(function () {
 		//Route::post('/user/comments', [CommentController::class, 'store'])->name('user.comments.store');
 		//Route::put('/user/comments/{id}', [CommentController::class, 'update'])->name('user.comments.update');
 		//Route::delete('/user/comments/{id}', [CommentController::class, 'destroy'])->name('user.comments.destroy');
-		Route::middleware('auth')->group(function () {
-    //Route::put('/user/profile/update', [UserController::class, 'update'])->name('user.profile.update');
-    // other protected routes
-  });
+	
 
 
 
@@ -380,6 +383,7 @@ Route::prefix('group')->name('group.')->group(function () {
 		Route::get('/', [GroupController::class, 'index'])->name('index');
 		Route::get('/create', [GroupController::class, 'create'])->name('create');
 		Route::post('/', [GroupController::class, 'store'])->name('store');
+		Route::post('/store_ajax', [GroupController::class, 'store_ajax'])->name('store_ajax');
 		Route::get('/{group}/edit', [GroupController::class, 'edit'])->name('edit');
 		Route::put('/{group}', [GroupController::class, 'update'])->name('update');
 		Route::delete('/{group}', [GroupController::class, 'destroy'])->name('destroy');
@@ -515,6 +519,8 @@ Route::get('/user-search', [MemberController::class, 'user_search'])->name('user
 
 Route::post('/otp/send', [OtpLoginController::class, 'sendOtp'])->name('otp.send');
 Route::post('/otp/verify', [OtpLoginController::class, 'verifyOtp'])->name('otp.verify');
+Route::get('/admin/members/list', [App\Http\Controllers\Admin\GroupController::class, 'getMembers'])
+    ->name('admin.members.list');
 
 Route::post('/custom-broadcasting-auth', function(\Illuminate\Http\Request $request) {
     return response()->json([

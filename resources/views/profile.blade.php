@@ -27,6 +27,20 @@
                                     alt="" loading="lazy" decoding="async">
                             </div>
                         </div>
+                       @if(session('error'))
+
+        <div class="position-fixed top-0 end-0 p-3" style="z-index: 1100">
+            <div class="toast align-items-center text-bg-danger border-0 show" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="d-flex" style="display: flex !important;">
+                    <div class="toast-body">
+                      {{ session('error') }}
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+            </div>
+        </div>
+  @endif
+
                         <div class="ms-sm-4 mt-sm-3">
                             <!-- Info -->
                             @if(Auth::guard('user')->check())
@@ -252,11 +266,19 @@
                                                             <div class="row mb-3">
                                                                 <div class="col-3">
                                                                     <label for="profile_pic">Profile
-                                                                        Picture:</label>
+                                                                        Picture: <span
+                                                                            style="color: red">*</span></label>
                                                                 </div>
                                                                 <div class="col-9">
                                                                     <input type="file" id="ImageEdit" name="profile_pic"
                                                                         accept="image/*" class="form-control">
+                                                                    <div class="mt-2">
+                                                                        @if($user->profile_pic)
+                                                                        <img id="previewImageEdit"
+                                                                            src="{{ asset('storage/' . $user->profile_pic) }}"
+                                                                            alt="Profile Picture" style="max-width: 150px;">
+                                                                        @endif
+                                                                        </div>
 
                                                                 </div>
                                                             </div>
@@ -284,7 +306,7 @@
                                                                 <div class="col-3">
                                                                     <label for="school_name">Name
                                                                         of the
-                                                                        School:<span style="color: red">*</span></label>
+                                                                        School:</label>
                                                                 </div>
                                                                 <div class="col-9">
                                                                     <input type="text" id="school_name"
@@ -299,8 +321,7 @@
                                                                 <div class="col-3">
                                                                     <label for="school_year">Year
                                                                         of
-                                                                        Passing:<span
-                                                                            style="color: red">*</span></label>
+                                                                        Passing:</label>
                                                                 </div>
                                                                 <div class="col-9">
                                                                     <input type="text" id="school_year"
@@ -314,7 +335,7 @@
                                                                 <div class="col-3">
                                                                     <label for="undergrad_college">Undergraduate
                                                                         College/University
-                                                                        Name:<span style="color: red">*</span></label>
+                                                                        Name:</label>
                                                                 </div>
                                                                 <div class="col-9">
                                                                     <input type="text" id="undergrad_college"
@@ -329,8 +350,7 @@
                                                                 <div class="col-3">
                                                                     <label for="undergrad_degree">Undergraduate
                                                                         Degree
-                                                                        Obtained:<span
-                                                                            style="color: red">*</span></label>
+                                                                        Obtained:</label>
                                                                 </div>
                                                                 <div class="col-9">
                                                                     <input type="text" id="undergrad_degree"
@@ -345,8 +365,7 @@
                                                                 <div class="col-3">
                                                                     <label for="undergrad_year">Year
                                                                         of
-                                                                        Graduation:<span
-                                                                            style="color: red">*</span></label>
+                                                                        Graduation:</label>
                                                                 </div>
                                                                 <div class="col-9">
                                                                     <input type="text" id="undergrad_year"
