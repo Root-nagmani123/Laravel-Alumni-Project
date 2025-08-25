@@ -59,124 +59,8 @@
 }
 </style>
     <!-- Group Modal -->
-<div class="modal fade" id="groupModal" tabindex="-1" aria-labelledby="groupModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        {{-- <form action="{{ route('user.group.store') }}" method="POST" enctype="multipart/form-data"> --}}
-        <form id="groupForm">
-            @csrf
-            <div class="modal-content">
-                
-                <!-- Header -->
-                <div class="modal-header bg-danger text-white">
-                    <h5 class="modal-title text-white" id="groupModalLabel">Create Group</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
 
-                <!-- Body -->
-                <div class="modal-body">
-                    <div class="row g-3">
-
-                        <!-- Group Name -->
-                        <div class="col-md-6">
-                            <label for="groupName" class="form-label">Group Name <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="groupName" name="group_name" placeholder="Enter group name" required>
-                        </div>
-
-                        <!-- Service -->
-                        <div class="col-md-6">
-                            <label class="form-label">Service <span class="text-danger">*</span></label>
-                            <select class="form-select service" name="service" id="service" data-id="new_group_create" required>
-                                <option selected disabled>Select Service</option>
-                                @if(isset($members) && !$members->isEmpty())
-                                    @foreach($members as $member)
-                                        @if(!empty($member->Service))
-                                            <option value="{{ $member->Service }}">{{ $member->Service }}</option>
-                                        @endif
-                                    @endforeach
-                                @else
-                                    <option disabled>No Services Available</option>
-                                @endif
-                            </select>
-                        </div>
-
-                        <!-- Year / Batch -->
-                        <div class="col-md-6">
-                            <label class="form-label">Year / Batch <span class="text-danger">*</span></label>
-                            <select class="form-select year-select" name="year[]" multiple="multiple" data-id="new_group_create" required>
-                                <!-- Options populated dynamically via AJAX -->
-                            </select>
-                        </div>
-
-                        <!-- Cadre -->
-                        <div class="col-md-6">
-                            <label class="form-label">Cadre <span class="text-danger">*</span></label>
-                            <select class="form-select cadre select2" name="cadre[]" multiple="multiple" data-id="new_group_create" required>
-                                <!-- Options populated dynamically via AJAX -->
-                            </select>
-                        </div>
-
-                        <!-- Dual List Members -->
-                        <div class="col-12">
-                            <label class="form-label">Select Group Members <span class="text-danger">*</span></label>
-                            <div class="row">
-                                
-                                <!-- Available -->
-                                <div class="col-md-5">
-                                    <input type="text" id="searchAll" class="form-control mb-2"
-                                        placeholder="Search members...">
-                                    <select id="availableMembers" class="form-select" size="10" multiple>
-                                        <!-- Members loaded dynamically by AJAX -->
-                                    </select>
-                                </div>
-
-                                <!-- Controls -->
-                                <div class="col-md-2 d-flex flex-column justify-content-center align-items-center">
-                                    <button type="button" class="btn btn-outline-primary mb-2" id="addMemberBtn">&gt;&gt;</button>
-                                    <button type="button" class="btn btn-outline-danger" id="removeMemberBtn">&lt;&lt;</button>
-                                </div>
-
-                                <!-- Selected -->
-                                <div class="col-md-5">
-                                    <input type="text" id="searchSelected" class="form-control mb-2"
-                                        placeholder="Search selected...">
-                                    <select id="selectedMembers" class="form-select" size="10" multiple name="mentees[]" required>
-                                        <!-- Selected members will appear here -->
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        {{-- <div class="col-12">
-    <label class="form-label">Select Group Members <span class="text-danger">*</span></label>
-    <select id="mentees" name="mentees[]" multiple="multiple" required>
-        <!-- Members AJAX se load honge -->
-    </select>
-</div> --}}
-
-
-
-                        <!-- Group Image -->
-                        <div class="col-md-6">
-                            <label for="grp_image" class="form-label">Upload Group Image <span class="text-danger">*</span></label>
-                            <input type="file" class="form-control" name="grp_image" id="grp_image" accept="image/*" required>
-                        </div>
-
-                        <!-- Expiry Date -->
-                        <div class="col-md-6">
-                            <label for="end_date" class="form-label">Expiry Date <span class="text-danger">*</span></label>
-                            <input type="date" class="form-control" name="end_date" id="end_date" required>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Footer -->
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Create Group</button>
-                </div>
-            </div>
-        </form>
-    </div>
-</div>
+    @include('layouts.group-modal')
 
 
     <!-- Toast for favorite actions -->
@@ -236,6 +120,7 @@ JS libraries, plugins and custom scripts -->
 <!-- Select2 JS -->
 <script src="{{asset('feed_assets/js/select2.min.js')}}"></script>
 <script src="https://cdn.jsdelivr.net/npm/tributejs@5.1.3/dist/tribute.min.js"></script>
+<script src="{{asset('feed_assets/js/group.js')}}"></script>
 <script>
     $(document).ready(function () {
     // Move to selected
@@ -612,104 +497,6 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById("forum_end_date").setAttribute('min', today);
         document.getElementById("end_date").setAttribute('min', today);
     });
-
-
-$(document).ready(function () {
-    $('#groupForm').on('submit', function (e) {
-        e.preventDefault();
-
-        let formData = new FormData(this);
-        
-        $.ajax({
-            url: "{{ route('group.store_ajax') }}", // store route
-            type: "POST",
-            data: formData,
-            processData: false,
-            contentType: false,
-            beforeSend: function () {
-                // Disable submit button & show loading
-                $('#groupForm button[type="submit"]').prop('disabled', true).text('Saving...');
-            },
-            success: function (response) {
-                $('#groupForm button[type="submit"]').prop('disabled', false).text('Create Group');
-                console.log(response);
-                if (response.success) {
-                    alert(response.message);
-                    $('#groupForm')[0].reset();
-                    $('#groupModal').modal('hide');
-                    // reload table/list if needed
-                    if (typeof groupTable !== "undefined") groupTable.ajax.reload();
-                } else {
-                    alert('Something went wrong.');
-                }
-            },
-            error: function (xhr) {
-                $('#groupForm button[type="submit"]').prop('disabled', false).text('Create Group');
-                if (xhr.status === 422) {
-                    let errors = xhr.responseJSON.errors;
-                    $.each(errors, function (key, value) {
-                        toastr.error(value[0]);
-                    });
-                } else {
-                    toastr.error('Server error. Please try again.');
-                }
-            }
-        });
-    });
-});
-function loadMembers(query = '') {
-    let service = $('#service').val();
-    let year = $('.year-select').val();
-    let cadre = $('.cadre').val();
-    $.ajax({
-        url: "{{ route('admin.members.list') }}",
-        type: "GET",
-        data: { search: query, service: service, year: year, cadre: cadre },
-        success: function (data) {
-            let $select = $('#availableMembers');
-            $select.empty();
-
-            $.each(data, function (index, member) {
-                // agar pehle se selected me hai to skip karo
-                if ($("#selectedMembers option[value='"+member.id+"']").length === 0) {
-                    $select.append(`<option value="${member.id}">${member.name}</option>`);
-                }
-            });
-        },
-        error: function () {
-            alert('Failed to load members.');
-        }
-    });
-}
-$(document).ready(function () {
-    // Initial load of available members
-    loadMembers();
-    // Search in available members (server-side)
-    $('#searchAll').on('keyup', function () {
-        let query = $(this).val();
-        loadMembers(query);
-    });
-
-    // Local search in selected members
-    $('#searchSelected').on('keyup', function () {
-        let value = $(this).val().toLowerCase();
-        $("#selectedMembers option").filter(function () {
-            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-        });
-    });
-
-    // Add members
-    $('#addMemberBtn').click(function () {
-        $('#availableMembers option:selected').appendTo('#selectedMembers');
-    });
-
-    // Remove members
-    $('#removeMemberBtn').click(function () {
-        $('#selectedMembers option:selected').appendTo('#availableMembers');
-    });
-});
-
-
 </script>
 <link rel="stylesheet"
     href="https://img1.digitallocker.gov.in/ux4g/UX4G-CDN-accessibility/css/accesibility-style-v2.1.css">

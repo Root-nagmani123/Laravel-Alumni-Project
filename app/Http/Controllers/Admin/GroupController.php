@@ -755,22 +755,58 @@ public function deleteTopic($id)
         // Create Group
         $group = Group::create([
             'name'       => $request->input('group_name'),
-            'service'    => $request->input('service'),
-            'batch_year' => json_encode($request->input('year')),
-            'cadre'      => json_encode($request->input('cadre')),
+            // 'service'    => $request->input('service'),
+            // 'batch_year' => json_encode($request->input('year')),
+            // 'cadre'      => json_encode($request->input('cadre')),
             'end_date'   => $request->input('end_date'),
             'status'     => 1,
             'created_by' => auth()->id(),
             'image'      => $imagePath ? basename($imagePath) : null,
         ]);
 
-        // Attach Members
-        foreach ($request->input('mentees') as $memberId) {
-            GroupMember::create([
-                'group_id'  => $group->id,
-                'member_id' => $memberId,
-                'status'    => 1,
-            ]);
+        GroupMember::create([
+            'group_id' => $group->id,
+            'member_id' => auth()->guard('user')->id(),
+            'mentor' => auth()->guard('user')->id(),
+            'mentiee' => json_encode($request->input('mentees')),
+            'status' => 1,
+        ]);
+    
+        // Notify only if status is active and not yet notified
+        if ($group->status == 1 && $group->notified_at == 0) {
+            $mentorId = $request->input('mentor_id');
+            $userIds = $request->input('user_id', []);
+    
+            $notificationsSent = false;
+    
+            if ($mentorId) {
+
+                $mentorMessage = $group->name . ' group has been added as mentor';
+    
+                    $mentorNotification = $this->notificationService->notifyMemberAdded(
+                        $mentorId,
+                        'group_member',
+                        $mentorMessage,
+                        $group->id,
+                        'group',
+                        auth()->id()
+                    );
+                
+            }
+
+            if (!empty($userIds)) {
+                $mentieeMessage = $group->name . ' group has been added as mentiee';
+                    $mentieeNotification = $this->notificationService->notifyMemberAdded(
+                        $userIds,
+                        'group_member',
+                        $mentieeMessage,
+                        $group->id,
+                        'group',
+                        auth()->id()
+                );
+
+            }
+
         }
 
         // Return JSON for AJAX
