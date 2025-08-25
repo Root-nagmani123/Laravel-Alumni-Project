@@ -13,7 +13,7 @@ class CheckProfile
             $user = auth()->guard('user')->user();
 
             // 👇 agar already profile edit route par hai to bypass kar do
-            if ($request->routeIs('user.profile.data') || $request->routeIs('user.profile.update')) {
+            if ($request->routeIs('user.profile.data') || $request->routeIs('user.profile.update') || $request->routeIs('user.profile.proinfo') || $request->routeIs('user.profile.social.update') || $request->routeIs('user.profile.eduinfo') ||  $request->routeIs('user.logout')) {
                 return $next($request);
             }
 

@@ -96,11 +96,12 @@ Route::prefix('user')->name('user.')->group(function () {
     });
         Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 
-    Route::middleware(UserAuthMiddleware::class)->group(function () {
-        Route::middleware(CheckProfile::class)->group(function () {
-            Route::get('/feed', [FeedController::class, 'index'])->name('feed');
+  Route::middleware(UserAuthMiddleware::class)->group(function () {
+    // Profile check sirf feed par chahiye
+    Route::get('/feed', [FeedController::class, 'index'])
+        ->middleware(CheckProfile::class)
+        ->name('feed');
 
-            });
         
         Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 		Route::put('/post/update/{id}', [PostController::class, 'update'])->name('post.update');
