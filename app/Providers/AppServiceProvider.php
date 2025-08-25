@@ -31,7 +31,7 @@ class AppServiceProvider extends ServiceProvider
                     $query->whereIn('type', ['event', 'broadcast','event_deactivated','broadcast_deactivated','forum_admin','forum_topic','forum_deleted','birthday']) // show to all users
                           ->orWhere(function ($q) use ($userId) {
                               $q->whereNotIn('type', ['event', 'broadcast','event_deactivated','broadcast_deactivated','forum_admin','forum_topic','forum_deleted','birthday']) // exclude these types
-                                ->whereJsonContains('user_id', $userId); // user-specific notifications
+                                ->where('user_id', $userId); // user-specific notifications
                           });
                 })
                 ->orderBy('created_at', 'desc')
