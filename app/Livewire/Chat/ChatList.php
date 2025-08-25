@@ -8,6 +8,8 @@ use App\Models\Message;
 use App\Events\{MessageSentEvent, UnreadMessage};
 use Livewire\Attributes\On;
 use Illuminate\Support\Facades\Auth;
+use App\Services\NotificationService;
+
 use App\Events\UserTyping;
 use Illuminate\Support\Facades\DB;
 
@@ -21,6 +23,7 @@ class ChatList extends Component
     public $senderId;
     public $messageLimit = 20;
     public $hasMoreMessages = false;
+
 
     public function loadOlderMessages()
     {
@@ -132,7 +135,18 @@ class ChatList extends Component
         $this->messages[] = $message;
 
         broadcast(new MessageSentEvent($message))->toOthers();
-        
+
+    
+
+        //Notification 
+        app()->make(\App\Services\NotificationService::class)
+            ->notifyChatMessage(
+                $this->selectedChat,
+                auth()->guard('user')->id(),
+                Auth::user()->name . ' has been sent message - ' . $this->newMessage,
+                $message->id
+            );
+
         $unreadCount = $this->getUnreadMessagesCount();
         broadcast(new UnreadMessage($this->selectedChat, auth()->guard('user')->id(), $unreadCount))->toOthers();
         $this->reset(['newMessage']);
