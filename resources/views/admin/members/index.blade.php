@@ -80,7 +80,7 @@
                                 <tr>
                                     <th scope="col">S.No.</th>
                                     <th scope="col">Name</th>
-                                    <th scope="col">User Name</th>
+                                    <th scope="col">UserName (LDAP)</th>
                                     <th scope="col">Email</th>
                                     <th scope="col">Mobile</th>
                                     <th scope="col">Service</th>

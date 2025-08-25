@@ -24,7 +24,7 @@
                                 @if(Auth::guard('user')->check())
                                 <h5 class="mb-0"> <a href="#!"> {{ Auth::guard('user')->user()->name }} </a> </h5>
                                 @endif
-                                <small>{{ Auth::guard('user')->user()->designation }}</small>
+                                <small>{{ Auth::guard('user')->user()->current_designation }} | {{ Auth::guard('user')->user()->Service }}</small>
                                 <div class="hstack gap-2 gap-xl-3 justify-content-center mt-3">
 											<!-- User stat item -->
 											<div>
