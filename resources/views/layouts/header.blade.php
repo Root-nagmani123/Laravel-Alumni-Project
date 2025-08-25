@@ -7,6 +7,33 @@
 .dropdown-menu {
     z-index: 1100 !important;
 }
+/* Circle Badge with Count */
+.badge-circle {
+    position: absolute;
+    top: -4px;        /* adjust for your icon size */
+    right: -6px;      /* adjust for alignment */
+    background-color: #dc3545; /* red */
+    color: #fff;
+    font-size: 0.65rem;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 50%;
+    min-width: 20px;
+    min-height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+}
+
+/* Blink Animation */
+@keyframes blink {
+    50% { opacity: 0.5; }
+}
+.animation-blink {
+    animation: blink 1.5s infinite;
+}
+
 </style>
 <header class="navbar-light fixed-top header-static bg-mode">
 
@@ -114,8 +141,10 @@
         }
     @endphp
 
-    @if($showNotifBadge)
-        <span class="badge-notif animation-blink">{{ $unreadCount }}</span>
+  @if($unreadCount > 0)
+        <span class="badge-circle animation-blink">
+            {{ $unreadCount > 99 ? '99+' : $unreadCount }}
+        </span>
     @endif
 
     <i class="bi bi-bell-fill fs-6"></i>
