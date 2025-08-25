@@ -1,6 +1,6 @@
 <!-- Main content START -->
      <!-- Story START -->
-    <div class="d-flex gap-2 mb-n3">
+    <div class="d-flex gap-2 mb-1">
       <div class="position-relative" id="openAddStoryModal">
   <div class="card border border-2 border-dashed h-150px px-4 px-sm-5 shadow-none d-flex align-items-center justify-content-center text-center">
     <div>
@@ -17,7 +17,7 @@
     </div>
     <!-- Story END -->
         <!-- Share feed START -->
-    <div class="card card-body">
+    <div class="card card-body mb-1">
         <div class="d-flex">
             <!-- Avatar -->
             <div class="avatar avatar-xs me-2">
@@ -57,7 +57,7 @@
 
     <!-- Card feed item START -->
     @foreach($posts as $post)
-    <div class="card">
+    <div class="card mb-1">
         <!-- Card header START -->
         <div class="card-header border-0 pb-0">
             <div class="d-flex align-items-center justify-content-between">
