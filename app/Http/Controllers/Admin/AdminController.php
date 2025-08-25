@@ -159,6 +159,46 @@ public function loginAuth(Request $request)
 
 public function socialwall()
 {
+
+    // Get filter inputs
+    $year = request('year');
+    $month = request('month');
+    $day = request('day');
+
+
+    $years = DB::table('posts')
+        ->selectRaw('DISTINCT YEAR(created_at) as year')
+        ->whereNull('posts.group_id')
+        ->orderBy('year', 'desc')
+        ->pluck('year')
+        ->filter()
+        ->values();
+
+    $months = DB::table('posts')
+        ->selectRaw('DISTINCT MONTH(created_at) as month')
+        ->whereNull('posts.group_id')
+        ->when($year, function ($query, $year) {
+            return $query->whereYear('created_at', $year);
+        })
+        ->orderBy('month', 'asc')
+        ->pluck('month')
+        ->filter()
+        ->values();
+
+    $days = DB::table('posts')
+        ->selectRaw('DISTINCT DAY(created_at) as day')
+        ->whereNull('posts.group_id')
+        ->when($year, function ($query, $year) {
+            return $query->whereYear('created_at', $year);
+        })
+        ->when($month, function ($query, $month) {
+            return $query->whereMonth('created_at', $month);
+        })
+        ->orderBy('day', 'asc')
+        ->pluck('day')
+        ->filter()
+        ->values();
+
     // Fetch posts + media
     $rawPosts = DB::table('posts')
         ->join('members', 'posts.member_id', '=', 'members.id')
@@ -167,6 +207,7 @@ public function socialwall()
             'posts.id as post_id',
             'posts.content',
             'posts.media_type',
+            'posts.video_link',
             'posts.created_at as post_created_at',
             'post_media.file_path',
             'post_media.file_type',
@@ -174,6 +215,15 @@ public function socialwall()
             'members.profile_pic as member_profile_pic'
         )
         ->whereNull('posts.group_id')
+       ->when($year, function ($query, $year) {
+            return $query->whereYear('posts.created_at', $year);
+        })
+        ->when($month, function ($query, $month) {
+            return $query->whereMonth('posts.created_at', $month);
+        })
+        ->when($day, function ($query, $day) {
+            return $query->whereDay('posts.created_at', $day);
+        })
         ->orderBy('posts.created_at', 'desc')
         ->get();
 
@@ -206,11 +256,12 @@ public function socialwall()
             'member_profile_pic' => $first->member_profile_pic,
             'content' => $first->content,
             'media_type' => $first->media_type,
-            'created_at' => $first->post_created_at, 
+            'created_at' => $first->post_created_at,
+            'video_link' => $first->video_link,
             'media' => $group->map(function ($item) {
                 return [
                     'file_path' => $item->file_path,
-                    'file_type' => $item->file_type
+                    'file_type' => $item->file_type,
                 ];
             })->filter(fn($media) => !empty($media['file_path']))->values(),
             'likes_count' => $likesCounts[$first->post_id] ?? 0,
@@ -218,10 +269,8 @@ public function socialwall()
         ];
     })->values();
 
-    return view('admin.socialwall.index', compact('groupedPosts'));
+    return view('admin.socialwall.index', compact('groupedPosts', 'years', 'months', 'days'));
 }
-
-
 
   public function socialwall_delete($id)
 {

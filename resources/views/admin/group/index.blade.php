@@ -63,6 +63,7 @@
                                     <th class="col">Name</th>
                                     <th class="col">Topics</th>
                                     <th class="col">Created By</th>
+                                    <th class="col">Created At</th>
                                     <th class="col">Group End Date</th>
                                     <th class="col">Member Count</th>
                                     <th class="col">Status</th>
@@ -91,8 +92,8 @@
                                         </div>
                                     </td>
                                     <!-- <td>{{ \Carbon\Carbon::parse($group->created_at)->timezone('Asia/Kolkata')->format('l, d M Y, h:i A') }}</td> -->
-                                    <td>{{ $group->created_at ? \Carbon\Carbon::parse($group->created_at)->format('d-m-Y') : '' }}
-                                    </td>
+                                    <td>{{ $group->creator ? $group->creator->name : '' }}</td>
+                                    <td>{{ $group->updated_at ? \Carbon\Carbon::parse($group->updated_at)->format('d-m-Y') : '' }}</td>
                                     <td>
                                         @if($group->end_date != null)
                                         <!-- {{ \Carbon\Carbon::parse($group->end_date)->timezone('Asia/Kolkata')->format('l, d M Y') }} -->

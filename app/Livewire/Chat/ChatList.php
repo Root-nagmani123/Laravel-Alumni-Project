@@ -136,15 +136,13 @@ class ChatList extends Component
 
         broadcast(new MessageSentEvent($message))->toOthers();
 
-    
-
         //Notification 
         app()->make(\App\Services\NotificationService::class)
             ->notifyChatMessage(
                 $this->selectedChat,
                 auth()->guard('user')->id(),
                 Auth::user()->name . ' has been sent message - ' . $this->newMessage,
-                $message->id
+                $this->selectedChat
             );
 
         $unreadCount = $this->getUnreadMessagesCount();
