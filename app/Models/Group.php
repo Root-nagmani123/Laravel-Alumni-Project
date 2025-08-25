@@ -27,4 +27,9 @@ class Group extends Model
     return $this->hasMany(GroupMember::class);
 }
 
+public function creator()
+{
+    return $this->belongsTo(Member::class, 'created_by');
+}
+
 }

@@ -97,7 +97,7 @@ Route::prefix('user')->name('user.')->group(function () {
         Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 
     Route::middleware(UserAuthMiddleware::class)->group(function () {
-        Route::middleware(CheckProfile::class)->group(function () {
+         Route::middleware(CheckProfile::class)->group(function () {
             Route::get('/feed', [FeedController::class, 'index'])->name('feed');
 
             });
