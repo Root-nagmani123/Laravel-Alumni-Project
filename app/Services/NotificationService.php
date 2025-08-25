@@ -253,4 +253,19 @@ public function notifyGroupPost(int $groupId, int $fromUserId, string $message, 
         ]);
     }
 
+
+   
+    
+    public function notifyChatMessage(int $receiverId, int $fromUserId, string $message, int $messageId)
+  {
+    return $this->createNotification([
+        'from_user_id' => $fromUserId,
+        'type'         => 'chat_message', // chat-specific type
+        'message'      => $message,
+        'source_id'    => $messageId,
+        'source_type'  => 'chat',
+        'user_id'      => $receiverId,
+     ]);
+  }
+
 }   

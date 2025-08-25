@@ -205,6 +205,9 @@
                                                         case 'request_reject':
                                                             $notificationUrl = route('user.mentor_mentee', ['tab' => 'outgoing']);
                                                             break;
+                                                        case 'chat':
+                                                            $notificationUrl = '#';
+                                                            break;
                                                         case 'birthday':
                                                             $notificationUrl = route('user.profile.data', ['id' => $enc_source_id]);
                                                             break;
