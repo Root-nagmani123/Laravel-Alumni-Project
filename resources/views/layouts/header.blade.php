@@ -209,7 +209,7 @@
                                                             $notificationUrl = '#';
                                                             break;
                                                         case 'birthday':
-                                                            $notificationUrl = route('user.profile.data', ['id' => $enc_source_id]);
+                                                            $notificationUrl = route('user.profile.data', ['id' => Crypt::encrypt($enc_source_id)]);
                                                             break;
                                                         default:
                                                             $notificationUrl = '#';
@@ -283,7 +283,7 @@
                         $user = Auth::guard('user')->user();
                         @endphp
                 <li class="nav-item ms-2 dropdown" style="z-index:1060 !important;">
-                    <a class="nav-link btn icon-md p-0" href="{{ route('user.profile.data', ['id' => $user->id]) }}" id="profileDropdown" role="button"
+                    <a class="nav-link btn icon-md p-0" href="{{ route('user.profile.data', ['id' => Crypt::encrypt($user->id)]) }}" id="profileDropdown" role="button"
                         data-bs-auto-close="outside" data-bs-display="static" data-bs-toggle="dropdown"
                         aria-expanded="false">
                        
@@ -351,7 +351,7 @@
                             @php
                             $user = Auth::guard('user')->user();
                             @endphp
-                           <a href="{{ route('user.profile.data', ['id' => $user->id]) }}"
+                           <a href="{{ route('user.profile.data', ['id' => Crypt::encrypt($user->id)]) }}"
                                 class="dropdown-item btn btn-primary-soft btn-sm my-2 text-center">View profile</a>
                             @endif
                         </li>

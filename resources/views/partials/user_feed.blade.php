@@ -21,7 +21,7 @@
         <div class="d-flex">
             <!-- Avatar -->
             <div class="avatar avatar-xs me-2">
-                <a href="{{ route('user.profile.data', ['id' => $user->id]) }}"> <img class="avatar-img rounded-circle" src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}"
+                <a href="{{ route('user.profile.data', ['id' => Crypt::encrypt($user->id)]) }}"> <img class="avatar-img rounded-circle" src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}"
                         alt="" loading="lazy" decoding="async"> </a>
             </div>
             <!-- Post input -->
@@ -82,9 +82,9 @@
         $created_by = $post->member->name;
 
         // Optional: if you have a group detail page
-        $profileLink =  route('user.profile.data', ['id' => $post->member->id]);
+        $profileLink =  route('user.profile.data', ['id' => Crypt::encrypt($post->member->id)]);
 
-        $groupLink = route('user.group-post',['id' =>$post->group_id]);
+        $groupLink = route('user.group-post',['id' =>Crypt::encryptString($post->group_id)]);
     } else {
         // Member/user post
         $member = $post->member ?? null;
@@ -95,7 +95,7 @@
 
         $displayName = $member->name ?? 'N/A';
         $designation = $member->Service ?? 'N/A';
-        $profileLink = route('user.profile.data', ['id' => $member->id]);
+        $profileLink = route('user.profile.data', ['id' => Crypt::encrypt($member->id)]);
 
     }
 @endphp
@@ -378,7 +378,7 @@
             <div class="d-flex mb-3">
                 <!-- Avatar -->
                <div class="avatar avatar-xs me-2">
-    <a href="{{ route('user.profile.data', ['id' => auth()->guard('user')->id()]) }}">
+    <a href="{{ route('user.profile.data', ['id' => Crypt::encrypt(auth()->guard('user')->id())]) }}">
         <img class="avatar-img rounded-circle"
              src="{{ auth()->guard('user')->user()->profile_pic
                     ? asset('storage/' . auth()->guard('user')->user()->profile_pic)
@@ -419,7 +419,7 @@
                         $username = $matches[1];
                         $user = \App\Models\Member::where('username', $username)->first();
                         if ($user) {
-                            $url = route('user.profile.data', ['id' => $user->id]);
+                            $url = route('user.profile.data', ['id' => Crypt::encrypt($user->id)]);
                            return "<a href='{$url}' 
             class='mention-badge' 
             data-bs-toggle='tooltip' 
@@ -441,7 +441,7 @@
                                    src="${comment.member && comment.member.profile_pic ? '/storage/' + comment.member.profile_pic : '/feed_assets/images/avatar/07.jpg'}"
                                     alt="" loading="lazy" decoding="async"></a> -->
 
-                                    <a href="{{ $comment->member ? route('user.profile.data', ['id' => $comment->member->id]) : '#' }}">
+                                    <a href="{{ $comment->member ? route('user.profile.data', ['id' => Crypt::encrypt($comment->member->id)]) : '#' }}">
                                         <img class="avatar-img rounded-circle"
                                              src="{{ $comment->member && $comment->member->profile_pic ? asset('storage/' . $comment->member->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}"
                                              alt="" loading="lazy" decoding="async">
@@ -451,7 +451,7 @@
                             <!-- Comment by -->
                             <div class="bg-light rounded-start-top-0 p-3 rounded">
                                 <div class="d-flex justify-content-between">
-                                    <h6 class="mb-1"> <a href="{{ $comment->member ? route('user.profile.data', ['id' => $comment->member->id]) : '#' }}"> {{ $comment->member->name ?? 'Anonymous' }} </a>
+                                    <h6 class="mb-1"> <a href="{{ $comment->member ? route('user.profile.data', ['id' => Crypt::encrypt($comment->member->id)]) : '#' }}"> {{ $comment->member->name ?? 'Anonymous' }} </a>
                                     </h6>
                                     <small class="ms-2">{{$comment->created_at->diffForHumans()}}</small>
                                 </div>
