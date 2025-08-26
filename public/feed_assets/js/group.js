@@ -68,6 +68,25 @@ function loadMembers(query = '') {
     });
 }
 
+function selectedMembers() {
+    // let $select = $('#selectedMembers');
+    // $select.empty();
+
+    // $.ajax({
+    //     url: window.location.origin + "/admin/members/list",
+    //     type: "GET",
+    //     data: { selected: true },
+    //     success: function (data) {
+    //         $.each(data, function (index, member) {
+    //             $select.append(`<option value="${member.id}">${member.name}</option>`);
+    //         });
+    //     },
+    //     error: function () {
+    //         alert('Failed to load members.');
+    //     }
+    // });
+}
+
 $(document).ready(function () {
     loadMembers();
     $('#searchAll').on('keyup', function () {
@@ -113,16 +132,15 @@ $(document).ready(function () {
                 //     width: '100%'
                 // });
                 $('#addMemberModal').modal('show');
-
-
+                loadMembers();
+                selectedMembers();
             },
             error: function () {
                 alert('Failed to load members.');
             }
         });
     });
-});
-$(document).ready(function () {
+
     // Service change hone par Year load karo
     $(document).on('change', '.service', function () {
         let $form = $(this).closest('form');
@@ -260,12 +278,7 @@ $(document).ready(function () {
             $(this).remove().appendTo('#availableMembers');
         });
     });
-});
 
-
-
-
-$(document).ready(function () {
     $(document).on('submit', '#groupForm1', function (e) {
         e.preventDefault();
 
