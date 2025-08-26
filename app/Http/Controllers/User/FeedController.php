@@ -458,9 +458,14 @@ public function getPostByGroup($group_id)
         ->whereIn('id', $memberIds)
         ->select('id', 'name', 'designation','profile_pic' )
         ->get();
+
+       $members = DB::table('members')
+->select('Service', DB::raw('COUNT(*) as count'))
+->groupBy('Service')
+->get();
         // print_r($grp_members);die;
 
-    return view('user.grouppost_details', compact('posts','group','isMentee','grp_members'));
+    return view('user.grouppost_details', compact('posts','group','isMentee','grp_members','members'));
 }
     public function getPostByGroup_bkp($group_id)
     {
