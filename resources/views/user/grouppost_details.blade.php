@@ -68,6 +68,7 @@
             <!-- group member details -->
 
             <!-- Members Modal -->
+            @include('layouts.group-modal', ['group' => $group])
             <div class="modal fade" id="membersModal-{{ $group->id }}" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-lg modal-dialog-scrollable">
                     <div class="modal-content">
@@ -406,100 +407,6 @@
     </div>
 </div>
 <!-- Add Members Modal -->
-<div class="modal fade" id="addMembersModal" tabindex="-1" aria-labelledby="addMembersLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-scrollable">
-        <div class="modal-content">
-
-            <!-- Header -->
-            <div class="modal-header bg-danger text-white">
-                <h5 class="modal-title" id="addMembersLabel">Add Members to Group</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
-                    aria-label="Close"></button>
-            </div>
-
-            <!-- Body -->
-            <div class="modal-body">
-                <form action="" method="POST">
-                    @csrf
-
-                    <!-- Group Select -->
-                   <div class="row">
-                     <!-- Service -->
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label">Service</label>
-                        <select class="form-select service" name="service" id="service" data-id="new_group_create">
-                            <option selected disabled>Select Service</option>
-                            @if(isset($members) && !$members->isEmpty())
-                            @foreach($members as $member)
-                            @if(!empty($member->Service))
-                            <option value="{{ $member->Service }}">{{ $member->Service }}</option>
-                            @endif
-                            @endforeach
-                            @else
-                            <option disabled>No Services Available</option>
-                            @endif
-                        </select>
-                    </div>
-
-                    <!-- Year / Batch -->
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label">Year / Batch</label>
-                        <select class="form-select year-select form-control" name="year[]" multiple="multiple"
-                            data-id="new_group_create">
-                            <!-- Options populated dynamically via AJAX -->
-                        </select>
-                    </div>
-
-                    <!-- Cadre -->
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label">Cadre</label>
-                        <select class="form-select cadre select2 form-control" name="cadre[]" multiple="multiple"
-                            data-id="new_group_create">
-                            <!-- Options populated dynamically via AJAX -->
-                        </select>
-                    </div>
-
-                    <!-- Dual List Members -->
-                    <div class="mb-3">
-                        <label class="form-label">Select Members <span class="text-danger">*</span></label>
-                        <div class="row">
-                            <!-- Available -->
-                            <div class="col-md-5">
-                                <select id="availableMembersModal" class="form-select" size="10" multiple>
-                                    <option value=""></option>
-                                </select>
-                            </div>
-
-                            <!-- Controls -->
-                            <div class="col-md-2 d-flex flex-column justify-content-center align-items-center">
-                                <button type="button" class="btn btn-outline-primary mb-2"
-                                    id="addMemberBtnModal">&gt;&gt;</button>
-                                <button type="button" class="btn btn-outline-danger"
-                                    id="removeMemberBtnModal">&lt;&lt;</button>
-                            </div>
-
-                            <!-- Selected -->
-                            <div class="col-md-5">
-                                <select id="selectedMembersModal" class="form-select" size="10" multiple
-                                    name="members[]" required>
-                                    <!-- Selected members will appear here -->
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Submit -->
-                    <div class="d-flex justify-content-end">
-                        <button type="button" class="btn btn-light me-2" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary">Add Members</button>
-                    </div>
-                   </div>
-                </form>
-            </div>
-
-        </div>
-    </div>
-</div>
 @section('scripts')
 <script>
 $(document).ready(function() {
