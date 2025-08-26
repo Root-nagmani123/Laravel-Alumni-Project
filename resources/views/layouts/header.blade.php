@@ -87,11 +87,6 @@
     </li>
 
     <li class="nav-item">
-        <a class="nav-link {{ request()->is('user/all-events') ? 'active' : '' }}" 
-           href="{{ url('user/all-events') }}">Events</a>
-    </li>
-
-    <li class="nav-item">
         <a class="nav-link {{ request()->is('user/directory') ? 'active' : '' }}" 
            href="{{ route('user.directory') }}">Directory</a>
     </li>
