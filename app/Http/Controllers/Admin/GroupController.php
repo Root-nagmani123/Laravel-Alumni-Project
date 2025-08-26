@@ -760,8 +760,9 @@ public function deleteTopic($id)
             // 'cadre'      => json_encode($request->input('cadre')),
             'end_date'   => $request->input('end_date'),
             'status'     => 1,
-            'created_by' => auth()->id(),
+            'created_by' => auth()->guard('user')->id(),
             'image'      => $imagePath ? basename($imagePath) : null,
+            'member_type' => 2 // this is created by user so thats why here 2
         ]);
 
         GroupMember::create([
@@ -823,7 +824,7 @@ public function deleteTopic($id)
         $year = $request->get('year');
         $cadre = $request->get('cadre');
 
-        $query = Member::query();
+        $query = Member::where('status',1);
         if ($search) {
             $query->where('name', 'like', "%{$search}%");
         }
