@@ -383,7 +383,7 @@ Route::prefix('group')->name('group.')->group(function () {
 		Route::get('/', [GroupController::class, 'index'])->name('index');
 		Route::get('/create', [GroupController::class, 'create'])->name('create');
 		Route::post('/', [GroupController::class, 'store'])->name('store');
-		Route::post('/store_ajax', [GroupController::class, 'store_ajax'])->name('store_ajax');
+		
 		Route::get('/{group}/edit', [GroupController::class, 'edit'])->name('edit');
 		Route::put('/{group}', [GroupController::class, 'update'])->name('update');
 		Route::delete('/{group}', [GroupController::class, 'destroy'])->name('destroy');
@@ -557,7 +557,7 @@ Route::post('admin/get-cadres', function(Illuminate\Http\Request $request){
     return response()->json($cadres);
 });
 Route::post('admin/group/store_ajax_admin_side', [App\Http\Controllers\Admin\GroupController::class, 'store_ajax_admin_side'])->name('store_ajax_admin_side');
-
+Route::post('/store_ajax', [GroupController::class, 'store_ajax'])->name('store_ajax');
 
 Route::post('/custom-broadcasting-auth', function(\Illuminate\Http\Request $request) {
     return response()->json([
