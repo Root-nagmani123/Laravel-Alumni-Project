@@ -359,24 +359,27 @@
                 <div class="row mt-5">
                     <div class="col-sm-5 col-8 mb-2 p-0">
                         <a href="#" class="text-decoration-none open-panel" data-panel="ldap">
-                            <div class="card login-card p-3">
+                            <div class="card login-card p-3 d-flex flex-column justify-content-center align-items-center">
                                 <span class="card-label">Login with</span>
-                                <p class="text-center m-0 fw-bold">LDAP</p>
+                                <p class="m-0 fw-bold">LDAP</p>
                             </div>
                         </a>
                     </div>
+
                     <div class="col-sm-2 col-8 align-self-center p-0">
                         <p class="text-center">or</p>
                     </div>
+
                     <div class="col-sm-5 col-8 mb-2 p-0">
                         <a href="#" class="text-decoration-none open-panel" data-panel="otp">
-                            <div class="card login-card p-3">
+                            <div class="card login-card p-3 d-flex flex-column justify-content-center align-items-center">
                                 <span class="card-label">Login with</span>
-                                <p class="text-center m-0 fw-bold">Email OTP</p>
+                                <p class="m-0 fw-bold">Email OTP</p>
                             </div>
                         </a>
                     </div>
                 </div>
+
 
                 <div class="mt-3 text-center">
                     <a href="#" class="btn btn-outline-danger open-panel" data-panel="register"
