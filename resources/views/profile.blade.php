@@ -826,7 +826,7 @@
                                             // Optional: if you have a group detail page
                                             $profileLink = route('user.profile.data', ['id' => Crypt::encrypt($post->member->id)]);
 
-                                            $groupLink = route('user.group-post',['id' => Crypt::encryptString($post->group_id)]);
+                                            $groupLink = route('user.group-post',['id' => ($post->group_id)]);
                                             } else {
                                             // Member/user post
                                             $member = $post->member ?? null;

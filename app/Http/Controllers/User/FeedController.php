@@ -178,7 +178,7 @@ class FeedController extends Controller
     ->distinct()
     ->get()
     ->map(function($item) {
-        $item->enc_id = Crypt::encryptString($item->id); // extra field add
+        $item->enc_id = ($item->id); // extra field add
         return $item;
     });
 
@@ -418,7 +418,7 @@ class FeedController extends Controller
     }
 public function getPostByGroup($group_id)
 {
-    echo $group_id = Crypt::decryptString($group_id); // Decrypt the group ID
+    // echo $group_id = Crypt::decryptString($group_id); // Decrypt the group ID
     $userId = auth()->guard('user')->id();
 
     // Posts with relations
@@ -431,7 +431,12 @@ public function getPostByGroup($group_id)
     $group = Group::find($group_id);
 
     // Mentee check (one-liner)
+    $isMentee = 0;
+
+if ($group) {
     $isMentee = ($group->member_type == 2 && $group->created_by == $userId) ? 1 : 0;
+}
+    // $isMentee = ($group->member_type == 2 && $group->created_by == $userId) ? 1 : 0;
 
     // Mentor + mentees direct members fetch
     $groupMember = DB::table('group_member')

@@ -67,86 +67,6 @@
             </div>
             <!-- group member details -->
 
-            <!-- Members Modal -->
-            @include('layouts.group-modal', ['group' => $group])
-            <div class="modal fade" id="membersModal-{{ $group->id }}" tabindex="-1" aria-hidden="true">
-                <div class="modal-dialog modal-lg modal-dialog-scrollable">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Group Members ({{ count($grp_members) }})</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-
-                        <div class="modal-body">
-                            <!-- Search Box -->
-                            <div class="mb-3">
-                                <input type="text" class="form-control member-search" placeholder="Search members..."
-                                    data-target="member-list-{{ $group->id }}">
-                            </div>
-
-                            <!-- Members List -->
-                          <div id="member-list-{{ $group->id }}">
-                            @php
-                                // Sort: admins first, then alphabetically by name
-                                $sortedMembers = collect($grp_members)->sort(function ($a, $b) {
-                                    // Put admins first
-                                    if (($a->is_admin ?? 0) != ($b->is_admin ?? 0)) {
-                                        return ($a->is_mentor ?? 0) ? -1 : 1;
-                                    }
-                                    // Then sort alphabetically by name
-                                    return strcasecmp($a->name, $b->name);
-                                });
-                            @endphp
-
-                            @foreach($sortedMembers as $member)
-                            <div class="d-md-flex align-items-center mb-3 member-item">
-                                <!-- Avatar -->
-                                <div class="avatar me-3 mb-3 mb-md-0">
-                                    @php
-                                        $defaultImage = asset('feed_assets/images/avatar/07.jpg');
-                                        $profileImage = $defaultImage;
-                                        if ($member->profile_pic && file_exists(public_path('storage/' .
-                                        $member->profile_pic))) {
-                                        $profileImage = asset('storage/' . $member->profile_pic);
-                                        }
-                                        @endphp
-                                        <a
-                                            href="{{ $member->id ? route('user.profile.data', ['id' => Crypt::encrypt($member->id)]) : '#' }}">
-                                            <img class="avatar-img rounded-circle" src="{{ $profileImage }}" alt="">
-                                        </a>
-                                    </div>
-                                    <!-- Info -->
-                                    <div class="w-100">
-                                        <h6 class="mb-0">
-                                            <a
-                                                href="{{ $member->id ? route('user.profile.data', ['id' => Crypt::encrypt($member->id)]) : '#' }}">
-                                                {{ $member->name }}
-                                            </a>
-                                            @if(!empty($member->is_admin) && $member->is_admin == 1)
-                                                <span class="badge bg-danger ms-2" title="Group Admin">
-                                                    <i class="bi bi-shield-lock"></i> Admin
-                                                </span>
-                                            @endif
-                                        </h6>
-                                        <p class="small text-muted mb-0">{{ $member->Service ?? 'N/A' }} | {{ $member->current_designation ?? 'N/A' }}</p>
-                                    </div>
-                                </div>
-                            </div>
-                            @endforeach
-                        </div>
-
-
-
-
-                        </div>
-
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
 
 
             @forelse($posts as $post)
@@ -331,8 +251,8 @@
                         <div class="avatar avatar-xs me-2">
                             <a href="{{ route('user.profile', ['id' => Crypt::encrypt(Auth::guard('user')->id())]) }}">
                                 <img class="avatar-img rounded-circle" src="{{ Auth::guard('user')->user()->profile_pic
-                ? asset('storage/' . Auth::guard('user')->user()->profile_pic)
-                : asset('feed_assets/images/avatar/07.jpg') }}" alt="User" loading="lazy" decoding="async">
+                                    ? asset('storage/' . Auth::guard('user')->user()->profile_pic)
+                                    : asset('feed_assets/images/avatar/07.jpg') }}" alt="User" loading="lazy" decoding="async">
                             </a>
 
                         </div>
@@ -428,6 +348,79 @@
         </div>
     </div>
 </div>
+<!-- Members Modal -->
+
+  <div class="modal fade" id="membersModal-{{ $group->id }}" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Group Members ({{ count($grp_members) }})</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <!-- Search Box -->
+                <div class="mb-3">
+                    <input type="text" class="form-control member-search" 
+                           placeholder="Search members..."
+                           data-target="member-list-{{ $group->id }}">
+                </div>
+
+                <!-- Members List -->
+                <div id="member-list-{{ $group->id }}">
+                    @php
+                        // Sort: admins first, then alphabetically by name
+                        $sortedMembers = collect($grp_members)->sort(function ($a, $b) {
+                            if (($a->is_admin ?? 0) != ($b->is_admin ?? 0)) {
+                                return ($a->is_admin ?? 0) ? -1 : 1;
+                            }
+                            return strcasecmp($a->name, $b->name);
+                        });
+                    @endphp
+
+                    @foreach($sortedMembers as $member)
+                        <div class="d-md-flex align-items-center mb-3 member-item">
+                            <!-- Avatar -->
+                            <div class="avatar me-3 mb-3 mb-md-0">
+                                @php
+                                    $defaultImage = asset('feed_assets/images/avatar/07.jpg');
+                                    $profileImage = $defaultImage;
+                                    if ($member->profile_pic && file_exists(public_path('storage/' . $member->profile_pic))) {
+                                        $profileImage = asset('storage/' . $member->profile_pic);
+                                    }
+                                @endphp
+                                <a href="{{ $member->id ? route('user.profile.data', ['id' => Crypt::encrypt($member->id)]) : '#' }}">
+                                    <img class="avatar-img rounded-circle" src="{{ $profileImage }}" alt="">
+                                </a>
+                            </div>
+                            <!-- Info -->
+                            <div class="w-100">
+                                <h6 class="mb-0">
+                                    <a href="{{ $member->id ? route('user.profile.data', ['id' => Crypt::encrypt($member->id)]) : '#' }}">
+                                        {{ $member->name }}
+                                    </a>
+                                    @if(!empty($member->is_admin) && $member->is_admin == 1)
+                                        <span class="badge bg-danger ms-2" title="Group Admin">
+                                            <i class="bi bi-shield-lock"></i> Admin
+                                        </span>
+                                    @endif
+                                </h6>
+                                <p class="small text-muted mb-0">
+                                    {{ $member->Service ?? 'N/A' }} | {{ $member->current_designation ?? 'N/A' }}
+                                </p>
+                            </div>
+                        </div> <!-- ✅ yeh foreach item ka close -->
+                    @endforeach
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Add Members Modal -->
 @section('scripts')
 <script>
