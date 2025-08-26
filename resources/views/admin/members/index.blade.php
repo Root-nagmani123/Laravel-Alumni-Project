@@ -39,9 +39,10 @@
         <!-- start Zero Configuration -->
         <div class="card">
             <div class="card-body">
+                <form method="GET" action="{{ route('members.index') }}">
                 <div class="row align-items-center g-3 mb-4">
                     <!-- Title --> 
-                      <form method="GET" action="{{ route('members.index') }}">
+                      
                     <div class="col-lg-3 col-md-6">
                         <h4 class="card-title mb-0">Member List</h4>
                     </div>
@@ -77,7 +78,7 @@
                             </div>
                         
                     </div>
-                    </form>
+                    
 
                     <!-- Action Buttons -->
                     <div
@@ -90,6 +91,7 @@
                         </a>
                     </div>
                 </div>
+                </form>
 
                 <hr>
                 <div class="dataTables_wrapper">

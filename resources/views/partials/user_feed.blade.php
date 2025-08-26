@@ -38,18 +38,6 @@
                     data-bs-target="#feedActionPhoto"> <i
                         class="bi bi-image-fill text-success pe-2"></i>Photos/Videos</a>
             </li>
-            <!-- <li class="nav-item">
-                <a class="nav-link bg-light py-1 px-2 mb-0" href="#!" data-bs-toggle="modal"
-                    data-bs-target="#feedActionVideo"> <i class="bi bi-camera-reels-fill text-info pe-2"></i>Video</a>
-            </li>
-            <li class="nav-item">
-                <a href="#" class="nav-link bg-light py-1 px-2 mb-0" data-bs-toggle="modal"
-                    data-bs-target="#modalCreateEvents"> <i
-                        class="bi bi-calendar2-event-fill text-danger pe-2"></i>Event </a>
-            </li> -->
-            <!-- <li class="nav-item">
-                            <a class="nav-link bg-light py-1 px-2 mb-0" href="#!" data-bs-toggle="modal" data-bs-target="#modalCreateFeed"> <i class="bi bi-emoji-smile-fill text-warning pe-2"></i>Feeling /Activity</a>
-                        </li> -->
         </ul>
         <!-- Share feed toolbar END -->
     </div>
@@ -64,41 +52,41 @@
                 <div class="d-flex align-items-center">
                     <!-- Avatar -->
                   @php
-    $profileImage = '';
-    $displayName = '';
-    $designation = '';
-    $Service = '';
-    $profileLink = '#';
+                        $profileImage = '';
+                        $displayName = '';
+                        $designation = '';
+                        $Service = '';
+                        $profileLink = '#';
 
-    if ($post->type === 'group_post') {
+                        if ($post->type === 'group_post') {
 
-        // Group post ke liye
-        $profileImage = $post->group_image
-            ? asset('storage/uploads/images/grp_img/' . $post->group_image)
-            : asset('feed_assets/images/avatar/07.jpg'); // fallback image
+                            // Group post ke liye
+                            $profileImage = $post->group_image
+                                ? asset('storage/uploads/images/grp_img/' . $post->group_image)
+                                : asset('feed_assets/images/avatar/07.jpg'); // fallback image
 
-        $displayName = $post->group_name ?? 'Unknown Group';
-        $designation = 'Group Post';
-        $created_by = $post->member->name;
+                            $displayName = $post->group_name ?? 'Unknown Group';
+                            $designation = 'Group Post';
+                            $created_by = $post->member->name;
 
-        // Optional: if you have a group detail page
-        $profileLink =  route('user.profile.data', ['id' => Crypt::encrypt($post->member->id)]);
+                            // Optional: if you have a group detail page
+                            $profileLink =  route('user.profile.data', ['id' => Crypt::encrypt($post->member->id)]);
 
-        $groupLink = route('user.group-post',['id' =>Crypt::encryptString($post->group_id)]);
-    } else {
-        // Member/user post
-        $member = $post->member ?? null;
+                            $groupLink = route('user.group-post',['id' =>Crypt::encryptString($post->group_id)]);
+                        } else {
+                            // Member/user post
+                            $member = $post->member ?? null;
 
-        $profileImage = $member && $member->profile_pic
-            ? asset('storage/' . $member->profile_pic)
-            : asset('feed_assets/images/avatar/07.jpg');
+                            $profileImage = $member && $member->profile_pic
+                                ? asset('storage/' . $member->profile_pic)
+                                : asset('feed_assets/images/avatar/07.jpg');
 
-        $displayName = $member->name ?? 'N/A';
-        $designation = $member->Service ?? 'N/A';
-        $profileLink = route('user.profile.data', ['id' => Crypt::encrypt($member->id)]);
+                            $displayName = $member->name ?? 'N/A';
+                            $designation = $member->Service ?? 'N/A';
+                            $profileLink = route('user.profile.data', ['id' => Crypt::encrypt($member->id)]);
 
-    }
-@endphp
+                        }
+                    @endphp
 
 <!-- Info -->
  <div class="d-flex align-items-center">
@@ -159,7 +147,7 @@
         @else
         <!-- Designation -->
         <p class="mb-0">
-            {{ $user->Service }} | {{ $user->current_designation }}
+            {{ $user->Service ?? 'N/A' }} | {{ $user->current_designation ?? 'N/A' }}
         </p>
         @endif
     </div>
