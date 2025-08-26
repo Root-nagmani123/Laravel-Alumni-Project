@@ -278,6 +278,12 @@
                         </div>
                     </div>
                 </li>
+                <li class="nav-item ms-2 d-lg-none">
+    <a class="nav-link bg-light icon-md btn btn-light p-0" href="#chat">
+        <i class="bi bi-chat-left-text-fill fs-6"></i>
+    </a>
+</li>
+
                 <!-- Notification dropdown END -->
  @php
                         $user = Auth::guard('user')->user();

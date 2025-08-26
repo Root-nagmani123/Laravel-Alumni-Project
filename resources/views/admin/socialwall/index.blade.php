@@ -31,6 +31,39 @@
     <div class="alert alert-success">{{ session('success') }}</div>
     @endif
     @php use Illuminate\Support\Str; @endphp
+<div class="row align-items-center mb-3">
+    <div class="col-md-6">
+        <form method="GET" action="{{ route('socialwall.index') }}">
+            <div class="input-group">
+                <select name="year" class="form-select" onchange="this.form.submit()">
+                    <option value="">All Years</option>
+                    @foreach($years as $year)
+                        <option value="{{ $year }}" {{ request('year') == $year ? 'selected' : '' }}>
+                            {{ $year }}
+                        </option>
+                    @endforeach
+                </select>
+                <select name="month" class="form-select" onchange="this.form.submit()">
+                    <option value="">All Months</option>
+                    @foreach(range(1, 12) as $month)
+                        <option value="{{ $month }}" {{ request('month') == $month ? 'selected' : '' }}>
+                            {{ \Carbon\Carbon::create()->month($month)->format('F') }}
+                        </option>
+                    @endforeach
+                </select>
+                <select name="day" class="form-select" onchange="this.form.submit()">
+                    <option value="">All Days</option>
+                    @foreach($days as $day)
+                        <option value="{{ $day }}" {{ request('day') == $day ? 'selected' : '' }}>
+                            {{ $day }}
+                        </option>
+                    @endforeach
+                </select>
+                <button type="submit" class="btn btn-primary">Filter</button>
+            </div>
+        </form>
+    </div>
+</div>
 
     @foreach($groupedPosts as $post)
     <div class="card rounded" id="feed-{{ $post['post_id'] }}">
@@ -98,6 +131,28 @@
                 @endforeach
             </div>
             @endif
+
+            @if(!empty($post['video_link']))
+    <div class="mb-3">
+        @if(Str::contains($post['video_link'], 'youtube.com') || Str::contains($post['video_link'], 'youtu.be'))
+            @php
+                // Extract YouTube video ID from URL
+                preg_match('/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?|shorts)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})/', $post['video_link'], $matches);
+                $youtubeId = $matches[1] ?? null;
+            @endphp
+            @if($youtubeId)
+                <iframe width="320" height="240" src="https://www.youtube.com/embed/{{ $youtubeId }}" frameborder="0" allowfullscreen></iframe>
+            @else
+                <a href="{{ $post['video_link'] }}" target="_blank">View Video</a>
+            @endif
+        @else
+            <video width="320" height="240" controls>
+                <source src="{{ $post['video_link'] }}" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        @endif
+    </div>
+@endif
         </div>
         <!-- Comments Section -->
         <div class="card-footer border-top">

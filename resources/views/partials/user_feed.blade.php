@@ -159,7 +159,7 @@
         @else
         <!-- Designation -->
         <p class="mb-0">
-            {{ $member->Service }} | {{ $member->current_designation }}
+            {{ $user->Service }} | {{ $user->current_designation }}
         </p>
         @endif
     </div>
