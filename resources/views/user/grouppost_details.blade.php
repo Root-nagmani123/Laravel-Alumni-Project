@@ -108,10 +108,10 @@
                                         <h6 class="mb-0">
                                             <a
                                                 href="{{ $member->id ? route('user.profile.data', ['id' => $member->id]) : '#' }}">
-                                                {{ $member->name }}
+                                                {{ $member->name }}  
                                             </a>
                                         </h6>
-                                        <p class="small text-muted mb-0">{{ $member->designation ?? 'N/A' }}</p>
+                                        <p class="small text-muted mb-0">{{ $member->Service ?? 'N/A' }} | {{ $member->current_designation ?? 'N/A' }}</p>
                                     </div>
                                 </div>
                                 @endforeach

@@ -93,7 +93,8 @@ $(document).ready(function () {
 
 // Admin side changes
 $(document).ready(function () {
-    $('.add_member_').click(function () {
+    $(document).on('click', '.add_member_', function () {
+    // $('.add_member_').click(function () {
         let groupId = $(this).data('id');
         if (!groupId) {
             return;
@@ -172,7 +173,7 @@ $(document).ready(function () {
 
     // Pehle hi cadre etc. ke liye select2 init kar lo
     $(document).on('shown.bs.modal', '#addMemberModal', function () {
-        $(this).find('.cadre, .select2').each(function () {
+        $(this).find('.cadre, .select2, .year-select').each(function () {
             if (!$(this).data('select2')) {
                 $(this).select2({
                     placeholder: "Select",
@@ -288,6 +289,7 @@ $(document).ready(function () {
                     $('#groupForm')[0].reset();
                     $('#groupModal').modal('hide');
                     // reload table/list if needed
+                    location.reload();
                     if (typeof groupTable !== "undefined") groupTable.ajax.reload();
                 } else {
                     alert('Something went wrong.');

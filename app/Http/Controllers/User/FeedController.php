@@ -456,7 +456,7 @@ public function getPostByGroup($group_id)
     // Fetch member details from members table
     $grp_members = DB::table('members')
         ->whereIn('id', $memberIds)
-        ->select('id', 'name', 'designation','profile_pic' )
+        ->select('id', 'name', 'designation','profile_pic', 'Service', 'current_designation' )
         ->get();
 
        $members = DB::table('members')
