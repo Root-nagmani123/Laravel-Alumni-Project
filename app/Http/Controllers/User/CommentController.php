@@ -133,7 +133,7 @@ public function loadComments_old_22_08_2025($postId)
                 $user = \App\Models\Member::where('username', $username)->first();
 
                 if ($user) {
-                    $url = route('user.profile.data', ['id' => $user->id]);
+                    $url = route('user.profile.data', ['id' => Crypt::encrypt($user->id)]);
                     return "<a href='{$url}' 
                         class='mention-badge text-primary fw-semibold text-decoration-none' 
                         data-bs-toggle='tooltip' 

@@ -70,13 +70,13 @@
 
                     @endphp
                 <div class="d-flex align-items-start gap-3 mb-3 comment-item" data-comment-id="{{ $comment->id }}">
-                  <a href="{{ route('user.profile.data', ['id' => $comment->user_id]) }}">
+                  <a href="{{ route('user.profile.data', ['id' => Crypt::encrypt($comment->user_id)]) }}">
     <img src="{{ $commentPicPath }}" class="rounded-circle" alt="User" style="width:40px; height:40px; object-fit:cover;">
 </a>
 <div class="flex-grow-1">
     <div class="d-flex align-items-center justify-content-between mb-1">
         <div class="d-flex align-items-center gap-2">
-            <a href="{{ route('user.profile.data', ['id' => $comment->user_id]) }}">
+            <a href="{{ route('user.profile.data', ['id' => Crypt::encrypt($comment->user_id)]) }}">
                 <h6 class="mb-0 fw-bold">{{ $comment->member_name }}</h6>
             </a>
             <small class="text-muted">{{ \Carbon\Carbon::parse($comment->created_at)->format('d-m-y') }}</small>
@@ -98,7 +98,7 @@
                 $username = $matches[1];
                 $user = \App\Models\Member::where('username', $username)->first(); // 👈 username se search
                 if ($user) {
-                    $url = route('user.profile.data', ['id' => $user->id]);
+                    $url = route('user.profile.data', ['id' => Crypt::encrypt($user->id)]);
                     return "<a href='{$url}' 
                         class='mention-badge text-primary fw-bold' 
                         data-bs-toggle='tooltip' 

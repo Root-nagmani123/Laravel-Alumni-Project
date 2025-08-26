@@ -85,12 +85,24 @@
                             </div>
 
                             <!-- Members List -->
-                            <div id="member-list-{{ $group->id }}">
-                                @foreach($grp_members as $member)
-                                <div class="d-md-flex align-items-center mb-3 member-item">
-                                    <!-- Avatar -->
-                                    <div class="avatar me-3 mb-3 mb-md-0">
-                                        @php
+                          <div id="member-list-{{ $group->id }}">
+                            @php
+                                // Sort: admins first, then alphabetically by name
+                                $sortedMembers = collect($grp_members)->sort(function ($a, $b) {
+                                    // Put admins first
+                                    if (($a->is_admin ?? 0) != ($b->is_admin ?? 0)) {
+                                        return ($a->is_mentor ?? 0) ? -1 : 1;
+                                    }
+                                    // Then sort alphabetically by name
+                                    return strcasecmp($a->name, $b->name);
+                                });
+                            @endphp
+
+                            @foreach($sortedMembers as $member)
+                            <div class="d-md-flex align-items-center mb-3 member-item">
+                                <!-- Avatar -->
+                                <div class="avatar me-3 mb-3 mb-md-0">
+                                    @php
                                         $defaultImage = asset('feed_assets/images/avatar/07.jpg');
                                         $profileImage = $defaultImage;
                                         if ($member->profile_pic && file_exists(public_path('storage/' .
@@ -99,7 +111,7 @@
                                         }
                                         @endphp
                                         <a
-                                            href="{{ $member->id ? route('user.profile.data', ['id' => $member->id]) : '#' }}">
+                                            href="{{ $member->id ? route('user.profile.data', ['id' => Crypt::encrypt($member->id)]) : '#' }}">
                                             <img class="avatar-img rounded-circle" src="{{ $profileImage }}" alt="">
                                         </a>
                                     </div>
@@ -107,15 +119,25 @@
                                     <div class="w-100">
                                         <h6 class="mb-0">
                                             <a
-                                                href="{{ $member->id ? route('user.profile.data', ['id' => $member->id]) : '#' }}">
-                                                {{ $member->name }}  
+                                                href="{{ $member->id ? route('user.profile.data', ['id' => Crypt::encrypt($member->id)]) : '#' }}">
+                                                {{ $member->name }}
                                             </a>
+                                            @if(!empty($member->is_admin) && $member->is_admin == 1)
+                                                <span class="badge bg-danger ms-2" title="Group Admin">
+                                                    <i class="bi bi-shield-lock"></i> Admin
+                                                </span>
+                                            @endif
                                         </h6>
                                         <p class="small text-muted mb-0">{{ $member->Service ?? 'N/A' }} | {{ $member->current_designation ?? 'N/A' }}</p>
                                     </div>
                                 </div>
-                                @endforeach
                             </div>
+                            @endforeach
+                        </div>
+
+
+
+
                         </div>
 
                         <div class="modal-footer">
@@ -154,7 +176,7 @@
                         <div class="d-flex align-items-center">
                             <!-- Avatar -->
                             <div class="avatar me-2">
-                                <a href="{{ $post->member ? url('/user/profile/' . $post->member->id) : '#' }}">
+                                <a href="{{ $post->member ? url('/user/profile/' . Crypt::encrypt($post->member->id)) : '#' }}">
                                     <img class="avatar-img rounded-circle" src="{{ $profileImage }}"
                                         alt="Profile Picture" loading="lazy" decoding="async">
                                 </a>
@@ -164,7 +186,7 @@
                             <div>
                                 <div class="nav nav-divider">
                                     <h6 class="nav-item card-title mb-0">
-                                        <a href="{{ $post->member ? url('/user/profile/' . $post->member->id) : '#' }}">
+                                        <a href="{{ $post->member ? url('/user/profile/' . Crypt::encrypt($post->member->id)) : '#' }}">
                                             {{ $post->member->name ?? 'Anonymous' }}
                                         </a>
                                     </h6>
@@ -307,9 +329,9 @@
                     <!-- Comment box -->
                     <div class="d-flex mb-3">
                         <div class="avatar avatar-xs me-2">
-                            <a href="{{ route('user.profile', ['id' => Auth::guard('user')->id()]) }}">
-                                <img class="avatar-img rounded-circle" src="{{ Auth::guard('user')->user()->profile_pic 
-                ? asset('storage/' . Auth::guard('user')->user()->profile_pic) 
+                            <a href="{{ route('user.profile', ['id' => Crypt::encrypt(Auth::guard('user')->id())]) }}">
+                                <img class="avatar-img rounded-circle" src="{{ Auth::guard('user')->user()->profile_pic
+                ? asset('storage/' . Auth::guard('user')->user()->profile_pic)
                 : asset('feed_assets/images/avatar/07.jpg') }}" alt="User" loading="lazy" decoding="async">
                             </a>
 

@@ -341,7 +341,7 @@ class ForumController extends Controller
                 $username = $matches[1];
                 $user = \App\Models\Member::where('username', $username)->first();
                 if ($user) {
-                    $url = route('user.profile.data', ['id' => $user->id]);
+                    $url = route('user.profile.data', ['id' => Crypt::encrypt($user->id)]);
                     return "<a href='{$url}' 
                         class='mention-badge' 
                         data-bs-toggle='tooltip' 
