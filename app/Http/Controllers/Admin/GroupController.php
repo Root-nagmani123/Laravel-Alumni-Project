@@ -739,8 +739,8 @@ public function deleteTopic($id)
         $request->validate([
             'group_name'  => 'required|string|max:255',
             'service'     => 'required|string|max:255',
-            'year'        => 'required|array',
-            'cadre'       => 'required|array',
+            // 'year'        => 'required|array',
+            // 'cadre'       => 'required|array',
             'mentees'     => 'required|array',
             'grp_image'   => 'required|image|mimes:jpeg,png,jpg,avif|max:2048',
             'end_date'    => 'required|date|after_or_equal:today',
