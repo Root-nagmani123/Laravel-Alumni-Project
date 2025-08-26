@@ -872,46 +872,17 @@ public function deleteTopic($id)
     }
 
     function store_ajax_admin_side(Request $request) {
-        // dd($request->all());
-//         array:6 [ // app/Http/Controllers/Admin/GroupController.php:855
-//   "_token" => "zdlJVpRQ2lHFmbrjtEyiM5ZMeAwHOvQf5e9OSUS0"
-//   "group_id" => "30"
-//   "service" => "IAS"
-//   "year" => array:3 [
-//     0 => "2020"
-//     1 => "131331"
-//     2 => "2005"
-//   ]
-//   "cadre" => array:1 [
-//     0 => "Assam\u{A0}Meghalaya"
-//   ]
-//   "mentees" => array:2 [
-//     0 => "3363"
-//     1 => "3423"
-//   ]
-// ]
-
 
         $request->validate([
             'group_id'    => 'required|integer|exists:groups,id',
-            'service'     => 'required|string|max:255',
-            'year'        => 'required|array',
-            'cadre'       => 'required|array',
             'mentees'     => 'required|array',
         ]);
 
-
         if(isset($request->group_id)) {
             $group = Group::find($request->group_id);
-            // Update Group
-            $group->update([
-                'status'     => 1,
-                'created_by' => auth()->id(),
-            ]);
 
             GroupMember::updateOrCreate([
                 'group_id' => $group->id,
-                
             ], [
                 'mentiee' => json_encode($request->input('mentees')),
                 'status' => 1,

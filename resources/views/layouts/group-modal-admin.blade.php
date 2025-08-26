@@ -13,16 +13,15 @@
             </div>
 
             <!-- Body -->
-            <div class="modal-body">
+            <div class="">
                 <div class="row g-3">
 
 
 
                     <!-- Service -->
                     <div class="col-md-6">
-                        <label class="form-label">Service <span class="text-danger">*</span></label>
-                        <select class="form-select service" name="service" id="service" data-id="new_group_create"
-                            required>
+                        <label class="form-label">Service</label>
+                        <select class="form-select service" name="service" id="service" data-id="new_group_create">
                             <option selected disabled>Select Service</option>
                             @if(isset($members) && !$members->isEmpty())
                                 @foreach($members as $member)
@@ -38,7 +37,7 @@
 
                     <!-- Year / Batch -->
                     <div class="col-md-6">
-                        <label class="form-label">Year / Batch <span class="text-danger">*</span></label>
+                        <label class="form-label">Year / Batch</label>
                         <select class="form-select year-select" name="year[]" multiple="multiple" required>
                             <!-- Options populated dynamically via AJAX -->
                         </select>
@@ -46,7 +45,7 @@
 
                     <!-- Cadre -->
                     <div class="col-md-6">
-                        <label class="form-label">Cadre <span class="text-danger">*</span></label>
+                        <label class="form-label">Cadre</label>
                         <select class="form-select cadre select2" name="cadre[]" multiple="multiple"
                             data-id="new_group_create" required>
                             <!-- Options populated dynamically via AJAX -->
@@ -92,7 +91,7 @@
             <!-- Footer -->
             <div class="modal-footer">
                 <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
-                <button type="submit" class="btn btn-primary">Create Group</button>
+                <button type="submit" class="btn btn-primary">Update Group</button>
             </div>
         </div>
     </form>
