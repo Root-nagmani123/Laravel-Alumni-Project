@@ -14,5 +14,16 @@ class GroupMember extends Model
     protected $fillable = [
        'group_id', 'member_id', 'mentor', 'mentiee', 'status'
     ];
+
+    public function getMentieesCount() {
+        if ($this->mentiee) {
+            $mentees = json_decode($this->mentiee, true);
+            if (is_array($mentees)) {
+                return count($mentees);
+            }
+        }
+        return 0;
+    }
+
 }
 

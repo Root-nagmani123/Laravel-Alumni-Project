@@ -7,44 +7,11 @@
     <div class="offcanvas-header d-flex justify-content-between">
         <h5 class="offcanvas-title"> Mentor/Mentee Conversation</h5>
         <div class="d-flex">
-            <!-- New chat box open button -->
-            {{-- <a href="#" class="btn btn-secondary-soft-hover py-1 px-2">
-                <i class="bi bi-pencil-square"></i>
-            </a> --}}
-            <!-- Chat action START -->
-            {{-- <div class="dropdown">
-                <a href="#" class="btn btn-secondary-soft-hover py-1 px-2" id="chatAction" data-bs-toggle="dropdown"
-                    aria-expanded="false">
-                    <i class="bi bi-three-dots"></i>
-                </a>
-                <!-- Chat action menu -->
-                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="chatAction">
-                    <li><a class="dropdown-item" href="#"> <i class="bi bi-check-square fa-fw pe-2"></i>Mark all as
-                            read</a></li>
-                    <li><a class="dropdown-item" href="#"> <i class="bi bi-gear fa-fw pe-2"></i>Chat setting </a>
-                    </li>
-                    <li><a class="dropdown-item" href="#"> <i class="bi bi-bell fa-fw pe-2"></i>Disable
-                            notifications</a></li>
-                    <li><a class="dropdown-item" href="#"> <i class="bi bi-volume-up-fill fa-fw pe-2"></i>Message
-                            sounds</a></li>
-                    <li><a class="dropdown-item" href="#"> <i class="bi bi-slash-circle fa-fw pe-2"></i>Block
-                            setting</a></li>
-                    <li>
-                        <hr class="dropdown-divider">
-                    </li>
-                    <li><a class="dropdown-item" href="#"> <i class="bi bi-people fa-fw pe-2"></i>Create a group
-                            chat</a></li>
-                </ul>
-            </div> --}}
-            <!-- Chat action END -->
-
             <!-- Close  -->
             <a href="#" class="btn btn-secondary-soft-hover d-flex align-items-center justify-content-center p-0"
                 style="width:32px; height:32px;" data-bs-dismiss="offcanvas" aria-label="Close">
                 <i class="fa-solid fa-xmark"></i>
             </a>
-
-
         </div>
     </div>
     <!-- Offcanvas body START -->
@@ -243,8 +210,7 @@
                             $profileImage = asset('feed_assets/images/avatar/07.jpg');
                             }
                             @endphp
-                            <img class="avatar-img rounded-circle" src="{{ $profileImage }}"
-                                alt="">
+                            <img class="avatar-img rounded-circle" src="{{ $profileImage }}" alt="">
                         </div>
                         <div class="flex-grow-1">
                             <div class="d-flex flex-column align-items-start">
@@ -273,24 +239,21 @@
 
                 <!-- Message input -->
                 <div class="mt-2">
-    <form wire:submit.prevent="submit">
-        <div class="position-relative">
-            <textarea class="form-control pe-5"
-                rows="1"
-                wire:model.defer="newMessage"
-                wire:key="message-input-{{ now() }}"
-                wire:keydown.enter="submit"
-                placeholder="Type your message..."></textarea>
+                    <form wire:submit.prevent="submit">
+                        <div class="position-relative">
+                            <textarea class="form-control pe-5" rows="1" wire:model.defer="newMessage"
+                                wire:key="message-input-{{ now() }}" wire:keydown.enter="submit"
+                                placeholder="Type your message..."></textarea>
 
-            <!-- Send button -->
-            <button type="submit"
-                class="btn btn-primary btn-sm position-absolute top-50 end-0 translate-middle-y me-2 d-flex align-items-center justify-content-center"
-                style="padding: 6px; width: 32px; height: 32px; border-radius: 8px;">
-                <i class="fa-solid fa-paper-plane"></i>
-            </button>
-        </div>
-    </form>
-</div>
+                            <!-- Send button -->
+                            <button type="submit"
+                                class="btn btn-primary btn-sm position-absolute top-50 end-0 translate-middle-y me-2 d-flex align-items-center justify-content-center"
+                                style="padding: 6px; width: 32px; height: 32px; border-radius: 8px;">
+                                <i class="fa-solid fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
 
 
             </div>
@@ -302,13 +265,52 @@
     @endif
     <!-- Chat END -->
 </div>
-
 <script>
-document.addEventListener('livewire:load', function() {
-    Livewire.hook('message.processed', () => {
-        const chat = document.getElementById('chat-container');
-        if (chat) {
-            chat.scrollTop = chat.scrollHeight;
+public
+function submit() {
+    // Save message
+    $this - > validate([
+        'newMessage' => 'required|string|max:500',
+    ]);
+
+    Message::create([
+        'chat_id' => $this - > selectedChat - > id,
+        'sender_id' => auth() - > id(),
+        'message' => $this - > newMessage,
+    ]);
+
+    $this - > newMessage = '';
+
+    // Tell frontend to scroll
+    $this - > dispatchBrowserEvent('chat-scroll', [
+        'chatId' => $this - > selectedChat - > id
+    ]);
+}
+
+public
+function getListeners() {
+    return [
+        "echo:chat.{$this->selectedChat->id},MessageSent" => 'messageReceived',
+    ];
+}
+
+public
+function messageReceived($payload) {
+    // Just trigger scroll when someone else sends message
+    $this - > dispatchBrowserEvent('chat-scroll', [
+        'chatId' => $this - > selectedChat - > id
+    ]);
+}
+</script>
+<script>
+document.addEventListener('livewire:load', () => {
+    window.addEventListener('chat-scroll', event => {
+        let container = document.getElementById('chat-container-' + event.detail.chatId);
+        if (container.scrollHeight - container.scrollTop - container.clientHeight < 100) {
+            container.scrollTo({
+                top: container.scrollHeight,
+                behavior: 'smooth'
+            });
         }
     });
 });

@@ -170,7 +170,7 @@ Route::prefix('user')->name('user.')->group(function () {
          Route::get('/profile/{id}', [ProfileController::class, 'showById'])->where('id', '[0-9]+')->name('profile');
          Route::get('/profile/{name}', [ProfileController::class, 'showByName'])->where('name', '[a-zA-Z\s]+')->name('profile.name');
 
-         Route::get('/profile/data/{id}', [ProfileController::class, 'showById_data'])->where('id', '[0-9]+')->name('profile.data');
+         Route::get('/profile/data/{id}', [ProfileController::class, 'showById_data'])->name('profile.data');
          Route::put('/profile/update/{id}', [ProfileController::class, 'update'])->name('profile.update');
 
         Route::put('/eduinfo/update/{id}', [ProfileController::class, 'updateEduinfo'])->name('profile.eduinfo');
@@ -222,11 +222,10 @@ Route::prefix('user')->name('user.')->group(function () {
         // Route::get('/notifications/{id}', [App\Http\Controllers\Member\NotificationController::class, 'notificationstatus'])->name('notifications.status');
        Route::post('/notifications/{id}/clear', [App\Http\Controllers\Member\NotificationController::class, 'clearNotifications'])
      ->name('notifications.clear');
-       
-        Route::put('/notifications/{id}/read', [App\Http\Controllers\Member\NotificationController::class, 'markAsRead'])->name('notifications.read');
+
+        Route::post('/notifications/read/{notifId}', [App\Http\Controllers\Member\NotificationController::class, 'markAsRead'])->name('notifications.read');
         Route::get('/get-members', [MemberController::class, 'getMembers'])->name('members.list');
 
-        
     });
 
 
@@ -383,7 +382,7 @@ Route::prefix('group')->name('group.')->group(function () {
 		Route::get('/', [GroupController::class, 'index'])->name('index');
 		Route::get('/create', [GroupController::class, 'create'])->name('create');
 		Route::post('/', [GroupController::class, 'store'])->name('store');
-		Route::post('/store_ajax', [GroupController::class, 'store_ajax'])->name('store_ajax');
+		
 		Route::get('/{group}/edit', [GroupController::class, 'edit'])->name('edit');
 		Route::put('/{group}', [GroupController::class, 'update'])->name('update');
 		Route::delete('/{group}', [GroupController::class, 'destroy'])->name('destroy');
@@ -521,6 +520,45 @@ Route::post('/otp/send', [OtpLoginController::class, 'sendOtp'])->name('otp.send
 Route::post('/otp/verify', [OtpLoginController::class, 'verifyOtp'])->name('otp.verify');
 Route::get('/admin/members/list', [App\Http\Controllers\Admin\GroupController::class, 'getMembers'])
     ->name('admin.members.list');
+Route::get('/admin/group/members', [App\Http\Controllers\Admin\GroupController::class, 'getGroupMembers'])
+    ->name('admin.group.members');
+Route::post('/admin/get-year', function (Illuminate\Http\Request $request) {
+    
+    $service = $request->input('service'); 
+         $years = App\Models\Member::where('service', $service)
+    ->whereNotNull('batch')
+    ->where('batch', '!=', 'NA')
+    ->distinct()
+    ->pluck('batch');
+
+return response()->json($years);
+});
+
+Route::post('admin/get-cadres', function(Illuminate\Http\Request $request){
+    $service = $request->service;
+    $year = $request->year; // batch year
+
+    $query = App\Models\Member::query();
+
+    if (!empty($service)) {
+        $query->where('service', $service);
+    }
+
+    if (!empty($year)) {
+        $query->whereIn('batch', $year);
+    }
+
+    $cadres = $query->whereNotNull('cader')
+        ->where('cader', '!=', 'NA')
+        ->distinct()
+        ->orderBy('cader')
+        ->pluck('cader');
+
+
+    return response()->json($cadres);
+});
+Route::post('admin/group/store_ajax_admin_side', [App\Http\Controllers\Admin\GroupController::class, 'store_ajax_admin_side'])->name('store_ajax_admin_side');
+Route::post('/store_ajax', [GroupController::class, 'store_ajax'])->name('store_ajax');
 
 Route::post('/custom-broadcasting-auth', function(\Illuminate\Http\Request $request) {
     return response()->json([

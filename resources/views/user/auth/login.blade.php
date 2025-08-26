@@ -329,7 +329,7 @@
         </div>
     </div>
 
-    <div class="container-fluid">
+    <div class="container-fluid d-none d-lg-block">
         <div class="row">
             <!-- Left Section -->
             <div class="col-lg-4 p-5 d-flex flex-column justify-content-center bg-top-bottom">
@@ -359,24 +359,27 @@
                 <div class="row mt-5">
                     <div class="col-sm-5 col-8 mb-2 p-0">
                         <a href="#" class="text-decoration-none open-panel" data-panel="ldap">
-                            <div class="card login-card p-3">
+                            <div class="card login-card p-3 d-flex flex-column justify-content-center align-items-center">
                                 <span class="card-label">Login with</span>
-                                <p class="text-center m-0 fw-bold">LDAP</p>
+                                <p class="m-0 fw-bold">LDAP</p>
                             </div>
                         </a>
                     </div>
+
                     <div class="col-sm-2 col-8 align-self-center p-0">
                         <p class="text-center">or</p>
                     </div>
+
                     <div class="col-sm-5 col-8 mb-2 p-0">
                         <a href="#" class="text-decoration-none open-panel" data-panel="otp">
-                            <div class="card login-card p-3">
+                            <div class="card login-card p-3 d-flex flex-column justify-content-center align-items-center">
                                 <span class="card-label">Login with</span>
-                                <p class="text-center m-0 fw-bold">Email OTP</p>
+                                <p class="m-0 fw-bold">Email OTP</p>
                             </div>
                         </a>
                     </div>
                 </div>
+
 
                 <div class="mt-3 text-center">
                     <a href="#" class="btn btn-outline-danger open-panel" data-panel="register"
@@ -552,92 +555,211 @@
 
 
     </div>
+    <div class="container-fluid mx-auto d-block d-lg-none">
+        <div class="row">
+            <!-- Left Section -->
+            <div class="col-lg-4 p-5 d-flex flex-column justify-content-center bg-top-bottom">
+                <!-- Your left column content here -->
+                <!-- Logo -->
+                <div class="logo-sec text-center mb-4">
+                    <a href="#!"
+                        class="d-flex align-items-center gap-3 text-decoration-none justify-content-center flex-wrap">
+                        <img src="{{ asset('admin_assets/images/logos/lbsnaa_logo.jpg') }}" alt="LBSNAA Logo"
+                            style="height: 60px; object-fit: contain;">
+                    </a>
+                </div>
 
-    <!-- Registration Modal -->
-    <div class="modal fade" id="registrationModal" tabindex="-1" aria-labelledby="registrationModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content">
-                <form id="registrationForm" method="POST" action="" enctype="multipart/form-data">
-                    @csrf
-                    <div class="modal-header">
-                        <div class="logo-sec text-center">
-                            <a href="#!"
-                                class="d-flex align-items-center gap-3 text-decoration-none justify-content-center flex-wrap">
-                                <!-- Logo Image -->
-                                <img src="{{ asset('admin_assets/images/logos/lbsnaa_logo.jpg') }}" alt="LBSNAA Logo"
-                                    style="height: 60px; object-fit: contain;">
+                <div class="text-center">
+                    <h1 class="fw-bold mb-3 ">Welcome to Alumni Portal!</h1>
+                    <p>The LBSNAA Alumni Portal connects officer trainees across batches, fostering lifelong bonds, knowledge sharing, and collaboration. It preserves the Academy’s heritage while offering alumni a platform to stay engaged, contribute, and celebrate their shared journey.</p>
+                </div>
 
-                                <!-- Text Block -->
-                                <div class="d-flex flex-column text-start">
-                                    <span class="mb-0"
-                                        style="color: #000000;font-weight: bold;font-size: 24px;">Alumni</span>
-                                    <span style="font-size: 16px; font-weight: 500;color: #af2910;">
-                                        Lal Bahadur Shastri National Academy of Administration
-                                    </span>
-                                </div>
-                            </a>
-                                      
-                        </div>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        <hr>
+
+                <!-- Login Buttons -->
+                <div class="row mt-5">
+                    <div class="col-10 mx-auto mb-2 p-0">
+                        <a href="#" class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#ldapModal">
+                            <div class="card login-card p-3 d-flex flex-column justify-content-center align-items-center">
+                                <span class="card-label">Login with</span>
+                                <p class="m-0 fw-bold">LDAP</p>
+                            </div>
+                        </a>
+                    </div>
+
+                    <div class="col-8 align-self-center p-0 mb-4 mx-auto">
+                        <p class="text-center">or</p>
+                    </div>
+
+                    <div class="col-10 mx-auto mb-2 p-0">
+                       <a href="#" class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#otpModal">
+                            <div class="card login-card p-3 d-flex flex-column justify-content-center align-items-center">
+                                <span class="card-label">Login with</span>
+                                <p class="m-0 fw-bold">Email OTP</p>
+                            </div>
+                        </a>
 
                     </div>
-                    <div class="modal-body">
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold">Name</label>
-                                <input type="text" name="name" class="form-control" required>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold">Email <span class="text-muted"
-                                        style="font-size:12px;">(.gov or .nic only)</span></label>
-                                <input type="email" name="email" class="form-control"
-                                    pattern="^[^@\s]+@(?:[^@\s]+\.)?(gov|nic)\.in$" required>
-                                <div class="form-text text-danger" id="emailMsg" style="display:none;">Only .gov.in
-                                    or
-                                    .nic.in email IDs are allowed.</div>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold">Mobile Number</label>
-                                <input type="text" name="mobile" class="form-control" pattern="^[6-9]\d{9}$"
-                                    maxlength="10" required>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold">Service</label>
-                                <input type="text" name="service" class="form-control" required>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold">Batch</label>
-                                <input type="text" name="batch" class="form-control" required>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold">Cadre <span
-                                        class="text-muted">(Optional)</span></label>
-                                <input type="text" name="cadre" class="form-control">
-                            </div>
-                            <div class="col-md-12">
-                                <label class="form-label fw-bold">Course Attended in LBSNAA</label>
-                                <input type="text" name="course_attended" class="form-control" required>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold">Upload Photo</label>
-                                <input type="file" name="photo" class="form-control" accept="image/*" required>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold">Upload Govt. ID</label>
-                                <input type="file" name="govt_id" class="form-control" accept="image/*,.pdf" required>
-                            </div>
+                </div>
+
+
+                <div class="mt-3 text-center">
+                    <a href="#" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#registerModal">
+                        For Registration Click Here
+                    </a>
+                </div>
+                <div class="position-relative w-100 bg-light d-flex align-items-center px-3 mt-4"
+                    style="height: 40px; overflow: hidden; z-index: 1040;">
+                    <div class="position-relative d-flex align-items-center">
+                        <button class="btn btn-sm btn-danger position-relative z-1"
+                            style="background-color:#af2910; border: #af2910 1px solid;color:#fff;min-width: 120px;">
+                            Helpdesk
+                        </button>
+                    </div>
+
+                    <div class="marquee-container flex-grow-1 d-flex align-items-center ms-2"
+                        style="overflow: hidden; height: 100%;">
+                        <div class="marquee-text">
+                            Inquiry regarding user credentials: Phone: 135-2222346 (Mon–Fri,
+                            9:00 AM–5:30 PM) Email:
+                            ithelpdesk.lbsnaa@nic.in
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Register</button>
+                </div>
+                <div class="card mt-5 w-100" style="background:transparent !important; border:none !important;">
+                    <div class="card-body">
+                        <p class="text-center mb-0">
+                            © {{ date("Y") }}
+                            <a href="https://www.lbsnaa.gov.in/">
+                                Lal Bahadur Shastri National Academy of Administration Mussoorie
+                            </a>,<br>
+                            Govt of India. All Rights Reserved
+                        </p>
                     </div>
-                </form>
+                </div>
             </div>
         </div>
     </div>
+        <!-- ================= LDAP Login Modal ================= -->
+<div class="modal fade" id="ldapModal" tabindex="-1" aria-labelledby="ldapModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content shadow-lg p-4">
+      <button type="button" class="btn-close position-absolute top-0 end-0 m-3" data-bs-dismiss="modal"></button>
+      <h4 class="mb-3 fw-bold text-center">LDAP Login</h4>
+      <hr class="my-2">
+      <form method="POST" action="{{ route('user.login.submit_ldap') }}" id="loginForm">
+        @csrf
+        <div class="mb-3">
+          <label class="form-label fw-bold">User Name</label>
+          <input type="text" name="username" class="form-control" placeholder="Enter your username" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label fw-bold">Password</label>
+          <input type="password" name="password" id="password" class="form-control" placeholder="Enter your password" required>
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Login</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+<!-- ================= Email OTP Login Modal ================= -->
+<div class="modal fade" id="otpModal" tabindex="-1" aria-labelledby="otpModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content shadow-lg p-4">
+      <button type="button" class="btn-close position-absolute top-0 end-0 m-3" data-bs-dismiss="modal"></button>
+      <h4 class="mb-3 fw-bold text-center">Email OTP Login</h4>
+      <hr class="my-2">
+      <form id="otpForm">
+        @csrf
+        <div class="form-group mb-3">
+          <label class="form-label fw-bold">Email Address</label>
+          <input type="email" name="otp_email" id="otp_email" class="form-control" placeholder="Enter your email" required>
+          <div id="emailError" class="error-message"></div>
+          <div id="emailSuccess" class="success-message"></div>
+        </div>
+
+        <div id="otpInputContainer">
+          <div class="form-group mb-3">
+            <label class="form-label fw-bold">Enter OTP</label>
+            <div class="d-flex gap-2">
+              <input type="text" class="form-control text-center otp-input" maxlength="1" pattern="[0-9]*" inputmode="numeric">
+              <input type="text" class="form-control text-center otp-input" maxlength="1" pattern="[0-9]*" inputmode="numeric">
+              <input type="text" class="form-control text-center otp-input" maxlength="1" pattern="[0-9]*" inputmode="numeric">
+              <input type="text" class="form-control text-center otp-input" maxlength="1" pattern="[0-9]*" inputmode="numeric">
+              <input type="text" class="form-control text-center otp-input" maxlength="1" pattern="[0-9]*" inputmode="numeric">
+              <input type="text" class="form-control text-center otp-input" maxlength="1" pattern="[0-9]*" inputmode="numeric">
+            </div>
+            <input type="hidden" name="otp_code" id="otp_code">
+            <div id="otpError" class="error-message"></div>
+            <div id="otpSuccess" class="success-message"></div>
+            <div id="resendOtp">Didn't receive OTP? Resend</div>
+          </div>
+        </div>
+        <button type="button" id="sendOtpBtn" class="btn btn-primary w-100">Send OTP</button>
+        <button type="button" id="verifyOtpBtn" class="btn btn-primary w-100 mt-2">Verify OTP</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+<!-- ================= Registration Modal ================= -->
+<div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content shadow-lg p-4">
+      <button type="button" class="btn-close position-absolute top-0 end-0 m-3" data-bs-dismiss="modal"></button>
+      <h4 class="mb-3 fw-bold text-center">Registration</h4>
+      <hr class="my-2">
+      <form>
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label fw-bold">Name</label>
+            <input type="text" name="name" class="form-control" required>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-bold">Email <span class="text-muted" style="font-size:12px;">(.gov or .nic only)</span></label>
+            <input type="email" name="email" class="form-control"
+              pattern="^[^@\s]+@(?:[^@\s]+\.)?(gov|nic)\.in$" required>
+            <div class="form-text text-danger" id="emailMsg" style="display:none;">
+              Only .gov.in or .nic.in email IDs are allowed.
+            </div>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-bold">Mobile Number</label>
+            <input type="text" name="mobile" class="form-control" pattern="^[6-9]\d{9}$" maxlength="10" required>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-bold">Service</label>
+            <input type="text" name="service" class="form-control" required>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-bold">Batch</label>
+            <input type="text" name="batch" class="form-control" required>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-bold">Cadre <span class="text-muted">(Optional)</span></label>
+            <input type="text" name="cadre" class="form-control">
+          </div>
+          <div class="col-md-12">
+            <label class="form-label fw-bold">Course Attended in LBSNAA</label>
+            <input type="text" name="course_attended" class="form-control" required>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-bold">Upload Photo</label>
+            <input type="file" name="photo" class="form-control" accept="image/*" required>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-bold">Upload Govt. ID</label>
+            <input type="file" name="govt_id" class="form-control" accept="image/*,.pdf" required>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary w-100 mt-3">Register</button>
+      </form>
+    </div>
+  </div>
+</div>
+
 
     <script src="{{ asset('user_assets/js/jquery-3.6.0.min.js') }}"></script>
     <script src="{{ asset('user_assets/js/popper.min.js') }}"></script>
@@ -722,37 +844,6 @@
         }
     });
     </script>
-
-    <!-- latest jquery-->
-    <script src="{{asset('user_assets/js/jquery-3.6.0.min.js')}}"></script>
-
-    <!-- popper js-->
-    <script src="{{asset('user_assets/js/popper.min.js')}}"></script>
-
-    <!-- slick slider js -->
-    <script src="{{asset('user_assets/js/slick.js')}}"></script>
-    <script src="{{asset('user_assets/js/custom-slick.js')}}"></script>
-
-    <!-- feather icon js-->
-    <script src="{{asset('user_assets/js/feather.min.js')}}"></script>
-
-    <!-- emoji picker js-->
-    <script src="{{asset('user_assets/js/emojionearea.min.js')}}"></script>
-
-    <!-- Bootstrap js-->
-    <script src="{{asset('user_assets/js/bootstrap.js')}}"></script>
-
-    <!-- chatbox js -->
-    <script src="{{asset('user_assets/js/chatbox.js')}}"></script>
-
-    <!-- lazyload js-->
-    <script src="{{asset('user_assets/js/lazysizes.min.js')}}"></script>
-
-    <!-- theme setting js-->
-    <script src="{{asset('user_assets/js/theme-setting.js')}}"></script>
-
-    <!-- Theme js-->
-    <script src="{{asset('user_assets/js/script.js')}}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     @if(session('success'))
@@ -959,6 +1050,7 @@
         this.submit(); // Now submit the form
     });
     </script>
+    
 </body>
 
 </html>

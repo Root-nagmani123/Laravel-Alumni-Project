@@ -4,6 +4,8 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
+
 
 class CheckProfile
 {
@@ -13,7 +15,7 @@ class CheckProfile
             $user = auth()->guard('user')->user();
 
             // 👇 agar already profile edit route par hai to bypass kar do
-            if ($request->routeIs('user.profile.data') || $request->routeIs('user.profile.update') || $request->routeIs('user.profile.proinfo') || $request->routeIs('user.profile.social.update') || $request->routeIs('user.profile.eduinfo') ||  $request->routeIs('user.logout')) {
+            if ($request->routeIs('user.profile.data') || $request->routeIs('user.profile.update') || $request->routeIs('user.profile.proinfo') || $request->routeIs('user.profile.social.update') || $request->routeIs('user.profile.eduinfo') ||  $request->routeIs('user.logout') || $request->routeIs('admin.members.list')) {
                 return $next($request);
             }
 

@@ -100,8 +100,8 @@
                                         {{ \Carbon\Carbon::parse($group->end_date)->format('d-m-Y') }}
                                         @endif
                                     </td>
-                                    <td>{{ $group->members_count }} | <a href="javascript:void(0)"
-                                            data-bs-toggle="modal" data-bs-target="#addMemberModal" class="btn btn-primary btn-sm">
+                                    <td>{{ optional($group->groupMember)->getMentieesCount() ?? 0 }} | <a href="javascript:void(0)"
+                                            data-bs-toggle="modal" data-bs-target="#addMemberModal" class="btn btn-primary btn-sm add_member_" data-id="{{ $group->id }}">
                                             Add Members
                                         </a></td>
                                     <td>
@@ -141,94 +141,21 @@
         <!-- end Zero Configuration -->
     </div>
 </div>
-@foreach($groups as $group)
+{{-- @foreach($groups as $group)
+
+
+@endforeach --}}
 <div class="modal fade" id="addMemberModal" tabindex="-1" aria-labelledby="addMemberModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
 
-            <div class="modal-header">
-                 
-                <h5 class="modal-title" id="addMemberModalLabel">
-                    Add Members to Group : <span class="text-primary">{{ $group->name }}</span>
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-body">
+
             </div>
-
-
-            <form id="addMemberForm" method="POST" action="">
-                @csrf
-                <input type="hidden" name="group_id" id="group_id" value="">
-
-                <div class="modal-body">
-
-                    <!-- Filters -->
-                    <div class="row g-2 mb-3">
-                        <div class="col-md-4">
-                            <label class="form-label">Year/Batch</label>
-                            <select id="filter-year" class="form-select">
-                                <option value="">All</option>
-                                
-                                    <option value=""></option>
-                               
-                            </select>
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label">Cadre</label>
-                            <select id="filter-cadre" class="form-select">
-                                <option value="">All</option>
-                               
-                                    <option value=""></option>
-                              
-                            </select>
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label">Service</label>
-                            <select id="filter-service" class="form-select">
-                                <option value="">All</option>
-                                
-                                    <option value=""></option>
-                               
-                            </select>
-                        </div>
-                    </div>
-
-                    <!-- Search -->
-                    <div class="row mb-3">
-                        <div class="col">
-                            <input type="text" id="member-search" class="form-control" placeholder="Search members...">
-                        </div>
-                    </div>
-
-                    <!-- Dual List -->
-                    <div class="row">
-                        <!-- Available Members -->
-                        <div class="col-md-6 border p-2">
-                            <h6>Available Members</h6>
-                            <div id="available-members" class="member-list" style="max-height: 350px; overflow-y:auto;">
-                                <!-- Members will be loaded here via AJAX -->
-                            </div>
-                        </div>
-
-                        <!-- Selected Members -->
-                        <div class="col-md-6 border p-2">
-                            <h6>Selected Members</h6>
-                            <div id="selected-members" class="member-list" style="max-height: 350px; overflow-y:auto;">
-                                <!-- Checked members move here -->
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Add Members</button>
-                </div>
-            </form>
         </div>
     </div>
 </div>
 
-@endforeach
 <script>
 $(document).ready(function () {
 

@@ -87,11 +87,6 @@
     </li>
 
     <li class="nav-item">
-        <a class="nav-link {{ request()->is('user/all-events') ? 'active' : '' }}" 
-           href="{{ url('user/all-events') }}">Events</a>
-    </li>
-
-    <li class="nav-item">
         <a class="nav-link {{ request()->is('user/directory') ? 'active' : '' }}" 
            href="{{ route('user.directory') }}">Directory</a>
     </li>
@@ -169,32 +164,59 @@
                                         $latestNotifications = $notifications->sortByDesc('created_at');
                                         @endphp
                                         @foreach($latestNotifications as $notification)
+                                       
+
                                         <!-- Notif item -->
                                         <li>
                                             @php
                                             
                                                 $notificationUrl = '#';
                                                 $enc_source_id = Crypt::encryptString($notification->source_id);
-                                                // Debug: Log notification data
+                                                 $notificationStatus = 0;
+                
                                                 if (isset($enc_source_id) && isset($notification->source_type)) {
                                                     switch ($notification->source_type) {
                                                         case 'event':
-                                                            $notificationUrl = route('user.allevents');
+                                                            $event = \App\Models\Events::find($notification->source_id);
+                                                            $notificationStatus = $event ? $event->status : 0;
+                                                            if ($notificationStatus == 1) {
+                                                                $notificationUrl = route('user.allevents');
+                                                            }
                                                             break;
                                                         case 'broadcast':
-                                                            $notificationUrl = route('user.broadcastDetails', ['id' => $enc_source_id]);
+                                                            $broadcast = \App\Models\Broadcast::find($notification->source_id);
+                                                            $notificationStatus = $broadcast ? $broadcast->status : 0;
+                                                            if ($notificationStatus == 1) {
+                                                                $notificationUrl = route('user.broadcastDetails', ['id' => $enc_source_id]);
+                                                            }
                                                             break;
                                                         case 'forum':
+                                                            $forum = \App\Models\Forum::find($notification->source_id);
+                                                            $notificationStatus = $forum ? $forum->status : 0;
+                                                            if ($notificationStatus == 1) {
                                                                 $notificationUrl = route('user.forum.show', ['id' => $enc_source_id]);
+                                                            }
                                                                 break;
                                                         case 'profile':
-                                                            $notificationUrl = url('/profile/' . $enc_source_id);
+                                                            $profile = \App\Models\Member::find($notification->source_id);
+                                                            $notificationStatus = $profile ? $profile->status : 0;
+                                                            if ($notificationStatus == 1) {
+                                                                $notificationUrl = url('/profile/' . $enc_source_id);
+                                                            }
                                                             break;
                                                         case 'post':
-                                                            $notificationUrl = url('user/group-post/' . $enc_source_id);
+                                                            $post = \App\Models\Post::find($notification->source_id);
+                                                            $notificationStatus = $post ? $post->status : 0;
+                                                            if ($notificationStatus == 1) {
+                                                                $notificationUrl = url('user/group-post/' . $enc_source_id);
+                                                            }
                                                             break;
                                                         case 'group':
-                                                            $notificationUrl = route('user.group-post', ['id' => $enc_source_id]);
+                                                            $group = \App\Models\Group::find($notification->source_id);
+                                                            $notificationStatus = $group ? $group->status : 0;
+                                                            if ($notificationStatus == 1) {
+                                                                $notificationUrl = route('user.group-post', ['id' => $enc_source_id]);
+                                                            }
                                                             break;
                                                         case 'request':
                                                             $notificationUrl = route('user.mentor_mentee', ['tab' => 'incoming']);
@@ -209,7 +231,7 @@
                                                             $notificationUrl = '#';
                                                             break;
                                                         case 'birthday':
-                                                            $notificationUrl = route('user.profile.data', ['id' => $enc_source_id]);
+                                                            $notificationUrl = route('user.profile.data', ['id' => Crypt::encrypt($enc_source_id)]);
                                                             break;
                                                         default:
                                                             $notificationUrl = '#';
@@ -243,16 +265,16 @@
                 <div class="flex-grow-1 ms-3 notification-item mb-2"
                      style="max-width: calc(100% - 60px);">
                     <div class="d-flex justify-content-between">
-                                                        <a href="{{ $notificationUrl }}" class="text-decoration-none notification-link" 
-                                                           data-url="{{ $notificationUrl }}" 
-                                                           data-source-type="{{ $notification->source_type ?? '' }}" 
-                                                           data-source-id="{{ $notification->source_id ?? '' }}"
-                                                           onclick="handleNotificationClick(event, '{{ $notificationUrl }}', '{{ $notification->source_type ?? '' }}', '{{ $notification->source_id ?? '' }}')">
-                                                            <p class="small mb-2 text-primary">
-    {{ \Illuminate\Support\Str::words($notification->message, 20, '...') }}
-</p>
 
-                                                        </a>
+                
+<a href="javascript:void(0);" 
+   class="text-decoration-none notification-link {{ $notification->is_read == 0 ? 'text-primary' : 'text-muted' }}" 
+   data-url="{{ $notificationUrl }}" 
+   data-is-read="{{ $notification->is_read }}">
+    {{ \Illuminate\Support\Str::words($notification->message, 20, '...') }}
+</a>
+
+
                                                         <p class="small ms-3 mb-0 text-muted text-nowrap">
                                                              {{ \Carbon\Carbon::parse($notification->created_at)->setTimezone('Asia/Kolkata')->diffForHumans(null, null, true) }}
                                                         </p>
@@ -289,7 +311,7 @@
                         $user = Auth::guard('user')->user();
                         @endphp
                 <li class="nav-item ms-2 dropdown" style="z-index:1060 !important;">
-                    <a class="nav-link btn icon-md p-0" href="{{ route('user.profile.data', ['id' => $user->id]) }}" id="profileDropdown" role="button"
+                    <a class="nav-link btn icon-md p-0" href="{{ route('user.profile.data', ['id' => Crypt::encrypt($user->id)]) }}" id="profileDropdown" role="button"
                         data-bs-auto-close="outside" data-bs-display="static" data-bs-toggle="dropdown"
                         aria-expanded="false">
                        
@@ -357,7 +379,7 @@
                             @php
                             $user = Auth::guard('user')->user();
                             @endphp
-                           <a href="{{ route('user.profile.data', ['id' => $user->id]) }}"
+                           <a href="{{ route('user.profile.data', ['id' => Crypt::encrypt($user->id)]) }}"
                                 class="dropdown-item btn btn-primary-soft btn-sm my-2 text-center">View profile</a>
                             @endif
                         </li>
@@ -478,23 +500,24 @@
 </style>
 
 <script>
-function handleNotificationClick(event, url, sourceType, sourceId) {
+function handleNotificationClick(event, element) {
     event.preventDefault();
-    event.stopPropagation();
-    
-    // console.log('Notification clicked:', {
-    //     url: url,
-    //     sourceType: sourceType,
-    //     sourceId: sourceId
-    // });
-    
-    // Only redirect if we have a valid URL (not '#')
+    const url = element.dataset.url;
+
     if (url && url !== '#') {
         window.location.href = url;
-    } else {
-        // console.log('No valid URL for notification type:', sourceType);
     }
 }
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.notification-link').forEach(link => {
+        link.addEventListener('click', function(e) {
+            handleNotificationClick(e, this);
+        });
+    });
+});
+
 
 // Add event listeners for notification links
 document.addEventListener('DOMContentLoaded', function() {
@@ -680,6 +703,15 @@ function clearNotifications(event) {
 .notification-card {
     transition: all 0.3s ease;
 }
+
+.notification-card.notification-read .text-primary {
+    color: #6c757d !important;
+}
+
+.notification-card.notification-read .notification-item {
+    color: #6c757d !important;
+}
+
 
 </style>
 <script>

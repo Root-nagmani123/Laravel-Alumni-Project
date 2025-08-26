@@ -129,7 +129,7 @@
             <div class="col-md-6">
                 <div class="mb-3">
                     <label class="form-label">Event Image <span class="text-danger">*</span></label>
-                    <input type="file" name="image" id="imageInput" class="form-control" accept="image/*">
+                    <input type="file" name="image" value="{{ old('image', $event->image) }}" id="imageInput" class="form-control" accept="image/*">
                     <span>image type: jpg, jpeg, png</span>
                     <div class="mt-2">
                         <img id="imagePreview"

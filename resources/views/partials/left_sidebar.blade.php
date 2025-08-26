@@ -24,7 +24,7 @@
                                 @if(Auth::guard('user')->check())
                                 <h5 class="mb-0"> <a href="#!"> {{ Auth::guard('user')->user()->name }} </a> </h5>
                                 @endif
-                                <small>{{ Auth::guard('user')->user()->current_designation }} | {{ Auth::guard('user')->user()->Service }}</small>
+                                <small>{{ Auth::guard('user')->user()->Service }} |{{ Auth::guard('user')->user()->current_designation }}</small>
                                 <div class="hstack gap-2 gap-xl-3 justify-content-center mt-3">
 											<!-- User stat item -->
 											<div>
@@ -45,7 +45,7 @@
                         <!-- Card body END -->
                         <!-- Card footer -->
                         <div class="card-footer text-center py-2">
-                           <a class="btn btn-link btn-sm" href="{{ route('user.profile.data', ['id' => $user->id]) }}">View
+                           <a class="btn btn-link btn-sm" href="{{ route('user.profile.data', ['id' => Crypt::encrypt($user->id)]) }}">View
                                 Profile </a>
                         </div>
                     </div>

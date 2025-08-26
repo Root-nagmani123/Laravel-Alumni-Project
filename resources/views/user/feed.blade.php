@@ -1,18 +1,20 @@
-   @extends('layouts.app')
+@extends('layouts.app')
 
    @section('title', 'User Feed - Alumni | Lal Bahadur Shastri National Academy of Administration')
 
    @section('content')
    <div class="container">
        <div class="row g-4">
-           <div class="col-lg-3 left-sidebar col-12 mx-auto">
+           <div class="col-lg-3 left-sidebar col-12">
                     @include('partials.left-sidebar')
            </div>
 
-           <div class="col-md-8 col-lg-6 vstack gap-4 middle-sidebar">
+           <div class="col-lg-6 vstack gap-4 mx-auto col-12 middle-sidebar">
+               <div class="row">
                    @include('partials.user_feed')
+               </div>
            </div>
-           <div class="col-lg-3 right-sidebar col-12 mx-auto" >
+           <div class="col-lg-3 right-sidebar col-12" >
                        @include('partials.right-sidebar')
            </div>
        </div>

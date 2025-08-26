@@ -736,41 +736,61 @@ public function deleteTopic($id)
 
     function store_ajax(Request $request)
     {
-        $request->validate([
-            'group_name'  => 'required|string|max:255',
-            'service'     => 'required|string|max:255',
-            'year'        => 'required|array',
-            'cadre'       => 'required|array',
-            'mentees'     => 'required|array',
-            'grp_image'   => 'required|image|mimes:jpeg,png,jpg,avif|max:2048',
-            'end_date'    => 'required|date|after_or_equal:today',
-        ]);
+        
 
-        // Image Upload
-        $imagePath = null;
-        if ($request->hasFile('grp_image')) {
-            $imagePath = $request->file('grp_image')->store('uploads/images/grp_img', 'public');
+        if($request->group_id) {
+            // Update existing group
+            $group = GroupMember::where('group_id', $request->group_id)->first();
+
+            if ($group) {
+                
+                $existingMentees = json_decode($group->mentiee, true) ?? [];
+                $newMentees = $request->input('mentees', []);
+                $updatedMentees = array_unique(array_merge($existingMentees, $newMentees));
+
+                $group->update([
+                    'mentiee' => json_encode(array_values($updatedMentees)),
+                ]);
+            }
+            $message = 'Group updated successfully!';
         }
+        else {
+            // Create new group
 
-        // Create Group
-        $group = Group::create([
-            'name'       => $request->input('group_name'),
-            // 'service'    => $request->input('service'),
-            // 'batch_year' => json_encode($request->input('year')),
-            // 'cadre'      => json_encode($request->input('cadre')),
-            'end_date'   => $request->input('end_date'),
-            'status'     => 1,
-            'created_by' => auth()->id(),
-            'image'      => $imagePath ? basename($imagePath) : null,
-        ]);
+            $request->validate([
+                'group_name'  => 'required|string|max:255',
+                'service'     => 'required|string|max:255',
+                'mentees'     => 'required|array',
+                'grp_image'   => 'required|image|mimes:jpeg,png,jpg,avif|max:2048',
+                'end_date'    => 'required|date|after_or_equal:today',
+            ]);
 
-        GroupMember::create([
-            'group_id' => $group->id,
-            'member_id' => auth()->guard('user')->id(),
-            'mentor' => auth()->guard('user')->id(),
-            'mentiee' => json_encode($request->input('mentees')),
-            'status' => 1,
-        ]);
+            // Image Upload
+            $imagePath = null;
+            if ($request->hasFile('grp_image')) {
+                $imagePath = $request->file('grp_image')->store('uploads/images/grp_img', 'public');
+            }
+
+            // Create Group
+            $group = Group::create([
+                'name'       => $request->input('group_name'),
+                'end_date'   => $request->input('end_date'),
+                'status'     => 1,
+                'created_by' => auth()->guard('user')->id(),
+                'image'      => $imagePath ? basename($imagePath) : null,
+                'member_type' => 2 // this is created by user so thats why here 2
+            ]);
+
+            GroupMember::create([
+                'group_id' => $group->id,
+                'member_id' => auth()->guard('user')->id(),
+                'mentor' => auth()->guard('user')->id(),
+                'mentiee' => json_encode($request->input('mentees')),
+                'status' => 1,
+            ]);
+
+            $message = 'Group created successfully!';
+        }
     
         // Notify only if status is active and not yet notified
         if ($group->status == 1 && $group->notified_at == 0) {
@@ -812,7 +832,7 @@ public function deleteTopic($id)
         // Return JSON for AJAX
         return response()->json([
             'success' => true,
-            'message' => 'Group created successfully!',
+            'message' => $message,
         ]);
     }
 
@@ -823,7 +843,7 @@ public function deleteTopic($id)
         $year = $request->get('year');
         $cadre = $request->get('cadre');
 
-        $query = Member::query();
+        $query = Member::where('status',1);
         if ($search) {
             $query->where('name', 'like', "%{$search}%");
         }
@@ -840,5 +860,39 @@ public function deleteTopic($id)
         return response()->json($members);
     }
 
+    function getGroupMembers() {
+        $groupId = request()->get('group_id');
+        $group = Group::where('id', $groupId)->with('members')->first();
+        $members = DB::table('members')
+                ->select('Service', DB::raw('COUNT(*) as count'))
+                ->groupBy('Service')
+                ->get();
+        $html = view('layouts.group-modal-admin', compact('group', 'members'))->render();
+        return response()->json($html);
+    }
 
+    function store_ajax_admin_side(Request $request) {
+
+        $request->validate([
+            'group_id'    => 'required|integer|exists:groups,id',
+            'mentees'     => 'required|array',
+        ]);
+
+        if(isset($request->group_id)) {
+            $group = Group::find($request->group_id);
+
+            GroupMember::updateOrCreate([
+                'group_id' => $group->id,
+            ], [
+                'mentiee' => json_encode($request->input('mentees')),
+                'status' => 1,
+            ]);
+        }
+
+        // Return JSON for AJAX
+        return response()->json([
+            'success' => true,
+            'message' => 'Group updated successfully!',
+        ]);
+    }
 }

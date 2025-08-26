@@ -39,15 +39,34 @@
         <!-- start Zero Configuration -->
         <div class="card">
             <div class="card-body">
+                <form method="GET" action="{{ route('members.index') }}">
                 <div class="row align-items-center g-3 mb-4">
-                    <!-- Title -->
+                    <!-- Title --> 
+                      
                     <div class="col-lg-3 col-md-6">
                         <h4 class="card-title mb-0">Member List</h4>
                     </div>
+                    
+                    <div class="col-lg-3 d-flex align-items-center">
+                        <i class="bi bi-funnel me-2"></i>
+                        <select id="serviceFilter" name="serviceFilter" class="form-select form-select-sm">
+                            <option value="">Select Services</option>
+
+                             @if($members_service->isEmpty())
+                            <p>No services found.</p>
+                        @else
+                            @foreach($members_service as $service) 
+                                <option value="{{ $service->Service }}" @if($service->Service == request('serviceFilter')) selected @endif>{{ $service->Service }}</option>
+                            @endforeach
+                        @endif
+                        </select>
+                    </div>
+
+
 
                     <!-- Search Form -->
-                    <div class="col-lg-6 col-md-12">
-                        <form method="GET" action="{{ route('members.index') }}">
+                    <div class="col-lg-3 col-md-12">
+                       
                             <div class="input-group">
                                 <input type="text" name="search" class="form-control"
                                     placeholder="Search by name, username, email or mobile"
@@ -57,8 +76,9 @@
                                 <a href="{{ route('members.index') }}" class="btn btn-outline-secondary">Reset</a>
                                 @endif
                             </div>
-                        </form>
+                        
                     </div>
+                    
 
                     <!-- Action Buttons -->
                     <div
@@ -71,6 +91,7 @@
                         </a>
                     </div>
                 </div>
+                </form>
 
                 <hr>
                 <div class="dataTables_wrapper">
@@ -135,6 +156,43 @@
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const table = document.querySelector('#yourTableId'); // replace with your table id
+    const rows = table.querySelectorAll('tbody tr');
+    const serviceFilter = document.getElementById('serviceFilter');
+    const services = new Set();
+
+    // Collect unique service names from column 6 (index 5)
+    rows.forEach(row => {
+        let service = row.cells[5]?.textContent.trim();
+        if (service) {
+            services.add(service);
+        }
+    });
+
+    // Add services to dropdown
+    services.forEach(service => {
+        let option = document.createElement('option');
+        option.value = service;
+        option.textContent = service;
+        serviceFilter.appendChild(option);
+    });
+
+    // Filter on change
+    serviceFilter.addEventListener('change', function () {
+        let selected = this.value.toLowerCase();
+        rows.forEach(row => {
+            let serviceCol = row.cells[5]?.textContent.toLowerCase();
+            if (!selected || serviceCol === selected) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    });
+});
+</script>
 
 <script>
 //Toastr message
