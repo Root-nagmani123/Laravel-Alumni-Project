@@ -101,7 +101,7 @@
                 <div class="hstack gap-3 mb-3 align-items-center">
                     <!-- Group Image -->
                     <div class="avatar avatar-md">
-                        <a href="{{ route('user.group-post', $recent->enc_id) }}">
+                        <a href="{{ route('user.group-post', Crypt::encryptString($recent->enc_id)) }}">
                             <img src="{{asset('storage/uploads/images/grp_img/' . ($recent->image ?? 'default-group.png')) }}"
                                 alt="Group Image" class="rounded-circle img-fluid"
                                 style="width: 48px; height: 48px; object-fit: cover;">
@@ -111,8 +111,8 @@
                     <!-- Title + End Date -->
                     <div class="overflow-hidden">
                         <a class="mb-0 fw-semibold d-block text-truncate"
-                            href="{{ route('user.group-post', $recent->enc_id) }}">
-                            
+                            href="{{ route('user.group-post', Crypt::encryptString($recent->enc_id)) }}">
+
                             {{ ($recent->name) }}
                         </a>
                         <small class="text-muted d-block">End Date: {{ \Carbon\Carbon::parse($recent->end_date ?? now())->format('d-m-Y') }}</small>

@@ -104,20 +104,22 @@
                                 <div class="avatar me-3 mb-3 mb-md-0">
                                     @php
                                         $defaultImage = asset('feed_assets/images/avatar/07.jpg');
-                                        $profileImage = ($member->profile_pic && file_exists(public_path('storage/' . $member->profile_pic)))
-                                            ? asset('storage/' . $member->profile_pic)
-                                            : $defaultImage;
-                                    @endphp
-                                    <a href="{{ $member->id ? route('user.profile.data', ['id' => $member->id]) : '#' }}">
-                                        <img class="avatar-img rounded-circle" src="{{ $profileImage }}" alt="">
-                                    </a>
-                                </div>
-
-                                <!-- Info -->
-                                <div class="w-100 d-flex justify-content-between align-items-center">
-                                    <div>
+                                        $profileImage = $defaultImage;
+                                        if ($member->profile_pic && file_exists(public_path('storage/' .
+                                        $member->profile_pic))) {
+                                        $profileImage = asset('storage/' . $member->profile_pic);
+                                        }
+                                        @endphp
+                                        <a
+                                            href="{{ $member->id ? route('user.profile.data', ['id' => Crypt::encrypt($member->id)]) : '#' }}">
+                                            <img class="avatar-img rounded-circle" src="{{ $profileImage }}" alt="">
+                                        </a>
+                                    </div>
+                                    <!-- Info -->
+                                    <div class="w-100">
                                         <h6 class="mb-0">
-                                            <a href="{{ $member->id ? route('user.profile.data', ['id' => $member->id]) : '#' }}">
+                                            <a
+                                                href="{{ $member->id ? route('user.profile.data', ['id' => Crypt::encrypt($member->id)]) : '#' }}">
                                                 {{ $member->name }}
                                             </a>
                                             @if(!empty($member->is_admin) && $member->is_admin == 1)
@@ -174,7 +176,7 @@
                         <div class="d-flex align-items-center">
                             <!-- Avatar -->
                             <div class="avatar me-2">
-                                <a href="{{ $post->member ? url('/user/profile/' . $post->member->id) : '#' }}">
+                                <a href="{{ $post->member ? url('/user/profile/' . Crypt::encrypt($post->member->id)) : '#' }}">
                                     <img class="avatar-img rounded-circle" src="{{ $profileImage }}"
                                         alt="Profile Picture" loading="lazy" decoding="async">
                                 </a>
@@ -184,7 +186,7 @@
                             <div>
                                 <div class="nav nav-divider">
                                     <h6 class="nav-item card-title mb-0">
-                                        <a href="{{ $post->member ? url('/user/profile/' . $post->member->id) : '#' }}">
+                                        <a href="{{ $post->member ? url('/user/profile/' . Crypt::encrypt($post->member->id)) : '#' }}">
                                             {{ $post->member->name ?? 'Anonymous' }}
                                         </a>
                                     </h6>
@@ -327,9 +329,9 @@
                     <!-- Comment box -->
                     <div class="d-flex mb-3">
                         <div class="avatar avatar-xs me-2">
-                            <a href="{{ route('user.profile', ['id' => Auth::guard('user')->id()]) }}">
-                                <img class="avatar-img rounded-circle" src="{{ Auth::guard('user')->user()->profile_pic 
-                ? asset('storage/' . Auth::guard('user')->user()->profile_pic) 
+                            <a href="{{ route('user.profile', ['id' => Crypt::encrypt(Auth::guard('user')->id())]) }}">
+                                <img class="avatar-img rounded-circle" src="{{ Auth::guard('user')->user()->profile_pic
+                ? asset('storage/' . Auth::guard('user')->user()->profile_pic)
                 : asset('feed_assets/images/avatar/07.jpg') }}" alt="User" loading="lazy" decoding="async">
                             </a>
 
