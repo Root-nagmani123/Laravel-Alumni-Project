@@ -222,11 +222,10 @@ Route::prefix('user')->name('user.')->group(function () {
         // Route::get('/notifications/{id}', [App\Http\Controllers\Member\NotificationController::class, 'notificationstatus'])->name('notifications.status');
        Route::post('/notifications/{id}/clear', [App\Http\Controllers\Member\NotificationController::class, 'clearNotifications'])
      ->name('notifications.clear');
-       
-        Route::put('/notifications/{id}/read', [App\Http\Controllers\Member\NotificationController::class, 'markAsRead'])->name('notifications.read');
+
+        Route::post('/notifications/read/{notifId}', [App\Http\Controllers\Member\NotificationController::class, 'markAsRead'])->name('notifications.read');
         Route::get('/get-members', [MemberController::class, 'getMembers'])->name('members.list');
 
-        
     });
 
 
