@@ -523,14 +523,16 @@ Route::get('/admin/members/list', [App\Http\Controllers\Admin\GroupController::c
     ->name('admin.members.list');
 Route::get('/admin/group/members', [App\Http\Controllers\Admin\GroupController::class, 'getGroupMembers'])
     ->name('admin.group.members');
-Route::post('/admin/get-year', function (Request $request) {
+Route::post('/admin/get-year', function (Illuminate\Http\Request $request) {
     
-    $years = App\Models\Member::whereNotNull('batch')
-        ->where('batch', '!=', 'NA')
+    $service = $request->input('service'); 
+         $years = App\Models\Member::where('service', $service)
+    ->whereNotNull('batch')
+    ->where('batch', '!=', 'NA')
     ->distinct()
     ->pluck('batch');
 
-    return response()->json($years);
+return response()->json($years);
 });
 
 Route::post('admin/get-cadres', function(Illuminate\Http\Request $request){
