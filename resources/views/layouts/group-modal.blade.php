@@ -23,8 +23,8 @@
 
                         <!-- Service -->
                         <div class="col-md-6">
-                            <label class="form-label">Service <span class="text-danger">*</span></label>
-                            <select class="form-select service" name="service" id="service" data-id="new_group_create" required>
+                            <label class="form-label">Service</label>
+                            <select class="form-select service" name="service" id="service" data-id="new_group_create">
                                 <option selected disabled>Select Service</option>
                                 @if(isset($members) && !$members->isEmpty())
                                     @foreach($members as $member)
@@ -40,16 +40,16 @@
 
                         <!-- Year / Batch -->
                         <div class="col-md-6">
-                            <label class="form-label">Year / Batch <span class="text-danger">*</span></label>
-                            <select class="form-select year-select" name="year[]" multiple="multiple" data-id="new_group_create" required>
+                            <label class="form-label">Year / Batch</label>
+                            <select class="form-select year-select" name="year[]" multiple="multiple" data-id="new_group_create">
                                 <!-- Options populated dynamically via AJAX -->
                             </select>
                         </div>
 
                         <!-- Cadre -->
                         <div class="col-md-6">
-                            <label class="form-label">Cadre <span class="text-danger">*</span></label>
-                            <select class="form-select cadre select2" name="cadre[]" multiple="multiple" data-id="new_group_create" required>
+                            <label class="form-label">Cadre</label>
+                            <select class="form-select cadre select2" name="cadre[]" multiple="multiple" data-id="new_group_create">
                                 <!-- Options populated dynamically via AJAX -->
                             </select>
                         </div>
