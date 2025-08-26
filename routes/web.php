@@ -521,6 +521,43 @@ Route::post('/otp/send', [OtpLoginController::class, 'sendOtp'])->name('otp.send
 Route::post('/otp/verify', [OtpLoginController::class, 'verifyOtp'])->name('otp.verify');
 Route::get('/admin/members/list', [App\Http\Controllers\Admin\GroupController::class, 'getMembers'])
     ->name('admin.members.list');
+Route::get('/admin/group/members', [App\Http\Controllers\Admin\GroupController::class, 'getGroupMembers'])
+    ->name('admin.group.members');
+Route::post('/admin/get-year', function (Request $request) {
+    
+    $years = App\Models\Member::whereNotNull('batch')
+        ->where('batch', '!=', 'NA')
+    ->distinct()
+    ->pluck('batch');
+
+    return response()->json($years);
+});
+
+Route::post('admin/get-cadres', function(Illuminate\Http\Request $request){
+    $service = $request->service;
+    $year = $request->year; // batch year
+
+    $query = App\Models\Member::query();
+
+    if (!empty($service)) {
+        $query->where('service', $service);
+    }
+
+    if (!empty($year)) {
+        $query->whereIn('batch', $year);
+    }
+
+    $cadres = $query->whereNotNull('cader')
+        ->where('cader', '!=', 'NA')
+        ->distinct()
+        ->orderBy('cader')
+        ->pluck('cader');
+
+
+    return response()->json($cadres);
+});
+Route::post('admin/group/store_ajax_admin_side', [App\Http\Controllers\Admin\GroupController::class, 'store_ajax_admin_side'])->name('store_ajax_admin_side');
+
 
 Route::post('/custom-broadcasting-auth', function(\Illuminate\Http\Request $request) {
     return response()->json([

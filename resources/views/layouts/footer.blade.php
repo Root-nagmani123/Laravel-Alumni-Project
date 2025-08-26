@@ -497,6 +497,23 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById("forum_end_date").setAttribute('min', today);
         document.getElementById("end_date").setAttribute('min', today);
     });
+
+document.getElementById('grp_image').addEventListener('change', function(event) {
+    const preview = document.getElementById('preview-image');
+    const file = event.target.files[0];
+
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            preview.src = e.target.result;
+            preview.classList.remove('d-none');
+        }
+        reader.readAsDataURL(file);
+    } else {
+        preview.src = '#';
+        preview.classList.add('d-none');
+    }
+});
 </script>
 <link rel="stylesheet"
     href="https://img1.digitallocker.gov.in/ux4g/UX4G-CDN-accessibility/css/accesibility-style-v2.1.css">

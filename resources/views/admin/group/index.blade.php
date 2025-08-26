@@ -101,7 +101,7 @@
                                         @endif
                                     </td>
                                     <td>{{ $group->members_count }} | <a href="javascript:void(0)"
-                                            data-bs-toggle="modal" data-bs-target="#addMemberModal" class="btn btn-primary btn-sm">
+                                            data-bs-toggle="modal" data-bs-target="#addMemberModal" class="btn btn-primary btn-sm add_member_" data-id="{{ $group->id }}">
                                             Add Members
                                         </a></td>
                                     <td>
@@ -141,21 +141,18 @@
         <!-- end Zero Configuration -->
     </div>
 </div>
-@foreach($groups as $group)
+{{-- @foreach($groups as $group)
+
+
+@endforeach --}}
 <div class="modal fade" id="addMemberModal" tabindex="-1" aria-labelledby="addMemberModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
 
-            <div class="modal-header">
-                 
-                <h5 class="modal-title" id="addMemberModalLabel">
-                    Add Members to Group : <span class="text-primary">{{ $group->name }}</span>
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-body">
+
             </div>
-
-
-            <form id="addMemberForm" method="POST" action="">
+            {{-- <form id="addMemberForm" method="POST" action="">
                 @csrf
                 <input type="hidden" name="group_id" id="group_id" value="">
 
@@ -223,12 +220,11 @@
                     <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
                     <button type="submit" class="btn btn-primary">Add Members</button>
                 </div>
-            </form>
+            </form> --}}
         </div>
     </div>
 </div>
 
-@endforeach
 <script>
 $(document).ready(function () {
 

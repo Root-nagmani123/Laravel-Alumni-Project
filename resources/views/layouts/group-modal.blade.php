@@ -91,6 +91,10 @@
                         <div class="col-md-6">
                             <label for="grp_image" class="form-label">Upload Group Image <span class="text-danger">*</span></label>
                             <input type="file" class="form-control" name="grp_image" id="grp_image" accept="image/*" required>
+
+                            <div class="mt-2">
+                                <img id="preview-image" src="#" alt="Image Preview" class="img-fluid rounded d-none" style="max-height: 200px;" />
+                            </div>
                         </div>
 
                         <!-- Expiry Date -->
