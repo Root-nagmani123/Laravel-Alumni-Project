@@ -5,7 +5,7 @@ $(document).ready(function () {
         let formData = new FormData(this);
 
         $.ajax({
-            url: window.location.origin + "/admin/group/store_ajax",
+            url: window.location.origin + "/store_ajax",
             type: "POST",
             data: formData,
             processData: false,
@@ -16,12 +16,13 @@ $(document).ready(function () {
             },
             success: function (response) {
                 $('#groupForm button[type="submit"]').prop('disabled', false).text('Create Group');
-                console.log(response);
+                
                 if (response.success) {
                     alert(response.message);
                     $('#groupForm')[0].reset();
                     $('#groupModal').modal('hide');
                     // reload table/list if needed
+                    location.reload();
                     if (typeof groupTable !== "undefined") groupTable.ajax.reload();
                 } else {
                     alert('Something went wrong.');
