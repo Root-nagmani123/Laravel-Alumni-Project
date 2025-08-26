@@ -40,14 +40,24 @@
         <div class="card">
             <div class="card-body">
                 <div class="row align-items-center g-3 mb-4">
-                    <!-- Title -->
+                    <!-- Title --> 
+                      <form method="GET" action="{{ route('members.index') }}">
                     <div class="col-lg-3 col-md-6">
                         <h4 class="card-title mb-0">Member List</h4>
                     </div>
+                    
                     <div class="col-lg-3 d-flex align-items-center">
                         <i class="bi bi-funnel me-2"></i>
-                        <select id="serviceFilter" class="form-select form-select-sm">
-                            <option value="">All Services</option>
+                        <select id="serviceFilter" name="serviceFilter" class="form-select form-select-sm">
+                            <option value="">Select Services</option>
+
+                             @if($members_service->isEmpty())
+                            <p>No services found.</p>
+                        @else
+                            @foreach($members_service as $service) 
+                                <option value="{{ $service->Service }}" @if($service->Service == request('serviceFilter')) selected @endif>{{ $service->Service }}</option>
+                            @endforeach
+                        @endif
                         </select>
                     </div>
 
@@ -55,7 +65,7 @@
 
                     <!-- Search Form -->
                     <div class="col-lg-3 col-md-12">
-                        <form method="GET" action="{{ route('members.index') }}">
+                       
                             <div class="input-group">
                                 <input type="text" name="search" class="form-control"
                                     placeholder="Search by name, username, email or mobile"
@@ -65,8 +75,9 @@
                                 <a href="{{ route('members.index') }}" class="btn btn-outline-secondary">Reset</a>
                                 @endif
                             </div>
-                        </form>
+                        
                     </div>
+                    </form>
 
                     <!-- Action Buttons -->
                     <div

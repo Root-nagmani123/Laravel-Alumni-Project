@@ -19,21 +19,35 @@ class MemberController extends Controller
         {
         //$members = Member::whereNull('deleted_at')->get();
             //$members = Member::all();
-           
-           $members = Member::orderBy('id', 'desc')
+            $members_service = Member::select('Service')
+    ->where('status', 1)
+    ->groupBy('Service')
+    ->get();
+
+         $members = Member::orderBy('id', 'desc')
     ->select('id', 'name', 'username', 'mobile', 'email', 'cader', 'designation', 'batch', 'Service','status','sector');
-     if ($request->filled('search')) {
-        $search = $request->search;
-        $members->where(function ($q) use ($search) {
-            $q->where('name', 'like', "%{$search}%")
-              ->orWhere('username', 'like', "%{$search}%")
-              ->orWhere('email', 'like', "%{$search}%")
-              ->orWhere('mobile', 'like', "%{$search}%");
-        });
-    }
-   $members = $members->paginate(10); // har page me 20 records
- Paginator::useBootstrap();
-            return view('admin.members.index', compact('members'));
+
+// Search filter
+if ($request->filled('search')) { 
+    $search = $request->search;
+    $members->where(function ($q) use ($search) {
+        $q->where('name', 'like', "%{$search}%")
+          ->orWhere('username', 'like', "%{$search}%")
+          ->orWhere('email', 'like', "%{$search}%")
+          ->orWhere('mobile', 'like', "%{$search}%");
+    });
+}
+
+// Service filter (alag se apply karna hoga)
+if ($request->filled('serviceFilter')) {
+    $serviceFilter = $request->serviceFilter;
+    $members->where('Service', $serviceFilter);
+}
+
+$members = $members->paginate(10); // har page me 10 records
+Paginator::useBootstrap();
+
+            return view('admin.members.index', compact('members', 'members_service'));
         }
 
     public function create()

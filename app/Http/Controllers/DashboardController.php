@@ -70,6 +70,11 @@ class DashboardController extends Controller
     public function index()
     {
         $members = Member::where('status', 1)->get();
+        $members_service = Member::select('Service', \DB::raw('COUNT(*) as member_count'))
+    ->where('status', 1)
+    ->groupBy('Service')
+    ->get();
+
         //$forums = Forum::all();
         $forums = Forum::where('status', 1)->get();
         $groups = Group::where('status', 1)->get();
@@ -103,7 +108,7 @@ class DashboardController extends Controller
             $change = (($currentCount - $previousCount) / $previousCount) * 100;
             $topicChangePercent = round($change, 2);
         } else {
-            $topicChangePercent = null; https://docs.google.com/spreadsheets/d/16pfJ7zrvsHkUC44GvVhXYLHPQfj-Wqvg/edit?gid=876064966#gid=876064966
+            $topicChangePercent = null; 
         }
 
 
@@ -121,7 +126,8 @@ class DashboardController extends Controller
             'total_broadcasts',
             'total_topics',
             'topicChangePercent',
-             'userData'
+            'userData',
+            'members_service'
         ));
     }
 
