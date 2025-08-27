@@ -38,8 +38,8 @@ class AppServiceProvider extends ServiceProvider
                 })
                 ->orderBy('created_at', 'desc')
                 ->where('user_id', $userId)
-                ->get(['id', 'message', 'created_at', 'source_id', 'source_type']);
-                
+                ->get(['id', 'message', 'created_at', 'source_id', 'source_type', 'is_read']);
+
                 $view->with('notifications', $notifications);
             } else {
                 $view->with('notifications', collect([]));

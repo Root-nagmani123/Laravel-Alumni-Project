@@ -114,7 +114,7 @@ return redirect()->route('events.index')->with('error', 'Event not found!');retu
             'url'            => 'nullable|url|max:255',
             'start_datetime' => 'required|date',
             'end_datetime'   => 'nullable|date|after_or_equal:start_datetime',
-            'image'          => 'required|image|max:2048',
+            'image'          => 'nullable|image|max:2048',
         ]);
 
         if ($validator->fails()) {
@@ -169,7 +169,7 @@ return redirect()->route('events.index')->with('error', 'Event not found!');retu
         $event->save();
         // If event is being activated and notification not sent
         if ($oldStatus == 0 && $event->status == 1 ) {
-            $notification = $this->notificationService->notifyAllMembers('Event', $event->title . ' event has been added OR Activated.', $event->id, 'event', Auth::id());
+            $notification = $this->notificationService->notifyAllMembers('Event', $event->title . ' event has been Activated.', $event->id, 'event', Auth::id());
            
         }
 

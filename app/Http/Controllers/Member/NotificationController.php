@@ -75,4 +75,20 @@ class NotificationController extends Controller
 }
 
 
+public function markAsRead($id)
+{
+
+    $notificationId = Crypt::decryptString($id);
+
+    $notification = Notification::where('id', $notificationId)
+        ->where('user_id', auth('user')->id())
+        ->firstOrFail();
+
+    $notification->update(['is_read' => 1]);
+
+    return response()->json(['success' => true]);
+}
+
+
+
 }
