@@ -12,9 +12,17 @@ use Maatwebsite\Excel\Validators\ValidationException;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Crypt;
+use App\Services\RecentActivityService;
 
 class MemberController extends Controller
 {
+    protected $recentActivityService;
+
+    public function __construct(RecentActivityService $recentActivityService)
+    {
+        $this->recentActivityService = $recentActivityService;
+    }
+
     public function index(Request $request)
         {
         //$members = Member::whereNull('deleted_at')->get();
@@ -115,7 +123,15 @@ if ($request->filled('password')) {
     $data['password'] = Hash::make($request->password);
 }
 
-Member::create($data);
+$member = Member::create($data);
+        $this->recentActivityService->logActivity(
+            'Member Added',
+            'Member',
+            auth()->guard('admin')->id(),
+            'Added new member: ' . $member->name,
+            1, // Assuming 1 represents admin
+            $member->id
+        );
        return redirect()->route('members.index')->with('success', 'Member added successfully.');
         }
 public function edit($id)
@@ -212,6 +228,14 @@ public function edit($id)
                             ->with('error', 'Cannot delete an active member. Please deactivate it first.');
         }
         $member->delete();
+        $this->recentActivityService->logActivity(
+            'Member Deleted',
+            'Member',
+            auth()->guard('admin')->id(),
+            'Deleted member: ' . $member->name,
+            1, // Assuming 1 represents admin
+            $member->id
+        );
         return redirect()->route('members.index')
                         ->with('success', 'Member deleted successfully.');
     }
@@ -253,6 +277,14 @@ public function edit($id)
         $member = Member::findOrFail($request->id);
         $member->status = $request->status;
         $member->save();
+        $this->recentActivityService->logActivity(
+            'Member Status Toggled',
+            'Member',
+            auth()->guard('admin')->id(),
+            'Toggled status for member: ' . $member->name . ' to ' . ($member->status ? 'Active' : 'Inactive'),
+            1, // Assuming 1 represents admin
+            $member->id
+        );
         return response()->json(['message' => 'Status updated successfully.']);
 
     }

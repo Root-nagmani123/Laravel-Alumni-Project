@@ -7,6 +7,7 @@
 <div class="container-fluid">
     <x-breadcrum title="Group" />
     <x-session_message />
+    
     <!-- start Vertical Steps Example -->
     <div class="card">
         <div class="card-body">
@@ -21,6 +22,9 @@
                             <label class="form-label">Group Name</label>
                             <input type="text" name="name" class="form-control" required>
                         </div>
+                        @error('name')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
                     </div>
 
                     <!-- Group End Date -->
@@ -29,19 +33,25 @@
                             <label class="form-label">Group End Date</label>
                             <input type="date" class="form-control" name="end_date">
                         </div>
+                        @error('end_date')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
                     </div>
 
                     <!-- Group Image -->
                     <div class="col-md-6">
                         <div class="mb-3">
                             <label class="form-label">Group Image</label>
-                            <input type="file" class="form-control" name="image" accept="image/*">
+                            <input type="file" class="form-control" name="image" id="image" accept="image/*">
                             <!-- Preview -->
                             <div class="mt-2">
                                 <img id="preview-image" src="#" alt="Image Preview" class="img-fluid rounded d-none"
                                     style="max-height: 200px;" />
                             </div>
                         </div>
+                        @error('image')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
                     </div>
 
                     <!-- Status -->
@@ -88,31 +98,6 @@ document.addEventListener('change', function(e) {
         }
     }
 });
-
-// Sort alphabetically by label text
-function sortList(container) {
-    const items = Array.from(container.querySelectorAll('.form-check'));
-    items.sort((a, b) => {
-        const nameA = a.querySelector('label').textContent.trim().toLowerCase();
-        const nameB = b.querySelector('label').textContent.trim().toLowerCase();
-        return nameA.localeCompare(nameB);
-    });
-    items.forEach(item => container.appendChild(item));
-}
-
-// Search filtering
-function setupSearch(inputId, containerId) {
-    document.getElementById(inputId).addEventListener('keyup', function() {
-        const query = this.value.toLowerCase();
-        document.querySelectorAll(`#${containerId} .form-check`).forEach(item => {
-            const name = item.querySelector('label').textContent.toLowerCase();
-            item.style.display = name.includes(query) ? '' : 'none';
-        });
-    });
-}
-
-setupSearch('searchAll', 'allMembers');
-setupSearch('searchSelected', 'selectedMembers');
 </script>
 
 </div>
