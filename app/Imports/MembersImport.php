@@ -52,9 +52,9 @@ class MembersImport implements ToCollection, WithHeadingRow
                 'username' => 'required|string|max:255|unique:members,username',
                 'mobile' => ['required', 'integer', 'regex:/^[0-9]{10,20}$/'],
                 'email' => 'required|email|unique:members,email',
-                'password' => 'required|string|min:8',
-                'password_confirmation' => 'required|string|same:password',
-                'cader' => 'required|string|max:255',
+                // 'password' => 'required|string|min:8',
+                // 'password_confirmation' => 'required|string|same:password',
+                // 'cader' => 'required|string|max:255',
                 'designation' => 'required|string|max:255',
                 'batch' => 'required|numeric',
             ], $this->validationMessages());

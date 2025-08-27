@@ -527,6 +527,25 @@ JS libraries, plugins and custom scripts -->
             preview.classList.add('d-none');
         }
     });
+
+    function scrollToBottom(containerId) {
+        var $container = $("#" + containerId);
+
+        if ($container.length > 0) {
+            $container.scrollTop($container[0].scrollHeight);
+        }
+    }
+
+    $(document).ready(function () {
+        $('.select_user_click').on('click', function () {
+            var userId = $(this).data('user-id');
+            
+
+            setTimeout(function() {
+                scrollToBottom("chat-container-" + userId);
+            }, 300); // thoda delay badha do takki DOM render ho jaye
+        });
+    });
 </script>
 <link rel="stylesheet"
     href="https://img1.digitallocker.gov.in/ux4g/UX4G-CDN-accessibility/css/accesibility-style-v2.1.css">

@@ -6,7 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
 use App\Models\Notification;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Group;
+use App\Models\{Group, Broadcast};
 use App\Observers\RecentActivityObserver;
 use Illuminate\Pagination\Paginator;
 
@@ -47,7 +47,8 @@ class AppServiceProvider extends ServiceProvider
             }
         });
 
-        Group::observe(RecentActivityObserver::class);
+        // Group::observe(RecentActivityObserver::class);
+        // Broadcast::observe(RecentActivityObserver::class);
         Paginator::useBootstrap();
     }
 }

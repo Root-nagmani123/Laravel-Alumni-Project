@@ -40,9 +40,10 @@
                         @foreach ($chats as $key => $chat)
 
                         <!-- Contact item -->
-                        <li class="mt-3 hstack gap-3 align-items-center position-relative toast-btn user-id{{ $chat->member_id }}"
+                        <li class="mt-3 hstack gap-3 align-items-center position-relative select_user_click toast-btn user-id{{ $chat->member_id }}"
                             style=" {{ $selectedChat == $chat->member_id ? 'background-color: #af2910' : '' }}"
                             data-target="chatToast-{{ $chat->member_id }}"
+                            data-user-id="{{ $chat->member_id }}"
                             wire:click="selectChat({{ $chat->member_id }})" wire:key="chat-{{ $chat->member_id }}"
                             style="cursor: pointer;{{ $selectedChat == $chat->member_id ? 'background-color: #af2910' : '' }}">
 

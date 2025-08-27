@@ -218,7 +218,7 @@ class DashboardController extends Controller
     {
         // TopicsDataTable $topicsDataTable
         // $topics = Topic::where('status', 1)->latest('id')->get();
-        $topics = RecentActivity::paginate(25);
+        $topics = RecentActivity::latest('id')->paginate(25);
         return view('admin.topics.index', compact('topics'));
     }
 }
