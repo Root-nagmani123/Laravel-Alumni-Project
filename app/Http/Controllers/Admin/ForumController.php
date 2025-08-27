@@ -12,15 +12,18 @@ use DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use App\Services\NotificationService;
+use App\Services\RecentActivityService;
 
 class ForumController extends Controller
 {
 
     protected $notificationService;
+    protected $recentActivityService;
 
-    public function __construct(NotificationService $notificationService)
+    public function __construct(NotificationService $notificationService, RecentActivityService $recentActivityService)
     {
         $this->notificationService = $notificationService;
+        $this->recentActivityService = $recentActivityService;
     }
 
     public function index()
@@ -76,7 +79,14 @@ class ForumController extends Controller
             );
            
         }
-        
+        $this->recentActivityService->logActivity(
+            'New Forum Created',
+            'Forum',
+            auth()->guard('admin')->id(),
+            'Created new forum: ' . $forum->name,
+            1,
+            $forum->id
+        );
     // Redirect to the forum page
     return redirect()->route('forums.index')->with('success', 'Forum added successfully.');
     }
@@ -477,6 +487,15 @@ class ForumController extends Controller
      if ($result && $forum->status == 1) {  
         $notification = $this->notificationService->notifyAllMembers('forum_admin', $forum->name . ' forum has been updated.', $forum->id, 'forum', auth()->id());
     }
+
+    $this->recentActivityService->logActivity(
+        'Forum Updated',
+        'Forum',
+        auth()->guard('admin')->id(),
+        'Updated forum: ' . $forum->name,
+        1,
+        $forum->id
+    );
     return redirect()->route('forums.index')->with('success', 'Forum updated successfully!');
 }
 public function destroyforum(Forum $forum)
@@ -507,6 +526,15 @@ public function destroyforum(Forum $forum)
         $forumId,
         'forum_deleted',
         auth()->id()
+    );
+
+    $this->recentActivityService->logActivity(
+        'Forum Deleted',
+        'Forum',
+        auth()->guard('admin')->id(),
+        'Deleted Forum: ' . $forum->name,
+        1,
+        $forum->id
     );
     return redirect()->route('forums.index')->with('success', 'Forum and all associated data deleted successfully.');
 }
@@ -540,6 +568,15 @@ public function toggleStatus(Request $request)
             auth()->id()
         );
     }
+
+    $this->recentActivityService->logActivity(
+        'Forum Status Toggled',
+        'Forum',
+        auth()->guard('admin')->id(),
+        'Toggled status for forum: ' . $forum->name .' to ' . ($forum->status == 1 ? 'active' : 'inactive'),
+        1,
+        $forum->id
+    );
 
     return response()->json(['message' => 'Forum status updated successfully.']);
 }
