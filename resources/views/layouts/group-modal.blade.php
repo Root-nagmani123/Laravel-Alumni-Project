@@ -4,7 +4,6 @@
         <div class="modal fade" id="groupModal" tabindex="-1" aria-labelledby="groupModalLabel" aria-hidden="true">
     @endif
         <div class="modal-dialog modal-lg">
-            {{-- <form action="{{ route('user.group.store') }}" method="POST" enctype="multipart/form-data"> --}}
                 <form id="groupForm">
 
                     
@@ -147,3 +146,38 @@
                 </form>
         </div>
     </div>
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Target both modal IDs
+        const modals = ['#groupModal', '#addMembersModal'];
+
+        modals.forEach(modalId => {
+            const modalEl = document.querySelector(modalId);
+            if (modalEl) {
+                modalEl.addEventListener('hidden.bs.modal', function () {
+                    // Reset the form inside modal
+                    const form = modalEl.querySelector('form');
+                    if (form) {
+                        form.reset();
+                    }
+
+                    // Clear select2 or multiple selects if used
+                    $(modalEl).find('select').val(null).trigger('change');
+
+                    // Clear dual list boxes
+                    const available = modalEl.querySelector("#availableMembers");
+                    const selected = modalEl.querySelector("#selectedMembers");
+                    if (selected) selected.innerHTML = "";
+                    
+                    // Reset preview image
+                    const previewImg = modalEl.querySelector("#preview-image");
+                    if (previewImg) {
+                        previewImg.src = "#";
+                        previewImg.classList.add("d-none");
+                    }
+                });
+            }
+        });
+    });
+</script>
