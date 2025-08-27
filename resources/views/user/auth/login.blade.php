@@ -499,7 +499,8 @@
                         <button type="button" class="btn-close position-absolute top-0 end-0 m-3 close-panel"></button>
                         <h4 class="mb-3 fw-bold text-center">Registration</h4>
                         <hr class="my-2">
-                        <form>
+                        <form action="{{ route('admin.registration-requests.store') }}" method="POST" enctype="multipart/form-data">
+                            @csrf
                             <div class="row g-3">
                                 <div class="col-md-6">
                                     <label class="form-label fw-bold">Name</label>

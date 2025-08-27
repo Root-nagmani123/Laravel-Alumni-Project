@@ -69,7 +69,7 @@
                                         @else
                                         @foreach($members as $member)
                                         @if($member->Service != '')
-                                        <option value="{{ $member->Service }}">{{ $member->Service }}</option>
+                                        <option value="{{ $member->Service }}" selected>{{ $member->Service }}</option>
                                         @endif
                                         @endforeach
                                         @endif
@@ -185,7 +185,7 @@
                                         @else
                                         @foreach($members as $member)
                                         @if($member->Service != '')
-                                        <option value="{{ $member->Service }}">{{ $member->Service }}</option>
+                                        <option value="{{ $member->Service }}" selected>{{ $member->Service }}</option>
                                         @endif
                                         @endforeach
                                         @endif

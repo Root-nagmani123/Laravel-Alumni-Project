@@ -2,6 +2,7 @@
 <div class="row g-4">
     <!-- Card follow START -->
     <!-- Card News START -->
+     @if( $userId = auth()->guard('user')->user()->Service == 'IAS')
     <div class="col-sm-6 col-lg-12">
         <div class="card" style="height: 152px;">
             <!-- Card header START -->
@@ -20,6 +21,7 @@
             <!-- Card body END -->
         </div>
     </div>
+    @endif
 
     <div class="col-sm-6 col-lg-12">
         <div class="card">
