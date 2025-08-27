@@ -12,6 +12,16 @@
         <div class="card-body">
             <h4 class="card-title mb-3">Create Group</h4>
             <hr>
+            <!-- Display validation errors -->
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
             <form action="{{ route('group.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="row">
@@ -26,16 +36,18 @@
                     <!-- Group End Date -->
                     <div class="col-md-6">
                         <div class="mb-3">
-                            <label class="form-label">Group End Date</label>
-                            <input type="date" class="form-control" name="end_date">
+                            <label class="form-label">Group End Date<span
+                                                class="required text-danger ">*</span></label>
+                            <input type="date" class="form-control" name="end_date" id="end_date" required>
                         </div>
                     </div>
 
                     <!-- Group Image -->
                     <div class="col-md-6">
                         <div class="mb-3">
-                            <label class="form-label">Group Image</label>
-                            <input type="file" class="form-control" name="image" accept="image/*">
+                            <label class="form-label">Group Image<span
+                                                class="required text-danger ">*</span></label>
+                            <input type="file" id="image" class="form-control" name="image" accept="image/*" required>
                             <!-- Preview -->
                             <div class="mt-2">
                                 <img id="preview-image" src="#" alt="Image Preview" class="img-fluid rounded d-none"
@@ -182,6 +194,11 @@ $(document).ready(function() {
             cache: true
         }
     });
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById("end_date").setAttribute('min', today);
 });
 </script>
 @endsection
