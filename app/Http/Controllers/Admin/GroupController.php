@@ -58,20 +58,14 @@ class GroupController extends Controller
 
     public function store(Request $request)
     {
-      
+        
         $request->validate([
             'name'        => 'required|string|max:255',
-            'mentor_id'   => 'required|integer',
-            'user_id'     => 'required|array',
             'status'      => 'nullable|integer|in:0,1',
             'end_date'    => 'nullable|date|after_or_equal:today',
             'image'       => 'nullable|image|mimes:jpeg,png,jpg,avif|max:2048',
-            'state_id'    => 'nullable|integer',
-            'created_by'  => 'nullable|integer',
-            'member_type' => 'nullable|string|max:255',
         ]);
         
-    
         $imagePath = null;
         if ($request->hasFile('image')) {
             $imagePath = $request->file('image')->store('uploads/images/grp_img', 'public');
@@ -79,23 +73,22 @@ class GroupController extends Controller
     
         $group = Group::create([
             'name'        => $request->input('name'),
-            'state_id'    => $request->input('state_id'),
             'status'      => $request->input('status', 0),
-            'created_by'  => $request->input('created_by'),
-            'member_type' => $request->input('member_type'),
+            'created_by'  => auth()->guard('admin')->id(),
+            'member_type' => 1,
             'end_date'    => $request->input('end_date'),
             'image'       => $imagePath ? basename($imagePath) : null,
     
         ]);
     
         // Create the group member
-        GroupMember::create([
-            'group_id' => $group->id,
-            'member_id' => $request->input('mentor_id'),
-            'mentor' => $request->input('mentor_id'),
-            'mentiee' => json_encode($request->input('user_id')),
-            'status' => $request->input('status', 0),
-        ]);
+        // GroupMember::create([
+        //     'group_id' => $group->id,
+        //     'member_id' => $request->input('mentor_id'),
+        //     'mentor' => $request->input('mentor_id'),
+        //     'mentiee' => json_encode($request->input('user_id')),
+        //     'status' => $request->input('status', 0),
+        // ]);
     
         // Notify only if status is active and not yet notified
         if ($group->status == 1 && $group->notified_at == 0) {

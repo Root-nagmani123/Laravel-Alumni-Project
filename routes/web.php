@@ -536,8 +536,8 @@ return response()->json($years);
 });
 
 Route::post('admin/get-cadres', function(Illuminate\Http\Request $request){
-    $service = $request->service;
-    $year = $request->year; // batch year
+   $service = $request->input('service');
+    $years   = $request->input('year'); // batch years (array)
 
     $query = App\Models\Member::query();
 
@@ -545,16 +545,15 @@ Route::post('admin/get-cadres', function(Illuminate\Http\Request $request){
         $query->where('service', $service);
     }
 
-    if (!empty($year)) {
-        $query->whereIn('batch', $year);
+    if (!empty($years)) {
+        $query->whereIn('batch', $years);
     }
 
     $cadres = $query->whereNotNull('cader')
         ->where('cader', '!=', 'NA')
-        ->distinct()
-        ->orderBy('cader')
+        ->select(DB::raw('DISTINCT TRIM(cader) as cader'))
+        ->orderBy(DB::raw('TRIM(cader)'))
         ->pluck('cader');
-
 
     return response()->json($cadres);
 });
