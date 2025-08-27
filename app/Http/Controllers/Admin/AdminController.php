@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\URL;
+use App\Models\Grievance;
+
 
 
 use App\Models\User;
@@ -94,10 +96,6 @@ public function loginAuth(Request $request)
         'email' => 'Invalid login credentials or unauthorized access.',
     ]);
 }
-
-
-
-
 
 	public function dashboard(){
         $viewData['title'] = "Dashboard";
@@ -300,21 +298,35 @@ public function socialwall()
 }
 
 
-
-
-
-
 	public function profile(){
         $viewData['title'] = "admin profile";
         return view('admin.profile.profile',$viewData);
 
     }
+    
     public function grievanceList()
-    {
-        // echo "grievance list";die;
-       $grievances = DB::table('grievances')->orderBy('created_at', 'desc')->get();
-        return view('admin.grievance.list', compact('grievances'));
+{
+    $grievances = Grievance::with('member')
+        ->orderBy('created_at', 'desc')
+        ->get();
+
+    return view('admin.grievance.list', compact('grievances'));
+}
+
+  public function updateGrievanceStatus(Request $request, $id)
+{
+    $request->validate([
+        'status' => 'required|in:1,2,3',
+    ]);
+    $grievance = Grievance::find($id);
+
+    if (!$grievance) {
+        return redirect()->back()->withErrors(['error' => 'Grievance not found.']);
     }
+    $grievance->status = (int) $request->status;
+    $grievance->save();
+    return redirect()->back()->with('success', 'Grievance status updated successfully.');
+}
     public function mentorship(Request $request)
     {
         

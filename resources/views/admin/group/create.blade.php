@@ -52,8 +52,9 @@
                     <!-- Group Image -->
                     <div class="col-md-6">
                         <div class="mb-3">
-                            <label class="form-label">Group Image</label>
-                            <input type="file" class="form-control" name="image" id="image" accept="image/*">
+                            <label class="form-label">Group Image<span
+                                                class="required text-danger ">*</span></label>
+                            <input type="file" id="image" class="form-control" name="image" accept="image/*" required>
                             <!-- Preview -->
                             <div class="mt-2">
                                 <img id="preview-image" src="#" alt="Image Preview" class="img-fluid rounded d-none"

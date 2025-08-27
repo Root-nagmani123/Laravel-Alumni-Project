@@ -549,26 +549,30 @@ function submitGrievance(Request $request)
     $name = $user->name;
     $email = $user->email;
 
-    $grievanceType = request('typeSelect');
-    $grievanceMessage = request('userMessage');
-
-    // Validate the input
-    $validatedData = request()->validate([
+    $validatedData = $request->validate([
         'typeSelect' => 'required|string|max:255',
+        'userSubject' => 'required|string|max:255',
         'userMessage' => 'required|string|max:1000',
+        'userAttachment' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:5120', // 5MB
     ]);
 
-    // Store the grievance in the database
+    $attachmentPath = null;
+    if ($request->hasFile('userAttachment')) {
+    $attachmentPath = $request->file('userAttachment')->store('grievances', 'public');
+    }
+
     DB::table('grievances')->insert([
         'name' => $name,
         'email' => $email,
-        'type' => $grievanceType,
-        'message' => $grievanceMessage,
+        'type' => $validatedData['typeSelect'],
+        'subject' => $validatedData['userSubject'], // <-- Store subject
+        'message' => $validatedData['userMessage'],
+        'attachment' => $attachmentPath ?? null,
+        'user_id' => $user->id,
         'created_at' => now(),
     ]);
 
     return redirect()->back()->with('success', 'Request submitted successfully.');
-
 }
 
 

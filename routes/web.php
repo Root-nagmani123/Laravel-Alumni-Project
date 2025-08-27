@@ -225,6 +225,7 @@ Route::prefix('user')->name('user.')->group(function () {
 
         Route::post('/notifications/read/{notifId}', [App\Http\Controllers\Member\NotificationController::class, 'markAsRead'])->name('notifications.read');
         Route::get('/get-members', [MemberController::class, 'getMembers'])->name('members.list');
+        
 
     });
 
@@ -291,6 +292,8 @@ Route::prefix('admin')->middleware('auth:admin')->controller(AdminController::cl
 });
 		Route::get('socialwall', [AdminController::class, 'socialwall'])->name('socialwall.index');
 	Route::get('grievance/list', [AdminController::class, 'grievanceList'])->name('grievance.list');
+    Route::post('/grievances/{grievance}/status', [AdminController::class, 'updateGrievanceStatus'])
+       ->name('grievances.updateStatus');
 
 		Route::delete('delete-socialwall/{id}', [AdminController::class, 'socialwall_delete'])->name('socialwall.delete');
 
