@@ -16,37 +16,48 @@
                     <div class="row align-items-center g-3 mb-4">
                         <!-- Title -->
                         <div class="col-lg-3 col-md-6">
-                            <h4 class="card-title mb-0">Recent Topic List</h4>
+                            <h4 class="card-title mb-0">Recent Activity List</h4>
                         </div>
                     </div>
-                    <div class="dataTables_wrapper">
+                   
                         <div class="table-responsive-sm table-responsive-md table-responsive-lg">
                             <table
                                 class="table table-striped table-bordered align-middle dataTable w-100 text-nowwrap mb-0">
                                 <thead class="table-light">
                                     <tr>
                                         <th scope="col">S.No.</th>
+                                        <th scope="col">Module</th>
                                         <th scope="col">Title</th>
                                         <th scope="col">Description</th>
-                                        <th scope="col">Member</th>
+                                        <th scope="col">Created By</th>
+                                        <th scope="col">Created Time</th>
                                         <th scope="col">Created Date</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach($topics as $topic)
                                         <tr>
-                                            <td>{{ $loop->iteration }}</td>
+                                            <td>{{ $loop->iteration + ($topics->currentPage() - 1) * $topics->perPage() }}</td>
+                                            <td class="text-break">{{ $topic->module }}</td>
                                             <td class="text-break">{{ $topic->title }}</td>
-                                            <td class="text-break">{{ $topic->description }}</td>
-                                            <td class="text-break">{{ $topic->member ? $topic->member->name : '' }}</td>
-                                            <td class="text-break">{{ $topic->created_date }}</td>
+                                            <td class="text-break">{{ $topic->description ?? 'N/A' }}</td>
+                                            <td class="text-break">
+                                                @if($topic->member_type == 2)
+                                                    {{ $topic->member ? $topic->member->name : '' }}
+                                                @endif
+                                                @if($topic->member_type == 1)
+                                                    {{ $topic->admin ? $topic->admin->name : '' }}
+                                                @endif
+                                            </td>
+                                            <td class="text-break">{{ \Carbon\Carbon::parse($topic->created_at)->format('H:i A') }}</td>
+                                            <td class="text-break">{{ \Carbon\Carbon::parse($topic->created_at)->format('d M Y') }}</td>
                                         </tr>
                                     @endforeach
                                 </tbody>
                             </table>
-
+                            {{ $topics->links() }}
                         </div>
-                    </div>
+                    
                 </div>
             </div>
 @endsection

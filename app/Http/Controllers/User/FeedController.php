@@ -178,7 +178,7 @@ class FeedController extends Controller
     ->distinct()
     ->get()
     ->map(function($item) {
-        $item->enc_id = Crypt::encryptString($item->id); // extra field add
+        $item->enc_id = ($item->id); // extra field add
         return $item;
     });
 
@@ -418,7 +418,7 @@ class FeedController extends Controller
     }
 public function getPostByGroup($group_id)
 {
-    echo $group_id = Crypt::decryptString($group_id); // Decrypt the group ID
+    // echo $group_id = Crypt::decryptString($group_id); // Decrypt the group ID
     $userId = auth()->guard('user')->id();
 
     // Posts with relations
@@ -431,7 +431,12 @@ public function getPostByGroup($group_id)
     $group = Group::find($group_id);
 
     // Mentee check (one-liner)
+    $isMentee = 0;
+
+if ($group) {
     $isMentee = ($group->member_type == 2 && $group->created_by == $userId) ? 1 : 0;
+}
+    // $isMentee = ($group->member_type == 2 && $group->created_by == $userId) ? 1 : 0;
 
     // Mentor + mentees direct members fetch
     $groupMember = DB::table('group_member')
@@ -544,26 +549,30 @@ function submitGrievance(Request $request)
     $name = $user->name;
     $email = $user->email;
 
-    $grievanceType = request('typeSelect');
-    $grievanceMessage = request('userMessage');
-
-    // Validate the input
-    $validatedData = request()->validate([
+    $validatedData = $request->validate([
         'typeSelect' => 'required|string|max:255',
+        'userSubject' => 'required|string|max:255',
         'userMessage' => 'required|string|max:1000',
+        'userAttachment' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:5120', // 5MB
     ]);
 
-    // Store the grievance in the database
+    $attachmentPath = null;
+    if ($request->hasFile('userAttachment')) {
+    $attachmentPath = $request->file('userAttachment')->store('grievances', 'public');
+    }
+
     DB::table('grievances')->insert([
         'name' => $name,
         'email' => $email,
-        'type' => $grievanceType,
-        'message' => $grievanceMessage,
+        'type' => $validatedData['typeSelect'],
+        'subject' => $validatedData['userSubject'], // <-- Store subject
+        'message' => $validatedData['userMessage'],
+        'attachment' => $attachmentPath ?? null,
+        'user_id' => $user->id,
         'created_at' => now(),
     ]);
 
     return redirect()->back()->with('success', 'Request submitted successfully.');
-
 }
 
 

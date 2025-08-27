@@ -6,6 +6,9 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
 use App\Models\Notification;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Group;
+use App\Observers\RecentActivityObserver;
+use Illuminate\Pagination\Paginator;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -43,5 +46,8 @@ class AppServiceProvider extends ServiceProvider
                 $view->with('notifications', collect([]));
             }
         });
+
+        Group::observe(RecentActivityObserver::class);
+        Paginator::useBootstrap();
     }
 }

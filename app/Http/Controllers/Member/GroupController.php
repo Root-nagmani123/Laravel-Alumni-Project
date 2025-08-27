@@ -83,7 +83,7 @@ class GroupController extends Controller
     ->orderBy('g.id', 'desc')
     ->get()
    ->map(function ($item) {
-        $item->enc_id =  Crypt::encryptString($item->id); // yaha id encrypt ho rahi hai
+        $item->enc_id =  ($item->id); // yaha id encrypt ho rahi hai
         return $item;
     });
 

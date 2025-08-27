@@ -43,7 +43,7 @@
                                     class="card-body text-center pt-0 flex-grow-1 d-flex flex-column justify-content-between">
                                     <h5 class="mb-0 mt-3">
                                         <a
-                                            href="{{ route('user.group-post', Crypt::encryptString($recent->enc_id)) }}">{{ $recent->name }}</a>
+                                            href="{{ route('user.group-post', ($recent->enc_id)) }}">{{ $recent->name }}</a>
                                     </h5>
                                     <p class="small text-muted mb-1">End Date:
                                         {{ \Carbon\Carbon::parse($recent->end_date)->format('d-m-Y') }}</p>
@@ -63,7 +63,7 @@
 
                                 <div class="card-footer text-center mt-auto">
                                     <span class="badge bg-success-soft text-success mb-2 d-block">Group Active</span>
-                                    <a href="{{ route('user.group-post', Crypt::encryptString($recent->enc_id)) }}"
+                                    <a href="{{ route('user.group-post',($recent->enc_id)) }}"
                                         class="btn btn-primary btn-sm">View Group</a>
                                 </div>
                             </div>
@@ -95,7 +95,7 @@
                                     class="card-body text-center pt-0 flex-grow-1 d-flex flex-column justify-content-between">
                                     <h5 class="mb-0 mt-3">
                                         <a
-                                            href="{{ route('user.group-post', Crypt::encryptString($recent->enc_id)) }}">{{ $recent->name }}</a>
+                                            href="{{ route('user.group-post',($recent->enc_id)) }}">{{ $recent->name }}</a>
                                     </h5>
                                     <p class="small text-muted mb-1">End Date:
                                         {{ \Carbon\Carbon::parse($recent->end_date)->format('d-m-Y') }}</p>

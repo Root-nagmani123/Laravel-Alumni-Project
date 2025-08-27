@@ -123,7 +123,7 @@
                         <li class="sidebar-item">
                             <a class="sidebar-link" href="{{ route('recent.topics.index') }}">
                                 <iconify-icon icon="solar:document-bold-duotone"></iconify-icon>
-                                <span class="icon-small"></span> Recent Topics
+                                <span class="icon-small"></span> Recent Activity
                             </a>
                         </li>
                     </ul>
