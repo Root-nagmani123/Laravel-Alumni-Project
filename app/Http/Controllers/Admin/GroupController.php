@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\DB;
-use App\Services\NotificationService;
+use App\Services\{NotificationService, RecentActivityService};
 use App\Models\Notification;
 use Illuminate\Support\Str;
 use App\Models\Post;
@@ -21,9 +21,12 @@ class GroupController extends Controller
 {
 
     protected $notificationService;
-    public function __construct(NotificationService $notificationService)
+    protected $recentActivityService;
+
+    public function __construct(NotificationService $notificationService, RecentActivityService $recentActivityService)
     {
         $this->notificationService = $notificationService;
+        $this->recentActivityService = $recentActivityService;
     }
 
     public function index()
@@ -126,7 +129,15 @@ class GroupController extends Controller
             }
 
         }
-    
+
+        $this->recentActivityService->logActivity(
+            'New Group Created',
+            'Group',
+            auth()->guard('admin')->id(),
+            'Added new member: ' . $group->name,
+            1,
+            $group->id
+        );
         return redirect()->route('group.index')->with('success', 'Group created successfully.');
     }
     
@@ -261,6 +272,15 @@ public function update(Request $request, Group $group)
         );
     }
 
+    $this->recentActivityService->logActivity(
+        'Group Updated',
+        'Group',
+        auth()->guard('admin')->id(),
+        'Edit Group: ' . $group->name,
+        1,
+        $group->id
+    );
+
     return redirect()->route('group.index')->with('success', 'Group updated successfully.');
 }
 
@@ -283,6 +303,15 @@ public function update(Request $request, Group $group)
                     auth()->id()
                 );
             }
+
+            $this->recentActivityService->logActivity(
+                'Group Deleted',
+                'Group',
+                auth()->guard('admin')->id(),
+                'Deleted group: ' . $group->name,
+                1, // Assuming 1 represents admin
+                $group->id
+            );
 
             return redirect()->route('group.index')
                             ->with('success', 'Group deleted successfully.');
@@ -334,6 +363,14 @@ public function toggleStatus(Request $request)
         }
     }
 
+    $this->recentActivityService->logActivity(
+        'Group Status Toggled',
+        'Group',
+        auth()->guard('admin')->id(),
+        'Toggled status for group: ' . $group->name . ' to ' . ($group->status ? 'Active' : 'Inactive'),
+        1, // Assuming 1 represents admin
+        $group->id
+    );
     return response()->json(['message' => 'Status updated successfully.']);
 }
 
