@@ -17,7 +17,8 @@ class RecentActivityObserver
     {        
         $relatedActivity = $this->relatedActivity($model);
         RecentActivity::create([
-            'title' => $relatedActivity,
+            'title' => $model->name,
+            'module' => $relatedActivity,
             'created_by' => $model->created_by,
             'activity' => 'created',
             'member_type' => $model->member_type,

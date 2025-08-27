@@ -23,6 +23,7 @@ class DashboardController extends Controller
 namespace App\Http\Controllers;
 
 // use App\DataTables\TopicsDataTable;
+use App\Models\RecentActivity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
@@ -216,7 +217,8 @@ class DashboardController extends Controller
     public function recentTopics()
     {
         // TopicsDataTable $topicsDataTable
-        $topics = Topic::where('status', 1)->latest('id')->get();
+        // $topics = Topic::where('status', 1)->latest('id')->get();
+        $topics = RecentActivity::paginate(25);
         return view('admin.topics.index', compact('topics'));
     }
 }
