@@ -21,14 +21,17 @@
         </div>
     </div>
 
-        <div class="col-sm-6 col-lg-12">
+    <div class="col-sm-6 col-lg-12">
         <div class="card">
-                        <div class="rounded-top" style="background-image:url({{asset('user_assets/images/login/login-bg.jpg')}}); background-position: center; background-size: cover; background-repeat: no-repeat;height:55px;"></div>
-                        <div class="card-footer text-center">
-                          <a class="btn btn-success-soft btn-sm" href="https://www.lbsnaa.gov.in/lbsnaa-newsletter"> View Newsletter </a>
-                        </div>
-                        <!-- Card Footer END -->
-                      </div>
+            <div class="rounded-top"
+                style="background-image:url({{asset('user_assets/images/login/login-bg.jpg')}}); background-position: center; background-size: cover; background-repeat: no-repeat;height:55px;">
+            </div>
+            <div class="card-footer text-center">
+                <a class="btn btn-success-soft btn-sm" href="https://www.lbsnaa.gov.in/lbsnaa-newsletter"> View
+                    Newsletter </a>
+            </div>
+            <!-- Card Footer END -->
+        </div>
     </div>
     <!-- Card News END -->
     <!-- Card News START -->
@@ -40,24 +43,26 @@
             </div>
             <!-- Card header END -->
             <!-- Card body START -->
-            <div class="card-body  overflow-auto" style="max-height: 500px; scrollbar-width: thin; scrollbar-color: #af2910 transparent;">
+            <div class="card-body  overflow-auto"
+                style="max-height: 500px; scrollbar-width: thin; scrollbar-color: #af2910 transparent;">
                 <!-- News item -->
                 @if((isset($broadcast)) && ($broadcast->count() > 0))
                 @foreach($broadcast as $index => $broadcast)
-                
+
                 <div class="mb-3">
 
                     <div class="mb-2">
                         <a class="testing" href="{{ route('user.broadcastDetails', $broadcast->enc_id) }}">
-                        @if($broadcast->image_url)
-                        <img class="avatar-img rounded" src="{{ asset('storage/' . $broadcast->image_url) }}" alt=""
-                            height="45" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $broadcast->title }}"
-                            style="height: 85px; object-fit: cover;" loading="lazy" decoding="async">
-                        @else
-                        <img src="{{ asset('assets/images/no-image.png') }}" width="45" class="rounded-circle"
-                            data-bs-toggle="tooltip" data-bs-placement="top" title="No image available" alt="No image"
-                            loading="lazy">
-                        @endif
+                            @if($broadcast->image_url)
+                            <img class="avatar-img rounded" src="{{ asset('storage/' . $broadcast->image_url) }}" alt=""
+                                height="45" data-bs-toggle="tooltip" data-bs-placement="top"
+                                title="{{ $broadcast->title }}" style="height: 85px; object-fit: cover;" loading="lazy"
+                                decoding="async">
+                            @else
+                            <img src="{{ asset('assets/images/no-image.png') }}" width="45" class="rounded-circle"
+                                data-bs-toggle="tooltip" data-bs-placement="top" title="No image available"
+                                alt="No image" loading="lazy">
+                            @endif
                         </a>
 
                     </div>
@@ -115,7 +120,8 @@
 
                             {{ ($recent->name) }}
                         </a>
-                        <small class="text-muted d-block">End Date: {{ \Carbon\Carbon::parse($recent->end_date ?? now())->format('d-m-Y') }}</small>
+                        <small class="text-muted d-block">End Date:
+                            {{ \Carbon\Carbon::parse($recent->end_date ?? now())->format('d-m-Y') }}</small>
                     </div>
 
                     <!-- Post Button -->

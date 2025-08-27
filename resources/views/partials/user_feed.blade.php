@@ -404,19 +404,13 @@
                 $commentText = preg_replace_callback(
                     '/@([a-zA-Z0-9_.]+)/',
                     function ($matches) {
-                        $username = $matches[1];
-                        $user = \App\Models\Member::where('username', $username)->first();
+                        $name = $matches[1];
+                        $user = \App\Models\Member::where('name', $name)->first();
                         if ($user) {
                             $url = route('user.profile.data', ['id' => Crypt::encrypt($user->id)]);
-                           return "<a href='{$url}' 
-            class='mention-badge' 
-            data-bs-toggle='tooltip' 
-            data-bs-placement='top' 
-            title='{$user->name} | {$user->designation}'>
-            @{$username}
-        </a>";
+                           return "<a href='{$url}' class='mention-badge'>@{$user->name}</a>";
                         }
-                        return "@{$username}";
+                        return "@{$name}";
                     },
                     e($comment->comment)
                 );
@@ -534,12 +528,6 @@
           @error('story_file')
               <div class="alert alert-danger">{{ $message }}</div>
           @enderror
-          <!--<div class="mb-3">
-            <label for="story_file" class="form-label">Select Story (Image, Video or PDF)</label>
-            <input type="file" class="form-control" name="story_file" id="story_file" accept=".jpg,.jpeg,.png,.mp4,.mov,.pdf" required>
-            <small class="text-muted d-block mt-2" id="fileInfo">Max 10MB. Allowed types: JPG, PNG, MP4, MOV, PDF.</small>
-            <div class="text-danger mt-2" id="fileError"></div>
-          </div>-->
       <div class="mb-3">
             <label for="story_file" class="form-label">Select Story (Image or Video)</label>
             <input type="file" class="form-control" name="story_file" id="story_file"
@@ -585,27 +573,78 @@
 
 @section('scripts')
 <script>
-    var tribute = new Tribute({
-        trigger: '@',
-        itemClass: 'card',
+   var tribute = new Tribute({
+    trigger: '@',
+    itemClass: 'tribute-item',
+    lookup: 'name',
+    fillAttr: 'name',
 
-        lookup: 'name',
-        fillAttr: 'username',
-        values: function (text, cb) {
-            fetch(`/user-search?q=${text}`)
-                .then(res => res.json())
-                .then(data => cb(data));
+    values: function (text, cb) {
+        fetch(`/user-search?q=${text}`)
+            .then(res => res.json())
+            .then(data => cb(data));
+    },
+
+    menuItemTemplate: function (item) {
+        return `
+            <div class="d-flex align-items-center">
+                <img src="${item.original.avatar || 'https://ui-avatars.com/api/?name=' + item.original.name}" 
+                     class="rounded-circle me-2"
+                     width="36" height="36"
+                     style="object-fit: cover;">
+                <div class="info">
+                    <div class="name">${item.original.name}</div>
+                    <div class="meta">${item.original.meta || ''}</div>
+                </div>
+            </div>
+        `;
+    },
+
+    positionMenu: function (menu, el) {
+        let rects = tribute.range.getClientRects();
+        if (!rects || rects.length === 0) return;
+
+        let caretRect = rects[0];
+        let menuHeight = menu.offsetHeight;
+        let spaceBelow = window.innerHeight - caretRect.bottom;
+        let spaceAbove = caretRect.top;
+
+        // reset Tribute’s inline width/height
+        menu.style.width = "";
+        menu.style.height = "";
+
+        // get parent input/textarea width (comment box)
+        let parentRect = el.getBoundingClientRect();
+
+        // available space from caret → right edge of comment box
+        let availableWidth = parentRect.right - caretRect.left;
+
+        // ✅ position top/bottom
+        if (spaceBelow < menuHeight && spaceAbove > menuHeight) {
+            menu.style.top = (caretRect.top - menuHeight + window.scrollY - 5) + "px";
+        } else {
+            menu.style.top = (caretRect.bottom + window.scrollY + 5) + "px";
         }
-    });
-      function attachTributeTo(element) {
-        if (element && !element.hasAttribute('data-tribute-attached')) {
-            tribute.attach(element);
-            element.setAttribute('data-tribute-attached', 'true');
-        }
+
+        // ✅ align left at caret
+        menu.style.left = (caretRect.left + window.scrollX) + "px";
+
+        // ✅ make width equal to text space from caret to edge
+        menu.style.width = availableWidth + "px";
     }
-    document.querySelectorAll('.user_feed_comment').forEach(el => {
-        attachTributeTo(el);
-    });
+});
+
+function attachTributeTo(element) {
+    if (element && !element.hasAttribute('data-tribute-attached')) {
+        tribute.attach(element);
+        element.setAttribute('data-tribute-attached', 'true');
+    }
+}
+document.querySelectorAll('.user_feed_comment').forEach(el => {
+    attachTributeTo(el);
+});
+
+
 $(document).on('click', '.like-button', function() {
 
     const $btn = $(this);
@@ -672,12 +711,6 @@ $(document).on('click', '.delete-comment-btn', function() {
     }
 });
 
-//add storis modal
-/*document.getElementById('openAddStoryModal').addEventListener('click', function () {
-    var myModal = new bootstrap.Modal(document.getElementById('addStoryModal'));
-    myModal.show();
-});
-*/
 
 document.getElementById('openAddStoryModal').addEventListener('click', function () {
     const fileInput = document.getElementById('story_file');
