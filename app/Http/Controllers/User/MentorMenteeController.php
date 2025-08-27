@@ -24,7 +24,9 @@ class MentorMenteeController extends Controller
 
     public function index()
     {
-     
+     if(auth()->guard('user')->user()->Service == 'IAS'){
+              return redirect()->back('')->with('error', 'Access denied.');
+          }
 $user_id = auth()->guard('user')->user()->id;    
 $members = DB::table('members')
     ->select(
@@ -371,6 +373,8 @@ function filterMentorsData(Request $request)
 
     if ($request->filled('service')) {
         $query->whereIn('Service', $request->service);
+    }else{
+        $query->where('Service', 'IAS');
     }
 
     if ($request->filled('year')) {

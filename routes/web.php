@@ -193,7 +193,9 @@ Route::prefix('user')->name('user.')->group(function () {
     });
 
     Route::middleware('auth:user')->group(function () {
-		Route::get('/mentor-mentee', [MentorMenteeController::class, 'index'])->name('mentor_mentee');
+       
+        Route::get('/mentor-mentee', [MentorMenteeController::class, 'index'])->name('mentor_mentee');
+       
 		Route::post('/get-years', [MentorMenteeController::class, 'getYears'])->name('get.years');
 		Route::post('/get-cadres', [MentorMenteeController::class, 'getCadres'])->name('get.cadres');
 		Route::post('/get-sectors', [MentorMenteeController::class, 'getSectors'])->name('get.sectors');
@@ -478,9 +480,8 @@ Route::get('/user_login', function () {
         Route::get('/admin/topics', function () {
             return view('admin.topics.index');
         })->name('admin.topics.index');
-        Route::get('/admin/registration', function () {
-            return view('admin.registration.index');
-        })->name('admin.registration.index');
+        Route::get('/admin/registration', [App\Http\Controllers\Admin\RegistrationRequestController::class, 'index'])->name('admin.registration.index');
+        Route::put('/admin/registration_requests/update/{id}', [App\Http\Controllers\Admin\RegistrationRequestController::class, 'requests_update_status'])->name('admin.registration_requests.update');
 
 
 require __DIR__.'/auth.php';
@@ -557,6 +558,9 @@ Route::post('admin/get-cadres', function(Illuminate\Http\Request $request){
 
     return response()->json($cadres);
 });
+
+Route::post('admin/registration-requests/store', [App\Http\Controllers\Admin\RegistrationRequestController::class, 'registrationRequestsStore'])->name('admin.registration-requests.store');
+
 Route::post('admin/group/store_ajax_admin_side', [App\Http\Controllers\Admin\GroupController::class, 'store_ajax_admin_side'])->name('store_ajax_admin_side');
 Route::post('/store_ajax', [GroupController::class, 'store_ajax'])->name('store_ajax');
 

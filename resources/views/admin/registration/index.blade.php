@@ -47,12 +47,7 @@
                         </div>
                         <div class="col-6">
                             <!-- Incoming Requests Button -->
-                            <div class="float-end gap-2">
-                                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                    data-bs-target="#incomingRequestsModal">
-                                    Incoming Requests
-                                </button>
-                            </div>
+                            
                         </div>
                     </div>
                 </div>
@@ -76,26 +71,69 @@
                                     <th class="col">Government ID</th>
                                     <th scope="col">Requested Date</th>
                                     <th scope="col">Approved Date</th>
+                                    <th scope="col">Action</th>
                                     <th scope="col">Status</th>
                                 </tr>
                             </thead>
                             <tbody>
-
+                                @foreach($requests as $request)
                                 <tr>
-                                    <td></td>
-                                    <td class="text-break"></td>
-                                    <td class="text-break"></td>
-                                    <td class="text-break"></td>
-                                    <td class="text-break"></td>
-                                    <td class="text-break"></td>
-                                    <td class="text-break"></td>
-                                    <td class="text-break"></td>
-                                    <td class="text-break"></td>
-                                    <td class="text-break"></td>
-                                    <td class="text-break"></td>
-                                    <td class="text-break"></td>
-                                    <td class="text-break"></td>
+                                    <td>{{ $loop->iteration }}</td>
+                                    <td class="text-break">{{ $request->name }}</td>
+                                    <td class="text-break">{{ $request->email }}</td>
+                                    <td class="text-break">{{ $request->mobile }}</td>
+                                    <td class="text-break">{{ $request->service }}</td>
+                                    <td class="text-break">{{ $request->batch }}</td>
+                                    <td class="text-break">{{ $request->cadre }}</td>
+                                    <td class="text-break">{{ $request->course_attended }}</td>
+                                    <td class="text-break">
+                                        @if($request->photo)
+                                        <a href="{{ asset('storage/' . $request->photo) }}" target="_blank">View</a>
+                                        @endif
+                                    </td>
+                                    <td class="text-break">
+                                        @if($request->govt_id)
+                                        <a href="{{ asset('storage/' . $request->govt_id) }}" target="_blank">View</a>
+                                        @endif
+                                    </td>
+                                    <td class="text-break">{{ $request->created_at }}</td>
+                                    <td class="text-break">{{ $request->approved_at }}</td>
+                                 <td class="text-break">
+                                    @if($request->status == \App\Models\RegistrationRequest::STATUS_PENDING)
+                                        <form action="{{ route('admin.registration_requests.update', $request->id) }}" method="POST" style="display:inline;" 
+                                            onsubmit="return confirm('Are you sure you want to approve this request?');">
+                                            @csrf
+                                            @method('PUT')
+                                            <input type="hidden" name="status" value="{{ \App\Models\RegistrationRequest::STATUS_APPROVED }}">
+                                            <button type="submit" class="btn btn-success btn-sm">Approve</button>
+                                        </form>
+
+                                        <form action="{{ route('admin.registration_requests.update', $request->id) }}" method="POST" style="display:inline;" 
+                                            onsubmit="return confirm('Are you sure you want to reject this request?');">
+                                            @csrf
+                                            @method('PUT')
+                                            <input type="hidden" name="status" value="{{ \App\Models\RegistrationRequest::STATUS_REJECTED }}">
+                                            <button type="submit" class="btn btn-danger btn-sm">Reject</button>
+                                        </form>
+                                    @elseif($request->status == \App\Models\RegistrationRequest::STATUS_APPROVED)
+                                        <button class="btn btn-success btn-sm" disabled>Approved</button>
+                                    @elseif($request->status == \App\Models\RegistrationRequest::STATUS_REJECTED)
+                                        <button class="btn btn-danger btn-sm" disabled>Rejected</button>
+                                    @endif
+                                </td>
+
+
+                                    <td>
+                                        @if($request->status == \App\Models\RegistrationRequest::STATUS_PENDING)
+                                            <span class="badge bg-warning text-dark">Pending</span>
+                                        @elseif($request->status == \App\Models\RegistrationRequest::STATUS_APPROVED)
+                                            <span class="badge bg-success">Approved</span>
+                                        @elseif($request->status == \App\Models\RegistrationRequest::STATUS_REJECTED)
+                                            <span class="badge bg-danger">Rejected</span>
+                                        @endif
+
                                 </tr>
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -105,72 +143,6 @@
         <!-- end Zero Configuration -->
     </div>
 </div>
-<!-- Incoming Requests Modal -->
-<div class="modal fade" id="incomingRequestsModal" tabindex="-1" aria-labelledby="incomingRequestsLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-dialog-scrollable">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="incomingRequestsLabel">Incoming Requests</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-
-            <div class="modal-body">
-                <div class="table-responsive">
-                    <table class="table table-bordered table-hover align-middle text-nowrap">
-                        <thead class="table-light">
-                            <tr class="text-break">
-                                <th>S.No.</th>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Mobile</th>
-                                <th>Service</th>
-                                <th>Batch</th>
-                                <th>Cadre</th>
-                                <th>Course Attended in LBSNAA</th>
-                                <th>Profile Picture</th>
-                                <th>Government ID</th>
-                                <th>Requested Date</th>
-                                <th>Approved Date</th>
-                                <th>Status</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td><img src="" class="img-thumbnail" width="50"></td>
-                                <td><a href="" target="_blank" class="btn btn-sm btn-outline-info">View</a></td>
-                                <td></td>
-                                <td class="approved-date">-</td>
-                                <td class="status">
-                                    <span class="badge bg-warning">Pending</span>
-                                </td>
-                                <td>
-                                    <div class="d-flex gap-2">
-                                        <button class="btn btn-success btn-sm action-btn" data-id=""
-                                            data-action="approve">Approve</button>
-                                        <button class="btn btn-danger btn-sm action-btn" data-id=""
-                                            data-action="reject">Reject</button>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
 </div>
+
 @endsection
