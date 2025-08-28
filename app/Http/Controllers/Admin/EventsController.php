@@ -10,15 +10,18 @@ use App\Models\Events;
 use App\Services\NotificationService;
 use App\Models\Member;
 use App\Models\EventRsvp;
+use App\Services\RecentActivityService;
 
 
 class EventsController extends Controller
 {
     protected $notificationService;
+    protected $recentActivityService;
 
-    public function __construct(NotificationService $notificationService)
+    public function __construct(NotificationService $notificationService, RecentActivityService $recentActivityService)
     {
         $this->notificationService = $notificationService;
+        $this->recentActivityService = $recentActivityService;
     }
 
 		public function index()
@@ -83,6 +86,15 @@ class EventsController extends Controller
    if($event->status == 1){
     $notification = $this->notificationService->notifyAllMembers('event', $event->title . ' Event has been added.', $event->id, 'event',Auth::id());
    }
+
+        $this->recentActivityService->logActivity(
+            'Event Created',
+            'Event',
+            Auth::guard('admin')->id(),
+            'Created event: ' . $event->title,
+            1,
+            $event->id
+        );
 		return redirect()->route('events.index')->with('success', 'Event added successfully!');
 	}
 
@@ -139,6 +151,14 @@ return redirect()->route('events.index')->with('error', 'Event not found!');retu
             $notification = $this->notificationService->notifyAllMembers('Event', $event->title . ' event has been updated.', $event->id, 'event', Auth::id());
         }
 
+        $this->recentActivityService->logActivity(
+            'Event Updated',
+            'Event',
+            Auth::guard('admin')->id(),
+            'Updated event: ' . $event->title,
+            1,
+            $event->id
+        );
         return redirect('/admin/events')->with('success', 'Event updated successfully!');
     }
 
@@ -156,7 +176,14 @@ return redirect()->route('events.index')->with('error', 'Event not found!');retu
                 $notification = $this->notificationService->notifyAllMembers('Event', $event->title . ' event has been cancelled before the scheduled end date.', $event->id, 'event_deleted', Auth::id());
                 
             }
-        
+            $this->recentActivityService->logActivity(
+                'Event Deleted',
+                'Event',
+                Auth::guard('admin')->id(),
+                'Deleted event: ' . $event->title,
+                1,
+                $event->id
+            );
 
 			return redirect()->route('events.index')
 							->with('success', 'Event deleted successfully.');
@@ -177,6 +204,15 @@ return redirect()->route('events.index')->with('error', 'Event not found!');retu
         if ($oldStatus == 1 && $event->status == 0) {
             $notification = $this->notificationService->notifyAllMembers('Event', $event->title . ' event has been deactivated.', $event->id, 'event_deactivated', Auth::id());
         }   
+
+        $this->recentActivityService->logActivity(
+            'Event Status Toggled',
+            'Event',
+            Auth::guard('admin')->id(),
+            'Toggled status for event: ' . $event->title .' to ' . ($event->status == 1 ? 'active' : 'inactive'),
+            1,
+            $event->id
+        );
         return response()->json(['message' => 'Status updated successfully.']);
     }
 
