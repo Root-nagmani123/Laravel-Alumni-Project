@@ -859,6 +859,14 @@ public function deleteTopic($id)
 
         }
 
+        $this->recentActivityService->logActivity(
+            'New Group Created',
+            'Group',
+            auth()->guard('user')->id(),
+            'Added new member: ' . $group->name,
+            2, // 2 means user
+            $group->id
+        );
         // Return JSON for AJAX
         return response()->json([
             'success' => true,

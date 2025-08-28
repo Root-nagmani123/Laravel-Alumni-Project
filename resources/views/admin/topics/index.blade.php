@@ -30,6 +30,7 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                @if(!empty($topics))
                                 @foreach($topics as $topic)
                                     <tr>
                                         <td>{{ $loop->iteration + ($topics->currentPage() - 1) * $topics->perPage() }}</td>
@@ -50,6 +51,11 @@
                                         <td class="text-break">{{ $topic->ip_address }}</td>
                                     </tr>
                                 @endforeach
+                                @else
+                                    <tr>
+                                        <td colspan="8" class="text-center">No topics found.</td>
+                                    </tr>
+                                @endif
                             </tbody>
                         </table>
                         {{ $topics->links() }}
