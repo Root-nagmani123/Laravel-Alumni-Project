@@ -72,6 +72,12 @@
                                         </a>
                                     </li>
                                     <li>
+                                        <a href="{{route('user.directory')}}" class="mdtxt">
+                                            <i class="material-symbols-outlined mat-icon"> settings </i>
+                                            Directory
+                                        </a>
+                                    </li>
+                                    <li>
                                       <form action="{{ route('user.logout') }}" method="POST" style="display: inline;" >
 										@csrf
 										<button type="submit" class="mdtxt" style="background: none; border: none; cursor: pointer;" >
