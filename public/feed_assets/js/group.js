@@ -47,18 +47,24 @@ function loadMembers(query = '') {
     let service = $('#service').val();
     let year = $('.year-select').val();
     let cadre = $('.cadre').val();
+
     $.ajax({
         url: window.location.origin + "/admin/members/list",
         type: "GET",
         data: { search: query, service: service, year: year, cadre: cadre },
         success: function (data) {
-            let $select = $('#availableMembers');
-            $select.empty();
+            let $available = $('#availableMembers');
+            $available.empty();
 
             $.each(data, function (index, member) {
-                // agar pehle se selected me hai to skip karo
-                if ($("#selectedMembers option[value='" + member.id + "']").length === 0) {
-                    $select.append(`<option value="${member.id}">${member.name}</option>`);
+                // agar already selected me hai to skip karo
+                if ($("#selectedMembers input[value='" + member.id + "']").length === 0) {
+                    $available.append(`
+                        <div class="form-check">
+                            <input class="form-check-input avail-member" type="checkbox" value="${member.id}" id="avail_${member.id}">
+                            <label class="form-check-label" for="avail_${member.id}">${member.name}</label>
+                        </div>
+                    `);
                 }
             });
         },
@@ -68,27 +74,31 @@ function loadMembers(query = '') {
     });
 }
 
-function selectedMembers() {
-    // let $select = $('#selectedMembers');
-    // $select.empty();
+// already selected members group ke according laao
+function loadSelectedMembers(groupId) {
+    $.ajax({
+        url: window.location.origin + "/admin/members/selected",
+        type: "GET",
+        data: { group_id: groupId },
+        success: function (data) {
+            let $selected = $('#selectedMembers');
+            $selected.empty();
 
-    // $.ajax({
-    //     url: window.location.origin + "/admin/members/list",
-    //     type: "GET",
-    //     data: { selected: true },
-    //     success: function (data) {
-    //         $.each(data, function (index, member) {
-    //             $select.append(`<option value="${member.id}">${member.name}</option>`);
-    //         });
-    //     },
-    //     error: function () {
-    //         alert('Failed to load members.');
-    //     }
-    // });
+            $.each(data, function (index, member) {
+                $selected.append(`
+                    <div class="form-check">
+                        <input class="form-check-input sel-member" type="checkbox" value="${member.id}" id="sel_${member.id}" checked name="mentees[]">
+                        <label class="form-check-label" for="sel_${member.id}">${member.name}</label>
+                    </div>
+                `);
+            });
+        }
+    });
 }
 
 $(document).ready(function () {
     loadMembers();
+
     $('#searchAll').on('keyup', function () {
         let query = $(this).val();
         loadMembers(query);
@@ -96,19 +106,42 @@ $(document).ready(function () {
 
     $('#searchSelected').on('keyup', function () {
         let value = $(this).val().toLowerCase();
-        $("#selectedMembers option").filter(function () {
+        $("#selectedMembers .form-check").filter(function () {
             $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
         });
     });
 
+    // Add members
     $('#addMemberBtn').click(function () {
-        $('#availableMembers option:selected').appendTo('#selectedMembers');
+        $('#availableMembers input.avail-member:checked').each(function () {
+            let id = $(this).val();
+            let name = $(this).next('label').text();
+            $('#selectedMembers').append(`
+                <div class="form-check">
+                    <input class="form-check-input sel-member" type="checkbox" value="${id}" id="sel_${id}" checked name="mentees[]">
+                    <label class="form-check-label" for="sel_${id}">${name}</label>
+                </div>
+            `);
+            $(this).closest('.form-check').remove();
+        });
     });
 
+    // Remove members
     $('#removeMemberBtn').click(function () {
-        $('#selectedMembers option:selected').appendTo('#availableMembers');
+        $('#selectedMembers input.sel-member:checked').each(function () {
+            let id = $(this).val();
+            let name = $(this).next('label').text();
+            $('#availableMembers').append(`
+                <div class="form-check">
+                    <input class="form-check-input avail-member" type="checkbox" value="${id}" id="avail_${id}">
+                    <label class="form-check-label" for="avail_${id}">${name}</label>
+                </div>
+            `);
+            $(this).closest('.form-check').remove();
+        });
     });
 });
+
 
 // Admin side changes
 $(document).ready(function () {
