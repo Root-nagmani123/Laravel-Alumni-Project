@@ -108,12 +108,13 @@ class FeedController extends Controller
         $user = auth()->guard('user')->user();
         
         $userId = $user->id;
+        $memberId = $user->id;
         // Fetch posts with related models
-        $stories = Story::where('created_at', '>=', now()->subDay())
+        $story = Story::where('created_at', '>=', now()->subDay())
                      ->with('user')
                      ->get();
 
-         $storiesByMember = $stories->groupBy('member_id');
+         $storiesByMember = $story->groupBy('member_id');
          $broadcast = DB::table('broadcasts')
                 ->where('status',1)
             ->orderBy('broadcasts.id', 'desc')
@@ -225,7 +226,7 @@ class FeedController extends Controller
         ];
     }); 
 
-    return view('user.feed', compact('posts', 'user', 'storiesByMember', 'broadcast','events', 'forums', 'groupNames', 'members'));
+    return view('user.feed', compact('memberId', 'posts', 'user', 'story','storiesByMember', 'broadcast','events', 'forums', 'groupNames', 'members'));
     }
 
     public function store(Request $request)

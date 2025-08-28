@@ -951,10 +951,12 @@ document.addEventListener("DOMContentLoaded", function () {
         @endphp
 
         @php
-    $isVideo = in_array(pathinfo($story->story_image, PATHINFO_EXTENSION), ['mp4', 'webm']);
-    $previewImage = $isVideo
-        ? 'storage/thumbnails/' . pathinfo($story->story_image, PATHINFO_FILENAME) . '.jpg'
-        : 'storage/' . $story->story_image;
+        foreach ($story as $story) {
+            $isVideo = in_array(pathinfo($story->story_image, PATHINFO_EXTENSION), ['mp4', 'webm']);
+            $previewImage = $isVideo
+                ? 'storage/thumbnails/' . pathinfo($story->story_image, PATHINFO_FILENAME) . '.jpg'
+                : 'storage/' . $story->story_image;
+        }
 @endphp
         {
             id: "member-{{ $myUserId }}",
@@ -983,8 +985,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
          //Second: Other stories
     @foreach($storiesByMember as $memberId => $memberStories)
+   
         @continue($memberId == $myUserId)
         @php
+        
             $first = $memberStories->first();
             $user = $first->user;
             $storyImage = $first->story_image ?? null;
@@ -1000,10 +1004,12 @@ document.addEventListener("DOMContentLoaded", function () {
         @endphp
 
 @php
+foreach ($story as $story) {
     $isVideo = in_array(pathinfo($story->story_image, PATHINFO_EXTENSION), ['mp4', 'webm']);
     $previewImage = $isVideo
         ? 'storage/thumbnails/' . pathinfo($story->story_image, PATHINFO_FILENAME) . '.jpg'
         : 'storage/' . $story->story_image;
+}
 @endphp
         {
             id: "member-{{ $memberId }}",
