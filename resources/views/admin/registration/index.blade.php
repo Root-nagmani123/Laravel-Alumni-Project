@@ -45,18 +45,12 @@
                         <div class="col-6">
                             <h4>Registration List</h4>
                         </div>
-                        <div class="col-6">
-                            <!-- Incoming Requests Button -->
-                            
-                        </div>
                     </div>
                 </div>
 
                 <hr>
-                <div class="dataTables_wrapper">
-                    <div class="table-responsive-sm table-responsive-md table-responsive-lg">
-                        <table
-                            class="table table-striped table-bordered align-middle dataTable w-100 text-nowwrap mb-0">
+                <div class="table-responsive">
+                        <table class="table table-striped table-bordered align-middle text-nowrap mb-0">
                             <thead class="table-light">
                                 <tr>
                                     <th scope="col">S.No.</th>
@@ -79,26 +73,26 @@
                                 @foreach($requests as $request)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
-                                    <td class="text-break">{{ $request->name }}</td>
-                                    <td class="text-break">{{ $request->email }}</td>
-                                    <td class="text-break">{{ $request->mobile }}</td>
-                                    <td class="text-break">{{ $request->service }}</td>
-                                    <td class="text-break">{{ $request->batch }}</td>
-                                    <td class="text-break">{{ $request->cadre }}</td>
-                                    <td class="text-break">{{ $request->course_attended }}</td>
-                                    <td class="text-break">
+                                    <td>{{ $request->name }}</td>
+                                    <td>{{ $request->email }}</td>
+                                    <td>{{ $request->mobile }}</td>
+                                    <td>{{ $request->service }}</td>
+                                    <td>{{ $request->batch }}</td>
+                                    <td>{{ $request->cadre }}</td>
+                                    <td>{{ $request->course_attended }}</td>
+                                    <td>
                                         @if($request->photo)
                                         <a href="{{ asset('storage/' . $request->photo) }}" target="_blank">View</a>
                                         @endif
                                     </td>
-                                    <td class="text-break">
+                                    <td>
                                         @if($request->govt_id)
                                         <a href="{{ asset('storage/' . $request->govt_id) }}" target="_blank">View</a>
                                         @endif
                                     </td>
-                                    <td class="text-break">{{ $request->created_at }}</td>
-                                    <td class="text-break">{{ $request->approved_at }}</td>
-                                 <td class="text-break">
+                                    <td>{{ $request->created_at }}</td>
+                                    <td>{{ $request->approved_at }}</td>
+                                 <td>
                                     @if($request->status == \App\Models\RegistrationRequest::STATUS_PENDING)
                                         <form action="{{ route('admin.registration_requests.update', $request->id) }}" method="POST" style="display:inline;" 
                                             onsubmit="return confirm('Are you sure you want to approve this request?');">
@@ -136,7 +130,6 @@
                                 @endforeach
                             </tbody>
                         </table>
-                    </div>
                 </div>
             </div>
         </div>
