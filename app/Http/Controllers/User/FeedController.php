@@ -104,6 +104,7 @@ class FeedController extends Controller
 
    public function index()
     {
+        
         $user = auth()->guard('user')->user();
         
         $userId = $user->id;
@@ -189,10 +190,19 @@ class FeedController extends Controller
 ->groupBy('Service')
 ->get();
 
-    $posts = Post::with(['member', 'media', 'likes', 'comments.member', 'group'])
+    $posts = Post::with([
+        'member',
+        'media',
+        'likes',
+        'comments' => function($query) {
+            $query->where('status', 1);
+        },
+        'group'
+    ])
+    ->where('status', 1)
     ->where(function ($query) use ($groupIds) {
-        $query->whereNull('group_id') // normal post bhi chahiye
-              ->orWhereIn('group_id', $groupIds); // ya phir allowed group_id
+        $query->whereNull('group_id')
+              ->orWhereIn('group_id', $groupIds);
     })
     ->orderBy('created_at', 'desc')
     ->get()
@@ -207,7 +217,7 @@ class FeedController extends Controller
             'member' => $post->member,
             'media' => $post->media,
             'likes' => $post->likes,
-            'comments' => $post->comments,
+            'comments' => $post->comments, // now only status=1
             'video_link' => $post->video_link,
             'shares' => $post->shares,
             'group_image' => $post->group->image ?? null,

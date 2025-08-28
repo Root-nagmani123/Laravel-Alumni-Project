@@ -209,6 +209,7 @@ public function socialwall()
             'posts.created_at as post_created_at',
             'post_media.file_path',
             'post_media.file_type',
+            'posts.status',
             'members.name as member_name',
             'members.profile_pic as member_profile_pic'
         )
@@ -239,6 +240,7 @@ public function socialwall()
             'comments.post_id',
             'comments.comment',
             'comments.created_at',
+            'comments.status',
             'members.name as member_name',
             'members.profile_pic as member_profile_pic'
         )
@@ -256,6 +258,7 @@ public function socialwall()
             'media_type' => $first->media_type,
             'created_at' => $first->post_created_at,
             'video_link' => $first->video_link,
+            'status' => $first->status,
             'media' => $group->map(function ($item) {
                 return [
                     'file_path' => $item->file_path,

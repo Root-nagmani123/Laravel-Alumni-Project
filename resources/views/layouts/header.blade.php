@@ -239,7 +239,7 @@
                                                 }
                                                 // Debug: Log the generated URL
                                                 if (app()->environment('local')) {
-                                                    \Log::info('Notification URL generated:', [
+                                                    Log::info('Notification URL generated:', [
                                                         'source_id' => $enc_source_id ?? 'null',
                                                         'source_type' => $notification->source_type ?? 'null',
                                                         'url' => $notificationUrl
