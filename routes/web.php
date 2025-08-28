@@ -402,6 +402,8 @@ Route::prefix('events')->name('events.')->group(function () {
 });
 
 
+
+
 Route::middleware('auth')->group(function () {
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
 		Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -535,4 +537,7 @@ Route::post('/custom-broadcasting-auth', function(\Illuminate\Http\Request $requ
     return response()->json([
         'auth' => hash('sha256', $request->socket_id . ':' . $request->channel_name . ':bypass')
     ]);
-})->withoutMiddleware(\Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class); 
+})->withoutMiddleware(\Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class);
+
+Route::post('/admin/socialwall/toggle-status', [SocialWallController::class, 'togglePostStatus'])->name('socialwall.toggleStatus');
+Route::post('/admin/socialwall/toggle-comment-status', [SocialWallController::class, 'toggleCommentStatus'])->name('socialwall.toggleCommentStatus');
