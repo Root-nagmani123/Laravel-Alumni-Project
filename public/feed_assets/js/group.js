@@ -140,8 +140,45 @@ $(document).ready(function () {
             $(this).closest('.form-check').remove();
         });
     });
+
+    // load existing member
+    
+    $(document).on('shown.bs.modal', '#addMembersModal', function () {
+        let group_id = $("input[name='group_id']").val();
+        loadExistingMembers(group_id);
+    });
 });
 
+function loadExistingMembers(group_id) {
+    if (!group_id) {
+        return;
+    }
+    console.log('group id -> '+group_id);
+    $.ajax({
+        type: "GET",
+        url: window.location.origin + "/admin/group/existing_member",
+        data: { group_id: group_id },
+        success: function (data) {
+            let $selected = $('#selectedMembers');
+            $selected.empty();
+
+            $.each(data, function (index, member) {
+                $selected.append(`
+                    <div class="form-check">
+                        <input class="form-check-input sel-member" type="checkbox" value="${member.id}" id="sel_${member.id}" checked name="mentees[]">
+                        <label class="form-check-label" for="sel_${member.id}">${member.name}</label>
+                    </div>
+                `);
+            });
+        },
+        error: function (xhr) {
+            console.error("Error loading existing members:", xhr.responseText);
+        },
+        complete: function () {
+            // Any cleanup or finalization code can go here
+        }
+    });
+}
 
 // Admin side changes
 $(document).ready(function () {
