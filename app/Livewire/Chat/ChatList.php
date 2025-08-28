@@ -136,12 +136,13 @@ class ChatList extends Component
 
         broadcast(new MessageSentEvent($message))->toOthers();
 
+        $user = auth()->guard('user')->user();
         //Notification 
         app()->make(\App\Services\NotificationService::class)
             ->notifyChatMessage(
                 $this->selectedChat,
-                auth()->guard('user')->id(),
-                Auth::user()->name . ' has been sent message - ' . $this->newMessage,
+                $user->id ?? null,
+                $user->name ?? null . ' has been sent message - ' . $this->newMessage,
                 $this->selectedChat
             );
 
