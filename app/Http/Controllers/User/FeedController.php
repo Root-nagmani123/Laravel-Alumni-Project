@@ -428,7 +428,7 @@ class FeedController extends Controller
     }
 public function getPostByGroup($group_id)
 {
-    // echo $group_id = Crypt::decryptString($group_id); // Decrypt the group ID
+     $group_id = decrypt($group_id); // Decrypt the group ID
     $userId = auth()->guard('user')->id();
 
     // Posts with relations
