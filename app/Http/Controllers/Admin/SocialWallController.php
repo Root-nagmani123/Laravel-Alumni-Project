@@ -4,6 +4,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Member; // defining Member model
 use App\Models\User;
 use App\Models\Post;
+use App\Models\Comment; // <-- Add this line
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -74,6 +75,26 @@ class SocialWallController extends Controller
 
         return response()->json(['message' => 'Status updated successfully.']);
     }
+
+    public function togglePostStatus(Request $request)
+{
+    $post = Post::findOrFail($request->id);
+    $post->status = $request->status;
+    $post->save();
+
+    return response()->json(['message' => 'Post status updated successfully.']);
+}
+
+   public function toggleCommentStatus(Request $request)
+{
+    $comment = Comment::find($request->id);
+    if ($comment) {
+        $comment->status = $request->status;
+        $comment->save();
+        return response()->json(['message' => 'Comment status updated!']);
+    }
+    return response()->json(['message' => 'Comment not found!'], 404);
+}
 
 
 }
