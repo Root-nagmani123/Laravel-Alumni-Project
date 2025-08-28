@@ -33,7 +33,7 @@
     @php use Illuminate\Support\Str; @endphp
 <div class="row align-items-center mb-3">
     <div class="col-md-6">
-        <form method="GET" action="{{ route('socialwall.index') }}">
+        <form method="GET" action="{{ route('socialwall.index') }}" id="filterForm">
             <div class="input-group">
                 <select name="year" class="form-select" onchange="this.form.submit()">
                     <option value="">All Years</option>
@@ -59,11 +59,17 @@
                         </option>
                     @endforeach
                 </select>
-                <button type="submit" class="btn btn-primary">Filter</button>
+                <button type="button" class="btn btn-primary" id="clearFilterBtn">Clear Filter</button>
             </div>
         </form>
     </div>
 </div>
+
+    @if($groupedPosts->isEmpty())
+    <div class="alert alert-warning text-center my-4">
+        No post found against applied filter
+    </div>
+    @endif
 
     @foreach($groupedPosts as $post)
     <div class="card rounded" id="feed-{{ $post['post_id'] }}">
@@ -89,9 +95,11 @@
                     <div class="form-check form-switch">
                         <input class="form-check-input feed-status-toggle" type="checkbox" role="switch"
                             id="feedStatusSwitch-{{ $post['post_id'] }}" data-id="{{ $post['post_id'] }}"
-                            >
-                        <label class="form-check-label small" for="feedStatusSwitch-{{ $post['post_id'] }}">
-                            
+                            {{ $post['status'] == 1 ? 'checked' : '' }}>
+
+                            <span class="form-check-label small" for="feedStatusSwitch-{{ $post['post_id'] }}">
+                                {{ $post['status'] == 1 ? 'Active' : 'Inactive' }}
+                            </span>
                         </label>
                     </div>
                 </div>
@@ -187,7 +195,8 @@
                        type="checkbox" 
                        role="switch"
                        id="commentStatusSwitch-{{ $comment->id }}"
-                       data-id="{{ $comment->id }}">
+                       data-id="{{ $comment->id }}"
+                       {{ $comment->status == 1 ? 'checked' : '' }}>
                 <label class="form-check-label small" for="commentStatusSwitch-{{ $comment->id }}">
                 </label>
             </div>
@@ -205,62 +214,98 @@
 
     @endsection
     @section('scripts')
+<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
+<script>
+$(document).ready(function() {
+    @if(session('success'))
+    toastr.success("{{ session('success') }}");
+    @endif
 
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-
-    <script>
-    //Toastr message
-    $(document).ready(function() {
-        @if(session('success'))
-        toastr.success("{{ session('success') }}");
-        @endif
-
+    // Clear filter button
+    $('#clearFilterBtn').on('click', function() {
+        window.location.href = "{{ route('socialwall.index') }}";
     });
 
-    function delete_feed_model(postId) {
-        if (confirm('Are you sure you want to delete this post?')) {
-            $.ajax({
-                url: '/admin/delete-socialwall/' + postId,
-                type: 'DELETE',
-                data: {
-                    _token: '{{ csrf_token() }}'
-                },
-                success: function(response) {
-                    toastr.success(response.message);
-                    $('#feed-' + postId).remove(); // UI se post remove karo
-                },
-                error: function(xhr) {
-                    toastr.error('Failed to delete post.');
-                }
-            });
+    // Post status toggle
+    $(document).on('change', '.feed-status-toggle', function() {
+        let checkbox = $(this);
+        let postId = checkbox.data('id');
+        let status = checkbox.prop('checked') ? 1 : 0;
+        let confirmChange = confirm("Are you sure you want to " + (status ? "activate" : "deactivate") + " this post?");
+        if (!confirmChange) {
+            checkbox.prop('checked', !status);
+            return;
         }
-    }
-    </script>
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        document.querySelectorAll('.read-toggle').forEach(function(btn) {
-            btn.addEventListener('click', function() {
-                const postId = this.getAttribute('data-post-id');
-                const shortContent = document.getElementById('short-' + postId);
-                const fullContent = document.getElementById('full-' + postId);
-
-                if (fullContent.classList.contains('d-none')) {
-                    shortContent.classList.add('d-none');
-                    fullContent.classList.remove('d-none');
-                    this.textContent = 'Read less';
-                } else {
-                    shortContent.classList.remove('d-none');
-                    fullContent.classList.add('d-none');
-                    this.textContent = 'Read more';
-                }
-            });
+        $.ajax({
+            url: '/admin/socialwall/toggle-status',
+            type: 'POST',
+            data: {
+                _token: '{{ csrf_token() }}',
+                id: postId,
+                status: status
+            },
+            success: function(response) {
+                toastr.success(response.message);
+            },
+            error: function() {
+                toastr.error('Failed to update status.');
+                checkbox.prop('checked', !status);
+            }
         });
     });
-    
-    </script>
 
+    // Comment status toggle
+    $(document).on('change', '.comment-status-toggle', function() {
+        let checkbox = $(this);
+        let commentId = checkbox.data('id');
+        let status = checkbox.prop('checked') ? 1 : 0;
+        let confirmChange = confirm("Are you sure you want to " + (status ? "activate" : "deactivate") + " this comment?");
+        if (!confirmChange) {
+            checkbox.prop('checked', !status);
+            return;
+        }
+        $.ajax({
+            url: '/admin/socialwall/toggle-comment-status',
+            type: 'POST',
+            data: {
+                _token: '{{ csrf_token() }}',
+                id: commentId,
+                status: status
+            },
+            success: function(response) {
+                toastr.success(response.message);
+            },
+            error: function() {
+                toastr.error('Failed to update comment status.');
+                checkbox.prop('checked', !status);
+            }
+        });
+    });
+});
+</script>
 
-    @endsection
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.read-toggle').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            const postId = this.getAttribute('data-post-id');
+            const shortContent = document.getElementById('short-' + postId);
+            const fullContent = document.getElementById('full-' + postId);
+
+            if (fullContent.classList.contains('d-none')) {
+                shortContent.classList.add('d-none');
+                fullContent.classList.remove('d-none');
+                this.textContent = 'Read less';
+            } else {
+                shortContent.classList.remove('d-none');
+                fullContent.classList.add('d-none');
+                this.textContent = 'Read more';
+            }
+        });
+    });
+});
+</script>
+@endsection
