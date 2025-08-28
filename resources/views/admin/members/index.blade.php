@@ -123,7 +123,7 @@
                                     <td class="text-break">{{ $member->sector }}</td>
                                     <td class="text-break">{{ $member->cader }}, {{ $member->batch }}</td>
                                     <td>
-                                        <a href="{{ route('members.edit', $member->id) }}" class="btn btn-success text-white btn-sm mb-1">Edit</a>
+                                        <a href="{{ route('members.edit', encrypt($member->id)) }}" class="btn btn-success text-white btn-sm mb-1">Edit</a>
                                         <form action="{{ route('members.destroy', $member->id) }}" method="POST" style="display:inline;">
                                             @csrf
                                             @method('DELETE')

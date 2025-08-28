@@ -118,7 +118,7 @@
                     <!-- Title + End Date -->
                     <div class="overflow-hidden">
                         <a class="mb-0 fw-semibold d-block text-truncate"
-                            href="{{ route('user.group-post',($recent->enc_id)) }}">
+                            href="{{ route('user.group-post',encrypt($recent->enc_id)) }}">
 
                             {{ ($recent->name) }}
                         </a>
