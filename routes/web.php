@@ -126,47 +126,8 @@ Route::prefix('user')->name('user.')->group(function () {
         Route::post('/forum-store', [PostController::class, 'forum_store'])->name('forum.store');
 
 		Route::post('/post/{post}/like', [PostController::class, 'toggleLike'])->name('post.like');
-		//Route::post('/user/comments', [CommentController::class, 'store'])->name('user.comments.store');
-		//Route::put('/user/comments/{id}', [CommentController::class, 'update'])->name('user.comments.update');
-		//Route::delete('/user/comments/{id}', [CommentController::class, 'destroy'])->name('user.comments.destroy');
-	
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
          Route::get('/profile/{id}', [ProfileController::class, 'showById'])->where('id', '[0-9]+')->name('profile');
          Route::get('/profile/{name}', [ProfileController::class, 'showByName'])->where('name', '[a-zA-Z\s]+')->name('profile.name');
 
@@ -469,8 +430,12 @@ Route::get('/user_login', function () {
         // Route::get('/user/group', function () {
         //     return view('user.groups');
         // })->name('user.groups');
-        
-         
+
+         Route::get('/user/feedback', function () {
+            return view('user.feedback');
+        })->name('user.feedback');
+
+
         Route::get('/admin/mentorship/create', function () {
             return view('admin.mentorship.create');
         })->name('admin.mentorship.create');

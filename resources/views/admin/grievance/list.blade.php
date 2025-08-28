@@ -26,19 +26,20 @@
         <div class="card-body">
             <h4 class="card-title mb-3">Grievance List</h4>
             <div class="table-responsive">
-                <table class="table table-bordered align-middle">
+                <table class="table table-bordered align-middle text-nowrap" id="grievanceTable">
                     <thead>
                         <tr>
-                            <th>#</th>
-                            <th>Type</th>
-                            <th>Subject</th>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Message</th>
-                            <th>Attachment</th>
-                            <th>Status</th>
-                            <th>Username</th>
-                            <th>Date</th>
+                            <th class="col">#</th>
+                            <th class="col">Type</th>
+                            <th class="col">Subject</th>
+                            <th class="col">Name</th>
+                            <th class="col">Email</th>
+                            <th class="col">Message</th>
+                            <th class="col">Attachment</th>
+                            <th class="col">Status</th>
+                            <th class="col">Submitted By</th>
+                            <th class="col">Date</th>
+                            <th class="col" width="30%">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -59,34 +60,35 @@
                             </td>
                             <td>
                                  <!-- Current status badge -->
-    @php
-        $statusClasses = [
-            1 => 'bg-warning text-dark',
-            2 => 'bg-primary text-white',
-            3 => 'bg-success text-white',
-        ];
-        $statusTexts = [
-            1 => 'Pending',
-            2 => 'In Progress',
-            3 => 'Resolved',
-        ];
-    @endphp
+                                @php
+                                    $statusClasses = [
+                                        1 => 'bg-warning text-dark',
+                                        2 => 'bg-primary text-white',
+                                        3 => 'bg-success text-white',
+                                    ];
+                                    $statusTexts = [
+                                        1 => 'Pending',
+                                        2 => 'In Progress',
+                                        3 => 'Resolved',
+                                    ];
+                                @endphp
 
-    <span class="badge {{ $statusClasses[$grievance->status] }}">
-        {{ $statusTexts[$grievance->status] }}
-    </span>
-
-                            <form action="{{ route('grievances.updateStatus', $grievance->id) }}" method="POST">
-                                @csrf
-                                <select name="status" class="form-select form-select-sm" onchange="this.form.submit()">
-                                    <option value="1" {{ $grievance->status == 1 ? 'selected' : '' }}>Pending</option>
-                                    <option value="2" {{ $grievance->status == 2 ? 'selected' : '' }}>In Progress</option>
+                                <span class="badge {{ $statusClasses[$grievance->status] }}">
+                                    {{ $statusTexts[$grievance->status] }}
+                                </span>
+                            </td>
+                            <td>{{ $grievance->member->name }}</td>
+                            <td>{{ \Carbon\Carbon::parse($grievance->created_at)->format('d-m-Y') }}</td>
+                            <td width="30%">
+                                <form action="{{ route('grievances.updateStatus', $grievance->id) }}" method="POST">
+                                    @csrf
+                                    <select name="status" class="form-select form-select-sm" onchange="this.form.submit()">
+                                        <option value="1" {{ $grievance->status == 1 ? 'selected' : '' }}>Pending</option>
+                                        <option value="2" {{ $grievance->status == 2 ? 'selected' : '' }}>In Progress</option>
                                     <option value="3" {{ $grievance->status == 3 ? 'selected' : '' }}>Resolved</option>
                                 </select>
                             </form>
                             </td>
-                            <td>{{ $grievance->member->name }}</td>
-                            <td>{{ \Carbon\Carbon::parse($grievance->created_at)->format('d-m-Y') }}</td>
                         </tr>
                         @empty
                         <tr>
