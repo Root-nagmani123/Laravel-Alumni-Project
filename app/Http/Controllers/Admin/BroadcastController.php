@@ -9,13 +9,16 @@ use App\Models\Notification;
 use Illuminate\Support\Facades\Storage;
 use App\Services\NotificationService;
 use App\Models\Member;
+use App\Services\RecentActivityService;
 class BroadcastController extends Controller
 {
     protected $notificationService;
+    protected $recentActivityService;
 
-    public function __construct(NotificationService $notificationService)
+    public function __construct(NotificationService $notificationService, RecentActivityService $recentActivityService)
     {
         $this->notificationService = $notificationService;
+        $this->recentActivityService = $recentActivityService;
     }
 
     public function index()
@@ -90,6 +93,15 @@ public function store(Request $request)
         'deleted_on' => null,
     ]);
 
+    $this->recentActivityService->logActivity(
+        'New Broadcast Created',
+        'Broadcast',
+        auth()->guard('admin')->id(),
+        'Created new broadcast: ' . $broadcast->title,
+        1,
+        $broadcast->id
+    );
+
     if($broadcast){
        $notification = $this->notificationService->notifyAllMembers('broadcast', $broadcast->title . ' broadcast has been added.', $broadcast->id, 'broadcast', auth()->id());
     }
@@ -113,6 +125,15 @@ public function toggleStatus(Request $request)
         $notification = $this->notificationService->notifyAllMembers('broadcast', $broadcast->title . ' Broadcast has been deactivated.', $broadcast->id, 'broadcast_deactivated', auth()->id());
     }
 
+    $this->recentActivityService->logActivity(
+        'Broadcast Status Toggled',
+        'Broadcast',
+        auth()->guard('admin')->id(),
+        'Toggled status for broadcast: ' . $broadcast->title .' to ' . ($broadcast->status == 1 ? 'active' : 'inactive'),
+        1,
+        $broadcast->id
+    );
+
     return response()->json(['message' => 'Status updated successfully.']);
 }
 public function destroybroadcast(Broadcast $broadcast)
@@ -131,7 +152,14 @@ public function destroybroadcast(Broadcast $broadcast)
             $notification = $this->notificationService->notifyAllMembers('broadcast', $broadcast->title . ' broadcast has been deleted.', $broadcast->id, 'broadcast_deleted', auth()->id());
         }
 
-
+        $this->recentActivityService->logActivity(
+            'Broadcast Deleted',
+            'Broadcast',
+            auth()->guard('admin')->id(),
+            'Deleted broadcast: ' . $broadcast->title,
+            1,
+            $broadcast->id
+        );
         return redirect()->route('broadcasts.index')->with('success', 'Broadcast deleted successfully.');
     }
     public function update(Request $request, $id)
@@ -172,6 +200,14 @@ public function destroybroadcast(Broadcast $broadcast)
         $notification = $this->notificationService->notifyAllMembers('broadcast', $broadcast->title . ' broadcast has been updated.', $broadcast->id, 'broadcast', auth()->id());
     }
 
+    $this->recentActivityService->logActivity(
+        'Broadcast Updated',
+        'Broadcast',
+        auth()->guard('admin')->id(),
+        'Updated broadcast: ' . $broadcast->title,
+        1,
+        $broadcast->id
+    );
     return redirect()->back()->with('success', 'Broadcast updated successfully.');
 }
 
