@@ -77,7 +77,7 @@
                                     {{ $statusTexts[$grievance->status] }}
                                 </span>
                             </td>
-                            <td>{{ $grievance->member->name }}</td>
+                            <td>{{ optional($grievance->member)->name }}</td>
                             <td>{{ \Carbon\Carbon::parse($grievance->created_at)->format('d-m-Y') }}</td>
                             <td width="30%">
                                 <form action="{{ route('grievances.updateStatus', $grievance->id) }}" method="POST">
