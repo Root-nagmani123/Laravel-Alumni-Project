@@ -1,3 +1,20 @@
+@php
+    $years = [];
+    $cadres = [];
+    $years = App\Models\Member::where('service', 'IAS')
+        ->whereNotNull('batch')
+        ->where('batch', '!=', 'NA')
+        ->distinct()
+        ->pluck('batch');
+    $cadres = App\Models\Member::query();
+    $cadres = $cadres->whereNotNull('cader')
+                ->where('cader', '!=', 'NA')
+                ->distinct()
+                ->orderBy('cader')
+                ->pluck('cader');
+@endphp
+
+
 @if(!empty($group))
 <div class="modal fade" id="addMembersModal" tabindex="-1" aria-labelledby="groupModalLabel" aria-hidden="true">
     @else
@@ -60,6 +77,9 @@
                                 <select class="form-select year-select" name="year[]" multiple="multiple"
                                     data-id="new_group_create">
                                     <!-- Options populated dynamically via AJAX -->
+                                    @foreach($years as $year)
+                                    <option value="{{ $year }}">{{ $year }}</option>
+                                    @endforeach
                                 </select>
                             </div>
 
@@ -69,6 +89,9 @@
                                 <select class="form-select cadre select2" name="cadre[]" multiple="multiple"
                                     data-id="new_group_create">
                                     <!-- Options populated dynamically via AJAX -->
+                                    @foreach($cadres as $cadre)
+                                    <option value="{{ $cadre }}">{{ $cadre }}</option>
+                                    @endforeach
                                 </select>
                             </div>
 
