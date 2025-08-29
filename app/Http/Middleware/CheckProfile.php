@@ -26,8 +26,8 @@ class CheckProfile
                 !$user->current_designation || !$user->current_department || 
                 !$user->current_location || !$user->Service || !$user->sector
             ) {
-                // return redirect()->route('user.profile.data', $user->id)
-                //                  ->with('error', 'Please complete your profile first.');
+                return redirect()->route('user.profile.data', Crypt::encrypt($user->id))
+                                 ->with('error', 'Please complete your profile first.');
             }
         }
 
