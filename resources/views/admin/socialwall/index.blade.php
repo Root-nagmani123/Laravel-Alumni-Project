@@ -89,7 +89,7 @@
                 <div>
                     <h6 class="mb-0">By
                         {{ $post['member_name'] }}</h6>
-                    <span>{{ \Carbon\Carbon::parse($post['created_at'])->format('d-M-Y') }}</span>
+                    <span>{{ \Carbon\Carbon::parse($post['created_at'])->format('d-M-Y h:i A') }}</span>
                 </div>
                 <div class="d-flex ms-auto text-end">
                     <div class="form-check form-switch">
@@ -198,7 +198,7 @@
             <div class="d-flex justify-content-between align-items-center">
                 <strong>{{ $comment->member_name }}</strong>
                 <span class="text-muted" style="font-size:12px;">
-                    {{ \Carbon\Carbon::parse($comment->created_at)->format('d M Y') }}
+                    {{ \Carbon\Carbon::parse($comment->created_at)->format('d-M-Y h:i A') }}
                 </span>
             </div>
             <p class="mb-1">{!! $commentText !!}</p>
