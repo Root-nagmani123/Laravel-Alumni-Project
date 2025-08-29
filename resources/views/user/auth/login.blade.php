@@ -538,11 +538,11 @@
                                     <input type="text" name="course_attended" class="form-control" required>
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="form-label fw-bold">Upload Photo</label>
+                                    <label class="form-label fw-bold">Upload Photo <span>(type: jpg,jpeg,png)</span></label>
                                     <input type="file" name="photo" class="form-control" accept="image/*" required>
                                 </div>
                                 <div class="col-md-6 ">
-                                    <label class="form-label fw-bold">Upload Govt. ID</label>
+                                    <label class="form-label fw-bold">Upload Govt. ID <span>(type: jpg,jpeg,png,pdf)</span></label>
                                     <input type="file" name="govt_id" class="form-control" accept="image/*,.pdf"
                                         required>
                                 </div>
