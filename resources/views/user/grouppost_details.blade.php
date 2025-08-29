@@ -29,12 +29,22 @@
                                     </button>
                                 </form>
                             </li>
+                            @if($group->member_type == 2 && auth()->guard('user')->user()->id == $group->created_by)
                             <li>
                                 <a href="#" class="dropdown-item" data-bs-toggle="modal"
                                     data-bs-target="#addMembersModal">
                                     <i class="bi bi-plus fa-fw pe-2"></i>Add Members
                                 </a>
                             </li>
+                            @elseif ($group->member_type == 1 && auth()->guard('user')->user()->id == $group->created_by)
+                            <li>
+                                <a href="#" class="dropdown-item" data-bs-toggle="modal"
+                                    data-bs-target="#addMembersModal">
+                                    <i class="bi bi-plus fa-fw pe-2"></i>Add Members
+                                </a>
+                            </li>
+                            @else
+                            @endif
                             @else
                             <li>
                                 <form action="{{ route('user.groups.leave') }}" method="POST"
