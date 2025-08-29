@@ -38,7 +38,7 @@
                     <!-- Year / Batch -->
                     <div class="col-md-6">
                         <label class="form-label">Year / Batch</label>
-                        <select class="form-select year-select" name="year[]" multiple="multiple" required>
+                        <select class="form-select year-select" name="year[]" multiple="multiple">
                             <!-- Options populated dynamically via AJAX -->
                         </select>
                     </div>
@@ -47,44 +47,36 @@
                     <div class="col-md-6">
                         <label class="form-label">Cadre</label>
                         <select class="form-select cadre select2" name="cadre[]" multiple="multiple"
-                            data-id="new_group_create" required>
+                            data-id="new_group_create">
                             <!-- Options populated dynamically via AJAX -->
                         </select>
                     </div>
 
                     <!-- Dual List Members -->
                     <div class="col-12">
-                        <label class="form-label">Select Group Members <span class="text-danger">*</span></label>
-                        <div class="row">
-
-                            <!-- Available -->
-                            <div class="col-md-5">
-                                {{-- <input type="text" id="searchAll" class="form-control mb-2"
-                                    placeholder="Search members..."> --}}
-                                <select id="availableMembers" class="form-select" size="10" multiple>
-                                    <!-- Members loaded dynamically by AJAX -->
-                                </select>
+                                <label class="form-label">Select Group Members <span
+                                        class="text-danger">*</span></label>
+                                <div class="row">
+                                    <!-- Available Members -->
+                                    <div class="col-md-6">
+                                        <input type="text" id="searchAll" class="form-control mb-2"
+                                            placeholder="Search members...">
+                                        <div id="availableMembers" class="border rounded p-2"
+                                            style="min-height:220px; max-height:300px; overflow-y:auto;">
+                                            <!-- Available members (checkbox list) will load dynamically -->
+                                        </div>
+                                    </div>
+                                    <!-- Selected Members -->
+                                    <div class="col-md-6">
+                                        <input type="text" id="searchSelected" class="form-control mb-2"
+                                            placeholder="Search selected...">
+                                        <div id="selectedMembers" class="border rounded p-2"
+                                            style="min-height:220px; max-height:300px; overflow-y:auto;">
+                                            <!-- Selected members (checkbox list) will load dynamically -->
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-
-                            <!-- Controls -->
-                            <div class="col-md-2 d-flex flex-column justify-content-center align-items-center">
-                                <button type="button" class="btn btn-outline-primary mb-2"
-                                    id="addMemberBtn">&gt;&gt;</button>
-                                <button type="button" class="btn btn-outline-danger"
-                                    id="removeMemberBtn">&lt;&lt;</button>
-                            </div>
-
-                            <!-- Selected -->
-                            <div class="col-md-5">
-                                {{-- <input type="text" id="searchSelected" class="form-control mb-2"
-                                    placeholder="Search selected..."> --}}
-                                <select id="selectedMembers" class="form-select" size="10" multiple name="mentees[]"
-                                    required>
-                                    <!-- Selected members will appear here -->
-                                </select>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
 

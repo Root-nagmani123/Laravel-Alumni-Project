@@ -83,26 +83,26 @@ function loadMembers(query = '') {
 }
 
 // ✅ Load selected members (existing)
-function loadSelectedMembers(groupId) {
-    $.ajax({
-        url: window.location.origin + "/admin/members/selected",
-        type: "GET",
-        data: { group_id: groupId },
-        success: function (data) {
-            let $selected = $('#selectedMembers');
-            $selected.empty();
+// function loadSelectedMembers(groupId) {
+//     $.ajax({
+//         url: window.location.origin + "/admin/members/selected",
+//         type: "GET",
+//         data: { group_id: groupId },
+//         success: function (data) {
+//             let $selected = $('#selectedMembers');
+//             $selected.empty();
 
-            // 🔑 Sort alphabetically
-            let sortedData = sortByName(data);
+//             // 🔑 Sort alphabetically
+//             let sortedData = sortByName(data);
 
-            $.each(sortedData, function (i, member) {
-                $selected.append(renderMember(member, true));
-            });
+//             $.each(sortedData, function (i, member) {
+//                 $selected.append(renderMember(member, true));
+//             });
 
-            loadMembers();
-        }
-    });
-}
+//             loadMembers();
+//         }
+//     });
+// }
 
 // ✅ Load existing members (from group)
 function loadExistingMembers(group_id) {
@@ -205,7 +205,8 @@ $(document).ready(function () {
                 // });
                 $('#addMemberModal').modal('show');
                 loadMembers();
-                loadSelectedMembers();
+                // loadSelectedMembers();
+                loadExistingMembers(groupId);
             },
             error: function () {
                 alert('Failed to load members.');
@@ -371,8 +372,8 @@ $(document).ready(function () {
                 console.log(response);
                 if (response.success) {
                     alert(response.message);
-                    $('#groupForm')[0].reset();
-                    $('#groupModal').modal('hide');
+                    // $('#groupForm')[0].reset();
+                    // $('#groupModal').modal('hide');
                     // reload table/list if needed
                     location.reload();
                     if (typeof groupTable !== "undefined") groupTable.ajax.reload();
