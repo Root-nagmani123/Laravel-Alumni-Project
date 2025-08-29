@@ -167,8 +167,9 @@
                                             @php
                                             
                                                 $notificationUrl = '#';
+                                                $extraAttributes = null;
                                                 $enc_source_id = Crypt::encryptString($notification->source_id);
-                                                 $notificationStatus = 0;
+                                                $notificationStatus = 0;
                 
                                                 if (isset($enc_source_id) && isset($notification->source_type)) {
                                                     switch ($notification->source_type) {
@@ -224,7 +225,16 @@
                                                             $notificationUrl = route('user.mentor_mentee', ['tab' => 'outgoing']);
                                                             break;
                                                         case 'chat':
-                                                            $notificationUrl = '#';
+                                                            // find the user/member referred by source_id (adjust model if needed)
+                                                            $chatUser = \App\Models\Member::find($notification->source_id);
+
+                                                            if ($chatUser) {
+                                                                $notificationUrl = '#';
+                                                                $extraAttributes = 'data-bs-toggle="offcanvas" data-bs-target="#offcanvasChat" role="button" data-userid="' . $chatUser->id . '"';
+                                                            } else {
+                                                                $notificationUrl = '#';
+                                                                $extraAttributes = null;
+    }
                                                             break;
                                                         case 'birthday':
                                                             $notificationUrl = route('user.profile.data', ['id' => Crypt::encrypt($enc_source_id)]);
@@ -263,12 +273,16 @@
                     <div class="d-flex justify-content-between">
 
                 
-<a href="javascript:void(0);" 
-   class="text-decoration-none notification-link {{ $notification->is_read == 0 ? 'text-primary' : 'text-muted' }}" 
-   data-url="{{ $notificationUrl }}" 
-   data-is-read="{{ $notification->is_read }}">
+<a href="{{ $notificationUrl }}"
+   class="text-decoration-none notification-link {{ $notification->is_read == 0 ? 'text-primary' : 'text-muted' }}"
+   {!! $extraAttributes ?? '' !!}
+   data-url="{{ $notificationUrl }}"
+   data-is-read="{{ $notification->is_read }}"
+   data-source-type="{{ $notification->source_type }}"
+   data-source-id="{{ $notification->source_id }}">
     {{ \Illuminate\Support\Str::words($notification->message, 20, '...') }}
 </a>
+
 
 
                                                         <p class="small ms-3 mb-0 text-muted text-nowrap">
