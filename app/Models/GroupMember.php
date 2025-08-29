@@ -15,14 +15,17 @@ class GroupMember extends Model
        'group_id', 'member_id', 'mentor', 'mentiee', 'status'
     ];
 
-    public function getMentieesCount() {
-        if ($this->mentiee) {
+    public function getMembersCount() {
+        $mentorCount = !empty($this->mentor) ? 1 : 0;
+        $menteeCount = 0;
+        if (!empty($this->mentiee)) {
             $mentees = json_decode($this->mentiee, true);
             if (is_array($mentees)) {
-                return count($mentees);
+                $menteeCount = count($mentees);
             }
         }
-        return 0;
+
+        return $mentorCount + $menteeCount;
     }
 
 }
