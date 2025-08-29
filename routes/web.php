@@ -540,10 +540,6 @@ Route::post('/custom-broadcasting-auth', function(\Illuminate\Http\Request $requ
 })->withoutMiddleware(\Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class);
 
 Route::post('/admin/socialwall/toggle-status', [SocialWallController::class, 'togglePostStatus'])->name('socialwall.toggleStatus');
-<<<<<<< HEAD
 Route::post('/admin/socialwall/toggle-comment-status', [SocialWallController::class, 'toggleCommentStatus'])->name('socialwall.toggleCommentStatus');
 
 Route::get('admin/group/existing_member', [App\Http\Controllers\Admin\GroupController::class, 'getExistingMembers'])->name('admin.group.existing_member');
-=======
-Route::post('/admin/socialwall/toggle-comment-status', [SocialWallController::class, 'toggleCommentStatus'])->name('socialwall.toggleCommentStatus');
->>>>>>> c96a967 (social wall bugs)
