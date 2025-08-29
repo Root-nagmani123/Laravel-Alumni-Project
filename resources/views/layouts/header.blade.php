@@ -91,9 +91,7 @@
            href="{{ route('user.directory') }}">Directory</a>
     </li>
 
-    <li class="nav-item">
-        <a class="nav-link {{ request()->is('user/feedback') ? 'active' : '' }}" href="{{ route('user.feedback') }}" >Feedback</a>
-    </li>
+  
 </ul>
 
                 <!-- Search Input Group with Dropdown -->
@@ -400,9 +398,7 @@
                             </a>
                         </li> -->
                         <!-- <li>
-                            <a class="dropdown-item" href="{{ route('user.feedback') }}">
-                                <i class="bi bi-grid-1x2-fill fa-fw me-2"></i>Feedback/Grievance
-                            </a>
+                           
                         </li> -->
 
                         <li>
