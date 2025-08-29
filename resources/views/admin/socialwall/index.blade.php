@@ -175,6 +175,20 @@
         $commentProfilePic = !empty($comment->member_profile_pic) && file_exists($commentProfilePath)
             ? asset('storage/' . $comment->member_profile_pic)
             : asset('feed_assets/images/avatar-default.png');
+
+            $commentText = preg_replace_callback(
+                '/@([a-zA-Z0-9_.]+)/',
+                function ($matches) {
+                    $name = $matches[1];
+                    $user = \App\Models\Member::where('name', $name)->first();
+                    if ($user) {
+                      
+                        return "<a href='javascript:void(0);' class='mention-badge'>@{$user->name}</a>";
+                    }
+                    return "@{$name}";
+                },
+                e($comment->comment)
+            );
     @endphp
 
     <div class="d-flex mb-3 align-items-start">
@@ -187,7 +201,7 @@
                     {{ \Carbon\Carbon::parse($comment->created_at)->format('d M Y') }}
                 </span>
             </div>
-            <p class="mb-1">{{ $comment->comment }}</p>
+            <p class="mb-1">{!! $commentText !!}</p>
 
             <!-- Toggle switch -->
             <div class="form-check form-switch position-absolute top-0 end-0 me-2 mt-1">
