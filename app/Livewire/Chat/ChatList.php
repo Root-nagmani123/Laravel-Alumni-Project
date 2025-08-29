@@ -133,8 +133,9 @@ class ChatList extends Component
         $message->message = $this->newMessage;
         $message->save();
         $this->messages[] = $message;
-
+        
         broadcast(new MessageSentEvent($message))->toOthers();
+        $newMessage = ($user->name ?? 'Unknown') . ' has been sent message - ' . $this->newMessage;
 
         $user = auth()->guard('user')->user();
         //Notification 
@@ -142,8 +143,8 @@ class ChatList extends Component
             ->notifyChatMessage(
                 $this->selectedChat,
                 $user->id ?? null,
-                $user->name ?? null . ' has been sent message - ' . $this->newMessage,
-                $this->selectedChat
+                $newMessage,
+                $user->id
             );
 
         $unreadCount = $this->getUnreadMessagesCount();
