@@ -24,8 +24,8 @@
                                     {{-- <th scope="col">Title</th> --}}
                                     <th scope="col">Description</th>
                                     <th scope="col">Created By</th>
-                                    <th scope="col">Created Time</th>
                                     <th scope="col">Created Date</th>
+                                    <th scope="col">Created Time</th>
                                     <th scope="col">IP Address</th>
                                 </tr>
                             </thead>
@@ -46,8 +46,8 @@
                                                 {{ $topic->admin ? $topic->admin->name : '' }}
                                             @endif
                                         </td>
-                                        <td class="text-break">{{ \Carbon\Carbon::parse($topic->created_at)->format('H:i A') }}</td>
                                         <td class="text-break">{{ \Carbon\Carbon::parse($topic->created_at)->format('d M Y') }}</td>
+                                        <td class="text-break">{{ \Carbon\Carbon::parse($topic->created_at)->format('H:i A') }}</td>
                                         <td class="text-break">{{ $topic->ip_address }}</td>
                                     </tr>
                                 @endforeach

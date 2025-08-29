@@ -166,8 +166,8 @@ public function update(Request $request, Group $group)
 {
     $request->validate([
         'name' => 'required|string|max:255',
-        'mentor_id' => 'required|integer',
-        'user_id' => 'required|array',
+        // 'mentor_id' => 'required|integer',
+        // 'user_id' => 'required|array',
         'status' => 'nullable|integer',
         'end_date' => 'nullable|date|after_or_equal:today',
         'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
@@ -199,78 +199,78 @@ public function update(Request $request, Group $group)
     $previousMentor = $groupMember->mentor;
     $previousMentees = json_decode($groupMember->mentiee ?? '[]', true);
 
-    $newMentor = $request->input('mentor_id');
-    $newMentees = $request->input('user_id');
+    // $newMentor = $request->input('mentor_id');
+    // $newMentees = $request->input('user_id');
 
-    $groupMember->mentor = $newMentor;
-    $groupMember->mentiee = json_encode($newMentees);
+    // $groupMember->mentor = $newMentor;
+    // $groupMember->mentiee = json_encode($newMentees);
     $groupMember->status = $request->input('status');
     $groupMember->save();
 
     // --- Notifications ---
 
     // Mentor removed
-    if ($previousMentor && $previousMentor != $newMentor) {
-        $this->notificationService->notifyMemberAdded(
-            [$previousMentor],
-            'mentor_removed',
-            'You have been removed as mentor from ' . $group->name,
-            $group->id,
-            'group_remove',
-            Auth::id()
-        );
-    }
+    // if ($previousMentor && $previousMentor != $newMentor) {
+    //     $this->notificationService->notifyMemberAdded(
+    //         [$previousMentor],
+    //         'mentor_removed',
+    //         'You have been removed as mentor from ' . $group->name,
+    //         $group->id,
+    //         'group_remove',
+    //         Auth::id()
+    //     );
+    // }
 
-    // Mentor added
-    if ($previousMentor != $newMentor) {
-        $this->notificationService->notifyMemberAdded(
-            [$newMentor],
-            'mentor_added',
-            'You have been added as mentor to ' . $group->name,
-            $group->id,
-            'group',
-            Auth::id()
-        );
-    }
+    // // Mentor added
+    // if ($previousMentor != $newMentor) {
+    //     $this->notificationService->notifyMemberAdded(
+    //         [$newMentor],
+    //         'mentor_added',
+    //         'You have been added as mentor to ' . $group->name,
+    //         $group->id,
+    //         'group',
+    //         Auth::id()
+    //     );
+    // }
 
-    // Mentees removed
-    $removedMentees = array_diff($previousMentees, $newMentees);
-    if (!empty($removedMentees)) {
-        $this->notificationService->notifyMemberAdded(
-            $removedMentees,
-            'mentiee_removed',
-            'You have been removed as mentee from ' . $group->name,
-            $group->id,
-            'group_remove',
-            Auth::id()
-        );
-    }
+    // // Mentees removed
+    // $removedMentees = array_diff($previousMentees, $newMentees);
+    // if (!empty($removedMentees)) {
+    //     $this->notificationService->notifyMemberAdded(
+    //         $removedMentees,
+    //         'mentiee_removed',
+    //         'You have been removed as mentee from ' . $group->name,
+    //         $group->id,
+    //         'group_remove',
+    //         Auth::id()
+    //     );
+    // }
 
-    // Mentees added
-    $addedMentees = array_diff($newMentees, $previousMentees);
-    if (!empty($addedMentees)) {
-        $this->notificationService->notifyMemberAdded(
-            $addedMentees,
-            'mentiee_added',
-            'You have been added as mentee to ' . $group->name,
-            $group->id,
-            'group',
-            Auth::id()
-        );
-    }
+    // // Mentees added
+    // $addedMentees = array_diff($newMentees, $previousMentees);
+    // if (!empty($addedMentees)) {
+    //     $this->notificationService->notifyMemberAdded(
+    //         $addedMentees,
+    //         'mentiee_added',
+    //         'You have been added as mentee to ' . $group->name,
+    //         $group->id,
+    //         'group',
+    //         Auth::id()
+    //     );
+    // }
 
-    // Notify all current members if any changes happened (mentor/mentee or data)
-    if ($dataChanged || $previousMentor != $newMentor || !empty($addedMentees) || !empty($removedMentees)) {
-        $allCurrentMembers = array_merge([$newMentor], $newMentees);
-        $this->notificationService->notifyMemberAdded(
-            $allCurrentMembers,
-            'group_updated',
-            'Group details have been updated: ' . $group->name,
-            $group->id,
-            'group',
-            Auth::id()
-        );
-    }
+    // // Notify all current members if any changes happened (mentor/mentee or data)
+    // if ($dataChanged || $previousMentor != $newMentor || !empty($addedMentees) || !empty($removedMentees)) {
+    //     $allCurrentMembers = array_merge([$newMentor], $newMentees);
+    //     $this->notificationService->notifyMemberAdded(
+    //         $allCurrentMembers,
+    //         'group_updated',
+    //         'Group details have been updated: ' . $group->name,
+    //         $group->id,
+    //         'group',
+    //         Auth::id()
+    //     );
+    // }
 
     $this->recentActivityService->logActivity(
         'Group Updated',
@@ -926,6 +926,15 @@ public function deleteTopic($id)
                 'status' => 1,
             ]);
         }
+
+        $this->recentActivityService->logActivity(
+            'Group Members Updated',
+            'Group',
+            auth()->guard('admin')->id(),
+            'Updated members for group: ' . $group->name,
+            1, // Assuming 1 represents admin
+            $group->id
+        );
 
         // Return JSON for AJAX
         return response()->json([

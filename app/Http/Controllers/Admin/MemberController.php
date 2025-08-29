@@ -264,7 +264,15 @@ public function edit($id)
             return back()->with('failures', $import->failures);
         }
 
-        return back()->with('success', 'Members uploaded successfully!');
+        $this->recentActivityService->logActivity(
+            'Bulk Member Upload',
+            'Member',
+            auth()->guard('admin')->id(),
+            'Uploaded members in bulk via file: ' . $request->file('file')->getClientOriginalName(),
+            1, // Assuming 1 represents admin
+            null
+        );
+        return redirect()->route('members.index')->with('success', 'Members uploaded successfully!');
     }
 
    public function bulk_upload_form()

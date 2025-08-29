@@ -28,6 +28,9 @@
                         <label class="form-label">Name <span class="text-danger">*</span></label>
                         <input type="text" name="name" class="form-control" value="{{ $group->name }}" required>
                     </div>
+                    @error('name')
+                        <div class="alert alert-danger">{{ $message }}</div>
+                    @enderror
                 </div>
                     <!-- Group End Date -->
                 <div class="col-md-6">
@@ -36,6 +39,9 @@
                         <input type="date" class="form-control" name="end_date" id="end_date"
                                value="{{ $group->end_date }}" required>
                     </div>
+                    @error('end_date')
+                        <div class="alert alert-danger">{{ $message }}</div>
+                    @enderror
                 </div>
 
                 
@@ -55,6 +61,9 @@
                                 style="max-height: 200px;" />
                         </div>
                     </div>
+                    @error('image')
+                        <div class="alert alert-danger">{{ $message }}</div>
+                    @enderror
                 </div>
 
                 <!-- Status -->
@@ -66,6 +75,9 @@
                             <option value="0" {{ $group->status == 0 ? 'selected' : '' }}>Inactive</option>
                         </select>
                     </div>
+                    @error('status')
+                        <div class="alert alert-danger">{{ $message }}</div>
+                    @enderror
                 </div>
             </div>
 

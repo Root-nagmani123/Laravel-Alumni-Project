@@ -6,7 +6,7 @@ use App\Models\RecentActivity;
 
 class RecentActivityService
 {
-    public function logActivity(string $title, string $module, int $createdBy, string $activity, int $memberType, int $modelId): void
+    public function logActivity(string $title, string $module, int $createdBy, string $activity, int $memberType, $modelId): void
     {
         RecentActivity::create([
             'title' => $title,
