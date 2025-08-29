@@ -43,117 +43,71 @@ $(document).ready(function () {
     });
 });
 
-function loadMembers(query = '') {
-    let service = $('#service').val();
-    let year = $('.year-select').val();
-    let cadre = $('.cadre').val();
+function renderMember(member, checked = false) {
+    return `
+        <div class="form-check">
+            <input class="form-check-input member-checkbox" type="checkbox" 
+                   value="${member.id}" id="member_${member.id}" 
+                   name="mentees[]" ${checked ? 'checked' : ''}>
+            <label class="form-check-label" for="member_${member.id}">${member.name}</label>
+        </div>
+    `;
+}
 
+// ✅ Helper: sort by name (case-insensitive)
+function sortByName(list) {
+    return list.sort((a, b) => a.name.localeCompare(b.name, 'en', { sensitivity: 'base' }));
+}
+
+// ✅ Load available members
+function loadMembers(query = '') {
     $.ajax({
         url: window.location.origin + "/admin/members/list",
         type: "GET",
-        data: { search: query, service: service, year: year, cadre: cadre },
+        data: { search: query },
         success: function (data) {
             let $available = $('#availableMembers');
             $available.empty();
 
-            $.each(data, function (index, member) {
-                // agar already selected me hai to skip karo
+            // 🔑 Sort alphabetically
+            let sortedData = sortByName(data);
+
+            $.each(sortedData, function (i, member) {
+                // skip if already selected
                 if ($("#selectedMembers input[value='" + member.id + "']").length === 0) {
-                    $available.append(`
-                        <div class="form-check">
-                            <input class="form-check-input avail-member" type="checkbox" value="${member.id}" id="avail_${member.id}">
-                            <label class="form-check-label" for="avail_${member.id}">${member.name}</label>
-                        </div>
-                    `);
+                    $available.append(renderMember(member, false));
                 }
             });
-        },
-        error: function () {
-            alert('Failed to load members.');
         }
     });
 }
 
-// already selected members group ke according laao
-function loadSelectedMembers(groupId) {
-    $.ajax({
-        url: window.location.origin + "/admin/members/selected",
-        type: "GET",
-        data: { group_id: groupId },
-        success: function (data) {
-            let $selected = $('#selectedMembers');
-            $selected.empty();
+// ✅ Load selected members (existing)
+// function loadSelectedMembers(groupId) {
+//     $.ajax({
+//         url: window.location.origin + "/admin/members/selected",
+//         type: "GET",
+//         data: { group_id: groupId },
+//         success: function (data) {
+//             let $selected = $('#selectedMembers');
+//             $selected.empty();
 
-            $.each(data, function (index, member) {
-                $selected.append(`
-                    <div class="form-check">
-                        <input class="form-check-input sel-member" type="checkbox" value="${member.id}" id="sel_${member.id}" checked name="mentees[]">
-                        <label class="form-check-label" for="sel_${member.id}">${member.name}</label>
-                    </div>
-                `);
-            });
-        }
-    });
-}
+//             // 🔑 Sort alphabetically
+//             let sortedData = sortByName(data);
 
-$(document).ready(function () {
-    loadMembers();
+//             $.each(sortedData, function (i, member) {
+//                 $selected.append(renderMember(member, true));
+//             });
 
-    $('#searchAll').on('keyup', function () {
-        let query = $(this).val();
-        loadMembers(query);
-    });
+//             loadMembers();
+//         }
+//     });
+// }
 
-    $('#searchSelected').on('keyup', function () {
-        let value = $(this).val().toLowerCase();
-        $("#selectedMembers .form-check").filter(function () {
-            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-        });
-    });
-
-    // Add members
-    $('#addMemberBtn').click(function () {
-        $('#availableMembers input.avail-member:checked').each(function () {
-            let id = $(this).val();
-            let name = $(this).next('label').text();
-            $('#selectedMembers').append(`
-                <div class="form-check">
-                    <input class="form-check-input sel-member" type="checkbox" value="${id}" id="sel_${id}" checked name="mentees[]">
-                    <label class="form-check-label" for="sel_${id}">${name}</label>
-                </div>
-            `);
-            $(this).closest('.form-check').remove();
-        });
-    });
-
-    // Remove members
-    $('#removeMemberBtn').click(function () {
-        $('#selectedMembers input.sel-member:checked').each(function () {
-            let id = $(this).val();
-            let name = $(this).next('label').text();
-            $('#availableMembers').append(`
-                <div class="form-check">
-                    <input class="form-check-input avail-member" type="checkbox" value="${id}" id="avail_${id}">
-                    <label class="form-check-label" for="avail_${id}">${name}</label>
-                </div>
-            `);
-            $(this).closest('.form-check').remove();
-        });
-    });
-
-    // load existing member
-    
-    $(document).on('shown.bs.modal', '#addMembersModal', function () {
-        let group_id = $("input[name='group_id']").val();
-        loadExistingMembers(group_id);
-    });
-});
-
+// ✅ Load existing members (from group)
 function loadExistingMembers(group_id) {
-    if (!group_id) {
-        return;
-    }
-    console.log('group id -> '+group_id);
+    if (!group_id) return;
+
     $.ajax({
         type: "GET",
         url: window.location.origin + "/admin/group/existing_member",
@@ -162,23 +116,71 @@ function loadExistingMembers(group_id) {
             let $selected = $('#selectedMembers');
             $selected.empty();
 
-            $.each(data, function (index, member) {
-                $selected.append(`
-                    <div class="form-check">
-                        <input class="form-check-input sel-member" type="checkbox" value="${member.id}" id="sel_${member.id}" checked name="mentees[]">
-                        <label class="form-check-label" for="sel_${member.id}">${member.name}</label>
-                    </div>
-                `);
+            // 🔑 Sort alphabetically
+            let sortedData = sortByName(data);
+
+            $.each(sortedData, function (index, member) {
+                $selected.append(renderMember(member, true));
             });
+
+            loadMembers();
         },
         error: function (xhr) {
             console.error("Error loading existing members:", xhr.responseText);
-        },
-        complete: function () {
-            // Any cleanup or finalization code can go here
         }
     });
 }
+
+// ✅ Checkbox toggle handler (move between lists)
+$(document).on('change', '.member-checkbox', function () {
+    let $checkbox = $(this);
+    let id = $checkbox.val();
+    let name = $checkbox.next('label').text();
+    let isChecked = $checkbox.is(':checked');
+
+    $checkbox.closest('.form-check').remove();
+
+    if (isChecked) {
+        $('#selectedMembers').append(renderMember({ id: id, name: name }, true));
+        sortList('#selectedMembers'); // keep sorted
+    } else {
+        $('#availableMembers').append(renderMember({ id: id, name: name }, false));
+        sortList('#availableMembers'); // keep sorted
+    }
+});
+
+// ✅ Helper: sort DOM list after adding/removing
+function sortList(container) {
+    let $container = $(container);
+    let items = $container.children('.form-check').get();
+
+    items.sort(function (a, b) {
+        let nameA = $(a).find('label').text().toLowerCase();
+        let nameB = $(b).find('label').text().toLowerCase();
+        return nameA.localeCompare(nameB);
+    });
+
+    $.each(items, function (i, itm) {
+        $container.append(itm);
+    });
+}
+
+$(document).ready(function () {
+    loadMembers();
+
+    // modal events
+    $(document).on('shown.bs.modal', '#addMemberModal', function () {
+        let groupId = $("input[name='group_id']").val();
+        loadSelectedMembers(groupId);
+    });
+
+    $(document).on('shown.bs.modal', '#addMembersModal', function () {
+        let group_id = $("input[name='group_id']").val();
+        loadExistingMembers(group_id);
+    });
+});
+
+
 
 // Admin side changes
 $(document).ready(function () {
@@ -203,7 +205,8 @@ $(document).ready(function () {
                 // });
                 $('#addMemberModal').modal('show');
                 loadMembers();
-                selectedMembers();
+                // loadSelectedMembers();
+                loadExistingMembers(groupId);
             },
             error: function () {
                 alert('Failed to load members.');
@@ -369,8 +372,8 @@ $(document).ready(function () {
                 console.log(response);
                 if (response.success) {
                     alert(response.message);
-                    $('#groupForm')[0].reset();
-                    $('#groupModal').modal('hide');
+                    // $('#groupForm')[0].reset();
+                    // $('#groupModal').modal('hide');
                     // reload table/list if needed
                     location.reload();
                     if (typeof groupTable !== "undefined") groupTable.ajax.reload();

@@ -77,7 +77,7 @@
                                         class="text-danger">*</span></label>
                                 <div class="row">
                                     <!-- Available Members -->
-                                    <div class="col-md-5">
+                                    <div class="col-md-6">
                                         <input type="text" id="searchAll" class="form-control mb-2"
                                             placeholder="Search members...">
                                         <div id="availableMembers" class="border rounded p-2"
@@ -85,17 +85,8 @@
                                             <!-- Available members (checkbox list) will load dynamically -->
                                         </div>
                                     </div>
-
-                                    <!-- Controls -->
-                                    <div class="col-md-2 d-flex flex-column justify-content-center align-items-center">
-                                        <button type="button" class="btn btn-outline-primary mb-2"
-                                            id="addMemberBtn">&gt;&gt;</button>
-                                        <button type="button" class="btn btn-outline-danger"
-                                            id="removeMemberBtn">&lt;&lt;</button>
-                                    </div>
-
                                     <!-- Selected Members -->
-                                    <div class="col-md-5">
+                                    <div class="col-md-6">
                                         <input type="text" id="searchSelected" class="form-control mb-2"
                                             placeholder="Search selected...">
                                         <div id="selectedMembers" class="border rounded p-2"

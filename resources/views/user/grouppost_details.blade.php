@@ -379,16 +379,19 @@
                 <!-- Members List -->
                 <div id="member-list-{{ $group->id }}">
                     @php
-                        // Sort: admins first, then alphabetically by name
-                        $sortedMembers = collect($grp_members)->sort(function ($a, $b) {
-                            if (($a->is_admin ?? 0) != ($b->is_admin ?? 0)) {
-                                return ($a->is_admin ?? 0) ? -1 : 1;
-                            }
+                        $sortedMembers = collect($grp_members)->sort(function ($a, $b) use ($group) {
+                            // ✅ Creator always comes first
+                            if ($a->id == $group->created_by) return -1;
+                            if ($b->id == $group->created_by) return 1;
+
+                            // ✅ Otherwise sort by name (case-insensitive)
                             return strcasecmp($a->name, $b->name);
                         });
                     @endphp
 
+
                     @foreach($sortedMembers as $member)
+                  
                         <div class="d-md-flex align-items-center mb-3 member-item">
                             <!-- Avatar -->
                             <div class="avatar me-3 mb-3 mb-md-0">
@@ -409,7 +412,7 @@
                                     <a href="{{ $member->id ? route('user.profile.data', ['id' => Crypt::encrypt($member->id)]) : '#' }}">
                                         {{ $member->name }}
                                     </a>
-                                    @if(!empty($member->is_admin) && $member->is_admin == 1)
+                                    @if($group->member_type == 2 && $group->created_by == $member->id)
                                         <span class="badge bg-danger ms-2" title="Group Admin">
                                             <i class="bi bi-shield-lock"></i> Admin
                                         </span>

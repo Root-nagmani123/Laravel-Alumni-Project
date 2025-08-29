@@ -774,9 +774,19 @@ public function deleteTopic($id)
 
             if ($group) {
                 
+                // $existingMentees = json_decode($group->mentiee, true) ?? [];
+                // $newMentees = $request->input('mentees', []);
+                // $updatedMentees = array_unique(array_merge($existingMentees, $newMentees));
+
+                // $group->update([
+                //     'mentiee' => json_encode(array_values($updatedMentees)),
+                // ]);
+
                 $existingMentees = json_decode($group->mentiee, true) ?? [];
                 $newMentees = $request->input('mentees', []);
-                $updatedMentees = array_unique(array_merge($existingMentees, $newMentees));
+                $removed = array_diff($existingMentees, $newMentees);
+                $added = array_diff($newMentees, $existingMentees);
+                $updatedMentees = $newMentees;
 
                 $group->update([
                     'mentiee' => json_encode(array_values($updatedMentees)),
