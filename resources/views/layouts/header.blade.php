@@ -41,19 +41,19 @@
     <nav class="navbar navbar-expand-lg">
         <div class="container">
             <!-- Logo START -->
-<a class="navbar-brand d-flex align-items-center gap-2" href="{{ url('user/feed') }}">
-    <img src="{{ asset('admin_assets/images/logos/lbsnaa_logo.jpg') }}" alt="LBSNAA Logo"
-        class="navbar-brand-item" style="height: 60px; object-fit: contain;" loading="lazy" decoding="async">
+            <a class="navbar-brand d-flex align-items-center gap-2" href="{{ url('user/feed') }}">
+                <img src="{{ asset('admin_assets/images/logos/lbsnaa_logo.jpg') }}" alt="LBSNAA Logo"
+                    class="navbar-brand-item" style="height: 60px; object-fit: contain;" loading="lazy" decoding="async">
 
-    <!-- Text: visible only on medium and up -->
-    <div class="d-none d-md-flex flex-column lh-sm">
-        <span class="h5 mb-0 fw-bold">Alumni</span>
-        <span style="font-size: 12px; font-weight: 500; color: #af2910;">
-            Lal Bahadur Shastri <br> National Academy of Administration
-        </span>
-    </div>
-</a>
-<!-- Logo END -->
+                <!-- Text: visible only on medium and up -->
+                <div class="d-none d-md-flex flex-column lh-sm">
+                    <span class="h5 mb-0 fw-bold">Alumni</span>
+                    <span style="font-size: 12px; font-weight: 500; color: #af2910;">
+                        Lal Bahadur Shastri <br> National Academy of Administration
+                    </span>
+                </div>
+            </a>
+            <!-- Logo END -->
 
 
             <!-- Responsive navbar toggler -->
@@ -70,31 +70,27 @@
             <!-- Main navbar START -->
             <div class="collapse navbar-collapse" id="navbarCollapse">
                 <ul class="navbar-nav navbar-nav-scroll mx-auto">
-    <li class="nav-item">
-        <a class="nav-link {{ request()->is('user/feed') ? 'active' : '' }}" 
-           href="{{ url('user/feed') }}">Home</a>
-    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {{ request()->is('user/feed') ? 'active' : '' }}" 
+                        href="{{ url('user/feed') }}">Home</a>
+                    </li>
 
-    <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle {{ request()->is('library*') ? 'active' : '' }}"
-           href="#" id="libraryDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-           Library
-        </a>
-        <ul class="dropdown-menu" aria-labelledby="libraryDropdown">
-            <li><a class="dropdown-item" href="https://gsl.lbsnaa.gov.in/" target="_blank">Gandhi Smriti Library</a></li>
-            <li><a class="dropdown-item" href="https://idpbridge.myloft.xyz/" target="_blank">e-Library (MyLOFT)</a></li>
-        </ul>
-    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle {{ request()->is('library*') ? 'active' : '' }}"
+                        href="#" id="libraryDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Library
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="libraryDropdown">
+                            <li><a class="dropdown-item" href="https://gsl.lbsnaa.gov.in/" target="_blank">Gandhi Smriti Library</a></li>
+                            <li><a class="dropdown-item" href="https://idpbridge.myloft.xyz/" target="_blank">e-Library (MyLOFT)</a></li>
+                        </ul>
+                    </li>
 
-    <li class="nav-item">
-        <a class="nav-link {{ request()->is('user/directory') ? 'active' : '' }}" 
-           href="{{ route('user.directory') }}">Directory</a>
-    </li>
-
-    <li class="nav-item">
-        <a class="nav-link {{ request()->is('user/feedback') ? 'active' : '' }}" href="{{ route('user.feedback') }}" >Feedback</a>
-    </li>
-</ul>
+                    <li class="nav-item">
+                        <a class="nav-link {{ request()->is('user/directory') ? 'active' : '' }}" 
+                        href="{{ route('user.directory') }}">Directory</a>
+                    </li>
+                </ul>
 
                 <!-- Search Input Group with Dropdown -->
                 <!-- SEARCH BOX -->
@@ -383,28 +379,6 @@
                                 class="dropdown-item btn btn-primary-soft btn-sm my-2 text-center">View profile</a>
                             @endif
                         </li>
-                        <!-- Links -->
-                        <!-- <li><a class="dropdown-item" href="{{ route('user.directory') }}"><i
-                                    class="bi bi-gear-fill fa-fw me-2"></i>Directory</a></li> -->
-                        <!-- Dropdown with collapsible Social Media list -->
-                        <!-- <li><a class="dropdown-item" href="{{ route('user.change-password.form') }}"><i
-                                    class="bi bi-file-earmark-bar-graph-fill fa-fw me-2"></i>Change Password</a></li> -->
-                        <!-- <li>
-                            <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#grievanceModal">
-                                <i class="bi bi-chat-dots-fill fa-fw me-2"></i>Grievance / Feedback
-                            </a>
-                        </li> -->
-                        <!-- <li>
-                            <a class="dropdown-item" href="https://www.lbsnaa.gov.in/lbsnaa-newsletter" target="_blank">
-                                <i class="bi bi-newspaper fa-fw me-2"></i>Newsletter
-                            </a>
-                        </li> -->
-                        <!-- <li>
-                            <a class="dropdown-item" href="{{ route('user.feedback') }}">
-                                <i class="bi bi-grid-1x2-fill fa-fw me-2"></i>Feedback/Grievance
-                            </a>
-                        </li> -->
-
                         <li>
                             <form action="{{ route('user.logout') }}" method="POST" style="display: inline;">
                                 @csrf

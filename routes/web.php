@@ -533,3 +533,5 @@ Route::post('/custom-broadcasting-auth', function(\Illuminate\Http\Request $requ
         'auth' => hash('sha256', $request->socket_id . ':' . $request->channel_name . ':bypass')
     ]);
 })->withoutMiddleware(\Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class); 
+
+Route::get('admin/group/existing_member', [App\Http\Controllers\Admin\GroupController::class, 'getExistingMembers'])->name('admin.group.existing_member');
