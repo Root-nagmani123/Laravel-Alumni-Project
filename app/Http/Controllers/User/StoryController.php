@@ -24,11 +24,19 @@ class StoryController extends Controller
         $request->validate([
             'story_file' => 'required|file|mimes:jpg,jpeg,png,webp,gif,svg,mp4,mov,avi|max:10240', // 10MB
 
-             //'story_file' => 'required|file|mimes:jpg,jpeg,png|max:10240', // 10MB max
-        ]);
+              ]);
 
-        $path = $request->file('story_file')->store('stories', 'public');
-//dd($request);
+        // $path = $request->file('story_file')->store('stories', 'public');
+          // get original extension (jpg, png, mp4, etc.)
+    $extension = $request->file('story_file')->getClientOriginalExtension();
+
+    // create dynamic filename -> e.g. memberID_timestamp.extension
+    $filename = 'story_' . Auth::guard('user')->id() . '_' . time() . '.' . $extension;
+
+    // store with custom name
+    $path = $request->file('story_file')->storeAs('stories', $filename, 'public');
+
+
         $story = Story::create([
             'member_id' => Auth::guard('user')->id(),
             'story_image' => $path,
