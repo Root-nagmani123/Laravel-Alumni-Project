@@ -126,8 +126,9 @@ Route::prefix('user')->name('user.')->group(function () {
         Route::post('/forum-store', [PostController::class, 'forum_store'])->name('forum.store');
 
 		Route::post('/post/{post}/like', [PostController::class, 'toggleLike'])->name('post.like');
+		
 
-
+  
          Route::get('/profile/{id}', [ProfileController::class, 'showById'])->where('id', '[0-9]+')->name('profile');
          Route::get('/profile/{name}', [ProfileController::class, 'showByName'])->where('name', '[a-zA-Z\s]+')->name('profile.name');
 
@@ -402,8 +403,6 @@ Route::prefix('events')->name('events.')->group(function () {
 });
 
 
-
-
 Route::middleware('auth')->group(function () {
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
 		Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -432,12 +431,8 @@ Route::get('/user_login', function () {
         // Route::get('/user/group', function () {
         //     return view('user.groups');
         // })->name('user.groups');
-
-         Route::get('/user/feedback', function () {
-            return view('user.feedback');
-        })->name('user.feedback');
-
-
+        
+         
         Route::get('/admin/mentorship/create', function () {
             return view('admin.mentorship.create');
         })->name('admin.mentorship.create');
@@ -537,9 +532,4 @@ Route::post('/custom-broadcasting-auth', function(\Illuminate\Http\Request $requ
     return response()->json([
         'auth' => hash('sha256', $request->socket_id . ':' . $request->channel_name . ':bypass')
     ]);
-})->withoutMiddleware(\Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class);
-
-Route::post('/admin/socialwall/toggle-status', [SocialWallController::class, 'togglePostStatus'])->name('socialwall.toggleStatus');
-Route::post('/admin/socialwall/toggle-comment-status', [SocialWallController::class, 'toggleCommentStatus'])->name('socialwall.toggleCommentStatus');
-
-Route::get('admin/group/existing_member', [App\Http\Controllers\Admin\GroupController::class, 'getExistingMembers'])->name('admin.group.existing_member');
+})->withoutMiddleware(\Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class); 
