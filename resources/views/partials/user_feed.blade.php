@@ -883,7 +883,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                             alt="" loading="lazy" decoding="async"></a>
                                     </div>
                                     <div class="ms-2 w-100">
-                                        <div class="bg-light rounded-start-top-0 p-3 rounded">
+                                         <div class="bg-light rounded-start-top-0 p-3 rounded">
                                             <div class="d-flex justify-content-between">
                                                 <h6 class="mb-1"><a href="#!">${comment.member?.name || 'Anonymous'}</a></h6>
                                                 <small class="ms-2">{{$comment->created_at->diffForHumans()}}</small>
@@ -891,11 +891,11 @@ document.addEventListener('DOMContentLoaded', function () {
                                             <p class="small mb-0">${comment.parsed_comment}</p>
                                         </div>
                                         <div class="row">
-                                <div class="col-6">
-                                    <a href="#!" class="text-secondary small me-2">Like</a>
-                                    <a href="#!" class="text-secondary small">Reply</a>
-                                </div>
-                                <div class="col-6 text-end">
+                                            <div class="col-6">
+                                                <a href="#!" class="text-secondary small me-2">Like</a>
+                                                <a href="#!" class="text-secondary small">Reply</a>
+                                            </div>
+                                            <div class="col-6 text-end">
                                     @if(auth()->guard('user')->id() === $comment->member_id)
                             <button class="btn btn-sm btn-link p-0 text-primary edit-comment-btn"
                                 data-comment-id="{{ $comment->id }}" data-comment="{{ $comment->comment }}"
