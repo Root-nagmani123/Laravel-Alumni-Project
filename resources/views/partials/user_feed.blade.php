@@ -72,7 +72,7 @@
                             // Optional: if you have a group detail page
                             $profileLink =  route('user.profile.data', ['id' => Crypt::encrypt($post->member->id)]);
 
-        $groupLink = route('user.group-post',['id' =>encrypt($post->group_id)]);
+        $groupLink = route('user.group-post',['id' =>($post->group_id)]);
     } else {
         // Member/user post
         $member = $post->member ?? null;
@@ -863,7 +863,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             fetch(`load-comments/${postId}?offset=${offset}`)
                 .then(res => res.json())
-                .then data => {
+                .then(data => {
                     spinner.classList.add('d-none');
 
                     if (data.comments.length === 0) {
@@ -951,14 +951,10 @@ document.addEventListener("DOMContentLoaded", function () {
         @endphp
 
         @php
-        if (is_iterable($story)) {
-            foreach ($story as $item) {
-                $isVideo = in_array(pathinfo($item->story_image, PATHINFO_EXTENSION), ['mp4', 'webm']);
-                $previewImage = $isVideo
-                    ? 'storage/thumbnails/' . pathinfo($item->story_image, PATHINFO_FILENAME) . '.jpg'
-                    : 'storage/' . $item->story_image;
-            }
-        }
+    $isVideo = in_array(pathinfo($story->story_image, PATHINFO_EXTENSION), ['mp4', 'webm']);
+    $previewImage = $isVideo
+        ? 'storage/thumbnails/' . pathinfo($story->story_image, PATHINFO_FILENAME) . '.jpg'
+        : 'storage/' . $story->story_image;
 @endphp
         {
             id: "member-{{ $myUserId }}",
@@ -987,10 +983,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
          //Second: Other stories
     @foreach($storiesByMember as $memberId => $memberStories)
-   
         @continue($memberId == $myUserId)
         @php
-        
             $first = $memberStories->first();
             $user = $first->user;
             $storyImage = $first->story_image ?? null;
@@ -1006,12 +1000,10 @@ document.addEventListener("DOMContentLoaded", function () {
         @endphp
 
 @php
-foreach ($story as $story) {
     $isVideo = in_array(pathinfo($story->story_image, PATHINFO_EXTENSION), ['mp4', 'webm']);
     $previewImage = $isVideo
         ? 'storage/thumbnails/' . pathinfo($story->story_image, PATHINFO_FILENAME) . '.jpg'
         : 'storage/' . $story->story_image;
-}
 @endphp
         {
             id: "member-{{ $memberId }}",

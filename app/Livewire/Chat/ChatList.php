@@ -145,7 +145,7 @@ class ChatList extends Component
                 $this->selectedChat,
                 $user->id ?? null,
                 $newMessage,
-                $this->selectedChat
+                $user->id
             );
 
         $unreadCount = $this->getUnreadMessagesCount();
