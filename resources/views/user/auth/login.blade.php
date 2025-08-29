@@ -257,10 +257,7 @@
     }
     </style>
     <style>
-    body {
-        background: url('your-bg-image.jpg') no-repeat center center;
-        background-size: cover;
-    }
+   
 
     .login-card {
         background-color: rgba(255, 255, 255, 0.9);
@@ -318,9 +315,29 @@
         /* text white */
     }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+@if(session('success'))
+<script>
+    Swal.fire({
+        icon: 'success',
+        title: 'Success!',
+        text: '{{ session('success') }}',
+        showConfirmButton: false,
+        timer: 3000
+    });
+</script>
+@endif
+
 </head>
 
 <body>
+    @if(session('success'))
+    <div class="alert alert-success alert-dismissible fade show mt-2" role="alert">
+        {{ session('success') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+@endif
 
     <!-- Simple Bootstrap Loader -->
     <div class="d-flex justify-content-center align-items-center vh-100 bg-white" id="pageLoader">
@@ -503,11 +520,11 @@
                             @csrf
                             <div class="row g-3">
                                 <div class="col-md-6">
-                                    <label class="form-label fw-bold">Name</label>
+                                    <label class="form-label fw-bold">Name <span class="text-danger">*</span></label>
                                     <input type="text" name="name" class="form-control" required>
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="form-label fw-bold">Email <span class="text-muted"
+                                    <label class="form-label fw-bold">Email <span class="text-danger">*</span><span class="text-muted"
                                             style="font-size:12px;">(.gov or .nic only)</span></label>
                                     <input type="email" name="email" class="form-control"
                                         pattern="^[^@\s]+@(?:[^@\s]+\.)?(gov|nic)\.in$" required>
@@ -516,16 +533,16 @@
                                         .nic.in email IDs are allowed.</div>
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="form-label fw-bold">Mobile Number</label>
+                                    <label class="form-label fw-bold">Mobile Number <span class="text-danger">*</span></label>
                                     <input type="text" name="mobile" class="form-control" pattern="^[6-9]\d{9}$"
                                         maxlength="10" required>
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="form-label fw-bold">Service</label>
+                                    <label class="form-label fw-bold">Service <span class="text-danger">*</span></label>
                                     <input type="text" name="service" class="form-control" required>
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="form-label fw-bold">Batch</label>
+                                    <label class="form-label fw-bold">Batch <span class="text-danger">*</span></label>
                                     <input type="text" name="batch" class="form-control" required>
                                 </div>
                                 <div class="col-md-6">
@@ -534,15 +551,15 @@
                                     <input type="text" name="cadre" class="form-control">
                                 </div>
                                 <div class="col-md-12">
-                                    <label class="form-label fw-bold">Course Attended in LBSNAA</label>
+                                    <label class="form-label fw-bold">Course Attended in LBSNAA <span class="text-danger">*</span></label>
                                     <input type="text" name="course_attended" class="form-control" required>
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label fw-bold">Upload Photo</label>
-                                    <input type="file" name="photo" class="form-control" accept="image/*" required>
+                                    <input type="file" name="photo" class="form-control" accept="image/*">
                                 </div>
                                 <div class="col-md-6 ">
-                                    <label class="form-label fw-bold">Upload Govt. ID</label>
+                                    <label class="form-label fw-bold">Upload Govt. ID <span class="text-danger">*</span></label>
                                     <input type="file" name="govt_id" class="form-control" accept="image/*,.pdf"
                                         required>
                                 </div>
@@ -715,7 +732,7 @@
       <form>
         <div class="row g-3">
           <div class="col-md-6">
-            <label class="form-label fw-bold">Name</label>
+            <label class="form-label fw-bold">Name <span class="text-danger">*</span></label>
             <input type="text" name="name" class="form-control" required>
           </div>
           <div class="col-md-6">
@@ -727,15 +744,15 @@
             </div>
           </div>
           <div class="col-md-6">
-            <label class="form-label fw-bold">Mobile Number</label>
+            <label class="form-label fw-bold">Mobile Number <span class="text-danger">*</span></label>
             <input type="text" name="mobile" class="form-control" pattern="^[6-9]\d{9}$" maxlength="10" required>
           </div>
           <div class="col-md-6">
-            <label class="form-label fw-bold">Service</label>
+            <label class="form-label fw-bold">Service <span class="text-danger">*</span></label>
             <input type="text" name="service" class="form-control" required>
           </div>
           <div class="col-md-6">
-            <label class="form-label fw-bold">Batch</label>
+            <label class="form-label fw-bold">Batch <span class="text-danger">*</span></label>
             <input type="text" name="batch" class="form-control" required>
           </div>
           <div class="col-md-6">
@@ -743,15 +760,15 @@
             <input type="text" name="cadre" class="form-control">
           </div>
           <div class="col-md-12">
-            <label class="form-label fw-bold">Course Attended in LBSNAA</label>
+            <label class="form-label fw-bold">Course Attended in LBSNAA <span class="text-danger">*</span></label>
             <input type="text" name="course_attended" class="form-control" required>
           </div>
           <div class="col-md-6">
             <label class="form-label fw-bold">Upload Photo</label>
-            <input type="file" name="photo" class="form-control" accept="image/*" required>
+            <input type="file" name="photo" class="form-control" accept="image/*">
           </div>
           <div class="col-md-6">
-            <label class="form-label fw-bold">Upload Govt. ID</label>
+            <label class="form-label fw-bold">Upload Govt. ID <span class="text-danger">*</span></label>
             <input type="file" name="govt_id" class="form-control" accept="image/*,.pdf" required>
           </div>
         </div>
