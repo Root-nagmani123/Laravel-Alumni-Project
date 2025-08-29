@@ -166,7 +166,6 @@ public function socialwall()
 
     $years = DB::table('posts')
         ->selectRaw('DISTINCT YEAR(created_at) as year')
-        ->whereNull('posts.group_id')
         ->orderBy('year', 'desc')
         ->pluck('year')
         ->filter()
@@ -174,7 +173,6 @@ public function socialwall()
 
     $months = DB::table('posts')
         ->selectRaw('DISTINCT MONTH(created_at) as month')
-        ->whereNull('posts.group_id')
         ->when($year, function ($query, $year) {
             return $query->whereYear('created_at', $year);
         })
@@ -185,7 +183,6 @@ public function socialwall()
 
     $days = DB::table('posts')
         ->selectRaw('DISTINCT DAY(created_at) as day')
-        ->whereNull('posts.group_id')
         ->when($year, function ($query, $year) {
             return $query->whereYear('created_at', $year);
         })
@@ -213,7 +210,7 @@ public function socialwall()
             'members.name as member_name',
             'members.profile_pic as member_profile_pic'
         )
-        ->whereNull('posts.group_id')
+       
        ->when($year, function ($query, $year) {
             return $query->whereYear('posts.created_at', $year);
         })
