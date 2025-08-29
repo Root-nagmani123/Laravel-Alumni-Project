@@ -125,6 +125,16 @@ function activateGroup(Request $request) : RedirectResponse {
         $members = $this->groupService->index();
         return view('partials.right-sidebar', compact('members'));
     }
+    public function getSelectedMembers(Request $request)
+{
+    $groupId = $request->get('group_id');
+    $group = GroupMember::where('group_id', $groupId)->first();
+
+    $selectedIds = json_decode($group->mentiee, true) ?? [];
+    $members = Member::whereIn('id', $selectedIds)->get(['id','name']);
+
+    return response()->json($members);
+}
 
     public function store(Request $request)
     {

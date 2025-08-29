@@ -92,7 +92,7 @@
     </li>
 
     <li class="nav-item">
-        <a class="nav-link" data-bs-toggle="modal" data-bs-target="#grievanceModal">Feedback</a>
+        <a class="nav-link {{ request()->is('user/feedback') ? 'active' : '' }}" href="{{ route('user.feedback') }}" >Feedback</a>
     </li>
 </ul>
 
@@ -399,11 +399,11 @@
                                 <i class="bi bi-newspaper fa-fw me-2"></i>Newsletter
                             </a>
                         </li> -->
-                        <li>
+                        <!-- <li>
                             <a class="dropdown-item" href="{{ route('user.feedback') }}">
                                 <i class="bi bi-grid-1x2-fill fa-fw me-2"></i>Feedback/Grievance
                             </a>
-                        </li>
+                        </li> -->
 
                         <li>
                             <form action="{{ route('user.logout') }}" method="POST" style="display: inline;">

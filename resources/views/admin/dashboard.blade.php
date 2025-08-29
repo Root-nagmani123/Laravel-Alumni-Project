@@ -53,6 +53,35 @@
             </div>
         </div>
         <div class="col-6">
+            <div class="card">
+                <div class="card-body p-4 pb-0 overflow-auto gap-3" data-simplebar="init">
+                    <div class="row">
+                        @if($members_service->isEmpty())
+                        <p>No services found.</p>
+                        @else
+                        @foreach($members_service as $service)
+                        <div class="col-4">
+                            <div class="card primary-gradient">
+                                <div class="card-body text-center px-9 pb-4">
+                                    <h6 class="fw-normal fs-3 mb-1">{{ $service->Service }}</h6>
+                                    <h4 class="mb-3 d-flex align-items-center justify-content-center gap-1">
+                                        {{ $service->member_count }}</h4>
+                                    <a href="{{ route('members.index', ['serviceFilter' => $service->Service]) }}"
+                                        class="btn btn-white fs-2 fw-semibold text-nowrap">
+                                        View Details
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        @endforeach
+                        @endif
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-12">
             <div class="row">
                 <!-- -------------------------------------------- -->
                 <!-- Events -->
@@ -94,70 +123,6 @@
                                 <span class="fs-11 fw-semibold text-muted"></span>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card bg-danger overflow-hidden shadow-none">
-                        <div class="card-body p-4">
-                            <span class="text-dark-light"><a href="{{ route('broadcasts.index') }}"
-                                    class="text-white">Broadcasts</a></span>
-                            <div class="hstack gap-6">
-                                <h5 class="mb-0 fs-7">{{ $total_broadcasts }}</h5>
-                                <span class="fs-11 fw-semibold text-muted"></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card bg-danger overflow-hidden shadow-none">
-                        <div class="card-body p-4">
-                            <span class="text-dark-light"><a href="{{ route('broadcasts.index') }}"
-                                    class="text-white">Broadcasts</a></span>
-                            <div class="hstack gap-6">
-                                <h5 class="mb-0 fs-7">{{ $total_broadcasts }}</h5>
-                                <span class="fs-11 fw-semibold text-muted"></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card bg-danger overflow-hidden shadow-none">
-                        <div class="card-body p-4">
-                            <span class="text-dark-light"><a href="{{ route('broadcasts.index') }}"
-                                    class="text-white">Broadcasts</a></span>
-                            <div class="hstack gap-6">
-                                <h5 class="mb-0 fs-7">{{ $total_broadcasts }}</h5>
-                                <span class="fs-11 fw-semibold text-muted"></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-12">
-            <div class="card">
-                <div class="card-body p-4 pb-0 overflow-auto gap-3" data-simplebar="init">
-                    <div class="row">
-                        @if($members_service->isEmpty())
-                            <p>No services found.</p>
-                        @else
-                            @foreach($members_service as $service)  
-                                <div class="col-2">
-                                    <div class="card primary-gradient">
-                                        <div class="card-body text-center px-9 pb-4">
-                                            <h6 class="fw-normal fs-3 mb-1">{{ $service->Service }}</h6>
-                                            <h4 class="mb-3 d-flex align-items-center justify-content-center gap-1">
-                                                {{ $service->member_count }}</h4>
-                                             <a href="{{ route('members.index', ['serviceFilter' => $service->Service]) }}" 
-                   class="btn btn-white fs-2 fw-semibold text-nowrap">
-                    View Details
-                </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endforeach
-                        @endif
-                        
                     </div>
                 </div>
             </div>

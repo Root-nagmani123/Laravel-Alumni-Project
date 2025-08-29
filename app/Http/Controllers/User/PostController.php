@@ -14,15 +14,17 @@ use App\Services\NotificationService;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-
+use App\Services\RecentActivityService;
 
 class PostController extends Controller
 {
     protected $notificationService;
+    protected $recentActivityService;
 
-    public function __construct(NotificationService $notificationService)
+    public function __construct(NotificationService $notificationService, RecentActivityService $recentActivityService)
     {
         $this->notificationService = $notificationService;
+        $this->recentActivityService = $recentActivityService;
     }
 
 public function store_chnagefor_video_link(Request $request)
@@ -118,6 +120,15 @@ public function store_chnagefor_video_link(Request $request)
 
     //post redirection
     $notification = $this->notificationService->notifyAllMembers('post', $post->content . ' post has been created.', $post->id, 'SinglePost',Auth::id());
+
+    $this->recentActivityService->logActivity(
+        'Post Created',
+        'Posts',
+        auth()->guard('user')->id(),
+        'New Post Created',
+        2,
+        $post->id
+    );
 
     return redirect('/user/feed')->with('success', 'Post created successfully.');
 }
@@ -385,6 +396,15 @@ function forum_store(Request $request)
             'forums_id' => $forum->id,
             'status' => 1,
         ]);
+
+        $this->recentActivityService->logActivity(
+            'Forum Created',
+            'Forums',
+            auth()->guard('user')->id(),
+            'New Forum Created',
+            2,
+            $forum->id
+        );
 
         return redirect()->route('user.feed')->with('success', 'Forum created successfully!');
     }

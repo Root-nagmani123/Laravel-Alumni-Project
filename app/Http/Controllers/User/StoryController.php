@@ -10,10 +10,15 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 use App\Models\Story;
+use App\Services\RecentActivityService;
 
 class StoryController extends Controller
 {
+    protected $recentActivityService;
 
+    function __construct(RecentActivityService $recentActivityService) {
+        $this->recentActivityService = $recentActivityService;
+    }
 	public function store(Request $request)
     {
         $request->validate([
@@ -24,11 +29,19 @@ class StoryController extends Controller
 
         $path = $request->file('story_file')->store('stories', 'public');
 //dd($request);
-        Story::create([
+        $story = Story::create([
             'member_id' => Auth::guard('user')->id(),
             'story_image' => $path,
         ]);
 
+        $this->recentActivityService->logActivity(
+            'Story Added',
+            'Stories',
+            auth()->guard('user')->id(),
+            'New Story Added',
+            2,
+            $story->id
+        );
         return redirect()->back();
         //return redirect()->route('/feed')->with('success', 'Story added!');
     }

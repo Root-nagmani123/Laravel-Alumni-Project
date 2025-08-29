@@ -789,7 +789,7 @@ public function deleteTopic($id)
 
             $request->validate([
                 'group_name'  => 'required|string|max:255',
-                'service'     => 'required|string|max:255',
+                // 'service'     => 'required|string|max:255',
                 'mentees'     => 'required|array',
                 'grp_image'   => 'required|image|mimes:jpeg,png,jpg,avif|max:2048',
                 'end_date'    => 'required|date|after_or_equal:today',
@@ -859,6 +859,14 @@ public function deleteTopic($id)
 
         }
 
+        $this->recentActivityService->logActivity(
+            'New Group Created',
+            'Group',
+            auth()->guard('user')->id(),
+            'Added new member: ' . $group->name,
+            2, // 2 means user
+            $group->id
+        );
         // Return JSON for AJAX
         return response()->json([
             'success' => true,
@@ -924,5 +932,33 @@ public function deleteTopic($id)
             'success' => true,
             'message' => 'Group updated successfully!',
         ]);
+    }
+
+    function getExistingMembers(Request $request)
+    {
+        $groupId = $request->get('group_id');
+        $members = GroupMember::where('group_id', $groupId)->first();
+
+        $memberIds = [];
+        if ($members) {
+            if (!empty($members->mentor)) {
+                $memberIds[] = $members->mentor;
+            }
+
+            if (!empty($members->mentiee)) {
+                $mentieeIds = json_decode($members->mentiee, true);
+                if (is_array($mentieeIds)) {
+                    $memberIds = array_merge($memberIds, $mentieeIds);
+                }
+            }
+        }
+
+        $members = Member::whereIn('id', $memberIds)->get(['id', 'name']);
+        // $members->map(function ($member) {
+        //     $member->id = $member->id;
+        //     $member->name = $member->name;
+        // });
+        // dd($members);
+        return response()->json($members);
     }
 }
