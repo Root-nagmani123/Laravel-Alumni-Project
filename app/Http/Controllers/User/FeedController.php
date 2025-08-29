@@ -104,17 +104,15 @@ class FeedController extends Controller
 
    public function index()
     {
-        
         $user = auth()->guard('user')->user();
         
         $userId = $user->id;
-        $memberId = $user->id;
         // Fetch posts with related models
-        $story = Story::where('created_at', '>=', now()->subDay())
+        $stories = Story::where('created_at', '>=', now()->subDay())
                      ->with('user')
                      ->get();
 
-         $storiesByMember = $story->groupBy('member_id');
+         $storiesByMember = $stories->groupBy('member_id');
          $broadcast = DB::table('broadcasts')
                 ->where('status',1)
             ->orderBy('broadcasts.id', 'desc')
@@ -180,7 +178,7 @@ class FeedController extends Controller
     ->distinct()
     ->get()
     ->map(function($item) {
-        $item->enc_id = ($item->id); // extra field add
+        $item->enc_id = Crypt::encryptString($item->id); // extra field add
         return $item;
     });
 
@@ -191,19 +189,10 @@ class FeedController extends Controller
 ->groupBy('Service')
 ->get();
 
-    $posts = Post::with([
-        'member',
-        'media',
-        'likes',
-        'comments' => function($query) {
-            $query->where('status', 1);
-        },
-        'group'
-    ])
-    ->where('status', 1)
+    $posts = Post::with(['member', 'media', 'likes', 'comments.member', 'group'])
     ->where(function ($query) use ($groupIds) {
-        $query->whereNull('group_id')
-              ->orWhereIn('group_id', $groupIds);
+        $query->whereNull('group_id') // normal post bhi chahiye
+              ->orWhereIn('group_id', $groupIds); // ya phir allowed group_id
     })
     ->orderBy('created_at', 'desc')
     ->get()
@@ -218,7 +207,7 @@ class FeedController extends Controller
             'member' => $post->member,
             'media' => $post->media,
             'likes' => $post->likes,
-            'comments' => $post->comments, // now only status=1
+            'comments' => $post->comments,
             'video_link' => $post->video_link,
             'shares' => $post->shares,
             'group_image' => $post->group->image ?? null,
@@ -226,7 +215,7 @@ class FeedController extends Controller
         ];
     }); 
 
-    return view('user.feed', compact('memberId', 'posts', 'user', 'story','storiesByMember', 'broadcast','events', 'forums', 'groupNames', 'members'));
+    return view('user.feed', compact('posts', 'user', 'storiesByMember', 'broadcast','events', 'forums', 'groupNames', 'members'));
     }
 
     public function store(Request $request)
@@ -429,7 +418,7 @@ class FeedController extends Controller
     }
 public function getPostByGroup($group_id)
 {
-     $group_id = decrypt($group_id); // Decrypt the group ID
+    echo $group_id = Crypt::decryptString($group_id); // Decrypt the group ID
     $userId = auth()->guard('user')->id();
 
     // Posts with relations
@@ -442,12 +431,7 @@ public function getPostByGroup($group_id)
     $group = Group::find($group_id);
 
     // Mentee check (one-liner)
-    $isMentee = 0;
-
-if ($group) {
     $isMentee = ($group->member_type == 2 && $group->created_by == $userId) ? 1 : 0;
-}
-    // $isMentee = ($group->member_type == 2 && $group->created_by == $userId) ? 1 : 0;
 
     // Mentor + mentees direct members fetch
     $groupMember = DB::table('group_member')
@@ -472,16 +456,11 @@ if ($group) {
     // Fetch member details from members table
     $grp_members = DB::table('members')
         ->whereIn('id', $memberIds)
-        ->select('id', 'name', 'designation','profile_pic', 'Service', 'current_designation' )
+        ->select('id', 'name', 'designation','profile_pic' )
         ->get();
-
-       $members = DB::table('members')
-->select('Service', DB::raw('COUNT(*) as count'))
-->groupBy('Service')
-->get();
         // print_r($grp_members);die;
 
-    return view('user.grouppost_details', compact('posts','group','isMentee','grp_members','members'));
+    return view('user.grouppost_details', compact('posts','group','isMentee','grp_members'));
 }
     public function getPostByGroup_bkp($group_id)
     {
@@ -546,10 +525,6 @@ if ($group) {
         ->update([
             'mentiee' => json_encode($updatedMentiees),
         ]);
-        $memberName = Member::where('id', $userId)->select('name')->first();
-        $groupName = Group::where('id', $groupId)->select('name')->first();
-
-     $this->notificationService->notifyGroupPost($groupId, $userId, $memberName->name . ' has left the group ' . $groupName->name, 0, 'group_leave');
 
    return redirect()->route('user.feed')->with('success', 'You have left the group.');
 
@@ -560,33 +535,28 @@ function submitGrievance(Request $request)
     $name = $user->name;
     $email = $user->email;
 
-    $validatedData = $request->validate([
+    $grievanceType = request('typeSelect');
+    $grievanceMessage = request('userMessage');
+
+    // Validate the input
+    $validatedData = request()->validate([
         'typeSelect' => 'required|string|max:255',
-        'userSubject' => 'required|string|max:255',
         'userMessage' => 'required|string|max:1000',
-        'userAttachment' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:5120', // 5MB
     ]);
 
-    $attachmentPath = null;
-    if ($request->hasFile('userAttachment')) {
-    $attachmentPath = $request->file('userAttachment')->store('grievances', 'public');
-    }
-
+    // Store the grievance in the database
     DB::table('grievances')->insert([
         'name' => $name,
         'email' => $email,
-        'type' => $validatedData['typeSelect'],
-        'subject' => $validatedData['userSubject'], // <-- Store subject
-        'message' => $validatedData['userMessage'],
-        'attachment' => $attachmentPath ?? null,
-        'user_id' => $user->id,
+        'type' => $grievanceType,
+        'message' => $grievanceMessage,
         'created_at' => now(),
     ]);
 
     return redirect()->back()->with('success', 'Request submitted successfully.');
-}
-
-
 
 }
 
+
+
+}
