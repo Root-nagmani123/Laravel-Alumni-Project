@@ -904,7 +904,7 @@ public function deleteTopic($id)
         if ($cadre) {
             $query->whereIn('cader', (array)$cadre);
         }
-        $members = $query->limit(50)->get(['id','name']); // limit for performance
+        $members = $query->get(['id','name']); // limit for performance
         return response()->json($members);
     }
 
