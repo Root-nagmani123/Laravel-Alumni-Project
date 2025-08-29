@@ -147,7 +147,7 @@
         @else
         <!-- Designation -->
         <p class="mb-0">
-            {{ $user->Service ?? 'N/A' }} | {{ $user->current_designation ?? 'N/A' }}
+            {{ $member->Service ?? 'N/A' }} | {{ $member->current_designation ?? 'N/A' }}
         </p>
         @endif
     </div>
