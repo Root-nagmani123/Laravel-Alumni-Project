@@ -60,7 +60,7 @@
         <div class="card mt-4">
             <!-- Card header START -->
             <div class="card-header pb-0 border-0">
-                <h5 class="card-title mb-0">Latest Events</h5>
+                <h5 class="card-title mb-0">Current Events</h5>
             </div>
             <!-- Card header END -->
             <!-- Card body START -->

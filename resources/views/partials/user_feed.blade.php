@@ -400,21 +400,30 @@
                 <!-- Comment item START -->
                 {{--@foreach ($post->comments as $comment)--}}
                 @foreach ($post->comments->take(2) as $comment)
-                @php
-                $commentText = preg_replace_callback(
-                    '/@([a-zA-Z0-9_.]+)/',
-                    function ($matches) {
-                        $name = $matches[1];
-                        $user = \App\Models\Member::where('name', $name)->first();
-                        if ($user) {
-                            $url = route('user.profile.data', ['id' => Crypt::encrypt($user->id)]);
-                           return "<a href='{$url}' class='mention-badge'>@{$user->name}</a>";
-                        }
-                        return "@{$name}";
-                    },
-                    e($comment->comment)
-                );
-                @endphp
+                   @php
+$rawComment = $comment->comment;
+
+preg_match_all('/@([A-Za-z0-9_.]+)/', $rawComment, $matches);
+$handles = array_unique($matches[1]);
+
+$users = \App\Models\Member::whereIn('username', $handles)->get()->keyBy('username');
+
+$commentText = preg_replace_callback(
+    '/@([A-Za-z0-9_.]+)/',
+    function ($m) use ($users) {
+        $username = $m[1];
+        $user = $users->get($username);
+
+        if ($user) {
+            $url = route('user.profile.data', ['id' => Crypt::encrypt($user->id)]);
+            return '<a href="'.$url.'" class="mention-badge">@'.e($user->name).'</a>';
+        }
+        return '@'.e($username);
+    },
+    e($rawComment) // ⬅ change this to just $rawComment
+);
+@endphp
+
                 <li class="comment-item mb-3" id="comment-{{ $comment->id }}">
                     <div class="d-flex position-relative">
                         <!-- Avatar -->
@@ -576,8 +585,8 @@
    var tribute = new Tribute({
     trigger: '@',
     itemClass: 'tribute-item',
-    lookup: 'name',
-    fillAttr: 'name',
+    fillAttr: 'username',   // insert @username in comment box
+lookup: 'name',         // still search/display by full name
 
     values: function (text, cb) {
         fetch(`/user-search?q=${text}`)
@@ -640,9 +649,24 @@ function attachTributeTo(element) {
         element.setAttribute('data-tribute-attached', 'true');
     }
 }
-document.querySelectorAll('.user_feed_comment').forEach(el => {
-    attachTributeTo(el);
+
+// Attach to existing
+document.querySelectorAll('.user_feed_comment').forEach(attachTributeTo);
+
+// Attach to dynamically added (observer)
+const observer = new MutationObserver(mutations => {
+    mutations.forEach(mutation => {
+        mutation.addedNodes.forEach(node => {
+            if (node.nodeType === 1 && node.matches('.user_feed_comment')) {
+                attachTributeTo(node);
+            }
+            if (node.nodeType === 1) {
+                node.querySelectorAll('.user_feed_comment').forEach(attachTributeTo);
+            }
+        });
+    });
 });
+observer.observe(document.body, { childList: true, subtree: true });
 
 
 $(document).on('click', '.like-button', function() {

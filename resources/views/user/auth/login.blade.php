@@ -353,7 +353,7 @@
                 <!-- Your left column content here -->
                 <!-- Logo -->
                 <div class="logo-sec text-center mb-4">
-                    <a href="#!"
+                    <!-- <a href="#!"
                         class="d-flex align-items-center gap-3 text-decoration-none justify-content-center flex-wrap">
                         <img src="{{ asset('admin_assets/images/logos/lbsnaa_logo.jpg') }}" alt="LBSNAA Logo"
                             style="height: 60px; object-fit: contain;">
@@ -363,11 +363,14 @@
                                 Lal Bahadur Shastri National Academy of Administration
                             </span>
                         </div>
-                    </a>
+                    </a> -->
+                    <div class="d-flex flex-column text-start">
+                            <h1 class="fw-bold text-dark">Alumni Connect at LBSNAA</h1>
+                        </div>
                 </div>
 
                 <div class="mt-4">
-                    <h1 class="fw-bold mb-3">Welcome to Alumni Portal!</h1>
+                    <h3 class="fw-bold mb-3">Welcome to Alumni Portal!</h3>
                     <p>The LBSNAA Alumni Portal connects officer trainees across batches, fostering lifelong bonds, knowledge sharing, and collaboration. It preserves the Academy’s heritage while offering alumni a platform to stay engaged, contribute, and celebrate their shared journey.</p>
                 </div>
 
@@ -398,10 +401,14 @@
                 </div>
 
 
-                <div class="mt-3 text-center">
+                <div class="mt-3 justify-content-between d-flex">
                     <a href="#" class="btn btn-outline-danger open-panel" data-panel="register"
                         style="background-color:#af2910; border: #af2910 1px solid;color:#fff;">
                         For Registration Click Here
+                    </a>
+                    <a href="#" class="btn btn-outline-danger open-panel" data-panel="forgot-password"
+                        style="background-color:#af2910; border: #af2910 1px solid;color:#fff;">
+                        Aadhar Authentication
                     </a>
                 </div>
                 <div class="position-relative w-100 bg-light d-flex align-items-center px-3 mt-4"
@@ -567,6 +574,48 @@
                             <button type="submit" class="btn btn-primary w-100 mt-3">Register</button>
                         </form>
                     </div>
+
+                    <!-- Aadhar Authentication -->
+                     <div id="forgot-password-panel" class="card shadow-lg p-4 d-none">
+ <button type="button" class="btn-close position-absolute top-0 end-0 m-3 close-panel"></button>
+                        <h4 class="mb-3 fw-bold text-center">Aadhaar Authentication</h4>
+                        <hr class="my-2">
+                        <form id="aadhaarAuthForm">
+    @csrf
+    <div class="form-group mb-3">
+        <label class="form-label fw-bold">Aadhaar Number</label>
+        <input type="text" name="aadhaar_no" id="aadhaar_no" class="form-control"
+               placeholder="Enter your 12-digit Aadhaar Number" maxlength="12"
+               pattern="[0-9]{12}" inputmode="numeric" required>
+        <div id="aadhaarError" class="error-message"></div>
+    </div>
+
+    <!-- OTP input (hidden until Aadhaar verified) -->
+    <div id="aadhaarOtpContainer" style="display: none;">
+        <div class="form-group mb-3">
+            <label class="form-label fw-bold">Enter OTP</label>
+            <div class="d-flex gap-2">
+                <input type="text" class="form-control text-center otp-input" maxlength="1" pattern="[0-9]*" inputmode="numeric">
+                <input type="text" class="form-control text-center otp-input" maxlength="1" pattern="[0-9]*" inputmode="numeric">
+                <input type="text" class="form-control text-center otp-input" maxlength="1" pattern="[0-9]*" inputmode="numeric">
+                <input type="text" class="form-control text-center otp-input" maxlength="1" pattern="[0-9]*" inputmode="numeric">
+                <input type="text" class="form-control text-center otp-input" maxlength="1" pattern="[0-9]*" inputmode="numeric">
+                <input type="text" class="form-control text-center otp-input" maxlength="1" pattern="[0-9]*" inputmode="numeric">
+            </div>
+
+            <input type="hidden" name="aadhaar_otp_code" id="aadhaar_otp_code">
+
+            <div id="otpError" class="error-message"></div>
+            <div id="otpSuccess" class="success-message"></div>
+            <div id="resendOtp" class="text-primary" style="cursor:pointer;">Didn’t receive OTP? Resend</div>
+        </div>
+    </div>
+
+    <button type="button" id="sendAadhaarOtpBtn" class="btn btn-primary w-100">Send OTP</button>
+    <button type="button" id="verifyAadhaarOtpBtn" class="btn btn-success w-100 mt-2" style="display:none;">Verify OTP</button>
+</form>
+
+                     </div>
                 </div>
             </div>
         </div>
@@ -580,22 +629,23 @@
                 <!-- Your left column content here -->
                 <!-- Logo -->
                 <div class="logo-sec text-center mb-4">
-                    <a href="#!"
+                    <!-- <a href="#!"
                         class="d-flex align-items-center gap-3 text-decoration-none justify-content-center flex-wrap">
                         <img src="{{ asset('admin_assets/images/logos/lbsnaa_logo.jpg') }}" alt="LBSNAA Logo"
                             style="height: 60px; object-fit: contain;">
-                    </a>
+                    </a> -->
+                    <h1 class="fw-bold" style="fotn-size:24px;">Alumni Connect at LBSNAA</h1>
                 </div>
 
                 <div class="text-center">
-                    <h1 class="fw-bold mb-3 ">Welcome to Alumni Portal!</h1>
+                    <h3 class="fw-bold mb-3 ">Welcome to Alumni Portal!</h3>
                     <p>The LBSNAA Alumni Portal connects officer trainees across batches, fostering lifelong bonds, knowledge sharing, and collaboration. It preserves the Academy’s heritage while offering alumni a platform to stay engaged, contribute, and celebrate their shared journey.</p>
                 </div>
 
 
                 <!-- Login Buttons -->
                 <div class="row mt-5">
-                    <div class="col-10 mx-auto mb-2 p-0">
+                    <div class="col-12 mx-auto mb-2 p-0">
                         <a href="#" class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#ldapModal">
                             <div class="card login-card p-3 d-flex flex-column justify-content-center align-items-center">
                                 <span class="card-label">Login with</span>
@@ -608,7 +658,7 @@
                         <p class="text-center">or</p>
                     </div>
 
-                    <div class="col-10 mx-auto mb-2 p-0">
+                    <div class="col-12 mx-auto mb-2 p-0">
                        <a href="#" class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#otpModal">
                             <div class="card login-card p-3 d-flex flex-column justify-content-center align-items-center">
                                 <span class="card-label">Login with</span>
@@ -620,10 +670,11 @@
                 </div>
 
 
-                <div class="mt-3 text-center">
-                    <a href="#" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#registerModal">
+                <div class="mt-3 text-center gap-3">
+                    <a href="#" class="btn btn-outline-danger mb-3 w-100" data-bs-toggle="modal" data-bs-target="#registerModal">
                         For Registration Click Here
                     </a>
+                    <a href="#" class="btn btn-outline-danger w-100" data-bs-toggle="modal" data-bs-target="#aadhaarModal">Aadhaar Authentication</a>
                 </div>
                 <div class="position-relative w-100 bg-light d-flex align-items-center px-3 mt-4"
                     style="height: 40px; overflow: hidden; z-index: 1040;">
@@ -778,6 +829,61 @@
   </div>
 </div>
 
+<!-- Aadhaar Authentication Modal -->
+<div class="modal fade" id="aadhaarModal" tabindex="-1" aria-labelledby="aadhaarModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content shadow-lg rounded-3">
+      
+      <div class="modal-header">
+        <h5 class="modal-title fw-bold" id="aadhaarModalLabel">Aadhaar Authentication</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        <form id="aadhaarAuthForm">
+          @csrf
+          
+          <!-- Aadhaar Number -->
+          <div class="form-group mb-3">
+            <label class="form-label fw-bold">Aadhaar Number</label>
+            <input type="text" name="aadhaar_no" id="aadhaar_no" class="form-control"
+                   placeholder="Enter your 12-digit Aadhaar Number" maxlength="12"
+                   pattern="[0-9]{12}" inputmode="numeric" required>
+            <div id="aadhaarError" class="error-message text-danger small mt-1"></div>
+          </div>
+
+          <!-- OTP Section (hidden until Aadhaar OTP sent) -->
+          <div id="aadhaarOtpContainer" style="display:none;">
+            <div class="form-group mb-3">
+              <label class="form-label fw-bold">Enter OTP</label>
+              <div class="d-flex gap-2">
+                <input type="text" class="form-control text-center otp-input" maxlength="1" pattern="[0-9]*" inputmode="numeric">
+                <input type="text" class="form-control text-center otp-input" maxlength="1" pattern="[0-9]*" inputmode="numeric">
+                <input type="text" class="form-control text-center otp-input" maxlength="1" pattern="[0-9]*" inputmode="numeric">
+                <input type="text" class="form-control text-center otp-input" maxlength="1" pattern="[0-9]*" inputmode="numeric">
+                <input type="text" class="form-control text-center otp-input" maxlength="1" pattern="[0-9]*" inputmode="numeric">
+                <input type="text" class="form-control text-center otp-input" maxlength="1" pattern="[0-9]*" inputmode="numeric">
+              </div>
+
+              <input type="hidden" name="aadhaar_otp_code" id="aadhaar_otp_code">
+
+              <div id="otpError" class="error-message text-danger small mt-1"></div>
+              <div id="otpSuccess" class="success-message text-success small mt-1"></div>
+              <div id="resendOtp" class="text-primary small mt-2" style="cursor:pointer;">Didn’t receive OTP? Resend</div>
+            </div>
+          </div>
+          
+          <!-- Action Buttons -->
+          <div class="d-grid">
+            <button type="button" id="sendAadhaarOtpBtn" class="btn btn-primary">Send OTP</button>
+            <button type="button" id="verifyAadhaarOtpBtn" class="btn btn-success mt-2" style="display:none;">Verify OTP</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
 
     <script src="{{ asset('user_assets/js/jquery-3.6.0.min.js') }}"></script>
     <script src="{{ asset('user_assets/js/popper.min.js') }}"></script>
@@ -790,6 +896,73 @@
     <script src="{{ asset('user_assets/js/lazysizes.min.js') }}"></script>
     <script src="{{ asset('user_assets/js/theme-setting.js') }}"></script>
     <script src="{{ asset('user_assets/js/script.js') }}"></script>
+    <script>
+        // Collect digits into hidden field
+document.addEventListener("input", function(e) {
+  if (e.target.classList.contains("otp-input")) {
+    let inputs = [...document.querySelectorAll(".otp-input")];
+    let otp = inputs.map(i => i.value).join('');
+    document.getElementById("aadhaar_otp_code").value = otp;
+
+    if (e.target.value && e.target.nextElementSibling) {
+      e.target.nextElementSibling.focus();
+    }
+  }
+});
+
+// Send Aadhaar OTP
+document.getElementById("sendAadhaarOtpBtn").addEventListener("click", function () {
+  let aadhaarNo = document.getElementById("aadhaar_no").value;
+
+  if (!/^\d{12}$/.test(aadhaarNo)) {
+    document.getElementById("aadhaarError").textContent = "Please enter a valid 12-digit Aadhaar number.";
+    return;
+  }
+
+  // 🔹 Call backend to trigger UIDAI OTP API
+  fetch("/aadhaar/send-otp", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRF-TOKEN": document.querySelector('input[name="_token"]').value
+    },
+    body: JSON.stringify({ aadhaar_no: aadhaarNo })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      document.getElementById("aadhaarOtpContainer").style.display = "block";
+      document.getElementById("verifyAadhaarOtpBtn").style.display = "block";
+      document.getElementById("aadhaarError").textContent = "";
+    } else {
+      document.getElementById("aadhaarError").textContent = data.message || "Failed to send OTP.";
+    }
+  });
+});
+
+// Verify Aadhaar OTP
+document.getElementById("verifyAadhaarOtpBtn").addEventListener("click", function () {
+  let otpCode = document.getElementById("aadhaar_otp_code").value;
+
+  fetch("/aadhaar/verify-otp", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRF-TOKEN": document.querySelector('input[name="_token"]').value
+    },
+    body: JSON.stringify({ otp: otpCode })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      document.getElementById("otpSuccess").textContent = "✅ Aadhaar verified successfully.";
+    } else {
+      document.getElementById("otpError").textContent = data.message || "OTP verification failed.";
+    }
+  });
+});
+
+    </script>
     <script>
         $(document).on('click', '.close-panel', function () {
     $(this).closest('.card').addClass('d-none'); // hide the panel
@@ -807,6 +980,65 @@
             document.getElementById(target + '-panel').classList.remove('d-none');
         });
     });
+    </script>
+    <script>
+        // Collect digits into hidden OTP field
+document.querySelectorAll('.otp-input').forEach((input, index, inputs) => {
+    input.addEventListener('keyup', function(e) {
+        if (this.value.length === 1 && index < inputs.length - 1) {
+            inputs[index + 1].focus();
+        }
+        document.getElementById('aadhaar_otp_code').value =
+            Array.from(inputs).map(i => i.value).join('');
+    });
+});
+
+// Send Aadhaar OTP
+document.getElementById('sendAadhaarOtpBtn').addEventListener('click', function () {
+    let aadhaarNo = document.getElementById('aadhaar_no').value;
+
+    if (!/^\d{12}$/.test(aadhaarNo)) {
+        document.getElementById('aadhaarError').textContent = "Please enter a valid 12-digit Aadhaar number.";
+        return;
+    }
+
+    // 🔹 Send request to backend (you must call UIDAI Aadhaar OTP API from server)
+    fetch('/aadhaar/send-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value },
+        body: JSON.stringify({ aadhaar_no: aadhaarNo })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            document.getElementById('aadhaarOtpContainer').style.display = "block";
+            document.getElementById('verifyAadhaarOtpBtn').style.display = "block";
+            document.getElementById('aadhaarError').textContent = "";
+        } else {
+            document.getElementById('aadhaarError').textContent = data.message || "Failed to send OTP.";
+        }
+    });
+});
+
+// Verify Aadhaar OTP
+document.getElementById('verifyAadhaarOtpBtn').addEventListener('click', function () {
+    let otpCode = document.getElementById('aadhaar_otp_code').value;
+
+    fetch('/aadhaar/verify-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value },
+        body: JSON.stringify({ otp: otpCode })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            document.getElementById('otpSuccess').textContent = "Aadhaar verified successfully ✅";
+        } else {
+            document.getElementById('otpError').textContent = data.message || "OTP verification failed.";
+        }
+    });
+});
+
     </script>
     <script>
     document.addEventListener("DOMContentLoaded", function() {
