@@ -344,23 +344,21 @@
 
                 </li>
                 <!-- Card share action START -->
-                <li class="nav-item dropdown ms-sm-auto">
+                {{--<li class="nav-item dropdown ms-sm-auto">
                     <a class="nav-link mb-0" href="#" id="cardShareAction" data-bs-toggle="dropdown"
                         aria-expanded="false">
                         <i class="bi bi-reply-fill flip-horizontal ps-1"></i> Share
                         {{ $post->shares ? '('.$post->shares->count().')' : '' }}
                     </a>
-                    <!-- Card share action dropdown menu -->
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="cardShareAction">
-
                         <li>
-<a class="dropdown-item copy-url-btn" href="javascript:void(0)"
-                                data-url="{{-- url('/user/profile/' . $member->id) --}}">
+                            <a class="dropdown-item copy-url-btn" href="javascript:void(0)"
+                                data-url="">
                                 <i class="bi bi-link fa-fw pe-2"></i>Copy link to post
                             </a>
                             </li>
                     </ul>
-                </li>
+                </li> --}}
                 <!-- Card share action END -->
             </ul>
             <div class="d-flex mb-3">
@@ -397,8 +395,7 @@
 
             </div>
             <ul class="comment-wrap list-unstyled">
-                <!-- Comment item START -->
-                {{--@foreach ($post->comments as $comment)--}}
+                
                 @foreach ($post->comments->take(2) as $comment)
                    @php
 $rawComment = $comment->comment;
