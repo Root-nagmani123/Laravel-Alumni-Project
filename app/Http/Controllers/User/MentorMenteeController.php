@@ -410,5 +410,16 @@ function filterMentorsData(Request $request)
     return view('partials.mentor_table', compact('members'));
 }
 
+public function toggleStatus(Request $request, $id)
+{
+    $mentee = DB::table('mentor_mentee_connection')->where('id', $id)->first();
+
+    // checkbox checked = 1, unchecked = 0
+    $mentee->status = $request->has('status') ? 1 : 0;
+    DB::table('mentor_mentee_connection')->where('id', $id)->update(['status' => $mentee->status]);
+
+    return redirect()->back()->with('success', 'Mentee status updated!');
+}
+
 
 }
