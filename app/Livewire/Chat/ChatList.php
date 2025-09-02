@@ -9,7 +9,7 @@ use App\Events\{MessageSentEvent, UnreadMessage};
 use Livewire\Attributes\On;
 use Illuminate\Support\Facades\Auth;
 use App\Services\NotificationService;
-
+use Illuminate\Support\Facades\Mail;
 use App\Events\UserTyping;
 use Illuminate\Support\Facades\DB;
 
@@ -146,6 +146,16 @@ class ChatList extends Component
                 $newMessage,
                 $user->id
             );
+
+
+         // --- Check if receiver is offline ---
+        $receiver = Member::find($this->selectedChat);
+        $isOnline = $receiver->last_seen && $receiver->last_seen->gt(now()->subMinutes(5));
+
+        if (!$isOnline && $receiver->email) {
+            // Send email
+            Mail::to($receiver->email)->send(new \App\Mail\OfflineMessageMail($user, $receiver, $this->newMessage));
+        }
 
         $unreadCount = $this->getUnreadMessagesCount();
         broadcast(new UnreadMessage($this->selectedChat, $user->id ?? null, $unreadCount))->toOthers();
