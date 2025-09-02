@@ -466,7 +466,7 @@
                                         role="switch" 
                                         name="status"
                                         onchange="this.form.submit()"
-                                        {{ $mentee->status == 1 ? 'checked' : '' }}>
+                                        {{ $mentor->status == 1 ? 'checked' : '' }}>
                                 </form>
                             </div>
                              @if ($mentor->status == 1)
