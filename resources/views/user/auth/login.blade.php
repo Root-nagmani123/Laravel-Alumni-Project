@@ -317,17 +317,7 @@
     </style>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-@if(session('success'))
-<script>
-    Swal.fire({
-        icon: 'success',
-        title: 'Success!',
-        text: '{{ session('success') }}',
-        showConfirmButton: false,
-        timer: 3000
-    });
-</script>
-@endif
+
 
 </head>
 
@@ -336,6 +326,16 @@
     <div class="alert alert-success alert-dismissible fade show mt-2" role="alert">
         {{ session('success') }}
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+@endif
+@if ($errors->any())
+    <div class="alert alert-danger  alert-dismissible fade show mt-2" role="alert">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 @endif
 
@@ -745,7 +745,7 @@
           </div>
           <div class="col-md-6">
             <label class="form-label fw-bold">Mobile Number <span class="text-danger">*</span></label>
-            <input type="text" name="mobile" class="form-control" pattern="^[6-9]\d{9}$" maxlength="10" required>
+            <input type="number" name="mobile" class="form-control" pattern="^[6-9]\d{9}$" maxlength="10" required>
           </div>
           <div class="col-md-6">
             <label class="form-label fw-bold">Service <span class="text-danger">*</span></label>
@@ -753,7 +753,7 @@
           </div>
           <div class="col-md-6">
             <label class="form-label fw-bold">Batch <span class="text-danger">*</span></label>
-            <input type="text" name="batch" class="form-control" required>
+            <input type="number" name="batch" class="form-control" required>
           </div>
           <div class="col-md-6">
             <label class="form-label fw-bold">Cadre <span class="text-muted">(Optional)</span></label>
@@ -864,22 +864,7 @@
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-    @if(session('success'))
-    <script>
-    toastr.success("{{ session('success') }}");
-    </script>
-    @endif
-    @if(session('error'))
-    <script>
-    toastr.options = {
-        "closeButton": true,
-        "progressBar": true,
-        "positionClass": "toast-top-center", // 👈 Center top
-        "timeOut": "5000"
-    };
-    toastr.error("{{ session('error') }}");
-    </script>
-    @endif
+    
 
 
     <script>

@@ -157,6 +157,8 @@ Route::prefix('user')->name('user.')->group(function () {
     Route::middleware('auth:user')->group(function () {
        
         Route::get('/mentor-mentee', [MentorMenteeController::class, 'index'])->name('mentor_mentee');
+        Route::post('/mentee/toggle/{id}', [MentorMenteeController::class, 'toggleStatus'])->name('mentee.toggle');
+
        
 		Route::post('/get-years', [MentorMenteeController::class, 'getYears'])->name('get.years');
 		Route::post('/get-cadres', [MentorMenteeController::class, 'getCadres'])->name('get.cadres');
