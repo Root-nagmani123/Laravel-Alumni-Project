@@ -56,7 +56,7 @@
                             wire:click="selectChat({{ $chat->member_id }})" wire:key="chat-{{ $chat->member_id }}"> --}}
 
                             <!-- Avatar -->
-                            <div class="avatar ">
+                            <div class="avatar">
                                 <!--status-online-->
                                 @php
                                 $profileImage = '';
