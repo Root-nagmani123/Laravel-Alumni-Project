@@ -23,6 +23,11 @@ class Member extends Authenticatable
         'current_department','current_location','previous_postings','Service','username','sector', 'status'
     ];
 
+protected $casts = [
+    'last_seen' => 'datetime',
+];
+
+
     public function otps()
 {
     return $this->hasMany(\App\Models\UserOtp::class);

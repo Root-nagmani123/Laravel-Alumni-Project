@@ -28,6 +28,13 @@ class Kernel extends ConsoleKernel
                    ->dailyAt('16:00') // send at 4:00 PM
                    ->timezone('Asia/Kolkata');
 
+        // 👤 new: mark users offline if last_seen older than 5 minutes
+       $schedule->call(function () {
+       \App\Models\Member::where('is_online', 1)
+           ->where('last_seen', '<', now()->subMinutes(5))
+              ->update(['is_online' => 0]);
+      })->everyMinute();
+
     }
 
     /**

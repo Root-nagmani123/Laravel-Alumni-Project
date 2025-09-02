@@ -46,6 +46,10 @@ class AuthController extends Controller
             if ($user) {
                 Auth::guard('user')->login($user);
                 $request->session()->regenerate();
+                // Update online status
+                $user->is_online = 1;
+                $user->last_seen = now();
+                $user->save();
                 return redirect()->intended('/user/feed');
             }
         } else {
@@ -59,6 +63,10 @@ if ($connection->auth()->attempt($username, $password)) {
                 if ($user) {
                     Auth::guard('user')->login($user);
                     $request->session()->regenerate();
+                    // Update online status
+                    $user->is_online = 1;
+                    $user->last_seen = now();
+                    $user->save();
                     return redirect()->intended('/user/feed');
                 }
             }
@@ -133,6 +141,10 @@ public function login_ldap(Request $request)
             if ($user) {
                 Auth::guard('user')->login($user);
                 $request->session()->regenerate();
+                // Update online status
+                $user->is_online = 1;
+                $user->last_seen = now();
+                $user->save();
                 return redirect()->intended('/user/feed');
             }else{
                 return back()->with('error', 'Invalid username or password.');
@@ -202,21 +214,18 @@ public function login_ldap(Request $request)
     }
 }
 
-	/* public function logout()
-    {
-        Auth::guard('user')->logout();
-        $request->session()->invalidate();
-       	return redirect('user/login')->with('success', 'Logged Out Successfully');;
-    } */
-
 	public function logout(Request $request)
 	{
-		Auth::guard('user')->logout();
-
-		$request->session()->invalidate();
-		$request->session()->regenerateToken();
-
-		return redirect('user/login')->with('success', 'Logged Out Successfully');
+        $user = Auth::guard('user')->user();
+        if ($user) {
+            $user->is_online = 0;
+            $user->last_seen = now();
+            $user->save();
+        }
+        Auth::guard('user')->logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect('user/login')->with('success', 'Logged Out Successfully');
 	}
 }
 
