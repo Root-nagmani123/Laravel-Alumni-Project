@@ -73,16 +73,20 @@ public function sendOtp(Request $request)
                            ->where('expires_at', '>=', now())
                            ->first();
 
+        
+
         if (!$otpRecord) {
             return response()->json(['error' => 'Invalid or expired OTP'], 422);
         }
 
         // Log in the user
-       
-         Auth::guard('user')->login($user);
-                $request->session()->regenerate();
-                 $otpRecord->delete();
-                // return redirect()->intended('/user/feed');
+        Auth::guard('user')->login($user);
+        $request->session()->regenerate();
+        $user->is_online = 1;
+        $user->last_seen = now();
+        $user->save();
+        $otpRecord->delete();
+        // return redirect()->intended('/user/feed');
 
         return response()->json([
             'message' => 'Login successful', 
