@@ -29,17 +29,17 @@
                         </div>
                        @if(session('error'))
 
-        <div class="position-fixed top-0 end-0 p-3" style="z-index: 1100">
-            <div class="toast align-items-center text-bg-danger border-0 show" role="alert" aria-live="assertive" aria-atomic="true">
-                <div class="d-flex" style="display: flex !important;">
-                    <div class="toast-body">
-                      {{ session('error') }}
-                    </div>
-                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-                </div>
-            </div>
-        </div>
-  @endif
+                            <div class="position-fixed top-0 end-0 p-3" style="z-index: 1100">
+                                <div class="toast align-items-center text-bg-danger border-0 show" role="alert" aria-live="assertive" aria-atomic="true">
+                                    <div class="d-flex" style="display: flex !important;">
+                                        <div class="toast-body">
+                                        {{ session('error') }}
+                                        </div>
+                                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                                    </div>
+                                </div>
+                            </div>
+                    @endif
 
                         <div class="ms-sm-4 mt-sm-3">
                             <!-- Info -->
@@ -48,9 +48,7 @@
                                 {{ $user->name }}</h1>
                             @endif
                             <ul class="list-inline mb-0 text-center text-sm-start mt-3 mt-sm-0">
-                                <li class="list-inline-item"><i class="bi bi-file-person me-1"></i>
-                                </li>
-                                <li class="list-inline-item"><i class="bi bi-collection me-1"></i></li>
+                                <li class="list-inline-item">{{ $user->Service }}</li>
                             </ul>
                         </div>
                         <!-- Button -->
@@ -101,6 +99,10 @@
                                                 <button class="nav-link" id="social_media-tab" data-bs-toggle="tab"
                                                     data-bs-target="#social_media" type="button" role="tab">Social
                                                     Media</button>
+                                            </li>
+                                            <li class="nav-item" role="presentation">
+                                                <button class="nav-link" id="sector-ministries-tab" data-bs-toggle="tab"
+                                                    data-bs-target="#sector-ministries" type="button" role="tab">Sector & Ministries</button>
                                             </li>
                                         </ul>
 
@@ -507,18 +509,7 @@
                                                                         placeholder="Enter your Service">
                                                                 </div>
                                                             </div>
-                                                            <div class="row mb-3">
-                                                                <div class="col-3">
-                                                                    <label for="sector">Sector
-                                                                        <span style="color: red">*</span></label>
-                                                                </div>
-                                                                <div class="col-9">
-                                                                    <input type="text" id="sector" name="sector"
-                                                                        value="{{ old('sector', $user->sector) }}"
-                                                                        class="form-control"
-                                                                        placeholder="Enter your Sector">
-                                                                </div>
-                                                            </div>
+
                                                         </div>
 
                                                         <button type="submit" class="btn btn-primary">Update</button>
@@ -601,13 +592,40 @@
                                                     </form>
                                                 </div>
                                             </div>
+
+                                            <!-- sector & ministries -->
+
+                                            <div class="tab-pane fade" id="sector-ministries" role="tabpanel">
+                                                   <form>
+                                                     
+                                                     <div class="row g-4">
+                                                       
+                                                            <div class="col-md-6">
+                                                                <div class="card p-3">
+                                                                    <label>
+                                                                        <input type="checkbox" class="toggle-sector" >
+                                                                        <strong></strong>
+                                                                    </label>
+
+                                                                    <div class="row mt-3" style="display:none;">
+                                                                       
+                                                                            <div class="col-md-4 mb-2">
+                                                                                <label>
+                                                                                    <input type="checkbox" >
+                                                                                   
+                                                                                </label>
+                                                                            </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                    </div>
+                                                   </form>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-
-
+</div>
+</div>
                     </div>
                     <!-- List profile -->
                     <ul class="list-inline mb-0 text-center text-sm-start mt-3 mt-sm-0">
@@ -1979,4 +1997,5 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 });
 </script>
+
 @endsection

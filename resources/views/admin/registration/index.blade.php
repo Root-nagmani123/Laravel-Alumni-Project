@@ -49,7 +49,7 @@
                 </div>
 
                 <hr>
-                <div class="table-responsive">
+                <div class="table-responsive overflow-auto">
                         <table class="table table-striped table-bordered align-middle text-nowrap mb-0">
                             <thead class="table-light">
                                 <tr>

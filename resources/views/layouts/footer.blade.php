@@ -304,112 +304,112 @@ JS libraries, plugins and custom scripts -->
     $(document).ready(function () {
         // Service change (for both forms)
         // After service selection, populate year
-        $('.service').on('change', function () {
-            let dataId = $(this).data('id');
-            let $form = $(this).closest('form');
-            let service = $(this).val();
-            let $year = $form.find('.year-select[data-id="' + dataId + '"]');
+        // $('.service').on('change', function () {
+        //     let dataId = $(this).data('id');
+        //     let $form = $(this).closest('form');
+        //     let service = $(this).val();
+        //     let $year = $form.find('.year-select[data-id="' + dataId + '"]');
 
-            $year.empty().append('');
-            console.log(dataId);
-            console.log($form);
-            console.log(service);
-            console.log($year);
+        //     $year.empty().append('');
+        //     console.log(dataId);
+        //     console.log($form);
+        //     console.log(service);
+        //     console.log($year);
 
-            $.ajax({
-                url: '{{ route("user.get.years") }}',
-                type: 'POST',
-                data: {
-                    service: service,
-                    _token: '{{ csrf_token() }}'
-                },
-                success: function (response) {
-                    $.each(response, function (key, value) {
-                        $year.append('<option value="' + value + '">' + value + '</option>');
-                    });
-                    console.log($year);
-                    $year.prop('disabled', false);
-                    $year.select2({
-                        placeholder: "Select Years",
-                        closeOnSelect: false,
-                        // templateResult: formatCheckbox,
-                        templateSelection: formatSelection
-                    });
-                }
-            });
-            loadMembers();
-        });
+        //     $.ajax({
+        //         url: '{{ route("user.get.years") }}',
+        //         type: 'POST',
+        //         data: {
+        //             service: service,
+        //             _token: '{{ csrf_token() }}'
+        //         },
+        //         success: function (response) {
+        //             $.each(response, function (key, value) {
+        //                 $year.append('<option value="' + value + '">' + value + '</option>');
+        //             });
+        //             console.log($year);
+        //             $year.prop('disabled', false);
+        //             $year.select2({
+        //                 placeholder: "Select Years",
+        //                 closeOnSelect: false,
+        //                 // templateResult: formatCheckbox,
+        //                 templateSelection: formatSelection
+        //             });
+        //         }
+        //     });
+        //     loadMembers();
+        // });
 
 
         // Year change
-        $('.year-select').on('change', function () {
-            let dataId = $(this).data('id');
-            let $form = $(this).closest('form');
-            let service = $form.find('.service[data-id="' + dataId + '"]').val();
-            let years = $(this).val();
+        // $('.year-select').on('change', function () {
+        //     let dataId = $(this).data('id');
+        //     let $form = $(this).closest('form');
+        //     let service = $form.find('.service[data-id="' + dataId + '"]').val();
+        //     let years = $(this).val();
 
-            let $cadre = $form.find('.cadre[data-id="' + dataId + '"]');
-            $cadre.empty().append('');
-            $form.find('.sector[data-id="' + dataId + '"]').empty().append('');
-            $form.find('.mentees[data-id="' + dataId + '"]').empty().append('');
-            $.ajax({
-                url: '{{ route("user.get.cadres") }}',
-                type: 'POST',
-                data: {
-                    service: service,
-                    year: years,
-                    _token: '{{ csrf_token() }}'
-                },
-                success: function (response) {
-                    $.each(response, function (key, value) {
-                        $cadre.append('<option value="' + value + '">' + value + '</option>');
-                    });
-                    $cadre.prop('disabled', false);
-                    $cadre.select2({
-                        placeholder: "Select cadres",
-                        closeOnSelect: false,
-                        // templateResult: formatCheckbox,
-                        templateSelection: formatSelection
-                    });
-                }
-            });
-            loadMembers();
-        });
+        //     let $cadre = $form.find('.cadre[data-id="' + dataId + '"]');
+        //     $cadre.empty().append('');
+        //     $form.find('.sector[data-id="' + dataId + '"]').empty().append('');
+        //     $form.find('.mentees[data-id="' + dataId + '"]').empty().append('');
+        //     $.ajax({
+        //         url: '{{ route("user.get.cadres") }}',
+        //         type: 'POST',
+        //         data: {
+        //             service: service,
+        //             year: years,
+        //             _token: '{{ csrf_token() }}'
+        //         },
+        //         success: function (response) {
+        //             $.each(response, function (key, value) {
+        //                 $cadre.append('<option value="' + value + '">' + value + '</option>');
+        //             });
+        //             $cadre.prop('disabled', false);
+        //             $cadre.select2({
+        //                 placeholder: "Select cadres",
+        //                 closeOnSelect: false,
+        //                 // templateResult: formatCheckbox,
+        //                 templateSelection: formatSelection
+        //             });
+        //         }
+        //     });
+        //     loadMembers();
+        // });
 
         // Cadre change
-        $('.cadre').on('change', function () {
-            let dataId = $(this).data('id');
-            let $form = $(this).closest('form');
-            let service = $form.find('.service[data-id="' + dataId + '"]').val();
-            let year = $form.find('.year[data-id="' + dataId + '"]').val();
-            let cadre = $(this).val();
-            let $sector = $form.find('.sector[data-id="' + dataId + '"]');
-            $sector.empty().append('');
-            $form.find('.mentees[data-id="' + dataId + '"]').empty().append('');
-            $.ajax({
-                url: '{{ route("user.get.sectors") }}',
-                type: 'POST',
-                data: {
-                    service: service,
-                    year: year,
-                    cadre: cadre,
-                    _token: '{{ csrf_token() }}'
-                },
-                success: function (response) {
-                    $.each(response, function (key, value) {
-                        $sector.append('<option value="' + value + '">' + value + '</option>');
-                    });
-                    $sector.prop('disabled', false);
-                    $sector.select2({
-                        placeholder: "Select sectors",
-                        closeOnSelect: false,
-                        // templateResult: formatCheckbox,
-                        templateSelection: formatSelection
-                    });
-                }
-            });
-            loadMembers();
-        });
+        // $('.cadre').on('change', function () {
+        //     let dataId = $(this).data('id');
+        //     let $form = $(this).closest('form');
+        //     let service = $form.find('.service[data-id="' + dataId + '"]').val();
+        //     let year = $form.find('.year[data-id="' + dataId + '"]').val();
+        //     let cadre = $(this).val();
+        //     let $sector = $form.find('.sector[data-id="' + dataId + '"]');
+        //     $sector.empty().append('');
+        //     $form.find('.mentees[data-id="' + dataId + '"]').empty().append('');
+        //     $.ajax({
+        //         url: '{{ route("user.get.sectors") }}',
+        //         type: 'POST',
+        //         data: {
+        //             service: service,
+        //             year: year,
+        //             cadre: cadre,
+        //             _token: '{{ csrf_token() }}'
+        //         },
+        //         success: function (response) {
+        //             $.each(response, function (key, value) {
+        //                 $sector.append('<option value="' + value + '">' + value + '</option>');
+        //             });
+        //             $sector.prop('disabled', false);
+        //             $sector.select2({
+        //                 placeholder: "Select sectors",
+        //                 closeOnSelect: false,
+        //                 // templateResult: formatCheckbox,
+        //                 templateSelection: formatSelection
+        //             });
+        //         }
+        //     });
+        //     loadMembers();
+        // });
 
         // Sector change
         $('.sector').on('change', function () {

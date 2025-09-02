@@ -123,6 +123,8 @@
                                                 <span><i class="bi bi-chat"></i> {{ $forum->comment_count ?? 0 }}</span>
                                             </div>
                                             <span class="badge bg-danger-soft text-danger">Expired</span>
+                                            <a href="" data-bs-toggle="modal" data-bs-target="#activateForumModal"
+                                                data-forum-id="{{ $forum->id }}" data-forum-name="{{ $forum->name }}">Activate</a>
                                         </div>
                                     </div>
                                 </div>

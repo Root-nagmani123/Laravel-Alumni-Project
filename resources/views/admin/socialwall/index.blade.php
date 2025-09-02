@@ -31,39 +31,39 @@
     <div class="alert alert-success">{{ session('success') }}</div>
     @endif
     @php use Illuminate\Support\Str; @endphp
-<div class="row align-items-center mb-3">
-    <div class="col-md-6">
-        <form method="GET" action="{{ route('socialwall.index') }}" id="filterForm">
-            <div class="input-group">
-                <select name="year" class="form-select" onchange="this.form.submit()">
-                    <option value="">All Years</option>
-                    @foreach($years as $year)
-                        <option value="{{ $year }}" {{ request('year') == $year ? 'selected' : '' }}>
-                            {{ $year }}
-                        </option>
-                    @endforeach
-                </select>
-                <select name="month" class="form-select" onchange="this.form.submit()">
-                    <option value="">All Months</option>
-                    @foreach(range(1, 12) as $month)
-                        <option value="{{ $month }}" {{ request('month') == $month ? 'selected' : '' }}>
-                            {{ \Carbon\Carbon::create()->month($month)->format('F') }}
-                        </option>
-                    @endforeach
-                </select>
-                <select name="day" class="form-select" onchange="this.form.submit()">
-                    <option value="">All Days</option>
-                    @foreach($days as $day)
-                        <option value="{{ $day }}" {{ request('day') == $day ? 'selected' : '' }}>
-                            {{ $day }}
-                        </option>
-                    @endforeach
-                </select>
-                <button type="button" class="btn btn-primary" id="clearFilterBtn">Clear Filter</button>
+        <div class="row align-items-center mb-3">
+            <div class="col-md-6">
+                <form method="GET" action="{{ route('socialwall.index') }}" id="filterForm">
+                    <div class="input-group">
+                        <select name="year" class="form-select" onchange="this.form.submit()">
+                            <option value="">All Years</option>
+                            @foreach($years as $year)
+                                <option value="{{ $year }}" {{ request('year') == $year ? 'selected' : '' }}>
+                                    {{ $year }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <select name="month" class="form-select" onchange="this.form.submit()">
+                            <option value="">All Months</option>
+                            @foreach(range(1, 12) as $month)
+                                <option value="{{ $month }}" {{ request('month') == $month ? 'selected' : '' }}>
+                                    {{ \Carbon\Carbon::create()->month($month)->format('F') }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <select name="day" class="form-select" onchange="this.form.submit()">
+                            <option value="">All Days</option>
+                            @foreach($days as $day)
+                                <option value="{{ $day }}" {{ request('day') == $day ? 'selected' : '' }}>
+                                    {{ $day }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <button type="button" class="btn btn-primary" id="clearFilterBtn">Clear Filter</button>
+                    </div>
+                </form>
             </div>
-        </form>
-    </div>
-</div>
+        </div>
 
     @if($groupedPosts->isEmpty())
     <div class="alert alert-warning text-center my-4">
@@ -73,9 +73,9 @@
 
     @foreach($groupedPosts as $post)
     <div class="card rounded" id="feed-{{ $post['post_id'] }}">
-        <div class="card-header">
-            <div class="d-flex align-items-center gap-6">
-                @php
+        <div class="card-header position-relative">
+    <div class="d-flex align-items-center gap-3">
+        @php
 
                 $profilePath = public_path('storage/' .
                 $post['member_profile_pic']);
@@ -84,27 +84,26 @@
                 ? asset('storage/' . $post['member_profile_pic'])
                 : asset('feed_assets/images/avatar-default.png');
                 @endphp
-
-                <img src="{{ $profilePic }}" alt="prd1" width="48" class="rounded">
-                <div>
-                    <h6 class="mb-0">By
-                        {{ $post['member_name'] }}</h6>
-                    <span>{{ \Carbon\Carbon::parse($post['created_at'])->format('d-M-Y h:i A') }}</span>
-                </div>
-                <div class="d-flex ms-auto text-end">
-                    <div class="form-check form-switch">
-                        <input class="form-check-input feed-status-toggle" type="checkbox" role="switch"
-                            id="feedStatusSwitch-{{ $post['post_id'] }}" data-id="{{ $post['post_id'] }}"
-                            {{ $post['status'] == 1 ? 'checked' : '' }}>
-
-                            <span class="form-check-label small" for="feedStatusSwitch-{{ $post['post_id'] }}">
-                                {{ $post['status'] == 1 ? 'Active' : 'Inactive' }}
-                            </span>
-                        </label>
-                    </div>
-                </div>
-            </div>
+        <img src="{{ $profilePic }}" alt="prd1" width="48" class="rounded">
+        <div>
+            <h6 class="mb-0">By {{ $post['member_name'] }}</h6>
+            <span>{{ \Carbon\Carbon::parse($post['created_at'])->format('d-M-Y h:i A') }}</span>
         </div>
+    </div>
+
+    <!-- Post Toggle in same style as comment -->
+    <div class="form-check form-switch position-absolute top-0 end-0 me-3 mt-2">
+        <input class="form-check-input feed-status-toggle" 
+               type="checkbox" 
+               role="switch"
+               id="feedStatusSwitch-{{ $post['post_id'] }}" 
+               data-id="{{ $post['post_id'] }}"
+               {{ $post['status'] == 1 ? 'checked' : '' }}>
+        <label class="form-check-label small" for="feedStatusSwitch-{{ $post['post_id'] }}">
+            {{ $post['status'] == 1 ? 'Active' : 'Inactive' }}
+        </label>
+    </div>
+</div>
 
         <div class="card-body">
             @if(!empty($post['content']))
@@ -160,7 +159,7 @@
             </video>
         @endif
     </div>
-@endif
+    @endif
         </div>
         <!-- Comments Section -->
         <div class="card-footer border-top">
@@ -169,54 +168,76 @@
                 <h6>Comments ({{ count($post['comments']) }})</h6>
             </div>
 
-           @foreach($post['comments'] as $comment)
-    @php
-        $commentProfilePath = public_path('storage/' . $comment->member_profile_pic);
-        $commentProfilePic = !empty($comment->member_profile_pic) && file_exists($commentProfilePath)
-            ? asset('storage/' . $comment->member_profile_pic)
-            : asset('feed_assets/images/avatar-default.png');
+           <!-- Comments Accordion Wrapper -->
+<div class="accordion mt-3" id="postCommentsAccordion-{{ $post['post_id'] }}">
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="heading-comments-{{ $post['post_id'] }}">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                data-bs-target="#collapse-comments-{{ $post['post_id'] }}" aria-expanded="false"
+                aria-controls="collapse-comments-{{ $post['post_id'] }}">
+                💬 View Comments ({{ count($post['comments']) }})
+            </button>
+        </h2>
 
-            $commentText = preg_replace_callback(
-                '/@([a-zA-Z0-9_.]+)/',
-                function ($matches) {
-                    $name = $matches[1];
-                    $user = \App\Models\Member::where('name', $name)->first();
-                    if ($user) {
-                      
-                        return "<a href='javascript:void(0);' class='mention-badge'>@{$user->name}</a>";
-                    }
-                    return "@{$name}";
-                },
-                e($comment->comment)
-            );
-    @endphp
+        <div id="collapse-comments-{{ $post['post_id'] }}" class="accordion-collapse collapse"
+            aria-labelledby="heading-comments-{{ $post['post_id'] }}"
+            data-bs-parent="#postCommentsAccordion-{{ $post['post_id'] }}">
+            <div class="accordion-body">
 
-    <div class="d-flex mb-3 align-items-start">
-        <img src="{{ $commentProfilePic }}" alt="commenter" width="36" height="36" class="rounded me-2">
+                @foreach($post['comments'] as $comment)
+                    @php
+                        $commentProfilePath = public_path('storage/' . $comment->member_profile_pic);
+                        $commentProfilePic = !empty($comment->member_profile_pic) && file_exists($commentProfilePath)
+                            ? asset('storage/' . $comment->member_profile_pic)
+                            : asset('feed_assets/images/avatar-default.png');
 
-        <div class="bg-light rounded p-2 w-100 position-relative">
-            <div class="d-flex justify-content-between align-items-center">
-                <strong>{{ $comment->member_name }}</strong>
-                <span class="text-muted" style="font-size:12px;">
-                    {{ \Carbon\Carbon::parse($comment->created_at)->format('d-M-Y h:i A') }}
-                </span>
-            </div>
-            <p class="mb-1">{!! $commentText !!}</p>
+                        $commentText = preg_replace_callback(
+                            '/@([a-zA-Z0-9_.]+)/',
+                            function ($matches) {
+                                $name = $matches[1];
+                                $user = \App\Models\Member::where('name', $name)->first();
+                                if ($user) {
+                                    return "<a href='javascript:void(0);' class='mention-badge'>@{$user->name}</a>";
+                                }
+                                return "@{$name}";
+                            },
+                            e($comment->comment)
+                        );
+                    @endphp
 
-            <!-- Toggle switch -->
-            <div class="form-check form-switch position-absolute top-0 end-0 me-2 mt-1">
-                <input class="form-check-input comment-status-toggle" 
-                       type="checkbox" 
-                       role="switch"
-                       id="commentStatusSwitch-{{ $comment->id }}"
-                       data-id="{{ $comment->id }}"
-                       {{ $comment->status == 1 ? 'checked' : '' }}>
-                <label class="form-check-label small" for="commentStatusSwitch-{{ $comment->id }}">
-                </label>
+                    <!-- Comment Card -->
+                    <div class="d-flex mb-3 align-items-start">
+                        <img src="{{ $commentProfilePic }}" alt="commenter" width="36" height="36" class="rounded me-2">
+                        <div class="bg-light rounded p-2 w-100 position-relative">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <strong>{{ $comment->member_name }}</strong>
+                                <span class="text-muted" style="font-size:12px;">
+                                    {{ \Carbon\Carbon::parse($comment->created_at)->format('d-M-Y h:i A') }}
+                                </span>
+                            </div>
+                            <p class="mb-1">{!! $commentText !!}</p>
+
+                            <!-- Toggle switch -->
+                            <div class="form-check form-switch position-absolute top-0 end-0 me-3 mt-2">
+                                <input class="form-check-input comment-status-toggle" 
+                                    type="checkbox" 
+                                    role="switch"
+                                    id="commentStatusSwitch-{{ $comment->id }}"
+                                    data-id="{{ $comment->id }}"
+                                    {{ $comment->status == 1 ? 'checked' : '' }}>
+                                <label class="form-check-label small" for="commentStatusSwitch-{{ $comment->id }}">
+                                    {{ $comment->status == 1 ? 'Active' : 'Inactive' }}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+
             </div>
         </div>
     </div>
-@endforeach
+</div>
+
 
         </div>
 

@@ -92,20 +92,19 @@
     <!-- Card follow START -->
     <div class="col-sm-6 col-lg-12">
         <div class="card">
-            <!-- Card header START -->
-            <div class="card-header d-sm-flex justify-content-between border-0">
-                <h5 class="card-title">Groups</h5>
-                <a class="btn btn-primary-soft btn-sm" href="" data-bs-toggle="modal" data-bs-target="#groupModal">
-                    Create groups</a>
+    <!-- Card header START -->
+    <div class="card-header d-sm-flex justify-content-between border-0">
+        <h5 class="card-title">Groups</h5>
+        <a class="btn btn-primary-soft btn-sm" href="" data-bs-toggle="modal" data-bs-target="#groupModal">
+            Create groups</a>
+    </div>
+    <!-- Card header END -->
 
-            </div>
-            <!-- Card header END -->
-            <!-- Card body START -->
-            <div class="card-body" style="max-height: 300px; overflow-y: auto;">
-                <!-- Connection item START -->
-                @if(isset($groupNames) && $groupNames->count() > 0)
-                @foreach($groupNames as $index => $recent)
-                <div class="hstack gap-3 mb-3 align-items-center">
+    <!-- Card body START -->
+    <div class="card-body group-list">
+        @if(isset($groupNames) && $groupNames->count() > 0)
+            @foreach($groupNames as $index => $recent)
+                <div class="hstack gap-3 mb-3 align-items-center group-item">
                     <!-- Group Image -->
                     <div class="avatar avatar-md">
                         <a href="{{ route('user.group-post',($recent->enc_id)) }}">
@@ -119,7 +118,6 @@
                     <div class="overflow-hidden">
                         <a class="mb-0 fw-semibold d-block text-truncate"
                             href="{{ route('user.group-post',encrypt($recent->enc_id)) }}">
-
                             {{ ($recent->name) }}
                         </a>
                         <small class="text-muted d-block">End Date:
@@ -127,24 +125,24 @@
                     </div>
 
                     <!-- Post Button -->
-                    <a class="btn btn-primary-soft rounded-circle icon-md ms-auto open-group-post-modal" href="#"
-                        data-bs-toggle="modal" data-bs-target="#groupActionpost" data-group-name="{{ $recent->name }}"
-                        data-group-id="{{ $recent->id }}">
+                    <a class="btn btn-primary-soft rounded-circle icon-md ms-auto open-group-post-modal"
+                        href="#" data-bs-toggle="modal" data-bs-target="#groupActionpost"
+                        data-group-name="{{ $recent->name }}" data-group-id="{{ $recent->id }}">
                         <i class="fa-solid fa-plus"></i>
                     </a>
                 </div>
+            @endforeach
 
-                @endforeach
-                <div class="d-grid mt-3">
-                    <a class="btn btn-sm btn-primary-soft" href="{{ route('user.group.index') }}">View more</a>
-                </div>
-                @else
-                <p class="text-muted">No recent groups available</p>
-                @endif
-
+            <div class="d-grid mt-3">
+                <a class="btn btn-sm btn-primary-soft" href="{{ route('user.group.index') }}">View more</a>
             </div>
-            <!-- Card body END -->
-        </div>
+        @else
+            <p class="text-muted">No recent groups available</p>
+        @endif
+    </div>
+    <!-- Card body END -->
+</div>
+
     </div>
     <!-- Card follow START -->
 </div>
@@ -173,6 +171,16 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+document.addEventListener("DOMContentLoaded", function () {
+    let list = document.querySelector(".group-list");
+    let firstItem = list.querySelector(".group-item");
+
+    if (firstItem) {
+        let itemHeight = firstItem.offsetHeight + parseInt(getComputedStyle(firstItem).marginBottom);
+        list.style.maxHeight = (itemHeight * 5) + "px";
+    }
+});
+
 </script>
 
 
