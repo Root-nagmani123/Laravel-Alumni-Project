@@ -467,7 +467,7 @@
                                                                         placeholder="Enter your current department">
                                                                 </div>
                                                             </div>
-
+                                                           
                                                             <div class="row mb-3">
                                                                 <div class="col-3">
                                                                     <label for="current_location">Current
@@ -495,6 +495,19 @@
                                                                         value="{{ old('previous_postings', $user->previous_postings) }}"
                                                                         class="form-control"
                                                                         placeholder="List previous postings (comma-separated)">
+                                                                </div>
+                                                            </div>
+                                                             <div class="row mb-3">
+                                                                <div class="col-3">
+                                                                    <label for="sector">Sector:<span
+                                                                            style="color: red">*</span></label>
+                                                                </div>
+                                                                <div class="col-9">
+                                                                    <input type="text" id="sector"
+                                                                        name="sector"
+                                                                        value="{{ old('sector', $user->sector) }}"
+                                                                        class="form-control"
+                                                                        placeholder="Enter your current department">
                                                                 </div>
                                                             </div>
                                                             <div class="row mb-3">
