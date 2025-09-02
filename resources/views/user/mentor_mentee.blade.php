@@ -459,7 +459,7 @@
                             
                             <div class="text-end">
                                 <div class="form-check form-switch d-inline-block">
-                                <form action="{{ route('user.mentee.toggle', $mentee->connection_id) }}" method="POST" class="d-inline">
+                                <form action="{{ route('user.mentee.toggle', $mentor->connection_id) }}" method="POST" class="d-inline">
                                     @csrf
                                     <input class="form-check-input" 
                                         type="checkbox" 
