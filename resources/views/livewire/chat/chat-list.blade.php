@@ -71,19 +71,19 @@
                                 $isOnline = $user->last_seen && $user->last_seen->gt(now()->subMinutes(5));
 
                                  // Compact diff for humans
-    $lastSeen = '';
-    if (!$isOnline && $user->last_seen) {
-        $diff = now()->diff($user->last_seen);
-        if ($diff->d >= 1) {
-            $lastSeen = $diff->d . 'd'; // days
-        } elseif ($diff->h >= 1) {
-            $lastSeen = $diff->h . 'h'; // hours
-        } elseif ($diff->i >= 1) {
-            $lastSeen = $diff->i . 'm'; // minutes
-        } else {
-            $lastSeen = 'just now';
-        }
-    }
+                                $lastSeen = '';
+                                if (!$isOnline && $user->last_seen) {
+                                    $diff = now()->diff($user->last_seen);
+                                    if ($diff->d >= 1) {
+                                        $lastSeen = $diff->d . 'd'; // days
+                                    } elseif ($diff->h >= 1) {
+                                        $lastSeen = $diff->h . 'h'; // hours
+                                    } elseif ($diff->i >= 1) {
+                                        $lastSeen = $diff->i . 'm'; // minutes
+                                    } else {
+                                        $lastSeen = 'just now';
+                                    }
+                                }   
 
                                 @endphp
 
@@ -102,6 +102,16 @@
     @endif
 </div>
 
+                                    @if($isOnline)
+                                        <!-- Green circle for online -->
+                                        <span style="position:absolute; bottom:0; right:0; width:10px; height:10px; background-color:#28a745; border:2px solid #fff; border-radius:50%;"></span>
+                                    @else
+                                        <!-- Last seen compact -->
+                                        <span class="position-absolute bottom-0 end-0 small text-gray-500">
+                                            {{ $lastSeen ?: 'Offline' }}
+                                        </span>
+                                    @endif
+                                </div>
 
                                 <!-- <img class="avatar-img rounded-circle" src="{{ $profileImage }}" alt=""> -->
                             </div>
