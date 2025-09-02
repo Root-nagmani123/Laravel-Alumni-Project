@@ -43,7 +43,7 @@
                         <li class="nav-item dropdown">
                             <a class="nav-link" href="javascript:void(0)" id="drop1" aria-expanded="false">
                                 <div class="d-flex align-items-center gap-2 lh-base">
-                                    <img src="{{asset('admin_assets/images/profile/user-1.jpg')}}" class="rounded-circle" width="35"
+                                    <img src="{{asset('admin_assets/images/profile/user-1.webp')}}" class="rounded-circle" width="35"
                                         height="35" alt="matdash-img">
                                     <iconify-icon icon="solar:alt-arrow-down-bold" class="fs-2"></iconify-icon>
                                 </div>
@@ -57,7 +57,7 @@
                                             <img class="rounded-circle me-2"
                                         src="{{ session('admin_profile_pic')  && session('admin_profile_pic')
                                                 ? asset('storage/' . session('admin_profile_pic') )
-                                                : asset('admin_assets/images/profile/user-1.jpg') }}"
+                                                : asset('admin_assets/images/profile/user-1.webp') }}"
                                         alt="Profile Picture" height="56" width="56">
                                         <div>
                                             <h5 class="mb-0 fs-12"> Welcome : {{{ session('LoginName') }}} <span

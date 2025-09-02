@@ -17,10 +17,9 @@
     <form id="groupForm1">
         @csrf
         <input type="hidden" name="group_id" value="{{ $group->id }}">
-        <div class="modal-content">
 
             <!-- Header -->
-            <div class="modal-header bg-danger text-white">
+            <div class="modal-header bg-danger text-white ">
                 <h5 class="modal-title text-white" id="groupModalLabel">Add Members to Group : <span
                         class="text-primary">{{ $group->name }}</span></h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
@@ -28,7 +27,7 @@
             </div>
 
             <!-- Body -->
-            <div class="">
+            <div class="modal-body">
                 <div class="row g-3">
 
 
@@ -106,5 +105,4 @@
                 <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
                 <button type="submit" class="btn btn-primary">Update Group</button>
             </div>
-        </div>
     </form>

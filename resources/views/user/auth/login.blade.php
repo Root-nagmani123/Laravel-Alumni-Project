@@ -332,12 +332,19 @@
 </head>
 
 <body>
-    @if(session('success'))
-    <div class="alert alert-success alert-dismissible fade show mt-2" role="alert">
-        {{ session('success') }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+@if(session('success'))
+    <div class="position-fixed top-0 end-0 p-3" style="z-index: 1100">
+        <div class="toast align-items-center text-bg-success border-0 show" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    {{ session('success') }}
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
     </div>
 @endif
+
 
     <!-- Simple Bootstrap Loader -->
     <div class="d-flex justify-content-center align-items-center vh-100 bg-white" id="pageLoader">
