@@ -596,32 +596,28 @@
                                             <!-- sector & ministries -->
 
                                             <div class="tab-pane fade" id="sector-ministries" role="tabpanel">
-                                                   <form action="{{ route('user.updateSectorinfo', $user->id) }}"
-                                                        method="post" id="myForm" enctype="multipart/form-data">
-                                                     @csrf
-                                                     @method('PUT')
+                                                   <form>
+                                                     
                                                      <div class="row g-4">
-                                                        @foreach($sectors as $sector => $departments)
+                                                       
                                                             <div class="col-md-6">
                                                                 <div class="card p-3">
                                                                     <label>
-                                                                        <input type="checkbox" class="toggle-sector" data-target="#sector-{{ \Illuminate\Support\Str::slug($sector) }}">
-                                                                        <strong>{{ $sector }}</strong>
+                                                                        <input type="checkbox" class="toggle-sector" >
+                                                                        <strong></strong>
                                                                     </label>
 
                                                                     <div id="sector-{{ \Illuminate\Support\Str::slug($sector) }}" class="row mt-3" style="display:none;">
-                                                                        @foreach($departments as $index => $dept)
+                                                                       
                                                                             <div class="col-md-4 mb-2">
                                                                                 <label>
-                                                                                    <input type="checkbox" name="departments[]" value="{{ $dept }}">
-                                                                                    {{ $dept }}
+                                                                                    <input type="checkbox" >
+                                                                                   
                                                                                 </label>
                                                                             </div>
-                                                                        @endforeach
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        @endforeach
                                                     </div>
                                                    </form>
                                                 </div>
