@@ -138,6 +138,8 @@ Route::prefix('user')->name('user.')->group(function () {
         Route::put('/eduinfo/update/{id}', [ProfileController::class, 'updateEduinfo'])->name('profile.eduinfo');
         Route::put('/proinfo/update/{id}', [ProfileController::class, 'updateProinfo'])->name('profile.proinfo');
         Route::put('/social/update/{id}', [ProfileController::class, 'updateSocial'])->name('profile.social.update');
+        Route::put('/sector_departments/update/{id}', [ProfileController::class, 'updateSectorDepartments'])->name('profile.sector_departments.update');
+        Route::put('/social/update/{id}', [ProfileController::class, 'updateSocial'])->name('profile.social.update');
   		Route::post('favorite-user/toggle', [ProfileController::class, 'toggleFavorite'])->name('favorite.user.toggle');
         Route::get('directory', [DashboardController::class, 'directory'])->name('directory');
        //Route::post('/feed/search', [FeedController::class, 'search'])->name('feed.search');
@@ -157,6 +159,8 @@ Route::prefix('user')->name('user.')->group(function () {
     Route::middleware('auth:user')->group(function () {
        
         Route::get('/mentor-mentee', [MentorMenteeController::class, 'index'])->name('mentor_mentee');
+        Route::post('/mentee/toggle/{id}', [MentorMenteeController::class, 'toggleStatus'])->name('mentee.toggle');
+
        
 		Route::post('/get-years', [MentorMenteeController::class, 'getYears'])->name('get.years');
 		Route::post('/get-cadres', [MentorMenteeController::class, 'getCadres'])->name('get.cadres');

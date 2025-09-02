@@ -596,30 +596,60 @@
                                             <!-- sector & ministries -->
 
                                             <div class="tab-pane fade" id="sector-ministries" role="tabpanel">
-                                                   <form>
-                                                     
-                                                     <div class="row g-4">
-                                                       
-                                                            <div class="col-md-6">
-                                                                <div class="card p-3">
-                                                                    <label>
-                                                                        <input type="checkbox" class="toggle-sector" >
-                                                                        <strong></strong>
-                                                                    </label>
+                                            <form
+                                                        action="{{ route('user.profile.sector_departments.update', ['id' => $user->id]) }}"
+                                                        method="post" id="myForm">
+                                                @csrf
+                                                @method('PUT')     
+                                            <div class="row g-4">
 
-                                                                    <div class="row mt-3" style="display:none;">
-                                                                       
-                                                                            <div class="col-md-4 mb-2">
-                                                                                <label>
-                                                                                    <input type="checkbox" >
-                                                                                   
-                                                                                </label>
-                                                                            </div>
-                                                                    </div>
+                                                      @foreach($departments as $sector => $deptList)
+                                                        @php
+                                                            // Is sector ke liye user ka stored data nikal lo
+                                                            $sectorData = collect($selectedSectors)->firstWhere('name', $sector);
+                                                            $selectedDepts = $sectorData['departments'] ?? [];
+                                                        @endphp
+
+                                                        <div class="col-md-6">
+                                                            <div class="card p-3">
+                                                                <label>
+                                                                    {{-- Sector checkbox --}}
+                                                                    <input type="checkbox" 
+                                                                        name="sectors[{{ $loop->index }}][name]" 
+                                                                        value="{{ $sector }}" 
+                                                                        class="toggle-sector"
+                                                                        data-target="#sector-{{ \Illuminate\Support\Str::slug($sector) }}"
+                                                                        {{ $sectorData ? 'checked' : '' }}>
+                                                                    <strong>{{ $sector }}</strong>
+                                                                </label>
+
+                                                                <div id="sector-{{ \Illuminate\Support\Str::slug($sector) }}" 
+                                                                    class="row mt-3" 
+                                                                    style="{{ $sectorData ? '' : 'display:none;' }}">
+
+                                                                    @foreach($deptList as $dept)
+                                                                        <div class="col-md-4 mb-2">
+                                                                            <label>
+                                                                                <input type="checkbox" 
+                                                                                    name="sectors[{{ $loop->parent->index }}][departments][]" 
+                                                                                    value="{{ $dept }}"
+                                                                                    {{ in_array($dept, $selectedDepts) ? 'checked' : '' }}>
+                                                                                {{ $dept }}
+                                                                            </label>
+                                                                        </div>
+                                                                    @endforeach
                                                                 </div>
                                                             </div>
+                                                        </div>
+                                                    @endforeach
+
+
                                                     </div>
-                                                   </form>
+                                                    <div class="mt-3">
+                                                        <button type="submit" class="btn btn-primary">Update</button>
+                                                       </div>
+                                                       </form>
+
                                                 </div>
                                             </div>
                                         </div>
@@ -1714,8 +1744,13 @@
     </div>
 </div>
 <!-- Modal create Feed photo END -->
-
 <script>
+document.querySelectorAll('.toggle-sector').forEach(cb => {
+    cb.addEventListener('change', function() {
+        const target = document.querySelector(this.dataset.target);
+        target.style.display = this.checked ? 'flex' : 'none';
+    });
+});
 /*  */
 
 document.addEventListener("DOMContentLoaded", function() {
