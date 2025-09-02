@@ -628,7 +628,7 @@
                                                                     style="{{ $sectorData ? '' : 'display:none;' }}">
 
                                                                     @foreach($deptList as $dept)
-                                                                        <div class="col-md-4 mb-2">
+                                                                        <div class="col-md-6 mb-2">
                                                                             <label>
                                                                                 <input type="checkbox" 
                                                                                     name="sectors[{{ $loop->parent->index }}][departments][]" 
