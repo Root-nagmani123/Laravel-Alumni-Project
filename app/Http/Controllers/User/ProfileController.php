@@ -15,6 +15,7 @@ use App\Models\Post;
 use Illuminate\Support\Facades\DB; // For database operations
 
 use App\Models\member;
+use App\Models\UserSectordepartment;
 use Illuminate\Support\Facades\Crypt; // For encrypting and decrypting IDs
 
 
@@ -26,7 +27,7 @@ class ProfileController extends Controller
 
     public function showByName($name): View
     {
-        
+        $departments = config('departments');
         $user = Member::where('name', $name)->first();
         $userId = $user->id;
 
@@ -34,8 +35,9 @@ class ProfileController extends Controller
        ->orderBy('created_at', 'desc')
        ->where('member_id', $userId)
        ->get();
-
-   return view('profile', compact('user','posts'));
+ $userSectors = UserSectordepartment::where('user_id', $userId)->first();
+    $selectedSectors = $userSectors ? $userSectors->sector_departments : [];
+   return view('profile', compact('user','posts' ,'departments', 'selectedSectors'));
     }
 
    public function showById(Request $request, $encryptedId): View
@@ -45,17 +47,19 @@ class ProfileController extends Controller
     $user = Member::findOrFail($id);
 
     $userId = $user->id;
-
+ $departments = config('departments');
          $posts = Post::with(['member', 'media', 'likes', 'comments.member'])
         ->orderBy('created_at', 'desc')
         ->where('member_id', $userId)
         ->get();
-
-    return view('profile', compact('user','posts'));
+ $userSectors = UserSectordepartment::where('user_id', $userId)->first();
+    $selectedSectors = $userSectors ? $userSectors->sector_departments : [];
+    return view('profile', compact('user','posts', 'departments', 'selectedSectors'));
 }
 
 public function showById_data(Request $request, $id): View
 {
+
     //$user = auth()->guard('user')->user();
     
     $id = Crypt::decrypt($id);
@@ -67,8 +71,12 @@ public function showById_data(Request $request, $id): View
         ->orderBy('created_at', 'desc')
         ->where('member_id', $userId)
         ->get();
+      $departments = config('departments');
 
-    return view('profile', compact('user','posts'));
+ $userSectors = UserSectordepartment::where('user_id', $userId)->first();
+    $selectedSectors = $userSectors ? $userSectors->sector_departments : [];
+
+    return view('profile', compact('user','posts' , 'departments', 'selectedSectors'));
 }
   public function edit($id)
         {
@@ -248,5 +256,21 @@ function searchFavMembers(Request $request) {
         ->get();
 
     return response()->json($favorites);
+}
+function updateSectorDepartments(Request $request, $id){
+    $request->validate([
+        'sectors' => 'nullable|array',
+       
+    ]);
+    $sectors = $request->input('sectors', []);
+
+    // Save or update by user_id
+    $record = UserSectordepartment::updateOrCreate(
+        ['user_id' => $id],
+        ['sector_departments' => $sectors]
+    );
+
+    return redirect()->back()->with('success', 'Sectors and Departments updated successfully.');
+
 }
 }
