@@ -15080,9 +15080,6 @@ textarea.form-control-lg {
             transform: none;
   }
 }
-header {
-  height: 80px;
-}
 
 .navbar-nav .nav-link {
   font-size: 0.9375rem;
@@ -17894,7 +17891,7 @@ a.badge:hover {
 .left-sidebar,
 .right-sidebar {
   position: sticky;
-  top: 100px;
+  top: 80px;
   height: 90vh;
   overflow-y: auto; /* Always scrollable */
   scrollbar-gutter: stable overlay;
@@ -17904,7 +17901,7 @@ a.badge:hover {
   scrollbar-color: transparent transparent; /* Firefox */
 }
 .middle-sidebar{
-  margin-top:125px;
+  margin-top:105px;
 }
 
 /* Hide scrollbar in WebKit by default */

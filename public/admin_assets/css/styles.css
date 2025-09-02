@@ -40444,9 +40444,6 @@ body
     border-color: var(--bs-primary);
     color: #fff;
 }
-body .select2-container {
-    display: inline;
-}
 body
     .select2-container--default
     .select2-selection--multiple

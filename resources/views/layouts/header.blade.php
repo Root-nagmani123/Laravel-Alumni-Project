@@ -47,7 +47,7 @@
 
     <!-- Text: visible only on medium and up -->
     <div class="d-none d-md-flex flex-column lh-sm">
-        <span class="h4 mb-0 fw-bold" style="color:#af2910;">Alumni Connect at LBSNAA</span>
+        <a href="{{ url('user/feed') }}"><span class="mb-0 fw-bold" style="color:#af2910;font-size:20px;">Alumni Connect at LBSNAA</span></a>
     </div>
 </a>
 <!-- Logo END -->

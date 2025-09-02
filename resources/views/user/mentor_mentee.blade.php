@@ -454,36 +454,36 @@
 
                         @foreach ($mentee_connections->toArray() as $mentor)
                        
-                        <li class="list-group-item d-flex justify-content-between">
-                            <span>{{ $mentor->name }}</span>
-                            
-                            <div class="text-end">
-                                <div class="form-check form-switch d-inline-block">
-                                <form action="{{ route('user.mentee.toggle', $mentee->connection_id) }}" method="POST" class="d-inline">
-                                    @csrf
-                                    <input class="form-check-input" 
-                                        type="checkbox" 
-                                        role="switch" 
-                                        name="status"
-                                        onchange="this.form.submit()"
-                                        {{ $mentee->status == 1 ? 'checked' : '' }}>
-                                </form>
-                            </div>
-                             @if ($mentor->status == 1)
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+    <span>{{ $mentor->name }}</span>
 
-                                    <div class="text-end">
-                        <a data-bs-toggle="offcanvas"
-                            href="#offcanvasChat"
-                            role="button"
-                            class="text-decoration-none open-chat"
-                            data-userid="{{ $mentor->id }}">   <!-- dynamic mentor id -->
-                                <div class="chat-icon">
-                                    <i class="bi bi-chat-left-text-fill text-white"></i>
-                                </div>
-                        </a>
-                        </div>
-                        @endif
-                        </li>
+    <div class="d-flex align-items-center gap-3">
+        <form action="{{ route('user.mentor.toggle', $mentor->connection_id) }}" method="POST" class="d-inline">
+            @csrf
+            <div class="form-check form-switch mb-0">
+                <input class="form-check-input" 
+                    type="checkbox" 
+                    role="switch" 
+                    name="status"
+                    onchange="this.form.submit()"
+                    {{ $mentor->status == 1 ? 'checked' : '' }}>
+            </div>
+        </form>
+
+        @if ($mentor->status == 1)
+            <a data-bs-toggle="offcanvas"
+                href="#offcanvasChat"
+                role="button"
+                class="text-decoration-none open-chat"
+                data-userid="{{ $mentor->id }}">
+                <div class="chat-icon bg-primary rounded-circle d-flex justify-content-center align-items-center" style="width: 32px; height: 32px;">
+                    <i class="bi bi-chat-left-text-fill text-white"></i>
+                </div>
+            </a>
+        @endif
+    </div>
+</li>
+
                         @php $hasMentor = true; @endphp
                        
                         @endforeach
@@ -501,36 +501,39 @@
 
                         @foreach ($mentor_connections->toArray() as $mentee)
                         
-                        <li class="list-group-item d-flex justify-content-between">
-                            <span>{{ $mentee->name }}</span>
-                            <small>{{ $mentee->cadre }} | {{ $mentee->batch }}</small>
+                      <li class="list-group-item d-flex justify-content-between align-items-center">
+    <div>
+        <span>{{ $mentee->name }}</span>
+        <small class="d-block text-muted">{{ $mentee->cadre }} | {{ $mentee->batch }}</small>
+    </div>
 
-                            <div class="text-end">
-                                <div class="form-check form-switch d-inline-block">
-                                <form action="{{ route('user.mentee.toggle', $mentee->connection_id) }}" method="POST" class="d-inline">
-                                    @csrf
-                                    <input class="form-check-input" 
-                                        type="checkbox" 
-                                        role="switch" 
-                                        name="status"
-                                        onchange="this.form.submit()"
-                                        {{ $mentee->status == 1 ? 'checked' : '' }}>
-                                </form>
-                            </div>
+    <div class="d-flex align-items-center gap-3">
+        <form action="{{ route('user.mentee.toggle', $mentee->connection_id) }}" method="POST" class="d-inline">
+            @csrf
+            <div class="form-check form-switch mb-0">
+                <input class="form-check-input" 
+                    type="checkbox" 
+                    role="switch" 
+                    name="status"
+                    onchange="this.form.submit()"
+                    {{ $mentee->status == 1 ? 'checked' : '' }}>
+            </div>
+        </form>
 
-                    @if ($mentee->status == 1)
-                            <a data-bs-toggle="offcanvas"
-                                href="#offcanvasChat"
-                                role="button"
-                                class="text-decoration-none open-chat"
-                                data-userid="{{ $mentee->id }}">   <!-- dynamic mentor id -->
-                                    <div class="chat-icon">
-                                        <i class="bi bi-chat-left-text-fill text-white"></i>
-                                    </div>
-                            </a>
-                    @endif
-                            </div>
-                        </li>
+        @if ($mentee->status == 1)
+            <a data-bs-toggle="offcanvas"
+                href="#offcanvasChat"
+                role="button"
+                class="text-decoration-none open-chat"
+                data-userid="{{ $mentee->id }}">
+                <div class="chat-icon bg-primary rounded-circle d-flex justify-content-center align-items-center" style="width: 32px; height: 32px;">
+                    <i class="bi bi-chat-left-text-fill text-white"></i>
+                </div>
+            </a>
+        @endif
+    </div>
+</li>
+
                         @php $hasMentee = true; @endphp
                        
                         @endforeach

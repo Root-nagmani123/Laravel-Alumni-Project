@@ -82,7 +82,7 @@
                 $profilePic = !empty( $post['member_profile_pic']) &&
                 file_exists($profilePath)
                 ? asset('storage/' . $post['member_profile_pic'])
-                : asset('feed_assets/images/avatar-default.png');
+                : asset('admin_assets/images/profile/user-1.webp');
                 @endphp
         <img src="{{ $profilePic }}" alt="prd1" width="48" class="rounded">
         <div>
@@ -189,7 +189,7 @@
                         $commentProfilePath = public_path('storage/' . $comment->member_profile_pic);
                         $commentProfilePic = !empty($comment->member_profile_pic) && file_exists($commentProfilePath)
                             ? asset('storage/' . $comment->member_profile_pic)
-                            : asset('feed_assets/images/avatar-default.png');
+                            : asset('admin_assets/images/profile/user-1.webp');
 
                         $commentText = preg_replace_callback(
                             '/@([a-zA-Z0-9_.]+)/',

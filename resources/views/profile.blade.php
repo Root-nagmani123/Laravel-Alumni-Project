@@ -611,7 +611,7 @@
                                                         @endphp
 
                                                         <div class="col-md-6">
-                                                            <div class="card p-3">
+                                                            <div class="card p-3 h-100">
                                                                 <label>
                                                                     {{-- Sector checkbox --}}
                                                                     <input type="checkbox" 
