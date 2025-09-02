@@ -453,24 +453,39 @@
                         @endphp
 
                         @foreach ($mentee_connections->toArray() as $mentor)
-                        @if ($mentor->status == 1)
+                       
                         <li class="list-group-item d-flex justify-content-between">
                             <span>{{ $mentor->name }}</span>
-              <div class="text-end">
-   <a data-bs-toggle="offcanvas"
-      href="#offcanvasChat"
-      role="button"
-      class="text-decoration-none open-chat"
-      data-userid="{{ $mentor->id }}">   <!-- dynamic mentor id -->
-        <div class="chat-icon">
-            <i class="bi bi-chat-left-text-fill text-white"></i>
-        </div>
-   </a>
-</div>
+                            
+                            <div class="text-end">
+                                <div class="form-check form-switch d-inline-block">
+                                <form action="{{ route('user.mentee.toggle', $mentee->connection_id) }}" method="POST" class="d-inline">
+                                    @csrf
+                                    <input class="form-check-input" 
+                                        type="checkbox" 
+                                        role="switch" 
+                                        name="status"
+                                        onchange="this.form.submit()"
+                                        {{ $mentee->status == 1 ? 'checked' : '' }}>
+                                </form>
+                            </div>
+                             @if ($mentor->status == 1)
 
-     </li>
-                        @php $hasMentor = true; @endphp
+                                    <div class="text-end">
+                        <a data-bs-toggle="offcanvas"
+                            href="#offcanvasChat"
+                            role="button"
+                            class="text-decoration-none open-chat"
+                            data-userid="{{ $mentor->id }}">   <!-- dynamic mentor id -->
+                                <div class="chat-icon">
+                                    <i class="bi bi-chat-left-text-fill text-white"></i>
+                                </div>
+                        </a>
+                        </div>
                         @endif
+                        </li>
+                        @php $hasMentor = true; @endphp
+                       
                         @endforeach
 
                         @unless($hasMentor)
@@ -485,24 +500,39 @@
                         @endphp
 
                         @foreach ($mentor_connections->toArray() as $mentee)
-                        @if ($mentee->status == 1)
+                        
                         <li class="list-group-item d-flex justify-content-between">
                             <span>{{ $mentee->name }}</span>
                             <small>{{ $mentee->cadre }} | {{ $mentee->batch }}</small>
+
                             <div class="text-end">
-   <a data-bs-toggle="offcanvas"
-      href="#offcanvasChat"
-      role="button"
-      class="text-decoration-none open-chat"
-      data-userid="{{ $mentee->id }}">   <!-- dynamic mentor id -->
-        <div class="chat-icon">
-            <i class="bi bi-chat-left-text-fill text-white"></i>
-        </div>
-   </a>
-</div>
+                                <div class="form-check form-switch d-inline-block">
+                                <form action="{{ route('user.mentee.toggle', $mentee->connection_id) }}" method="POST" class="d-inline">
+                                    @csrf
+                                    <input class="form-check-input" 
+                                        type="checkbox" 
+                                        role="switch" 
+                                        name="status"
+                                        onchange="this.form.submit()"
+                                        {{ $mentee->status == 1 ? 'checked' : '' }}>
+                                </form>
+                            </div>
+
+                    @if ($mentee->status == 1)
+                            <a data-bs-toggle="offcanvas"
+                                href="#offcanvasChat"
+                                role="button"
+                                class="text-decoration-none open-chat"
+                                data-userid="{{ $mentee->id }}">   <!-- dynamic mentor id -->
+                                    <div class="chat-icon">
+                                        <i class="bi bi-chat-left-text-fill text-white"></i>
+                                    </div>
+                            </a>
+                    @endif
+                            </div>
                         </li>
                         @php $hasMentee = true; @endphp
-                        @endif
+                       
                         @endforeach
 
                         @unless($hasMentee)
