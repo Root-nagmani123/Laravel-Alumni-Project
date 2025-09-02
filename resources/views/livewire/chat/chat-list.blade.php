@@ -88,7 +88,7 @@
                                 @endphp
 
 
-                                <div class="avatar position-relative">
+                                <div class="avatar ">
                                     <img class="avatar-img rounded-circle" src="{{ $profileImage }}" alt="">
 
                                     @if($isOnline)
