@@ -607,7 +607,7 @@
                                                                         <strong></strong>
                                                                     </label>
 
-                                                                    <div id="sector-{{ \Illuminate\Support\Str::slug($sector) }}" class="row mt-3" style="display:none;">
+                                                                    <div class="row mt-3" style="display:none;">
                                                                        
                                                                             <div class="col-md-4 mb-2">
                                                                                 <label>
@@ -624,6 +624,8 @@
                                             </div>
                                         </div>
                                     </div>
+</div>
+</div>
                     </div>
                     <!-- List profile -->
                     <ul class="list-inline mb-0 text-center text-sm-start mt-3 mt-sm-0">
