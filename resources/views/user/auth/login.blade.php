@@ -345,7 +345,6 @@
     </div>
 @endif
 
-
     <!-- Simple Bootstrap Loader -->
     <div class="d-flex justify-content-center align-items-center vh-100 bg-white" id="pageLoader">
         <div class="spinner-border text-danger" role="status" style="width: 3rem; height: 3rem;">
