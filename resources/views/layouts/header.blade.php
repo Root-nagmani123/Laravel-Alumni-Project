@@ -165,7 +165,7 @@
                                             
                                                 $notificationUrl = '#';
                                                 $extraAttributes = null;
-                                                $enc_source_id = Crypt::encryptString($notification->source_id);
+                                                $enc_source_id = Crypt::encrypt($notification->source_id);
                                                 $notificationStatus = 0;
                 
                                                 if (isset($enc_source_id) && isset($notification->source_type)) {
