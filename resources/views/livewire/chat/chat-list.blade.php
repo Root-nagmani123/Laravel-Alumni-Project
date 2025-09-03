@@ -68,7 +68,7 @@
                                 } else {
                                 $profileImage = asset('feed_assets/images/avatar/07.jpg');
                                 }
-                                $isOnline = $user->last_seen && $user->last_seen->gt(now()->subMinutes(5));
+                                $isOnline = $user->is_online == 1 && $user->last_seen;  
 
                                  // Compact diff for humans
                                 $lastSeen = '';
@@ -189,7 +189,8 @@
                             <div class="small text-secondary">
                                 @php
                                     $lastSeen = $user && $user->last_seen ? \Carbon\Carbon::parse($user->last_seen)->diffForHumans() : null;
-                                    $isOnline = $user && $user->last_seen && \Carbon\Carbon::parse($user->last_seen)->gt(now()->subMinutes(5));
+                                    $isOnline = $user->is_online == 1 && $user->last_seen;
+
                                 @endphp
                                 
                                 @if($isOnline)
