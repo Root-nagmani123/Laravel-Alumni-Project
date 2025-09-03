@@ -12,10 +12,11 @@
             $now = Carbon::now();
             @endphp
 
-            @php
-            $activeForums = $forums->filter(fn($f) => \Carbon\Carbon::parse($f->end_date)->gte($now));
-            $inactiveForums = $forums->filter(fn($f) => \Carbon\Carbon::parse($f->end_date)->lt($now));
+           @php
+                $activeForums = $forums->filter(fn($f) => \Carbon\Carbon::parse($f->end_date)->toDateString() >= $now->toDateString());
+                $inactiveForums = $forums->filter(fn($f) => \Carbon\Carbon::parse($f->end_date)->toDateString() < $now->toDateString());
             @endphp
+
 
             <ul class="nav nav-tabs mb-3" id="forumTabs" role="tablist">
                 <li class="nav-item" role="presentation">

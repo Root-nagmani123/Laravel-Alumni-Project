@@ -86,7 +86,18 @@
                 @endphp
         <img src="{{ $profilePic }}" alt="prd1" width="48" class="rounded">
         <div>
-            <h6 class="mb-0">By {{ $post['member_name'] }}</h6>
+            <h6 class="mb-0">
+                 {{ $post['member_name'] }}
+                @if(!empty($post['group_id']))
+                    <span title="Group Post">
+                        <i class="bi bi-people-fill text-primary"></i>
+                    </span>
+                @else
+                    <span title="Single Post">
+                        <i class="bi bi-person-fill text-secondary"></i>
+                    </span>
+                @endif
+            </h6>
             <span>{{ \Carbon\Carbon::parse($post['created_at'])->format('d-M-Y h:i A') }}</span>
         </div>
     </div>

@@ -314,7 +314,7 @@
         @endforeach
     </div>
 @endif
-
+  @if($post->type != 'group_post')
             <ul class="nav nav-stack py-3 small">
                 @php
                 $likeUserList = $post->likes->pluck('member.name')->filter();
@@ -361,20 +361,23 @@
                 </li> --}}
                 <!-- Card share action END -->
             </ul>
+
+             
             <div class="d-flex mb-3">
                 <!-- Avatar -->
                <div class="avatar avatar-xs me-2">
-    <a href="{{ route('user.profile.data', ['id' => Crypt::encrypt(auth()->guard('user')->id())]) }}">
-        <img class="avatar-img rounded-circle"
-             src="{{ auth()->guard('user')->user()->profile_pic
-                    ? asset('storage/' . auth()->guard('user')->user()->profile_pic)
-                    : asset('feed_assets/images/avatar/07.jpg') }}"
-             alt="{{ auth()->guard('user')->user()->name ?? 'User' }}"
-             loading="lazy" decoding="async">
-    </a>
-</div>
+                    <a href="{{ route('user.profile.data', ['id' => Crypt::encrypt(auth()->guard('user')->id())]) }}">
+                        <img class="avatar-img rounded-circle"
+                            src="{{ auth()->guard('user')->user()->profile_pic
+                                    ? asset('storage/' . auth()->guard('user')->user()->profile_pic)
+                                    : asset('feed_assets/images/avatar/07.jpg') }}"
+                            alt="{{ auth()->guard('user')->user()->name ?? 'User' }}"
+                            loading="lazy" decoding="async">
+                    </a>
+                </div>
 
                 <!-- Comment box  -->
+                
                 <form class="nav nav-item w-100 position-relative" id="commentForm-{{ $post->id }}"
                     action="{{ route('user.comments.store') }}" method="POST" data-post-id="{{ $post->id }}">
                     @csrf
@@ -388,12 +391,9 @@
                     </button>
                     
                 </form>
-                <!-- Mention Suggestion Box -->
-
-
-
-
+               
             </div>
+             @endif
             <ul class="comment-wrap list-unstyled">
                 
                 @foreach ($post->comments->take(2) as $comment)
@@ -420,8 +420,9 @@ $commentText = preg_replace_callback(
     e($rawComment) // ⬅ change this to just $rawComment
 );
 @endphp
-
-                <li class="comment-item mb-3" id="comment-{{ $comment->id }}">
+                 @if(auth()->guard('user')->id() )
+                 @if(isset($member->id) && $member->id === auth()->guard('user')->id())
+                <li class="comment-item mb-3 " id="comment-{{ $comment->id }}">
                     <div class="d-flex position-relative">
                         <!-- Avatar -->
                         <div class="avatar avatar-xs">
@@ -437,6 +438,7 @@ $commentText = preg_replace_callback(
                         </div>
                         <div class="ms-2 w-100">
                             <!-- Comment by -->
+                           
                             <div class="bg-light rounded-start-top-0 p-3 rounded">
                                 <div class="d-flex justify-content-between">
                                     <h6 class="mb-1"> <a href="{{ $comment->member ? route('user.profile.data', ['id' => Crypt::encrypt($comment->member->id)]) : '#' }}"> {{ $comment->member->name ?? 'Anonymous' }} </a>
@@ -445,32 +447,79 @@ $commentText = preg_replace_callback(
                                 </div>
                                 <p class="small mb-0" id="comment-text-{{ $comment->id }}">{!! $commentText !!}</p>
                             </div>
-                            <div class="row">
-                                <div class="col-6">
-                                    <a href="#!" class="text-secondary small me-2">Like</a>
-                                    <a href="#!" class="text-secondary small">Reply</a>
+                           <div class="row">
+                              <div class="col-6">
+                                    {{--<a href="#!" class="text-secondary small me-2">Like</a>
+                                    <a href="#!" class="text-secondary small">Reply</a>--}}
                                 </div>
                                 <div class="col-6 text-end">
                                     @if(auth()->guard('user')->id() === $comment->member_id)
-                            <button class="btn btn-sm btn-link p-0 text-primary edit-comment-btn"
-                                data-comment-id="{{ $comment->id }}" data-comment="{{ $comment->comment }}"
-                                type="button"><i class="bi bi-pencil-fill"></i></button>
-                            @endif
-                            @if(auth()->guard('user')->id() === $comment->member_id)
-                            <button class="btn btn-sm btn-link p-0 text-danger delete-comment-btn"
-                                data-comment-id="{{ $comment->id }}" type="button"><i class="bi bi-trash-fill"></i></button>
-                            @endif
+                                    <button class="btn btn-sm btn-link p-0 text-primary edit-comment-btn"
+                                        data-comment-id="{{ $comment->id }}" data-comment="{{ $comment->comment }}"
+                                        type="button"><i class="bi bi-pencil-fill"></i></button>
+                                   
+                                    <button class="btn btn-sm btn-link p-0 text-danger delete-comment-btn"
+                                        data-comment-id="{{ $comment->id }}" type="button"><i class="bi bi-trash-fill"></i></button>
+                                    @endif
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <!-- Comment item nested END -->
+                   
                 </li>
+                @elseif(auth()->guard('user')->id() === $comment->member_id)
+                 <li class="comment-item mb-3 " id="comment-{{ $comment->id }}">
+                    <div class="d-flex position-relative">
+                        <!-- Avatar -->
+                        <div class="avatar avatar-xs">
+                            <!-- <a href="#!"><img class="avatar-img rounded-circle"
+                                   src="${comment.member && comment.member.profile_pic ? '/storage/' + comment.member.profile_pic : '/feed_assets/images/avatar/07.jpg'}"
+                                    alt="" loading="lazy" decoding="async"></a> -->
+
+                                    <a href="{{ $comment->member ? route('user.profile.data', ['id' => Crypt::encrypt($comment->member->id)]) : '#' }}">
+                                        <img class="avatar-img rounded-circle"
+                                             src="{{ $comment->member && $comment->member->profile_pic ? asset('storage/' . $comment->member->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}"
+                                             alt="" loading="lazy" decoding="async">
+                                    </a>
+                        </div>
+                        <div class="ms-2 w-100">
+                            <!-- Comment by -->
+                           
+                            <div class="bg-light rounded-start-top-0 p-3 rounded">
+                                <div class="d-flex justify-content-between">
+                                    <h6 class="mb-1"> <a href="{{ $comment->member ? route('user.profile.data', ['id' => Crypt::encrypt($comment->member->id)]) : '#' }}"> {{ $comment->member->name ?? 'Anonymous' }} </a>
+                                    </h6>
+                                    <small class="ms-2">{{$comment->created_at->diffForHumans()}}</small>
+                                </div>
+                                <p class="small mb-0" id="comment-text-{{ $comment->id }}">{!! $commentText !!}</p>
+                            </div>
+                           <div class="row">
+                              <div class="col-6">
+                                    {{--<a href="#!" class="text-secondary small me-2">Like</a>
+                                    <a href="#!" class="text-secondary small">Reply</a>--}}
+                                </div>
+                                <div class="col-6 text-end">
+                                    @if(auth()->guard('user')->id() === $comment->member_id)
+                                    <button class="btn btn-sm btn-link p-0 text-primary edit-comment-btn"
+                                        data-comment-id="{{ $comment->id }}" data-comment="{{ $comment->comment }}"
+                                        type="button"><i class="bi bi-pencil-fill"></i></button>
+                                   
+                                    <button class="btn btn-sm btn-link p-0 text-danger delete-comment-btn"
+                                        data-comment-id="{{ $comment->id }}" type="button"><i class="bi bi-trash-fill"></i></button>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                   
+                </li>
+                @endif
+                @endif
                 @endforeach
                 <!-- Comment item END -->
             </ul>
             <!-- Card body END -->
-            @if ($post->comments->count() > 5)
+            {{--@if ($post->comments->count() > 5)
     <div class="card-footer border-0 pt-0">
         <a href="#!" class="btn btn-link btn-sm text-secondary load-more-comments"
            data-post-id="{{ $post->id }}" data-offset="2">
@@ -482,7 +531,7 @@ $commentText = preg_replace_callback(
             Load more comments
         </a>
     </div>
-    @endif
+    @endif --}}
             <!-- Card footer END -->
         </div>
         <!-- Card feed item END -->

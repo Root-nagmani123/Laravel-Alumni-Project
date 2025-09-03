@@ -10,6 +10,7 @@ use LdapRecord\Models\ActiveDirectory\User as LdapUser;
 
 class AuthController extends Controller
 {
+    
     public function showLoginForm()
     {
 

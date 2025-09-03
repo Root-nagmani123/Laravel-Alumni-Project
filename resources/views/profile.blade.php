@@ -467,7 +467,7 @@
                                                                         placeholder="Enter your current department">
                                                                 </div>
                                                             </div>
-
+                                                           
                                                             <div class="row mb-3">
                                                                 <div class="col-3">
                                                                     <label for="current_location">Current
@@ -495,6 +495,19 @@
                                                                         value="{{ old('previous_postings', $user->previous_postings) }}"
                                                                         class="form-control"
                                                                         placeholder="List previous postings (comma-separated)">
+                                                                </div>
+                                                            </div>
+                                                             <div class="row mb-3">
+                                                                <div class="col-3">
+                                                                    <label for="sector">Sector:<span
+                                                                            style="color: red">*</span></label>
+                                                                </div>
+                                                                <div class="col-9">
+                                                                    <input type="text" id="sector"
+                                                                        name="sector"
+                                                                        value="{{ old('sector', $user->sector) }}"
+                                                                        class="form-control"
+                                                                        placeholder="Enter your current department">
                                                                 </div>
                                                             </div>
                                                             <div class="row mb-3">
@@ -1157,24 +1170,23 @@
 
                                         </li>
                                         <!-- Card share action START -->
-                                        <li class="nav-item dropdown ms-sm-auto">
+                                        {{-- <li class="nav-item dropdown ms-sm-auto">
                                             <a class="nav-link mb-0" href="#" id="cardShareAction"
                                                 data-bs-toggle="dropdown" aria-expanded="false">
                                                 <i class="bi bi-reply-fill flip-horizontal ps-1"></i> Share
                                                 {{ $post->shares ? '('.$post->shares->count().')' : '' }}
                                             </a>
-                                            <!-- Card share action dropdown menu -->
                                             <ul class="dropdown-menu dropdown-menu-end"
                                                 aria-labelledby="cardShareAction">
 
                                                 <li>
                                                     <a class="dropdown-item copy-url-btn" href="javascript:void(0)"
-                                                        data-url="{{-- url('/user/profile/' . $member->id) --}}">
+                                                        data-url="">
                                                         <i class="bi bi-link fa-fw pe-2"></i>Copy link to post
                                                     </a>
                                                 </li>
                                             </ul>
-                                        </li>
+                                        </li>--}}
                                         <!-- Card share action END -->
                                     </ul>
                                     <div class="d-flex mb-3">
@@ -1211,6 +1223,7 @@
                                         <!-- Comment item START -->
                                         {{--@foreach ($post->comments as $comment)--}}
                                         @foreach ($post->comments->take(2) as $comment)
+                                        @if(isset($member->id) && $member->id === auth()->guard('user')->id())
                                         <li class="comment-item mb-3" id="comment-{{ $comment->id }}">
                                             <div class="d-flex position-relative">
                                                 <!-- Avatar -->
@@ -1264,10 +1277,67 @@
                                             </div>
                                             <!-- Comment item nested END -->
                                         </li>
+                                         @elseif(auth()->guard('user')->id() === $comment->member_id)
+                                           <li class="comment-item mb-3" id="comment-{{ $comment->id }}">
+                                            <div class="d-flex position-relative">
+                                                <!-- Avatar -->
+                                                <div class="avatar avatar-xs">
+                                                    <!-- <a href="#!"><img class="avatar-img rounded-circle"
+                                   src="${comment.member && comment.member.profile_pic ? '/storage/' + comment.member.profile_pic : '/feed_assets/images/avatar/07.jpg'}"
+                                    alt="" loading="lazy" decoding="async"></a> -->
+
+                                                    <a
+                                                        href="{{ $comment->member ? route('user.profile.data', ['id' => Crypt::encrypt($comment->member->id)]) : '#' }}">
+                                                        <img class="avatar-img rounded-circle"
+                                                            src="{{ $comment->member && $comment->member->profile_pic ? asset('storage/' . $comment->member->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}"
+                                                            alt="" loading="lazy" decoding="async">
+                                                    </a>
+                                                </div>
+                                                <div class="ms-2 w-100">
+                                                    <!-- Comment by -->
+                                                    <div class="bg-light rounded-start-top-0 p-3 rounded">
+                                                        <div class="d-flex justify-content-between">
+                                                            <h6 class="mb-1"> <a href="#!">
+                                                                    {{ $comment->member->name ?? 'Anonymous' }} </a>
+                                                            </h6>
+                                                            <small
+                                                                class="ms-2">{{$comment->created_at->diffForHumans()}}</small>
+                                                        </div>
+                                                        <p class="small mb-0" id="comment-text-{{ $comment->id }}">
+                                                            {{ $comment->comment }}</p>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-6">
+                                                            <a href="#!" class="text-secondary small me-2">Like</a>
+                                                            <a href="#!" class="text-secondary small">Reply</a>
+                                                        </div>
+                                                        <div class="col-6 text-end">
+                                                            @if(auth()->guard('user')->id() === $comment->member_id)
+                                                            <button
+                                                                class="btn btn-sm btn-link p-0 text-primary edit-comment-btn"
+                                                                data-comment-id="{{ $comment->id }}"
+                                                                data-comment="{{ $comment->comment }}" type="button"><i
+                                                                    class="bi bi-pencil-fill"></i></button>
+                                                            @endif
+                                                            @if(auth()->guard('user')->id() === $comment->member_id)
+                                                            <button
+                                                                class="btn btn-sm btn-link p-0 text-danger delete-comment-btn"
+                                                                data-comment-id="{{ $comment->id }}" type="button"><i
+                                                                    class="bi bi-trash-fill"></i></button>
+                                                            @endif
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- Comment item nested END -->
+                                        </li>
+                                        @endif
                                         @endforeach
                                         <!-- Comment item END -->
                                     </ul>
                                     <!-- Card body END -->
+                                        @if(isset($member->id) && $member->id === auth()->guard('user')->id())
+
                                     @if ($post->comments->count() > 2)
                                     <div class="card-footer border-0 pt-0">
                                         <a href="#!" class="btn btn-link btn-sm text-secondary load-more-comments"
@@ -1280,6 +1350,7 @@
                                             Load more comments
                                         </a>
                                     </div>
+                                    @endif
                                     @endif
                                     <!-- Card footer END -->
                                 </div>

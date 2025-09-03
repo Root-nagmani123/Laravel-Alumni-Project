@@ -94,41 +94,11 @@ class GroupController extends Controller
         // ]);
     
         // Notify only if status is active and not yet notified
-        if ($group->status == 1 && $group->notified_at == 0) {
-            $mentorId = $request->input('mentor_id');
-            $userIds = $request->input('user_id', []);
-    
-            $notificationsSent = false;
-    
-            if ($mentorId) {
-
-                $mentorMessage = $group->name . ' group has been added as mentor';
-    
-                    $mentorNotification = $this->notificationService->notifyMemberAdded(
-                        $mentorId,
-                        'group_member',
-                        $mentorMessage,
-                        $group->id,
-                        'group',
-                        auth()->id()
-                    );
-                
-            }
-
-            if (!empty($userIds)) {
-                $mentieeMessage = $group->name . ' group has been added as mentiee';
-                    $mentieeNotification = $this->notificationService->notifyMemberAdded(
-                        $userIds,
-                        'group_member',
-                        $mentieeMessage,
-                        $group->id,
-                        'group',
-                        auth()->id()
-                );
+        if ($group->status == 1 && now()->lt($group->end_date)) {
+                // Notify members about the group creation
+                $notification = $this->notificationService->notifyAllMembers('group', $group->name . ' group has been created.', $group->id, 'group', Auth::id());
 
             }
-
-        }
 
         $this->recentActivityService->logActivity(
             'New Group Created',
@@ -317,62 +287,50 @@ public function update(Request $request, Group $group)
                             ->with('success', 'Group deleted successfully.');
         }
 
-public function toggleStatus(Request $request)
-{
-    $group = Group::findOrFail($request->id);
+        public function toggleStatus(Request $request)
+        {
+            $group = Group::findOrFail($request->id);
 
-    $oldStatus = $group->status;
-    $group->status = $request->status;
-    $group->save();
-    if ($oldStatus != $group->status) {
+            $oldStatus = $group->status;
+            $group->status = $request->status;
+            $group->save();
 
-        $statusMessage = $group->status ? 'activated' : 'deactivated';
-        $SourceType = $group->status ? 'group' : 'group_deactivated';
+            if ($oldStatus != $group->status) {
+               
 
-        $groupMembers = GroupMember::where('group_id', $group->id)->get();
+                $statusMessage = $group->status ? 'activated' : 'deactivated';
+                 
+                $SourceType = $group->status ? 'group' : 'group_deactivated';
 
-        foreach ($groupMembers as $member) {
+                $groupMembers = GroupMember::where('group_id', $group->id)->get();
 
-            $mentorId = $member->mentor;
+              foreach ($groupMembers as $member) {
+                    $mentiees = json_decode($member->mentiee, true);
 
-            $mentiees = json_decode($member->mentiee, true);
+                    if (!empty($mentiees)) {
+                        $this->notificationService->notifyMemberAdded(
+                            $mentiees, // directly pass array of IDs
+                            'group_member',
+                            "The group '{$group->name}' has been {$statusMessage}.",
+                            $group->id,
+                            'group',
+                            auth()->guard('admin')->id()
+                        );
+                    }
+                }
 
-            // Step 6a: Notify mentor if exists
-            if ($mentorId) {
-                $this->notificationService->notifyMemberAdded(
-                    [$mentorId],                     // member IDs as array
-                    'group_member',                  // notification type
-                    $group->name . " group has been $statusMessage as mentor", // message
-                    $group->id,                      // source ID
-                    $SourceType,                      // source type
-                    auth()->id()                     // who triggered this
-                );
             }
 
-            // Step 6b: Notify mentiees if exists
-            if (!empty($mentiees)) {
-                $this->notificationService->notifyMemberAdded(
-                    $mentiees,                       // mentiee IDs
-                    'group_member',                  // notification type
-                    $group->name . " group has been $statusMessage as mentiee",
-                    $group->id,
-                    $SourceType,
-                    auth()->id()
-                );
-            }
+            $this->recentActivityService->logActivity(
+                'Group Status Toggled',
+                'Group',
+                auth()->guard('admin')->id(),
+                'Toggled status for group: ' . $group->name . ' to ' . ($group->status ? 'Active' : 'Inactive'),
+                1, // Assuming 1 represents admin
+                $group->id
+            );
+            return response()->json(['message' => 'Status updated successfully.']);
         }
-    }
-
-    $this->recentActivityService->logActivity(
-        'Group Status Toggled',
-        'Group',
-        auth()->guard('admin')->id(),
-        'Toggled status for group: ' . $group->name . ' to ' . ($group->status ? 'Active' : 'Inactive'),
-        1, // Assuming 1 represents admin
-        $group->id
-    );
-    return response()->json(['message' => 'Status updated successfully.']);
-}
 
 
     public function add_topic($id)
@@ -945,6 +903,16 @@ public function deleteTopic($id)
             1, // Assuming 1 represents admin
             $group->id
         );
+        if (!empty($request->mentees)) {
+            $this->notificationService->notifyMemberAdded(
+                $request->mentees,
+                'group_member',
+                'You have been added to the group: ' . $group->name,
+                $group->id,
+                'group',
+                auth()->guard('admin')->id()
+            );
+        }
 
         // Return JSON for AJAX
         return response()->json([

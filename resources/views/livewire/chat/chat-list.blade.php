@@ -56,7 +56,7 @@
                             wire:click="selectChat({{ $chat->member_id }})" wire:key="chat-{{ $chat->member_id }}"> --}}
 
                             <!-- Avatar -->
-                            <div class="avatar ">
+                            <div class="avatar">
                                 <!--status-online-->
                                 @php
                                 $profileImage = '';
@@ -88,7 +88,7 @@
                                 @endphp
 
 
-                                <div class="avatar position-relative">
+                                <div class="avatar ">
                                     <img class="avatar-img rounded-circle" src="{{ $profileImage }}" alt="">
 
                                     @if($isOnline)
@@ -101,6 +101,8 @@
                                         </span>
                                     @endif
                                 </div>
+
+                                
 
                                 <!-- <img class="avatar-img rounded-circle" src="{{ $profileImage }}" alt=""> -->
                             </div>
@@ -184,9 +186,23 @@
                         </div>
                         <div class="flex-grow-1">
                             <h6 class="mb-0 mt-1">{{ $selectChat->name }}</h6>
-                            <!-- <div class="small text-secondary">
-                                <i class="fa-solid fa-circle text-success me-1"></i>Online
-                            </div> -->
+                            <div class="small text-secondary">
+                                @php
+                                    $lastSeen = $user && $user->last_seen ? \Carbon\Carbon::parse($user->last_seen)->diffForHumans() : null;
+                                    $isOnline = $user && $user->last_seen && \Carbon\Carbon::parse($user->last_seen)->gt(now()->subMinutes(5));
+                                @endphp
+                                
+                                @if($isOnline)
+                                    <i class="fa-solid fa-circle text-success me-1"></i>Online
+                                @else
+                                    @if($lastSeen)
+                                        <i class="fa-solid fa-circle text-secondary me-1"></i>{{ $lastSeen }}
+                                    @else
+                                        <i class="fa-solid fa-circle text-secondary me-1"></i>Offline
+                                    @endif
+                                @endif
+
+                            </div>
                         </div>
                     </div>
 
