@@ -27,19 +27,21 @@
                                     alt="" loading="lazy" decoding="async">
                             </div>
                         </div>
-                       @if(session('error'))
+                        @if(session('error'))
 
-                            <div class="position-fixed top-0 end-0 p-3" style="z-index: 1100">
-                                <div class="toast align-items-center text-bg-danger border-0 show" role="alert" aria-live="assertive" aria-atomic="true">
-                                    <div class="d-flex" style="display: flex !important;">
-                                        <div class="toast-body">
+                        <div class="position-fixed top-0 end-0 p-3" style="z-index: 1100">
+                            <div class="toast align-items-center text-bg-danger border-0 show" role="alert"
+                                aria-live="assertive" aria-atomic="true">
+                                <div class="d-flex" style="display: flex !important;">
+                                    <div class="toast-body">
                                         {{ session('error') }}
-                                        </div>
-                                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
                                     </div>
+                                    <button type="button" class="btn-close btn-close-white me-2 m-auto"
+                                        data-bs-dismiss="toast" aria-label="Close"></button>
                                 </div>
                             </div>
-                    @endif
+                        </div>
+                        @endif
 
                         <div class="ms-sm-4 mt-sm-3">
                             <!-- Info -->
@@ -73,7 +75,7 @@
                                     <div class="modal-header">
                                         <h5 class="modal-title" id="editProfileModalLabel">Edit Profile</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                            aria-label="Close"></button>
+                                            aria-label="Close" ></button>
                                     </div>
                                     <div class="modal-body">
                                         <!-- Success Message -->
@@ -102,7 +104,8 @@
                                             </li>
                                             <li class="nav-item" role="presentation">
                                                 <button class="nav-link" id="sector-ministries-tab" data-bs-toggle="tab"
-                                                    data-bs-target="#sector-ministries" type="button" role="tab">Sector & Ministries</button>
+                                                    data-bs-target="#sector-ministries" type="button" role="tab">Sector
+                                                    & Ministries</button>
                                             </li>
                                         </ul>
 
@@ -278,9 +281,10 @@
                                                                         @if($user->profile_pic)
                                                                         <img id="previewImageEdit"
                                                                             src="{{ asset('storage/' . $user->profile_pic) }}"
-                                                                            alt="Profile Picture" style="max-width: 150px;">
+                                                                            alt="Profile Picture"
+                                                                            style="max-width: 150px;">
                                                                         @endif
-                                                                        </div>
+                                                                    </div>
 
                                                                 </div>
                                                             </div>
@@ -467,7 +471,7 @@
                                                                         placeholder="Enter your current department">
                                                                 </div>
                                                             </div>
-                                                           
+
                                                             <div class="row mb-3">
                                                                 <div class="col-3">
                                                                     <label for="current_location">Current
@@ -495,19 +499,6 @@
                                                                         value="{{ old('previous_postings', $user->previous_postings) }}"
                                                                         class="form-control"
                                                                         placeholder="List previous postings (comma-separated)">
-                                                                </div>
-                                                            </div>
-                                                             <div class="row mb-3">
-                                                                <div class="col-3">
-                                                                    <label for="sector">Sector:<span
-                                                                            style="color: red">*</span></label>
-                                                                </div>
-                                                                <div class="col-9">
-                                                                    <input type="text" id="sector"
-                                                                        name="sector"
-                                                                        value="{{ old('sector', $user->sector) }}"
-                                                                        class="form-control"
-                                                                        placeholder="Enter your current department">
                                                                 </div>
                                                             </div>
                                                             <div class="row mb-3">
@@ -609,66 +600,66 @@
                                             <!-- sector & ministries -->
 
                                             <div class="tab-pane fade" id="sector-ministries" role="tabpanel">
-                                            <form
-                                                        action="{{ route('user.profile.sector_departments.update', ['id' => $user->id]) }}"
-                                                        method="post" id="myForm">
-                                                @csrf
-                                                @method('PUT')     
-                                            <div class="row g-4">
+                                                <form
+                                                    action="{{ route('user.profile.sector_departments.update', ['id' => $user->id]) }}"
+                                                    method="post" id="myForm">
+                                                    @csrf
+                                                    @method('PUT')
+                                                    <div class="row g-4">
 
-                                                      @foreach($departments as $sector => $deptList)
+                                                        @foreach($departments as $sector => $deptList)
                                                         @php
-                                                            // Is sector ke liye user ka stored data nikal lo
-                                                            $sectorData = collect($selectedSectors)->firstWhere('name', $sector);
-                                                            $selectedDepts = $sectorData['departments'] ?? [];
+                                                        // Is sector ke liye user ka stored data nikal lo
+                                                        $sectorData = collect($selectedSectors)->firstWhere('name',
+                                                        $sector);
+                                                        $selectedDepts = $sectorData['departments'] ?? [];
                                                         @endphp
 
                                                         <div class="col-md-6">
                                                             <div class="card p-3 h-100">
                                                                 <label>
                                                                     {{-- Sector checkbox --}}
-                                                                    <input type="checkbox" 
-                                                                        name="sectors[{{ $loop->index }}][name]" 
-                                                                        value="{{ $sector }}" 
-                                                                        class="toggle-sector"
+                                                                    <input type="checkbox"
+                                                                        name="sectors[{{ $loop->index }}][name]"
+                                                                        value="{{ $sector }}" class="toggle-sector"
                                                                         data-target="#sector-{{ \Illuminate\Support\Str::slug($sector) }}"
                                                                         {{ $sectorData ? 'checked' : '' }}>
                                                                     <strong>{{ $sector }}</strong>
                                                                 </label>
 
-                                                                <div id="sector-{{ \Illuminate\Support\Str::slug($sector) }}" 
-                                                                    class="row mt-3" 
+                                                                <div id="sector-{{ \Illuminate\Support\Str::slug($sector) }}"
+                                                                    class="row mt-3"
                                                                     style="{{ $sectorData ? '' : 'display:none;' }}">
 
                                                                     @foreach($deptList as $dept)
-                                                                        <div class="col-md-6 mb-2">
-                                                                            <label>
-                                                                                <input type="checkbox" 
-                                                                                    name="sectors[{{ $loop->parent->index }}][departments][]" 
-                                                                                    value="{{ $dept }}"
-                                                                                    {{ in_array($dept, $selectedDepts) ? 'checked' : '' }}>
-                                                                                {{ $dept }}
-                                                                            </label>
-                                                                        </div>
+                                                                    <div class="col-md-6 mb-2">
+                                                                        <label>
+                                                                            <input type="checkbox"
+                                                                                name="sectors[{{ $loop->parent->index }}][departments][]"
+                                                                                value="{{ $dept }}"
+                                                                                {{ in_array($dept, $selectedDepts) ? 'checked' : '' }}>
+                                                                            {{ $dept }}
+                                                                        </label>
+                                                                    </div>
                                                                     @endforeach
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    @endforeach
+                                                        @endforeach
 
 
                                                     </div>
                                                     <div class="mt-3">
                                                         <button type="submit" class="btn btn-primary">Update</button>
-                                                       </div>
-                                                       </form>
+                                                    </div>
+                                                </form>
 
-                                                </div>
                                             </div>
                                         </div>
                                     </div>
-</div>
-</div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <!-- List profile -->
                     <ul class="list-inline mb-0 text-center text-sm-start mt-3 mt-sm-0">
@@ -714,6 +705,12 @@
                             <a class="nav-link" id="groups-tab" data-bs-toggle="tab" href="#social" role="tab"
                                 aria-controls="social" aria-selected="false">
                                 Social Media
+                            </a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link" id="groups-tab" data-bs-toggle="tab" href="#sector_department"
+                                role="tab" aria-controls="sector_department" aria-selected="false">
+                                Sector & Department
                             </a>
                         </li>
                     </ul>
@@ -774,39 +771,40 @@
                                 <!-- Card body START -->
                                 <div class="card-body position-relative pt-0">
                                     <div class="row g-3">
-                                @if(!empty($posts) && $posts->count())
-                                    @php
+                                        @if(!empty($posts) && $posts->count())
+                                        @php
                                         // Collect all media images from all posts
                                         $allPhotos = collect();
                                         foreach ($posts as $post) {
-                                            if (!empty($post->media) && $post->media->count()) {
-                                                foreach ($post->media as $media) {
-                                                    if ($media->file_type === 'image') {
-                                                        $allPhotos->push($media);
-                                                    }
-                                                }
-                                            }
+                                        if (!empty($post->media) && $post->media->count()) {
+                                        foreach ($post->media as $media) {
+                                        if ($media->file_type === 'image') {
+                                        $allPhotos->push($media);
+                                        }
+                                        }
+                                        }
                                         }
                                         // Limit to 6 images total
                                         $photos = $allPhotos->take(6);
-                                    @endphp
+                                        @endphp
 
-                                    @foreach($photos as $media)
+                                        @foreach($photos as $media)
                                         @php
-                                            $relativePath = 'storage/' . str_replace(['app/public/', 'public/'], '', $media->file_path);
-                                            $file_path = public_path($relativePath);
-                                            $image_url = file_exists($file_path)
-                                                ? asset($relativePath)
-                                                : asset('feed_assets/images/avatar-1.png');
+                                        $relativePath = 'storage/' . str_replace(['app/public/', 'public/'], '',
+                                        $media->file_path);
+                                        $file_path = public_path($relativePath);
+                                        $image_url = file_exists($file_path)
+                                        ? asset($relativePath)
+                                        : asset('feed_assets/images/avatar-1.png');
                                         @endphp
                                         <div class="col-6">
                                             <a href="{{ $image_url }}" data-gallery="image-popup" data-glightbox="">
                                                 <img class="rounded img-fluid" src="{{ $image_url }}" alt="">
                                             </a>
                                         </div>
-                                    @endforeach
-                                @endif
-                            </div>
+                                        @endforeach
+                                        @endif
+                                    </div>
 
                                 </div>
                                 <!-- Card body END -->
@@ -821,39 +819,39 @@
                     <div class="tab-content" id="profileTabContent" role="tabpanel" aria-labelledby="profileTab">
                         <!-- Post tab -->
                         <div class="tab-pane fade show active" id="post" role="tabpanel" aria-labelledby="post-tab">
-                           @php
-                                $authId = Auth::guard('user')->id();
+                            @php
+                            $authId = Auth::guard('user')->id();
                             @endphp
 
                             @if($authId === $user->id)
-                                <div class="card card-body mb-4">
-                                    <div class="d-flex">
-                                        <!-- Avatar -->
-                                        <div class="avatar avatar-xs me-2">
-                                            <a href="{{ route('user.profile.data', ['id' => Crypt::encrypt($user->id)]) }}">
-                                                <img class="avatar-img rounded-circle"
-                                                    src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}"
-                                                    alt="" loading="lazy" decoding="async">
-                                            </a>
-                                        </div>
-                                        <!-- Post input -->
-                                        <form class="w-100">
-                                            <textarea class="form-control pe-4 border-0" rows="2" data-autoresize=""
-                                                placeholder="Share your thoughts..." data-bs-toggle="modal"
-                                                data-bs-target="#feedActionPhoto"></textarea>
-                                        </form>
+                            <div class="card card-body mb-4">
+                                <div class="d-flex">
+                                    <!-- Avatar -->
+                                    <div class="avatar avatar-xs me-2">
+                                        <a href="{{ route('user.profile.data', ['id' => Crypt::encrypt($user->id)]) }}">
+                                            <img class="avatar-img rounded-circle"
+                                                src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}"
+                                                alt="" loading="lazy" decoding="async">
+                                        </a>
                                     </div>
-                                    <!-- Share feed toolbar START -->
-                                    <ul class="nav nav-pills nav-stack small fw-normal">
-                                        <li class="nav-item">
-                                            <a class="nav-link bg-light py-1 px-2 mb-0" href="#!" data-bs-toggle="modal"
-                                                data-bs-target="#feedActionPhoto">
-                                                <i class="bi bi-image-fill text-success pe-2"></i>Photos/Videos
-                                            </a>
-                                        </li>
-                                    </ul>
-                                    <!-- Share feed toolbar END -->
+                                    <!-- Post input -->
+                                    <form class="w-100">
+                                        <textarea class="form-control pe-4 border-0" rows="2" data-autoresize=""
+                                            placeholder="Share your thoughts..." data-bs-toggle="modal"
+                                            data-bs-target="#feedActionPhoto"></textarea>
+                                    </form>
                                 </div>
+                                <!-- Share feed toolbar START -->
+                                <ul class="nav nav-pills nav-stack small fw-normal">
+                                    <li class="nav-item">
+                                        <a class="nav-link bg-light py-1 px-2 mb-0" href="#!" data-bs-toggle="modal"
+                                            data-bs-target="#feedActionPhoto">
+                                            <i class="bi bi-image-fill text-success pe-2"></i>Photos/Videos
+                                        </a>
+                                    </li>
+                                </ul>
+                                <!-- Share feed toolbar END -->
+                            </div>
                             @endif
 
 
@@ -885,7 +883,8 @@
                                             $created_by = $post->member->name;
 
                                             // Optional: if you have a group detail page
-                                            $profileLink = route('user.profile.data', ['id' => Crypt::encrypt($post->member->id)]);
+                                            $profileLink = route('user.profile.data', ['id' =>
+                                            Crypt::encrypt($post->member->id)]);
 
                                             $groupLink = route('user.group-post',['id' => ($post->group_id)]);
                                             } else {
@@ -898,7 +897,8 @@
 
                                             $displayName = $member->name ?? 'N/A';
                                             $designation = $member->Service ?? 'N/A';
-                                            $profileLink = route('user.profile.data', ['id' => Crypt::encrypt($member->id)]);
+                                            $profileLink = route('user.profile.data', ['id' =>
+                                            Crypt::encrypt($member->id)]);
 
                                             }
                                             @endphp
@@ -1175,17 +1175,16 @@
                                                 data-bs-toggle="dropdown" aria-expanded="false">
                                                 <i class="bi bi-reply-fill flip-horizontal ps-1"></i> Share
                                                 {{ $post->shares ? '('.$post->shares->count().')' : '' }}
-                                            </a>
-                                            <ul class="dropdown-menu dropdown-menu-end"
-                                                aria-labelledby="cardShareAction">
+                                        </a>
+                                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="cardShareAction">
 
-                                                <li>
-                                                    <a class="dropdown-item copy-url-btn" href="javascript:void(0)"
-                                                        data-url="">
-                                                        <i class="bi bi-link fa-fw pe-2"></i>Copy link to post
-                                                    </a>
-                                                </li>
-                                            </ul>
+                                            <li>
+                                                <a class="dropdown-item copy-url-btn" href="javascript:void(0)"
+                                                    data-url="">
+                                                    <i class="bi bi-link fa-fw pe-2"></i>Copy link to post
+                                                </a>
+                                            </li>
+                                        </ul>
                                         </li>--}}
                                         <!-- Card share action END -->
                                     </ul>
@@ -1277,8 +1276,8 @@
                                             </div>
                                             <!-- Comment item nested END -->
                                         </li>
-                                         @elseif(auth()->guard('user')->id() === $comment->member_id)
-                                           <li class="comment-item mb-3" id="comment-{{ $comment->id }}">
+                                        @elseif(auth()->guard('user')->id() === $comment->member_id)
+                                        <li class="comment-item mb-3" id="comment-{{ $comment->id }}">
                                             <div class="d-flex position-relative">
                                                 <!-- Avatar -->
                                                 <div class="avatar avatar-xs">
@@ -1336,7 +1335,7 @@
                                         <!-- Comment item END -->
                                     </ul>
                                     <!-- Card body END -->
-                                        @if(isset($member->id) && $member->id === auth()->guard('user')->id())
+                                    @if(isset($member->id) && $member->id === auth()->guard('user')->id())
 
                                     @if ($post->comments->count() > 2)
                                     <div class="card-footer border-0 pt-0">
@@ -1389,22 +1388,6 @@
                                             </div>
                                             <!-- Service END -->
                                         </div>
-                                        <div class="col-sm-6">
-                                            <!-- sector START -->
-                                            <div class="d-flex align-items-center rounded border px-3 py-2">
-
-                                                <p class="mb-0">
-                                                    <i class="fas fa-draw-polygon fa-fw me-2"></i> Sector: <strong>
-                                                        @if($user->sector != '') {{ $user->sector }} @else N/A @endif
-                                                    </strong>
-                                                </p>
-                                            </div>
-                                            <!-- sector END -->
-                                        </div>
-
-
-
-
                                         <div class="col-sm-6">
                                             <!-- Birthday START -->
                                             <div class="d-flex align-items-center rounded border px-3 py-2">
@@ -1731,6 +1714,21 @@
                                 <!-- Card body END -->
                             </div>
                         </div>
+                        <div class="tab-pane fade" id="sector_department" role="tabpanel"
+                            aria-labelledby="sector_department-tab">
+                            <div class="card">
+                                <!-- Card header START -->
+                                <div class="card-header border-0 pb-0">
+                                    <h5 class="card-title">Sector & Department</h5>
+                                </div>
+                                <!-- Card header END -->
+                                <!-- Card body START -->
+                                <div class="card-body">
+
+                                </div>
+                                <!-- Card body END -->
+                            </div>
+                        </div>
                         <!-- Edit Comment Modal -->
                         <div class="modal fade" id="editCommentModal" tabindex="-1" aria-hidden="true">
                             <div class="modal-dialog">
@@ -1814,6 +1812,30 @@
         </form>
     </div>
 </div>
+<!-- Clear Confirmation Modal -->
+<div class="modal fade" id="clearConfirmModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      
+      <div class="modal-header">
+        <h5 class="modal-title">Clear All Selections</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+        Are you sure you want to <strong>clear all selected sectors and departments</strong>?  
+        This will not affect saved data until you click <b>Update</b>.
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-danger" id="confirmClearBtn">Yes, Clear</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
 <!-- Modal create Feed photo END -->
 <script>
 document.querySelectorAll('.toggle-sector').forEach(cb => {
@@ -1853,7 +1875,7 @@ document.addEventListener("DOMContentLoaded", function() {
     document.querySelectorAll(".drop-area").forEach(dropArea => {
         const input = dropArea.querySelector('input[type="file"]');
         const preview = dropArea.querySelector(
-        'div[id^="preview-"]'); // matches preview-feed, preview-group, etc.
+            'div[id^="preview-"]'); // matches preview-feed, preview-group, etc.
 
         // Click to open file dialog
         dropArea.addEventListener("click", () => input.click());
@@ -2103,5 +2125,19 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 });
 </script>
+<script>
+document.getElementById('clearFormBtn').addEventListener('click', function () {
+    if (confirm('Are you sure you want to clear all selections?')) {
+        let form = document.getElementById('myForm');
+
+        // Uncheck all checkboxes
+        form.querySelectorAll('input[type="checkbox"]').forEach(el => el.checked = false);
+
+        // Hide all department sections
+        form.querySelectorAll('[id^="sector-"]').forEach(el => el.style.display = 'none');
+    }
+});
+</script>
+
 
 @endsection
