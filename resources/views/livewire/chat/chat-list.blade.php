@@ -96,7 +96,7 @@
                                         <span style="position:absolute; bottom:0; right:0; width:15px; height:15px; background-color:#28a745; border:2px solid #fff; border-radius:50%;"></span>
                                     @else
                                         <!-- Last seen compact -->
-                                        <span class="position-absolute bottom-0 end-0 small text-dark {{ $selectedChat == $chat->member_id ? 'text-dark' : '' }}">
+                                        <span class="position-absolute bottom-0 end-0 small text-dark {{ $selectedChat == $chat->member_id ? 'text-dark' : '' }}" style="background-color: #c5c3c3ff; border-radius: 50%; padding: 2px 4px; font-size: 10px; border:1px solid #ccc;">
                                             {{ $lastSeen ?: 'Offline' }}
                                         </span>
                                     @endif
