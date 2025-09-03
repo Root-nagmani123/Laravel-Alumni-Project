@@ -118,7 +118,7 @@
             <a href="{{ $profileLink }}" class="text-dark">{{ $displayName }}</a>
         </h6>
         @endif
-        
+
 
         <!-- Group post info + Time -->
         @php
@@ -304,7 +304,7 @@
                             data-gallery="post-gallery-{{ $post->id }}"></a>
                     @endforeach
 
-                    <div class="position-absolute top-0 start-0 w-100 h-100 d-flex 
+                    <div class="position-absolute top-0 start-0 w-100 h-100 d-flex
                                 align-items-center justify-content-center text-white"
                          style="background: rgba(0,0,0,0.6); font-size: 2rem; border-radius: 0.5rem;">
                         +{{ $totalImages - 4 }}
@@ -362,7 +362,7 @@
                 <!-- Card share action END -->
             </ul>
 
-             
+
             <div class="d-flex mb-3">
                 <!-- Avatar -->
                <div class="avatar avatar-xs me-2">
@@ -377,7 +377,7 @@
                 </div>
 
                 <!-- Comment box  -->
-                
+
                 <form class="nav nav-item w-100 position-relative" id="commentForm-{{ $post->id }}"
                     action="{{ route('user.comments.store') }}" method="POST" data-post-id="{{ $post->id }}">
                     @csrf
@@ -389,13 +389,13 @@
                         type="submit">
                         <i class="bi bi-send-fill"></i>
                     </button>
-                    
+
                 </form>
-               
+
             </div>
              @endif
             <ul class="comment-wrap list-unstyled">
-                
+
                 @foreach ($post->comments->take(2) as $comment)
                    @php
 $rawComment = $comment->comment;
@@ -438,7 +438,7 @@ $commentText = preg_replace_callback(
                         </div>
                         <div class="ms-2 w-100">
                             <!-- Comment by -->
-                           
+
                             <div class="bg-light rounded-start-top-0 p-3 rounded">
                                 <div class="d-flex justify-content-between">
                                     <h6 class="mb-1"> <a href="{{ $comment->member ? route('user.profile.data', ['id' => Crypt::encrypt($comment->member->id)]) : '#' }}"> {{ $comment->member->name ?? 'Anonymous' }} </a>
@@ -457,7 +457,7 @@ $commentText = preg_replace_callback(
                                     <button class="btn btn-sm btn-link p-0 text-primary edit-comment-btn"
                                         data-comment-id="{{ $comment->id }}" data-comment="{{ $comment->comment }}"
                                         type="button"><i class="bi bi-pencil-fill"></i></button>
-                                   
+
                                     <button class="btn btn-sm btn-link p-0 text-danger delete-comment-btn"
                                         data-comment-id="{{ $comment->id }}" type="button"><i class="bi bi-trash-fill"></i></button>
                                     @endif
@@ -465,7 +465,7 @@ $commentText = preg_replace_callback(
                             </div>
                         </div>
                     </div>
-                   
+
                 </li>
                 @elseif(auth()->guard('user')->id() === $comment->member_id)
                  <li class="comment-item mb-3 " id="comment-{{ $comment->id }}">
@@ -484,7 +484,7 @@ $commentText = preg_replace_callback(
                         </div>
                         <div class="ms-2 w-100">
                             <!-- Comment by -->
-                           
+
                             <div class="bg-light rounded-start-top-0 p-3 rounded">
                                 <div class="d-flex justify-content-between">
                                     <h6 class="mb-1"> <a href="{{ $comment->member ? route('user.profile.data', ['id' => Crypt::encrypt($comment->member->id)]) : '#' }}"> {{ $comment->member->name ?? 'Anonymous' }} </a>
@@ -503,7 +503,7 @@ $commentText = preg_replace_callback(
                                     <button class="btn btn-sm btn-link p-0 text-primary edit-comment-btn"
                                         data-comment-id="{{ $comment->id }}" data-comment="{{ $comment->comment }}"
                                         type="button"><i class="bi bi-pencil-fill"></i></button>
-                                   
+
                                     <button class="btn btn-sm btn-link p-0 text-danger delete-comment-btn"
                                         data-comment-id="{{ $comment->id }}" type="button"><i class="bi bi-trash-fill"></i></button>
                                     @endif
@@ -511,7 +511,7 @@ $commentText = preg_replace_callback(
                             </div>
                         </div>
                     </div>
-                   
+
                 </li>
                 @endif
                 @endif
@@ -643,7 +643,7 @@ lookup: 'name',         // still search/display by full name
     menuItemTemplate: function (item) {
         return `
             <div class="d-flex align-items-center">
-                <img src="${item.original.avatar || 'https://ui-avatars.com/api/?name=' + item.original.name}" 
+                <img src="${item.original.avatar || 'https://ui-avatars.com/api/?name=' + item.original.name}"
                      class="rounded-circle me-2"
                      width="36" height="36"
                      style="object-fit: cover;">
@@ -978,10 +978,10 @@ document.addEventListener('DOMContentLoaded', function () {
                                 </div>
                             </div>
                                     </div>
-                                    
+
                                 </div>
-                                
-                                
+
+
                             </li></ul>`;
                     });
 
@@ -999,109 +999,94 @@ document.addEventListener('DOMContentLoaded', function () {
 document.addEventListener("DOMContentLoaded", function () {
     let currentTime = Math.floor(Date.now() / 1000); // current time in seconds
 
-        @php
-            $myUserId = Auth::guard('user')->id();
-        @endphp
+    @php
+        $myUserId = Auth::guard('user')->id();
+    @endphp
 
     let storiesData = [
-    //First: MY stories
-    @if(isset($storiesByMember[$myUserId]))
-        @php
-            $myFirst = $storiesByMember[$myUserId]->first();
-            $myUser = $myFirst->user;
-            $myStoryImage = $myFirst->story_image ?? null;
-            $profileImage = '';
-        $user = App\Models\Member::find($memberId);
-        if ($user && !empty($user->profile_pic) &&
-        Storage::disk('public')->exists($user->profile_pic)) {
-        $profileImage = asset('storage/' . $user->profile_pic);
-        } else {
-        $profileImage = asset('feed_assets/images/avatar/07.jpg');
-        }
-        @endphp
+        // First: MY stories
+        @if(isset($storiesByMember[$myUserId]))
+            @php
+                $myFirst = $storiesByMember[$myUserId]->first();
+                $myUser = $myFirst->user;
+                $profileImage = '';
+                $user = App\Models\Member::find($myUserId);
+                if ($user && !empty($user->profile_pic) &&
+                    Storage::disk('public')->exists($user->profile_pic)) {
+                    $profileImage = asset('storage/' . $user->profile_pic);
+                } else {
+                    $profileImage = asset('feed_assets/images/avatar/07.jpg');
+                }
+            @endphp
 
-        @php
-    $isVideo = in_array(pathinfo($story->story_image, PATHINFO_EXTENSION), ['mp4', 'webm']);
-    $previewImage = $isVideo
-        ? 'storage/thumbnails/' . pathinfo($story->story_image, PATHINFO_FILENAME) . '.jpg'
-        : 'storage/' . $story->story_image;
-@endphp
-        {
-            id: "member-{{ $myUserId }}",
-            photo: "{{ $profileImage }}",
-            name: "{{ addslashes($myUser->name) }}",
-            // link: "#", // REMOVE
-            items: [
-                @foreach($storiesByMember[$myUserId] as $story)
-                {
-                    id: "story-{{ $story->id }}",
-                    //type: "photo",
-                    type: "{{ in_array(pathinfo($story->story_image, PATHINFO_EXTENSION), ['mp4', 'webm']) ? 'video' : 'photo' }}",
-                   // length: 5,
-                   length: {{ in_array(pathinfo($story->story_image, PATHINFO_EXTENSION), ['mp4', 'webm']) ? 15 : 5 }},
-                    src: "{{ asset('storage/' . $story->story_image) }}",
-                   // preview: "{{ asset('storage/' . $story->story_image) }}",
-                   preview: "{{ asset($previewImage) }}",
-                    // link: "#", // REMOVE
-                    // linkText: "View", // REMOVE
-                    time: {{ \Carbon\Carbon::parse($story->created_at)->timestamp }}
-                }@if(!$loop->last),@endif
-                @endforeach
-            ]
-        },
-    @endif
+            {
+                id: "member-{{ $myUserId }}",
+                photo: "{{ $profileImage }}",
+                name: "{{ addslashes($myUser->name) }}",
+                items: [
+                    @foreach($storiesByMember[$myUserId] as $story)
+                        @php
+                            $isVideo = in_array(pathinfo($story->story_image, PATHINFO_EXTENSION), ['mp4', 'webm']);
+                            $previewImage = $isVideo
+                                ? 'storage/thumbnails/' . pathinfo($story->story_image, PATHINFO_FILENAME) . '.jpg'
+                                : 'storage/' . $story->story_image;
+                        @endphp
+                        {
+                            id: "story-{{ $story->id }}",
+                            type: "{{ $isVideo ? 'video' : 'photo' }}",
+                            length: {{ $isVideo ? 15 : 5 }},
+                            src: "{{ asset('storage/' . $story->story_image) }}",
+                            preview: "{{ asset($previewImage) }}",
+                            time: {{ \Carbon\Carbon::parse($story->created_at)->timestamp }}
+                        }@if(!$loop->last),@endif
+                    @endforeach
+                ]
+            },
+        @endif
 
-         //Second: Other stories
-    @foreach($storiesByMember as $memberId => $memberStories)
-        @continue($memberId == $myUserId)
-        @php
-            $first = $memberStories->first();
-            $user = $first->user;
-            $storyImage = $first->story_image ?? null;
-        
-        $profileImage = '';
-        $user = App\Models\Member::find($memberId);
-        if ($user && !empty($user->profile_pic) &&
-        Storage::disk('public')->exists($user->profile_pic)) {
-        $profileImage = asset('storage/' . $user->profile_pic);
-        } else {
-        $profileImage = asset('feed_assets/images/avatar/07.jpg');
-        }
-        @endphp
+        // Second: Other stories
+        @foreach($storiesByMember as $memberId => $memberStories)
+            @continue($memberId == $myUserId)
+            @php
+                $first = $memberStories->first();
+                $user = $first->user;
+                $profileImage = '';
+                $member = App\Models\Member::find($memberId);
+                if ($member && !empty($member->profile_pic) &&
+                    Storage::disk('public')->exists($member->profile_pic)) {
+                    $profileImage = asset('storage/' . $member->profile_pic);
+                } else {
+                    $profileImage = asset('feed_assets/images/avatar/07.jpg');
+                }
+            @endphp
 
-@php
-    $isVideo = in_array(pathinfo($story->story_image, PATHINFO_EXTENSION), ['mp4', 'webm']);
-    $previewImage = $isVideo
-        ? 'storage/thumbnails/' . pathinfo($story->story_image, PATHINFO_FILENAME) . '.jpg'
-        : 'storage/' . $story->story_image;
-@endphp
-        {
-            id: "member-{{ $memberId }}",
-            photo: "{{ $profileImage }}",
-            name: "{{ addslashes($user->name) }}",
-            // link: "#", // REMOVE
-            items: [
-                @foreach($memberStories as $story)
-                {
-                    id: "story-{{ $story->id }}",
-                  //  type: "photo",
-                  //type: "{{ in_array(pathinfo($story->story_image, PATHINFO_EXTENSION), ['mp4', 'webm']) ? 'video' : 'photo' }}",
-                    //length: 5,
-                    length: {{ in_array(pathinfo($story->story_image, PATHINFO_EXTENSION), ['mp4', 'webm']) ? 15 : 5 }},
-                    src: "{{ asset('storage/' . $story->story_image) }}",
-                    //preview: "{{ asset('storage/' . $story->story_image) }}",
-                    preview: "{{ asset($previewImage) }}",
-                    // link: "#", // REMOVE
-                    // linkText: "View", // REMOVE
-                    time: {{ \Carbon\Carbon::parse($story->created_at)->timestamp }}
-                }@if(!$loop->last),@endif
-                @endforeach
-            ]
-        }@if(!$loop->last),@endif
-    @endforeach
-];
+            {
+                id: "member-{{ $memberId }}",
+                photo: "{{ $profileImage }}",
+                name: "{{ addslashes($user->name) }}",
+                items: [
+                    @foreach($memberStories as $story)
+                        @php
+                            $isVideo = in_array(pathinfo($story->story_image, PATHINFO_EXTENSION), ['mp4', 'webm']);
+                            $previewImage = $isVideo
+                                ? 'storage/thumbnails/' . pathinfo($story->story_image, PATHINFO_FILENAME) . '.jpg'
+                                : 'storage/' . $story->story_image;
+                        @endphp
+                        {
+                            id: "story-{{ $story->id }}",
+                            type: "{{ $isVideo ? 'video' : 'photo' }}",
+                            length: {{ $isVideo ? 15 : 5 }},
+                            src: "{{ asset('storage/' . $story->story_image) }}",
+                            preview: "{{ asset($previewImage) }}",
+                            time: {{ \Carbon\Carbon::parse($story->created_at)->timestamp }}
+                        }@if(!$loop->last),@endif
+                    @endforeach
+                ]
+            }@if(!$loop->last),@endif
+        @endforeach
+    ];
 
-    // ✅g Filter stories and items that are still valid (not expired after 2 hours)
+    // ✅ Filter stories and items that are still valid (not expired after 2 hours)
     let filteredStories = storiesData
         .map(story => {
             story.items = story.items.filter(item => currentTime - item.time <= 7200);
@@ -1111,6 +1096,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     initZuckStories(filteredStories);
 });
+
 
 // delete stories
 function deleteStory(storyId) {
@@ -1307,8 +1293,8 @@ document.addEventListener("DOMContentLoaded", function () {
         {id:2, name:"Virender Kumar", service:"IPS", avatar:"/feed_assets/images/avatar/06.jpg", username:"virender"}
     ];
 
-    let filtered = users.filter(u => 
-        u.name.toLowerCase().includes(query.toLowerCase()) || 
+    let filtered = users.filter(u =>
+        u.name.toLowerCase().includes(query.toLowerCase()) ||
         u.username.toLowerCase().includes(query.toLowerCase())
     );
 
