@@ -207,6 +207,7 @@ public function socialwall()
             'post_media.file_path',
             'post_media.file_type',
             'posts.status',
+            'posts.group_id',
             'members.name as member_name',
             'members.profile_pic as member_profile_pic'
         )
@@ -255,6 +256,7 @@ public function socialwall()
             'media_type' => $first->media_type,
             'created_at' => $first->post_created_at,
             'video_link' => $first->video_link,
+            'group_id' => $first->group_id,
             'status' => $first->status,
             'media' => $group->map(function ($item) {
                 return [
