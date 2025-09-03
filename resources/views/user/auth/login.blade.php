@@ -547,7 +547,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label fw-bold">Mobile Number <span class="text-danger">*</span></label>
-                                    <input type="text" name="mobile" class="form-control" pattern="^[6-9]\d{9}$"
+                                    <input type="number" name="mobile" class="form-control" pattern="^[6-9]\d{9}$"
                                         maxlength="10" required>
                                 </div>
                                 <div class="col-md-6">
@@ -556,7 +556,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label fw-bold">Batch <span class="text-danger">*</span></label>
-                                    <input type="text" name="batch" class="form-control" required>
+                                    <input type="number" name="batch" class="form-control" required>
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label fw-bold">Cadre <span

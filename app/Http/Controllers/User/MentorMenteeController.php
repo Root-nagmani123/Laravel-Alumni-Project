@@ -362,19 +362,13 @@ function filterMentorsData(Request $request)
         ->pluck('Mentor_ids')
         ->toArray();
 
-    $already_mentees = DB::table('mentor_requests')
-        ->select('mentees')
-        ->whereIn('status', [1, 2])
-        ->where('Mentor_ids', auth()->guard('user')->user()->id)
-        ->pluck('mentees')
-        ->toArray();
-
-    $already_from_mentee_requests = DB::table('mentee_requests')
+    $already_mentees = DB::table('mentee_requests')
         ->select('mentees_ids')
         ->whereIn('status', [1, 2])
         ->where('mentor', auth()->guard('user')->user()->id)
         ->pluck('mentees_ids')
         ->toArray();
+
    
 
     $query = DB::table('members')
