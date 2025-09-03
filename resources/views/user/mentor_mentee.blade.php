@@ -453,7 +453,7 @@
                         @endphp
 
                         @foreach ($mentee_connections->toArray() as $mentor)
-                       
+                       @if($mentor->Service == 'IAS')
                        <li class="list-group-item d-flex align-items-center justify-content-between">
     <!-- Mentor Name + Status Badge -->
     <div class="d-flex flex-column">
@@ -493,7 +493,7 @@
         @endif
     </div>
 </li>
-
+@endif
                         @php $hasMentor = true; @endphp
                        
                         @endforeach
@@ -510,7 +510,8 @@
                         @endphp
 
                         @foreach ($mentor_connections->toArray() as $mentee)
-                        
+                       @if($mentee->Service == 'IAS')
+
                         <li class="list-group-item d-flex align-items-center justify-content-between">
     <!-- Left: Mentee Info -->
     <div class="d-flex flex-column">
@@ -551,6 +552,7 @@
         </a>
     </div>
 </li>
+@endif
 
                         @php $hasMentee = true; @endphp
                        

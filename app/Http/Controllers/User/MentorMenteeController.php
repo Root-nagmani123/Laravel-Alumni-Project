@@ -80,15 +80,14 @@ $members = DB::table('members')
         $mentor_connections = DB::table('mentor_mentee_connection')
         ->join('members as mentors', 'mentor_mentee_connection.mentee_id', '=', 'mentors.id')
         ->where('mentor_mentee_connection.mentor_id', $user_id)
-        ->select('mentor_mentee_connection.id as connection_id','mentors.id' ,'mentors.name', 'mentors.cader as cadre', 'mentors.batch', 'mentors.sector','mentor_mentee_connection.status')
+        ->select('mentor_mentee_connection.id as connection_id','mentors.id' ,'mentors.name','mentors.Service', 'mentors.cader as cadre', 'mentors.batch', 'mentors.sector','mentor_mentee_connection.status')
         ->get();
          $mentee_connections = DB::table('mentor_mentee_connection')
         ->join('members as mentors', 'mentor_mentee_connection.mentor_id', '=', 'mentors.id')
         ->where('mentor_mentee_connection.mentee_id', $user_id)
-        ->select('mentor_mentee_connection.id as connection_id','mentors.id' ,'mentors.name',  'mentors.cader as cadre', 'mentors.batch', 'mentors.sector','mentor_mentee_connection.status')
+        ->select('mentor_mentee_connection.id as connection_id','mentors.id' ,'mentors.name','mentors.Service', 'mentors.cader as cadre', 'mentors.batch', 'mentors.sector','mentor_mentee_connection.status')
         ->get();
 
-        // print_r($members);die;
         return view('user.mentor_mentee', compact('members', 'mentee_requests', 'mentor_requests', 'mentor_connections', 'mentee_connections', 'mentee_connections_outgoing', 'mentor_connections_outgoing'));
     }
     function getYears(Request $request) {
