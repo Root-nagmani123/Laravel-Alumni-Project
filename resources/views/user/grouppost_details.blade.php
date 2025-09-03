@@ -10,7 +10,7 @@
         <div class="col-9">
             <div class="post-list p-3 rounded mb-4" style="background-color: #af2910; color: #fff;">
                 <div class="d-flex justify-content-between align-items-center">
-                    <h1 class="h5 mb-0 text-white">Group Posts : {{ $group->name }}</h1>
+                    <h1 class="h5 mb-0 text-white">Group Posts : {{ $group->name ?? '' }}</h1>
 
                     <div class="dropdown">
                         <a href="#" class="text-white btn btn-sm btn-transparent py-0 px-2" data-bs-toggle="dropdown">
@@ -19,11 +19,11 @@
                         <ul class="dropdown-menu dropdown-menu-end">
                             @if($isMentee)
                             <li>
-                                <form action="{{ route('user.group.destroy', $group->id) }}" method="POST"
+                                <form action="{{ route('user.group.destroy', $group->id ?? '') }}" method="POST"
                                     onsubmit="return confirm('Are you sure you want to delete this group?');">
                                     @csrf
                                     @method('DELETE')
-                                    <input type="hidden" name="group_id" value="{{ $group->id }}">
+                                    <input type="hidden" name="group_id" value="{{ $group->id ?? '' }}">
                                     <button type="submit" class="dropdown-item text-danger">
                                         <i class="bi bi-trash fa-fw pe-2"></i>Delete Group
                                     </button>

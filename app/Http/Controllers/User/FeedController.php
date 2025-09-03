@@ -549,7 +549,7 @@ if ($group) {
         $memberName = Member::where('id', $userId)->select('name')->first();
         $groupName = Group::where('id', $groupId)->select('name')->first();
 
-     $this->notificationService->notifyGroupPost($groupId, $userId, $memberName->name . ' has left the group ' . $groupName->name, 0, 'group_leave');
+     $this->notificationService->notifyGroupPost($groupId, $userId, $memberName->name . ' has left the group ' . $groupName->name, 0, 'group');
 
    return redirect()->route('user.feed')->with('success', 'You have left the group.');
 
