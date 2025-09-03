@@ -52,102 +52,163 @@
 
                     </div>
                     <hr>
-                    <div id="zero_config_wrapper" class="dataTables_wrapper table-responsive" style="overflow-x: auto;">
+                    @php
+    use Carbon\Carbon;
 
+    $current_datetime = Carbon::now();
 
-                        <table id="zero_config" class="table table-striped table-bordered align-middle dataTable"
-                            aria-describedby="zero_config_info">
-                            <thead>
-                                <!-- start row -->
+    $ongoingEvents = $events->filter(function($event) use ($current_datetime) {
+        return $event->status == 1 && Carbon::parse($event->end_datetime) >= $current_datetime;
+    });
+
+    $expiredEvents = $events->filter(function($event) use ($current_datetime) {
+        return Carbon::parse($event->end_datetime) < $current_datetime;
+    });
+@endphp
+                    <!-- Tabs -->
+        <ul class="nav nav-tabs" id="eventTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="ongoing-tab" data-bs-toggle="tab"
+                        data-bs-target="#ongoing" type="button" role="tab">
+                    Ongoing Events
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="expired-tab" data-bs-toggle="tab"
+                        data-bs-target="#expired" type="button" role="tab">
+                    Expired Events
+                </button>
+            </li>
+        </ul>
+
+        <!-- Tab Content -->
+        <div class="tab-content mt-3" id="eventTabsContent">
+
+            <!-- Ongoing Events -->
+            <div class="tab-pane fade show active" id="ongoing" role="tabpanel" aria-labelledby="ongoing-tab">
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered align-middle">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Description</th>
+                                <th>Start DateTime</th>
+                                <th>End DateTime</th>
+                                <th>Mode</th>
+                                <th>Event Image</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse ($ongoingEvents as $event)
                                 <tr>
-                                    <th class="col">Title</th>
-                                    <th class="col">Description</th>
-                                    <th class="col">Start DateTime</th>
-                                    <th class="col">End DateTime</th>
-                                    <th class="col">Mode of event</th>
-                                    <th class="col">Event Image</th>
-                                    <th class="col">Status</th>
-                                    <th class="col">Actions</th>
-                                </tr>
-                                <!-- end row -->
-                            </thead>
-                            <tbody>
-                                @foreach ($events as $event)
-                                <tr class="odd">
                                     <td>{{ $event->title }}</td>
-                                    <td>{{ \Illuminate\Support\Str::words(strip_tags($event->description), 20, '...') }}
-                                    </td>
-                                    <td>{{ $event->start_datetime ? \Carbon\Carbon::parse($event->start_datetime)->format('d-m-Y') : '' }}
-                                    </td>
-                                    <td>{{ $event->end_datetime ? \Carbon\Carbon::parse($event->end_datetime)->format('d-m-Y') : '' }}
-                                    </td>
+                                    <td>{{ \Illuminate\Support\Str::words(strip_tags($event->description), 20, '...') }}</td>
+                                    <td>{{ $event->start_datetime ? Carbon::parse($event->start_datetime)->format('d-m-Y') : '' }}</td>
+                                    <td>{{ $event->end_datetime ? Carbon::parse($event->end_datetime)->format('d-m-Y') : '' }}</td>
                                     <td>
                                         @if($event->venue === 'online')
-                                        Online: <a href="{{ $event->url }}" target="_blank">{{ $event->url }}</a>
+                                            Online: <a href="{{ $event->url }}" target="_blank">{{ $event->url }}</a>
                                         @elseif($event->venue === 'physical')
-                                        Offline: {{ $event->location }}
+                                            Offline: {{ $event->location }}
                                         @else
-                                        N/A
+                                            N/A
                                         @endif
                                     </td>
                                     <td>
-
                                         <img class="avatar-img rounded-circle"
-                                            src="{{ $event->image && $event->image ? asset('storage/' . $event->image) : asset('feed_assets/images/avatar/12.jpg') }}"
-                                            alt="" height="70" width="70">
+                                             src="{{ $event->image ? asset('storage/' . $event->image) : asset('feed_assets/images/avatar/12.jpg') }}"
+                                             alt="" height="70" width="70">
                                     </td>
                                     <td>
                                         <div class="form-check form-switch d-inline-block">
-                                            <input class="form-check-input status-toggle" type="checkbox" role="switch"
-                                                data-table="events" data-column="active_inactive"
-                                                data-id="{{ $event->id }}" {{ $event->status == 1 ? 'checked' : '' }}>
+                                            <input class="form-check-input status-toggle" type="checkbox"
+                                                   data-table="events" data-column="active_inactive"
+                                                   data-id="{{ $event->id }}" {{ $event->status == 1 ? 'checked' : '' }}>
                                         </div>
                                     </td>
-
-                                    @php
-                                    $event_datetime = \Carbon\Carbon::parse($event->end_datetime);
-                                    $current_datetime = \Carbon\Carbon::now();
-                                    @endphp
-
                                     <td>
                                         <div class="d-flex gap-2">
-                                            @if ($event_datetime > $current_datetime)
-                                            {{-- Edit Button --}}
                                             <a href="{{ route('events.edit', encrypt($event->id)) }}"
-                                                class="btn btn-success btn-sm">
-                                                Edit
-                                            </a>
-
-                                            {{-- Delete Button --}}
+                                               class="btn btn-success btn-sm">Edit</a>
                                             <form action="{{ route('events.destroy', $event->id) }}" method="POST"
-                                                onsubmit="return confirm('Are you sure you want to delete?')">
+                                                  onsubmit="return confirm('Are you sure you want to delete?')">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-danger btn-sm">
-                                                    Delete
-                                                </button>
+                                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                                             </form>
-                                            @else
-                                            {{-- Expired Badge --}}
-                                            <span class="badge text-bg-primary align-self-center">Expired</span>
-                                            @endif
-
-                                            {{-- RSVP Button --}}
                                             <a href="{{ route('events.rsvp', $event->id) }}"
-                                                class="btn btn-outline-primary btn-sm">
-                                                RSVP
-                                            </a>
+                                               class="btn btn-outline-primary btn-sm">RSVP</a>
                                         </div>
                                     </td>
-
-
                                 </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                        {{ $events->links() }}
+                            @empty
+                                <tr>
+                                    <td colspan="8" class="text-center">No Ongoing Events</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
-                    </div>
+            <!-- Expired Events -->
+            <div class="tab-pane fade" id="expired" role="tabpanel" aria-labelledby="expired-tab">
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered align-middle">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Description</th>
+                                <th>Start DateTime</th>
+                                <th>End DateTime</th>
+                                <th>Mode</th>
+                                <th>Event Image</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse ($expiredEvents as $event)
+                                <tr>
+                                    <td>{{ $event->title }}</td>
+                                    <td>{{ \Illuminate\Support\Str::words(strip_tags($event->description), 20, '...') }}</td>
+                                    <td>{{ $event->start_datetime ? Carbon::parse($event->start_datetime)->format('d-m-Y') : '' }}</td>
+                                    <td>{{ $event->end_datetime ? Carbon::parse($event->end_datetime)->format('d-m-Y') : '' }}</td>
+                                    <td>
+                                        @if($event->venue === 'online')
+                                            Online: <a href="{{ $event->url }}" target="_blank">{{ $event->url }}</a>
+                                        @elseif($event->venue === 'physical')
+                                            Offline: {{ $event->location }}
+                                        @else
+                                            N/A
+                                        @endif
+                                    </td>
+                                    <td>
+                                        <img class="avatar-img rounded-circle"
+                                             src="{{ $event->image ? asset('storage/' . $event->image) : asset('feed_assets/images/avatar/12.jpg') }}"
+                                             alt="" height="70" width="70">
+                                    </td>
+                                    <td>
+                                        <span class="badge text-bg-primary">Expired</span>
+                                    </td>
+                                    <td>
+                                        <a href="{{ route('events.rsvp', $event->id) }}"
+                                           class="btn btn-outline-primary btn-sm">RSVP</a>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="8" class="text-center">No Expired Events</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
                 </div>
             </div>
         </div>

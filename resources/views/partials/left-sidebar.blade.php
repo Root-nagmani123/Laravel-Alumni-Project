@@ -57,7 +57,7 @@
     <!-- Navbar END-->
     <!-- Card follow START -->
     <div class="mb-4">
-        <div class="card mt-4">
+        <div class="card">
             <!-- Card header START -->
             <div class="card-header pb-0 border-0">
                 <h5 class="card-title mb-0">Current Events</h5>
@@ -126,7 +126,7 @@
     </div>
     <!-- Card follow START -->
     <div class="mb-4">
-        <div class="card mt-4">
+        <div class="card">
             <!-- Card header START -->
             <div class="card-header d-sm-flex justify-content-between border-0">
                 <h5 class="card-title">Forums</h5>

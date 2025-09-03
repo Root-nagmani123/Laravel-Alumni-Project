@@ -5,9 +5,8 @@
 @section('content')
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
 
-<main class="main-content">
-    <div class="container">
-        <div class="pagetitle" style="margin-top:7rem !important;">
+<div class="container">
+        <div class="pagetitle" style="margin-top:5rem !important;">
             <div class="row">
                 <div class="col-6">
                     <h5>{{ $pageName ?? 'Members List' }}</h5>
@@ -144,7 +143,6 @@
             </div>
         </section>
     </div>
-</main>
 @endsection
 
 @section('scripts')

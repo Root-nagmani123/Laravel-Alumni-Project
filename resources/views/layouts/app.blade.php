@@ -78,7 +78,7 @@
     @endforeach
 @endif
 
-    <main>
+    <main class="mt-2">
    
         @yield('content')
         <div class="chat-container">
