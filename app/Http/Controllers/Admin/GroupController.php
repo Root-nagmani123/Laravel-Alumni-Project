@@ -335,7 +335,8 @@ public function update(Request $request, Group $group)
 
     public function add_topic($id)
     {
-        $group = Group::find($id);
+        $groupId = decrypt($id);
+        $group = Group::find($groupId);
         if (!$group) {
             abort(404, 'Group not found');
         }
@@ -556,7 +557,7 @@ public function save_topic(Request $request, $group_id)
 
     public function view_topic($id)
         {
-            $groupId = Crypt::decryptString($id); 
+            $groupId = decrypt($id);
             $pageName = 'Group';
             $group = Group::findOrFail($groupId);
             $topics = Post::where('group_id', $groupId)->with('member', 'media')->get();

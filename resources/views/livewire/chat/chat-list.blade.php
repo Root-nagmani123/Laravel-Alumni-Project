@@ -41,11 +41,11 @@
 
                         <!-- Contact item -->
                         <li class="mt-3 hstack gap-3 align-items-center position-relative select_user_click toast-btn user-id{{ $chat->member_id }}"
-                            style=" {{ $selectedChat == $chat->member_id ? 'background-color: #af2910' : '' }}"
+                            style=" {{ $selectedChat == $chat->member_id ? 'background-color: #af2910; padding: 5px; border-radius: 10px;' : '' }}"
                             data-target="chatToast-{{ $chat->member_id }}"
                             data-user-id="{{ $chat->member_id }}"
                             wire:click="selectChat({{ $chat->member_id }})" wire:key="chat-{{ $chat->member_id }}"
-                            style="cursor: pointer;{{ $selectedChat == $chat->member_id ? 'background-color: #af2910' : '' }}">
+                            style="cursor: pointer;{{ $selectedChat == $chat->member_id ? 'background-color: #af2910; padding: 5px; border-radius: 10px;' : '' }}">
 
                             {{-- new code needed to test --}}
 
@@ -93,10 +93,10 @@
 
                                     @if($isOnline)
                                         <!-- Green circle for online -->
-                                        <span style="position:absolute; bottom:0; right:0; width:10px; height:10px; background-color:#28a745; border:2px solid #fff; border-radius:50%;"></span>
+                                        <span style="position:absolute; bottom:0; right:0; width:15px; height:15px; background-color:#28a745; border:2px solid #fff; border-radius:50%;"></span>
                                     @else
                                         <!-- Last seen compact -->
-                                        <span class="position-absolute bottom-0 end-0 small text-gray-500">
+                                        <span class="position-absolute bottom-0 end-0 small text-dark {{ $selectedChat == $chat->member_id ? 'text-dark' : '' }}">
                                             {{ $lastSeen ?: 'Offline' }}
                                         </span>
                                     @endif
@@ -115,7 +115,7 @@
                                     {{ App\Models\Member::find($chat->member_id)->unreadMessages->count() > 0 ? '(' . App\Models\Member::find($chat->member_id)->unreadMessages->count() . ')' : null }}
                                     </span>
                                     @endif --}}
-                                    <div class="small text-secondary text-truncate">{{ $chat->role_type ?? '' }}</div>
+                                    <div class="small text-truncate">{{ $chat->role_type ?? '' }}</div>
                                 </a>
                                 {{-- <div class="small text-secondary text-truncate">Frances sent a photo.</div> --}}
                             </div>

@@ -53,17 +53,82 @@
             </div>
         </div>
         <div class="col-6">
+            <div class="row">
+                <!-- -------------------------------------------- -->
+                <!-- Events -->
+                <!-- -------------------------------------------- -->
+                <div class="col-md-6">
+                    <div class="card bg-success overflow-hidden shadow-none">
+                        <div class="card-body p-4 text-center">
+                            <span class="text-dark-light"><a href="{{ route('events.index') }}"
+                                    class="text-white">Events</a></span>
+                            <div class="hstack gap-6 justify-content-center">
+                                <h5 class="mb-0 fs-7">{{ $total_events }}</h5>
+                                <span class="fs-11 fw-semibold text-muted"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card bg-info overflow-hidden shadow-none">
+                        <div class="card-body p-4 text-center">
+                            <span class="text-dark-light"><a href="{{ route('group.index') }}"
+                                    class="text-white">Groups</a></span>
+                            <div class="hstack gap-6 justify-content-center">
+                                <h5 class="mb-0 fs-7">{{ $total_groups }}</h5>
+                                <span class="fs-11 fw-semibold text-muted"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- -------------------------------------------- -->
+                <!-- Broadcasts -->
+                <!-- -------------------------------------------- -->
+                <div class="col-md-6">
+                    <div class="card bg-danger overflow-hidden shadow-none">
+                        <div class="card-body p-4 text-center">
+                            <span class="text-dark-light"><a href="{{ route('broadcasts.index') }}"
+                                    class="text-white">Broadcasts</a></span>
+                            <div class="hstack gap-6 justify-content-center">
+                                <h5 class="mb-0 fs-7">{{ $total_broadcasts }}</h5>
+                                <span class="fs-11 fw-semibold text-muted"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- -------------------------------------------- -->
+                <!-- Feedback/Grievances -->
+                <!-- -------------------------------------------- -->
+                <div class="col-md-6">
+                    <div class="card bg-primary overflow-hidden shadow-none">
+                        <div class="card-body p-4 text-center">
+                            <span class="text-dark-light"><a href="{{ route('grievance.list') }}"
+                                    class="text-white">Feedback/Grievances</a></span>
+                            <div class="hstack gap-6 justify-content-center">
+                                <h5 class="mb-0 fs-7">0</h5>
+                                <span class="fs-11 fw-semibold text-muted"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-12">
             <div class="card">
-                <div class="card-body p-4 pb-0 overflow-auto gap-3" data-simplebar="init">
+                <div class="card-header">
+                    <h5 class="mb-0">Member Services</h5>
+                </div>
+                <div class="card-body p-4 pb-0 overflow-auto gap-4" data-simplebar="init">
                     <div class="row">
                         @if($members_service->isEmpty())
                         <p>No services found.</p>
                         @else
                         @foreach($members_service as $service)
-                        <div class="col-4">
+                        <div class="col-2">
                             <div class="card primary-gradient">
                                 <div class="card-body text-center px-9 pb-4">
-                                    <h6 class="fw-normal fs-3 mb-1">{{ $service->Service }}</h6>
+                                    <h6 class="fw-normal fs-3 mb-1">{{ $service->Service ?? 'N/A' }}</h6>
                                     <h4 class="mb-3 d-flex align-items-center justify-content-center gap-1">
                                         {{ $service->member_count }}</h4>
                                     <a href="{{ route('members.index', ['serviceFilter' => $service->Service]) }}"
@@ -76,53 +141,6 @@
                         @endforeach
                         @endif
 
-                    </div>
-                </div>
-            </div>
-
-        </div>
-        <div class="col-12">
-            <div class="row">
-                <!-- -------------------------------------------- -->
-                <!-- Events -->
-                <!-- -------------------------------------------- -->
-                <div class="col-md-4">
-                    <div class="card bg-success overflow-hidden shadow-none">
-                        <div class="card-body p-4">
-                            <span class="text-dark-light"><a href="{{ route('events.index') }}"
-                                    class="text-white">Events</a></span>
-                            <div class="hstack gap-6">
-                                <h5 class="mb-0 fs-7">{{ $total_events }}</h5>
-                                <span class="fs-11 fw-semibold text-muted"></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card bg-info overflow-hidden shadow-none">
-                        <div class="card-body p-4">
-                            <span class="text-dark-light"><a href="{{ route('group.index') }}"
-                                    class="text-white">Groups</a></span>
-                            <div class="hstack gap-6">
-                                <h5 class="mb-0 fs-7">{{ $total_groups }}</h5>
-                                <span class="fs-11 fw-semibold text-muted"></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- -------------------------------------------- -->
-                <!-- Broadcasts -->
-                <!-- -------------------------------------------- -->
-                <div class="col-md-4">
-                    <div class="card bg-danger overflow-hidden shadow-none">
-                        <div class="card-body p-4">
-                            <span class="text-dark-light"><a href="{{ route('broadcasts.index') }}"
-                                    class="text-white">Broadcasts</a></span>
-                            <div class="hstack gap-6">
-                                <h5 class="mb-0 fs-7">{{ $total_broadcasts }}</h5>
-                                <span class="fs-11 fw-semibold text-muted"></span>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
