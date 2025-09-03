@@ -726,7 +726,6 @@ public function deleteTopic($id)
     function store_ajax(Request $request)
     {
         
-
         if($request->group_id) {
             // Update existing group
             $group = GroupMember::where('group_id', $request->group_id)->first();
@@ -790,29 +789,14 @@ public function deleteTopic($id)
 
             $message = 'Group created successfully!';
         }
+
+
+        
     
         // Notify only if status is active and not yet notified
-        if ($group->status == 1 && $group->notified_at == 0) {
-            $mentorId = $request->input('mentor_id');
+        if ($group->status == 1 && !empty($request->mentees)) {
             $userIds = $request->input('user_id', []);
     
-            $notificationsSent = false;
-    
-            if ($mentorId) {
-
-                $mentorMessage = $group->name . ' group has been added as mentor';
-    
-                    $mentorNotification = $this->notificationService->notifyMemberAdded(
-                        $mentorId,
-                        'group_member',
-                        $mentorMessage,
-                        $group->id,
-                        'group',
-                        auth()->id()
-                    );
-                
-            }
-
             if (!empty($userIds)) {
                 $mentieeMessage = $group->name . ' group has been added as mentiee';
                     $mentieeNotification = $this->notificationService->notifyMemberAdded(
@@ -825,6 +809,18 @@ public function deleteTopic($id)
                 );
 
             }
+
+              if (!empty($request->mentees)) {
+            $this->notificationService->notifyMemberAdded(
+                $request->mentees,
+                'group_member',
+                'You have been added to the group: ' . $group->name,
+                $group->id,
+                'group',
+                auth()->guard('admin')->id()
+            );
+        }
+
 
         }
 
