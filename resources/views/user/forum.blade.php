@@ -73,7 +73,7 @@
                                                     {{ $forum->like_count ?? 0 }}</span>
                                                 <span><i class="bi bi-chat"></i> {{ $forum->comment_count ?? 0 }}</span>
                                             </div>
-                                            <span class="badge bg-success-soft text-success">Active</span>
+                                            <span class="badge bg-light text-success border border-success">Active</span>
                                         </div>
                                     </div>
                                 </div>
@@ -91,46 +91,61 @@
                 <div class="tab-pane fade" id="inactive-forums" role="tabpanel" aria-labelledby="inactive-forum-tab">
                     <div class="row g-3">
                         @forelse($inactiveForums as $forum)
-                        <div class="col-12">
-                            <div class="card p-3 border-0 shadow-sm">
-                                <div class="d-flex">
-                                    <!-- Thumbnail -->
-                                    <div class="flex-shrink-0 me-3">
-                                        <a href="{{ route('user.forum.show', $forum->enc_id) }}">
-                                            <img src="{{ asset('storage/uploads/images/forums_img/' . ($forum->images ?? 'default-forum.jpg')) }}"
-                                                alt="Forum Image" class="rounded"
-                                                style="width:60px; height:60px; object-fit:cover;">
-                                        </a>
-                                    </div>
+                       <div class="col-12 mb-3">
+    <div class="card p-3 border-0 shadow-sm h-100">
+        <div class="d-flex">
+            <!-- Thumbnail -->
+            <div class="flex-shrink-0 me-3">
+                <a href="{{ route('user.forum.show', $forum->enc_id) }}">
+                    <img src="{{ asset('storage/uploads/images/forums_img/' . ($forum->images ?? 'default-forum.jpg')) }}"
+                         alt="Forum Image" class="rounded"
+                         style="width:60px; height:60px; object-fit:cover;">
+                </a>
+            </div>
 
-                                    <!-- Content -->
-                                    <div class="flex-grow-1">
-                                        <h6 class="mb-1 fw-semibold">
-                                            <a href="{{ route('user.forum.show', $forum->enc_id) }}"
-                                                class="text-decoration-none">
-                                                {{ $forum->name }}
-                                            </a>
-                                        </h6>
-                                        <p class="mb-2 text-muted small">
-                                            {{ Str::limit($forum->description ?? 'No description available.', 120) }}
-                                        </p>
-                                        <div class="small text-muted mb-2">
-                                            {{ \Carbon\Carbon::parse($forum->created_at)->format('d M, Y') }}
-                                        </div>
-                                        <div class="d-flex justify-content-between align-items-center flex-wrap">
-                                            <div class="d-flex align-items-center gap-3 small text-muted">
-                                                <span><i class="bi bi-hand-thumbs-up"></i>
-                                                    {{ $forum->like_count ?? 0 }}</span>
-                                                <span><i class="bi bi-chat"></i> {{ $forum->comment_count ?? 0 }}</span>
-                                            </div>
-                                            <span class="badge bg-danger-soft text-danger">Expired</span>
-                                            <a href="" data-bs-toggle="modal" data-bs-target="#activateForumModal"
-                                                data-forum-id="{{ $forum->id }}" data-forum-name="{{ $forum->name }}">Activate</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+            <!-- Content -->
+            <div class="flex-grow-1">
+                <!-- Title -->
+                <h6 class="mb-1 fw-semibold">
+                    <a href="{{ route('user.forum.show', $forum->enc_id) }}"
+                       class="text-decoration-none text-dark">
+                        {{ $forum->name }}
+                    </a>
+                </h6>
+
+                <!-- Description -->
+                <p class="mb-2 text-muted small">
+                    {{ Str::limit($forum->description ?? 'No description available.', 120) }}
+                </p>
+
+                <!-- Date -->
+                <div class="small text-muted mb-2">
+                    {{ \Carbon\Carbon::parse($forum->created_at)->format('d M, Y') }}
+                </div>
+
+                <!-- Footer: Likes, Comments, Badge + Action -->
+                <div class="d-flex justify-content-between align-items-center flex-wrap">
+                    <!-- Left: stats -->
+                    <div class="d-flex align-items-center gap-3 small text-muted">
+                        <span><i class="bi bi-hand-thumbs-up me-1"></i>{{ $forum->like_count ?? 0 }}</span>
+                        <span><i class="bi bi-chat me-1"></i>{{ $forum->comment_count ?? 0 }}</span>
+                    </div>
+
+                    <!-- Right: status + actions -->
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="badge bg-light text-danger border border-danger">Expired</span>
+                        <a href="javascript:void(0);" class="text-decoration-none small fw-semibold text-primary"
+                           data-bs-toggle="modal" data-bs-target="#activateForumModal"
+                           data-forum-id="{{ $forum->id }}" data-forum-name="{{ $forum->name }}">
+                            Activate
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
                         @empty
                         <div class="col-12">
                             <div class="alert alert-info">No inactive forums available.</div>
