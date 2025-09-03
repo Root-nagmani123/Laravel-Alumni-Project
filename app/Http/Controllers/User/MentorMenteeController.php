@@ -24,11 +24,18 @@ class MentorMenteeController extends Controller
 
     public function index()
     {
-     if (auth()->guard('user')->user()->Service != 'IAS') {
-    return redirect()
-        ->route('user.feed')
-        ->with('error', 'Access denied.');
-}
+        $user_id = auth()->guard('user')->user()->id; 
+        $members_service_check = DB::table('members')
+    ->select(
+        DB::raw('TRIM(Service) as Service')
+    )
+    ->where('id', $user_id)
+    ->first();
+        if ($members_service_check->Service != 'IAS') {
+                return redirect()
+                    ->route('user.feed')
+                    ->with('error', 'Access denied.');
+        }
 $user_id = auth()->guard('user')->user()->id;    
 $members = DB::table('members')
     ->select(
