@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="container">
-    <div class="row g-4" style="margin-top: 5rem;">
+    <div class="row g-4" style="margin-top: 4rem;">
         @include('partials.left_sidebar')
         <div class="col-lg-9">
             @php use Carbon\Carbon; @endphp

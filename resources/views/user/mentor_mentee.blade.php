@@ -20,7 +20,7 @@
 </style>
 
 <div class="container">
-    <div class="row g-4" style="margin-top:5rem !important;">
+    <div class="row g-4" style="margin-top:4rem !important;">
         <div class="bg-mode p-4 rounded shadow-sm">
             <h1 class="h4 mb-4">Mentor / Mentee</h1>
 
@@ -456,9 +456,9 @@
                        
                        <li class="list-group-item d-flex align-items-center justify-content-between">
     <!-- Mentor Name + Status Badge -->
-    <div class="d-flex align-items-center gap-2">
+    <div class="d-flex flex-column">
         <span class="fw-semibold">{{ $mentor->name }}</span>
-        
+        <small class="text-muted">{{ $mentor->cadre }} | {{ $mentor->batch }}</small>
     </div>
 
     <!-- Actions -->
