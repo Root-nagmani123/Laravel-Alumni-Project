@@ -623,6 +623,11 @@ public function deleteTopic($id)
         return response()->json(['message' => 'Post not found'], 404);
     }
 
+    if ((int) $post->status === 1) {
+        return back()->with('error', 'Cannot delete an active topic. Please deactivate it first.');
+    }
+
+
     $group_id = $post->group_id;
 
     // 2️⃣ Delete media files (including physical files)
