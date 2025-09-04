@@ -202,7 +202,7 @@
                                                             $post = \App\Models\Post::find($notification->source_id);
                                                             $notificationStatus = $post ? $post->status : 0;
                                                             if ($notificationStatus == 1) {
-                                                                $notificationUrl = url('user/group-post/' . $enc_source_id);
+                                                                $notificationUrl = route('user.group-post', ['id' => $enc_source_id]);
                                                             }
                                                             break;
                                                         case 'group':

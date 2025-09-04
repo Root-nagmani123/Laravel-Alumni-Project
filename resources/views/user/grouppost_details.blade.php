@@ -286,7 +286,7 @@
                             <div class="d-flex position-relative">
                                 <div class="avatar avatar-xs">
                                     <a
-                                        href="{{ $comment->member ? url('/user/profile/' . $comment->member->id) : '#' }}">
+                                        href="{{ $comment->member ? url('/user/profile/' . Crypt::encrypt($comment->member->id)) : '#' }}">
                                         <img class="avatar-img rounded-circle"
                                             src="{{ $comment->member && $comment->member->profile_pic ? asset('storage/' . $comment->member->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}"
                                             alt="" loading="lazy" decoding="async">
@@ -297,7 +297,7 @@
                                         <div class="d-flex justify-content-between">
                                             <h6 class="mb-1">
                                                 <a
-                                                    href="{{ $comment->member ? url('/user/profile/' . $comment->member->id) : '#' }}">
+                                                    href="{{ $comment->member ? url('/user/profile/data/' .  Crypt::encrypt($comment->member->id)) : '#' }}">
                                                     {{ $comment->member->name ?? 'Anonymous' }}
                                                 </a>
                                             </h6>

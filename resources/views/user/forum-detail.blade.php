@@ -171,9 +171,7 @@
                     }
 
                     likeThumb?.addEventListener('click', async function() {
-                        const url = liked ? '{{ route('
-                        user.forum.unlike ', $forum->id) }}': '{{ route('
-                        user.forum.like ', $forum->id) }}';
+                        const url = liked ? '{{ route('user.forum.unlike', $forum->id) }}' : '{{ route('user.forum.like', $forum->id) }}';
                         try {
                             const res = await fetch(url, {
                                 method: 'POST',
@@ -208,8 +206,7 @@
                         const comment = input.value.trim();
                         if (!comment) return;
                         try {
-                            const res = await fetch('{{ route('
-                                user.forum.comment ', $forum->id) }}', {
+                            const res = await fetch('{{ route('user.forum.comment', $forum->id) }}', {
                                     method: 'POST',
                                     headers: {
                                         'X-Requested-With': 'XMLHttpRequest',

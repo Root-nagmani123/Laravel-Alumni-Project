@@ -175,7 +175,7 @@ public function group_post_store(Request $request)
     $message = "$groupName - New post by " . auth('user')->user()->name;
 
 
-    $this->notificationService->notifyGroupPost($request->group_id, $fromUserId, $message, $post->id, 'post');
+    $this->notificationService->notifyGroupPost($request->group_id, $fromUserId, $message, $request->group_id, 'group');
 
     return redirect()->back()->with('success', 'Group Post created successfully.');
 }
@@ -232,8 +232,9 @@ public function toggleLike(Post $post)
 
     $likeUsersTooltip = $post->likes()->with('member')->get()->pluck('member.name')->implode('<br>');
 
+    $groupId = $post->group_id;
     if($post->member_id !== $user->id){
-        $this->notificationService->notifyPostOwner($post->member_id, $user->id, 'like', "{$user->name} liked your post", $post->id, 'post',Auth::id());
+        $this->notificationService->notifyPostOwner($post->member_id, $user->id, 'like', "{$user->name} liked your post", $groupId, 'group',Auth::id());
     }
     return response()->json([
         'like_count' => $post->likes()->count(),
