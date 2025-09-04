@@ -30,8 +30,10 @@ class CommentController extends Controller
         'comment' => strip_tags($request->comment),
     ]);
 
+    $group_id = $comment->post->group_id;
+
     if($comment){
-        $this->notificationService->notifyPostOwner($comment->post->member_id, auth()->guard('user')->id(), 'comment', "{$comment->member->name} commented on your post", $comment->post->id, 'post');
+        $this->notificationService->notifyPostOwner($comment->post->member_id, auth()->guard('user')->id(), 'comment', "{$comment->member->name} commented on your post", $group_id, 'group');
     }
 
     if ($request->ajax()) {
