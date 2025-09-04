@@ -80,12 +80,12 @@ $members = DB::table('members')
         $mentor_connections = DB::table('mentor_mentee_connection')
         ->join('members as mentors', 'mentor_mentee_connection.mentee_id', '=', 'mentors.id')
         ->where('mentor_mentee_connection.mentor_id', $user_id)
-        ->select('mentor_mentee_connection.id as connection_id','mentors.id' ,'mentors.name','mentors.Service', 'mentors.cader as cadre', 'mentors.batch', 'mentors.sector','mentor_mentee_connection.status')
+        ->select('mentor_mentee_connection.id as connection_id','mentors.id' ,'mentors.name','mentors.Service', 'mentors.cader as cadre', 'mentors.batch', 'mentors.sector','mentor_mentee_connection.status','mentor_mentee_connection.status_updated_by')
         ->get();
          $mentee_connections = DB::table('mentor_mentee_connection')
         ->join('members as mentors', 'mentor_mentee_connection.mentor_id', '=', 'mentors.id')
         ->where('mentor_mentee_connection.mentee_id', $user_id)
-        ->select('mentor_mentee_connection.id as connection_id','mentors.id' ,'mentors.name','mentors.Service', 'mentors.cader as cadre', 'mentors.batch', 'mentors.sector','mentor_mentee_connection.status')
+        ->select('mentor_mentee_connection.id as connection_id','mentors.id' ,'mentors.name','mentors.Service', 'mentors.cader as cadre', 'mentors.batch', 'mentors.sector','mentor_mentee_connection.status','mentor_mentee_connection.status_updated_by')
         ->get();
 
         return view('user.mentor_mentee', compact('members', 'mentee_requests', 'mentor_requests', 'mentor_connections', 'mentee_connections', 'mentee_connections_outgoing', 'mentor_connections_outgoing'));
@@ -414,10 +414,18 @@ public function toggleStatus(Request $request, $id)
 {
     $mentee = DB::table('mentor_mentee_connection')->where('id', $id)->first();
 
-    // checkbox checked = 1, unchecked = 0
-    $mentee->status = $request->has('status') ? 1 : 0;
-    DB::table('mentor_mentee_connection')->where('id', $id)->update(['status' => $mentee->status]);
+    $status = $request->has('status') ? 1 : 0;
 
+    // condition: if status = 1 then null, else auth user id
+    $statusUpdatedBy = $status == 1 ? null : auth()->guard('user')->user()->id;
+
+    DB::table('mentor_mentee_connection')
+        ->where('id', $id)
+        ->update([
+            'status' => $status,
+            'status_updated_by' => $statusUpdatedBy,
+            'updated_at' => now()
+        ]);
     return redirect()->back()->with('success', 'Mentee status updated!');
 }
 

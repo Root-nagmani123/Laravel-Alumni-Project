@@ -126,30 +126,7 @@
                                         @enderror
                                     </div>
                                 </div>
-                                 <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">Sector<span class="required text-danger text-danger" >*</span></label>
-                                        
-                                             <select name="sector" id="sector" class="form-control " >
-                                        @if($members->isEmpty())
-                                        <option disabled>No Sector Available</option>
-                                        @else
-                                        <option value="">Select Sector</option>
-                                        @foreach($members as $member)
-                                        @if(!empty($member->sector_list))
-                                        @php $sector_list = explode(',', $member->sector_list); @endphp
-                                        @foreach($sector_list as $sector)
-                                        <option value="{{ trim($sector) }}">{{ trim($sector) }}</option>
-                                        @endforeach
-                                        @endif
-                                        @endforeach
-                                        @endif
-                                    </select>
-                                              @error('sector')
-                                        <div class="text-danger">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>
+                                 
                                 <div class="col-md-4">
                                     <div class="mb-3">
                                         <label class="form-label">Cadre<span class="required text-danger text-danger" >*</span></label>
@@ -175,32 +152,47 @@
                                     </div>
                                 </div>
                               
-                                <div class="col-md-4">
+                               <div class="col-md-4">
                                     <div class="mb-3">
-                                        <label class="form-label">Batch<span class="required text-danger text-danger" >*</span></label>
-                                        <!-- <input type="number" name="batch" id="batch" class="form-control"
-                                            value="{{ old('batch') }}"> -->
-                                             <select name="batch" id="batch" class="form-control batch" >
-                                        @if($members->isEmpty())
-                                        <option disabled>No Batch Available</option>
-                                        @else
-                                        <option value="">Select Batche</option>
+                                        <label class="form-label">Batch <span class="required text-danger">*</span></label>
+                                        <select name="batch" id="batch" class="form-control batch">
+                                            @if($members->isEmpty())
+                                                <option disabled>No Batch Available</option>
+                                            @else
+                                                <option value="">Select Batch</option>
+                                                @php
+                                                    $allBatches = [];
 
-                                        @foreach($members as $member)
-                                        @if(!empty($member->batches))
-                                        @php $batches = explode(',', $member->batches); @endphp
-                                        @foreach($batches as $batch)
-                                        <option value="{{ trim($batch) }}">{{ trim($batch) }}</option>
-                                        @endforeach
-                                        @endif
-                                        @endforeach
-                                        @endif
-                                    </select>
-                                            @error('batch')
-                                        <div class="text-danger">{{ $message }}</div>
+                                                    foreach ($members as $member) {
+                                                        if (!empty($member->batches)) {
+                                                            $allBatches = array_merge($allBatches, explode(',', $member->batches));
+                                                        }
+                                                    }
+
+                                                    $allBatches = array_map('trim', $allBatches); // trim spaces
+                                                    $allBatches = array_filter($allBatches); // remove empty values
+                                                    $allBatches = array_unique($allBatches); // remove duplicates
+
+                                                    $currentYear = date('Y');
+                                                    if (!in_array($currentYear, $allBatches)) {
+                                                        $allBatches[] = $currentYear;
+                                                    }
+
+                                                    sort($allBatches, SORT_NUMERIC); // ascending order
+                                                @endphp
+
+                                                @foreach($allBatches as $batch)
+                                                    <option value="{{ $batch }}">{{ $batch }}</option>
+                                                @endforeach
+                                            @endif
+                                        </select>
+
+                                        @error('batch')
+                                            <div class="text-danger">{{ $message }}</div>
                                         @enderror
                                     </div>
                                 </div>
+
                                   <div class="col-md-4">
                                     <div class="mb-3">
                                         <label class="form-label">Designation<span class="required text-danger text-danger" >*</span></label>

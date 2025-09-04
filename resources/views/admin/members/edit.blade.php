@@ -119,28 +119,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label class="form-label">Sector<span class="required text-danger">*</span></label>
-                                    <select name="sector" id="sector" class="form-control">
-                                        <option value="">Select Sector</option>
-                                        @foreach($members as $m)
-                                            @if(!empty($m->sector_list))
-                                                @php $sector_list = explode(',', $m->sector_list); @endphp
-                                                @foreach($sector_list as $sector)
-                                                    <option value="{{ trim($sector) }}" 
-                                                        {{ old('sector', $member->sector) == trim($sector) ? 'selected' : '' }}>
-                                                        {{ trim($sector) }}
-                                                    </option>
-                                                @endforeach
-                                            @endif
-                                        @endforeach
-                                    </select>
-                                    @error('sector')
-                                    <div class="text-danger">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
+                           
 
                             <div class="col-md-6">
                                 <div class="mb-3">

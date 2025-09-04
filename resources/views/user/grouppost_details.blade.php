@@ -214,7 +214,7 @@
                     @endif
 
                     <!-- Reaction Section -->
-                    <ul class="nav nav-stack py-3 small">
+                    {{--<ul class="nav nav-stack py-3 small">
                         @php
                         $likeUserList = $post->likes->pluck('member.name')->filter();
                         $likeUsersTooltip = $likeUserList->implode('<br>');
@@ -254,10 +254,10 @@
                                 </li>
                             </ul>
                         </li>
-                    </ul>
+                    </ul>--}}
 
                     <!-- Comment box -->
-                    <div class="d-flex mb-3">
+                {{--<div class="d-flex mb-3">
                         <div class="avatar avatar-xs me-2">
                             <a href="{{ route('user.profile', ['id' => Crypt::encrypt(Auth::guard('user')->id())]) }}">
                                 <img class="avatar-img rounded-circle" src="{{ Auth::guard('user')->user()->profile_pic
@@ -348,9 +348,10 @@
                             </div>
                         </li>
                         @endforeach
-                    </ul>
-
+                    </ul>--}}
+                                      
                 </div>
+                  
             </div>
             @empty
             <p>No posts found for this group.</p>
