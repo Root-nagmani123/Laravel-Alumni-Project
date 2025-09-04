@@ -40915,7 +40915,7 @@ body pre[class*="language-"] {
     background: #1f2a3d;
 }
 .auth-bg {
-    background: url(admin_assets/images/backgrounds/login-bg.jpg);
+    background: url(admin_assets/images/backgrounds/login-bg.webp);
     background-size: cover;
     background-repeat: no-repeat;
 }

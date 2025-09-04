@@ -451,7 +451,7 @@
             <!-- Right Section (Background + Overlay Forms) -->
             <div class="col-8 p-0 position-relative" style="height: 100vh;">
                 <!-- Background image -->
-                <img src="{{ asset('user_assets/images/login/login-bg.jpg') }}" alt="Employee Services Graphic"
+                <img src="{{ asset('user_assets/images/login/login-bg.webp') }}" alt="Employee Services Graphic"
                     class="w-100 h-100" style="object-fit: cover;">
 
                 <!-- Overlay Container -->

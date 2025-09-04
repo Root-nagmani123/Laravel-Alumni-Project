@@ -26,7 +26,7 @@
     <div class="col-sm-6 col-lg-12">
         <div class="card">
             <div class="rounded-top"
-                style="background-image:url({{asset('user_assets/images/login/login-bg.jpg')}}); background-position: center; background-size: cover; background-repeat: no-repeat;height:55px;">
+                style="background-image:url({{asset('user_assets/images/login/login-bg.webp')}}); background-position: center; background-size: cover; background-repeat: no-repeat;height:55px;">
             </div>
             <div class="card-footer text-center">
                 <a class="btn btn-success-soft btn-sm" href="https://www.lbsnaa.gov.in/lbsnaa-newsletter">LBSNAA Newsletter</a>

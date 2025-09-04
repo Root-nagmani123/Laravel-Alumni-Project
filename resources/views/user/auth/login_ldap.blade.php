@@ -149,7 +149,7 @@
 
 
     <!-- login section start -->
-    <section class="login-section" style="background-image: url({{asset('user_assets/images/login/login-bg.jpg')}});">
+    <section class="login-section" style="background-image: url({{asset('user_assets/images/login/login-bg.webp')}});">
         <div class="container">
             <div class="row">
                 <div class="col-xl-6 col-lg-6 col-md-6 col-12 mx-auto">

@@ -2,7 +2,7 @@
               <div class="card">
                         <!-- Cover image -->
                         <div class="h-100px rounded-top"
-                            style="background-image:url({{asset('user_assets/images/login/login-bg.jpg')}}); background-position: center; background-size: cover; background-repeat: no-repeat;">
+                            style="background-image:url({{asset('user_assets/images/login/login-bg.webp')}}); background-position: center; background-size: cover; background-repeat: no-repeat;">
                         </div>
                         <!-- Card body START -->
                         <div class="card-body pt-0" style="height:167px;">

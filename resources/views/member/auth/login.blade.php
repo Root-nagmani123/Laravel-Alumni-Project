@@ -20,7 +20,7 @@
             <img src="{{ asset('admin_assets/images/logos/favicon.ico') }}" alt="loader" class="lds-ripple img-fluid">
         </div>
         <div id="main-wrapper">
-    <div class="position-relative overflow-hidden auth-bg min-vh-100 w-100 d-flex align-items-center justify-content-center" style="background-image: url(admin_assets/images/backgrounds/login-bg.jpg);">
+    <div class="position-relative overflow-hidden auth-bg min-vh-100 w-100 d-flex align-items-center justify-content-center" style="background-image: url(admin_assets/images/backgrounds/login-bg.webp);">
         <div class="d-flex align-items-center justify-content-center w-100">
             <div class="row justify-content-center w-100 my-5 my-xl-0">
                 <div class="col-12 d-flex flex-column align-items-center justify-content-center px-0">
