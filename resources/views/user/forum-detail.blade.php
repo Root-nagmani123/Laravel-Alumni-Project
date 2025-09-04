@@ -71,8 +71,11 @@
                     @foreach($forum->comments as $index => $comment)
                     @php
                     $commentPicPath = $comment->profile_pic
-                    ? asset($comment->profile_pic)
-                    : asset('feed_assets/images/avatar/07.jpg');
+                        ? (Str::startsWith($comment->profile_pic, 'storage/')
+                            ? asset($comment->profile_pic)
+                            : asset('storage/' . ltrim($comment->profile_pic, '/')))
+
+                        : asset('feed_assets/images/avatar/07.jpg');
 
 
                     @endphp
@@ -154,17 +157,9 @@
                     const likeThumb = document.getElementById('likeThumb');
                     const likeCountEl = document.getElementById('likeCount');
                     const commentCountEl = document.getElementById('commentCount');
-                    const forumId = {
-                        {
-                            $forum - > id
-                        }
-                    };
+                    const forumId = {{ $forum->id }};
                     const csrf = '{{ csrf_token() }}';
-                    let liked = {
-                        {
-                            !empty($forum - > has_liked) ? 'true' : 'false'
-                        }
-                    };
+                    let liked = {{ !empty($forum->has_liked) ? 'true' : 'false' }};
 
                     function toggleThumbColor(isLiked) {
                         likeThumb.style.color = isLiked ? '#dc3545' : '';
@@ -237,7 +232,9 @@
                                 if (/^https?:\/\//i.test(profile)) {
                                     imgSrc = profile;
                                 } else {
-                                    imgSrc = `{{ asset('') }}` + profile.replace(/^\/+/, '');
+                                    // imgSrc = `{{ asset('storage/') }}` + profile.replace(/^\/+/, '');
+                                    imgSrc = `{{ asset('storage') }}/${profile.replace(/^storage\//, '').replace(/^\/+/, '')}`;
+
                                 }
                                 item.innerHTML = `
                                 <img src="${imgSrc}" class="rounded-circle" alt="User" style="width:40px; height:40px; object-fit:cover;">
