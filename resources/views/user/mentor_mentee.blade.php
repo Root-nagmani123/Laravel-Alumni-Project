@@ -469,17 +469,25 @@
             <span class="badge bg-secondary">Inactive</span>
         @endif
         <!-- Status Toggle -->
-        <form action="{{ route('user.mentee.toggle', $mentor->connection_id) }}" method="POST" class="m-0">
-            @csrf
-            <div class="form-check form-switch">
-                <input class="form-check-input"
-                       type="checkbox"
-                       role="switch"
-                       name="status"
-                       onchange="this.form.submit()"
-                       {{ $mentor->status == 1 ? 'checked' : '' }}>
-            </div>
-        </form>
+@php
+    $canToggle = ($mentor->status != 0 && $mentor->status_updated_by != auth()->guard('user')->id())
+        || ($mentor->status == 0 && $mentor->status_updated_by == auth()->guard('user')->id());
+@endphp
+
+@if($canToggle)
+    <form action="{{ route('user.mentee.toggle', $mentor->connection_id) }}" method="POST" class="m-0">
+        @csrf
+        <div class="form-check form-switch">
+            <input class="form-check-input"
+                   type="checkbox"
+                   role="switch"
+                   name="status"
+                   onchange="this.form.submit()"
+                   {{ $mentor->status == 1 ? 'checked' : '' }}>
+        </div>
+    </form>
+@endif
+
 
         <!-- Chat Button -->
         @if ($mentor->status == 1)
@@ -528,19 +536,24 @@
         @else
             <span class="badge bg-secondary">Inactive</span>
         @endif
+@php
+    $canToggle = ($mentee->status != 0 && $mentee->status_updated_by != auth()->guard('user')->id())
+        || ($mentee->status == 0 && $mentee->status_updated_by == auth()->guard('user')->id());
+@endphp
 
-        <!-- Status Toggle -->
-        <form action="{{ route('user.mentee.toggle', $mentee->connection_id) }}" method="POST" class="m-0">
-            @csrf
-            <div class="form-check form-switch">
-                <input class="form-check-input"
-                       type="checkbox"
-                       role="switch"
-                       name="status"
-                       onchange="this.form.submit()"
-                       {{ $mentee->status == 1 ? 'checked' : '' }}>
-            </div>
-        </form>
+@if($canToggle)
+    <form action="{{ route('user.mentee.toggle', $mentee->connection_id) }}" method="POST" class="m-0">
+        @csrf
+        <div class="form-check form-switch">
+            <input class="form-check-input"
+                   type="checkbox"
+                   role="switch"
+                   name="status"
+                   onchange="this.form.submit()"
+                   {{ $mentee->status == 1 ? 'checked' : '' }}>
+        </div>
+    </form>
+@endif
 
         <!-- Chat Button -->
         <a data-bs-toggle="offcanvas"

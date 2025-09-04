@@ -65,9 +65,10 @@ Paginator::useBootstrap();
         DB::raw('TRIM(Service) as Service'),
           DB::raw('GROUP_CONCAT(DISTINCT TRIM(batch) ORDER BY batch ASC SEPARATOR ",") as batches'),
          DB::raw('GROUP_CONCAT(DISTINCT TRIM(cader) ORDER BY TRIM(cader) ASC SEPARATOR ",") as cader_list'),
-        DB::raw('GROUP_CONCAT(DISTINCT TRIM(sector) ORDER BY TRIM(sector) ASC SEPARATOR ",") as sector_list')
+        // DB::raw('GROUP_CONCAT(DISTINCT TRIM(sector) ORDER BY TRIM(sector) ASC SEPARATOR ",") as sector_list')
+         DB::raw('YEAR(CURDATE()) as current_year')
     )
-    ->where('Service', '=', 'IAS')
+    // ->where('Service', '=', 'IAS')
     ->groupBy(DB::raw('TRIM(Service)'))
     ->orderBy('Service')
     ->get();
@@ -146,9 +147,9 @@ public function edit($id)
                 DB::raw('TRIM(Service) as Service'),
                 DB::raw('GROUP_CONCAT(DISTINCT TRIM(batch) ORDER BY batch ASC SEPARATOR ",") as batches'),
                 DB::raw('GROUP_CONCAT(DISTINCT TRIM(cader) ORDER BY TRIM(cader) ASC SEPARATOR ",") as cader_list'),
-                DB::raw('GROUP_CONCAT(DISTINCT TRIM(sector) ORDER BY TRIM(sector) ASC SEPARATOR ",") as sector_list')
+                // DB::raw('GROUP_CONCAT(DISTINCT TRIM(sector) ORDER BY TRIM(sector) ASC SEPARATOR ",") as sector_list')
             )
-            ->where('Service', '=', 'IAS')
+            // ->where('Service', '=', 'IAS')
             ->groupBy(DB::raw('TRIM(Service)'))
             ->orderBy('Service')
             ->get();
