@@ -704,17 +704,55 @@ public function deleteTopic($id)
                  * 🔔 Notify only NEW members (not creator)
                  */
                 if (!empty($added)) {
-                    $mentieeMessage = 'You have been added to the group ' . $group->name;
+                    $newMemberMessage = 'You have been added to the group ' . $group->name;                
                     $this->notificationService->notifyMemberAdded(
                         $added,
                         'group_member_added',
-                        $mentieeMessage,
+                        $newMemberMessage,
                         $group->id,
                         'group',
                         $creatorId
                     );
+
+
+                    if (!empty($existingMentees)) {
+                     $oldMemberMessage = 'New members have joined the group ' . $group->name;
+                     $this->notificationService->notifyMemberAdded(
+                        $existingMentees,
+                        'group_new_members',
+                        $oldMemberMessage,
+                        $group->id,
+                        'group',
+                        $creatorId
+                        );
+                    }
+                }
+
+                 // 🔔 Notify removed members
+                if (!empty($removed)) {
+                    $this->notificationService->notifyMemberAdded(
+                        $removed,
+                        'group_member_removed',
+                        'You have been removed from the group ' . $group->name,
+                        $group->id,
+                        'remove_member',
+                        $creatorId
+                    );
+
+                    if (!empty($newMentees)) {
+                        $remainingMessage = 'Some members have been removed from the group ' . $group->name;
+                        $this->notificationService->notifyMemberAdded(
+                            $newMentees,
+                            'group_members_removed',
+                            $remainingMessage,
+                            $group->id,
+                            'remove_member',
+                            $creatorId
+                        );
+                    }
                 }
             }
+
 
         } else {
             /**
