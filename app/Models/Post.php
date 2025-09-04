@@ -20,6 +20,7 @@ class Post extends Model
         'media_path',
         'group_id',
         'video_link',
+        'status',
     ];
 
     // Optional: set default attributes
