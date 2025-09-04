@@ -166,8 +166,6 @@ public function showById_data(Request $request, $id): View
         // Ensure service and sector are explicitly set even if not fillable
         // Handle potential fillable/case mismatch for `service`
         $user->Service = $validatedData['service'];
-        $user->sector = $validatedData['sector'];
-
         $user->save();
 
         return redirect()->back()->with('success', 'Professional info updated successfully.');
