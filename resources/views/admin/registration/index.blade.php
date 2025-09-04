@@ -64,7 +64,7 @@
                                     <th class="col">Profile Picture</th>
                                     <th class="col">Government ID</th>
                                     <th scope="col">Requested Date</th>
-                                    <th scope="col">Approved Date</th>
+                                    <th scope="col">Action Taken Date</th>
                                     <th scope="col">Action</th>
                                     <th scope="col">Status</th>
                                 </tr>
@@ -90,8 +90,9 @@
                                         <a href="{{ asset('storage/' . $request->govt_id) }}" target="_blank">View</a>
                                         @endif
                                     </td>
-                                    <td>{{ $request->created_at }}</td>
-                                    <td>{{ $request->approved_at }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($request->created_at)->format('d-m-Y') }}</td>
+                                    <td>{{ $request->approved_at ? \Carbon\Carbon::parse($request->approved_at)->format('d-m-Y') : 'N/A' }}</td>
+
                                  <td>
                                     @if($request->status == \App\Models\RegistrationRequest::STATUS_PENDING)
                                         <form action="{{ route('admin.registration_requests.update', $request->id) }}" method="POST" style="display:inline;" 
