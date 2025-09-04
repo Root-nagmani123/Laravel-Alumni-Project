@@ -416,6 +416,7 @@ class FeedController extends Controller
 
     public function getPostByGroup_2872025($group_id)
     {
+
         // $posts = Post::with('member')
          $posts = Post::with(['member', 'media'])
                     ->where('group_id', $group_id)
@@ -429,7 +430,9 @@ class FeedController extends Controller
     }
 public function getPostByGroup($group_id)
 {
+
      $group_id = decrypt($group_id); // Decrypt the group ID
+    
     $userId = auth()->guard('user')->id();
 
     // Posts with relations
@@ -437,7 +440,6 @@ public function getPostByGroup($group_id)
         ->where('group_id', $group_id)
         ->latest()
         ->get();
-
     // Group
     $group = Group::find($group_id);
 
@@ -480,7 +482,6 @@ if ($group) {
 ->groupBy('Service')
 ->get();
         // print_r($grp_members);die;
-
     return view('user.grouppost_details', compact('posts','group','isMentee','grp_members','members'));
 }
     public function getPostByGroup_bkp($group_id)

@@ -186,36 +186,50 @@ public function update(Request $request, Group $group)
 
 
 
-      public function destroy(Group $group)
+            public function destroy(Group $group)
         {
             if ($group->status == 1) {
                 return redirect()->route('group.index')
-                                ->with('error', 'Cannot delete an active Group. Please deactivate it first.');
+                    ->with('error', 'Cannot delete an active Group. Please deactivate it first.');
             }
+
+            // ✅ Collect all mentee IDs properly
+            $groupMembers = GroupMember::where('group_id', $group->id)->get();
+            $memberIds = [];
+
+            foreach ($groupMembers as $member) {
+                $mentees = json_decode($member->mentiee, true) ?? [];
+                $memberIds = array_merge($memberIds, $mentees);
+            }
+
             $data = $group->delete();
-            if($data) {
-                // Notify all members about group deletion
-                $this->notificationService->notifyAllMembers(
+
+            if ($data && !empty($memberIds)) {
+                // ✅ Notify members
+                $this->notificationService->notifyMemberAdded(
+                    $memberIds,
                     'group_admin',
-                    $group->name . 'group has been deleted.',
+                    $group->name . ' group has been deleted.',
                     $group->id,
                     'group_delete',
-                    auth()->id()
+                    auth()->guard('admin')->id() // keep consistent
                 );
             }
 
+            // ✅ Log recent activity
             $this->recentActivityService->logActivity(
                 'Group Deleted',
                 'Group',
                 auth()->guard('admin')->id(),
                 'Deleted group: ' . $group->name,
-                1, // Assuming 1 represents admin
+                1, // 1 = Admin type
                 $group->id
             );
 
             return redirect()->route('group.index')
-                            ->with('success', 'Group deleted successfully.');
+                ->with('success', 'Group deleted successfully.');
         }
+
 
         public function toggleStatus(Request $request)
         {
@@ -243,7 +257,7 @@ public function update(Request $request, Group $group)
                             'group_member',
                             "The group '{$group->name}' has been {$statusMessage}.",
                             $group->id,
-                            'group',
+                            $SourceType,
                             auth()->guard('admin')->id()
                         );
                     }
@@ -591,7 +605,7 @@ public function deleteTopic($id)
             'admin_group_topic_deleted',
             $message,
             $group_id,
-            'group',
+            'group_deleted',
             Auth::id()
         );
     }
@@ -828,28 +842,43 @@ public function deleteTopic($id)
             'mentees'     => 'required|array',
         ]);
 
-        if(isset($request->group_id)) {
-            $group = Group::find($request->group_id);
+        $group = Group::find($request->group_id);
 
-            GroupMember::updateOrCreate([
-                'group_id' => $group->id,
-            ], [
-                'mentiee' => json_encode($request->input('mentees')),
-                'status' => 1,
-            ]);
+        // Get previous mentees
+        $groupMember = GroupMember::where('group_id', $group->id)->first();
+        $previousMentees = [];
+        if ($groupMember && !empty($groupMember->mentiee)) {
+            $previousMentees = json_decode($groupMember->mentiee, true) ?? [];
         }
+
+        // New mentees from request
+        $newMentees = $request->input('mentees', []);
+
+        // Find only newly added mentees
+        $addedMentees = array_diff($newMentees, $previousMentees);
+
+        // Update mentee list in DB
+        GroupMember::updateOrCreate(
+            ['group_id' => $group->id],
+            [
+                'mentiee' => json_encode($newMentees),
+                'status' => 1,
+            ]
+        );
 
         $this->recentActivityService->logActivity(
             'Group Members Updated',
             'Group',
             auth()->guard('admin')->id(),
             'Updated members for group: ' . $group->name,
-            1, // Assuming 1 represents admin
+            1,
             $group->id
         );
-        if (!empty($request->mentees)) {
+
+        // Notify only newly added mentees
+        if (!empty($addedMentees)) {
             $this->notificationService->notifyMemberAdded(
-                $request->mentees,
+                $addedMentees,
                 'group_member',
                 'You have been added to the group: ' . $group->name,
                 $group->id,
@@ -858,7 +887,6 @@ public function deleteTopic($id)
             );
         }
 
-        // Return JSON for AJAX
         return response()->json([
             'success' => true,
             'message' => 'Group updated successfully!',

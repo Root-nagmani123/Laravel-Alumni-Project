@@ -56,9 +56,9 @@ protected $casts = [
             'm.name as member_name',
             'pm.id as image_id',
             'pm.name as image_name',
-            'p.created_at as created_date' // Assuming `created_date` is a timestamp column
+            'p.created_at as created_date' 
         )
-        ->leftJoin('members as m', 'p.created_by', '=', 'm.id') // Changed from `t.created_by` to `p.created_by`
+        ->leftJoin('members as m', 'p.created_by', '=', 'm.id') 
         ->leftJoin('post_media as pm', 'p.id', '=', 'pm.post_id')
         ->where('m.id', $userId)
         ->get();
