@@ -81,7 +81,11 @@
 
                                     <td>
                                         <div class="d-flex gap-2">
-                                            <a href="{{route('group.add_topic', ['id' => encrypt($group->id)]) }}"
+                                            <!--<a href="{{--route('group.add_topic', ['id' => encrypt($group->id)]) --}}"
+                                                class="btn btn-sm btn-primary" data-bs-toggle="tooltip"
+                                                data-bs-placement="top" title="Add Group Topics"><i
+                                                    class="bi bi-plus"></i></a>-->
+                                            <a href="{{route('group.add_topic', ['id' => encrypt((string) $group->id)]) }}"
                                                 class="btn btn-sm btn-primary" data-bs-toggle="tooltip"
                                                 data-bs-placement="top" title="Add Group Topics"><i
                                                     class="bi bi-plus"></i></a>
