@@ -156,7 +156,6 @@ public function showById_data(Request $request, $id): View
         'current_location'   => 'required|string|max:255',
         'previous_postings'     => 'required|string|max:255',
         'service' => 'required|string|max:255',
-        'sector' => 'required|string|max:255',
 
     ]);
 
