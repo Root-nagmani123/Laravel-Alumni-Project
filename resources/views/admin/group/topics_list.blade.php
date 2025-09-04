@@ -55,11 +55,19 @@
                             <span>{{ \Carbon\Carbon::parse($topic->created_at)->diffForHumans() }}</span>
                         </div>
                         <div class="d-flex ms-auto text-end">
+
+                            <div class="form-check form-switch d-inline-block me-2">
+							<input class="form-check-input status-toggle"
+								   type="checkbox"
+								   role="switch"
+								   data-id="{{ $topic->id }}"
+								   {{ $topic->status == 1 ? 'checked' : '' }}>
+						</div>
                             <form id="delete-form-{{ $topic->id }}" action="{{ route('group.topics.delete', $topic->id) }}"
                             method="POST" style="display:inline;">
                             @csrf
                             @method('DELETE')
-                            <button type="button" class="btn btn-sm btn-danger delete-topic-btn"
+                            <button type="submit" class="btn btn-sm btn-danger delete-topic-btn"
                                 data-id="{{ $topic->id }}" data-status="{{ $topic->status }}">
                                 Delete
                             </button>
@@ -152,6 +160,20 @@
             </div>
         </div>
     </div>
+
+     @if (session('success'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {{ session('success') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+	@endif
+
+	@if (session('error'))
+		<div class="alert alert-danger alert-dismissible fade show text-white" role="alert">
+			{{ session('error') }}
+			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+		</div>
+	@endif
 
     <!-- repeater div -->
     @empty
