@@ -5,7 +5,7 @@
 @section('content')
 <div class="container">
 
-    <div class="row g-4 py-4" style="margin-top:4rem !important;">
+    <div class="row g-4" style="margin-top:4rem !important;">
         <!-- Error Messages -->
 
         <!-- Main content START -->

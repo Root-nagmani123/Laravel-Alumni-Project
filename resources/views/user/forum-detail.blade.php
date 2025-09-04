@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="container">
-    <div class="row g-4" style="margin-top: 100px;">
+    <div class="row g-4" style="margin-top: 4rem;">
         <!-- Left Sidebar -->
         @include('partials.left_sidebar')
 

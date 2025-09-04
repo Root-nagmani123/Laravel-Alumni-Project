@@ -5,7 +5,7 @@
 @section('content')
 
 <div class="container">
-    <div class="row g-4" style="margin-top: 100px;">
+    <div class="row g-4" style="margin-top: 4rem;">
         @include('partials.left_sidebar')
         <div class="col-9">
             <div class="post-list p-3 rounded mb-4" style="background-color: #af2910; color: #fff;">
