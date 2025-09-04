@@ -156,7 +156,6 @@ public function showById_data(Request $request, $id): View
         'current_location'   => 'required|string|max:255',
         'previous_postings'     => 'required|string|max:255',
         'service' => 'required|string|max:255',
-        'sector' => 'required|string|max:255',
 
     ]);
 
@@ -167,8 +166,6 @@ public function showById_data(Request $request, $id): View
         // Ensure service and sector are explicitly set even if not fillable
         // Handle potential fillable/case mismatch for `service`
         $user->Service = $validatedData['service'];
-        $user->sector = $validatedData['sector'];
-
         $user->save();
 
         return redirect()->back()->with('success', 'Professional info updated successfully.');

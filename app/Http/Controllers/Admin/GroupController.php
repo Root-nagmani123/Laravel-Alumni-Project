@@ -44,7 +44,7 @@ class GroupController extends Controller
         $users = Member::all();
         return view('admin.group.create', compact('mentors','users'));
     }
-    
+
     public function store_1012025(Request $request)
     {
         //Array ( [name] => Dhananjay [mentor_id] => 1 [user_id] => Array ( [0] => 4 [1] => 5 ) [status] => 1 )
@@ -61,19 +61,19 @@ class GroupController extends Controller
 
     public function store(Request $request)
     {
-        
+
         $request->validate([
             'name'        => 'required|string|max:255',
             'status'      => 'nullable|integer|in:0,1',
             'end_date'    => 'nullable|date|after_or_equal:today',
             'image'       => 'nullable|image|mimes:jpeg,png,jpg,avif|max:2048',
         ]);
-        
+
         $imagePath = null;
         if ($request->hasFile('image')) {
             $imagePath = $request->file('image')->store('uploads/images/grp_img', 'public');
         }
-    
+
         $group = Group::create([
             'name'        => $request->input('name'),
             'status'      => $request->input('status', 0),
@@ -81,9 +81,9 @@ class GroupController extends Controller
             'member_type' => 1,
             'end_date'    => $request->input('end_date'),
             'image'       => $imagePath ? basename($imagePath) : null,
-    
+
         ]);
-    
+
         // Create the group member
         // GroupMember::create([
         //     'group_id' => $group->id,
@@ -103,7 +103,7 @@ class GroupController extends Controller
         );
         return redirect()->route('group.index')->with('success', 'Group created successfully.');
     }
-    
+
     public function edit_bkp(Group $group)
     {
         $users = Member::all();
@@ -240,10 +240,10 @@ public function update(Request $request, Group $group)
             $group->save();
 
             if ($oldStatus != $group->status) {
-               
+
 
                 $statusMessage = $group->status ? 'activated' : 'deactivated';
-                 
+
                 $SourceType = $group->status ? 'group' : 'group_deactivated';
 
                 $groupMembers = GroupMember::where('group_id', $group->id)->get();
@@ -559,6 +559,10 @@ public function deleteTopic($id)
     $post = DB::table('posts')->where('id', $id)->first();
     if (!$post) {
         return response()->json(['message' => 'Post not found'], 404);
+    }
+
+    if ((int) $post->status === 1) {
+        return back()->with('error', 'Cannot delete an active topic. Please deactivate it first.');
     }
 
     $group_id = $post->group_id;

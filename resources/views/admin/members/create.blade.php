@@ -127,7 +127,7 @@
                                     </div>
                                 </div>
                                  
-                                <div class="col-md-4">
+                                <div class="col-md-6">
                                     <div class="mb-3">
                                         <label class="form-label">Cadre<span class="required text-danger text-danger" >*</span></label>
                                       
@@ -152,7 +152,7 @@
                                     </div>
                                 </div>
                               
-                               <div class="col-md-4">
+                               <div class="col-md-6">
                                     <div class="mb-3">
                                         <label class="form-label">Batch <span class="required text-danger">*</span></label>
                                         <select name="batch" id="batch" class="form-control batch">
@@ -193,7 +193,7 @@
                                     </div>
                                 </div>
 
-                                  <div class="col-md-4">
+                                  <div class="col-md-6">
                                     <div class="mb-3">
                                         <label class="form-label">Designation<span class="required text-danger text-danger" >*</span></label>
                                         <input type="text" name="designation" id="designation" class="form-control"
