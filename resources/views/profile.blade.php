@@ -509,9 +509,13 @@
                                                                         placeholder="Enter your Service"> -->
                                                                         <select name="service" id="service" class="form-control">
                                                                             <option value="">Select Service</option>
-                                                                            @foreach($Service_data as $Service)
-                                                                                <option value="{{ $Service->Service }}" {{ old('service', $user->Service) == $Service->Service ? 'selected' : '' }}>{{ $Service->Service }}</option>
-                                                                            @endforeach
+                                                                            @if($Service_data->isEmpty())
+                                                                                <option value="" disabled>No services available</option>
+                                                                            @else
+                                                                                @foreach($Service_data as $Service)
+                                                                                    <option value="{{ $Service->Service }}" {{ old('service', $user->Service) == $Service->Service ? 'selected' : '' }}>{{ $Service->Service }}</option>
+                                                                                @endforeach
+                                                                            @endif
                                                                         </select>
                                                                 </div>
                                                             </div>
@@ -1741,33 +1745,23 @@
                                 <!-- Card header END -->
                                 <!-- Card body START -->
                                 <div class="card-body">
-                                    @if(!empty($selectedSectors) && count($selectedSectors) > 0)
-                                        <div class="row g-4">
-                                            @foreach($selectedSectors as $sector)
-                                                <div class="col-sm-6">
-                                                    <div class="d-flex align-items-center rounded border px-3 py-2">
-                                                        <p class="mb-0">
-                                                            <i class="fas fa-draw-polygon fa-fw me-2"></i>
-                                                            <strong>{{ $sector['name'] }}</strong>
-                                                            @if(!empty($sector['departments']))
-                                                                <ul class="list-unstyled mt-2">
-                                                                    @foreach($sector['departments'] as $dept)
-                                                                        <li><i class="bi bi-circle-fill fa-xs me-2"></i>{{ $dept }}</li>
-                                                                    @endforeach
-                                                                </ul>
-                                                            @else
-                                                                <span class="ms-2 text-muted">No departments selected</span>
-                                                            @endif
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            @endforeach
-                                        </div>
+                                   @if(!empty($selectedSectors))
+                                        @foreach($selectedSectors as $sector)
+                                            <strong>{{ $sector['name'] }}</strong>
+                                            @if(!empty($sector['departments']))
+                                                <ul>
+                                                    @foreach($sector['departments'] as $dept)
+                                                        <li>{{ $dept }}</li>
+                                                    @endforeach
+                                                </ul>
+                                            @else
+                                                <span>No departments selected</span>
+                                            @endif
+                                        @endforeach
                                     @else
-                                        <div class="alert alert-info" role="alert">
-                                            {{ $message ?? 'No sector or ministry data available.' }}
-                                        </div>
+                                        <div class="alert alert-info">No sector or ministry data available.</div>
                                     @endif
+
                                 </div>
                                 <!-- Card body END -->
                             </div>

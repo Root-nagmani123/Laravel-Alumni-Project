@@ -76,15 +76,12 @@ public function showById_data(Request $request, $id): View
       $departments = config('departments');
 
  $userSectors = UserSectordepartment::where('user_id', $userId)->first();
-<<<<<<< HEAD
     //$selectedSectors = $userSectors ? json_decode($userSectors->sector_departments, true) : [];
-     $selectedSectors =$userSectors->sector_departments;
-    return view('profile', compact('user','posts' , 'departments', 'selectedSectors'));
-=======
-    $selectedSectors = $userSectors ? $userSectors->sector_departments : [];
-
+     $selectedSectors = [];
+    if ($userSectors && !empty($userSectors->sector_departments)) {
+        $selectedSectors = json_decode($userSectors->sector_departments, true);
+    }
     return view('profile', compact('user','posts' , 'departments', 'selectedSectors', 'Service_data'));
->>>>>>> 2b62b13f6ca3097a3188d71cf2a8bcfa92493cf0
 }
   public function edit($id)
         {
