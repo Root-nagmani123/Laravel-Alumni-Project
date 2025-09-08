@@ -175,36 +175,87 @@
                 <div class="card-body">
                     <p>{{ \Illuminate\Support\Str::words(strip_tags($post->content), 50, '...') }}</p>
                     @if($totalImages === 1)
-                    <a href="{{ asset('storage/' . $imageMedia[0]->file_path) }}" class="glightbox"
-                        data-gallery="post-gallery-{{ $post->id }}">
-                        <img class="card-img" src="{{ asset('storage/' . $imageMedia[0]->file_path) }}" alt="Post"
-                            style="max-height: 400px; object-fit: cover;" loading="lazy" decoding="async">
-                    </a>
-                    @elseif($totalImages > 1)
-                    <div class="d-flex flex-wrap gap-2">
-                        @foreach($imageMedia->take(4) as $index => $media)
-                        <div class="position-relative" style="width: 48%;">
-                            <a href="{{ asset('storage/' . $media->file_path) }}" class="glightbox"
-                                data-gallery="post-gallery-{{ $post->id }}">
-                                <img src="{{ asset('storage/' . $media->file_path) }}" class="img-fluid rounded"
-                                    alt="Post Image" style="max-height: 400px; object-fit: cover;" loading="lazy"
-                                    decoding="async">
-                            </a>
-                            @if($index === 3 && $totalImages > 4)
-                            @foreach($imageMedia->slice(4) as $extra)
-                            <a href="{{ asset('storage/' . $extra->file_path) }}" class="glightbox d-none"
-                                data-gallery="post-gallery-{{ $post->id }}"></a>
-                            @endforeach
-                            <a href="{{ asset('storage/' . $imageMedia[4]->file_path) }}"
-                                class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center text-white glightbox"
-                                style="background-color: rgba(0,0,0,0.6); font-size: 2rem;">
-                                +{{ $totalImages - 4 }}
-                            </a>
-                            @endif
-                        </div>
-                        @endforeach
+    <!-- Single Image -->
+    <a href="{{ asset('storage/' . $imageMedia[0]->file_path) }}" class="glightbox"
+       data-gallery="post-gallery-{{ $post->id }}">
+        <img class="w-100 rounded" src="{{ asset('storage/' . $imageMedia[0]->file_path) }}" 
+             alt="Post" style="max-height: 500px; object-fit: cover;">
+    </a>
+
+@elseif($totalImages === 2)
+    <!-- Two Images Side by Side -->
+    <div class="d-flex gap-2">
+        @foreach($imageMedia->take(2) as $media)
+            <a href="{{ asset('storage/' . $media->file_path) }}" class="glightbox flex-fill"
+               data-gallery="post-gallery-{{ $post->id }}">
+                <img class="w-100 rounded" src="{{ asset('storage/' . $media->file_path) }}" 
+                     alt="Post" style="height: 300px; object-fit: cover;">
+            </a>
+        @endforeach
+    </div>
+
+@elseif($totalImages === 3)
+    <!-- Three Images: 1 big left + 2 stacked right -->
+    <div class="d-flex gap-2">
+        <div class="flex-fill">
+            <a href="{{ asset('storage/' . $imageMedia[0]->file_path) }}" class="glightbox"
+               data-gallery="post-gallery-{{ $post->id }}">
+                <img class="w-100 rounded" src="{{ asset('storage/' . $imageMedia[0]->file_path) }}" 
+                     alt="Post" style="height: 400px; object-fit: cover;">
+            </a>
+        </div>
+        <div class="d-flex flex-column gap-2" style="width: 35%;">
+            @foreach($imageMedia->slice(1, 2) as $media)
+                <a href="{{ asset('storage/' . $media->file_path) }}" class="glightbox flex-fill"
+                   data-gallery="post-gallery-{{ $post->id }}">
+                    <img class="w-100 rounded" src="{{ asset('storage/' . $media->file_path) }}" 
+                         alt="Post" style="height: 195px; object-fit: cover;">
+                </a>
+            @endforeach
+        </div>
+    </div>
+
+@elseif($totalImages === 4)
+    <!-- Four Images: 2x2 Grid -->
+    <div class="row g-2">
+        @foreach($imageMedia->take(4) as $media)
+            <div class="col-6">
+                <a href="{{ asset('storage/' . $media->file_path) }}" class="glightbox"
+                   data-gallery="post-gallery-{{ $post->id }}">
+                    <img class="w-100 rounded" src="{{ asset('storage/' . $media->file_path) }}" 
+                         alt="Post" style="height: 250px; object-fit: cover;">
+                </a>
+            </div>
+        @endforeach
+    </div>
+
+@elseif($totalImages > 4)
+    <!-- More than 4: 2x2 grid + overlay on last -->
+    <div class="row g-2">
+        @foreach($imageMedia->take(4) as $index => $media)
+            <div class="col-6 position-relative">
+                <a href="{{ asset('storage/' . $media->file_path) }}" 
+                   class="glightbox d-block" 
+                   data-gallery="post-gallery-{{ $post->id }}">
+                    <img class="w-100 rounded" src="{{ asset('storage/' . $media->file_path) }}" 
+                         alt="Post" style="height: 250px; object-fit: cover;">
+                </a>
+
+                @if($index === 3)
+                    @foreach($imageMedia->slice(4) as $extra)
+                        <a href="{{ asset('storage/' . $extra->file_path) }}" 
+                           class="glightbox d-none" 
+                           data-gallery="post-gallery-{{ $post->id }}"></a>
+                    @endforeach
+                    <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center bg-dark bg-opacity-50 rounded">
+                        <span class="text-white fs-3 fw-bold">+{{ $totalImages - 4 }}</span>
                     </div>
-                    @endif
+                @endif
+            </div>
+        @endforeach
+    </div>
+@endif
+
 
                     @if($post->media_type == 'video' && $post->video_link)
                     <div class="mt-3">
