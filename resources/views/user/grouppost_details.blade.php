@@ -20,19 +20,29 @@
             data-bs-toggle="modal" data-bs-target="#editGroupModal" title="Edit Group">
         <i class="fa-solid fa-pen"></i>
     </button>
+
+    <!-- Delete Button -->
+    {{-- <button type="button" class="btn btn-sm btn-light text-danger" 
+            onclick="confirm('Are you sure you want to delete this group?') && $wire.deleteGroup({{ $group->id }})"
+            title="Delete Group">
+        <i class="fa-solid fa-trash"></i>
+    </button> --}}
 </div>
 
 <!-- Edit Modal -->
 <div class="modal fade" id="editGroupModal" tabindex="-1" aria-labelledby="editGroupModalLabel" aria-hidden="true">
   <div class="modal-dialog">
-    <form wire:submit.prevent="updateGroup">
+    <form action="{{ route('group_name_update', $group->id) }}" method="POST">
+      @csrf
+      @method('PUT')
+      <input type="hidden" name="group_id" value="{{ $group->id }}">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="editGroupModalLabel">Edit Group Name</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
-          <input type="text" class="form-control" wire:model.defer="group.name" placeholder="Enter group name">
+          <input type="text" class="form-control" value="{{ $group->name }}" name="name" placeholder="Enter group name">
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>

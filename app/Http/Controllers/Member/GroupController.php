@@ -206,4 +206,17 @@ function post_destroy(Request $request, $id) : RedirectResponse {
     $post->delete();
     return redirect()->back()->with('success', 'Post deleted successfully.');
 }
+
+function updateGroupName(Request $request) {
+    $request->validate([
+        'group_id' => 'required|exists:groups,id',
+        'name' => 'required|string|max:255',
+    ]);
+
+    $group = Group::find($request->input('group_id'));
+    $group->name = $request->input('name');
+    $group->save();
+
+    return redirect()->back()->with('success', 'Group name updated successfully.');
+}
 }

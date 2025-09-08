@@ -542,3 +542,4 @@ Route::post('/admin/socialwall/toggle-status', [SocialWallController::class, 'to
 Route::post('/admin/socialwall/toggle-comment-status', [SocialWallController::class, 'toggleCommentStatus'])->name('socialwall.toggleCommentStatus');
 
 Route::get('admin/group/existing_member', [App\Http\Controllers\Admin\GroupController::class, 'getExistingMembers'])->name('admin.group.existing_member');
+Route::PUT('group_name_update', [App\Http\Controllers\Member\GroupController::class, 'updateGroupName'])->name('group_name_update');
