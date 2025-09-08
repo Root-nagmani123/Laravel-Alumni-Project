@@ -1745,24 +1745,165 @@
                                 <!-- Card header END -->
                                 <!-- Card body START -->
                                 <div class="card-body">
-                                   @if(!empty($selectedSectors))
-                                        @foreach($selectedSectors as $sector)
-                                            <strong>{{ $sector['name'] }}</strong>
-                                            @if(!empty($sector['departments']))
-                                                <ul>
-                                                    @foreach($sector['departments'] as $dept)
-                                                        <li>{{ $dept }}</li>
-                                                    @endforeach
-                                                </ul>
-                                            @else
-                                                <span>No departments selected</span>
-                                            @endif
-                                        @endforeach
-                                    @else
-                                        <div class="alert alert-info">No sector or ministry data available.</div>
-                                    @endif
+    @if(!empty($selectedSectors))
+        <!-- Search Box with Inline Clear Button -->
+        <div class="mb-3 position-relative">
+            <input type="text" class="form-control pe-5" id="sectorSearch" placeholder="🔍 Search sector or department...">
+            <button class="btn btn-sm btn-light position-absolute top-50 end-0 translate-middle-y me-2 d-none" 
+                    type="button" id="clearSearch" style="border:none; background:transparent;">
+                <i class="bi bi-x-circle text-muted"></i>
+            </button>
+        </div>
 
+        <div class="accordion" id="sectorsAccordion">
+            @foreach($selectedSectors as $index => $sector)
+                <div class="accordion-item sector-item">
+                    <!-- Sector Header -->
+                    <h2 class="accordion-header" id="heading-{{ $index }}">
+                        <button class="accordion-button d-flex justify-content-between align-items-center {{ $index !== 0 ? 'collapsed' : '' }}"
+                                type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#collapse-{{ $index }}"
+                                aria-expanded="{{ $index === 0 ? 'true' : 'false' }}"
+                                aria-controls="collapse-{{ $index }}">
+                            <span class="sector-name">
+                                <i class="fas fa-draw-polygon me-2 text-primary"></i>
+                                {{ $sector['name'] }}
+                            </span>
+                            <span class="badge bg-light text-dark ms-2">
+                                {{ !empty($sector['departments']) ? count($sector['departments']) . ' Depts' : '0 Depts' }}
+                            </span>
+                        </button>
+                    </h2>
+
+                    <!-- Sector Body -->
+                    <div id="collapse-{{ $index }}" 
+                         class="accordion-collapse collapse {{ $index === 0 ? 'show' : '' }}"
+                         aria-labelledby="heading-{{ $index }}"
+                         data-bs-parent="#sectorsAccordion">
+                        <div class="accordion-body">
+                            @if(!empty($sector['departments']))
+                                <ul class="list-group list-group-flush small department-list">
+                                    @foreach($sector['departments'] as $dept)
+                                        <li class="list-group-item px-2 py-1 department-name">
+                                            <i class="bi bi-building me-2 text-secondary"></i>{{ $dept }}
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            @else
+                                <div class="text-muted small fst-italic">
+                                    <i class="bi bi-info-circle me-1"></i>No departments selected
                                 </div>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+    @else
+        <div class="alert alert-info mb-0">
+            <i class="bi bi-exclamation-circle me-2"></i>No sector or ministry data available.
+        </div>
+    @endif
+</div>
+
+<!-- Highlight Style -->
+<style>
+    .highlight {
+        background-color: #ffe066; /* soft yellow */
+        font-weight: bold;
+        padding: 0 2px;
+        border-radius: 3px;
+    }
+</style>
+
+<!-- Filter + Highlight + Clear Script -->
+<script>
+    const searchInput = document.getElementById('sectorSearch');
+    const clearBtn = document.getElementById('clearSearch');
+
+    function highlightMatch(text, filter) {
+        if (!filter) return text;
+        let regex = new RegExp(`(${filter})`, 'gi');
+        return text.replace(regex, '<span class="highlight">$1</span>');
+    }
+
+    function filterSectors() {
+        let filter = searchInput.value.toLowerCase();
+        let foundMatch = false;
+
+        document.querySelectorAll('.sector-item').forEach(function(item) {
+            let sectorNameEl = item.querySelector('.sector-name');
+            let sectorName = sectorNameEl.textContent.trim();
+
+            let departmentEls = item.querySelectorAll('.department-name');
+            let departmentNames = Array.from(departmentEls).map(el => el.textContent.trim());
+
+            let matchSector = sectorName.toLowerCase().includes(filter);
+            let matchDept = departmentNames.some(d => d.toLowerCase().includes(filter));
+            let match = matchSector || matchDept;
+
+            // Show/hide
+            item.style.display = match ? '' : 'none';
+
+            // Reset highlights
+            sectorNameEl.innerHTML = `<i class="fas fa-draw-polygon me-2 text-primary"></i> ${sectorName}`;
+            departmentEls.forEach((el, i) => {
+                el.innerHTML = `<i class="bi bi-building me-2 text-secondary"></i> ${departmentNames[i]}`;
+            });
+
+            // Apply highlighting
+            if (filter) {
+                if (matchSector) {
+                    sectorNameEl.innerHTML = `<i class="fas fa-draw-polygon me-2 text-primary"></i> ${highlightMatch(sectorName, filter)}`;
+                }
+                departmentEls.forEach((el, i) => {
+                    if (departmentNames[i].toLowerCase().includes(filter)) {
+                        el.innerHTML = `<i class="bi bi-building me-2 text-secondary"></i> ${highlightMatch(departmentNames[i], filter)}`;
+                    }
+                });
+            }
+
+            // Auto-expand if department matches
+            let collapse = item.querySelector('.accordion-collapse');
+            let button = item.querySelector('.accordion-button');
+            if (matchDept && collapse && !collapse.classList.contains('show')) {
+                new bootstrap.Collapse(collapse, { show: true, toggle: true });
+                button.classList.remove('collapsed');
+                button.setAttribute('aria-expanded', 'true');
+            }
+
+            if (match) foundMatch = true;
+        });
+
+        // Toggle clear button
+        clearBtn.classList.toggle('d-none', !filter);
+
+        // Show/hide no results message
+        if (!foundMatch && filter) {
+            if (!document.getElementById('noResults')) {
+                let noResults = document.createElement('div');
+                noResults.id = 'noResults';
+                noResults.className = 'alert alert-warning mt-2';
+                noResults.innerHTML = '<i class="bi bi-search"></i> No matching sector or department found.';
+                document.querySelector('#sectorsAccordion').insertAdjacentElement('beforebegin', noResults);
+            }
+        } else {
+            let noResults = document.getElementById('noResults');
+            if (noResults) noResults.remove();
+        }
+    }
+
+    searchInput.addEventListener('keyup', filterSectors);
+
+    clearBtn.addEventListener('click', function() {
+        searchInput.value = '';
+        clearBtn.classList.add('d-none');
+        filterSectors();
+        searchInput.focus();
+    });
+</script>
+
                                 <!-- Card body END -->
                             </div>
                         </div>
