@@ -36,6 +36,7 @@
                                     <i class="bi bi-plus fa-fw pe-2"></i>Add Members
                                 </a>
                             </li>
+                            
                             @elseif ($group->member_type == 1 && auth()->guard('user')->user()->id == $group->created_by)
                             <li>
                                 <a href="#" class="dropdown-item" data-bs-toggle="modal"

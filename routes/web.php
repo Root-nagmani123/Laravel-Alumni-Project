@@ -432,11 +432,11 @@ Route::get('/user_login', function () {
         // Route::get('/user/forum', function () {
         //     return view('user.forum');
         // })->name('user.forum');
-        // Route::get('/user/group', function () {
-        //     return view('user.groups');
-        // })->name('user.groups');
-        
-         
+        Route::get('/admin/user_management', function () {
+            return view('admin.user_management.index');
+        })->name('admin.user_management.index');
+
+
         Route::get('/admin/mentorship/create', function () {
             return view('admin.mentorship.create');
         })->name('admin.mentorship.create');

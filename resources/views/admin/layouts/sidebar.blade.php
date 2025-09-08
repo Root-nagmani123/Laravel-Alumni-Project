@@ -38,6 +38,12 @@
                                 <span class="icon-small"></span> Dashboard
                             </a>
                         </li>
+                         <li class="sidebar-item">
+                            <a class="sidebar-link" href="{{ route('admin.user_management.index') }}">
+                                <iconify-icon icon="solar:user-id-bold-duotone"></iconify-icon>
+                                <span class="icon-small"></span> User Management
+                            </a>
+                        </li>
                         <li class="sidebar-item">
                             <a class="sidebar-link" href="{{ route('admin.registration.index') }}">
                                 <iconify-icon icon="solar:document-bold-duotone"></iconify-icon>

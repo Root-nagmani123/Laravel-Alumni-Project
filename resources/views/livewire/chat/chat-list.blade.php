@@ -238,13 +238,17 @@
                     <div class="chat-conversation-content custom-scrollbar h-200px" style="overflow-y:auto;"
                         id="chat-container-{{ $selectChat->id }}">
 
-                        @if($hasMoreMessages)
-                            <div class="text-center mb-2">
-                                <button class="btn btn-sm btn-outline-primary" wire:click="loadOlderMessages">
-                                    Load older messages
-                                </button>
-                            </div>
-                        @endif
+@if($hasMoreMessages) 
+<div class="d-flex justify-content-center my-3">
+    <div class="chat-loader text-center px-3 py-1 rounded-pill shadow-sm" wire:click="loadOlderMessages"
+        wire:loading.attr="disabled"
+        style="cursor:pointer; background:#f8f9fa; border:1px solid #e0e0e0; transition: all 0.3s ease;">
+        <i
+        class="fa-solid fa-clock-rotate-left me-1 text-primary"></i> <span
+        class="small fw-semibold text-primary">Load previous messages</span>
+    </div>
+</div> 
+@endif  
 
                         @php
                             $groupedMessages = $messages->groupBy(
