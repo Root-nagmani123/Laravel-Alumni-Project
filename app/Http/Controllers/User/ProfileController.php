@@ -78,10 +78,7 @@ public function showById_data(Request $request, $id): View
  $userSectors = UserSectordepartment::where('user_id', $userId)->first();
 <<<<<<< HEAD
     //$selectedSectors = $userSectors ? json_decode($userSectors->sector_departments, true) : [];
- $selectedSectors = [];
-    if ($userSectors && !empty($userSectors->sector_departments)) {
-        $selectedSectors = json_decode($userSectors->sector_departments, true);
-    }
+     $selectedSectors =$userSectors->sector_departments;
     return view('profile', compact('user','posts' , 'departments', 'selectedSectors'));
 =======
     $selectedSectors = $userSectors ? $userSectors->sector_departments : [];
