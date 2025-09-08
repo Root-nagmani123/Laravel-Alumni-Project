@@ -449,7 +449,7 @@ $commentText = preg_replace_callback(
                             </div>
                            <div class="row">
                               <div class="col-6">
-                                    {{--<a href="#!" class="text-secondary small me-2">Like</a>
+                                   {{--<a href="#!" class="text-secondary small me-2">Like</a>
                                     <a href="#!" class="text-secondary small">Reply</a>--}}
                                 </div>
                                 <div class="col-6 text-end">
@@ -467,6 +467,7 @@ $commentText = preg_replace_callback(
                     </div>
 
                 </li>
+                
                 @elseif(auth()->guard('user')->id() === $comment->member_id)
                  <li class="comment-item mb-3 " id="comment-{{ $comment->id }}">
                     <div class="d-flex position-relative">
@@ -515,23 +516,27 @@ $commentText = preg_replace_callback(
                 </li>
                 @endif
                 @endif
+               
                 @endforeach
                 <!-- Comment item END -->
             </ul>
             <!-- Card body END -->
-            {{--@if ($post->comments->count() > 5)
-    <div class="card-footer border-0 pt-0">
-        <a href="#!" class="btn btn-link btn-sm text-secondary load-more-comments"
-           data-post-id="{{ $post->id }}" data-offset="2">
-            <div class="spinner-dots me-2 d-none" id="spinner-{{ $post->id }}">
-                <span class="spinner-dot"></span>
-                <span class="spinner-dot"></span>
-                <span class="spinner-dot"></span>
-            </div>
-            Load more comments
-        </a>
-    </div>
-    @endif --}}
+         @if(isset($member->id) && $member->id === auth()->guard('user')->id())
+
+                        @if ($post->comments->count() > 2)
+                        <div class="card-footer border-0 pt-0">
+                            <a href="#!" class="btn btn-link btn-sm text-secondary load-more-comments"
+                            data-post-id="{{ $post->id }}" data-offset="2">
+                                <div class="spinner-dots me-2 d-none" id="spinner-{{ $post->id }}">
+                                    <span class="spinner-dot"></span>
+                                    <span class="spinner-dot"></span>
+                                    <span class="spinner-dot"></span>
+                                </div>
+                                Load more comments
+                            </a>
+                        </div>
+                        @endif
+                        @endif
             <!-- Card footer END -->
         </div>
         <!-- Card feed item END -->
