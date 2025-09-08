@@ -1735,9 +1735,33 @@
                                 <!-- Card header END -->
                                 <!-- Card body START -->
                                 <div class="card-body">
-                                    <div class="row g-4">
-                                        
-                                    </div>
+                                    @if(!empty($selectedSectors) && count($selectedSectors) > 0)
+                                        <div class="row g-4">
+                                            @foreach($selectedSectors as $sector)
+                                                <div class="col-sm-6">
+                                                    <div class="d-flex align-items-center rounded border px-3 py-2">
+                                                        <p class="mb-0">
+                                                            <i class="fas fa-draw-polygon fa-fw me-2"></i>
+                                                            <strong>{{ $sector['name'] }}</strong>
+                                                            @if(!empty($sector['departments']))
+                                                                <ul class="list-unstyled mt-2">
+                                                                    @foreach($sector['departments'] as $dept)
+                                                                        <li><i class="bi bi-circle-fill fa-xs me-2"></i>{{ $dept }}</li>
+                                                                    @endforeach
+                                                                </ul>
+                                                            @else
+                                                                <span class="ms-2 text-muted">No departments selected</span>
+                                                            @endif
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    @else
+                                        <div class="alert alert-info" role="alert">
+                                            {{ $message ?? 'No sector or ministry data available.' }}
+                                        </div>
+                                    @endif
                                 </div>
                                 <!-- Card body END -->
                             </div>
