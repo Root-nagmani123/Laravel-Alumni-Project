@@ -683,7 +683,8 @@ public function deleteTopic($id)
 
   public function topicToggleStatus(Request $request)
     {
-        $topic = Topic::findOrFail($request->id);
+        $topic = Post::findOrFail($request->id);
+       // dd($topic);
         $oldStatus = $topic->status;
         $topic->status = $request->status;
         $topic->save();

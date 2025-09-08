@@ -26,8 +26,7 @@
                 </div>
             </div>
         </div>
-    </div>
- @if (session('success'))
+         @if (session('success'))
     <div class="alert alert-success alert-dismissible fade show" role="alert">
         {{ session('success') }}
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -40,6 +39,8 @@
 			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 		</div>
 	@endif
+
+    </div>
 
     @php $i = 0; @endphp
 
@@ -70,7 +71,13 @@
                             <span>{{ \Carbon\Carbon::parse($topic->created_at)->diffForHumans() }}</span>
                         </div>
                         <div class="d-flex ms-auto text-end">
-
+                            <div class="form-check form-switch d-inline-block me-2">
+							<input class="form-check-input status-toggle"
+								   type="checkbox"
+								   role="switch"
+								   data-id="{{ $topic->id }}"
+								   {{ $topic->status == 1 ? 'checked' : '' }}>
+						</div>
 
                             <form id="delete-form-{{ $topic->id }}" action="{{ route('group.topics.delete', $topic->id) }}"
                             method="POST" style="display:inline;">
