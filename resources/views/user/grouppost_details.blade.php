@@ -10,7 +10,46 @@
         <div class="col-9">
             <div class="post-list p-3 rounded mb-4" style="background-color: #af2910; color: #fff;">
                 <div class="d-flex justify-content-between align-items-center">
-                    <h1 class="h5 mb-0 text-white">Group Posts : {{ $group->name ?? '' }}</h1>
+                   <div class="d-flex align-items-center gap-2 mb-3">
+    <h1 class="h5 mb-0 text-white flex-grow-1">
+        Group Posts: {{ $group->name ?? '' }}
+    </h1>
+
+    <!-- Edit Button -->
+    <button type="button" class="btn btn-sm btn-light text-primary" 
+            data-bs-toggle="modal" data-bs-target="#editGroupModal" title="Edit Group">
+        <i class="fa-solid fa-pen"></i>
+    </button>
+
+    <!-- Delete Button -->
+    <button type="button" class="btn btn-sm btn-light text-danger" 
+            onclick="confirm('Are you sure you want to delete this group?') && $wire.deleteGroup({{ $group->id }})"
+            title="Delete Group">
+        <i class="fa-solid fa-trash"></i>
+    </button>
+</div>
+
+<!-- Edit Modal -->
+<div class="modal fade" id="editGroupModal" tabindex="-1" aria-labelledby="editGroupModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <form wire:submit.prevent="updateGroup">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editGroupModalLabel">Edit Group Name</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <input type="text" class="form-control" wire:model.defer="group.name" placeholder="Enter group name">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Changes</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
 
                     <div class="dropdown">
                         <a href="#" class="text-white btn btn-sm btn-transparent py-0 px-2" data-bs-toggle="dropdown">

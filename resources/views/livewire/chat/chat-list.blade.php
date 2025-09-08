@@ -308,22 +308,72 @@
                     </div>
 
                     <!-- Message input -->
-                    <div class="mt-2">
-                        <form wire:submit.prevent="submit">
-                            <div class="position-relative">
-                                <textarea class="form-control pe-5" rows="1" wire:model.defer="newMessage"
-                                    wire:key="message-input-{{ now() }}" wire:keydown.enter="submit"
-                                    placeholder="Type your message..."></textarea>
+                    <div class="chat-input mt-3 position-relative" style="padding: 10px; background:#f0f2f5;">
+    <form wire:submit.prevent="submit" class="d-flex align-items-center position-relative">
 
-                                <!-- Send button -->
-                                <button type="submit"
-                                    class="btn btn-primary btn-sm position-absolute top-50 end-0 translate-middle-y me-2 d-flex align-items-center justify-content-center"
-                                    style="padding: 6px; width: 32px; height: 32px; border-radius: 8px;">
-                                    <i class="fa-solid fa-paper-plane"></i>
-                                </button>
-                            </div>
-                        </form>
-                    </div>
+        <!-- Input container -->
+        <div class="input-wrapper flex-grow-1 d-flex align-items-center bg-white rounded-pill px-3 py-2 shadow-sm">
+            
+            <!-- Attachment button -->
+            <button type="button" class="btn btn-light btn-sm me-2 d-flex align-items-center justify-content-center"
+                    style="width:36px; height:36px; border-radius:50%; font-size:16px; color:#555;">
+                <i class="fa-solid fa-paperclip"></i>
+            </button>
+
+            <!-- Auto-expanding textarea -->
+            <textarea class="form-control border-0 flex-grow-1 bg-transparent"
+                      rows="1"
+                      wire:model.defer="newMessage"
+                      wire:key="message-input-{{ now() }}"
+                      wire:keydown.enter="submit"
+                      placeholder="Type a message..."
+                      style="resize:none; overflow:hidden; outline:none; font-size:14px; line-height:1.4;"></textarea>
+        </div>
+
+        <!-- Send / Mic button -->
+        <button type="submit"
+                class="btn send-btn position-absolute d-flex align-items-center justify-content-center"
+                style="width:44px; height:44px; border-radius:50%; right:10px; top:50%; transform: translateY(-50%); background:#0b93f6; color:#fff; border:none;">
+            <i class="fa-solid fa-paper-plane"></i>
+        </button>
+    </form>
+</div>
+
+<style>
+.chat-input textarea {
+    min-height: 36px;
+    max-height: 120px;
+    overflow-y: hidden;
+}
+
+.chat-input textarea:focus {
+    box-shadow: none;
+}
+
+.chat-input .send-btn {
+    transition: all 0.2s;
+}
+
+.chat-input .send-btn:hover {
+    transform: translateY(-50%) scale(1.1);
+}
+
+.chat-input .send-btn:active {
+    transform: translateY(-50%) scale(0.95);
+}
+</style>
+
+<script>
+// Auto-expand textarea like WhatsApp
+document.querySelectorAll('.chat-input textarea').forEach(textarea => {
+    textarea.addEventListener('input', e => {
+        textarea.style.height = 'auto';
+        textarea.style.height = textarea.scrollHeight + 'px';
+    });
+});
+</script>
+
+
 
 
                 </div>
