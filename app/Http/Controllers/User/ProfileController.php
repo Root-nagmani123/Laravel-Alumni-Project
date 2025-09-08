@@ -36,7 +36,7 @@ class ProfileController extends Controller
        ->where('member_id', $userId)
        ->get();
  $userSectors = UserSectordepartment::where('user_id', $userId)->first();
-    $selectedSectors = $userSectors ? $userSectors->sector_departments : [];
+    $selectedSectors = $userSectors ? json_decode($userSectors->sector_departments, true) : [];
    return view('profile', compact('user','posts' ,'departments', 'selectedSectors'));
     }
 
@@ -53,7 +53,8 @@ class ProfileController extends Controller
         ->where('member_id', $userId)
         ->get();
  $userSectors = UserSectordepartment::where('user_id', $userId)->first();
-    $selectedSectors = $userSectors ? $userSectors->sector_departments : [];
+   // $selectedSectors = $userSectors ? json_decode($userSectors->sector_departments, true) : [];
+    $selectedSectors =$userSectors->sector_departments;
     return view('profile', compact('user','posts', 'departments', 'selectedSectors'));
 }
 
@@ -74,8 +75,8 @@ public function showById_data(Request $request, $id): View
       $departments = config('departments');
 
  $userSectors = UserSectordepartment::where('user_id', $userId)->first();
-    $selectedSectors = $userSectors ? $userSectors->sector_departments : [];
-
+    //$selectedSectors = $userSectors ? json_decode($userSectors->sector_departments, true) : [];
+     $selectedSectors =$userSectors->sector_departments;
     return view('profile', compact('user','posts' , 'departments', 'selectedSectors'));
 }
   public function edit($id)
@@ -263,14 +264,14 @@ function updateSectorDepartments(Request $request, $id){
        
     ]);
     $sectors = $request->input('sectors', []);
-
-    // Save or update by user_id
-    $record = UserSectordepartment::updateOrCreate(
+    // $sectors should be an array of ['name' => ..., 'departments' => [...]]
+    UserSectordepartment::updateOrCreate(
         ['user_id' => $id],
-        ['sector_departments' => $sectors]
+        ['sector_departments' => json_encode($sectors)]
     );
 
     return redirect()->back()->with('success', 'Sectors and Departments updated successfully.');
 
 }
+
 }
