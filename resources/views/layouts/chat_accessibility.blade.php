@@ -1,3 +1,4 @@
+@if(strtolower(auth()->guard('user')->user()->Service) == 'ias')
 <div class="d-none d-lg-block position-relative">
     <a data-bs-toggle="offcanvas" href="#offcanvasChat" role="button" aria-controls="offcanvasChat"
         class="floating-chat-btn">
@@ -8,12 +9,12 @@
         </div>
         <span class="chat-text">Mentor/Mentee Conversation</span>
     </a>
-
     <div class="offcanvas offcanvas-end" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1"
         id="offcanvasChat">
         <livewire:chat.chat-list />
     </div>
 </div>
+@endif
 
 
 <!-- accessibility panel -->
