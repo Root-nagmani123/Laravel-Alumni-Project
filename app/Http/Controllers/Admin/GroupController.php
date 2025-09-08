@@ -92,6 +92,13 @@ class GroupController extends Controller
         //     'mentiee' => json_encode($request->input('user_id')),
         //     'status' => $request->input('status', 0),
         // ]);
+    
+        // Notify only if status is active and not yet notified
+        if ($group->status == 1 && now()->lt($group->end_date)) {
+                // Notify members about the group creation
+                $notification = $this->notificationService->notifyAllMembers('group', $group->name . ' group has been created.', $group->id, 'group', Auth::id());
+
+            }
 
         $this->recentActivityService->logActivity(
             'New Group Created',
@@ -407,7 +414,6 @@ public function update(Request $request, Group $group)
 
 public function save_topic(Request $request, $group_id)
 {
-    $group_id = decrypt($group_id);
     // 1️⃣ Validation
     $request->validate([
         'description' => 'nullable|string',
@@ -561,10 +567,6 @@ public function deleteTopic($id)
         return response()->json(['message' => 'Post not found'], 404);
     }
 
-    if ((int) $post->status === 1) {
-        return back()->with('error', 'Cannot delete an active topic. Please deactivate it first.');
-    }
-
     $group_id = $post->group_id;
 
     // 2️⃣ Delete media files (including physical files)
@@ -620,7 +622,8 @@ public function deleteTopic($id)
 
   public function topicToggleStatus(Request $request)
     {
-        $topic = Topic::findOrFail($request->id);
+        $topic = Post::findOrFail($request->id);
+       // dd($topic);
         $oldStatus = $topic->status;
         $topic->status = $request->status;
         $topic->save();
@@ -674,7 +677,7 @@ public function deleteTopic($id)
 
     public function store_ajax(Request $request)
     {
-        $creatorId = auth()->guard('user')->id();
+        
 
         if ($request->group_id) {
             /**
@@ -685,22 +688,15 @@ public function deleteTopic($id)
             $groupMember = GroupMember::where('group_id', $request->group_id)->first();
             $group = Group::findOrFail($request->group_id);
 
-            if ($groupMember) {
-                // Current mentees in DB
-                $existingMentees = json_decode($groupMember->mentiee, true) ?? [];
+            if ($group) {
+                
+                // $existingMentees = json_decode($group->mentiee, true) ?? [];
+                // $newMentees = $request->input('mentees', []);
+                // $updatedMentees = array_unique(array_merge($existingMentees, $newMentees));
 
-                // New mentees from form (exclude creator)
-                $newMentees = $request->input('mentees', []);
-                $newMentees = array_filter($newMentees, fn($id) => $id != $creatorId);
-
-                // Find differences
-                $removed = array_diff($existingMentees, $newMentees); // members removed
-                $added   = array_diff($newMentees, $existingMentees); // members newly added
-
-                // Update mentee list in DB
-                $groupMember->update([
-                    'mentiee' => json_encode(array_values($newMentees)),
-                ]);
+                // $group->update([
+                //     'mentiee' => json_encode(array_values($updatedMentees)),
+                // ]);
 
                 $message = 'Group updated successfully!';
 
@@ -800,27 +796,45 @@ public function deleteTopic($id)
             ]);
 
             $message = 'Group created successfully!';
+        }
+    
+        // Notify only if status is active and not yet notified
+        if ($group->status == 1 && $group->notified_at == 0) {
+            $mentorId = $request->input('mentor_id');
+            $userIds = $request->input('user_id', []);
+    
+            $notificationsSent = false;
+    
+            if ($mentorId) {
 
-            /**
-             * 🔔 Notify ALL mentees (excluding creator)
-             */
-            if (!empty($mentees)) {
-                $this->notificationService->notifyMemberAdded(
-                    $mentees,
-                    'group_member',
-                    'A new group "' . $group->name . '" has been created and you have been added.',
-                    $group->id,
-                    'group',
-                    $creatorId
-                );
+                $mentorMessage = $group->name . ' group has been added as mentor';
+    
+                    $mentorNotification = $this->notificationService->notifyMemberAdded(
+                        $mentorId,
+                        'group_member',
+                        $mentorMessage,
+                        $group->id,
+                        'group',
+                        auth()->id()
+                    );
+                
             }
+
+            if (!empty($userIds)) {
+                $mentieeMessage = $group->name . ' group has been added as mentiee';
+                    $mentieeNotification = $this->notificationService->notifyMemberAdded(
+                        $userIds,
+                        'group_member',
+                        $mentieeMessage,
+                        $group->id,
+                        'group',
+                        auth()->id()
+                );
+
+            }
+
         }
 
-        /**
-         * ---------------------------------------------------
-         * Log recent activity
-         * ---------------------------------------------------
-         */
         $this->recentActivityService->logActivity(
             $request->group_id ? 'Group Updated' : 'New Group Created',
             'Group',
