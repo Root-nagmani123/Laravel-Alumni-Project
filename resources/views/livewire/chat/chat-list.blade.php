@@ -110,11 +110,11 @@
                             <div class="overflow-hidden">
                                 <a class="h6 mb-0 stretched-link {{ $selectedChat == $chat->member_id ? 'text-white' : '' }}"
                                     href="#!">{{ $chat->name }}
-                                    {{-- @if ($selectedChat != $chat->member_id)
+                                    @if ($selectedChat != $chat->member_id)
                                                 <span id="unread-count-{{ $chat->member_id }}">
                                     {{ App\Models\Member::find($chat->member_id)->unreadMessages->count() > 0 ? '(' . App\Models\Member::find($chat->member_id)->unreadMessages->count() . ')' : null }}
                                     </span>
-                                    @endif --}}
+                                    @endif
                                     <div class="small text-truncate">{{ $chat->role_type ?? '' }}</div>
                                 </a>
                                 {{-- <div class="small text-secondary text-truncate">Frances sent a photo.</div> --}}
