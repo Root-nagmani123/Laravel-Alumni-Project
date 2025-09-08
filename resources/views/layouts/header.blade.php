@@ -207,9 +207,18 @@
                                                             break;
                                                         case 'group':
                                                             $group = \App\Models\Group::find($notification->source_id);
-                                                            $notificationStatus = $group ? $group->status : 0;
-                                                            if ($notificationStatus == 1) {
-                                                                $notificationUrl = route('user.group-post', ['id' => $enc_source_id]);
+                                                          
+                                                            if ($group && $group->status == 1) {
+                                                                // Check membership
+                                                                $memberRecord = \App\Models\GroupMember::where('group_id', $group->id)->first();
+                                                                if ($memberRecord) {
+                                                                    $members = json_decode($memberRecord->mentiee, true) ?? [];
+                                                                    $user=Auth::guard('user')->id();
+
+                                                                        if (in_array($user, $members)) {
+                                                                            $notificationUrl = route('user.group-post', ['id' => $enc_source_id]);
+                                                                    }
+                                                                }
                                                             }
                                                             break;
                                                         case 'request':
