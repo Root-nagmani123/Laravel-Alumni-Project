@@ -20,13 +20,6 @@
             data-bs-toggle="modal" data-bs-target="#editGroupModal" title="Edit Group">
         <i class="fa-solid fa-pen"></i>
     </button>
-
-    <!-- Delete Button -->
-    <button type="button" class="btn btn-sm btn-light text-danger" 
-            onclick="confirm('Are you sure you want to delete this group?') && $wire.deleteGroup({{ $group->id }})"
-            title="Delete Group">
-        <i class="fa-solid fa-trash"></i>
-    </button>
 </div>
 
 <!-- Edit Modal -->
@@ -206,6 +199,16 @@
                                         </button>
                                     </form>
                                 </li>
+                                <li>
+    <a href="#"
+       class="text-decoration-none ms-2 border-0 bg-transparent d-flex align-items-center gap-2"
+       data-bs-toggle="modal" data-bs-target="#editPostModal">
+        <i class="bi bi-pencil"></i> Edit Post
+    </a>
+</li>
+
+
+
                             </ul>
                         </div>
                         @endif
@@ -527,6 +530,43 @@
 </div>
 
 <!-- Add Members Modal -->
+
+<!-- Edit Post Modal -->
+<div class="modal fade" id="editPostModal" tabindex="-1" aria-labelledby="editPostModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <form wire:submit.prevent="updatePost">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editPostModalLabel">Edit Post</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Post Title -->
+                    <div class="mb-3">
+                        <label for="postTitle" class="form-label">Title</label>
+                        <input type="text" id="postTitle" class="form-control" wire:model.defer="post.title">
+                    </div>
+
+                    <!-- Post Content -->
+                    <div class="mb-3">
+                        <label for="postContent" class="form-label">Content</label>
+                        <textarea id="postContent" class="form-control" rows="5" wire:model.defer="post.content"></textarea>
+                    </div>
+
+                    <!-- Optional: Image/Media upload -->
+                    <div class="mb-3">
+                        <label for="postMedia" class="form-label">Attach Media</label>
+                        <input type="file" id="postMedia" class="form-control" wire:model="media">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Update Post</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
 @section('scripts')
 <script>
 $(document).ready(function() {

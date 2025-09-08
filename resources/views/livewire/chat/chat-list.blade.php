@@ -308,7 +308,7 @@
                     </div>
 
                     <!-- Message input -->
-                    <div class="chat-input mt-3 position-relative" style="padding: 10px; background:#f0f2f5;">
+                    <div class="chat-input mt-3 position-relative">
     <form wire:submit.prevent="submit" class="d-flex align-items-center position-relative">
 
         <!-- Input container -->
@@ -333,7 +333,7 @@
         <!-- Send / Mic button -->
         <button type="submit"
                 class="btn send-btn position-absolute d-flex align-items-center justify-content-center"
-                style="width:44px; height:44px; border-radius:50%; right:10px; top:50%; transform: translateY(-50%); background:#0b93f6; color:#fff; border:none;">
+                style="width:44px; height:44px; border-radius:50%; right:10px; top:50%; transform: translateY(-50%); background:#af2910; color:#fff; border:none;">
             <i class="fa-solid fa-paper-plane"></i>
         </button>
     </form>
