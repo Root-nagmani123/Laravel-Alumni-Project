@@ -27,6 +27,7 @@ class ProfileController extends Controller
 
     public function showByName($name): View
     {
+        $Service_data  = Member::select('Service')->groupBy('Service')->get();
         $departments = config('departments');
         $user = Member::where('name', $name)->first();
         $userId = $user->id;
@@ -37,7 +38,7 @@ class ProfileController extends Controller
        ->get();
  $userSectors = UserSectordepartment::where('user_id', $userId)->first();
     $selectedSectors = $userSectors ? $userSectors->sector_departments : [];
-   return view('profile', compact('user','posts' ,'departments', 'selectedSectors'));
+   return view('profile', compact('user','posts' ,'departments', 'selectedSectors', 'Service_data'));
     }
 
    public function showById(Request $request, $encryptedId): View
@@ -45,7 +46,7 @@ class ProfileController extends Controller
     //$user = auth()->guard('user')->user();
     $id = Crypt::decrypt($encryptedId); 
     $user = Member::findOrFail($id);
-
+$Service_data  = Member::select('Service')->groupBy('Service')->get();
     $userId = $user->id;
  $departments = config('departments');
          $posts = Post::with(['member', 'media', 'likes', 'comments.member'])
@@ -54,14 +55,15 @@ class ProfileController extends Controller
         ->get();
  $userSectors = UserSectordepartment::where('user_id', $userId)->first();
     $selectedSectors = $userSectors ? $userSectors->sector_departments : [];
-    return view('profile', compact('user','posts', 'departments', 'selectedSectors'));
+    return view('profile', compact('user','posts', 'departments', 'selectedSectors', 'Service_data'));
 }
 
 public function showById_data(Request $request, $id): View
 {
 
     //$user = auth()->guard('user')->user();
-    
+ $Service_data  = Member::select('Service')->groupBy('Service')->get();
+
     $id = Crypt::decrypt($id);
     $user = Member::findOrFail($id);
 
@@ -76,7 +78,7 @@ public function showById_data(Request $request, $id): View
  $userSectors = UserSectordepartment::where('user_id', $userId)->first();
     $selectedSectors = $userSectors ? $userSectors->sector_departments : [];
 
-    return view('profile', compact('user','posts' , 'departments', 'selectedSectors'));
+    return view('profile', compact('user','posts' , 'departments', 'selectedSectors', 'Service_data'));
 }
   public function edit($id)
         {
