@@ -27,6 +27,7 @@ class ProfileController extends Controller
 
     public function showByName($name): View
     {
+        $Service_data  = Member::select('Service')->groupBy('Service')->get();
         $departments = config('departments');
         $user = Member::where('name', $name)->first();
         $userId = $user->id;
@@ -36,8 +37,8 @@ class ProfileController extends Controller
        ->where('member_id', $userId)
        ->get();
  $userSectors = UserSectordepartment::where('user_id', $userId)->first();
-    $selectedSectors = $userSectors ? json_decode($userSectors->sector_departments, true) : [];
-   return view('profile', compact('user','posts' ,'departments', 'selectedSectors'));
+    $selectedSectors = $userSectors ? $userSectors->sector_departments : [];
+   return view('profile', compact('user','posts' ,'departments', 'selectedSectors', 'Service_data'));
     }
 
    public function showById(Request $request, $encryptedId): View
@@ -45,7 +46,7 @@ class ProfileController extends Controller
     //$user = auth()->guard('user')->user();
     $id = Crypt::decrypt($encryptedId); 
     $user = Member::findOrFail($id);
-
+$Service_data  = Member::select('Service')->groupBy('Service')->get();
     $userId = $user->id;
  $departments = config('departments');
          $posts = Post::with(['member', 'media', 'likes', 'comments.member'])
@@ -53,16 +54,16 @@ class ProfileController extends Controller
         ->where('member_id', $userId)
         ->get();
  $userSectors = UserSectordepartment::where('user_id', $userId)->first();
-   // $selectedSectors = $userSectors ? json_decode($userSectors->sector_departments, true) : [];
-    $selectedSectors =$userSectors->sector_departments;
-    return view('profile', compact('user','posts', 'departments', 'selectedSectors'));
+    $selectedSectors = $userSectors ? $userSectors->sector_departments : [];
+    return view('profile', compact('user','posts', 'departments', 'selectedSectors', 'Service_data'));
 }
 
 public function showById_data(Request $request, $id): View
 {
 
     //$user = auth()->guard('user')->user();
-    
+ $Service_data  = Member::select('Service')->groupBy('Service')->get();
+
     $id = Crypt::decrypt($id);
     $user = Member::findOrFail($id);
 
@@ -75,12 +76,18 @@ public function showById_data(Request $request, $id): View
       $departments = config('departments');
 
  $userSectors = UserSectordepartment::where('user_id', $userId)->first();
+<<<<<<< HEAD
     //$selectedSectors = $userSectors ? json_decode($userSectors->sector_departments, true) : [];
  $selectedSectors = [];
     if ($userSectors && !empty($userSectors->sector_departments)) {
         $selectedSectors = json_decode($userSectors->sector_departments, true);
     }
     return view('profile', compact('user','posts' , 'departments', 'selectedSectors'));
+=======
+    $selectedSectors = $userSectors ? $userSectors->sector_departments : [];
+
+    return view('profile', compact('user','posts' , 'departments', 'selectedSectors', 'Service_data'));
+>>>>>>> 2b62b13f6ca3097a3188d71cf2a8bcfa92493cf0
 }
   public function edit($id)
         {

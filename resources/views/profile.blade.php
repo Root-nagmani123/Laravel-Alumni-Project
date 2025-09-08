@@ -503,10 +503,16 @@
                                                                             style="color: red">*</span></label>
                                                                 </div>
                                                                 <div class="col-9">
-                                                                    <input type="text" id="service" name="service"
+                                                                    <!-- <input type="text" id="service" name="service"
                                                                         value="{{ old('service', $user->Service) }}"
                                                                         class="form-control"
-                                                                        placeholder="Enter your Service">
+                                                                        placeholder="Enter your Service"> -->
+                                                                        <select name="service" id="service" class="form-control">
+                                                                            <option value="">Select Service</option>
+                                                                            @foreach($Service_data as $Service)
+                                                                                <option value="{{ $Service->Service }}" {{ old('service', $user->Service) == $Service->Service ? 'selected' : '' }}>{{ $Service->Service }}</option>
+                                                                            @endforeach
+                                                                        </select>
                                                                 </div>
                                                             </div>
 
