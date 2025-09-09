@@ -906,6 +906,8 @@ $removedMentees = array_diff($previousMentees, $newMentees);
             ['group_id' => $group->id],
             [
                 'mentiee' => json_encode($newMentees),
+                'member_id' => auth()->guard('admin')->id(),
+                'mentor'=>auth()->guard('admin')->id(),
                 'status' => 1,
             ]
         );
