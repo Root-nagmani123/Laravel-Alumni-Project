@@ -524,7 +524,7 @@
                                     href="{{ $member->id ? route('user.profile.data', ['id' => Crypt::encrypt($member->id)]) : '#' }}">
                                     {{ $member->name }}
                                 </a>
-                                @if($group->member_type == 2 && $group->created_by == $member->id)
+                                @if( $group->created_by == $member->id)
                                 <span class="badge bg-danger ms-2" title="Group Admin">
                                     <i class="bi bi-shield-lock"></i> Admin
                                 </span>
