@@ -150,7 +150,11 @@ Route::prefix('user')->name('user.')->group(function () {
 	   Route::get('/all-events', [DashboardController::class, 'allevents'])->name('allevents');
       Route::get('/broadcast/{id}', [FeedController::class, 'broadcastDetails'])->name('broadcastDetails');
       Route::get('/group-post/{id}', [FeedController::class, 'getPostByGroup'])->name('group-post');
-      Route::get('/library', [LibraryController::class, 'index'])->name('library');
+      Route::get('/group/edit_data_get/{id}/edit', [FeedController::class, 'edit_data_get']);
+      Route::delete('/post/media_remove/{id}', [FeedController::class, 'deleteMedia']);
+
+      Route::put('/update-post-details', [FeedController::class, 'update_topic_details'])->name('update_topic_details');
+        Route::get('/library', [LibraryController::class, 'index'])->name('library');
   	Route::post('/groups-leave', [FeedController::class, 'leaveGroup'])->name('groups.leave');
 	Route::post('/grievance.submit', [FeedController::class, 'submitGrievance'])->name('grievance.submit');
 
