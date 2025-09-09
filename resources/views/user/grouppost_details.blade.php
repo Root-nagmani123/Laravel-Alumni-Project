@@ -564,8 +564,7 @@
                     <!-- Post Content -->
                     <div class="mb-3">
                         <label for="postContent" class="form-label">Content</label>
-                        <textarea id="postContent" name="content" class="form-control" rows="5"
-                            wire:model.defer="post.content">{{ $post->content }}</textarea>
+                        <textarea id="postContent" name="content" class="form-control" rows="5">{{ $post->content }}</textarea>
                     </div>
                     <div class="mb-3">
                         <label for="videoLink" class="form-label">Video Link (YouTube, Vimeo, etc.)</label>
