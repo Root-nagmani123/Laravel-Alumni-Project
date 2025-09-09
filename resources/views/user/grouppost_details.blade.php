@@ -166,6 +166,11 @@
                                         </button>
                                     </form>
                                 </li>
+                                 <li>
+                                    <button class="text-decoration-none ms-2 border-0 bg-transparent d-flex align-items-center gap-2 text-primary edit-post-btn" data-post-id="{{ $post->id }}" data-post-content="{{ $post->content }}">
+                                        <i class="bi bi-pencil-square"></i> Edit Post
+                                    </button>
+                                </li>
                             </ul>
                         </div>
                         @endif

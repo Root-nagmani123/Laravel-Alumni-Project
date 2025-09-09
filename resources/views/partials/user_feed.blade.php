@@ -67,10 +67,13 @@
 
                             $displayName = $post->group_name ?? 'Unknown Group';
                             $designation = 'Group Post';
-                            $created_by = $post->member->name;
+                          $created_by = optional($post->member)->name;
+
 
                             // Optional: if you have a group detail page
-                            $profileLink =  route('user.profile.data', ['id' => Crypt::encrypt($post->member->id)]);
+                           $profileLink = $post->member?->id 
+    ? route('user.profile.data', ['id' => Crypt::encrypt($post->member->id)]) 
+    : null;
 
         $groupLink = route('user.group-post',['id' => encrypt($post->group_id)]);
     } else {
@@ -83,7 +86,9 @@
 
                             $displayName = $member->name ?? 'N/A';
                             $designation = $member->Service ?? 'N/A';
-                            $profileLink = route('user.profile.data', ['id' => Crypt::encrypt($member->id)]);
+                          $profileLink = $member && $member->id
+    ? route('user.profile.data', ['id' => Crypt::encrypt($member->id)])
+    : null;
 
                         }
                     @endphp

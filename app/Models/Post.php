@@ -42,16 +42,8 @@ class Post extends Model
 			return $this->hasMany(PostMedia::class);
 		}
 
-		/*public function user()
-		{
-			return $this->belongsTo(User::class);
-		}
-            */
-
-            public function user()
-            {
-                return $this->belongsTo(User::class, 'member_id'); // 'member_id' is your foreign key in `posts` table
-            }
+		
+           
 
     public function likes()
     {

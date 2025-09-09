@@ -13,6 +13,7 @@ use App\Models\Broadcast;
 use App\Models\Member;
 use App\Services\NotificationService;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Cache;
 
 use App\Models\Group;
 
@@ -115,23 +116,27 @@ class FeedController extends Controller
                      ->get();
 
          $storiesByMember = $story->groupBy('member_id');
-         $broadcast = DB::table('broadcasts')
-                ->where('status',1)
-            ->orderBy('broadcasts.id', 'desc')
-            ->get()
-            ->map(function($item) {
-        $item->enc_id = Crypt::encryptString($item->id); // extra field add
-        return $item;
-    });
+         $broadcast = Cache::remember('broadcasts', 60, function() {
+                    $broadcast = DB::table('broadcasts')
+                            ->where('status',1)
+                        ->orderBy('broadcasts.id', 'desc')
+                        ->get()
+                        ->map(function($item) {
+                    $item->enc_id = Crypt::encryptString($item->id); // extra field add
+                    return $item;
+                });
+            return $broadcast;
+            });
 
-          $events = DB::table('events')
-        ->where('status', 1)
-        ->where('end_datetime', '>', now())
-        ->orderBy('id', 'desc')
+       $events = Cache::remember('events', 60, function() {
+    return DB::table('events')
+        ->where('status',1)
+        ->where('end_datetime','>',now())
+        ->orderBy('id','desc')
         ->get();
+});
 
     $forums = DB::table('forums as f')
-    // ->join('forums_member as fm', 'fm.forums_id', '=', 'f.id')
     ->select(
         'f.id', 
         'f.name',
@@ -191,14 +196,17 @@ class FeedController extends Controller
 ->groupBy('Service')
 ->get();
 
-    $posts = Post::with([
-        'member',
-        'media',
-        'likes',
+    $posts = Post::select('id','content','created_at','group_id','video_link','member_id')
+    ->with([
+        'member:id,name,profile_pic,Service,current_designation',
+        'media:id,post_id,file_path,file_type',
+        'likes:id,post_id,member_id',
         'comments' => function($query) {
-            $query->where('status', 1);
+            $query->where('status', 1)
+                  ->select('id','post_id','comment','member_id','created_at')
+                  ->with('member:id,name,profile_pic');
         },
-        'group'
+        'group:id,name,image'
     ])
     ->where('status', 1)
     ->where(function ($query) use ($groupIds) {
@@ -225,7 +233,7 @@ class FeedController extends Controller
             'group_id' => $post->group_id,
         ];
     }); 
-
+// print_r($posts);die;
     return view('user.feed', compact('memberId', 'posts', 'user', 'story','storiesByMember', 'broadcast','events', 'forums', 'groupNames', 'members'));
     }
 
