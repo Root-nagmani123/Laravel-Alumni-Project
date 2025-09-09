@@ -564,12 +564,12 @@
                     <!-- Post Content -->
                     <div class="mb-3">
                         <label for="postContent" class="form-label">Content</label>
-                        <textarea id="postContent" name="content" class="form-control" rows="5">{{ $post->content }}</textarea>
+                        <textarea id="postContent" name="content" class="form-control" rows="5"></textarea>
                     </div>
                     <div class="mb-3">
                         <label for="videoLink" class="form-label">Video Link (YouTube, Vimeo, etc.)</label>
                         <input type="url" id="videoLink" name="video_link" class="form-control"
-                            value="{{ $post->video_link }}" placeholder="Enter video URL">
+                            value="" placeholder="Enter video URL">
                     </div>
 
                     <!-- Optional: Image/Media upload -->
