@@ -220,7 +220,7 @@
                                 <li>
                                     <a href="#"
                                         class="text-decoration-none ms-2 border-0 bg-transparent d-flex align-items-center gap-2"
-                                        data-bs-toggle="modal" data-bs-target="#editPostModal">
+                                        data-bs-toggle="modal" onclick="editGrp_post({{ $post->id }})">
                                         <i class="bi bi-pencil"></i> Edit Post
                                     </a>
                                 </li>
@@ -317,7 +317,7 @@
                     @endif
 
 
-                    @if($post->media_type == 'video' && $post->video_link)
+                    @if($post->video_link != null)
                     <div class="mt-3">
                         <iframe width="100%" height="200" src="{{ $post->video_link }}" frameborder="0"
                             allowfullscreen></iframe>
@@ -551,8 +551,11 @@
 <!-- Edit Post Modal -->
 <div class="modal fade" id="editPostModal" tabindex="-1" aria-labelledby="editPostModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
-        <form wire:submit.prevent="updatePost">
-            <div class="modal-content">
+        <form action="{{ route('user.update_topic_details')  }} " method="POST" enctype="multipart/form-data">
+        @csrf
+        @method('PUT')
+        <input type="hidden" name="post_id" id="editPostId" value="">   
+        <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="editPostModalLabel">Edit Post</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
@@ -561,27 +564,24 @@
                     <!-- Post Content -->
                     <div class="mb-3">
                         <label for="postContent" class="form-label">Content</label>
-                        <textarea id="postContent" class="form-control" rows="5"
-                            wire:model.defer="post.content"></textarea>
+                        <textarea id="postContent" name="content" class="form-control" rows="5"
+                            wire:model.defer="post.content">{{ $post->content }}</textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="videoLink" class="form-label">Video Link (YouTube, Vimeo, etc.)</label>
+                        <input type="url" id="videoLink" name="video_link" class="form-control"
+                            value="{{ $post->video_link }}" placeholder="Enter video URL">
                     </div>
 
                     <!-- Optional: Image/Media upload -->
                     <!-- Multiple Image Upload -->
                     <div class="mb-3">
                         <label for="postMedia" class="form-label">Attach Media</label>
-                        <input type="file" id="postMedia" class="form-control" multiple>
+                        <input type="file" id="postMedia" name="postMedia[]" class="form-control" multiple>
+                      <div id="currentMediaPreview" class="d-flex flex-wrap gap-3 mt-3"></div>
 
                         <!-- Static Preview Gallery -->
-                        <div class="d-flex flex-wrap gap-3 mt-3">
-                            <div class="position-relative d-inline-block">
-                                <img src="https://via.placeholder.com/150" class="img-thumbnail rounded shadow-sm"
-                                    style="max-height: 150px; max-width: 150px; object-fit: cover;">
-                                <button type="button"
-                                    class="btn btn-sm btn-danger position-absolute top-0 end-0 m-1 rounded-circle">
-                                    <i class="fa fa-times"></i>
-                                </button>
-                            </div>
-                        </div>
+                        
                     </div>
 
                 </div>
@@ -595,7 +595,87 @@
 </div>
 @section('scripts')
 <script>
+   
+     function editGrp_post(postId) {
+        // Fetch post data using AJAX
+        $.ajax({
+       url: "/user/group/edit_data_get/" + postId + "/edit",
+
+        type: "GET",
+        success: function (response) {
+            // Fill content
+            $("#postContent").val(response.post.content);
+            $("#videoLink").val(response.post.video_link);
+
+            // Empty old previews
+            $("#currentMediaPreview").html("");
+
+            // Load current images
+            if (response.post.media.length > 0) {
+                response.post.media.forEach(function (media) {
+                    let imgHtml = `
+        <div class="position-relative d-inline-block m-2" id="media-${media.id}">
+            <img src="/storage/${media.file_path}" class="img-thumbnail rounded shadow-sm"
+                 style="max-height: 150px; max-width: 150px; object-fit: cover;">
+            <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-1 rounded-circle"
+                    onclick="removeMedia(${media.id})">
+                <i class="fa fa-times"></i>
+            </button>
+        </div>
+    `;
+                    $("#currentMediaPreview").append(imgHtml);
+                });
+            }
+
+            // Set hidden post id
+            $("#editPostId").val(postId);
+
+            // Open Modal
+            $("#editPostModal").modal("show");
+        }
+    });
+    }
+    function removeMedia(mediaId) {
+      
+                 $.ajax({
+        url: "/user/post/media_remove/" + mediaId,
+        type: "DELETE",
+        data: {
+            _token: "{{ csrf_token() }}"
+        },
+        success: function(response) {
+            if(response.success) {
+                $("#media-" + mediaId).remove();
+            }
+        }
+    });
+           
+    }
 $(document).ready(function() {
+   
+$("#postMedia").on("change", function() {
+    $("#currentMediaPreview").append(""); 
+    let files = this.files;
+
+    Array.from(files).forEach((file, index) => {
+        let reader = new FileReader();
+        reader.onload = function(e) {
+            let tempId = "new-" + index;
+            let imgHtml = `
+                <div class="position-relative d-inline-block m-2" id="${tempId}">
+                    <img src="${e.target.result}" class="img-thumbnail rounded shadow-sm"
+                         style="max-height: 150px; max-width: 150px; object-fit: cover;">
+                    <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-1 rounded-circle"
+                            onclick="$('#${tempId}').remove()">
+                        <i class="fa fa-times"></i>
+                    </button>
+                </div>
+            `;
+            $("#currentMediaPreview").append(imgHtml);
+        };
+        reader.readAsDataURL(file);
+    });
+});
     // Move to selected
     $('#addMemberBtn').click(function() {
         $('#availableMembers option:selected').each(function() {

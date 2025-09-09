@@ -414,6 +414,7 @@ public function update(Request $request, Group $group)
 
 public function save_topic(Request $request, $group_id)
 {
+    $group_id = decrypt($group_id);
     // 1️⃣ Validation
     $request->validate([
         'description' => 'nullable|string',
