@@ -15,11 +15,13 @@
         Group Posts: {{ $group->name ?? '' }}
     </h1>
 
+    @if($group->member_type == 2 && $group->created_by == auth()->guard('user')->user()->id)
     <!-- Edit Button -->
     <button type="button" class="btn btn-sm btn-light text-primary" 
             data-bs-toggle="modal" data-bs-target="#editGroupModal" title="Edit Group">
         <i class="fa-solid fa-pen"></i>
     </button>
+    @endif
 
     <!-- Delete Button -->
     {{-- <button type="button" class="btn btn-sm btn-light text-danger" 

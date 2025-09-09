@@ -677,7 +677,7 @@ public function deleteTopic($id)
 
     public function store_ajax(Request $request)
     {
-        
+        $creatorId = auth()->guard('user')->id();
 
         if ($request->group_id) {
             /**
