@@ -94,11 +94,11 @@ class GroupController extends Controller
         // ]);
     
         // Notify only if status is active and not yet notified
-        if ($group->status == 1 && now()->lt($group->end_date)) {
-                // Notify members about the group creation
-                $notification = $this->notificationService->notifyAllMembers('group', $group->name . ' group has been created.', $group->id, 'group', Auth::id());
+        // if ($group->status == 1 && now()->lt($group->end_date)) {
+        //         // Notify members about the group creation
+        //         $notification = $this->notificationService->notifyAllMembers('group', $group->name . ' group has been created.', $group->id, 'group', Auth::id());
 
-            }
+        // }
 
         $this->recentActivityService->logActivity(
             'New Group Created',
@@ -912,6 +912,8 @@ public function deleteTopic($id)
 
         // Find only newly added mentees
         $addedMentees = array_diff($newMentees, $previousMentees);
+        $removedMentees = array_diff($previousMentees, $newMentees);
+        $remainingMentees = array_intersect($newMentees, $previousMentees);
 
         // Update mentee list in DB
         GroupMember::updateOrCreate(
@@ -922,6 +924,42 @@ public function deleteTopic($id)
             ]
         );
 
+        // 1️⃣ Notify newly added mentees
+        if (!empty($addedMentees)) {
+            $this->notificationService->notifyMemberAdded(
+                $addedMentees,
+                'group_member_added',
+                'You have been added to the group ' . $group->name,
+                $group->id,
+                'group',
+                auth()->guard('admin')->id()
+            );
+        }
+
+        // 2️⃣ Notify removed mentees
+        if (!empty($removedMentees)) {
+            $this->notificationService->notifyMemberAdded(
+                $removedMentees,
+                'group_member_removed',
+                'You have been removed from the group ' . $group->name,
+                $group->id,
+                'remove_member',
+                auth()->guard('admin')->id()
+            );
+        }
+
+        // 3️⃣ Notify remaining mentees about removal
+        if (!empty($removedMentees) && !empty($remainingMentees)) {
+            $this->notificationService->notifyMemberAdded(
+                $remainingMentees,
+                'group_members_removed',
+                'Some members have been removed from the group ' . $group->name,
+                $group->id,
+                'remove_member',
+                auth()->guard('admin')->id()
+            );
+        }
+
         $this->recentActivityService->logActivity(
             'Group Members Updated',
             'Group',
@@ -930,18 +968,6 @@ public function deleteTopic($id)
             1,
             $group->id
         );
-
-        // Notify only newly added mentees
-        if (!empty($addedMentees)) {
-            $this->notificationService->notifyMemberAdded(
-                $addedMentees,
-                'group_member',
-                'You have been added to the group: ' . $group->name,
-                $group->id,
-                'group',
-                auth()->guard('admin')->id()
-            );
-        }
 
         return response()->json([
             'success' => true,
