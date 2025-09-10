@@ -164,11 +164,17 @@
             <i class="bi bi-pen fa-fw pe-2"></i>Edit post 
         </a>
     </li>
-    <li>
-        <a class="dropdown-item " href="#">
-            <i class="bi bi-trash fa-fw pe-2"></i>Delete post
-        </a>
-    </li>
+     <li>
+                                    <form action="{{ route('user.group.post.destroy', $post->id) }}" method="POST"
+                                        onsubmit="return confirm('Are you sure you want to delete this post?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit"
+                                            class="text-decoration-none ms-2 border-0 bg-transparent d-flex align-items-center gap-2 text-danger">
+                                            <i class="bi bi-trash"></i> Delete Post
+                                        </button>
+                                    </form>
+                                </li>
 </ul>
 
 
