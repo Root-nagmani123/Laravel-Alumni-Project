@@ -160,8 +160,8 @@
                                 </a>
 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="cardFeedAction">
     <li>
-        <a class="dropdown-item" href="#">
-            <i class="bi bi-pen fa-fw pe-2"></i>Edit post
+        <a class="dropdown-item" onclick="editGrp_post({{ $post->id }})" href="#">
+            <i class="bi bi-pen fa-fw pe-2"></i>Edit post 
         </a>
     </li>
     <li>
@@ -378,19 +378,18 @@
 
                 <!-- Comment box  -->
 
-                <form class="nav nav-item w-100 position-relative" id="commentForm-{{ $post->id }}"
-                    action="{{ route('user.comments.store') }}" method="POST" data-post-id="{{ $post->id }}">
-                    @csrf
-                    <textarea name="comment" data-autoresize class="form-control pe-5 bg-light user_feed_comment" rows="1"
-                        placeholder="Add a comment..." id="comments-{{ $post->id }}"></textarea>
-                    <input type="hidden" name="post_id" value="{{ $post->id }}">
-                    <button
-                        class="nav-link bg-transparent px-3 position-absolute top-50 end-0 translate-middle-y border-0"
-                        type="submit">
-                        <i class="bi bi-send-fill"></i>
-                    </button>
-
-                </form>
+                <form class="nav nav-item w-100 position-relative commentForm" id="commentForm-{{ $post->id }}"
+      action="{{ route('user.comments.store') }}" method="POST" data-post-id="{{ $post->id }}">
+    @csrf
+    <textarea name="comment" class="form-control pe-5 bg-light user_feed_comment commentInput" rows="1"
+        placeholder="Add a comment..." id="comments-{{ $post->id }}"></textarea>
+    <input type="hidden" name="post_id" value="{{ $post->id }}">
+    <button class="nav-link bg-transparent px-3 position-absolute top-50 end-0 translate-middle-y border-0"
+        type="submit">
+        <i class="bi bi-send-fill"></i>
+    </button>
+    <div class="comment-error text-danger small mt-1"></div>
+</form>
 
             </div>
              @endif
@@ -629,10 +628,135 @@ $commentText = preg_replace_callback(
     </form>
   </div>
  </div>
+ <div class="modal fade" id="editPostModal" tabindex="-1" aria-labelledby="editPostModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <form action="{{ route('user.update_topic_details')  }} " method="POST" enctype="multipart/form-data">
+        @csrf
+        @method('PUT')
+        <input type="hidden" name="post_id" id="editPostId" value="">   
+        <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editPostModalLabel">Edit Post</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Post Content -->
+                    <div class="mb-3">
+                        <label for="postContent" class="form-label">Content</label>
+                        <textarea id="postContent" name="content" class="form-control" rows="5"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="videoLink" class="form-label">Video Link (YouTube, Vimeo, etc.)</label>
+                        <input type="url" id="videoLink" name="video_link" class="form-control"
+                            value="" placeholder="Enter video URL">
+                    </div>
+
+                    <!-- Optional: Image/Media upload -->
+                    <!-- Multiple Image Upload -->
+                    <div class="mb-3">
+                        <label for="postMedia" class="form-label">Attach Media</label>
+                        <input type="file" id="postMedia" name="postMedia[]" class="form-control" multiple>
+                      <div id="currentMediaPreview" class="d-flex flex-wrap gap-3 mt-3"></div>
+
+                        <!-- Static Preview Gallery -->
+                        
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Update Post</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
 <!-- Direct Message Modal end -->
 
 @section('scripts')
+
 <script>
+    function editGrp_post(postId) {
+        // Fetch post data using AJAX
+        $.ajax({
+       url: "/user/group/edit_data_get/" + postId + "/edit",
+
+        type: "GET",
+        success: function (response) {
+            // Fill content
+            $("#postContent").val(response.post.content);
+            $("#videoLink").val(response.post.video_link);
+
+            // Empty old previews
+            $("#currentMediaPreview").html("");
+
+            // Load current images
+            if (response.post.media.length > 0) {
+                response.post.media.forEach(function (media) {
+                    let imgHtml = `
+        <div class="position-relative d-inline-block m-2" id="media-${media.id}">
+            <img src="/storage/${media.file_path}" class="img-thumbnail rounded shadow-sm"
+                 style="max-height: 150px; max-width: 150px; object-fit: cover;">
+            <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-1 rounded-circle"
+                    onclick="removeMedia(${media.id})">
+                <i class="fa fa-times"></i>
+            </button>
+        </div>
+    `;
+                    $("#currentMediaPreview").append(imgHtml);
+                });
+            }
+
+            // Set hidden post id
+            $("#editPostId").val(postId);
+
+            // Open Modal
+            $("#editPostModal").modal("show");
+        }
+    });
+    }
+    function removeMedia(mediaId) {
+      
+                 $.ajax({
+        url: "/user/post/media_remove/" + mediaId,
+        type: "DELETE",
+        data: {
+            _token: "{{ csrf_token() }}"
+        },
+        success: function(response) {
+            if(response.success) {
+                $("#media-" + mediaId).remove();
+            }
+        }
+    });
+           
+    }
+$(document).ready(function() {
+   
+$("#postMedia").on("change", function() {
+    $("#currentMediaPreview").append(""); 
+    let files = this.files;
+
+    Array.from(files).forEach((file, index) => {
+        let reader = new FileReader();
+        reader.onload = function(e) {
+            let tempId = "new-" + index;
+            let imgHtml = `
+                <div class="position-relative d-inline-block m-2" id="${tempId}">
+                    <img src="${e.target.result}" class="img-thumbnail rounded shadow-sm"
+                         style="max-height: 150px; max-width: 150px; object-fit: cover;">
+                    <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-1 rounded-circle"
+                            onclick="$('#${tempId}').remove()">
+                        <i class="fa fa-times"></i>
+                    </button>
+                </div>
+            `;
+            $("#currentMediaPreview").append(imgHtml);
+        };
+        reader.readAsDataURL(file);
+    });
+});
+});
    var tribute = new Tribute({
     trigger: '@',
     itemClass: 'tribute-item',
@@ -1102,7 +1226,6 @@ document.addEventListener("DOMContentLoaded", function () {
     initZuckStories(filteredStories);
 });
 
-
 // delete stories
 function deleteStory(storyId) {
         fetch(`{{ route('user.stories.destroy', ['id' => '__ID__']) }}`.replace('__ID__', storyId), {
@@ -1238,45 +1361,75 @@ $('#editPostForm').on('submit', function(e) {
 });
 
 
-$(document).ready(function () {
-    $('.commentForm').on('submit', function (e) {
-        e.preventDefault();
+$(document).on('submit', '.commentForm', function(e) {
+    e.preventDefault();
 
-        let form = $(this);
-        let postId = form.data('post-id');
-        let textarea = form.find('.commentInput');
-        let errorDiv = form.find('.comment-error');
-        errorDiv.text(''); // clear previous errors
+    let form = $(this);
+    let postId = form.data('post-id');
+    let textarea = form.find('.commentInput');
+    let errorDiv = form.find('.comment-error');
+    let commentList = form.closest('.card-body').find('.comment-wrap');
 
-        if ($.trim(textarea.val()) === '') {
-            errorDiv.text('Comment is required.');
-            textarea.focus();
-            return false;
-        }
+    errorDiv.text(''); // clear previous errors
 
-        let formData = form.serialize(); // serialize form data
+    if ($.trim(textarea.val()) === '') {
+        errorDiv.text('Comment is required.');
+        textarea.focus();
+        return false;
+    }
 
-        $.ajax({
-            url: form.attr('action'),
-            method: 'POST',
-            data: formData,
-            success: function (response) {
-                if (response.status === 'success') {
-                    textarea.val(''); // clear comment box
-                    errorDiv.removeClass('text-danger').addClass('text-success').text('Comment added successfully!');
+    let formData = form.serialize();
 
-                    // Optionally append to comment list
-                    // $('#comment-list-' + postId).append(`<div><strong>You:</strong> ${response.comment.comment}</div>`);
-                }
-            },
-            error: function (xhr) {
-                if (xhr.responseJSON?.errors?.comment) {
-                    errorDiv.text(xhr.responseJSON.errors.comment[0]);
-                } else {
-                    errorDiv.text('An error occurred.');
-                }
+    $.ajax({
+        url: form.attr('action'),
+        method: 'POST',
+        data: formData,
+        success: function (response) {
+            if (response.status === 'success') {
+                textarea.val(''); // clear comment box
+
+                // Build new comment HTML (customize as needed)
+                let newComment = `
+<li class="comment-item mb-3" id="comment-${response.comment.id}">
+    <div class="d-flex position-relative">
+        <div class="avatar avatar-xs">
+            <a href="${response.comment.member_profile_url}">
+                <img class="avatar-img rounded-circle"
+                     src="${response.comment.member_avatar}"
+                     alt="" loading="lazy" decoding="async">
+            </a>
+        </div>
+        <div class="ms-2 w-100">
+            <div class="bg-light rounded-start-top-0 p-3 rounded">
+                <div class="d-flex justify-content-between">
+                    <h6 class="mb-1">
+                        <a href="${response.comment.member_profile_url}">${response.comment.member_name}</a>
+                    </h6>
+                    <small class="ms-2">Just now</small>
+                </div>
+                <p class="small mb-0" id="comment-text-${response.comment.id}">${response.comment.parsed_comment}</p>
+            </div>
+        </div>
+    </div>
+</li>
+                `;
+                commentList.prepend(newComment);
+
+                // Update comment count
+                let countSpan = form.closest('.card').find('.comment-count');
+                let count = parseInt(countSpan.text().replace(/[()]/g, '')) || 0;
+                countSpan.text('(' + (count + 1) + ')');
+            } else {
+                errorDiv.text(response.message || 'Failed to add comment.');
             }
-        });
+        },
+        error: function (xhr) {
+            if (xhr.responseJSON?.errors?.comment) {
+                errorDiv.text(xhr.responseJSON.errors.comment[0]);
+            } else {
+                errorDiv.text('An error occurred.');
+            }
+        }
     });
 });
 document.addEventListener("DOMContentLoaded", function () {

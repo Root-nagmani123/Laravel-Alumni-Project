@@ -15,6 +15,7 @@ use App\Services\NotificationService;
 use Illuminate\Support\Facades\Crypt;
 
 use App\Models\Group;
+use App\Models\PostMedia;
 
 
 class FeedController extends Controller
@@ -483,6 +484,77 @@ if ($group) {
 ->get();
         // print_r($grp_members);die;
     return view('user.grouppost_details', compact('posts','group','isMentee','grp_members','members'));
+}
+function edit_data_get($id){
+     $post = Post::select('id', 'content', 'video_link')
+        ->with(['media:id,post_id,file_path'])
+        ->findOrFail($id);
+
+    return response()->json([
+        'post' => $post
+    ]);
+}
+public function deleteMedia($id)
+{
+    $media = PostMedia::findOrFail($id);
+
+    // file delete
+    \Storage::delete('public/' . $media->file_path);
+
+    // db delete
+    $media->delete();
+
+    return response()->json(['success' => true]);
+}
+function update_topic_details(Request $request) 
+    {
+        $request->validate([
+        'post_id' => 'required|exists:posts,id',
+        'content' => 'required|string',
+        'video_link' => 'nullable|url',
+        'postMedia.*' => 'image|mimes:jpg,jpeg,png,gif,webp|max:2048'
+    ]);
+       $videoId = null;
+ if ($request->video_link) {
+             
+$url = $request->video_link;
+    // Agar query string wala link hai (watch?v=xxxx)
+    if (strpos($url, 'watch?v=') !== false) {
+        parse_str(parse_url($url, PHP_URL_QUERY), $query);
+        $videoId = $query['v'] ?? null;
+    }
+    // Agar short link hai (youtu.be/xxxx)
+    elseif (strpos($url, 'youtu.be/') !== false) {
+        $videoId = basename(parse_url($url, PHP_URL_PATH));
+    }
+    // Agar embed link hai (youtube.com/embed/xxxx)
+    elseif (strpos($url, '/embed/') !== false) {
+        $videoId = basename(parse_url($url, PHP_URL_PATH));
+    }
+    // Agar shorts link hai (youtube.com/shorts/xxxx)
+    elseif (strpos($url, '/shorts/') !== false) {
+        $videoId = basename(parse_url($url, PHP_URL_PATH));
+    }
+            }
+    $post = Post::findOrFail($request->post_id);
+    $post->content = $request->content;
+    $post->video_link = $videoId ? "https://www.youtube.com/embed/" . $videoId : null;
+    $post->save();
+
+    // 2. Add new media (jo user ne abhi upload kiya h)
+    if ($request->hasFile('postMedia')) {
+        foreach ($request->file('postMedia') as $file) {
+            $path = $file->store('posts', 'public');
+
+            PostMedia::create([
+                'post_id' => $post->id,
+                'file_path' => $path,
+            ]);
+        }
+    }
+
+    return redirect()->back()->with('success', 'Post updated successfully.');
+ 
 }
     public function getPostByGroup_bkp($group_id)
     {
