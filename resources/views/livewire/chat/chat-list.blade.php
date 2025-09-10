@@ -155,17 +155,13 @@
     </div>
     <!-- Chat sidebar END -->
 
-    <!-- Chat END -->
-
+    <div>
     <!-- Chat START -->
-
-
-
     @if($selectedChat)
         <div class="toast-container toast-chat d-flex gap-3 align-items-end">
 
             <!-- Chat toast START -->
-            <div id="chatToast-{{ $selectChat->id }}" class="toast mb-0 bg-mode fade show" role="alert"
+            <div id="chatToast-{{ $selectedChat }}" class="toast mb-0 bg-mode fade show" role="alert"
                 aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
 
                 <!-- Header -->
@@ -173,87 +169,48 @@
                     <div class="d-flex justify-content-between align-items-center w-100">
                         <div class="d-flex">
                             <div class="flex-shrink-0 avatar me-2 position-relative">
-
                                 @php
-                                    $profileImage = '';
-                                    $user = App\Models\Member::find($selectChat->id);
-                                    if (
-                                        $user && !empty($user->profile_pic) &&
-                                        Storage::disk('public')->exists($user->profile_pic)
-                                    ) {
-                                        $profileImage = asset('storage/' . $user->profile_pic);
-                                    } else {
-                                        $profileImage = asset('feed_assets/images/avatar/07.jpg');
-                                    }
+                                    $user = App\Models\Member::find($selectedChat);
+                                    $profileImage = $user && $user->profile_pic && Storage::disk('public')->exists($user->profile_pic)
+                                        ? asset('storage/'.$user->profile_pic)
+                                        : asset('feed_assets/images/avatar/07.jpg');
+                                    $lastSeen = $user && $user->last_seen ? \Carbon\Carbon::parse($user->last_seen)->diffForHumans() : null;
+                                    $isOnline = $user->is_online == 1 && $user->last_seen;
                                 @endphp
                                 <img class="avatar-img rounded-circle" src="{{ $profileImage }}" alt="">
-                                <!-- <span
-                                    class="position-absolute bottom-0 end-0 p-1 bg-success border border-light rounded-circle"></span> -->
                             </div>
                             <div class="flex-grow-1">
-                                <h6 class="mb-0 mt-1">{{ $selectChat->name }}</h6>
+                                <h6 class="mb-0 mt-1">{{ $user->name ?? 'Unknown' }}</h6>
                                 <div class="small text-secondary">
-                                    @php
-                                        $lastSeen = $user && $user->last_seen ? \Carbon\Carbon::parse($user->last_seen)->diffForHumans() : null;
-                                        $isOnline = $user->is_online == 1 && $user->last_seen;
-
-                                    @endphp
-
                                     @if($isOnline)
                                         <i class="fa-solid fa-circle text-success me-1"></i>Online
                                     @else
-                                        @if($lastSeen)
-                                            <i class="fa-solid fa-circle text-secondary me-1"></i>{{ $lastSeen }}
-                                        @else
-                                            <i class="fa-solid fa-circle text-secondary me-1"></i>Offline
-                                        @endif
+                                        <i class="fa-solid fa-circle text-secondary me-1"></i>{{ $lastSeen ?? 'Offline' }}
                                     @endif
-
                                 </div>
                             </div>
                         </div>
 
                         <div class="d-flex gap-1">
-                            <!-- Collapse -->
-                            <a class="btn btn-secondary-soft-hover d-flex align-items-center justify-content-center p-0"
-                                style="width:32px; height:32px;" data-bs-toggle="collapse"
-                                href="#collapseChat-{{ $selectChat->id }}">
-                                <i class="bi bi-dash-lg"></i>
-                            </a>
-
                             <!-- Close -->
                             <button type="button"
                                 class="btn btn-secondary-soft-hover d-flex align-items-center justify-content-center p-0"
                                 style="width:32px; height:32px;" data-bs-dismiss="toast"
-                                wire:click="closeChat({{ $selectChat->id }})">
+                                wire:click="closeChat({{ $selectedChat }})">
                                 <i class="fa-solid fa-xmark"></i>
                             </button>
                         </div>
-
                     </div>
                 </div>
 
                 <!-- Body -->
-                <div class="toast-body collapse show" id="collapseChat-{{ $selectChat->id }}">
+                <div class="toast-body collapse show" id="collapseChat-{{ $selectedChat }}">
                     <div class="chat-conversation-content custom-scrollbar h-200px" style="overflow-y:auto;"
-                        id="chat-container-{{ $selectChat->id }}">
-
-@if($hasMoreMessages) 
-<div class="d-flex justify-content-center my-3">
-    <div class="chat-loader text-center px-3 py-1 rounded-pill shadow-sm" wire:click="loadOlderMessages"
-        wire:loading.attr="disabled"
-        style="cursor:pointer; background:#f8f9fa; border:1px solid #e0e0e0; transition: all 0.3s ease;">
-        <i
-        class="fa-solid fa-clock-rotate-left me-1 text-primary"></i> <span
-        class="small fw-semibold text-primary">Load previous messages</span>
-    </div>
-</div> 
-@endif  
+                        id="chat-container-{{ $selectedChat }}">
 
                         @php
-                            $groupedMessages = $messages->groupBy(
-                                fn($m) =>
-                                \Carbon\Carbon::parse($m->created_at)->format('Y-m-d')
+                            $groupedMessages = $chatMessages->groupBy(
+                                fn($m) => \Carbon\Carbon::parse($m->created_at)->format('Y-m-d')
                             );
                         @endphp
 
@@ -263,31 +220,32 @@
                                 {{ \Carbon\Carbon::parse($date)->isToday() ? 'Today' : \Carbon\Carbon::parse($date)->format('M j, Y') }}
                             </div>
 
-                            @foreach ($dailyMessages as $message)
-                                @if ($message->sender_id != auth()->guard('user')->id())
+                            @foreach ($dailyMessages as $msg)
+                                @if ($msg->sender_id != auth()->id())
                                     <!-- Received -->
                                     <div class="d-flex mb-1">
                                         <div class="flex-shrink-0 avatar avatar-xs me-2">
-                                            @php
-                                                $profileImage = '';
-                                                $user = App\Models\Member::find($selectChat->id);
-                                                if (
-                                                    $user && !empty($user->profile_pic) &&
-                                                    Storage::disk('public')->exists($user->profile_pic)
-                                                ) {
-                                                    $profileImage = asset('storage/' . $user->profile_pic);
-                                                } else {
-                                                    $profileImage = asset('feed_assets/images/avatar/07.jpg');
-                                                }
-                                            @endphp
                                             <img class="avatar-img rounded-circle" src="{{ $profileImage }}" alt="">
                                         </div>
                                         <div class="flex-grow-1">
                                             <div class="d-flex flex-column align-items-start">
                                                 <div class="bg-light text-secondary p-2 px-3 rounded-2">
-                                                    {{ $message->message }}
+                                                    @if($msg->file_path)
+                                                        @if($msg->file_type == 'image')
+                                                            <img src="{{ asset('storage/'.$msg->file_path) }}" class=   "rounded mb-1" style="max-width:200px;">
+                                                        @elseif($msg->file_type == 'video')
+                                                            <video controls style="max-width:200px;">
+                                                                <source src="{{ asset('storage/'.$msg->file_path) }}" type="video/mp4">
+                                                            </video>
+                                                        @else
+                                                            <a href="{{ asset('storage/'.$msg->file_path) }}" target="_blank">
+                                                                <i class="fa-solid fa-file"></i> {{ basename($msg->file_path) }}
+                                                            </a>
+                                                        @endif
+                                                    @endif
+                                                    {{ $msg->message }}
                                                 </div>
-                                                <div class="small my-1">{{ $message->created_at->format('g:i A') }}</div>
+                                                <div class="small my-1">{{ $msg->created_at->format('g:i A') }}</div>
                                             </div>
                                         </div>
                                     </div>
@@ -296,92 +254,104 @@
                                     <div class="d-flex justify-content-end text-end mb-1">
                                         <div class="d-flex flex-column align-items-end">
                                             <div class="text-white p-2 px-3 rounded-2" style="background:#af2910;">
-                                                {{ $message->message }}
+                                                @if($msg->file_path)
+                                                    @if($msg->file_type == 'image')
+                                                        <img src="{{ asset('storage/'.$msg->file_path) }}" class="rounded mb-1" style="max-width:200px;">
+                                                    @elseif($msg->file_type == 'video')
+                                                        <video controls style="max-width:200px;">
+                                                            <source src="{{ asset('storage/'.$msg->file_path) }}" type="video/mp4">
+                                                        </video>
+                                                    @else
+                                                        <a href="{{ asset('storage/'.$msg->file_path) }}" target="_blank" class="text-white">
+                                                            <i class="fa-solid fa-file"></i> {{ basename($msg->file_path) }}
+                                                        </a>
+                                                    @endif
+                                                @endif
+                                                {{ $msg->message }}
                                             </div>
-                                            <div class="small my-1 text-secondary">{{ $message->created_at->format('g:i A') }}</div>
+                                            <div class="small my-1 text-secondary">{{ $msg->created_at->format('g:i A') }}</div>
                                         </div>
                                     </div>
                                 @endif
                             @endforeach
                         @endforeach
-
                     </div>
 
                     <!-- Message input -->
                     <div class="chat-input mt-3 position-relative">
-    <form wire:submit.prevent="submit" class="d-flex align-items-center position-relative">
+                        <form wire:submit.prevent="submit" class="d-flex align-items-center position-relative">
 
-        <!-- Input container -->
-        <div class="input-wrapper flex-grow-1 d-flex align-items-center bg-white rounded-pill px-3 py-2 shadow-sm">
-            
-            <!-- Attachment button -->
-            <button type="button" class="btn btn-light btn-sm me-2 d-flex align-items-center justify-content-center"
-                    style="width:36px; height:36px; border-radius:50%; font-size:16px; color:#555;">
-                <i class="fa-solid fa-paperclip"></i>
-            </button>
+                            <!-- Input container -->
+                            <div class="input-wrapper flex-grow-1 d-flex align-items-center bg-white rounded-pill px-3 py-2 shadow-sm">
+                                
+                                <!-- Hidden file input -->
+                                <input type="file" id="chat-attachment" class="d-none"
+                                    wire:model="attachment"
+                                    accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.zip,.mp4,.mov,.avi,.mkv" />
 
-            <!-- Auto-expanding textarea -->
-            <textarea class="form-control border-0 flex-grow-1 bg-transparent"
-                      rows="1"
-                      wire:model.defer="newMessage"
-                      wire:key="message-input-{{ now() }}"
-                      wire:keydown.enter="submit"
-                      placeholder="Type a message..."
-                      style="resize:none; overflow:hidden; outline:none; font-size:14px; line-height:1.4;"></textarea>
-        </div>
+                                <!-- Attachment button -->
+                                <button type="button"
+                                        onclick="document.getElementById('chat-attachment').click()"
+                                        class="btn btn-light btn-sm me-2 d-flex align-items-center justify-content-center"
+                                        style="width:36px; height:36px; border-radius:50%; font-size:16px; color:#555;">
+                                    <i class="fa-solid fa-paperclip"></i>
+                                </button>
 
-        <!-- Send / Mic button -->
-        <button type="submit"
-                class="btn send-btn position-absolute d-flex align-items-center justify-content-center"
-                style="width:44px; height:44px; border-radius:50%; right:10px; top:50%; transform: translateY(-50%); background:#af2910; color:#fff; border:none;">
-            <i class="fa-solid fa-paper-plane"></i>
-        </button>
-    </form>
-</div>
+                                <!-- Auto-expanding textarea -->
+                                <textarea class="form-control border-0 flex-grow-1 bg-transparent"
+                                        rows="1"
+                                        wire:model.defer="newMessage"
+                                        wire:key="chat-message-input-{{ now() }}"
+                                        placeholder="Type a message..."
+                                        style="resize:none; overflow:hidden; outline:none; font-size:14px; line-height:1.4;"></textarea>
+                            </div>
 
-<style>
-.chat-input textarea {
-    min-height: 36px;
-    max-height: 120px;
-    overflow-y: hidden;
-}
+                            <!-- Send button -->
+                            <button type="submit"
+                                    class="btn send-btn position-absolute d-flex align-items-center justify-content-center"
+                                    style="width:44px; height:44px; border-radius:50%; right:10px; top:50%; transform: translateY(-50%); background:#af2910; color:#fff; border:none;">
+                                <i class="fa-solid fa-paper-plane"></i>
+                            </button>
+                        </form>
 
-.chat-input textarea:focus {
-    box-shadow: none;
-}
-
-.chat-input .send-btn {
-    transition: all 0.2s;
-}
-
-.chat-input .send-btn:hover {
-    transform: translateY(-50%) scale(1.1);
-}
-
-.chat-input .send-btn:active {
-    transform: translateY(-50%) scale(0.95);
-}
-</style>
-
-<script>
-// Auto-expand textarea like WhatsApp
-document.querySelectorAll('.chat-input textarea').forEach(textarea => {
-    textarea.addEventListener('input', e => {
-        textarea.style.height = 'auto';
-        textarea.style.height = textarea.scrollHeight + 'px';
-    });
-});
-</script>
-
-
-
-
+                        <!-- File preview -->
+                        @if ($attachment)
+    <div class="mt-2 d-flex align-items-center gap-2">
+        @if ($attachment instanceof \Livewire\Features\SupportFileUploads\TemporaryUploadedFile)
+            {{-- Preview before save --}}
+            @if(str_starts_with($attachment->getMimeType(), 'image/'))
+                <img src="{{ $attachment->temporaryUrl() }}" class="rounded border" style="max-height:80px;">
+            @else
+                <div class="p-2 border rounded small bg-light">
+                    <i class="fa-solid fa-file me-1"></i> {{ $attachment->getClientOriginalName() }}
                 </div>
+            @endif
+        @else
+            {{-- Already saved file (after submit) --}}
+            @if(in_array(pathinfo($attachment, PATHINFO_EXTENSION), ['jpg','jpeg','png','gif','webp']))
+                <img src="{{ asset('storage/' . $attachment) }}" class="rounded border" style="max-height:80px;">
+            @else
+                <div class="p-2 border rounded small bg-light">
+                    <i class="fa-solid fa-file me-1"></i> {{ basename($attachment) }}
+                </div>
+            @endif
+        @endif
 
+        <!-- Cancel/remove button -->
+        <button type="button" wire:click="$set('attachment', null)" 
+                class="btn btn-sm btn-outline-danger rounded-circle">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+    </div>
+@endif
+
+                    </div>
+                </div>
             </div>
             <!-- Chat toast END -->
-
         </div>
     @endif
     <!-- Chat END -->
+</div>
+
 </div>
