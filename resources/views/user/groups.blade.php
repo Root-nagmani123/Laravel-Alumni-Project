@@ -19,7 +19,7 @@
                 <li class="nav-item" role="presentation">
                     <button class="nav-link" id="inactive-tab" data-bs-toggle="tab" data-bs-target="#inactive-groups"
                         type="button" role="tab" aria-controls="inactive-groups" aria-selected="false">
-                        Inactive Groups
+                        Expired Groups
                     </button>
                 </li>
             </ul>
