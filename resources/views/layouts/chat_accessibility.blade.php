@@ -1,11 +1,14 @@
 @if(strtolower(auth()->guard('user')->user()->Service) == 'ias')
+@php $unreadCount = App\Models\Member::find(auth()->guard('user')->id())->unreadMessages->count(); @endphp
 <div class="d-none d-lg-block position-relative">
     <a data-bs-toggle="offcanvas" href="#offcanvasChat" role="button" aria-controls="offcanvasChat"
         class="floating-chat-btn">
 
         <div class="chat-icon">
             <i class="bi bi-chat-left-text-fill" style="font-size: 20px; color: #fff;"></i>
-            <span class="chat-dot d-none" id="unread-count-{{ auth()->guard('user')->id() }}"></span>
+            <span class="" id="unread-count-{{ auth()->guard('user')->id() }}">
+                {{ $unreadCount ?? '' }}
+            </span>
         </div>
         <span class="chat-text">Mentor/Mentee Conversation</span>
     </a>
