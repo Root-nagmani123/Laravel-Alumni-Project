@@ -104,7 +104,7 @@
                                         {{ \Carbon\Carbon::parse($group->end_date)->format('d-m-Y') }}
                                         @endif
                                     </td>
-                                    <td>{{ optional($group->groupMember)->getMembersCount() ?? 0 }} | <a href="javascript:void(0)"
+                                    <td>{{ count($group->all_members) ?? 0 }} | <a href="javascript:void(0)"
                                             data-bs-toggle="modal" data-bs-target="#addMemberModal" class="btn btn-primary btn-sm add_member_" data-id="{{ $group->id }}">
                                             Add Members
                                         </a></td>
