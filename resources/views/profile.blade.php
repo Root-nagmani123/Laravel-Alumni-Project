@@ -2279,5 +2279,30 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 });
 </script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const modal = document.getElementById("editProfileModal"); // replace with your modal ID
+
+    if (modal) {
+        modal.addEventListener("hidden.bs.modal", function () {
+            // Reset only sector & ministries tab
+            document.querySelectorAll('#sector-ministries input[type="checkbox"]').forEach(cb => {
+                // Restore to server-rendered state (Laravel already printed `checked` if saved)
+                cb.checked = cb.defaultChecked;
+
+                // Handle show/hide for sector groups
+                if (cb.classList.contains("toggle-sector")) {
+                    const target = document.querySelector(cb.dataset.target);
+                    if (target) {
+                        target.style.display = cb.defaultChecked ? "" : "none";
+                    }
+                }
+            });
+        });
+    }
+});
+</script>
+
+
 
 @endsection
