@@ -1,3 +1,4 @@
+
 <!-- Main content START -->
      <!-- Story START -->
     <div class="d-flex gap-2 mb-4" style="margin-left:-.5rem;">
@@ -520,9 +521,10 @@ $commentText = preg_replace_callback(
                 <!-- Comment item END -->
             </ul>
             <!-- Card body END -->
-         @if(isset($member->id) && $member->id === auth()->guard('user')->id())
+        @if(isset($member->id) && $member->id === auth()->guard('user')->id())
 
-                        @if ($post->comments->count() > 2)
+                    {{-- Case 1: Post owner can load all comments --}}
+                    @if ($post->comments->count() > 2)
                         <div class="card-footer border-0 pt-0">
                             <a href="#!" class="btn btn-link btn-sm text-secondary load-more-comments"
                             data-post-id="{{ $post->id }}" data-offset="2">
@@ -534,8 +536,52 @@ $commentText = preg_replace_callback(
                                 Load more comments
                             </a>
                         </div>
-                        @endif
-                        @endif
+                    @endif
+
+                @else
+
+                   {{-- Case 2: Logged-in commenter or mentioned user → show only own comments and mentions --}}
+@php
+    $currentUser = auth()->guard('user')->user();
+
+    $userComments = $post->comments->filter(function($comment) use ($currentUser) {
+        // Apna comment
+        if ($comment->member_id === $currentUser->id) {
+            return true;
+        }
+
+        $rawComment = $comment->comment;
+        preg_match_all('/@([A-Za-z0-9_.]+)/', $rawComment, $matches);
+        $handles = $matches[1] ?? [];
+
+        // Check username and name
+        return in_array($currentUser->username ?? '', $handles)
+            || in_array(str_replace(' ', '', $currentUser->name ?? ''), $handles);
+    });
+@endphp
+
+@foreach ($userComments as $comment)
+    {{-- show only this user's comments or mentions --}}
+@endforeach
+
+@if ($userComments->count() > 2)
+    <div class="card-footer border-0 pt-0">
+        <a href="#!" class="btn btn-link btn-sm text-secondary load-more-comments"
+           data-post-id="{{ $post->id }}"
+           data-offset="2"
+           data-user-id="{{ auth()->guard('user')->id() }}">
+            <div class="spinner-dots me-2 d-none" id="spinner-{{ $post->id }}">
+                <span class="spinner-dot"></span>
+                <span class="spinner-dot"></span>
+                <span class="spinner-dot"></span>
+            </div>
+            Load more my comments
+        </a>
+    </div>
+@endif
+
+        @endif
+
             <!-- Card footer END -->
         </div>
         <!-- Card feed item END -->
@@ -760,7 +806,7 @@ $("#postMedia").on("change", function() {
    var tribute = new Tribute({
     trigger: '@',
     itemClass: 'tribute-item',
-    fillAttr: 'username',   // insert @username in comment box
+    fillAttr: 'username', // This is correct!
 lookup: 'name',         // still search/display by full name
 
     values: function (text, cb) {
@@ -1334,7 +1380,6 @@ $(document).ready(function() {
 
 });
 </script>
-
 <script>
 $('#editPostForm').on('submit', function(e) {
     e.preventDefault();
