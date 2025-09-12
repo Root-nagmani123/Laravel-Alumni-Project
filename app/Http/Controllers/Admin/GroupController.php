@@ -620,12 +620,20 @@ public function deleteTopic($id)
 
   public function topicToggleStatus(Request $request)
     {
-        $topic = Topic::findOrFail($request->id);
+        /* $topic = Post::findOrFail($request->id);
         $oldStatus = $topic->status;
         $topic->status = $request->status;
-        $topic->save();
+        $topic->save(); */
+		
+		$topic = Post::find($request->id);
 
-        if ($oldStatus == 0 && $topic->status == 1) {
+		if (!$topic) {
+			return response()->json(['message' => 'Topic not found'], 404);
+		}
+		$topic->status = $request->status;
+		$topic->save();
+
+        if ($topic->status == 0 && $request->status == 1) {
             $groupMembers = GroupMember::where('group_id', $topic->group_id)->first();
             if ($groupMembers) {
                 $mentorId = $groupMembers->mentor;
