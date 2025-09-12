@@ -41,7 +41,16 @@ $pageName
                 <div class="card-body">
                     <h4 class="card-title mb-3">Add Topic</h4>
                     <hr>
-
+                     <!-- Display validation errors -->
+            @if ($errors->any())
+                <div class="alert alert-danger" >
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
                         <form method="POST" action="{{ route('group.save_topic', ['id' => $id]) }}" enctype="multipart/form-data" id="AddMemberForm">
 
                             @csrf
@@ -53,7 +62,7 @@ $pageName
                             </div>
                         </div>
 
-                     
+
                         <div class="row mb-3">
                             <label for="inputPassword" class="col-sm-3 col-form-label">Description<span
                                     class="required text-danger">*</span></label>
@@ -71,7 +80,7 @@ $pageName
                             </div>
                         </div>
 
-                       
+
                         <!-- Photo Caption -->
                         <div class="row mb-3 d-none" id="photoCaptionRow">
                             <label for="inputText" class="col-sm-3 col-form-label">Photo Caption</label>
@@ -89,7 +98,7 @@ $pageName
                             </div>
                         </div>
 
-                      
+
 
                         <!-- Status -->
                         <div class="row mb-3">

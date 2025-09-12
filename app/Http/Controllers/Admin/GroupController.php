@@ -405,100 +405,100 @@ public function update(Request $request, Group $group)
 //     return redirect()->route('group.index')->with('success', 'Group post (topic) added successfully.');
 // }
 
-public function save_topic(Request $request, $group_id)
-{
-    $group_id = decrypt($group_id);
-    // 1️⃣ Validation
-    $request->validate([
-        'description' => 'nullable|string',
-        'video_link' => 'nullable|url',
-        'video_caption' => 'nullable|string',
-        'status' => 'required|integer',
-        'doc' => 'nullable|file|mimes:pdf,jpg,png,gif',
-        'topic_image' => 'nullable|file|mimes:jpg,png,gif',
-        'video' => 'nullable|file|mimes:mp4,mov,avi,wmv|max:102400'
-    ]);
-
-    // 2️⃣ Handle topic image
-    $imageFile = $request->hasFile('topic_image')
-        ? $request->file('topic_image')->store('uploads/topics', 'public')
-        : null;
-
-    // 3️⃣ Handle YouTube embed link
-    $embedLink = '';
-    if ($request->video_link) {
-        parse_str(parse_url($request->video_link, PHP_URL_QUERY), $query);
-        $embedLink = isset($query['v']) ? "https://www.youtube.com/embed/" . $query['v'] : $request->video_link;
-    }
-
-    // 4️⃣ Determine media type
-    $media_type = null;
-    if ($imageFile && $embedLink) {
-        $media_type = 'photo_video';
-    } elseif ($imageFile) {
-        $media_type = 'photo';
-    } elseif ($embedLink) {
-        $media_type = 'video';
-    }
-
-    // 5️⃣ Save post
-    $post = Post::create([
-        'group_id'    => $group_id,
-        'member_id'   => Auth::id(),
-        'content'     => $request->description,
-        'media_type'  => $media_type,
-        'video_link'  => $embedLink,
-        'status'      => $request->status
-    ]);
-
-    // 6️⃣ Save topic image as PostMedia
-    if ($imageFile) {
-        PostMedia::create([
-            'post_id'   => $post->id,
-            'file_path' => $imageFile,
-            'file_type' => 'image',
+    public function save_topic(Request $request, $group_id)
+    {
+        $group_id = decrypt($group_id);
+        // 1️⃣ Validation
+        $request->validate([
+            'description' => 'required|string',
+            'video_link' => 'nullable|url',
+            'video_caption' => 'nullable|string',
+            'status' => 'required|integer',
+            'doc' => 'nullable|file|mimes:pdf,jpg,png,gif',
+            'topic_image' => 'nullable|file|mimes:jpg,png,gif',
+            'video' => 'nullable|file|mimes:mp4,mov,avi,wmv|max:102400'
         ]);
-    }
 
-    // 7️⃣ Get group members (mentor + mentees)
-    $groupMember = DB::table('group_member')->where('group_id', $group_id)->first();
+        // 2️⃣ Handle topic image
+        $imageFile = $request->hasFile('topic_image')
+            ? $request->file('topic_image')->store('uploads/topics', 'public')
+            : null;
 
-    $memberIds = [];
-
-    if ($groupMember) {
-        // Add mentor
-        if ($groupMember->mentor) {
-            $memberIds[] = $groupMember->mentor;
+        // 3️⃣ Handle YouTube embed link
+        $embedLink = '';
+        if ($request->video_link) {
+            parse_str(parse_url($request->video_link, PHP_URL_QUERY), $query);
+            $embedLink = isset($query['v']) ? "https://www.youtube.com/embed/" . $query['v'] : $request->video_link;
         }
 
-        // Add mentees
-        if ($groupMember->mentiee) {
-            $mentees = json_decode($groupMember->mentiee, true);
-            if (!empty($mentees)) {
-                $memberIds = array_merge($memberIds, $mentees);
+        // 4️⃣ Determine media type
+        $media_type = null;
+        if ($imageFile && $embedLink) {
+            $media_type = 'photo_video';
+        } elseif ($imageFile) {
+            $media_type = 'photo';
+        } elseif ($embedLink) {
+            $media_type = 'video';
+        }
+
+        // 5️⃣ Save post
+        $post = Post::create([
+            'group_id'    => $group_id,
+            'member_id'   => Auth::id(),
+            'content'     => $request->description,
+            'media_type'  => $media_type,
+            'video_link'  => $embedLink,
+            'status'      => $request->status
+        ]);
+
+        // 6️⃣ Save topic image as PostMedia
+        if ($imageFile) {
+            PostMedia::create([
+                'post_id'   => $post->id,
+                'file_path' => $imageFile,
+                'file_type' => 'image',
+            ]);
+        }
+
+        // 7️⃣ Get group members (mentor + mentees)
+        $groupMember = DB::table('group_member')->where('group_id', $group_id)->first();
+
+        $memberIds = [];
+
+        if ($groupMember) {
+            // Add mentor
+            if ($groupMember->mentor) {
+                $memberIds[] = $groupMember->mentor;
+            }
+
+            // Add mentees
+            if ($groupMember->mentiee) {
+                $mentees = json_decode($groupMember->mentiee, true);
+                if (!empty($mentees)) {
+                    $memberIds = array_merge($memberIds, $mentees);
+                }
             }
         }
+
+        // 8️⃣ Send notifications to all members
+        if (!empty($memberIds)) {
+            $groupName = DB::table('groups')->where('id', $group_id)->value('name');
+
+            $message = $groupName . ' new topic has been posted: ' . Str::limit($request->description, 50);
+
+            $this->notificationService->notifyMemberAdded(
+                $memberIds,
+                'admin_group_topic',
+                $message,
+                $group_id,
+                'group',
+                Auth::id()
+            );
+        }
+
+        // 9️⃣ Redirect with success
+        return redirect()->route('group.index')->with('success', 'Group topic added successfully.');
     }
-
-    // 8️⃣ Send notifications to all members
-    if (!empty($memberIds)) {
-        $groupName = DB::table('groups')->where('id', $group_id)->value('name');
-
-        $message = $groupName . ' new topic has been posted: ' . Str::limit($request->description, 50);
-
-        $this->notificationService->notifyMemberAdded(
-            $memberIds,
-            'admin_group_topic',
-            $message,
-            $group_id,
-            'group',
-            Auth::id()
-        );
-    }
-
-    // 9️⃣ Redirect with success
-    return redirect()->route('group.index')->with('success', 'Group topic added successfully.');
-}
 
     public function view_topic($id)
         {
@@ -624,7 +624,7 @@ public function deleteTopic($id)
         $oldStatus = $topic->status;
         $topic->status = $request->status;
         $topic->save(); */
-		
+
 		$topic = Post::find($request->id);
 
 		if (!$topic) {
@@ -716,7 +716,7 @@ public function deleteTopic($id)
                  * 🔔 Notify only NEW members (not creator)
                  */
                 if (!empty($added)) {
-                    $newMemberMessage = 'You have been added to the group ' . $group->name;                
+                    $newMemberMessage = 'You have been added to the group ' . $group->name;
                     $this->notificationService->notifyMemberAdded(
                         $added,
                         'group_member_added',
