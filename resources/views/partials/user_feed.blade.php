@@ -426,102 +426,67 @@ $commentText = preg_replace_callback(
     e($rawComment) // ⬅ change this to just $rawComment
 );
 @endphp
-                 @if(auth()->guard('user')->id() )
-                 @if(isset($member->id) && $member->id === auth()->guard('user')->id())
-                <li class="comment-item mb-3 " id="comment-{{ $comment->id }}">
-                    <div class="d-flex position-relative">
-                        <!-- Avatar -->
-                        <div class="avatar avatar-xs">
-                            <!-- <a href="#!"><img class="avatar-img rounded-circle"
-                                   src="${comment.member && comment.member.profile_pic ? '/storage/' + comment.member.profile_pic : '/feed_assets/images/avatar/07.jpg'}"
-                                    alt="" loading="lazy" decoding="async"></a> -->
+@if(auth()->guard('user')->id())
+    @php
+        $currentUser = auth()->guard('user')->user();
 
-                                    <a href="{{ $comment->member ? route('user.profile.data', ['id' => Crypt::encrypt($comment->member->id)]) : '#' }}">
-                                        <img class="avatar-img rounded-circle"
-                                             src="{{ $comment->member && $comment->member->profile_pic ? asset('storage/' . $comment->member->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}"
-                                             alt="" loading="lazy" decoding="async">
-                                    </a>
+        // Case 1: Post owner
+        $isPostOwner = isset($member->id) && $member->id === $currentUser->id;
+
+        // Case 2: Comment owner
+        $isCommentOwner = $currentUser->id === $comment->member_id;
+
+        // Case 3: Mentioned user
+        preg_match_all('/@([A-Za-z0-9_.]+)/', $comment->comment, $matches);
+        $handles = array_map('strtolower', $matches[1] ?? []);
+        $isMentioned = in_array(strtolower($currentUser->username ?? ''), $handles, true);
+
+        // Final check → should we show this comment?
+        $canSeeComment = $isPostOwner || $isCommentOwner || $isMentioned;
+    @endphp
+
+    @if($canSeeComment)
+        <li class="comment-item mb-3 " id="comment-{{ $comment->id }}">
+            <div class="d-flex position-relative">
+                <!-- Avatar -->
+                <div class="avatar avatar-xs">
+                    <a href="{{ $comment->member ? route('user.profile.data', ['id' => Crypt::encrypt($comment->member->id)]) : '#' }}">
+                        <img class="avatar-img rounded-circle"
+                             src="{{ $comment->member && $comment->member->profile_pic ? asset('storage/' . $comment->member->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}"
+                             alt="" loading="lazy" decoding="async">
+                    </a>
+                </div>
+                <div class="ms-2 w-100">
+                    <!-- Comment by -->
+                    <div class="bg-light rounded-start-top-0 p-3 rounded">
+                        <div class="d-flex justify-content-between">
+                            <h6 class="mb-1">
+                                <a href="{{ $comment->member ? route('user.profile.data', ['id' => Crypt::encrypt($comment->member->id)]) : '#' }}">
+                                    {{ $comment->member->name ?? 'Anonymous' }}
+                                </a>
+                            </h6>
+                            <small class="ms-2">{{ $comment->created_at->diffForHumans() }}</small>
                         </div>
-                        <div class="ms-2 w-100">
-                            <!-- Comment by -->
+                        <p class="small mb-0" id="comment-text-{{ $comment->id }}">{!! $commentText !!}</p>
+                    </div>
+                    <div class="row">
+                        <div class="col-6"></div>
+                        <div class="col-6 text-end">
+                            @if($isCommentOwner)
+                                <button class="btn btn-sm btn-link p-0 text-primary edit-comment-btn"
+                                    data-comment-id="{{ $comment->id }}" data-comment="{{ $comment->comment }}"
+                                    type="button"><i class="bi bi-pencil-fill"></i></button>
 
-                            <div class="bg-light rounded-start-top-0 p-3 rounded">
-                                <div class="d-flex justify-content-between">
-                                    <h6 class="mb-1"> <a href="{{ $comment->member ? route('user.profile.data', ['id' => Crypt::encrypt($comment->member->id)]) : '#' }}"> {{ $comment->member->name ?? 'Anonymous' }} </a>
-                                    </h6>
-                                    <small class="ms-2">{{$comment->created_at->diffForHumans()}}</small>
-                                </div>
-                                <p class="small mb-0" id="comment-text-{{ $comment->id }}">{!! $commentText !!}</p>
-                            </div>
-                           <div class="row">
-                              <div class="col-6">
-                                   {{--<a href="#!" class="text-secondary small me-2">Like</a>
-                                    <a href="#!" class="text-secondary small">Reply</a>--}}
-                                </div>
-                                <div class="col-6 text-end">
-                                    @if(auth()->guard('user')->id() === $comment->member_id)
-                                    <button class="btn btn-sm btn-link p-0 text-primary edit-comment-btn"
-                                        data-comment-id="{{ $comment->id }}" data-comment="{{ $comment->comment }}"
-                                        type="button"><i class="bi bi-pencil-fill"></i></button>
-
-                                    <button class="btn btn-sm btn-link p-0 text-danger delete-comment-btn"
-                                        data-comment-id="{{ $comment->id }}" type="button"><i class="bi bi-trash-fill"></i></button>
-                                    @endif
-                                </div>
-                            </div>
+                                <button class="btn btn-sm btn-link p-0 text-danger delete-comment-btn"
+                                    data-comment-id="{{ $comment->id }}" type="button"><i class="bi bi-trash-fill"></i></button>
+                            @endif
                         </div>
                     </div>
-
-                </li>
-                
-                @elseif(auth()->guard('user')->id() === $comment->member_id)
-                 <li class="comment-item mb-3 " id="comment-{{ $comment->id }}">
-                    <div class="d-flex position-relative">
-                        <!-- Avatar -->
-                        <div class="avatar avatar-xs">
-                            <!-- <a href="#!"><img class="avatar-img rounded-circle"
-                                   src="${comment.member && comment.member.profile_pic ? '/storage/' + comment.member.profile_pic : '/feed_assets/images/avatar/07.jpg'}"
-                                    alt="" loading="lazy" decoding="async"></a> -->
-
-                                    <a href="{{ $comment->member ? route('user.profile.data', ['id' => Crypt::encrypt($comment->member->id)]) : '#' }}">
-                                        <img class="avatar-img rounded-circle"
-                                             src="{{ $comment->member && $comment->member->profile_pic ? asset('storage/' . $comment->member->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}"
-                                             alt="" loading="lazy" decoding="async">
-                                    </a>
-                        </div>
-                        <div class="ms-2 w-100">
-                            <!-- Comment by -->
-
-                            <div class="bg-light rounded-start-top-0 p-3 rounded">
-                                <div class="d-flex justify-content-between">
-                                    <h6 class="mb-1"> <a href="{{ $comment->member ? route('user.profile.data', ['id' => Crypt::encrypt($comment->member->id)]) : '#' }}"> {{ $comment->member->name ?? 'Anonymous' }} </a>
-                                    </h6>
-                                    <small class="ms-2">{{$comment->created_at->diffForHumans()}}</small>
-                                </div>
-                                <p class="small mb-0" id="comment-text-{{ $comment->id }}">{!! $commentText !!}</p>
-                            </div>
-                           <div class="row">
-                              <div class="col-6">
-                                    {{--<a href="#!" class="text-secondary small me-2">Like</a>
-                                    <a href="#!" class="text-secondary small">Reply</a>--}}
-                                </div>
-                                <div class="col-6 text-end">
-                                    @if(auth()->guard('user')->id() === $comment->member_id)
-                                    <button class="btn btn-sm btn-link p-0 text-primary edit-comment-btn"
-                                        data-comment-id="{{ $comment->id }}" data-comment="{{ $comment->comment }}"
-                                        type="button"><i class="bi bi-pencil-fill"></i></button>
-
-                                    <button class="btn btn-sm btn-link p-0 text-danger delete-comment-btn"
-                                        data-comment-id="{{ $comment->id }}" type="button"><i class="bi bi-trash-fill"></i></button>
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                </li>
-                @endif
-                @endif
+                </div>
+            </div>
+        </li>
+    @endif
+@endif
                
                 @endforeach
                 <!-- Comment item END -->
@@ -550,20 +515,16 @@ $commentText = preg_replace_callback(
 @php
     $currentUser = auth()->guard('user')->user();
 
-    $userComments = $post->comments->filter(function($comment) use ($currentUser) {
-        // Apna comment
-        if ($comment->member_id === $currentUser->id) {
-            return true;
-        }
+  $userComments = $post->comments->filter(function($comment) use ($currentUser) {
+    $rawComment = $comment->comment;
 
-        $rawComment = $comment->comment;
-        preg_match_all('/@([A-Za-z0-9_.]+)/', $rawComment, $matches);
-        $handles = $matches[1] ?? [];
+    preg_match_all('/@([A-Za-z0-9_.]+)/', $rawComment, $matches);
+    $handles = array_map('strtolower', $matches[1] ?? []);
 
-        // Check username and name
-        return in_array($currentUser->username ?? '', $handles)
-            || in_array(str_replace(' ', '', $currentUser->name ?? ''), $handles);
-    });
+    return $comment->member_id === $currentUser->id 
+        || in_array(strtolower($currentUser->username ?? ''), $handles, true);
+});
+
 @endphp
 
 @foreach ($userComments as $comment)
@@ -581,7 +542,7 @@ $commentText = preg_replace_callback(
                 <span class="spinner-dot"></span>
                 <span class="spinner-dot"></span>
             </div>
-            Load more my comments
+            Load more comments
         </a>
     </div>
 @endif
