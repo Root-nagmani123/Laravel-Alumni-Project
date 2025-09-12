@@ -547,3 +547,13 @@ Route::post('/admin/socialwall/toggle-comment-status', [SocialWallController::cl
 
 Route::get('admin/group/existing_member', [App\Http\Controllers\Admin\GroupController::class, 'getExistingMembers'])->name('admin.group.existing_member');
 Route::PUT('group_name_update', [App\Http\Controllers\Member\GroupController::class, 'updateGroupName'])->name('group_name_update');
+
+
+Route::prefix('admin')->group(function () {
+    Route::get('user_management', [App\Http\Controllers\Admin\UserManagementController::class, 'index'])
+        ->name('admin.user_management.index');
+    Route::get('user_management/search', [App\Http\Controllers\Admin\UserManagementController::class, 'searchUser'])
+        ->name('admin.user_management.search');
+    Route::post('user_management/assign_role_permissions', [App\Http\Controllers\Admin\UserManagementController::class, 'assignRolePermissions'])
+        ->name('admin.user_management.assign_role_permissions');
+});
