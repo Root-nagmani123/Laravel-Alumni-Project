@@ -203,8 +203,13 @@ class FeedController extends Controller
     ])
     ->where('status', 1)
     ->where(function ($query) use ($groupIds) {
-        $query->whereNull('group_id')
-              ->orWhereIn('group_id', $groupIds);
+       $query->whereNull('group_id')
+              ->orWhere(function ($sub) use ($groupIds) {
+                  $sub->whereIn('group_id', $groupIds)
+                      ->whereHas('group', function ($q) {
+                          $q->where('status', 1); // ✅ only active groups
+                      });
+              });
     })
     ->orderBy('created_at', 'desc')
     ->get()
