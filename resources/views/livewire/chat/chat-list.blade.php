@@ -335,7 +335,7 @@
                             <div
                                 class="input-wrapper flex-grow-1 d-flex align-items-center bg-white rounded-pill px-3 py-2 shadow-sm border border-1">
                                 <input type="file" id="chat-attachment" class="d-none" wire:model="attachment"
-                                    accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.zip,.mp4,.mov,.avi,.mkv" />
+                                    accept="image/*,.pdf" />
                                 <button type="button" onclick="document.getElementById('chat-attachment').click()"
                                     class="btn btn-light btn-sm me-2 d-flex align-items-center justify-content-center"
                                     style="width:36px; height:36px; border-radius:50%; font-size:16px; color:#555;"
