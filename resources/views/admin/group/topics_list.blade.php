@@ -57,46 +57,49 @@
 
 
     <div class="row">
-        <div class="col-md-12 grid-margin">
-            <div class="card rounded">
-                <div class="card-header">
-                    <div class="d-flex align-items-center gap-6">
-                        <img src="{{ $topic->member && $topic->member->profile_pic
-                                        ? asset('storage/' . $topic->member->profile_pic)
-                                        : asset('feed_assets/images/avatar/07.jpg') }}" alt="prd1" width="48"
-                            class="rounded">
-                        <div>
-                            <h6 class="mb-0">By
-                                {{ $topic->member->name ?? 'Unknown' }}</h6>
-                            <span>{{ \Carbon\Carbon::parse($topic->created_at)->diffForHumans() }}</span>
+    <div class="col-md-12 grid-margin">
+        <div class="card rounded">
+            <div class="card-header">
+                <div class="d-flex align-items-center gap-6">
+                    <img src="{{ $topic->member && $topic->member->profile_pic
+                                    ? asset('storage/' . $topic->member->profile_pic)
+                                    : asset('feed_assets/images/avatar/07.jpg') }}"
+                         alt="profile" width="48" class="rounded">
+
+                    <div>
+                        <h6 class="mb-0">By {{ $topic->member->name ?? 'Unknown' }}</h6>
+                        <span>{{ $topic->created_at ? $topic->created_at->diffForHumans() : '' }}</span>
+                    </div>
+
+                    <div class="d-flex ms-auto text-end">
+                        <div class="form-check form-switch d-inline-block me-2">
+                            <input class="form-check-input status-toggle"
+                                   type="checkbox"
+                                   role="switch"
+                                   data-id="{{ $topic->id }}"
+                                   {{ $topic->status == 1 ? 'checked' : '' }}>
                         </div>
-                        <div class="d-flex ms-auto text-end">
-                            <div class="form-check form-switch d-inline-block me-2">
-							<input class="form-check-input status-toggle"
-								   type="checkbox"
-								   role="switch"
-								   data-id="{{ $topic->id }}"
-								   {{ $topic->status == 1 ? 'checked' : '' }}>
-						</div>
-                            <form id="delete-form-{{ $topic->id }}" action="{{ route('group.topics.delete', $topic->id) }}"
-                            method="POST" style="display:inline;">
+
+                        <form id="delete-form-{{ $topic->id }}"
+                              action="{{ route('group.topics.delete', $topic->id) }}"
+                              method="POST" style="display:inline;">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn btn-sm btn-danger delete-topic-btn"
-                                data-id="{{ $topic->id }}" data-status="{{ $topic->status }}">
+                                    data-id="{{ $topic->id }}" data-status="{{ $topic->status }}">
                                 Delete
                             </button>
-
                         </form>
-                        </div>
                     </div>
                 </div>
+            </div>
 
-                <div class="card-body">
-                    <p class="mb-3">{{ $topic->content }}</p>
-                    @php
+            <div class="card-body">
+                <p class="mb-3">{{ $topic->content }}</p>
+
+                @php
                     $validMedia = $topic->media->filter(function($media) {
-                    return file_exists(storage_path('app/public/' . $media->file_path));
+                        return file_exists(storage_path('app/public/' . $media->file_path));
                     });
 
                     $imageMedia = $validMedia->where('file_type', 'image')->values();
@@ -104,77 +107,73 @@
 
                     $totalImages = $imageMedia->count();
                     $totalVideos = $videoMedia->count();
-                    @endphp
-                    @if($topic->video_link)
-                    {{-- Embedded YouTube Video --}}
+                @endphp
+
+                {{-- Video link --}}
+                @if($topic->video_link)
                     <div class="ratio ratio-16x9 mt-2">
                         <iframe src="{{ $topic->video_link }}" title="YouTube video player"
-                            frameborder="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                            referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                                frameborder="0" allowfullscreen></iframe>
                     </div>
-                    @elseif($totalVideos > 0)
-                    {{-- Uploaded Video Files --}}
+
+                {{-- Uploaded videos --}}
+                @elseif($totalVideos > 0)
                     <div class="post-video mt-2">
                         @foreach($videoMedia as $video)
-                        <video controls class="w-100 rounded mb-2" preload="metadata">
-                            <source src="{{ asset('storage/' . $video->file_path) }}" type="video/mp4">
-                            Your browser does not support the video tag.
-                        </video>
+                            <video controls class="w-100 rounded mb-2" preload="metadata">
+                                <source src="{{ asset('storage/' . $video->file_path) }}" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
                         @endforeach
                     </div>
-                    @endif
-                    @if($totalImages === 1)
+                @endif
+
+                {{-- Uploaded images --}}
+                @if($totalImages === 1)
                     <div class="post-img mt-2">
-                        <a href="{{ asset('storage/' . $imageMedia[0]->file_path) }}" class="glightbox"
-                            data-gallery="post-gallery-{{ $topic->id }}">
-                            <img src="{{ asset('storage/' . $imageMedia[0]->file_path) }}" loading="lazy" class="img-fluid rounded" style="max-height: 400px; object-fit: cover;"
-                                alt="Post Image">
+                        <a href="{{ asset('storage/' . $imageMedia[0]->file_path) }}"
+                           class="glightbox"
+                           data-gallery="post-gallery-{{ $topic->id }}">
+                            <img src="{{ asset('storage/' . $imageMedia[0]->file_path) }}"
+                                 class="img-fluid rounded"
+                                 style="max-height: 400px; object-fit: cover;"
+                                 alt="Post Image">
                         </a>
                     </div>
-                    @elseif($totalImages > 1)
+                @elseif($totalImages > 1)
                     <div class="post-img d-flex justify-content-between flex-wrap gap-2 gap-lg-3 mt-2">
                         @foreach($imageMedia->take(4) as $index => $media)
-                        <div class="position-relative" style="width: 48%;">
-                            <a href="{{ asset('storage/' . $media->file_path) }}" class="glightbox"
-                                data-gallery="post-gallery-{{ $post->id }}">
-                                <img src="{{ asset('storage/' . $media->file_path) }}" alt="Post Image" loading="lazy"
-                                    class="w-100">
-                            </a>
-                            @if($index === 3 && $totalImages > 4)
-                            {{-- Hidden extra images --}}
-                            @foreach($imageMedia->slice(4) as $extra)
-                            <a href="{{ asset('storage/' . $extra->file_path) }}" class="glightbox d-none"
-                                data-gallery="post-gallery-{{ $post->id }}"></a>
-                            @endforeach
+                            <div class="position-relative" style="width: 48%;">
+                                <a href="{{ asset('storage/' . $media->file_path) }}"
+                                   class="glightbox"
+                                   data-gallery="post-gallery-{{ $topic->id }}">
+                                    <img src="{{ asset('storage/' . $media->file_path) }}" alt="Post Image" class="w-100">
+                                </a>
 
-                            {{-- Overlay link to trigger the rest of the images --}}
-                            <a href="{{ asset('storage/' . $imageMedia[4]->file_path) }}"
-                                class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center text-white glightbox"
-                                style="background-color: rgba(0,0,0,0.6); font-size: 2rem; cursor: pointer;"
-                                data-gallery="post-gallery-{{ $post->id }}">
-                                +{{ $totalImages - 4 }}
-                            </a>
-                            @endif
-                        </div>
+                                {{-- Overlay if more than 4 images --}}
+                                @if($index === 3 && $totalImages > 4)
+                                    @foreach($imageMedia->slice(4) as $extra)
+                                        <a href="{{ asset('storage/' . $extra->file_path) }}"
+                                           class="glightbox d-none"
+                                           data-gallery="post-gallery-{{ $topic->id }}"></a>
+                                    @endforeach
 
+                                    <a href="{{ asset('storage/' . $imageMedia[4]->file_path) }}"
+                                       class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center text-white glightbox"
+                                       style="background-color: rgba(0,0,0,0.6); font-size: 2rem; cursor: pointer;"
+                                       data-gallery="post-gallery-{{ $topic->id }}">
+                                        +{{ $totalImages - 4 }}
+                                    </a>
+                                @endif
+                            </div>
                         @endforeach
                     </div>
-                    @endif
-                </div>
-
-                <!-- <div class="card-footer">
-                            <div class="d-flex post-actions">
-                                <a href="{{ url('group/topic_view/' . $topic->id) }}"
-                                   class="d-flex align-items-center text-muted mr-4">
-                                    <i class="bi bi-arrow-right"></i>
-                                    <p class="d-none d-md-block ms-2 mb-1">Read more...</p>
-                                </a>
-                            </div>
-                        </div> -->
+                @endif
             </div>
         </div>
     </div>
+</div>
+
 
     <!-- repeater div -->
     @empty
@@ -291,6 +290,11 @@
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<!-- Glightbox CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css">
+
+<!-- Glightbox JS -->
+<script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
 
     <script>
     $(document).ready(function() {
@@ -346,5 +350,16 @@
         }
     }
     </script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const lightbox = GLightbox({
+            selector: '.glightbox',
+            touchNavigation: true,
+            loop: true,
+            zoomable: true,
+        });
+    });
+</script>
 
     @endsection
