@@ -468,7 +468,6 @@ Route::get('/user_login', function () {
                 Route::get('/admin/registration', [App\Http\Controllers\Admin\RegistrationRequestController::class, 'index'])->name('admin.registration.index');
                 Route::put('/admin/registration_requests/update/{id}', [App\Http\Controllers\Admin\RegistrationRequestController::class, 'requests_update_status'])->name('admin.registration_requests.update');
         });
-
 require __DIR__.'/auth.php';
 
 
