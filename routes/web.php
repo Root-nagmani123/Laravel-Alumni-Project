@@ -449,10 +449,13 @@ Route::get('/user_login', function () {
         Route::get('/admin/topics', function () {
             return view('admin.topics.index');
         })->name('admin.topics.index');
-        Route::get('/admin/registration', [App\Http\Controllers\Admin\RegistrationRequestController::class, 'index'])->name('admin.registration.index');
-        Route::put('/admin/registration_requests/update/{id}', [App\Http\Controllers\Admin\RegistrationRequestController::class, 'requests_update_status'])->name('admin.registration_requests.update');
 
 
+        Route::middleware('auth:admin')->group(function () {
+                Route::get('/admin/registration', [App\Http\Controllers\Admin\RegistrationRequestController::class, 'index'])->name('admin.registration.index');
+                Route::put('/admin/registration_requests/update/{id}', [App\Http\Controllers\Admin\RegistrationRequestController::class, 'requests_update_status'])->name('admin.registration_requests.update');
+        });
+        
 require __DIR__.'/auth.php';
 
 
