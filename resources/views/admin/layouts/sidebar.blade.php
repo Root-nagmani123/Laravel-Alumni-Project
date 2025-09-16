@@ -103,6 +103,12 @@
                                 <span class="icon-small"></span> Grievance/Feedback
                             </a>
                         </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="{{ route('admin.feeds.index') }}">
+                                <iconify-icon icon="solar:document-bold-duotone"></iconify-icon>
+                                <span class="icon-small"></span> Feeds
+                            </a>
+                        </li>
                         <!-- <li class="sidebar-item">
                             <a class="sidebar-link has-arrow" href="javascript:void(0)" aria-expanded="false">
                                 <iconify-icon icon="solar:map-point-wave-bold-duotone"></iconify-icon>

@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="container">
-    <div class="row g-4 py-4" style="margin-top:4rem;">
+    <div class="row g-4 py-4" style="margin-top:2rem;">
 
         <!-- Sidenav START -->
         @include('partials.left_sidebar')

@@ -87,6 +87,10 @@
                         <a class="nav-link {{ request()->is('user/directory') ? 'active' : '' }}" 
                         href="{{ route('user.directory') }}">Directory</a>
                     </li>
+                     <li class="nav-item">
+                        <a class="nav-link {{ request()->is('user/feedback') ? 'active' : '' }}" 
+                        href="{{ route('user.feedback') }}">Feedback / Grievance</a>
+                    </li>
                 </ul>
 
                 <!-- Search Input Group with Dropdown -->
