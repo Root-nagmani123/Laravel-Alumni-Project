@@ -5,7 +5,10 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use LdapRecord\Container;
+use Illuminate\Support\Facades\Crypt;
+
 use LdapRecord\Models\ActiveDirectory\User as LdapUser;
 
 class AuthController extends Controller
@@ -131,15 +134,16 @@ public function login_ldap(Request $request)
 
      try {
         if (in_array($serverHost, ['localhost', '127.0.0.1', 'dev.local','52.140.75.46'])) {
-           
+          
             // 👨‍💻 Localhost: Normal DB-based login
             $user = \App\Models\Member::where('username', $username)
                         ->where('status', 1) // only active users
                         ->first();
-                        // print_r($user);die;
+
+            
                        
 
-            if ($user) {
+            if ($user && Hash::check($password, $user->password)) {
                 Auth::guard('user')->login($user);
                 $request->session()->regenerate();
                 // Update online status
