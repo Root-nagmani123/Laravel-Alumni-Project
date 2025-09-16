@@ -73,12 +73,28 @@ $pageName
                         </div>
 
                         <!-- Photo -->
-                        <div class="row mb-3">
+                        <!--<div class="row mb-3">
                             <label for="topicImage" class="col-sm-3 col-form-label">Photo</label>
                             <div class="col-sm-9">
                                 <input class="form-control" name="topic_image" type="file" id="topicImage">
                             </div>
-                        </div>
+                        </div>-->
+
+                   <div class="row mb-3">
+    <!-- Label -->
+    <label class="col-sm-3 col-form-label">Photo</label>
+
+    <!-- Input area -->
+    <div class="col-sm-9">
+        <div id="drop-area" class="drop-area p-4 text-center border border-secondary rounded">
+            <i class="bi bi-images fs-1 mb-2 d-block"></i>
+            <span class="d-block">Drag & Drop image here or click to browse.</span>
+            <input type="file" id="topic_image" name="topic_image[]" multiple class="d-none" accept="image/*">
+            <div id="preview-feed" class="mt-3 d-flex flex-wrap gap-3"></div>
+        </div>
+    </div>
+</div>
+
 
 
                         <!-- Photo Caption -->
@@ -169,6 +185,69 @@ $(document).ready(function() {
         $('#videoCaptionRow').removeClass('d-none');
     }
 });
+
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    function showFiles(files, previewContainer) {
+        previewContainer.innerHTML = ''; // Clear old previews
+        [...files].forEach(file => {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                let mediaElement;
+                if (file.type.startsWith('image/')) {
+                    mediaElement = document.createElement('img');
+                    mediaElement.src = e.target.result;
+                    mediaElement.style.width = "100px";
+                    mediaElement.style.height = "100px";
+                    mediaElement.style.objectFit = "cover";
+                } else if (file.type.startsWith('video/')) {
+                    mediaElement = document.createElement('video');
+                    mediaElement.src = e.target.result;
+                    mediaElement.controls = true;
+                    mediaElement.style.width = "100px";
+                    mediaElement.style.height = "100px";
+                }
+                previewContainer.appendChild(mediaElement);
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+
+    document.querySelectorAll(".drop-area").forEach(dropArea => {
+        const input = dropArea.querySelector('input[type="file"]');
+        const preview = dropArea.querySelector('div[id^="preview-"]'); // matches preview-feed, preview-group, etc.
+
+        // Click to open file dialog
+        dropArea.addEventListener("click", () => input.click());
+
+        // File selection from dialog
+        input.addEventListener("change", () => showFiles(input.files, preview));
+
+        // Drag & drop highlight
+        ['dragenter', 'dragover'].forEach(evt =>
+            dropArea.addEventListener(evt, e => {
+                e.preventDefault();
+                dropArea.classList.add('border-primary');
+            })
+        );
+
+        ['dragleave', 'drop'].forEach(evt =>
+            dropArea.addEventListener(evt, e => {
+                e.preventDefault();
+                dropArea.classList.remove('border-primary');
+            })
+        );
+
+        // Handle dropped files
+        dropArea.addEventListener("drop", e => {
+            const files = e.dataTransfer.files;
+            input.files = files;
+            showFiles(files, preview);
+        });
+    });
+});
+
 </script>
 @endpush
 
