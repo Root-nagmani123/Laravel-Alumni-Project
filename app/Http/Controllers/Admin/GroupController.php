@@ -415,14 +415,26 @@ public function update(Request $request, Group $group)
             'video_caption' => 'nullable|string',
             'status' => 'required|integer',
             'doc' => 'nullable|file|mimes:pdf,jpg,png,gif',
-            'topic_image' => 'nullable|file|mimes:jpg,png,gif',
+            //'topic_image' => 'nullable|file|mimes:jpg,png,gif',
+            'topic_image'   => 'nullable|array',
+            'topic_image.*' => 'nullable|file|mimes:jpg,png,gif|max:5120', // file max 5MB
+
             'video' => 'nullable|file|mimes:mp4,mov,avi,wmv|max:102400'
         ]);
 
         // 2️⃣ Handle topic image
-        $imageFile = $request->hasFile('topic_image')
+        /*$imageFile = $request->hasFile('topic_image')
             ? $request->file('topic_image')->store('uploads/topics', 'public')
             : null;
+            */
+
+          //  Handle multiple topic images
+            $imageFiles = [];
+            if ($request->hasFile('topic_image')) {
+                foreach ($request->file('topic_image') as $image) {
+                    $imageFiles[] = $image->store('uploads/topics', 'public');
+                }
+            }
 
         // 3️⃣ Handle YouTube embed link
         $embedLink = '';
@@ -433,9 +445,9 @@ public function update(Request $request, Group $group)
 
         // 4️⃣ Determine media type
         $media_type = null;
-        if ($imageFile && $embedLink) {
+        if ($imageFiles && $embedLink) {
             $media_type = 'photo_video';
-        } elseif ($imageFile) {
+        } elseif ($imageFiles) {
             $media_type = 'photo';
         } elseif ($embedLink) {
             $media_type = 'video';
@@ -452,12 +464,22 @@ public function update(Request $request, Group $group)
         ]);
 
         // 6️⃣ Save topic image as PostMedia
-        if ($imageFile) {
+        /*if ($imageFiles) {
             PostMedia::create([
                 'post_id'   => $post->id,
-                'file_path' => $imageFile,
+                'file_path' => $imageFiles,
                 'file_type' => 'image',
             ]);
+        }*/
+
+        if (!empty($imageFiles)) {
+            foreach ($imageFiles as $filePath) {
+                PostMedia::create([
+                    'post_id'   => $post->id,
+                    'file_path' => $filePath,
+                    'file_type' => 'image',
+                ]);
+            }
         }
 
         // 7️⃣ Get group members (mentor + mentees)
@@ -505,8 +527,8 @@ public function update(Request $request, Group $group)
             $groupId = decrypt($id);
             $pageName = 'Group';
             $group = Group::findOrFail($groupId);
-            $topics = Post::where('group_id', $groupId)->with('member', 'media')->get();
-            // print_r($topics);die;
+            $topics = Post::where('group_id', $groupId)->with('member', 'media')->latest('created_at')->get();
+           // print_r($topics);die;
             return view('admin.group.topics_list', compact('group', 'topics','pageName'));
         }
    public function updateTopic(Request $request, $id) {
