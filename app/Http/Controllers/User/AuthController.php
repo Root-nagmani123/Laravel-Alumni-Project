@@ -143,7 +143,7 @@ public function login_ldap(Request $request)
             
                        
 
-            if ($user) {
+            if ($user && Hash::check($password, $user->password)) {
                 Auth::guard('user')->login($user);
                 $request->session()->regenerate();
                 // Update online status
