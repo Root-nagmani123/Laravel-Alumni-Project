@@ -23,7 +23,12 @@ class CommentController extends Controller
     {
         $request->validate([
             'post_id' => 'required|exists:posts,id',
-            'comment' => ['required', 'string', 'max:1000', new NoHtmlOrScript()],
+             'comment' => 'required|string|max:1000|',
+        // 'comment' => ['required', 'string', 'max:1000', function ($attribute, $value, $fail) {
+        //     if ($value !== strip_tags($value)) {
+        //         $fail('HTML and JavaScript are not allowed in comments.');
+        //     }
+        // }],
     ]);
 
         $comment = Comment::create([
@@ -85,7 +90,12 @@ class CommentController extends Controller
    public function update(Request $request, $id)
     {
     $request->validate([
-       'comment' => ['required', 'string', 'max:1000', new NoHtmlOrScript()],
+       'comment' => 'required|string|max:1000',
+    // 'comment' => ['required', 'string', 'max:1000', function ($attribute, $value, $fail) {
+    //     if ($value !== strip_tags($value)) {
+    //         $fail('HTML and JavaScript are not allowed in comments.');
+    //     }
+    // }],
     ]);
 
     $comment = Comment::findOrFail($id);
