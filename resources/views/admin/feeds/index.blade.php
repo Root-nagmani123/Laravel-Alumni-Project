@@ -73,7 +73,13 @@
                                         <td>{{ $post->member->name ?? 'Unknown' }}</td>
                                         <td class="text-nowrap">{{ $post->created_at->format('Y-m-d H:i') }}</td>
                                         <td>
-                                            <span class="badge bg-secondary">{{ $post->approved_by_moderator ? 'Approved' : 'Pending' }}</span>
+                                            @if($post->approved_by_moderator == 1)
+                                                <span class="badge bg-success">Approved</span>
+                                            @elseif($post->approved_by_moderator == 2)
+                                                <span class="badge bg-danger">Declined</span>
+                                            @else
+                                                <span class="badge bg-warning text-dark">Pending</span>
+                                            @endif
                                         </td>
                                         <td>
                                             <div class="d-flex gap-2">

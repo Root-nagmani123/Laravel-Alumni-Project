@@ -25,7 +25,7 @@ class FeedController extends Controller
     function decline(Request $request)
     {
         $post = Post::findOrFail($request->_post_id);
-        $post->approved_by_moderator = 0;
+        $post->approved_by_moderator = 2;
         $post->save();
 
         return redirect()->route('admin.feeds.index')->with('success', 'Post declined successfully.');
