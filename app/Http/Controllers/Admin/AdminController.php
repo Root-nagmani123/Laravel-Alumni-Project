@@ -36,7 +36,6 @@ class AdminController extends Controller
 
 public function loginAuth(Request $request)
 {
-
     // Custom validation messages
     $messages = [
         'email.required' => 'We need to know your email address!',
