@@ -72,7 +72,7 @@ public function store_chnagefor_video_link(Request $request)
     public function store(Request $request)
 {
     $request->validate([
-        'modalContent' => 'nullable|string|max:5000',
+        'modalContent' => 'required|string|max:5000',
         'media.*' => 'file|mimes:jpg,jpeg,png,gif,mp4,mov,avi|max:51200', // Adjust if needed
         'video_link' => 'nullable|url|max:1000',
     ]);
@@ -136,7 +136,7 @@ public function group_post_store(Request $request)
 {
     $request->validate([
         'group_id' => 'required|integer|exists:groups,id',
-        'modalContent' => 'nullable|string',
+        'modalContent' => 'required|string',
         'media' => 'nullable',
         'media.*' => 'image|max:5120', // 5MB max per file
         'video' => 'nullable|url',

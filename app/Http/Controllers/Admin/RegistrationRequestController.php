@@ -23,7 +23,7 @@ class RegistrationRequestController extends Controller
     public function registrationRequestsStore(Request $request)
     {
        $request->validate([
-            'name'   => 'required',
+            'name'   => 'required|string|max:255|regex:/^[a-zA-Z\s]+$/',
             'email'  => 'required|email',
             'mobile' => 'required|digits:10',
             'service'=> 'required',

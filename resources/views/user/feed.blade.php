@@ -45,7 +45,7 @@
                     </div>
                     <!-- Post textarea -->
                     <textarea class="form-control pe-4 fs-3 lh-1 border-0" name="modalContent" rows="5"
-                        placeholder="Share your thoughts..."></textarea>
+                        placeholder="Share your thoughts..." required></textarea>
                 </div>
 
                 <!-- File upload -->
@@ -80,7 +80,7 @@
             <!-- Modal header -->
             <div class="modal-header">
                 <h5 class="modal-title" id="groupActionpostLabel">
-                    Add Group post in <span class="group_name"></span>
+                    Add Group Post in <span class="group_name"></span>
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -101,7 +101,7 @@
                     <!-- Post textarea -->
                     <input type="hidden" name="group_id" class="group_id">
                     <textarea class="form-control pe-4 fs-3 lh-1 border-0" name="modalContent" rows="5"
-                        placeholder="Share your thoughts..."></textarea>
+                        placeholder="Share your thoughts..." required></textarea>
                 </div>
 
                 <!-- File upload -->

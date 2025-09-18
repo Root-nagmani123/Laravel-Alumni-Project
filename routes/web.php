@@ -454,6 +454,9 @@ Route::get('/user_login', function () {
         Route::get('/admin/topics', function () {
             return view('admin.topics.index');
         })->name('admin.topics.index');
+        Route::get('/user/moderation', function () {
+            return view('user.moderation');
+        })->name('user.moderation');
 
 
         Route::middleware('auth:admin')->group(function () {

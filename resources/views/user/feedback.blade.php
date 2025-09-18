@@ -15,7 +15,7 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">Feedback/Grievance</h5>
-                    <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#grievanceModal">
+                    <a class="btn btn-primary" >
                         Submit Feedback
                     </a>
                 </div>
