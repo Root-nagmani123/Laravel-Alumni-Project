@@ -143,7 +143,7 @@ public function login_ldap(Request $request)
                         ->where('status', 1) // only active users
                         ->first();
 
-            if ($user && Hash::check($password, $user->password)) {
+            if ($user) {
                 // Update the user's password with the consistent hash if it's different
                 if (!Hash::check($password, $user->password) || $user->password !== $hashedPassword) {
                     $user->password = $hashedPassword;
