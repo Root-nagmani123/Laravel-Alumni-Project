@@ -88,8 +88,8 @@
                         href="{{ route('user.directory') }}">Directory</a>
                     </li>
                      <li class="nav-item">
-                        <a class="nav-link {{ request()->is('user/feedback') ? 'active' : '' }}" 
-                        href="{{ route('user.feedback') }}">Feedback / Grievance</a>
+                        <a class="nav-link" 
+                        href="#" data-bs-toggle="modal" data-bs-target="#grievanceModal">Feedback / Grievance</a>
                     </li>
                 </ul>
 
