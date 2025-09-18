@@ -105,9 +105,9 @@ class FeedController extends Controller
 
    public function index()
     {
-        
+
         $user = auth()->guard('user')->user();
-        
+
         $userId = $user->id;
         $memberId = $user->id;
         // Fetch posts with related models
@@ -134,7 +134,7 @@ class FeedController extends Controller
     $forums = DB::table('forums as f')
     // ->join('forums_member as fm', 'fm.forums_id', '=', 'f.id')
     ->select(
-        'f.id', 
+        'f.id',
         'f.name',
         'f.images',
         'f.created_at',
@@ -146,7 +146,7 @@ class FeedController extends Controller
         $query->whereNull('f.end_date')
               ->orWhere('f.end_date', '>=', now()->toDateString());
     })
-      ->orderBy('f.id', 'desc') 
+      ->orderBy('f.id', 'desc')
     ->get()
     ->map(function($item) {
         $item->enc_id = Crypt::encryptString($item->id); // extra field add
@@ -225,7 +225,7 @@ class FeedController extends Controller
             'group_image' => $post->group->image ?? null,
             'group_id' => $post->group_id,
         ];
-    }); 
+    });
 
     return view('user.feed', compact('memberId', 'posts', 'user', 'story','storiesByMember', 'broadcast','events', 'forums', 'groupNames', 'members'));
     }
@@ -433,12 +433,14 @@ public function getPostByGroup($group_id)
 {
 
      $group_id = decrypt($group_id); // Decrypt the group ID
-    
+
     $userId = auth()->guard('user')->id();
 
     // Posts with relations
     $posts = Post::with(['member', 'media'])
         ->where('group_id', $group_id)
+        ->where('status', 1) // only show active posts
+
         ->latest()
         ->get();
     // Group
@@ -506,7 +508,7 @@ public function deleteMedia($id)
 
     return response()->json(['success' => true]);
 }
-function update_topic_details(Request $request) 
+function update_topic_details(Request $request)
     {
         $request->validate([
         'post_id' => 'required|exists:posts,id',
@@ -516,7 +518,7 @@ function update_topic_details(Request $request)
     ]);
        $videoId = null;
  if ($request->video_link) {
-             
+
 $url = $request->video_link;
     // Agar query string wala link hai (watch?v=xxxx)
     if (strpos($url, 'watch?v=') !== false) {
@@ -554,7 +556,7 @@ $url = $request->video_link;
     }
 
     return redirect()->back()->with('success', 'Post updated successfully.');
- 
+
 }
     public function getPostByGroup_bkp($group_id)
     {
@@ -566,7 +568,7 @@ $url = $request->video_link;
 
 
         $group = Group::find($group_id); // Fetch the group by ID
-      
+
          $isMentee = 0;
         if($group->member_type == 2)
         {
@@ -575,14 +577,14 @@ $url = $request->video_link;
                 }
         }
         $created_by = $group->created_by;
-       
+
          $groupMember = DB::table('group_member')
         ->where('group_id', $group_id)
         ->first();
 
     // Determine if user is a mentee
-   
-   
+
+
 // echo ($isMentee);die;
         return view('user.grouppost_details', compact('posts', 'group','isMentee'));
     }
