@@ -436,9 +436,7 @@ Route::get('/user_login', function () {
         Route::get('/user/feedback', function () {
             return view('user.feedback');
         })->name('user.feedback');
-        Route::get('/admin/feed', function () {
-            return view('admin.feeds.index');
-        })->name('admin.feeds.index');
+        
         Route::get('/admin/user_management', function () {
             return view('admin.user_management.index');
         })->name('admin.user_management.index');
@@ -565,4 +563,11 @@ Route::prefix('admin')->group(function () {
         ->name('admin.user_management.search');
     Route::post('user_management/assign_role_permissions', [App\Http\Controllers\Admin\UserManagementController::class, 'assignRolePermissions'])
         ->name('admin.user_management.assign_role_permissions');
+    Route::post('toggleStatus', [App\Http\Controllers\Admin\UserManagementController::class, 'toggleStatus'])
+        ->name('admin.user_management.toggleStatus');
 });
+
+Route::get('/admin/feed', [App\Http\Controllers\Admin\FeedController::class, 'index'])->name('admin.feeds.index');
+Route::post('/admin/feed/approve', [App\Http\Controllers\Admin\FeedController::class, 'approve'])->name('admin.feeds.approve');
+Route::post('/admin/feed/decline', [App\Http\Controllers\Admin\FeedController::class, 'decline'])->name('admin.feeds.decline');
+Route::post('/admin/feed/view', [App\Http\Controllers\Admin\FeedController::class, 'view'])->name('admin.feeds.view');
