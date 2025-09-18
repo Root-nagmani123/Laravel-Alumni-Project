@@ -70,8 +70,7 @@
                                                         <div class="d-flex align-items-center justify-content-between">
                                                             <label for="exampleInputPassword1"
                                                                 class="form-label">Password</label>
-                                                            <a class="text-primary link-dark fs-2" href="#">Forgot
-                                                                Password?</a>
+                                                            
                                                         </div>
                                                         <div class="position-relative">
                                                             <input type="password"
