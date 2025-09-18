@@ -403,6 +403,7 @@
                                 class="dropdown-item btn btn-primary-soft btn-sm my-2 text-center">View profile</a>
                             @endif
                         </li>
+                        <li><a class="dropdown-item" href="{{ route('user.moderation') }}"><i class="bi bi-gear fa-fw me-2"></i>Moderation</a></li>
                         <li>
                             <form action="{{ route('user.logout') }}" method="POST" style="display: inline;">
                                 @csrf

@@ -21,7 +21,7 @@
 
         <img src="{{ asset('admin_assets/images/logos/favicon.ico') }}" alt="loader" class="lds-ripple img-fluid">
     </div>
-    <div id="main-wrapper" style="background-image: url({{asset('admin_assets/images/backgrounds/login-bg.webp')}});">
+    <div id="main-wrapper" style="background-image: url({{asset('user_assets/images/login/login-bg.webp')}}); background-position: center; background-size: cover; background-repeat: no-repeat;">
         <div class="position-relative overflow-hidden auth-bg min-vh-100 w-100 d-flex align-items-center justify-content-center">
             <div class="d-flex align-items-center justify-content-center w-100">
                 <div class="row justify-content-center w-100 my-5 my-xl-0">

@@ -99,14 +99,14 @@
                         </li>
                         <li class="sidebar-item">
                             <a class="sidebar-link" href="{{ route('grievance.list') }}">
-                                <iconify-icon icon="solar:document-bold-duotone"></iconify-icon>
+                                <iconify-icon icon="solar:feed-bold-duotone"></iconify-icon>
                                 <span class="icon-small"></span> Grievance/Feedback
                             </a>
                         </li>
                         <li class="sidebar-item">
                             <a class="sidebar-link" href="{{ route('admin.feeds.index') }}">
-                                <iconify-icon icon="solar:document-bold-duotone"></iconify-icon>
-                                <span class="icon-small"></span> Feeds
+                                <iconify-icon icon="solar:move-to-folder-bold-duotone"></iconify-icon>
+                                <span class="icon-small"></span> Moderation
                             </a>
                         </li>
                         <!-- <li class="sidebar-item">
