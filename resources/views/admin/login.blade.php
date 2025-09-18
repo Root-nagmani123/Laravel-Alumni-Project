@@ -82,6 +82,10 @@
                                                                 style="cursor: pointer;">
                                                                 👁️
                                                             </span>
+                                                            @php
+                                                            $ts = now()->addSeconds(30)->timestamp;
+                                                            @endphp
+                                                            <input type="hidden"  id="password"  name="password_salt" value="{{ Crypt::encryptString((string) $ts) }}">
                                                         </div>
                                                         @error('password')
                                                         <div class="invalid-feedback">

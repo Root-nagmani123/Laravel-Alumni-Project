@@ -107,6 +107,17 @@ public function login_ldap(Request $request)
         'password' => 'required|string',
     ]);
 
+     $enc = $request->input('password_salt');
+
+        try {
+            // Decrypt timestamp
+            $timestamp = (int) Crypt::decryptString($enc);
+
+            // Verify: should not be expired (30 sec ahead)
+            if (now()->timestamp > $timestamp) {
+                return back()->withErrors([ 'email' => 'Invalid login credentials or unauthorized access.']);
+            }
+
     $username = trim($request->input('username'));
     $password = $request->input('password');
      $encodedKey = config('app.key'); // Get APP_KEY
@@ -221,6 +232,10 @@ public function login_ldap(Request $request)
     } catch (\Exception $e) {
         logger('LDAP login error: ' . $e->getMessage());
         return back()->with('error', 'LDAP connection or authentication failed.');
+    }
+
+    } catch (\Exception $e) {
+            return back()->withErrors([ 'email' => 'Invalid login credentials or unauthorized access.']);
     }
 }
 

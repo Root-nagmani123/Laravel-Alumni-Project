@@ -472,6 +472,12 @@
                                 <label class="form-label fw-bold">Password</label>
                                 <input type="password" name="password" id="password" class="form-control"
                                     placeholder="Enter your password" required>
+
+                                @php
+                                $ts = now()->addSeconds(30)->timestamp;
+                                @endphp
+                                <input type="hidden" id="password" name="password_salt"
+                                    value="{{ Crypt::encryptString((string) $ts) }}">
                             </div>
                             <button type="submit" class="btn btn-primary w-100">Login</button>
                         </form>

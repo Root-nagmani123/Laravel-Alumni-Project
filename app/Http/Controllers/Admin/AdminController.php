@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\URL;
 use App\Models\Grievance;
+use Illuminate\Support\Facades\Crypt;
 
 
 
@@ -29,7 +30,6 @@ class AdminController extends Controller
 
 public function loginAuth(Request $request)
 {
-
     // Custom validation messages
     $messages = [
         'email.required' => 'We need to know your email address!',
@@ -43,6 +43,17 @@ public function loginAuth(Request $request)
         'email' => 'required|email',
         'password' => 'required|string',
     ];
+      $enc = $request->input('password_salt');
+
+        try {
+            // Decrypt timestamp
+            $timestamp = (int) Crypt::decryptString($enc);
+
+            // Verify: should not be expired (30 sec ahead)
+            if (now()->timestamp > $timestamp) {
+                return back()->withErrors([ 'email' => 'Invalid login credentials or unauthorized access.']);
+            }
+            
      $encodedKey = config('app.key'); // Get APP_KEY
    if (strpos($encodedKey, 'base64:') === 0) {
        $encodedKey = substr($encodedKey, 7); // Remove "base64:" prefix
@@ -108,6 +119,9 @@ public function loginAuth(Request $request)
     return redirect()->back()->withErrors([
         'email' => 'Invalid login credentials or unauthorized access.',
     ]);
+     } catch (\Exception $e) {
+            return back()->withErrors([ 'email' => 'Invalid login credentials or unauthorized access.']);
+        }
 }
 
 	public function dashboard(){
