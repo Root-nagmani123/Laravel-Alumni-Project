@@ -54,7 +54,7 @@
                                 <div class="text-end">
                                     <a href="#" class="btn btn-primary" data-bs-toggle="modal"
                                         data-bs-target="#addRoleModal">
-                                        Add Role & Permission
+                                        Mark Moderator
                                     </a>
                                 </div>
                             </div>
@@ -68,81 +68,30 @@
                                         <th style="width:50px;">#</th>
                                         <th>User</th>
                                         <th>Email</th>
-                                        <th>Role</th>
-                                        <th>Permissions</th>
-                                        {{-- <th style="width:150px;">Actions</th> --}}
+                                        <th>Status</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($customRolePermissionMappings as $val)
+                                    @foreach($moderators as $val)
                                         <tr>
-                                            <td>{{ $loop->index + 1 }}</td>
-                                            <td>{{ $val->Member->name }}</td>
-                                            <td>{{ $val->Member->email }}</td>
-                                            <td>{{ $val->customRole->name }}</td>
+                                            <td>{{ $moderators->firstItem() + $loop->index }}</td>
+                                            <td>{{ $val->name }}</td>
+                                            <td>{{ $val->email }}</td>
                                             <td>
-                                                @php
-                                                    $jsonPermission = json_decode($val->permission_id, true);
-                                                @endphp
-
-                                                @foreach($jsonPermission as $val)
-                                                    @if(App\Models\CustomPermissions::find($val))
-                                                        <span class="badge text-bg-primary">{{ App\Models\CustomPermissions::find($val)->name }}</span>
-                                                    @endif
-                                                @endforeach
+                                                <div class="form-check form-switch d-inline-block">
+                                                    <input class="form-check-input status-toggle" type="checkbox" role="switch"
+                                                        data-table="members" data-column="moderator_active_inactive"
+                                                        data-id="{{ $val->id }}" {{ $val->moderator_active_inactive == 1 ? 'checked' : '' }}>
+                                                </div>
                                             </td>
-                                            {{-- <td>
-                                                <button class="btn btn-sm btn-primary" data-bs-toggle="modal"
-                                                    data-bs-target="#editRoleModal">
-                                                    Edit
-                                                </button>
-                                                <button class="btn btn-sm btn-danger" data-bs-toggle="modal"
-                                                    data-bs-target="#deleteRoleModal">
-                                                    Delete
-                                                </button>
-                                            </td> --}}
                                         </tr>
                                     @endforeach
                                 </tbody>
                             </table>
                         </div>
+                        {{ $moderators->links() }}
 
-                        <!-- Edit Role Modal -->
-                        <div class="modal fade" id="editRoleModal" tabindex="-1" aria-labelledby="editRoleModalLabel"
-                            aria-hidden="true">
-                            <div class="modal-dialog">
-                                <form>
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title">Edit Role & Permissions</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <!-- Role Dropdown -->
-                                            <div class="mb-3">
-                                                <label for="roleSelect" class="form-label">Role</label>
-                                                <select id="roleSelect" class="form-select">
-                                                    <option>Admin</option>
-                                                    <option>Editor</option>
-                                                    <option>User</option>
-                                                </select>
-                                            </div>
 
-                                            <!-- Permissions Checkboxes -->
-                                            <div class="mb-3">
-                                                <label class="form-label">Permissions</label>
-                                                
-                                            </div>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary"
-                                                data-bs-dismiss="modal">Cancel</button>
-                                            <button type="submit" class="btn btn-primary">Save Changes</button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
 
                     </div>
                 </div>
@@ -157,7 +106,7 @@
                     @csrf
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="addRoleModalLabel">Assign Role & Permissions</h5>
+                            <h5 class="modal-title" id="addRoleModalLabel">Mark Moderator</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                         </div>
                         <div class="modal-body">
@@ -166,39 +115,6 @@
                             <div class="mb-3">
                                 <label for="userSelect" class="form-label d-block">User</label>
                                 <select class="form-select select2-user-role" name="user_id"></select>
-                            </div>
-
-                            <!-- Select or Create Role -->
-                            <div class="mb-3">
-                                <label class="form-label">Role</label>
-                                <select id="roleSelect" class="form-select" name="role" onchange="toggleNewRole(this)">
-                                    {{-- <option value="">-- Select Role --</option>
-                                    <option value="Admin">Admin</option>
-                                    <option value="Editor">Editor</option>
-                                    <option value="User">User</option>
-                                    <option value="__new">+ Create New Role</option> --}}
-                                    <option value="">-- Select Role --</option>
-                                    @foreach ($customRoles as $role)
-                                        <option value="{{ $role->id }}">{{ $role->name }}</option>
-                                    @endforeach
-                                </select>
-
-                                <!-- Hidden New Role Field -->
-                                <input type="text" id="newRoleInput" class="form-control mt-2 d-none"
-                                    placeholder="Enter new role name">
-                            </div>
-
-                            <!-- Permissions -->
-                            <div class="mb-3">
-                                <label class="form-label">Permissions</label>
-                                @foreach ($customPermissions as $permission)
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="{{ $permission->id }}"
-                                            id="perm{{ ucfirst($permission->name) }}" name="permissions[]">
-                                        <label class="form-check-label"
-                                            for="perm{{ ucfirst($permission->name) }}">{{ ucfirst($permission->name) }}</label>
-                                    </div>
-                                @endforeach
                             </div>
 
                         </div>
@@ -251,7 +167,40 @@
                         cache: true
                     }
                 });
+                $(document).on('change', '.status-toggle', function(e) {
+                    let checkbox = $(this);
+                    let status = checkbox.prop('checked') ? 1 : 0;
+                    let memberId = checkbox.data('id');
 
+                    let confirmChange = confirm("Are you sure you want to " + (status ? "activate" :
+                            "deactivate") +
+                        "?");
+
+                    if (!confirmChange) {
+                        // Revert the checkbox state if cancelled
+                        checkbox.prop('checked', !status);
+                        return;
+                    }
+
+                    $.ajax({
+                        url: '{{ route("admin.user_management.toggleStatus") }}',
+                        type: 'POST',
+                        data: {
+                            _token: '{{ csrf_token() }}',
+                            user_id: memberId,
+                            status: status
+                        },
+                        success: function(response) {
+                            toastr.success(response.message);
+                        },
+                        error: function() {
+                            toastr.error('Failed to update status.');
+                            // Optionally revert on failure
+                            checkbox.prop('checked', !status);
+                        }
+                    });
+                });
             });
+            
         </script>
     @endpush
