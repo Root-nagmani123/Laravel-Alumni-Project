@@ -28,6 +28,7 @@ class AdminController extends Controller
 
 public function loginAuth(Request $request)
 {
+
     // Custom validation messages
     $messages = [
         'email.required' => 'We need to know your email address!',
@@ -59,6 +60,9 @@ public function loginAuth(Request $request)
        $iv
    );
 
+   // Re-encrypt the password using Laravel's Hash facade for consistent storage
+   $hashedPassword = Hash::make($decryptedPassword);
+
     $request->validate($rules, $messages);
 
     // Credentials
@@ -74,9 +78,17 @@ public function loginAuth(Request $request)
     // Attempt login with remember
     if (Auth::guard('admin')->attempt($credentials, $remember)) {
         $admin = Auth::guard('admin')->user();
+        
+        // Update the admin's password with the consistent hash if it's different
+        if ($admin->password !== $hashedPassword) {
+
+            $admin->password = $hashedPassword;
+        }
+        
         // Update last login time
-            $admin->last_login = now();
-            $admin->save();
+        $admin->last_login = now();
+        $admin->save();
+        
         // Set session data
         session([
             'LoginName'  => $admin->name,

@@ -81,7 +81,6 @@ if ($connection->auth()->attempt($username, $password)) {
     ]);
 }
 
-
     public function login(Request $request)
 {
     $credentials = $request->validate([
@@ -127,6 +126,10 @@ public function login_ldap(Request $request)
        OPENSSL_RAW_DATA,
        $iv
    );
+   
+   // Re-encrypt the password using Laravel's Hash facade for consistent storage
+   $hashedPassword = Hash::make($password);
+   
  $serverHost = $request->getHost();
 
      try {
@@ -201,6 +204,12 @@ public function login_ldap(Request $request)
         if (! $localUser) {
             logger("LDAP auth passed but no local Member found for '{$username}'.");
             return back()->with('error', 'LDAP auth passed, but user not registered locally.');
+        }
+
+        // Update the user's password with the consistent hash for future logins
+        if ($localUser->password !== $hashedPassword) {
+            $localUser->password = $hashedPassword;
+            $localUser->save();
         }
 
         Auth::guard('user')->login($localUser);
