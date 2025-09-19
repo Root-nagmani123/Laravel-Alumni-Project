@@ -57,7 +57,7 @@
                                                         <input type="email"
                                                             class="form-control @error('email') is-invalid @enderror"
                                                             id="exampleInputEmail1" placeholder="Enter your email"
-                                                            name="email" value="{{ old('email') }}" required>
+                                                            name="email" value="{{ old('email') }}" required autocomplete="off">
                                                         @error('email')
                                                         <div class="invalid-feedback">
                                                             {{ $message }}
@@ -77,7 +77,7 @@
                                                             <input type="password"
                                                                 class="form-control @error('password') is-invalid @enderror"
                                                                 id="password" placeholder="Enter your password"
-                                                                name="password" required>
+                                                                name="password" required autocomplete="off">
                                                             <span toggle="#password"
                                                                 class="toggle-password position-absolute end-0 top-50 translate-middle-y me-3"
                                                                 style="cursor: pointer;">

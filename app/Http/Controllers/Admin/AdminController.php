@@ -68,6 +68,16 @@ public function loginAuth(Request $request)
         'isAdmin' => 1,
     ];
 
+     $allowedRedirects = [
+        'dashboard' => route('dashboard'),
+    ];
+
+    $target = $request->input('redirect'); // query param like ?redirect=dashboard
+
+    if ($target && array_key_exists($target, $allowedRedirects)) {
+        return redirect($allowedRedirects[$target]);
+    }
+
     // Check if remember checkbox is checked
     $remember = $request->has('remember');
 

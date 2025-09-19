@@ -24,6 +24,8 @@ return Application::configure(basePath: dirname(__DIR__))
           $middleware->web([
         \App\Http\Middleware\PreventBackHistory::class,
         \App\Http\Middleware\CheckProfile::class,
+        \App\Http\Middleware\SafeRedirect::class,
+        \App\Http\Middleware\SecurityHeaders::class,
     ]);
 		
     })

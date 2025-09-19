@@ -10,6 +10,7 @@ use App\Models\UserOtp;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Http;
 
 class OtpLoginController extends Controller
 {
@@ -54,44 +55,60 @@ public function sendOtp(Request $request)
         }
     }
 
-    public function verifyOtp(Request $request)
-    {
-        $request->validate([
-            'otp_email' => 'required|email',
-            'otp_code' => 'required|digits:6',
-        ]);
+  public function verifyOtp(Request $request)
+{
+    $request->validate([
+        'otp_email' => 'required|email',
+        'otp_code'  => 'required|digits:6',
+        'g-recaptcha-response' => 'required',
+    ]);
 
-        // Find user
-        $user = Member::where('email', $request->otp_email)->first();
-        if (!$user) {
-            return response()->json(['error' => 'Email not found'], 422);
-        }
+    // Verify reCAPTCHA
+    $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
+        'secret'   => '6LcxQc0rAAAAAN5Wl6h1kH78PHIszwHdLitSdPi8', // apna secret key
+        'response' => $request->input('g-recaptcha-response'),
+        'remoteip' => $request->ip(),
+    ]);
 
-        // Verify OTP
-        $otpRecord = UserOtp::where('email', $request->otp_email)
-                           ->where('otp', $request->otp_code)
-                           ->where('expires_at', '>=', now())
-                           ->first();
+    $result = $response->json();
 
-        
-
-        if (!$otpRecord) {
-            return response()->json(['error' => 'Invalid or expired OTP'], 422);
-        }
-
-        // Log in the user
-        Auth::guard('user')->login($user);
-        $request->session()->regenerate();
-        $user->is_online = 1;
-        $user->last_seen = now();
-        $user->save();
-        $otpRecord->delete();
-        // return redirect()->intended('/user/feed');
-
+    if (empty($result['success']) || $result['success'] !== true) {
         return response()->json([
-            'message' => 'Login successful', 
-            'redirect' => route('user.feed')
-        ]);
+            'error' => 'Captcha verification failed. Please try again.'
+        ], 422);
     }
+
+    // Find user
+    $user = Member::where('email', $request->otp_email)->first();
+    if (!$user) {
+        return response()->json(['error' => 'Email not found'], 422);
+    }
+
+    // Verify OTP
+    $otpRecord = UserOtp::where('email', $request->otp_email)
+        ->where('otp', $request->otp_code)
+        ->where('expires_at', '>=', now())
+        ->first();
+
+    if (!$otpRecord) {
+        return response()->json(['error' => 'Invalid or expired OTP'], 422);
+    }
+
+    // Login user
+    Auth::guard('user')->login($user);
+    $request->session()->regenerate();
+
+    $user->update([
+        'is_online' => 1,
+        'last_seen' => now(),
+    ]);
+
+    $otpRecord->delete();
+
+    return response()->json([
+        'message'  => 'Login successful',
+        'redirect' => route('user.feed')
+    ]);
+}
 }
 

@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Http;
 
 
 use App\Models\Member;
@@ -30,9 +31,22 @@ class RegistrationRequestController extends Controller
             'batch'  => 'required',
             'course_attended'  => 'required',
             'photo'  => 'required|file|mimes:jpg,jpeg,png',
-            'govt_id'=> 'required|file|mimes:jpg,jpeg,png,pdf'
+            'govt_id'=> 'required|file|mimes:jpg,jpeg,png,pdf',
+           'g-recaptcha-response' => 'required',
         ]);
+         $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
+        'secret' => '6LcxQc0rAAAAAN5Wl6h1kH78PHIszwHdLitSdPi8', // apna secret key
+        'response' => $request->input('g-recaptcha-response'),
+        'remoteip' => $request->ip(),
+    ]);
 
+    $result = $response->json();
+
+    if (empty($result['success']) || $result['success'] !== true) {
+        return back()->withErrors([
+            'captcha' => 'Captcha verification failed. Please try again.'
+        ])->withInput();
+    }
          $photo = $request->file('photo')->store('profile_pic', 'public');
         $govt_id = $request->file('govt_id')->store('uploads/govt_ids', 'public');
 

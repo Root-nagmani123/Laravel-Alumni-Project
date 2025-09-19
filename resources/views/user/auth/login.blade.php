@@ -430,8 +430,8 @@
                         style="overflow: hidden; height: 100%;">
                         <div class="marquee-text">
                             Inquiry regarding user credentials: Phone: 135-2222346 (Mon–Fri,
-                            9:00 AM–5:30 PM) Email:
-                            ithelpdesk.lbsnaa@nic.in
+                            9:00 AM–5:30 PM) Email: ithelpdesk[at]nic[dot]in
+
                         </div>
                     </div>
                 </div>
@@ -465,14 +465,20 @@
                             @csrf
                             <div class="mb-3">
                                 <label class="form-label fw-bold">User Name</label>
-                                <input type="text" name="username" class="form-control"
-                                    placeholder="Enter your username" required>
+                                 <input type="text" name="username" class="form-control"
+               placeholder="Enter your username" required autocomplete="off">
                             </div>
                             <div class="mb-3">
                                 <label class="form-label fw-bold">Password</label>
                                 <input type="password" name="password" id="password" class="form-control"
-                                    placeholder="Enter your password" required>
+                                    placeholder="Enter your password" required autocomplete="off">
                             </div>
+                            <div class="mb-3">
+                                <div id="captcha-ldap"></div> <!-- ID for LDAP captcha -->
+                                @error('captcha')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                                </div>
                             <button type="submit" class="btn btn-primary w-100">Login</button>
                         </form>
                     </div>
@@ -511,6 +517,12 @@
 
                                     <!-- Hidden field to store the final OTP -->
                                     <input type="hidden" name="otp_code" id="otp_code">
+                                     <div class="mb-3">
+                                        <div id="captcha-otp"></div> <!-- ID for OTP captcha -->
+                                        @error('captcha')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
 
                                     <div id="otpError" class="error-message"></div>
                                     <div id="otpSuccess" class="success-message"></div>
@@ -577,6 +589,13 @@
                                         required>
                                 </div>
                             </div>
+                            <div class="mb-3">
+                                        <div id="captcha-registration"></div> <!-- ID for registration captcha -->
+                                        @error('captcha')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+
                             <button type="submit" class="btn btn-primary w-100 mt-3">Register</button>
                         </form>
                     </div>
@@ -902,6 +921,24 @@
     <script src="{{ asset('user_assets/js/lazysizes.min.js') }}"></script>
     <script src="{{ asset('user_assets/js/theme-setting.js') }}"></script>
     <script src="{{ asset('user_assets/js/script.js') }}"></script>
+  
+  <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer></script>
+      <script>
+    let captchaLdap, captchaOtp;
+
+    function onloadCallback() {
+        captchaLdap = grecaptcha.render('captcha-ldap', {
+            'sitekey': '6LcxQc0rAAAAAOpY8yaHMqLtQB8NW9J2eVjjGMWA'
+        });
+
+        captchaOtp = grecaptcha.render('captcha-otp', {
+            'sitekey': '6LcxQc0rAAAAAOpY8yaHMqLtQB8NW9J2eVjjGMWA'
+        });
+        captchaRegistration = grecaptcha.render('captcha-registration', {
+            'sitekey': '6LcxQc0rAAAAAOpY8yaHMqLtQB8NW9J2eVjjGMWA'
+        });
+    }
+</script>
     <script>
         // Collect digits into hidden field
 document.addEventListener("input", function(e) {
@@ -1192,9 +1229,14 @@ document.getElementById('verifyAadhaarOtpBtn').addEventListener('click', functio
             const email = $('#otp_email').val();
             const otp = $('#otp_code').val();
             const token = $('input[name="_token"]').val();
+              const captchaResponse = grecaptcha.getResponse(captchaOtp);
 
             if (!otp || otp.length !== 6) {
                 $('#otpError').text('Please enter a valid 6-digit OTP').show();
+                return;
+            }
+            if (!captchaResponse) {
+                $('#otpError').text('Please complete the CAPTCHA').show();
                 return;
             }
 
@@ -1207,7 +1249,8 @@ document.getElementById('verifyAadhaarOtpBtn').addEventListener('click', functio
                 data: {
                     otp_email: email,
                     otp_code: otp,
-                    _token: token
+                    _token: token,
+                    'g-recaptcha-response': captchaResponse
                 },
                 success: function(response) {
                     $('#otpSuccess').text('OTP verified successfully!').show();
