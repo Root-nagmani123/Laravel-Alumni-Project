@@ -70,17 +70,25 @@ public function store(Request $request)
     $validated = $request->validate([
         'title' => 'required|string|max:255',
         'content' => 'required|string',
-        'images' => 'required|array', // <-- FIXED: added this line
+        'images' => 'file|mimes:jpg,jpeg,png|max:2048',// <-- FIXED: added this line
         'video_url' => 'nullable|url',
     ]);
 
 
     // Handle image upload (store first image only if multiple uploaded)
     $imageUrl = null;
-    if ($request->hasFile('images')) {
-        $image = $request->file('images')[0];
-        $imageUrl = $image->store('uploads/broadcasts', 'public'); // returns relative path
+  if ($request->hasFile('images')) {
+    $image = $request->file('images')[0]; // only first image
+    $extension = strtolower($image->getClientOriginalExtension());
+    $allowed = ['jpg', 'jpeg', 'png'];
+
+    if (!in_array($extension, $allowed)) {
+        return back()->withErrors(['images' => 'Invalid file type!']);
     }
+    // ✅ generate dynamic safe filename
+    $filename = uniqid('img_', true) . '.' . $image->getClientOriginalExtension();
+    $imageUrl = $image->storeAs('uploads/broadcasts', $filename, 'public');
+}
 
     // Save to DB
     $broadcast = Broadcast::create([
@@ -182,6 +190,11 @@ public function destroybroadcast(Broadcast $broadcast)
     // Image upload
    if ($request->hasFile('image')) {
     $file = $request->file('image');
+    $extension = strtolower($file->getClientOriginalExtension());
+    $allowed = ['jpg', 'jpeg', 'png'];
+    if (!in_array($extension, $allowed)) {
+        return back()->withErrors(['image' => 'Invalid file type!']);
+    }
 
     // 1) Reject double extensions
     $originalName = $file->getClientOriginalName();
