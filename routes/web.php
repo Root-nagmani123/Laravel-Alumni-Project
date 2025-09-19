@@ -92,8 +92,8 @@ Route::prefix('user')->name('user.')->group(function () {
         if (Auth::guard('user')->check()) {
             return redirect()->route('user.feed');
         }
-        Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
-        Route::get('/loginldap', [AuthController::class, 'showLoginForm_ldap'])->name('loginldap');
+        Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login')->middleware(SafeRedirect::class);
+        Route::get('/loginldap', [AuthController::class, 'showLoginForm_ldap'])->name('loginldap')->middleware(SafeRedirect::class);
         Route::post('/login', [AuthController::class, 'login'])->name('login.submit')->middleware(SafeRedirect::class);
         Route::post('/login_ldap', [AuthController::class, 'login_ldap'])->name('login.submit_ldap')->middleware(SafeRedirect::class);
     });
@@ -220,7 +220,7 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 Route::redirect('/member','member/login');
 Route::prefix('member')->name('member.')->group(function () {
-		Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login'); // <- Add this
+		Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login')->middleware(SafeRedirect::class); // <- Add this
 		Route::post('/login', [AuthController::class, 'login'])->name('login.submit')->middleware(SafeRedirect::class);
 		Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
@@ -239,8 +239,8 @@ Route::prefix('member')->middleware('auth:member')->group(function () {
 
 // Routes accessible *without* login (public)
 Route::prefix('admin')->controller(AdminController::class)->group(function () {
-    Route::get('/', 'index')->name('auth.admin'); // login form
-    Route::get('/login', 'index')->name('auth.admin'); // alias for login
+    Route::get('/', 'index')->name('auth.admin')->middleware(SafeRedirect::class); // login form
+    Route::get('/login', 'index')->name('auth.admin')->middleware(SafeRedirect::class); // alias for login
     Route::post('/authlogin', 'loginAuth')->name('admin.authlogin')->middleware(SafeRedirect::class); // login post
 
 });
