@@ -24,7 +24,7 @@ class CheckProfile
                 !$user->name || !$user->date_of_birth || !$user->gender || 
                 !$user->mobile || !$user->bio || !$user->profile_pic || 
                 !$user->current_designation || !$user->current_department || 
-                !$user->current_location || !$user->Service || !$user->sector
+                !$user->current_location || !$user->Service
             ) {
                 return redirect()->route('user.profile.data', Crypt::encrypt($user->id))
                                  ->with('error', 'Please complete your profile first.');

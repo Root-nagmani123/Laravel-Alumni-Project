@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
 use LdapRecord\Container;
 use Illuminate\Support\Facades\Crypt;
 
@@ -105,10 +106,25 @@ if ($connection->auth()->attempt($username, $password)) {
 }
 public function login_ldap(Request $request)
 {
+   
     $request->validate([
         'username' => 'required|string',
         'password' => 'required|string',
+        'g-recaptcha-response' => 'required', // reCAPTCHA validation
     ]);
+       $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
+        'secret' => '6LcxQc0rAAAAAN5Wl6h1kH78PHIszwHdLitSdPi8', // apna secret key
+        'response' => $request->input('g-recaptcha-response'),
+        'remoteip' => $request->ip(),
+    ]);
+
+    $result = $response->json();
+
+    if (empty($result['success']) || $result['success'] !== true) {
+        return back()->withErrors([
+            'captcha' => 'Captcha verification failed. Please try again.'
+        ])->withInput();
+    }
 
      $enc = $request->input('password_salt');
 
