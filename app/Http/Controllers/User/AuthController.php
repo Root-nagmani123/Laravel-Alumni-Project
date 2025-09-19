@@ -130,6 +130,19 @@ public function login_ldap(Request $request)
         'response' => $request->input('g-recaptcha-response'),
         'remoteip' => $request->ip(),
     ]);
+       $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
+        'secret' => '6LcxQc0rAAAAAN5Wl6h1kH78PHIszwHdLitSdPi8', // apna secret key
+        'response' => $request->input('g-recaptcha-response'),
+        'remoteip' => $request->ip(),
+    ]);
+
+    $result = $response->json();
+
+    if (empty($result['success']) || $result['success'] !== true) {
+        return back()->withErrors([
+            'captcha' => 'Captcha verification failed. Please try again.'
+        ])->withInput();
+    }
 
     $result = $response->json();
 
