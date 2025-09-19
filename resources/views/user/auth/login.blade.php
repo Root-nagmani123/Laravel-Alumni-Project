@@ -430,7 +430,7 @@
                         style="overflow: hidden; height: 100%;">
                         <div class="marquee-text">
                             Inquiry regarding user credentials: Phone: 135-2222346 (Mon–Fri,
-                            9:00 AM–5:30 PM) Email: ithelpdesk[at]nic[dot]in
+                            9:00 AM–5:30 PM) Email:  ithelpdesk[dot]lbsnaa[at]nic[dot]in
 
                         </div>
                     </div>
@@ -721,7 +721,7 @@
                         <div class="marquee-text">
                             Inquiry regarding user credentials: Phone: 135-2222346 (Mon–Fri,
                             9:00 AM–5:30 PM) Email:
-                            ithelpdesk.lbsnaa@nic.in
+                           ithelpdesk[dot]lbsnaa[at]nic[dot]in
                         </div>
                     </div>
                 </div>

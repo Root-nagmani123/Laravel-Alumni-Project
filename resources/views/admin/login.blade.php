@@ -93,6 +93,12 @@
                                                         </div>
                                                         @enderror
                                                     </div>
+                                                    <div class="mb-3">
+                                                        <div class="g-recaptcha" data-sitekey="6LcxQc0rAAAAAOpY8yaHMqLtQB8NW9J2eVjjGMWA"></div>
+                                                        @error('captcha')
+                                                            <span class="text-danger">{{ $message }}</span>
+                                                        @enderror
+                                                    </div>
 
                                                     <div class="form-check mb-3">
                                                         <input class="form-check-input primary" type="checkbox"
@@ -132,7 +138,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
-
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <script>
     @if(session('success'))
     toastr.success("{{ session('success') }}");

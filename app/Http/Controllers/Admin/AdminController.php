@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\URL;
 use App\Models\Grievance;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Http;
 
 
 
@@ -42,6 +43,7 @@ public function loginAuth(Request $request)
     $rules = [
         'email' => 'required|email',
         'password' => 'required|string',
+         'g-recaptcha-response' => 'required'
     ];
       $enc = $request->input('password_salt');
 
@@ -54,6 +56,17 @@ public function loginAuth(Request $request)
                 return back()->withErrors([ 'email' => 'Invalid login credentials or unauthorized access.']);
             }
             
+              $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
+        'secret' => '6LcxQc0rAAAAAN5Wl6h1kH78PHIszwHdLitSdPi8',
+        'response' => $request->input('g-recaptcha-response'),
+        'remoteip' => $request->ip(),
+    ]);
+     $result = $response->json();
+
+    if (!$result['success']) {
+        return back()->withErrors(['captcha' => 'Captcha verification failed. Please try again.'])->withInput();
+    }
+    
      $encodedKey = config('app.key'); // Get APP_KEY
    if (strpos($encodedKey, 'base64:') === 0) {
        $encodedKey = substr($encodedKey, 7); // Remove "base64:" prefix

@@ -8,7 +8,7 @@ class SafeRedirect
 {
     public function handle($request, Closure $next)
     {
-        $url = $request->input('redirect');
+       $url = $request->input('url');
 
         if ($url) {
             // Allow only internal URLs
