@@ -479,6 +479,12 @@
                                 <input type="hidden" id="password" name="password_salt"
                                     value="{{ Crypt::encryptString((string) $ts) }}">
                             </div>
+                            <div class="mb-3">
+                                <div id="captcha-ldap"></div> <!-- ID for LDAP captcha -->
+                                @error('captcha')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                                </div>
                             <button type="submit" class="btn btn-primary w-100">Login</button>
                         </form>
                     </div>
