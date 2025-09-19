@@ -35,4 +35,23 @@ class SafeRedirect
 
         return $response;
     }
+    
+    /**
+     * Check if the given URL is allowed
+     */
+    private function isUrlAllowed($url, $allowedHosts)
+    {
+        // Parse the URL to get the host
+        $parsedUrl = parse_url($url);
+        
+        // If no host is found, it might be a relative URL which is allowed
+        if (!isset($parsedUrl['host'])) {
+            return true;
+        }
+        
+        $host = $parsedUrl['host'];
+        
+        // Check if host is in allowed list
+        return in_array($host, $allowedHosts);
+    }
 }
