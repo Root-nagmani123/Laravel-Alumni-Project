@@ -189,8 +189,8 @@ public function destroybroadcast(Broadcast $broadcast)
     $broadcast = Broadcast::findOrFail($id);
 
     $validated = $request->validate([
-        'title' => ['required', 'string', 'max:255', new NoHtmlOrScript()],
-        'description' => ['required', 'string', new NoHtmlOrScript()],
+        'title' => 'required|string|max:255',
+        'description' => 'required|string',
         'image' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
         'video_url' => 'nullable|url',
     ],[
