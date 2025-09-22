@@ -105,7 +105,7 @@ Route::prefix('user')->name('user.')->group(function () {
         ->middleware(CheckProfile::class)
         ->name('feed');
 
-        
+
         Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 		Route::put('/post/update/{id}', [PostController::class, 'update'])->name('post.update');
 		Route::post('/post', [PostController::class, 'store'])->name('post.store');
@@ -129,9 +129,9 @@ Route::prefix('user')->name('user.')->group(function () {
         Route::post('/forum-store', [PostController::class, 'forum_store'])->name('forum.store');
 
 		Route::post('/post/{post}/like', [PostController::class, 'toggleLike'])->name('post.like');
-		
 
-  
+
+
          Route::get('/profile/{id}', [ProfileController::class, 'showById'])->where('id', '[0-9]+')->name('profile');
          Route::get('/profile/{name}', [ProfileController::class, 'showByName'])->where('name', '[a-zA-Z\s]+')->name('profile.name');
 
@@ -164,11 +164,11 @@ Route::prefix('user')->name('user.')->group(function () {
     });
 
     Route::middleware('auth:user')->group(function () {
-       
+
         Route::get('/mentor-mentee', [MentorMenteeController::class, 'index'])->name('mentor_mentee');
         Route::post('/mentee/toggle/{id}', [MentorMenteeController::class, 'toggleStatus'])->name('mentee.toggle');
 
-       
+
 		Route::post('/get-years', [MentorMenteeController::class, 'getYears'])->name('get.years');
 		Route::post('/get-cadres', [MentorMenteeController::class, 'getCadres'])->name('get.cadres');
 		Route::post('/get-sectors', [MentorMenteeController::class, 'getSectors'])->name('get.sectors');
@@ -190,7 +190,7 @@ Route::prefix('user')->name('user.')->group(function () {
         Route::post('user/forum/topic/{id}/like', [MemberForumController::class, 'like'])->name('forum.topic.like');
         Route::post('user/forum/topic/{id}/unlike', [MemberForumController::class, 'unlike'])->name('forum.topic.unlike');
         Route::post('user/forum/topic/{id}/comment', [MemberForumController::class, 'comment'])->name('forum.topic.comment');
-      
+
         Route::post('user/forum/topic/{id}/store', [MemberForumController::class, 'member_store_topic'])->name('forum.topic.store');
        Route::post('user/forum/delete', [MemberForumController::class, 'deleteforum'])->name('forum.delete');
         Route::get('/notifications', [App\Http\Controllers\Member\NotificationController::class, 'getNotifications'])->name('notifications.get');
@@ -200,7 +200,7 @@ Route::prefix('user')->name('user.')->group(function () {
 
         Route::post('/notifications/read/{notifId}', [App\Http\Controllers\Member\NotificationController::class, 'markAsRead'])->name('notifications.read');
         Route::get('/get-members', [MemberController::class, 'getMembers'])->name('members.list');
-        
+
 
     });
 
@@ -281,7 +281,7 @@ Route::prefix('admin')->middleware('auth:admin')->controller(AdminController::cl
 
    // Location Routes
     Route::prefix('location')->name('admin.location.')->group(function () {
-       
+
 
         // Country Routes
         Route::get('/country', [App\Http\Controllers\Admin\Location\CountryController::class, 'index'])->name('country');
@@ -360,7 +360,7 @@ Route::prefix('group')->name('group.')->group(function () {
 		Route::get('/', [GroupController::class, 'index'])->name('index');
 		Route::get('/create', [GroupController::class, 'create'])->name('create');
 		Route::post('/', [GroupController::class, 'store'])->name('store');
-		
+
 		Route::get('/{group}/edit', [GroupController::class, 'edit'])->name('edit');
 		Route::put('/{group}', [GroupController::class, 'update'])->name('update');
 		Route::delete('/{group}', [GroupController::class, 'destroy'])->name('destroy');
@@ -371,6 +371,9 @@ Route::prefix('group')->name('group.')->group(function () {
         Route::put('topics/{id}/update', [GroupController::class, 'updateTopic'])->name('topics_update');
         Route::delete('topics/{id}', [GroupController::class, 'deleteTopic'])->name('topics.delete');
         Route::post('topicToggleStatus', [GroupController::class, 'topicToggleStatus'])->name('topicToggleStatus');
+        Route::delete('media/{id}', [GroupController::class, 'deleteMedia'])->name('delete_media');
+        Route::post('media/upload/{id}', [GroupController::class, 'uploadMedia'])->name('media_upload');
+
     });
 
 
@@ -439,7 +442,7 @@ Route::get('/user_login', function () {
         Route::get('/user/feedback', function () {
             return view('user.feedback');
         })->name('user.feedback');
-        
+
         Route::get('/admin/user_management', function () {
             return view('admin.user_management.index');
         })->name('admin.user_management.index');
@@ -466,7 +469,7 @@ Route::get('/user_login', function () {
                 Route::get('/admin/registration', [App\Http\Controllers\Admin\RegistrationRequestController::class, 'index'])->name('admin.registration.index');
                 Route::put('/admin/registration_requests/update/{id}', [App\Http\Controllers\Admin\RegistrationRequestController::class, 'requests_update_status'])->name('admin.registration_requests.update');
         });
-        
+
 require __DIR__.'/auth.php';
 
 
@@ -480,7 +483,7 @@ Route::middleware(['auth:user'])->group(function () {
     Route::post('/user/change-password', [ChangePasswordController::class, 'changePassword'])->name('user.change-password');
 
     Route::prefix('group')->name('user.group.')->group(function () {
-         
+
         Route::post('/activate-group', [MemberGroupController::class, 'activateGroup'])->name('activate-group');
         Route::get('/', [MemberGroupController::class, 'index'])->name('index');
         Route::get('/create', [MemberGroupController::class, 'create'])->name('create');
@@ -489,13 +492,13 @@ Route::middleware(['auth:user'])->group(function () {
         Route::put('/{group}', [MemberGroupController::class, 'update'])->name('update');
         Route::delete('/{group}', [MemberGroupController::class, 'destroy'])->name('destroy');
 
-   
+
         Route::delete('group_post_data/{post}', [MemberGroupController::class, 'post_destroy'])->name('post.destroy');
 
 
     });
 
-    
+
 });
 
 Route::get('/user-search', [MemberController::class, 'user_search'])->name('user.search');
@@ -507,8 +510,8 @@ Route::get('/admin/members/list', [App\Http\Controllers\Admin\GroupController::c
 Route::get('/admin/group/members', [App\Http\Controllers\Admin\GroupController::class, 'getGroupMembers'])
     ->name('admin.group.members');
 Route::post('/admin/get-year', function (Illuminate\Http\Request $request) {
-    
-    $service = $request->input('service'); 
+
+    $service = $request->input('service');
          $years = App\Models\Member::where('service', $service)
     ->whereNotNull('batch')
     ->where('batch', '!=', 'NA')
@@ -550,7 +553,7 @@ Route::post('/custom-broadcasting-auth', function(\Illuminate\Http\Request $requ
     return response()->json([
         'auth' => hash('sha256', $request->socket_id . ':' . $request->channel_name . ':bypass')
     ]);
-})->withoutMiddleware(\Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class); 
+})->withoutMiddleware(\Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class);
 
 Route::post('/admin/socialwall/toggle-status', [SocialWallController::class, 'togglePostStatus'])->name('socialwall.toggleStatus');
 Route::post('/admin/socialwall/toggle-comment-status', [SocialWallController::class, 'toggleCommentStatus'])->name('socialwall.toggleCommentStatus');
