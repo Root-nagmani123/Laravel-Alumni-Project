@@ -70,14 +70,28 @@ public function store(Request $request)
     $validated = $request->validate([
         'title' => 'required|string|max:255',
         'content' => 'required|string',
-        'images' => 'nullable|file|mimes:jpg,jpeg,png|max:51200',
+        'images' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
         'video_url' => 'nullable|url',
+    ], [
+        'images.max' => 'File too large. Max allowed is 2MB.',
+        'images.mimes' => 'Invalid file type! Accepted: jpg, jpeg, png.',
+        'images.file' => 'Please upload a valid file.',
+        'video_url.url' => 'Please enter a valid URL.',
     ]);
 
     // Handle image upload (store first image only if multiple uploaded)
     $imageUrl = null;
   if ($request->hasFile('images')) {
     $image = $request->file('images'); // only first image
+
+ // 1️⃣ Reject double extensions
+ $originalName = $image->getClientOriginalName();
+ if (substr_count($originalName, '.') > 1) {
+     return back()->withErrors([
+         'images' => 'Invalid file name! Double extensions are not allowed.'
+     ]);
+ }
+
     $extension = strtolower($image->getClientOriginalExtension());
     $allowed = ['jpg', 'jpeg', 'png'];
 
