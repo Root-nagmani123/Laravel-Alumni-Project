@@ -203,16 +203,6 @@ public function destroybroadcast(Broadcast $broadcast)
     // Image upload
    if ($request->hasFile('image')) {
     $file = $request->file('image');
-    $extension = strtolower($file->getClientOriginalExtension());
-    $allowed = ['jpg', 'jpeg', 'png'];
-    if (!in_array($extension, $allowed)) {
-        return back()->withErrors(['image' => 'Invalid file type!']);
-    }
-    $extension = strtolower($file->getClientOriginalExtension());
-    $allowed = ['jpg', 'jpeg', 'png'];
-    if (!in_array($extension, $allowed)) {
-        return back()->withErrors(['image' => 'Invalid file type!']);
-    }
 
     // 1) Reject double extensions
     $originalName = $file->getClientOriginalName();
