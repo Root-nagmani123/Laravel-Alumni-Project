@@ -17,6 +17,8 @@ use Illuminate\Support\Str;
 use App\Models\Post;
 use App\Models\PostMedia;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Storage;
+
 class GroupController extends Controller
 {
 
@@ -531,7 +533,7 @@ public function update(Request $request, Group $group)
            // print_r($topics);die;
             return view('admin.group.topics_list', compact('group', 'topics','pageName'));
         }
-   public function updateTopic(Request $request, $id) {
+   /*public function updateTopic(Request $request, $id) {
         $topic = Post::findOrFail($id);
         $topic->title = $request->title;
         $topic->description = $request->description;
@@ -550,7 +552,107 @@ public function update(Request $request, Group $group)
         return back()->with('success', 'Topic added successfully.');
     //return redirect()->route('group.topics_list')->with('success', 'Topic added successfully.');
     }
+    */
 
+    public function updateTopic(Request $request, $id)
+    {
+    try {
+        $topicId = decrypt($id);
+    } catch (\Exception $e) {
+        return back()->with('error', 'Invalid post ID.');
+    }
+
+    $topic = Post::with('media')->findOrFail($topicId);
+
+$authUser = Auth::guard('admin')->check()
+        ? Auth::guard('admin')->user()
+        : Auth::guard('member')->user();
+
+    //  If post is not owned by member_id = 1 → block
+    if ($topic->member_id != 1) {
+        return back()->with('error', 'You are not allowed to edit this post.');
+    }
+
+    // If user is not admin → block
+    if (!$authUser || $authUser->isAdmin != 1) {
+        return back()->with('error', 'You are not allowed to edit this post.');
+    }
+
+    // 2️⃣ Validation
+    $request->validate([
+        'description'   => 'required|string',
+        'video_link'    => 'nullable|url',
+        'status'        => 'required|integer',
+        'topic_image'   => 'nullable|array',
+        'topic_image.*' => 'nullable|file|mimes:jpg,jpeg,png,gif|max:5120', // 5MB max
+    ]);
+
+    // 3️⃣ Update video link (convert to embed)
+    $embedLink = '';
+    if ($request->video_link) {
+        parse_str(parse_url($request->video_link, PHP_URL_QUERY), $query);
+        $embedLink = isset($query['v']) ? "https://www.youtube.com/embed/" . $query['v'] : $request->video_link;
+    }
+
+    // 4️⃣ Handle new images (upload + save in PostMedia)
+    $imageFiles = [];
+    if ($request->hasFile('topic_image')) {
+        foreach ($request->file('topic_image') as $image) {
+            $imageFiles[] = $image->store('uploads/topics', 'public');
+        }
+    }
+
+    // 5️⃣ Update media_type
+    $media_type = null;
+    if ($imageFiles && $embedLink) {
+        $media_type = 'photo_video';
+    } elseif ($imageFiles) {
+        $media_type = 'photo';
+    } elseif ($embedLink) {
+        $media_type = 'video';
+    }
+
+    // 6️⃣ Update post
+    $topic->update([
+        'content'     => $request->description,
+        'media_type'  => $media_type,
+        'video_link'  => $embedLink,
+        'status'      => $request->status,
+    ]);
+
+    // 7️⃣ Save new images in PostMedia
+    if (!empty($imageFiles)) {
+        foreach ($imageFiles as $filePath) {
+            PostMedia::create([
+                'post_id'   => $topic->id,
+                'file_path' => $filePath,
+                'file_type' => 'image',
+            ]);
+        }
+    }
+
+    return back()->with('success', 'Topic updated successfully.');
+}
+
+public function deleteMedia($id)
+{
+    try {
+        $media = PostMedia::findOrFail($id);
+
+        // Delete the file if it exists
+        if (Storage::disk('public')->exists($media->file_path)) {
+            Storage::disk('public')->delete($media->file_path);
+        }
+
+        // Delete the DB record
+        $media->delete();
+
+        // Return JSON response
+        return response()->json(['success' => true]);
+    } catch (\Exception $e) {
+        return response()->json(['success' => false, 'message' => $e->getMessage()]);
+    }
+}
 
 //     public function deleteTopic($id) {
 //     // post::destroy($id);

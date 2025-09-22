@@ -79,6 +79,132 @@
                                    data-id="{{ $topic->id }}"
                                    {{ $topic->status == 1 ? 'checked' : '' }}>
                         </div>
+@php
+    $authUser = auth()->guard('admin')->check()
+        ? auth()->guard('admin')->user()
+        : auth()->guard('member')->user();
+@endphp
+
+
+@if($topic->member_id == 1 && $authUser && $authUser->isAdmin == 1)
+
+        <!-- Edit Button -->
+        <button class="btn btn-sm btn-success"
+                style="margin:0 10px 10px 0"
+                data-bs-toggle="modal"
+                data-bs-target="#editTopicModal{{ $topic->id }}">
+            Edit
+        </button>
+
+        <!-- Edit Topic Modal -->
+        <div class="modal fade" id="editTopicModal{{ $topic->id }}" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+
+                    <div class="modal-header">
+                        <h5 class="modal-title">Edit Topic</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+<form method="POST"
+      action="{{ route('group.topics_update', ['id' => encrypt($topic->id)]) }}"
+      enctype="multipart/form-data">
+
+    @csrf
+    @method('PUT')
+
+    <div class="modal-body">
+        <!-- Description -->
+        <div class="mb-3">
+            <label class="form-label" style="float: left">Description <span class="text-danger">*</span></label>
+            <textarea name="description"
+                      class="form-control @error('description') is-invalid @enderror"
+                      rows="4"
+                      required>{{ old('description', $topic->content) }}</textarea>
+            @error('description')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
+        </div>
+
+        <!-- Video Link -->
+        <div class="mb-3">
+            <label class="form-label" style="float: left">Video Link (YouTube)</label>
+            <input type="url" name="video_link"
+                   class="form-control @error('video_link') is-invalid @enderror"
+                   value="{{ old('video_link', $topic->video_link) }}">
+            @error('video_link')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
+        </div>
+
+        <!-- Status -->
+        <div class="mb-3">
+            <label class="form-label" style="float: left">Status <span class="text-danger">*</span></label>
+            <select name="status"
+                    class="form-select @error('status') is-invalid @enderror"
+                    required>
+                <option value="1" {{ old('status', $topic->status) == 1 ? 'selected' : '' }}>Active</option>
+                <option value="0" {{ old('status', $topic->status) == 0 ? 'selected' : '' }}>Inactive</option>
+            </select>
+            @error('status')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
+        </div>
+
+        <!-- Images -->
+        <div class="mb-3">
+    <label class="form-label" style="float: left">
+        Upload Images (jpg, jpeg, png, gif | max 5MB each)
+    </label>
+    <input type="file"
+           name="topic_image[]"
+           class="form-control @error('topic_image.*') is-invalid @enderror"
+           multiple accept="image/*">
+    @error('topic_image.*')
+        <div class="invalid-feedback">{{ $message }}</div>
+    @enderror
+
+    @if($topic->media && $topic->media->count())
+        <div class="mt-2">
+            <strong style="float: left">Existing Images:</strong>
+            <div class="d-flex flex-wrap" id="existingImages{{ $topic->id }}">
+                @foreach($topic->media as $media)
+                    <div class="position-relative m-1" id="media-{{ $media->id }}">
+                        <img src="{{ asset('storage/' . $media->file_path) }}"
+                             alt="Topic Image" class="img-thumbnail" width="100">
+
+                        <!-- Delete button -->
+                       <button type="button"
+                            class="btn btn-sm btn-danger delete-media-btn"
+                            data-url="{{ route('group.delete_media', $media->id) }}"
+                            style="position: absolute; top: 2px; right: 2px;">
+                        &times;
+                    </button>
+
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    @endif
+</div>
+
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Update Topic</button>
+    </div>
+</form>
+
+
+                </div>
+            </div>
+        </div>
+    @endif
+
+
+
+
 
                         <form id="delete-form-{{ $topic->id }}"
                               action="{{ route('group.topics.delete', $topic->id) }}"
@@ -188,15 +314,14 @@
 
 
     @foreach ($topics as $topic)
-    <div class="modal fade" id="viewTopicModal{{ $topic->id }}" tabindex="-1"
+<!--    <div class="modal fade" id="viewTopicModal{{ $topic->id }}" tabindex="-1"
         aria-labelledby="editTopicLabel{{ $topic->id }}" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <form method="POST" action="{{ route('group.topics_update', ['id' => $topic->id]) }}"
+                <form method="POST" action="{{-- route('group.topics_update', ['id' => $topic->id]) --}}"
                     enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
-                    <!-- Use PUT for updating -->
 
                     <div class="modal-header">
                         <h5 class="modal-title" id="editTopicModalLabel{{ $topic->id }}">Edit Topic</h5>
@@ -204,7 +329,6 @@
                     </div>
 
                     <div class="modal-body">
-                        <!-- REPLICATE YOUR ENTIRE FORM FIELDS HERE, JUST LIKE YOU SHARED -->
 
                         <div class="row mb-3">
                             <label class="col-sm-3 col-form-label">Group Name</label>
@@ -225,27 +349,32 @@
                             <label class="col-sm-3 col-form-label">Description</label>
                             <div class="col-sm-9">
                                 <textarea name="description" class="form-control"
-                                    style="height: 100px">{{ old('description', $topic->description) }}</textarea>
+                                    style="height: 100px">{{ old('description', $topic->content ) }}</textarea>
                             </div>
                         </div>
+
 
                         <div class="row mb-3">
-                            <label class="col-sm-3 col-form-label">Image</label>
-                            <div class="col-sm-9">
-                                <!-- Existing image preview (if any) -->
-                                @if ($topic->images)
-                                <img id="imagePreview{{ $topic->id }}" src="{{ asset('storage/' . $topic->images) }}"
-                                    alt="Topic Image" style="max-height: 100px; margin-bottom: 10px;">
-                                @else
-                                <img id="imagePreview{{ $topic->id }}" src="#" alt="Image Preview"
-                                    style="display:none; max-height: 100px; margin-bottom: 10px;">
-                                @endif
+    <label class="col-sm-3 col-form-label">Existing Images</label>
+    <div class="col-sm-9 d-flex flex-wrap gap-3">
+        @foreach ($topic->media as $media)
+            <div class="position-relative">
+                <img src="{{ asset('storage/' . $media->file_path) }}"
+                     alt="Topic Image" style="max-height:100px;">
+                <a href="{{-- route('group.delete_media', $media->id) --}}"
+                   class="btn btn-sm btn-danger position-absolute top-0 end-0">X</a>
+            </div>
+        @endforeach
+    </div>
+</div>
 
-                                <!-- Image input -->
-                                <input type="file" name="images" class="form-control"
-                                    onchange="previewImage(event, {{ $topic->id }})">
-                            </div>
-                        </div>
+<div class="row mb-3">
+    <label class="col-sm-3 col-form-label">Add New Images</label>
+    <div class="col-sm-9">
+        <input type="file" name="topic_image[]" multiple class="form-control" accept="image/*">
+    </div>
+</div>
+
 
                         <div class="row mb-3">
                             <label class="col-sm-3 col-form-label">Status<span class="required">*</span></label>
@@ -271,7 +400,8 @@
                 </form>
             </div>
         </div>
-    </div>
+    </div>-->
+
     @endforeach
     @section('scripts')
     <script>
@@ -361,5 +491,38 @@
         });
     });
 </script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll(".delete-media-btn").forEach(btn => {
+        btn.addEventListener("click", function () {
+            let url = this.dataset.url; // <-- use the correct route
+            if (!confirm("Are you sure you want to delete this image?")) return;
+
+            fetch(url, {
+                method: "DELETE",
+                headers: {
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                    "Accept": "application/json"
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    this.closest('div.position-relative').remove();
+                } else {
+                    alert("Failed to delete image: " + (data.message || 'Unknown error'));
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert("An error occurred while deleting the image.");
+            });
+        });
+    });
+});
+
+</script>
+
 
     @endsection
