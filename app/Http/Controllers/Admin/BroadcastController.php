@@ -70,15 +70,14 @@ public function store(Request $request)
     $validated = $request->validate([
         'title' => 'required|string|max:255',
         'content' => 'required|string',
-        'images' => 'file|mimes:jpg,jpeg,png|max:2048',// <-- FIXED: added this line
+        'images' => 'nullable|file|mimes:jpg,jpeg,png|max:51200',
         'video_url' => 'nullable|url',
     ]);
-
 
     // Handle image upload (store first image only if multiple uploaded)
     $imageUrl = null;
   if ($request->hasFile('images')) {
-    $image = $request->file('images')[0]; // only first image
+    $image = $request->file('images'); // only first image
     $extension = strtolower($image->getClientOriginalExtension());
     $allowed = ['jpg', 'jpeg', 'png'];
 
