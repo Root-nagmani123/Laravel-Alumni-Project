@@ -56,7 +56,8 @@
                         <div class="mb-3">
                             <label class="form-label" for="content">Image<span class="text-danger">*</span>:</label>
                             <div class="mb-3">
-                                <input id="file-upload" multiple data-max-file-size="3MB" data-max-files="10" type="file" name="images[]" accept="image/*" class="form-control" required>
+                                <input id="file-upload" type="file" name="images" accept=".jpg,.jpeg,.png" class="form-control" required>
+                                Accepted file types: jpg, jpeg, png. Max file size: 50MB.
                             </div>
                         </div>
                     </div>
