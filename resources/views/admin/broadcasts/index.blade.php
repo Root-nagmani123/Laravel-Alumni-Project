@@ -158,16 +158,25 @@
                     <div class="mb-3">
                         <label for="edit_title" class="form-label">Title</label>
                         <input type="text" class="form-control" name="title" id="edit_title" required>
+                        @error('title')
+                        <div class="text-danger small">{{ $message }}</div>
+                        @enderror
                     </div>
 
                     <div class="mb-3">
                         <label for="edit_description" class="form-label">Description</label>
                         <textarea class="form-control" name="description" id="edit_description" required></textarea>
+                        @error('description')
+                        <div class="text-danger small">{{ $message }}</div>
+                        @enderror
                     </div>
                     <div class="mb-3">
                         <label for="image" class="form-label">Upload Image</label>
                         <input type="file" class="form-control" id="ImageEdit" name="image" accept="image/*" >
                         Accepted file types: jpg, jpeg, png. Max file size: 2MB.
+                        @error('image')
+                        <div class="text-danger small">{{ $message }}</div>
+                        @enderror
                     </div>
 {{-- asset('storage/' . $broadcast->image_url) --}}
 			    <div class="mb-3">
@@ -189,6 +198,9 @@
                     <div class="mb-3">
                         <label for="edit_video_url" class="form-label">Video URL</label>
                         <input type="url" class="form-control" name="video_url" id="edit_video_url">
+                        @error('video_url')
+                        <div class="text-danger small">{{ $message }}</div>
+                        @enderror
                     </div>
                     <!-- View Video Section -->
                     <div class="mb-3" id="videoViewSection" style="display: none;">
@@ -366,5 +378,23 @@ $(document).ready(function() {
 
 
 </script>
+
+@if ($errors->any())
+<script>
+$(function(){
+    const id = @json(old('broadcast_id'));
+    if (id) {
+        $('#broadcast_id').val(id);
+        $('#edit_title').val(@json(old('title')));
+        $('#edit_description').val(@json(old('description')));
+        $('#edit_video_url').val(@json(old('video_url')));
+        $('#editBroadcastForm').attr('action', `/admin/broadcasts/broadcast/${id}`);
+        $('#videoPreview').html('');
+        $('#videoViewSection').toggle(!!@json(old('video_url')));
+        $('#editBroadcastModal').modal('show');
+    }
+});
+</script>
+@endif
 
 @endsection
