@@ -57,7 +57,7 @@
                             <label class="form-label" for="content">Image<span class="text-danger">*</span>:</label>
                             <div class="mb-3">
                                 <input id="file-upload" type="file" name="images" accept=".jpg,.jpeg,.png" class="form-control" required>
-                                Accepted file types: jpg, jpeg, png. Max file size: 2MB.
+                                Accepted file types: jpg, jpeg, png. Max file size: 50MB.
                             </div>
                         </div>
                     </div>

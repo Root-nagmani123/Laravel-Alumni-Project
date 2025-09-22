@@ -3,7 +3,8 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use Illuminate\Http\Request;
+use Illuminate\Http\Request; 
+
 
 class SafeRedirect
 {
@@ -41,17 +42,13 @@ class SafeRedirect
      */
     private function isUrlAllowed($url, $allowedHosts)
     {
-        // Parse the URL to get the host
-        $parsedUrl = parse_url($url);
-        
-        // If no host is found, it might be a relative URL which is allowed
-        if (!isset($parsedUrl['host'])) {
-            return true;
-        }
-        
-        $host = $parsedUrl['host'];
-        
-        // Check if host is in allowed list
-        return in_array($host, $allowedHosts);
+        $response = $next($request);
+
+        $response->headers->set('Referrer-Policy', 'no-referrer'); // or 'same-origin'
+        // other header suggestions
+        $response->headers->set('X-Frame-Options', 'DENY');
+        $response->headers->set('X-Content-Type-Options', 'nosniff');
+
+        return $response;
     }
 }
