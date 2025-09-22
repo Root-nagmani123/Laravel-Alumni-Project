@@ -169,22 +169,37 @@ public function destroybroadcast(Broadcast $broadcast)
     $validated = $request->validate([
         'title' => 'required|string|max:255',
         'description' => 'required|string',
-        'image' => 'nullable|image|max:3072',
+        'image' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
         'video_url' => 'nullable|url',
+    ],[
+        'image.max' => 'File too large. Max allowed is 2MB.',
+        'image.mimes' => 'Invalid file type! Accepted: jpg, jpeg, png.',
+        'image.file' => 'Please upload a valid file.',
+        'video_url.url' => 'Please enter a valid URL.',
     ]);
+
 
     // Image upload
    if ($request->hasFile('image')) {
     $file = $request->file('image');
 
-    // Sanitize filename
+    // 1) Reject double extensions
     $originalName = $file->getClientOriginalName();
-    $safeName = preg_replace('/[^a-zA-Z0-9\._-]/', '', pathinfo($originalName, PATHINFO_FILENAME));
-    $extension = $file->getClientOriginalExtension();
-    $finalFileName = $safeName . '_' . time() . '.' . $extension;
+    if (substr_count($originalName, '.') > 1) {
+        return back()->withErrors([
+            'image' => 'Invalid file name! Double extensions are not allowed.'
+        ])->withInput();
+    }
 
-    // Store in desired location with custom filename
-    $path = $file->storeAs('uploads/broadcasts', $finalFileName, 'public');
+    $extension = strtolower($file->getClientOriginalExtension());
+    $allowed = ['jpg', 'jpeg', 'png'];
+    if (!in_array($extension, $allowed)) {
+        return back()->withErrors(['image' => 'Invalid file type!'])->withInput();
+    }
+
+    // Generate safe unique filename and store
+    $filename = uniqid('img_', true) . '.' . $extension;
+    $path = $file->storeAs('uploads/broadcasts', $filename, 'public');
 
     // Save only relative path; use asset() when rendering
     $broadcast->image_url = $path;
