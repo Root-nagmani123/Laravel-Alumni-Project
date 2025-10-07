@@ -443,9 +443,9 @@ Route::get('/user_login', function () {
             return view('user.feedback');
         })->name('user.feedback');
 
-        Route::get('/admin/user_management', function () {
-            return view('admin.user_management.index');
-        })->name('admin.user_management.index');
+        // Route::get('/admin/user_management', function () {
+        //     return view('admin.user_management.index');
+        // })->name('admin.user_management.index');
 
 
         Route::get('/admin/mentorship/create', function () {
@@ -559,19 +559,23 @@ Route::post('/admin/socialwall/toggle-comment-status', [SocialWallController::cl
 Route::get('admin/group/existing_member', [App\Http\Controllers\Admin\GroupController::class, 'getExistingMembers'])->name('admin.group.existing_member');
 Route::PUT('group_name_update', [App\Http\Controllers\Member\GroupController::class, 'updateGroupName'])->name('group_name_update');
 
-
-Route::prefix('admin')->group(function () {
-    Route::get('user_management', [App\Http\Controllers\Admin\UserManagementController::class, 'index'])
-        ->name('admin.user_management.index');
-    Route::get('user_management/search', [App\Http\Controllers\Admin\UserManagementController::class, 'searchUser'])
-        ->name('admin.user_management.search');
-    Route::post('user_management/assign_role_permissions', [App\Http\Controllers\Admin\UserManagementController::class, 'assignRolePermissions'])
-        ->name('admin.user_management.assign_role_permissions');
-    Route::post('toggleStatus', [App\Http\Controllers\Admin\UserManagementController::class, 'toggleStatus'])
-        ->name('admin.user_management.toggleStatus');
+Route::middleware('auth:admin')->group(function () {
+    Route::prefix('admin')->group(function () {
+        Route::get('user_management', [App\Http\Controllers\Admin\UserManagementController::class, 'index'])
+            ->name('admin.user_management.index');
+        Route::get('user_management/search', [App\Http\Controllers\Admin\UserManagementController::class, 'searchUser'])
+            ->name('admin.user_management.search');
+        Route::post('user_management/assign_role_permissions', [App\Http\Controllers\Admin\UserManagementController::class, 'assignRolePermissions'])
+            ->name('admin.user_management.assign_role_permissions');
+        Route::post('toggleStatus', [App\Http\Controllers\Admin\UserManagementController::class, 'toggleStatus'])
+            ->name('admin.user_management.toggleStatus');
+    });
 });
 
-Route::get('/admin/feed', [App\Http\Controllers\Admin\FeedController::class, 'index'])->name('admin.feeds.index');
 Route::post('/admin/feed/approve', [App\Http\Controllers\Admin\FeedController::class, 'approve'])->name('admin.feeds.approve');
-Route::post('/admin/feed/decline', [App\Http\Controllers\Admin\FeedController::class, 'decline'])->name('admin.feeds.decline');
-Route::post('/admin/feed/view', [App\Http\Controllers\Admin\FeedController::class, 'view'])->name('admin.feeds.view');
+
+Route::middleware('auth:admin')->group(function () {
+    Route::get('/admin/feed', [App\Http\Controllers\Admin\FeedController::class, 'index'])->name('admin.feeds.index');
+    Route::post('/admin/feed/decline', [App\Http\Controllers\Admin\FeedController::class, 'decline'])->name('admin.feeds.decline');
+    Route::post('/admin/feed/view', [App\Http\Controllers\Admin\FeedController::class, 'view'])->name('admin.feeds.view');
+});

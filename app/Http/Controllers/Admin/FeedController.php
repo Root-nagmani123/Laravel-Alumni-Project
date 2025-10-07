@@ -19,7 +19,12 @@ class FeedController extends Controller
         $post->approved_by_moderator = 1;
         $post->save();
 
-        return redirect()->route('admin.feeds.index')->with('success', 'Post approved successfully.');
+        if(auth()->guard('admin')->check()) {
+            return redirect()->route('admin.feeds.index')->with('success', 'Post approved successfully.');
+        }
+        else {
+            return redirect()->route('user.moderation')->with('success', 'Post approved successfully.');
+        }
     }
 
     function decline(Request $request)
