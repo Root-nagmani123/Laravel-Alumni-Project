@@ -403,7 +403,13 @@
                                 class="dropdown-item btn btn-primary-soft btn-sm my-2 text-center">View profile</a>
                             @endif
                         </li>
+                        @if(
+                            ($user->status == 1) && 
+                            ($user->is_moderator == 1) && 
+                            ($user->moderator_active_inactive == 1)
+                        )
                         <li><a class="dropdown-item" href="{{ route('user.moderation') }}"><i class="bi bi-gear fa-fw me-2"></i>Moderation</a></li>
+                        @endif
                         <li>
                             <form action="{{ route('user.logout') }}" method="POST" style="display: inline;">
                                 @csrf

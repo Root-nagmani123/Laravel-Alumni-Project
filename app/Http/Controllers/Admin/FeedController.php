@@ -37,4 +37,10 @@ class FeedController extends Controller
         $html = view('partials.post-field-details', compact('post'))->render();
         return response()->json(['html' => $html]);
     }
+
+    function userPostModeration()
+    {
+        $posts = Post::latest('id')->paginate(10);
+        return view('user.moderation', compact('posts'));
+    }
 }
