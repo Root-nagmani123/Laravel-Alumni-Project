@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 
 use LdapRecord\Models\ActiveDirectory\User as LdapUser;
+use App\Services\AuditService;
 
 class AuthController extends Controller
 {
@@ -110,9 +111,22 @@ if ($connection->auth()->attempt($username, $password)) {
     $credentials['status'] = 1;
 
     if (Auth::guard('user')->attempt($credentials)) {
+        $user = Auth::guard('user')->user();
+        
+        // Update online status
+        $user->is_online = 1;
+        $user->last_seen = now();
+        $user->save();
+        
+        // Log successful login
+        AuditService::logSuccessfulLogin($request, $user->username ?? $user->email, 'user_panel');
+        
         $request->session()->regenerate();
         return redirect()->intended('/user/feed');
     }
+
+    // Log failed login attempt
+    AuditService::logFailedLogin($request, $request->input('email'), 'Invalid credentials or inactive account', 'user_panel');
 
     return back()->withErrors([
         'email' => 'The provided credentials do not match our records or your account is inactive.',
@@ -223,8 +237,14 @@ public function login_ldap(Request $request)
                 $user->is_online = 1;
                 $user->last_seen = now();
                 $user->save();
+                
+                // Log successful login
+                AuditService::logSuccessfulLogin($request, $user->username, 'user_ldap_local');
+                
                 return redirect()->intended('/user/feed');
             }else{
+                // Log failed login attempt
+                AuditService::logFailedLogin($request, $username, 'User not found or inactive', 'user_ldap_local');
                 return back()->with('error', 'Invalid username or password.');
 
             }
@@ -243,6 +263,8 @@ public function login_ldap(Request $request)
 
         if (! $ldapUser) {
             logger("LDAP: User '{$username}' not found.");
+            // Log failed login attempt
+            AuditService::logFailedLogin($request, $username, 'User not found in LDAP directory', 'user_ldap_production');
             return back()->with('error', 'User not found in LDAP directory.');
         }
 
@@ -267,6 +289,8 @@ public function login_ldap(Request $request)
 
         if (! $bindSuccess) {
             logger("LDAP: Invalid credentials for '{$username}'. Tried formats: " . implode(', ', $bindAttempts));
+            // Log failed login attempt
+            AuditService::logFailedLogin($request, $username, 'Invalid LDAP credentials', 'user_ldap_production');
             return back()->with('error', 'Invalid username or password.');
         }
 
@@ -277,6 +301,8 @@ public function login_ldap(Request $request)
 
         if (! $localUser) {
             logger("LDAP auth passed but no local Member found for '{$username}'.");
+            // Log failed login attempt
+            AuditService::logFailedLogin($request, $username, 'LDAP auth passed but user not registered locally', 'user_ldap_production');
             return back()->with('error', 'LDAP auth passed, but user not registered locally.');
         }
 
@@ -288,6 +314,14 @@ public function login_ldap(Request $request)
 
         Auth::guard('user')->login($localUser);
         $request->session()->regenerate();
+
+        // Update online status
+        $localUser->is_online = 1;
+        $localUser->last_seen = now();
+        $localUser->save();
+
+        // Log successful login
+        AuditService::logSuccessfulLogin($request, $localUser->username, 'user_ldap_production');
 
         logger("LDAP: Login successful for '{$username}'.");
         return redirect()->intended('/user/feed');
@@ -306,6 +340,9 @@ public function login_ldap(Request $request)
 	{
         $user = Auth::guard('user')->user();
         if ($user) {
+            // Log logout
+            AuditService::logLogout($request, $user->username ?? $user->email);
+            
             $user->is_online = 0;
             $user->last_seen = now();
             $user->save();

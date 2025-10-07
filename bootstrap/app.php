@@ -2,6 +2,7 @@
 
 use App\Http\Middleware\AdminAuthMiddleware; //added this line by dhananjay 04-05-2025
 use App\Http\Middleware\AdminGuestMiddleware; //added this line by dhananjay 04-05-2025
+use App\Http\Middleware\AuditLoggingMiddleware;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -20,7 +21,8 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->append(\Illuminate\Http\Middleware\HandleCors::class);
 		 $middleware->alias([            //added this line by dhananjay 04-05-2025
             'admin_auth' => AdminAuthMiddleware::class,
-            'admin_guest' => AdminGuestMiddleware::class
+            'admin_guest' => AdminGuestMiddleware::class,
+            'audit.logging' => AuditLoggingMiddleware::class
         ]);
           $middleware->web([
         \App\Http\Middleware\PreventBackHistory::class,

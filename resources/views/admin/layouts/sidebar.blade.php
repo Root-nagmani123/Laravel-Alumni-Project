@@ -138,6 +138,12 @@
                                 <span class="icon-small"></span> Recent Activity
                             </a>
                         </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="{{ route('audit-logs.index') }}">
+                                <iconify-icon icon="solar:shield-check-bold-duotone"></iconify-icon>
+                                <span class="icon-small"></span> Audit Logs
+                            </a>
+                        </li>
                     </ul>
                 </nav>
             </div>

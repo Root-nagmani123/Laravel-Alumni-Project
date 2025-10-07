@@ -112,6 +112,60 @@
                     </div>
                 </div>
             </div>
+        </div>
+        
+        <!-- Audit Log Statistics Row -->
+        <div class="col-12 mt-4">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="card bg-warning overflow-hidden shadow-none">
+                        <div class="card-body p-4 text-center">
+                            <span class="text-dark-light"><a href="{{ route('audit-logs.index') }}"
+                                    class="text-white">Today's Requests</a></span>
+                            <div class="hstack gap-6 justify-content-center">
+                                <h5 class="mb-0 fs-7">{{ number_format($auditStats['total_requests_today']) }}</h5>
+                                <span class="fs-11 fw-semibold text-muted"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-success overflow-hidden shadow-none">
+                        <div class="card-body p-4 text-center">
+                            <span class="text-dark-light"><a href="{{ route('audit-logs.index', ['action_type' => 'login_success']) }}"
+                                    class="text-white">Successful Logins</a></span>
+                            <div class="hstack gap-6 justify-content-center">
+                                <h5 class="mb-0 fs-7">{{ number_format($auditStats['successful_logins_today']) }}</h5>
+                                <span class="fs-11 fw-semibold text-muted"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-danger overflow-hidden shadow-none">
+                        <div class="card-body p-4 text-center">
+                            <span class="text-dark-light"><a href="{{ route('audit-logs.index', ['action_type' => 'login_failed']) }}"
+                                    class="text-white">Failed Logins</a></span>
+                            <div class="hstack gap-6 justify-content-center">
+                                <h5 class="mb-0 fs-7">{{ number_format($auditStats['failed_logins_today']) }}</h5>
+                                <span class="fs-11 fw-semibold text-muted"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-info overflow-hidden shadow-none">
+                        <div class="card-body p-4 text-center">
+                            <span class="text-dark-light"><a href="{{ route('audit-logs.index') }}"
+                                    class="text-white">Unique IPs Today</a></span>
+                            <div class="hstack gap-6 justify-content-center">
+                                <h5 class="mb-0 fs-7">{{ number_format($auditStats['unique_ips_today']) }}</h5>
+                                <span class="fs-11 fw-semibold text-muted"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
         </div>
         <div class="col-12">
