@@ -65,6 +65,25 @@ Route::get('/check-time', function () {
     ];
 });
 
+Route::get('/test-audit', function (Illuminate\Http\Request $request) {
+    // Test audit logging
+    App\Services\AuditService::log('page_access', $request, 'test_user', [
+        'test_data' => 'This is a test audit log entry',
+        'timestamp' => now()->toISOString(),
+    ]);
+    
+    return [
+        'message' => 'Audit log test completed',
+        'request_info' => [
+            'ip' => $request->ip(),
+            'user_agent' => $request->userAgent(),
+            'referer' => $request->headers->get('referer'),
+            'url' => $request->fullUrl(),
+            'method' => $request->method(),
+        ]
+    ];
+});
+
 
 Route::get('/db-check', function () {
     $dbName = DB::select("SELECT DATABASE() AS db");
@@ -400,12 +419,19 @@ Route::prefix('events')->name('events.')->group(function () {
 		Route::delete('/{event}', [EventsController::class, 'destroy'])->name('destroy');
 		Route::post('/toggle-status', [EventsController::class, 'toggleStatus'])->name('toggleStatus');
 
-		Route::get('/events/rsvp/{id?}', [EventsController::class, 'rsvp'])->name('rsvp');
-		Route::post('rsvp/toggle-status', [EventsController::class, 'rsvptoggleStatus'])->name('rsvptoggleStatus');
+	Route::get('/events/rsvp/{id?}', [EventsController::class, 'rsvp'])->name('rsvp');
+	Route::post('rsvp/toggle-status', [EventsController::class, 'rsvptoggleStatus'])->name('rsvptoggleStatus');
     });
 
-
-
+    // Audit Log Routes
+    Route::prefix('audit-logs')->name('audit-logs.')->group(function () {
+        Route::get('/', [App\Http\Controllers\Admin\AuditLogController::class, 'index'])->name('index');
+        Route::get('/weekly-report', [App\Http\Controllers\Admin\AuditLogController::class, 'weeklyReport'])->name('weekly-report');
+        Route::get('/export/csv', [App\Http\Controllers\Admin\AuditLogController::class, 'export'])->name('export');
+        Route::get('/api/statistics', [App\Http\Controllers\Admin\AuditLogController::class, 'getStatistics'])->name('statistics');
+        Route::get('/api/failed-logins', [App\Http\Controllers\Admin\AuditLogController::class, 'getFailedLogins'])->name('failed-logins');
+        Route::get('/{id}', [App\Http\Controllers\Admin\AuditLogController::class, 'show'])->name('show');
+    });
 
 });
 
@@ -548,3 +574,4 @@ Route::post('/admin/socialwall/toggle-status', [SocialWallController::class, 'to
 Route::post('/admin/socialwall/toggle-comment-status', [SocialWallController::class, 'toggleCommentStatus'])->name('socialwall.toggleCommentStatus');
 
 Route::get('admin/group/existing_member', [App\Http\Controllers\Admin\GroupController::class, 'getExistingMembers'])->name('admin.group.existing_member');
+

@@ -34,6 +34,7 @@ use App\Models\Topic;
 use App\Models\Group;
 use App\Models\Events;
 use App\Models\Broadcast;
+use App\Models\AuditLog;
 use Carbon\Carbon;
 
 
@@ -112,6 +113,15 @@ class DashboardController extends Controller
             $topicChangePercent = null; 
         }
 
+        // Audit Log Statistics
+        $auditStats = [
+            'total_requests_today' => AuditLog::whereDate('timestamp', today())->count(),
+            'failed_logins_today' => AuditLog::whereDate('timestamp', today())->where('action_type', 'login_failed')->count(),
+            'successful_logins_today' => AuditLog::whereDate('timestamp', today())->where('action_type', 'login_success')->count(),
+            'unique_ips_today' => AuditLog::whereDate('timestamp', today())->distinct('ip_address')->count(),
+            'failed_logins_week' => AuditLog::where('timestamp', '>=', Carbon::now()->subDays(7))->where('action_type', 'login_failed')->count(),
+        ];
+
 
         return view('admin.dashboard', compact(
             'members',
@@ -128,7 +138,8 @@ class DashboardController extends Controller
             'total_topics',
             'topicChangePercent',
             'userData',
-            'members_service'
+            'members_service',
+            'auditStats'
         ));
     }
 

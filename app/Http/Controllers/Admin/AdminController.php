@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Http;
 
 
 use App\Models\User;
+use App\Services\AuditService;
 
 class AdminController extends Controller
 {
@@ -136,13 +137,21 @@ public function loginAuth(Request $request)
             'logged_in'  => true,
         ]);
 
+        // Log successful login
+        AuditService::logSuccessfulLogin($request, $admin->email);
+
         return redirect()->route('dashboard')->with('success', 'Welcome back, ' . $admin->name . '!');
     }
+
+    // Log failed login attempt
+    AuditService::logFailedLogin($request, $request->input('email'), 'Invalid credentials');
 
     return redirect()->back()->withErrors([
         'email' => 'Invalid login credentials or unauthorized access.',
     ]);
      } catch (\Exception $e) {
+            // Log failed login attempt
+            AuditService::logFailedLogin($request, $request->input('email'), 'Exception: ' . $e->getMessage());
             return back()->withErrors([ 'email' => 'Invalid login credentials or unauthorized access.']);
         }
 }
@@ -153,7 +162,16 @@ public function loginAuth(Request $request)
 
     }
 
-    public function logout(){
+    public function logout(Request $request){
+        // Get admin info before logout for logging
+        $admin = Auth::guard('admin')->user();
+        $username = $admin ? $admin->email : null;
+        
+        // Log logout
+        if ($username) {
+            AuditService::logLogout($request, $username);
+        }
+        
         Auth::guard('admin')->logout();
         Session::flush();
        // return redirect('admin/login');
