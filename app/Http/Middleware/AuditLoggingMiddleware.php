@@ -35,6 +35,11 @@ class AuditLoggingMiddleware
                 $username = $user->username ?: $user->name ?: $user->email;
             }
             
+            // Special handling for OTP routes - use email if available
+            if (!$username && $this->isOtpRoute($request)) {
+                $username = $this->getOtpUsername($request);
+            }
+            
             // Debug logging for username detection
             if (config('app.debug_audit', false)) {
                 \Log::info('Audit Middleware Debug', [
@@ -72,5 +77,27 @@ class AuditLoggingMiddleware
         }
 
         return $response;
+    }
+
+    /**
+     * Check if the request is for an OTP route
+     */
+    private function isOtpRoute(Request $request)
+    {
+        $otpRoutes = ['otp.send', 'otp.verify'];
+        $currentRoute = $request->route()?->getName();
+        return in_array($currentRoute, $otpRoutes);
+    }
+
+    /**
+     * Get username for OTP routes using email from request
+     */
+    private function getOtpUsername(Request $request)
+    {
+        $email = $request->input('otp_email');
+        if ($email) {
+            return "OTP: {$email}";
+        }
+        return 'OTP User';
     }
 }

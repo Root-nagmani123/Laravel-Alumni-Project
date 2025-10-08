@@ -75,6 +75,7 @@ class AuditLog extends Model
         return self::dateRange($startDate, $endDate)
             ->selectRaw('
                 DATE(timestamp) as date,
+                MAX(timestamp) as latest_timestamp,
                 action_type,
                 COUNT(*) as count,
                 COUNT(DISTINCT ip_address) as unique_ips,

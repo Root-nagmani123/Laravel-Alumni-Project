@@ -145,10 +145,17 @@
                                         </td>
                                         <td>
                                             @if($log->username)
-                                                <span class="username-badge">
-                                                    <i class="fas fa-user-circle"></i>
-                                                    {{ $log->username }}
-                                                </span>
+                                                @if(str_starts_with($log->username, 'OTP:'))
+                                                    <span class="otp-user-badge">
+                                                        <i class="fas fa-key"></i>
+                                                        {{ $log->username }}
+                                                    </span>
+                                                @else
+                                                    <span class="username-badge">
+                                                        <i class="fas fa-user-circle"></i>
+                                                        {{ $log->username }}
+                                                    </span>
+                                                @endif
                                             @else
                                                 <span class="guest-badge">
                                                     <i class="fas fa-user-slash"></i>
@@ -163,6 +170,8 @@
                                                     'login_failed' => ['class' => 'action-danger', 'icon' => 'fa-times-circle'],
                                                     'logout' => ['class' => 'action-warning', 'icon' => 'fa-sign-out-alt'],
                                                     'page_access' => ['class' => 'action-info', 'icon' => 'fa-eye'],
+                                                    'otp_send' => ['class' => 'action-primary', 'icon' => 'fa-paper-plane'],
+                                                    'otp_verify' => ['class' => 'action-success', 'icon' => 'fa-shield-check'],
                                                     'api_call' => ['class' => 'action-secondary', 'icon' => 'fa-code'],
                                                     default => ['class' => 'action-default', 'icon' => 'fa-question-circle']
                                                 };
@@ -370,6 +379,22 @@
     color: #9c27b0;
 }
 
+.otp-user-badge {
+    background: #e8f5e8;
+    color: #2e7d32;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid #c8e6c9;
+}
+
+.otp-user-badge i {
+    color: #4caf50;
+}
+
 /* Action Badge Styling */
 .action-badge {
     padding: 8px 12px;
@@ -413,6 +438,12 @@
     background: #f3e5f5;
     color: #7b1fa2;
     border-color: #e1bee7;
+}
+
+.action-primary {
+    background: #e3f2fd;
+    color: #1565c0;
+    border-color: #bbdefb;
 }
 
 .action-default {
@@ -722,24 +753,7 @@
         updateDateFromConstraints();
     });
 
-    // Add row click functionality
-    document.addEventListener('DOMContentLoaded', function() {
-        const rows = document.querySelectorAll('.audit-row');
-        rows.forEach(row => {
-            row.addEventListener('click', function(e) {
-                // Don't trigger if clicking on action buttons
-                if (!e.target.closest('.btn-view')) {
-                    const logId = this.dataset.logId;
-                    if (logId) {
-                        window.location.href = '{{ route("audit-logs.show", ":id") }}'.replace(':id', logId);
-                    }
-                }
-            });
-            
-            // Add cursor pointer
-            row.style.cursor = 'pointer';
-        });
-    });
+    // Row click functionality removed - only View Details button handles navigation
 
     // Add tooltip functionality
     $(document).ready(function() {

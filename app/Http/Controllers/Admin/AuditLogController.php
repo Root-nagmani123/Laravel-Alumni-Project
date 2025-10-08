@@ -32,6 +32,9 @@ class AuditLogController extends Controller
             if (strtolower($request->username) === 'guest') {
                 // Filter for guest users (NULL username)
                 $query->whereNull('username');
+            } elseif (strtolower($request->username) === 'otp') {
+                // Filter for OTP users
+                $query->where('username', 'like', 'OTP:%');
             } else {
                 // Filter for regular users
                 $query->where('username', 'like', '%' . $request->username . '%');
@@ -113,6 +116,9 @@ class AuditLogController extends Controller
             if (strtolower($request->username) === 'guest') {
                 // Filter for guest users (NULL username)
                 $query->whereNull('username');
+            } elseif (strtolower($request->username) === 'otp') {
+                // Filter for OTP users
+                $query->where('username', 'like', 'OTP:%');
             } else {
                 // Filter for regular users
                 $query->where('username', 'like', '%' . $request->username . '%');
@@ -211,6 +217,8 @@ class AuditLogController extends Controller
             'successful_logins' => AuditLog::dateRange($startDate, $endDate)->where('action_type', 'login_success')->count(),
             'failed_logins' => AuditLog::dateRange($startDate, $endDate)->where('action_type', 'login_failed')->count(),
             'logouts' => AuditLog::dateRange($startDate, $endDate)->where('action_type', 'logout')->count(),
+            'otp_sends' => AuditLog::dateRange($startDate, $endDate)->where('action_type', 'otp_send')->count(),
+            'otp_verifies' => AuditLog::dateRange($startDate, $endDate)->where('action_type', 'otp_verify')->count(),
         ];
 
         return response()->json($stats);

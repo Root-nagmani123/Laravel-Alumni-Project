@@ -119,7 +119,15 @@ class AuditService
             return;
         }
 
-        self::log('page_access', $request, $username);
+        // Use specific action types for OTP routes
+        $actionType = 'page_access';
+        if ($currentRoute === 'otp.send') {
+            $actionType = 'otp_send';
+        } elseif ($currentRoute === 'otp.verify') {
+            $actionType = 'otp_verify';
+        }
+
+        self::log($actionType, $request, $username);
     }
 
     /**

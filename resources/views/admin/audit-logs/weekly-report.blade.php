@@ -130,7 +130,13 @@
                                             <tr>
                                                 <td>
                                                     @php
-                                                        $badgeClass = $summary->action_type == 'login_success' ? 'badge-success' : 'badge-danger';
+                                                        $badgeClass = match($summary->action_type) {
+                                                            'login_success' => 'badge-success',
+                                                            'login_failed' => 'badge-danger',
+                                                            'otp_send' => 'badge-primary',
+                                                            'otp_verify' => 'badge-success',
+                                                            default => 'badge-info'
+                                                        };
                                                     @endphp
                                                     <span class="{{ $badgeClass }}">
                                                         {{ ucfirst(str_replace('_', ' ', $summary->action_type)) }}
@@ -169,7 +175,7 @@
                                     <tbody>
                                         @forelse($reportData['daily_activity'] as $activity)
                                             <tr>
-                                                <td>{{ $activity->date }}</td>
+                                                <td>{{ \Carbon\Carbon::parse($activity->latest_timestamp)->format('d-m-Y H:i:s') }}</td>
                                                 <td>
                                                     @php
                                                         $badgeClass = match($activity->action_type) {
@@ -177,6 +183,8 @@
                                                             'login_failed' => 'badge-danger',
                                                             'logout' => 'badge-warning',
                                                             'page_access' => 'badge-info',
+                                                            'otp_send' => 'badge-primary',
+                                                            'otp_verify' => 'badge-success',
                                                             'api_call' => 'badge-secondary',
                                                             default => 'badge-light'
                                                         };
