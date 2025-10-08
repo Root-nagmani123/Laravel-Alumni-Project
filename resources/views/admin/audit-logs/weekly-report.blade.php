@@ -99,7 +99,7 @@
                                 <div class="card-body">
                                     <div class="d-flex justify-content-between">
                                         <div>
-                                            <h4>{{ $reportData['period']['start'] }} to {{ $reportData['period']['end'] }}</h4>
+                                            <h4>{{ \Carbon\Carbon::parse($reportData['period']['start'])->format('M d') }} - {{ \Carbon\Carbon::parse($reportData['period']['end'])->format('M d') }}</h4>
                                             <p class="mb-0">Report Period</p>
                                         </div>
                                         <div class="align-self-center">
@@ -132,7 +132,7 @@
                                                     @php
                                                         $badgeClass = $summary->action_type == 'login_success' ? 'badge-success' : 'badge-danger';
                                                     @endphp
-                                                    <span class="badge {{ $badgeClass }}">
+                                                    <span class="{{ $badgeClass }}">
                                                         {{ ucfirst(str_replace('_', ' ', $summary->action_type)) }}
                                                     </span>
                                                 </td>
@@ -301,5 +301,71 @@
             location.reload();
         }
     }, 300000); // 5 minutes
+
+    // Date validation and dynamic min/max date setting
+    document.addEventListener('DOMContentLoaded', function() {
+        const startDateInput = document.querySelector('input[name="start_date"]');
+        const endDateInput = document.querySelector('input[name="end_date"]');
+        const form = document.querySelector('form[action="{{ route('audit-logs.weekly-report') }}"]');
+
+        // Set initial max date for start date (today)
+        const today = new Date().toISOString().split('T')[0];
+        startDateInput.setAttribute('max', today);
+
+        function updateEndDateConstraints() {
+            const startDate = startDateInput.value;
+            const endDate = endDateInput.value;
+            
+            if (startDate) {
+                // Set minimum date for end date to be the start date
+                endDateInput.setAttribute('min', startDate);
+                
+                // If current end date is before start date, clear it
+                if (endDate && new Date(endDate) < new Date(startDate)) {
+                    endDateInput.value = '';
+                }
+            } else {
+                // If no start date, remove min constraint
+                endDateInput.removeAttribute('min');
+            }
+        }
+
+        function updateStartDateConstraints() {
+            const endDate = endDateInput.value;
+            
+            if (endDate) {
+                // Set maximum date for start date to be the end date
+                startDateInput.setAttribute('max', endDate);
+            } else {
+                // If no end date, set max to today
+                startDateInput.setAttribute('max', today);
+            }
+        }
+
+        // Event listeners
+        startDateInput.addEventListener('change', function() {
+            updateEndDateConstraints();
+        });
+
+        endDateInput.addEventListener('change', function() {
+            updateStartDateConstraints();
+        });
+
+        // Form validation
+        form.addEventListener('submit', function(e) {
+            const startDate = new Date(startDateInput.value);
+            const endDate = new Date(endDateInput.value);
+            
+            if (startDate && endDate && startDate > endDate) {
+                e.preventDefault();
+                alert('Start date cannot be greater than end date. Please select valid dates.');
+                return false;
+            }
+        });
+
+        // Initialize constraints
+        updateEndDateConstraints();
+        updateStartDateConstraints();
+    });
 </script>
 @endpush

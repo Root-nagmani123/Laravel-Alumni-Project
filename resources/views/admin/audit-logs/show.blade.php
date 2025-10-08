@@ -26,7 +26,7 @@
                                 </tr>
                                 <tr>
                                     <th>Timestamp:</th>
-                                    <td>{{ $auditLog->timestamp->format('Y-m-d H:i:s') }} ({{ $auditLog->timestamp->diffForHumans() }})</td>
+                                    <td>{{ $auditLog->timestamp->format('d-m-Y H:i:s') }} ({{ $auditLog->timestamp->diffForHumans() }})</td>
                                 </tr>
                                 <tr>
                                     <th>Action Type:</th>
@@ -121,26 +121,6 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th>Response Code:</th>
-                                    <td>
-                                        @if($auditLog->response_code)
-                                            @php
-                                                $responseConfig = $auditLog->response_code >= 400 ? 
-                                                    ['class' => 'response-error', 'icon' => 'fa-exclamation-triangle'] : 
-                                                    ($auditLog->response_code >= 300 ? 
-                                                        ['class' => 'response-warning', 'icon' => 'fa-exclamation-circle'] : 
-                                                        ['class' => 'response-success', 'icon' => 'fa-check-circle']);
-                                            @endphp
-                                            <span class="response-badge {{ $responseConfig['class'] }}">
-                                                <i class="fas {{ $responseConfig['icon'] }}"></i>
-                                                {{ $auditLog->response_code }}
-                                            </span>
-                                        @else
-                                            <span class="text-muted">N/A</span>
-                                        @endif
-                                    </td>
-                                </tr>
-                                <tr>
                                     <th>Referrer URL:</th>
                                     <td>
                                         @if($auditLog->referrer_url)
@@ -155,7 +135,44 @@
                                 <tr>
                                     <th>User Agent:</th>
                                     <td>
-                                        <small class="text-muted">{{ $auditLog->user_agent }}</small>
+                                        @if($auditLog->username)
+                                            @php
+                                                $userAgent = $auditLog->user_agent;
+                                                $browserInfo = [];
+                                                
+                                                // Browser detection
+                                                if (strpos($userAgent, 'Chrome') !== false && strpos($userAgent, 'Edg') === false) {
+                                                    $browserInfo[] = 'Chrome';
+                                                } elseif (strpos($userAgent, 'Firefox') !== false) {
+                                                    $browserInfo[] = 'Firefox';
+                                                } elseif (strpos($userAgent, 'Safari') !== false && strpos($userAgent, 'Chrome') === false) {
+                                                    $browserInfo[] = 'Safari';
+                                                } elseif (strpos($userAgent, 'Edg') !== false) {
+                                                    $browserInfo[] = 'Edge';
+                                                } elseif (strpos($userAgent, 'Opera') !== false || strpos($userAgent, 'OPR') !== false) {
+                                                    $browserInfo[] = 'Opera';
+                                                } else {
+                                                    $browserInfo[] = 'Unknown Browser';
+                                                }
+                                                
+                                                // Device type detection
+                                                if (strpos($userAgent, 'Mobile') !== false || strpos($userAgent, 'Android') !== false || strpos($userAgent, 'iPhone') !== false) {
+                                                    $browserInfo[] = 'Mobile';
+                                                } elseif (strpos($userAgent, 'Tablet') !== false || strpos($userAgent, 'iPad') !== false) {
+                                                    $browserInfo[] = 'Tablet';
+                                                } else {
+                                                    $browserInfo[] = 'Desktop';
+                                                }
+                                            @endphp
+                                            
+                                            <div class="device-info">
+                                                @foreach($browserInfo as $info)
+                                                    <span class="device-badge">{{ $info }}</span>
+                                                @endforeach
+                                            </div>
+                                        @else
+                                            <span class="text-muted">Guest/Anonymous</span>
+                                        @endif
                                     </td>
                                 </tr>
                             </table>
@@ -187,7 +204,45 @@
                         <div class="col-12">
                             <h5><i class="fas fa-database"></i> Request Data</h5>
                             <div class="request-data-container">
-                                <pre class="request-data-code"><code>{{ json_encode($auditLog->request_data, JSON_PRETTY_PRINT) }}</code></pre>
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-bordered request-data-table">
+                                        <thead>
+                                            <tr>
+                                                <th width="30%">Parameter</th>
+                                                <th>Value</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach($auditLog->request_data as $key => $value)
+                                            <tr>
+                                                <td>
+                                                    <strong>{{ $key }}</strong>
+                                                </td>
+                                                <td>
+                                                    @if(is_array($value) || is_object($value))
+                                                        <div class="nested-data">
+                                                            <button type="button" class="btn btn-sm btn-outline-secondary toggle-nested" data-target="nested-{{ $loop->index }}">
+                                                                <i class="fas fa-chevron-down"></i> View Details
+                                                            </button>
+                                                            <div class="nested-content" id="nested-{{ $loop->index }}" style="display: none;">
+                                                                <pre class="nested-json"><code>{{ json_encode($value, JSON_PRETTY_PRINT) }}</code></pre>
+                                                            </div>
+                                                        </div>
+                                                    @elseif(is_bool($value))
+                                                        <span class="badge {{ $value ? 'badge-success' : 'badge-danger' }}">
+                                                            {{ $value ? 'True' : 'False' }}
+                                                        </span>
+                                                    @elseif(is_null($value))
+                                                        <span class="text-muted">NULL</span>
+                                                    @else
+                                                        <code>{{ $value }}</code>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -308,39 +363,6 @@
     color: #9c27b0;
 }
 
-.response-badge {
-    padding: 6px 10px;
-    border-radius: 6px;
-    font-weight: 600;
-    font-size: 0.85rem;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    border: 2px solid transparent;
-    font-family: 'Courier New', monospace;
-}
-
-.response-success {
-    background: #e8f5e8;
-    color: #2e7d32;
-    border-color: #c8e6c9;
-}
-
-.response-warning {
-    background: #fff3e0;
-    color: #ef6c00;
-    border-color: #ffcc02;
-}
-
-.response-error {
-    background: #ffebee;
-    color: #c62828;
-    border-color: #ffcdd2;
-}
-
-.response-badge i {
-    font-size: 0.8rem;
-}
 
 /* Action Badge Styling */
 .action-badge {
@@ -463,26 +485,158 @@
     margin-top: 10px;
 }
 
-.request-data-code {
+.request-data-table {
+    margin-bottom: 0;
+    background-color: #fff;
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.request-data-table th {
+    background-color: #667eea;
+    color: #fff;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 0.5px;
+    border: none;
+    padding: 12px 15px;
+}
+
+.request-data-table td {
+    padding: 12px 15px;
+    vertical-align: top;
+    border-bottom: 1px solid #f1f3f4;
+}
+
+.request-data-table tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+.request-data-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Nested Data Styling */
+.nested-data {
+    position: relative;
+}
+
+.toggle-nested {
+    font-size: 0.75rem;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.toggle-nested:hover {
+    background-color: #6c757d;
+    color: #fff;
+    transform: translateY(-1px);
+}
+
+.toggle-nested i {
+    transition: transform 0.3s ease;
+}
+
+.toggle-nested.active i {
+    transform: rotate(180deg);
+}
+
+.nested-content {
+    margin-top: 10px;
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 6px;
+    padding: 10px;
+}
+
+.nested-json {
     background-color: #2d3748;
     color: #e2e8f0;
-    padding: 15px;
-    border-radius: 6px;
+    padding: 10px;
+    border-radius: 4px;
     font-family: 'Courier New', monospace;
-    font-size: 0.85rem;
-    line-height: 1.5;
+    font-size: 0.8rem;
+    line-height: 1.4;
     overflow-x: auto;
     margin: 0;
     border: 1px solid #4a5568;
 }
 
-.request-data-code code {
+.nested-json code {
     background: none;
     color: inherit;
     padding: 0;
     border-radius: 0;
     font-family: inherit;
     font-size: inherit;
+}
+
+/* Badge Styling for Values */
+.badge-success {
+    background-color: #28a745;
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.badge-danger {
+    background-color: #dc3545;
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+/* Code Styling for Values */
+.request-data-table code {
+    background-color: #e9ecef;
+    color: #495057;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.85rem;
+    word-break: break-all;
+}
+
+/* Responsive Table */
+.table-responsive {
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+/* Device Info Styling */
+.device-info {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: center;
+}
+
+.device-badge {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #fff;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    box-shadow: 0 2px 4px rgba(102, 126, 234, 0.3);
+    transition: all 0.3s ease;
+}
+
+.device-badge:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(102, 126, 234, 0.4);
 }
 
 /* Section Headers */
@@ -574,7 +728,7 @@ h5 i {
         font-size: 0.9rem;
     }
     
-    .ip-badge, .username-badge, .guest-badge, .country-badge, .method-badge, .response-badge {
+    .ip-badge, .username-badge, .guest-badge, .country-badge, .method-badge {
         font-size: 0.8rem;
         padding: 6px 8px;
     }
@@ -587,6 +741,46 @@ h5 i {
     h5 {
         font-size: 1.1rem;
     }
+    
+    .device-badge {
+        font-size: 0.7rem;
+        padding: 3px 8px;
+    }
+    
+    .device-info {
+        gap: 4px;
+    }
 }
 </style>
+@endpush
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Toggle nested data functionality
+    const toggleButtons = document.querySelectorAll('.toggle-nested');
+    
+    toggleButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const targetId = this.getAttribute('data-target');
+            const targetElement = document.getElementById(targetId);
+            const icon = this.querySelector('i');
+            
+            if (targetElement.style.display === 'none' || targetElement.style.display === '') {
+                targetElement.style.display = 'block';
+                this.classList.add('active');
+                icon.classList.remove('fa-chevron-down');
+                icon.classList.add('fa-chevron-up');
+                this.innerHTML = '<i class="fas fa-chevron-up"></i> Hide Details';
+            } else {
+                targetElement.style.display = 'none';
+                this.classList.remove('active');
+                icon.classList.remove('fa-chevron-up');
+                icon.classList.add('fa-chevron-down');
+                this.innerHTML = '<i class="fas fa-chevron-down"></i> View Details';
+            }
+        });
+    });
+});
+</script>
 @endpush
