@@ -44,7 +44,14 @@
                             <div class="col-md-2">
                                 <div class="form-group">
                                     <label>IP Address</label>
-                                    <input type="text" name="ip_address" class="form-control" value="{{ request('ip_address') }}" placeholder="Enter IP">
+                                    <select name="ip_address" class="form-control">
+                                        <option value="">All IPs</option>
+                                        @foreach($ipAddresses as $ip)
+                                            <option value="{{ $ip }}" {{ request('ip_address') == $ip ? 'selected' : '' }}>
+                                                {{ $ip }}
+                                            </option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
                             <div class="col-md-2">
@@ -73,14 +80,16 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row mt-3">
                             <div class="col-12">
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="fas fa-search"></i> Filter
-                                </button>
-                                <a href="{{ route('audit-logs.index') }}" class="btn btn-secondary">
-                                    <i class="fas fa-times"></i> Clear
-                                </a>
+                                <div class="d-flex gap-2">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-search"></i> Filter
+                                    </button>
+                                    <a href="{{ route('audit-logs.index') }}" class="btn btn-secondary">
+                                        <i class="fas fa-times"></i> Clear
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </form>
@@ -124,7 +133,7 @@
                                         </td>
                                         <td>
                                             <div class="timestamp-info">
-                                                <div class="timestamp-main">{{ $log->timestamp->format('M d, Y') }}</div>
+                                                <div class="timestamp-main">{{ $log->timestamp->format('d-m-Y') }}</div>
                                                 <div class="timestamp-sub">{{ $log->timestamp->format('H:i:s') }}</div>
                                             </div>
                                         </td>
@@ -639,6 +648,80 @@
         }, 30000);
     @endif
 
+    // Date validation and dynamic min/max date setting
+    document.addEventListener('DOMContentLoaded', function() {
+        const dateFromInput = document.querySelector('input[name="date_from"]');
+        const dateToInput = document.querySelector('input[name="date_to"]');
+        const form = document.querySelector('form[method="GET"]');
+
+        // Set initial max date for date_from (today)
+        const today = new Date().toISOString().split('T')[0];
+        if (dateFromInput) {
+            dateFromInput.setAttribute('max', today);
+        }
+
+        function updateDateToConstraints() {
+            const dateFrom = dateFromInput ? dateFromInput.value : '';
+            const dateTo = dateToInput ? dateToInput.value : '';
+            
+            if (dateFrom && dateToInput) {
+                // Set minimum date for date_to to be the date_from
+                dateToInput.setAttribute('min', dateFrom);
+                
+                // If current date_to is before date_from, clear it
+                if (dateTo && new Date(dateTo) < new Date(dateFrom)) {
+                    dateToInput.value = '';
+                }
+            } else if (dateToInput) {
+                // If no date_from, remove min constraint
+                dateToInput.removeAttribute('min');
+            }
+        }
+
+        function updateDateFromConstraints() {
+            const dateTo = dateToInput ? dateToInput.value : '';
+            
+            if (dateTo && dateFromInput) {
+                // Set maximum date for date_from to be the date_to
+                dateFromInput.setAttribute('max', dateTo);
+            } else if (dateFromInput) {
+                // If no date_to, set max to today
+                dateFromInput.setAttribute('max', today);
+            }
+        }
+
+        // Event listeners
+        if (dateFromInput) {
+            dateFromInput.addEventListener('change', function() {
+                updateDateToConstraints();
+            });
+        }
+
+        if (dateToInput) {
+            dateToInput.addEventListener('change', function() {
+                updateDateFromConstraints();
+            });
+        }
+
+        // Form validation
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                const dateFrom = dateFromInput ? new Date(dateFromInput.value) : null;
+                const dateTo = dateToInput ? new Date(dateToInput.value) : null;
+                
+                if (dateFrom && dateTo && dateFrom > dateTo) {
+                    e.preventDefault();
+                    alert('Date From cannot be greater than Date To. Please select valid dates.');
+                    return false;
+                }
+            });
+        }
+
+        // Initialize constraints
+        updateDateToConstraints();
+        updateDateFromConstraints();
+    });
+
     // Add row click functionality
     document.addEventListener('DOMContentLoaded', function() {
         const rows = document.querySelectorAll('.audit-row');
@@ -648,7 +731,7 @@
                 if (!e.target.closest('.btn-view')) {
                     const logId = this.dataset.logId;
                     if (logId) {
-                        window.location.href = '/audit-logs/' + logId;
+                        window.location.href = '{{ route("audit-logs.show", ":id") }}'.replace(':id', logId);
                     }
                 }
             });

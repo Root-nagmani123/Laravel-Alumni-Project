@@ -29,7 +29,13 @@ class AuditLogController extends Controller
         }
 
         if ($request->filled('username')) {
-            $query->where('username', 'like', '%' . $request->username . '%');
+            if (strtolower($request->username) === 'guest') {
+                // Filter for guest users (NULL username)
+                $query->whereNull('username');
+            } else {
+                // Filter for regular users
+                $query->where('username', 'like', '%' . $request->username . '%');
+            }
         }
 
         if ($request->filled('ip_address')) {
@@ -57,8 +63,9 @@ class AuditLogController extends Controller
         // Get filter options
         $actionTypes = AuditLog::distinct('action_type')->pluck('action_type');
         $countries = AuditLog::distinct('country')->whereNotNull('country')->pluck('country');
+        $ipAddresses = AuditLog::distinct('ip_address')->whereNotNull('ip_address')->orderBy('ip_address')->pluck('ip_address');
 
-        return view('admin.audit-logs.index', compact('auditLogs', 'actionTypes', 'countries'));
+        return view('admin.audit-logs.index', compact('auditLogs', 'actionTypes', 'countries', 'ipAddresses'));
     }
 
     /**
@@ -103,7 +110,13 @@ class AuditLogController extends Controller
         }
 
         if ($request->filled('username')) {
-            $query->where('username', 'like', '%' . $request->username . '%');
+            if (strtolower($request->username) === 'guest') {
+                // Filter for guest users (NULL username)
+                $query->whereNull('username');
+            } else {
+                // Filter for regular users
+                $query->where('username', 'like', '%' . $request->username . '%');
+            }
         }
 
         if ($request->filled('ip_address')) {
@@ -148,7 +161,6 @@ class AuditLogController extends Controller
                 'Referrer URL',
                 'Process ID',
                 'HTTP Method',
-                'Response Code',
                 'Error Message'
             ]);
 
@@ -167,7 +179,6 @@ class AuditLogController extends Controller
                     $log->referrer_url,
                     $log->process_id,
                     $log->http_method,
-                    $log->response_code,
                     $log->error_message
                 ]);
             }

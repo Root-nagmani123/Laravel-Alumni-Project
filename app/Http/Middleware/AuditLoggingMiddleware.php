@@ -22,13 +22,17 @@ class AuditLoggingMiddleware
         $username = null;
         try {
             if (Auth::guard('admin')->check()) {
-                $username = Auth::guard('admin')->user()->username;
+                $admin = Auth::guard('admin')->user();
+                $username = $admin->name ?: $admin->email; // Use name or email for admin
             } elseif (Auth::guard('member')->check()) {
-                $username = Auth::guard('member')->user()->username;
+                $member = Auth::guard('member')->user();
+                $username = $member->username ?: $member->name ?: $member->email;
             } elseif (Auth::guard('web')->check()) {
-                $username = Auth::guard('web')->user()->username;
+                $user = Auth::guard('web')->user();
+                $username = $user->username ?: $user->name ?: $user->email;
             } elseif (Auth::guard('user')->check()) {
-                $username = Auth::guard('user')->user()->username;
+                $user = Auth::guard('user')->user();
+                $username = $user->username ?: $user->name ?: $user->email;
             }
             
             // Debug logging for username detection
