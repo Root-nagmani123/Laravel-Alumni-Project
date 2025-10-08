@@ -30,7 +30,7 @@ class FeedController extends Controller
     function decline(Request $request)
     {
         $post = Post::findOrFail($request->_post_id);
-        $post->approved_by_moderator = 0;
+        $post->approved_by_moderator = 2;
         $post->save();
 
         if(auth()->guard('admin')->check()) {

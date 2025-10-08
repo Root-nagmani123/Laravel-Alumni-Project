@@ -574,8 +574,8 @@ Route::middleware('auth:admin')->group(function () {
 
 Route::post('/admin/feed/approve', [App\Http\Controllers\Admin\FeedController::class, 'approve'])->name('admin.feeds.approve');
 Route::post('/admin/feed/decline', [App\Http\Controllers\Admin\FeedController::class, 'decline'])->name('admin.feeds.decline');
+Route::post('/admin/feed/view', [App\Http\Controllers\Admin\FeedController::class, 'view'])->name('admin.feeds.view');
 
 Route::middleware('auth:admin')->group(function () {
     Route::get('/admin/feed', [App\Http\Controllers\Admin\FeedController::class, 'index'])->name('admin.feeds.index');
-    Route::post('/admin/feed/view', [App\Http\Controllers\Admin\FeedController::class, 'view'])->name('admin.feeds.view');
 });
