@@ -41,7 +41,7 @@
                          <li class="sidebar-item">
                             <a class="sidebar-link" href="{{ route('admin.user_management.index') }}">
                                 <iconify-icon icon="solar:user-id-bold-duotone"></iconify-icon>
-                                <span class="icon-small"></span> User Management
+                                <span class="icon-small"></span> Moderator List
                             </a>
                         </li>
                         <li class="sidebar-item">

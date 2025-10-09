@@ -12,7 +12,7 @@
             <div class="row align-items-center">
                 <div class="col-12">
                     <div class="d-sm-flex align-items-center justify-space-between">
-                        <h4 class="mb-4 mb-sm-0 card-title">User Management</h4>
+                        <h4 class="mb-4 mb-sm-0 card-title">Moderator</h4>
                         <nav aria-label="breadcrumb" class="ms-auto">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item d-flex align-items-center">
@@ -22,7 +22,7 @@
                                 </li>
                                 <li class="breadcrumb-item" aria-current="page">
                                     <span class="badge fw-medium fs-2 bg-primary-subtle text-primary">
-                                        User Management
+                                        Moderator List
                                     </span>
                                 </li>
                             </ol>
@@ -48,7 +48,7 @@
                         <!-- Title -->
                         <div class="row">
                             <div class="col-6">
-                                <h4>User Management List</h4>
+                                <h4>Moderator List</h4>
                             </div>
                             <div class="col-6">
                                 <div class="text-end">

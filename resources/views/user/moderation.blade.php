@@ -39,12 +39,12 @@
                                             <tr data-id="{{ $post->id }}">
                                                 {{-- <td><input class="row-select" type="checkbox" value="{{ $post->id }}"></td>
                                                 --}}
-                                                <td>
-                                                    <div class="fw-semibold">{{ $post->title }}</div>
-                                                    <div class="text-muted small">{{ Str::limit($post->content, 100) }}</div>
+                                                <td class="text-dark fw-semibold">
+                                                    <div class="">{{ $post->title }}</div>
+                                                    <div class="">{{ Str::limit($post->content, limit: 100) }}</div>
                                                 </td>
-                                                <td>{{ $post->member->name ?? 'Unknown' }}</td>
-                                                <td class="text-nowrap">{{ $post->created_at->format('Y-m-d H:i') }}</td>
+                                                <td class="text-dark fw-semibold">{{ $post->member->name ?? 'Unknown' }}</td>
+                                                <td class="text-nowrap text-dark fw-semibold">{{ $post->created_at->format('Y-m-d H:i') }}</td>
                                                 <td>
                                                     @if($post->approved_by_moderator == 1)
                                                         <span class="badge bg-success">Approved</span>

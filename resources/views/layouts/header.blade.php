@@ -408,7 +408,7 @@
                             ($user->is_moderator == 1) && 
                             ($user->moderator_active_inactive == 1)
                         )
-                        <li><a class="dropdown-item" href="{{ route('user.moderation') }}"><i class="bi bi-gear fa-fw me-2"></i>Moderation</a></li>
+                        <li><a class="dropdown-item" href="{{ route('user.moderation') }}"><i class="bi bi-gear fa-fw me-2"></i>Moderator</a></li>
                         @endif
                         <li>
                             <form action="{{ route('user.logout') }}" method="POST" style="display: inline;">
