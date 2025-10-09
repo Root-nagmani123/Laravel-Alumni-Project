@@ -130,13 +130,7 @@
                                             <tr>
                                                 <td>
                                                     @php
-                                                        $badgeClass = match($summary->action_type) {
-                                                            'login_success' => 'badge-success',
-                                                            'login_failed' => 'badge-danger',
-                                                            'otp_send' => 'badge-primary',
-                                                            'otp_verify' => 'badge-success',
-                                                            default => 'badge-info'
-                                                        };
+                                                        $badgeClass = $summary->action_type == 'login_success' ? 'badge-success' : 'badge-danger';
                                                     @endphp
                                                     <span class="{{ $badgeClass }}">
                                                         {{ ucfirst(str_replace('_', ' ', $summary->action_type)) }}
@@ -183,8 +177,6 @@
                                                             'login_failed' => 'badge-danger',
                                                             'logout' => 'badge-warning',
                                                             'page_access' => 'badge-info',
-                                                            'otp_send' => 'badge-primary',
-                                                            'otp_verify' => 'badge-success',
                                                             'api_call' => 'badge-secondary',
                                                             default => 'badge-light'
                                                         };

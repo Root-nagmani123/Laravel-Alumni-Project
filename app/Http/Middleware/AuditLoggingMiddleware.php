@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use App\Services\AuditService;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Member;
 
 class AuditLoggingMiddleware
 {
@@ -35,9 +36,19 @@ class AuditLoggingMiddleware
                 $username = $user->username ?: $user->name ?: $user->email;
             }
             
-            // Special handling for OTP routes - use email if available
-            if (!$username && $this->isOtpRoute($request)) {
-                $username = $this->getOtpUsername($request);
+            // Special handling for OTP routes - extract email from request data
+            if (!$username && in_array($request->route()?->getName(), ['otp.send', 'otp.verify'])) {
+                $otpEmail = $request->input('otp_email');
+                if ($otpEmail) {
+                    // Try to find the user by email to get their username
+                    $user = Member::where('email', $otpEmail)->first();
+                    if ($user) {
+                        $username = $user->username ?: $user->name ?: $user->email;
+                    } else {
+                        // If user not found, use the email as identifier
+                        $username = $otpEmail;
+                    }
+                }
             }
             
             // Debug logging for username detection
@@ -50,6 +61,9 @@ class AuditLoggingMiddleware
                     'web_check' => Auth::guard('web')->check(),
                     'user_check' => Auth::guard('user')->check(),
                     'session_id' => $request->session()->getId(),
+                    'route_name' => $request->route()?->getName(),
+                    'otp_email' => $request->input('otp_email'),
+                    'is_otp_route' => in_array($request->route()?->getName(), ['otp.send', 'otp.verify']),
                 ]);
             }
         } catch (\Exception $e) {
@@ -77,27 +91,5 @@ class AuditLoggingMiddleware
         }
 
         return $response;
-    }
-
-    /**
-     * Check if the request is for an OTP route
-     */
-    private function isOtpRoute(Request $request)
-    {
-        $otpRoutes = ['otp.send', 'otp.verify'];
-        $currentRoute = $request->route()?->getName();
-        return in_array($currentRoute, $otpRoutes);
-    }
-
-    /**
-     * Get username for OTP routes using email from request
-     */
-    private function getOtpUsername(Request $request)
-    {
-        $email = $request->input('otp_email');
-        if ($email) {
-            return "OTP: {$email}";
-        }
-        return 'OTP User';
     }
 }
