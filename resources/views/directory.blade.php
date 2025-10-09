@@ -108,7 +108,7 @@
                             </div>
 
                             <!-- Member Table -->
-                            <div class="table-responsive">
+                            <div class="table-responsive" style="max-height: 600px; overflow-y: auto;">
                                 <table id="memberTable" class="table table-striped dt-bootstrap5 dt-responsive nowrap"
                                     style="width:100%">
                                     <thead>
@@ -122,7 +122,7 @@
                                             <th>Sector</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
+                                    <tbody style="max-height: 600px; overflow-y: auto;">
                                         @foreach($members as $index => $row)
                                         <tr>
                                             <td>{{ $index + 1 }}</td>
