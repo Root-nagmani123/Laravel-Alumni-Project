@@ -17,7 +17,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 
-    <link id="change-link" rel="stylesheet" type="text/css" href="{{asset('user_assets/css/style.css')}}">
+    <link id="change-link" rel="stylesheet" type="text/css" href="{{asset('feed_assets/css/style.css')}}">
     <style>
     body {
         background-color: #fff;
