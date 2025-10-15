@@ -245,7 +245,7 @@ public function edit($id)
     public function bulk_upload_members(Request $request)
     {
         $request->validate([
-            'file' => 'required|file|mimes:xlsx,xls,csv|max:3072',
+            'file' => 'required|file|mimes:xlsx,xls|max:3072',
         ]);
 
         $import = new MembersImport();
