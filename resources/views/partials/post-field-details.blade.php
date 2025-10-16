@@ -106,33 +106,6 @@
                 </div>
 
             </div>
-            <div class="dropdown">
-                <a href="#" class="text-secondary py-1 px-2" id="cardFeedAction" data-bs-toggle="dropdown"
-                    aria-expanded="false">
-                    {{ $timeDiff }} <i class="bi bi-caret-down fa-fw pe-2"></i>
-                </a>
-                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="cardFeedAction">
-                    <li>
-                        <a class="dropdown-item" onclick="editGrp_post({{ $post->id }})" href="#">
-                            <i class="bi bi-pen fa-fw pe-2"></i>Edit post
-                        </a>
-                    </li>
-                    <li>
-                        <form action="{{ route('user.group.post.destroy', $post->id) }}" method="POST"
-                            onsubmit="return confirm('Are you sure you want to delete this post?');">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit"
-                                class="text-decoration-none ms-2 border-0 bg-transparent d-flex align-items-center gap-2 text-danger">
-                                <i class="bi bi-trash"></i> Delete Post
-                            </button>
-                        </form>
-                    </li>
-                </ul>
-
-
-            </div>
-
         </div>
     </div>
     <!-- Card header END -->
