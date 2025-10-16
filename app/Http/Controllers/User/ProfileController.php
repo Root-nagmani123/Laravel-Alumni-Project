@@ -72,6 +72,8 @@ public function showById_data(Request $request, $id): View
          $posts = Post::with(['member', 'media', 'likes', 'comments.member'])
         ->orderBy('created_at', 'desc')
         ->where('member_id', $userId)
+        ->where('approved_by_moderator', 1)
+        ->where('status', 1)
         ->get();
       $departments = config('departments');
 
