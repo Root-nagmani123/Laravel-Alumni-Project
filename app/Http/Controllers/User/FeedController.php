@@ -445,7 +445,7 @@ public function getPostByGroup($group_id)
     $posts = Post::with(['member', 'media'])
         ->where('group_id', $group_id)
         ->where('status', 1) // only show active posts
-
+        ->where('approved_by_moderator', 1) // only approved posts
         ->latest()
         ->get();
     // Group
