@@ -232,8 +232,6 @@ class FeedController extends Controller
             'group_id' => $post->group_id,
         ];
     });
-    dd($posts);
-        // ->map(function ($post) {
     return view('user.feed', compact('memberId', 'posts', 'user', 'story','storiesByMember', 'broadcast','events', 'forums', 'groupNames', 'members'));
     }
 
