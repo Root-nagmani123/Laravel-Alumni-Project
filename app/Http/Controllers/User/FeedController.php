@@ -201,10 +201,10 @@ class FeedController extends Controller
         },
         'group'
     ])
-    ->where('status', 1)
-    ->where('approved_by_moderator', 1)
     ->where(function ($query) use ($groupIds) {
-       $query->whereNull('group_id')
+       $query->where('status', 1)
+              ->where('approved_by_moderator', 1)
+            ->whereNull('group_id')
               ->orWhere(function ($sub) use ($groupIds) {
                   $sub->whereIn('group_id', $groupIds)
                       ->whereHas('group', function ($q) {
@@ -232,7 +232,8 @@ class FeedController extends Controller
             'group_id' => $post->group_id,
         ];
     });
-
+    dd($posts);
+        // ->map(function ($post) {
     return view('user.feed', compact('memberId', 'posts', 'user', 'story','storiesByMember', 'broadcast','events', 'forums', 'groupNames', 'members'));
     }
 
