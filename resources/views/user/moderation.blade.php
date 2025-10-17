@@ -26,7 +26,7 @@
                                 <div class="col-md-3">
                                     <label for="status_filter" class="form-label">Status</label>
                                     <select name="status_filter" id="status_filter" class="form-select" onchange="this.form.submit()">
-                                        <option value="">-- Filter by Status --</option>
+                                        <option value="">All</option>
                                         <option value="pending" {{ request('status_filter') == 'pending' ? 'selected' : '' }}>Pending</option>
                                         <option value="approved" {{ request('status_filter') == 'approved' ? 'selected' : '' }}>Approved</option>
                                         <option value="declined" {{ request('status_filter') == 'declined' ? 'selected' : '' }}>Declined</option>
@@ -36,7 +36,7 @@
                                 <div class="col-md-3">
                                     <label for="post_type" class="form-label">Post Type</label>
                                     <select name="post_type" id="post_type" class="form-select" onchange="this.form.submit()">
-                                        <option value="">-- Filter by Post Type --</option>
+                                        <option value="">All</option>
                                         <option value="normal" {{ request('post_type') == 'normal' ? 'selected' : '' }}>Normal Post</option>
                                         <option value="group" {{ request('post_type') == 'group' ? 'selected' : '' }}>Group Post</option>
                                     </select>
