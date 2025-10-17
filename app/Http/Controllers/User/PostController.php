@@ -130,7 +130,8 @@ public function store_chnagefor_video_link(Request $request)
         $post->id
     );
 
-    return redirect('/user/feed')->with('success', 'Post created successfully.');
+    // return redirect('/user/feed')->with('success', 'Post created succsessfully.');
+    return redirect('/user/feed')->with('success', 'Post submitted and waiting for moderator approval.');
 }
 public function group_post_store(Request $request)
 {
