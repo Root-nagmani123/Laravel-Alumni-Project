@@ -202,8 +202,7 @@ class FeedController extends Controller
         'group'
     ])
     ->where(function ($query) use ($groupIds) {
-       $query->where('status', 1)
-              ->where('approved_by_moderator', 1)
+       $query
             ->whereNull('group_id')
               ->orWhere(function ($sub) use ($groupIds) {
                   $sub->whereIn('group_id', $groupIds)
@@ -212,6 +211,8 @@ class FeedController extends Controller
                       });
               });
     })
+    ->where('status', 1)
+    ->where('approved_by_moderator', 1)
     ->orderBy('created_at', 'desc')
     ->get()
     ->map(function ($post) {
