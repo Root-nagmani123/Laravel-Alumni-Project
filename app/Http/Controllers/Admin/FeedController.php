@@ -5,8 +5,15 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\{Member, Post};
+use \App\Services\RecentActivityService;
 class FeedController extends Controller
 {
+    protected $recentActivityService;
+
+    function __construct(RecentActivityService $recentActivityService)
+    {
+        $this->recentActivityService = $recentActivityService;
+    }
     public function index(Request $request)
     {
         $posts = Post::latest('id');
@@ -37,10 +44,27 @@ class FeedController extends Controller
         $post->approved_by_moderator = 1;
         $post->save();
 
+        
         if(auth()->guard('admin')->check()) {
+            $this->recentActivityService->logActivity(
+                'Post approved',
+                'Posts',
+                auth()->guard('admin')->id(),
+                'Post approved successfully',
+                2,
+                $post->id
+            );
             return redirect()->route('admin.feeds.index')->with('success', 'Post approved successfully.');
         }
         else {
+              $this->recentActivityService->logActivity(
+                'Post approved',
+                'Posts',
+                auth()->guard('user')->id(),
+                'Post approved successfully',
+                2,
+                $post->id
+            );
             return redirect()->route('user.moderation')->with('success', 'Post approved successfully.');
         }
     }
