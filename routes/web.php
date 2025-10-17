@@ -460,7 +460,7 @@ Route::get('/user_login', function () {
         Route::get('/admin/topics', function () {
             return view('admin.topics.index');
         })->name('admin.topics.index');
-        Route::get('/user/moderation', [App\Http\Controllers\Admin\FeedController::class, 'userPostModeration'])->name('user.moderation');
+        
 
 
         Route::middleware('auth:admin')->group(function () {
@@ -477,6 +477,7 @@ Route::get('/mapshow', [MapController::class, 'Map'])->name('maps.show');
 
 // User Change Password
 Route::middleware(['auth:user'])->group(function () {
+    Route::get('/user/moderation', [App\Http\Controllers\Admin\FeedController::class, 'userPostModeration'])->name('user.moderation');
     Route::get('/user/change-password', [ChangePasswordController::class, 'showForm'])->name('user.change-password.form');
     Route::post('/user/change-password', [ChangePasswordController::class, 'changePassword'])->name('user.change-password');
 

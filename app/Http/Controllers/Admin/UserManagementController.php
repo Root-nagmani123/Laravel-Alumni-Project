@@ -13,7 +13,7 @@ class UserManagementController extends Controller
         // $customPermissions = CustomPermissions::all();
         // $customRoles = CustomRoles::all();
         // $customRolePermissionMappings = CustomRolePermissionMapping::all();
-        $moderators = Member::where('is_moderator', true)->paginate(10);
+        $moderators = Member::where('is_moderator', true)->orderBy('name', 'asc')->paginate(10);
         // 'customPermissions', 'customRoles', 'customRolePermissionMappings', 
         return view('admin.user_management.index', compact('moderators'));
     }

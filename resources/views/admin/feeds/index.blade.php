@@ -47,14 +47,38 @@
                     </div> --}}
                 </div>
 
-
+                <form action="{{ route('admin.feeds.index') }}" method="get">
+                    
+                    {{-- status filter --}}
+                    <div class="row mb-3">
+                        <div class="col-md-3">
+                            <label for="status_filter" class="form-label">Status</label>
+                            <select name="status_filter" id="status_filter" class="form-select" onchange="this.form.submit()">
+                                <option value="">-- Filter by Status --</option>
+                                <option value="pending" {{ request('status_filter') == 'pending' ? 'selected' : '' }}>Pending</option>
+                                <option value="approved" {{ request('status_filter') == 'approved' ? 'selected' : '' }}>Approved</option>
+                                <option value="declined" {{ request('status_filter') == 'declined' ? 'selected' : '' }}>Declined</option>
+                            </select>
+                        </div>
+                        {{-- filter by post type --}}
+                        <div class="col-md-3">
+                            <label for="post_type" class="form-label">Post Type</label>
+                            <select name="post_type" id="post_type" class="form-select" onchange="this.form.submit()">
+                                <option value="">-- Filter by Post Type --</option>
+                                <option value="normal" {{ request('post_type') == 'normal' ? 'selected' : '' }}>Normal Post</option>
+                                <option value="group" {{ request('post_type') == 'group' ? 'selected' : '' }}>Group Post</option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
                 <div class="table-responsive">
-                    <table class="table table-hover align-middle mb-0 text-nowrap table-bordered table-stripped text-center">
+                    <table class="table table-hover align-middle mb-0 text-nowrap table-bordered table-stripped ">
                         <thead>
                             <tr>
                                 {{-- <th style="width:40px;"><input id="select-all" type="checkbox" aria-label="Select all">
                                 </th> --}}
                                 <th>Post</th>
+                                <th>Post Type</th>
                                 <th>Author</th>
                                 <th>Posted</th>
                                 <th style="width:140px">Status</th>
@@ -68,10 +92,11 @@
                                         {{-- <td><input class="row-select" type="checkbox" value="{{ $post->id }}"></td> --}}
                                         <td class="text-dark fw-semibold">
                                             <div class="">{{ $post->title }}</div>
-                                            <div class="">{{ Str::limit($post->content, 100) }}</div>
+                                            <div class="">{{ Str::limit($post->content, limit: 100) }}</div>
                                         </td>
+                                        <td class="text-dark fw-semibold">{{ ($post->group_id ? 'Group Post' : 'Normal Post') }}</td>
                                         <td class="text-dark fw-semibold">{{ $post->member->name ?? 'Unknown' }}</td>
-                                        <td class="text-nowrap text-dark fw-semibold">{{ $post->created_at->format('Y-m-d H:i') }}</td>
+                                        <td class="text-nowrap text-dark fw-semibold">{{ $post->created_at->format('d-m-Y H:i') }}</td>
                                         <td>
                                             @if($post->approved_by_moderator == 1)
                                                 <span class="badge bg-success">Approved</span>
@@ -86,12 +111,12 @@
                                                 <form action="{{ route('admin.feeds.approve') }}" method="post">
                                                     @csrf
                                                     <input type="hidden" name="_post_id" value="{{ $post->id }}">
-                                                    <button class="btn btn-sm btn-outline-success " type="submit">Approve</button>
+                                                    <button class="btn btn-sm btn-outline-success " type="submit" {{ $post->approved_by_moderator != 0 ? 'disabled' : '' }}>Approve</button>
                                                 </form>
                                                 <form action="{{ route('admin.feeds.decline') }}" method="post">
                                                     @csrf
                                                     <input type="hidden" name="_post_id" value="{{ $post->id }}">
-                                                    <button class="btn btn-sm btn-outline-danger btn-decline" type="submit">Decline</button>
+                                                    <button class="btn btn-sm btn-outline-danger btn-decline" type="submit" {{ $post->approved_by_moderator != 0 ? 'disabled' : '' }}>Decline</button>
                                                 </form>
                                                 <button class="btn btn-sm btn-outline-info btn-view" data-bs-toggle="modal"
                                                     data-bs-target="#postModal" data-title="Post Details" data-id="{{ $post->id }}">View</button>
@@ -126,7 +151,7 @@
                         </tbody>
                     </table>
                 </div>
-                {{ $posts->links() }}
+                {{ $posts->appends(['status_filter' => $status_filter, 'post_type' => $post_type])->links() }}
             </div>
         </div>
 

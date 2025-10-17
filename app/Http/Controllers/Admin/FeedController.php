@@ -7,10 +7,28 @@ use Illuminate\Http\Request;
 use App\Models\{Member, Post};
 class FeedController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $posts = Post::latest('id')->paginate(10);
-        return view('admin.feeds.index', compact('posts'));
+        $posts = Post::latest('id');
+
+        if($request->has('status_filter') && !empty($request->status_filter)) {
+            $statusMap = match($request->status_filter) {
+                'approved' => 1,
+                'declined' => 2,
+                'pending' => 0,
+            };
+            $posts = $posts->where('approved_by_moderator', $statusMap);
+        }
+        if($request->has('post_type') && !empty($request->post_type)) {
+            if($request->post_type == 'normal') {
+                $posts = $posts->whereNull('group_id');
+            }
+            elseif($request->post_type == 'group') {
+                $posts = $posts->whereNotNull('group_id');
+            }
+        }
+        $posts = $posts->paginate(10);
+        return view('admin.feeds.index')->with(['posts'=>$posts, 'status_filter' => $request->status_filter, 'post_type' => $request->post_type]);
     }
 
     function approve(Request $request)
@@ -48,9 +66,30 @@ class FeedController extends Controller
         return response()->json(['html' => $html]);
     }
 
-    function userPostModeration()
+    function userPostModeration(Request $request)
     {
-        $posts = Post::latest('id')->paginate(10);
-        return view('user.moderation', compact('posts'));
+        if(auth()->guard('user')->check() && auth()->guard('user')->user()->is_moderator && auth()->guard('user')->user()->moderator_active_inactive) {
+            $posts = Post::latest('id');
+
+            if($request->has('status_filter') && !empty($request->status_filter)) {
+                $statusMap = match($request->status_filter) {
+                    'approved' => 1,
+                    'declined' => 2,
+                    'pending' => 0,
+                };
+                $posts = $posts->where('approved_by_moderator', $statusMap);
+            }
+            if($request->has('post_type') && !empty($request->post_type)) {
+                if($request->post_type == 'normal') {
+                    $posts = $posts->whereNull('group_id');
+                }
+                elseif($request->post_type == 'group') {
+                    $posts = $posts->whereNotNull('group_id');
+                }
+            }
+            $posts = $posts->paginate(10);
+            return view('user.moderation', compact('posts'))->with(['status_filter' => $request->status_filter, 'post_type' => $request->post_type]);
+        }
+        abort(403, 'Unauthorized action.');
     }
 }
