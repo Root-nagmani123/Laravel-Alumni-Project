@@ -5,7 +5,7 @@ use App\Http\Controllers\Controller;
 use App\Services\NotificationService;
 use App\Http\Controllers\Auth;
 use Illuminate\Support\Facades\Crypt;
-
+use App\Rules\NoHtmlOrScript;
 
 use Illuminate\Http\Request;
 
@@ -23,12 +23,7 @@ class CommentController extends Controller
     {
         $request->validate([
             'post_id' => 'required|exists:posts,id',
-             'comment' => 'required|string|max:1000|',
-        // 'comment' => ['required', 'string', 'max:1000', function ($attribute, $value, $fail) {
-        //     if ($value !== strip_tags($value)) {
-        //         $fail('HTML and JavaScript are not allowed in comments.');
-        //     }
-        // }],
+            'comment' => ['required', 'string', 'max:1000', new NoHtmlOrScript()],
     ]);
 
         $comment = Comment::create([
@@ -88,12 +83,7 @@ class CommentController extends Controller
    public function update(Request $request, $id)
     {
     $request->validate([
-       'comment' => 'required|string|max:1000',
-    // 'comment' => ['required', 'string', 'max:1000', function ($attribute, $value, $fail) {
-    //     if ($value !== strip_tags($value)) {
-    //         $fail('HTML and JavaScript are not allowed in comments.');
-    //     }
-    // }],
+       'comment' => ['required', 'string', 'max:1000', new NoHtmlOrScript()],
     ]);
 
     $comment = Comment::findOrFail($id);

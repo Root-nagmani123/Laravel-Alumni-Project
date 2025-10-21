@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Services\NotificationService;
 use App\Models\Member;
 use App\Services\RecentActivityService;
+use App\Rules\NoHtmlOrScript;
 class BroadcastController extends Controller
 {
     protected $notificationService;
@@ -32,8 +33,8 @@ class BroadcastController extends Controller
     // dd($request);
     // Validate request
     $validated = $request->validate([
-        'title' => 'required|string|max:255',
-        'content' => 'required|string',
+        'title' => ['required', 'string', 'max:255', new NoHtmlOrScript()],
+        'content' => ['required', 'string', new NoHtmlOrScript()],
         'images.*' => 'required|image|max:3072', // 3MB per file
         'video_url' => 'nullable|url',
     ]);
@@ -68,8 +69,8 @@ public function store(Request $request)
 {
     // Validate request
     $validated = $request->validate([
-        'title' => 'required|string|max:255',
-        'content' => 'required|string',
+        'title' => ['required', 'string', 'max:255', new NoHtmlOrScript()],
+        'content' => ['required', 'string', new NoHtmlOrScript()],
         'images' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
         'video_url' => 'nullable|url',
     ], [
@@ -188,8 +189,8 @@ public function destroybroadcast(Broadcast $broadcast)
     $broadcast = Broadcast::findOrFail($id);
 
     $validated = $request->validate([
-        'title' => 'required|string|max:255',
-        'description' => 'required|string',
+        'title' => ['required', 'string', 'max:255', new NoHtmlOrScript()],
+        'description' => ['required', 'string', new NoHtmlOrScript()],
         'image' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
         'video_url' => 'nullable|url',
     ],[

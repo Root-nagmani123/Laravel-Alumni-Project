@@ -4,6 +4,7 @@
 <head>
     @include('layouts.pre_header')
     @vite(['resources/js/app.js'])
+    <script src="{{ asset('js/html-validation.js') }}"></script>
     @livewireStyles
     <style>
     #pageLoader {

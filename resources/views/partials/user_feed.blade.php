@@ -201,12 +201,12 @@
                     <a href="#" @click.prevent="expanded = true" class="text-danger">Read more</a>
                 </p>
                 <p x-show="expanded" x-cloak>
-                    {!! nl2br(e($post->content)) !!}
+                    {{ nl2br(e($post->content)) }}
                     <a href="#" @click.prevent="expanded = false" class="text-danger">Show less</a>
                 </p>
             </div>
         @else
-            <p>{!! nl2br(e($post->content)) !!}</p>
+            <p>{{ nl2br(e($post->content)) }}</p>
         @endif
 
         <!-- Media content -->
@@ -441,7 +441,7 @@
                                     </h6>
                                     <small class="ms-2">{{ $comment->created_at->diffForHumans() }}</small>
                                 </div>
-                                <p class="small mb-0" id="comment-text-{{ $comment->id }}">{!! $commentText !!}</p>
+                                <p class="small mb-0" id="comment-text-{{ $comment->id }}">{{ $commentText }}</p>
                             </div>
                             <div class="row">
                                 <div class="col-6"></div>

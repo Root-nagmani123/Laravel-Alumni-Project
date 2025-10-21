@@ -13,6 +13,8 @@ use App\Models\Broadcast;
 use App\Models\Member;
 use App\Services\NotificationService;
 use Illuminate\Support\Facades\Crypt;
+use App\Http\Requests\SafeContentRequest;
+use App\Rules\NoHtmlOrScript;
 
 use App\Models\Group;
 use App\Models\PostMedia;
@@ -201,9 +203,10 @@ class FeedController extends Controller
         },
         'group'
     ])
+    ->where('status', 1)
+    ->where('approved_by_moderator', 1)
     ->where(function ($query) use ($groupIds) {
-       $query
-            ->whereNull('group_id')
+       $query->whereNull('group_id')
               ->orWhere(function ($sub) use ($groupIds) {
                   $sub->whereIn('group_id', $groupIds)
                       ->whereHas('group', function ($q) {
@@ -211,8 +214,6 @@ class FeedController extends Controller
                       });
               });
     })
-    ->where('status', 1)
-    ->where('approved_by_moderator', 1)
     ->orderBy('created_at', 'desc')
     ->get()
     ->map(function ($post) {
@@ -233,13 +234,14 @@ class FeedController extends Controller
             'group_id' => $post->group_id,
         ];
     });
+
     return view('user.feed', compact('memberId', 'posts', 'user', 'story','storiesByMember', 'broadcast','events', 'forums', 'groupNames', 'members'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'content' => 'nullable|string|max:1000',
+            'content' => ['nullable', 'string', 'max:1000', new NoHtmlOrScript()],
             'media.*' => 'nullable|file|mimes:jpg,jpeg,png,mp4,mov,avi|max:30720', // 30MB
         ]);
 
@@ -324,7 +326,7 @@ class FeedController extends Controller
     public function storePostComment(Request $request, $id)
     {
         $request->validate([
-            'comment' => 'required|string|max:1000',
+            'comment' => ['required', 'string', 'max:1000', new NoHtmlOrScript()],
         ]);
 
         $post = Post::findOrFail($id);
@@ -345,7 +347,7 @@ class FeedController extends Controller
  public function storeComment(Request $request, $id)
     {
         $request->validate([
-            'comment' => 'required|string|max:1000',
+            'comment' => ['required', 'string', 'max:1000', new NoHtmlOrScript()],
         ]);
 
         $post = Post::findOrFail($id);
@@ -390,7 +392,7 @@ class FeedController extends Controller
     public function replyToComment(Request $request, $id)
     {
         $request->validate([
-            'reply' => 'required|string|max:1000',
+            'reply' => ['required', 'string', 'max:1000', new NoHtmlOrScript()],
         ]);
         $comment = Comment::findOrFail($id);
         $userId = auth('user')->id();
@@ -446,7 +448,7 @@ public function getPostByGroup($group_id)
     $posts = Post::with(['member', 'media'])
         ->where('group_id', $group_id)
         ->where('status', 1) // only show active posts
-        ->where('approved_by_moderator', 1) // only approved posts
+
         ->latest()
         ->get();
     // Group
@@ -518,7 +520,7 @@ function update_topic_details(Request $request)
     {
         $request->validate([
         'post_id' => 'required|exists:posts,id',
-        'content' => 'required|string',
+        'content' => ['required', 'string', new NoHtmlOrScript()],
         'video_link' => 'nullable|url',
         'postMedia.*' => 'image|mimes:jpg,jpeg,png,gif,webp|max:2048'
     ]);
@@ -642,9 +644,9 @@ function submitGrievance(Request $request)
     $email = $user->email;
 
     $validatedData = $request->validate([
-        'typeSelect' => 'required|string|max:255',
-        'userSubject' => 'required|string|max:255',
-        'userMessage' => 'required|string|max:1000',
+        'typeSelect' => ['required', 'string', 'max:255', new NoHtmlOrScript()],
+        'userSubject' => ['required', 'string', 'max:255', new NoHtmlOrScript()],
+        'userMessage' => ['required', 'string', 'max:1000', new NoHtmlOrScript()],
         'userAttachment' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:5120', // 5MB
     ]);
 
