@@ -91,17 +91,19 @@
     @endif
     </div>
 
-    <!-- Text content -->
-    <div>
-        <!-- Name -->
-         @if($post->type === 'group_post')
-        <h6 class="mb-1">
-           <i class="fa-solid fa-users fa-fw pe-2"></i> <a href="{{ $groupLink }}">{{ $displayName }}</a>
-        </h6>
+        @if ($wordCount > 50)
+            <div x-data="{ expanded: false }">
+                <p x-show="!expanded">
+                    {{ \Illuminate\Support\Str::words($fullContent, 50, '...') }}
+                    <a href="#" @click.prevent="expanded = true" class="text-danger">Read more</a>
+                </p>
+                <p x-show="expanded" x-cloak>
+                    {{ nl2br(e($post->content)) }}
+                    <a href="#" @click.prevent="expanded = false" class="text-danger">Show less</a>
+                </p>
+            </div>
         @else
-        <h6 class="mb-1">
-            <a href="{{ $profileLink }}" class="text-dark">{{ $displayName }}</a>
-        </h6>
+            <p>{{ nl2br(e($post->content)) }}</p>
         @endif
 
 
@@ -467,7 +469,7 @@ $commentText = preg_replace_callback(
                                     </h6>
                                     <small class="ms-2">{{$comment->created_at->diffForHumans()}}</small>
                                 </div>
-                                <p class="small mb-0" id="comment-text-{{ $comment->id }}">{!! $commentText !!}</p>
+                                <p class="small mb-0" id="comment-text-{{ $comment->id }}">{{ $commentText }}</p>
                             </div>
                            <div class="row">
                               <div class="col-6">

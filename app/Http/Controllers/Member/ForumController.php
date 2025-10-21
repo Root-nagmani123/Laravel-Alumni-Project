@@ -13,6 +13,7 @@ use App\Services\NotificationService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
+use App\Rules\NoHtmlOrScript;
 
 class ForumController extends Controller
 {
@@ -141,8 +142,8 @@ class ForumController extends Controller
     {
       
         $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'required|string',
+            'name' => ['required', 'string', 'max:255', new NoHtmlOrScript()],
+            'description' => ['required', 'string', new NoHtmlOrScript()],
             'end_date' => 'nullable|date',
         ]);
         
@@ -278,7 +279,7 @@ class ForumController extends Controller
 	public function commentForum(Request $request, $id)
 	{
 		$request->validate([
-			'comment' => 'required|string',
+			'comment' => ['required', 'string', new NoHtmlOrScript()],
 		]);
 		$userId = Auth::guard('user')->id();
 		if (!$userId) {
@@ -377,7 +378,7 @@ class ForumController extends Controller
 	public function updateForumComment(Request $request, $commentId)
 	{
 		$request->validate([
-			'comment' => 'required|string',
+			'comment' => ['required', 'string', new NoHtmlOrScript()],
 		]);
 		$userId = Auth::guard('user')->id();
 		$record = DB::table('forum_comment')->where('id', $commentId)->first();
@@ -481,7 +482,7 @@ class ForumController extends Controller
     function member_store_topic(Request $request, $forumId){
        
         $validated = $request->validate([
-            'description' => 'required|string',
+            'description' => ['required', 'string', new NoHtmlOrScript()],
         ]);
 
         $userId = Auth::guard('user')->id();

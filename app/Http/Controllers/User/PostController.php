@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Services\RecentActivityService;
+use App\Rules\NoHtmlOrScript;
 
 class PostController extends Controller
 {
@@ -32,7 +33,7 @@ public function store_chnagefor_video_link(Request $request)
 
 
         $request->validate([
-            'modalContent' => 'nullable|string|max:5000',
+            'modalContent' => ['nullable', 'string', 'max:5000', new NoHtmlOrScript()],
            //'media.*' => 'file|mimes:jpg,jpeg,png,gif,mp4,webm,mov|max:51200'
            'media.*' => 'file|mimes:jpg,jpeg,png,gif|max:51200'
         ]);
@@ -72,7 +73,7 @@ public function store_chnagefor_video_link(Request $request)
     public function store(Request $request)
 {
     $request->validate([
-        'modalContent' => 'required|string|max:5000',
+        'modalContent' => ['required', 'string', 'max:5000', new NoHtmlOrScript()],
         'media.*' => 'file|mimes:jpg,jpeg,png,gif,mp4,mov,avi|max:51200', // Adjust if needed
         'video_link' => 'nullable|url|max:1000',
     ]);
@@ -136,7 +137,7 @@ public function group_post_store(Request $request)
 {
     $request->validate([
         'group_id' => 'required|integer|exists:groups,id',
-        'modalContent' => 'required|string',
+        'modalContent' => ['required', 'string', new NoHtmlOrScript()],
         'media' => 'nullable',
         'media.*' => 'image|max:5120', // 5MB max per file
         'video' => 'nullable|url',
@@ -184,7 +185,7 @@ public function group_post_store(Request $request)
   public function store23062025(Request $request)
 {
     $request->validate([
-        'modalContent' => 'nullable|string|max:5000',
+        'modalContent' => ['nullable', 'string', 'max:5000', new NoHtmlOrScript()],
         'media.*' => 'file|mimes:jpg,jpeg,png,gif|max:51200',
         'video_link' => 'nullable|url|max:1000'
     ]);
@@ -284,7 +285,7 @@ public function toggleLike(Post $post)
 public function storePostComment(Request $request, $id)
 {
     $request->validate([
-        'comment' => 'required|string|max:1000',
+        'comment' => ['required', 'string', 'max:1000', new NoHtmlOrScript()],
     ]);
 
     $post = Post::findOrFail($id);
@@ -360,10 +361,10 @@ public function destroy($id)
 function forum_store(Request $request)
 {
    $validator = Validator::make($request->all(), [
-        'forum_name' => 'required|string|max:255',
+        'forum_name' => ['required', 'string', 'max:255', new NoHtmlOrScript()],
         'forum_end_date' => 'required|date|after_or_equal:today',
         'forum_image' => 'nullable|image|mimes:jpeg,png,jpg|max:1028', 
-        'forum_description' => 'nullable|string|max:5000', // Add description validation
+        'forum_description' => ['nullable', 'string', 'max:5000', new NoHtmlOrScript()], // Add description validation
 
       ]);
     // Check if validation fails

@@ -4,7 +4,6 @@
 <head>
     @include('layouts.pre_header')
     @vite(['resources/js/app.js'])
-    <link rel="stylesheet" href="{{ asset('css/custom-feed.css') }}">
     <script src="{{ asset('js/html-validation.js') }}"></script>
     @livewireStyles
     <style>

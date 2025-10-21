@@ -13,6 +13,8 @@ use App\Models\Broadcast;
 use App\Models\Member;
 use App\Services\NotificationService;
 use Illuminate\Support\Facades\Crypt;
+use App\Http\Requests\SafeContentRequest;
+use App\Rules\NoHtmlOrScript;
 
 use App\Models\Group;
 
@@ -201,9 +203,15 @@ class FeedController extends Controller
         'group'
     ])
     ->where('status', 1)
+    ->where('approved_by_moderator', 1)
     ->where(function ($query) use ($groupIds) {
-        $query->whereNull('group_id')
-              ->orWhereIn('group_id', $groupIds);
+       $query->whereNull('group_id')
+              ->orWhere(function ($sub) use ($groupIds) {
+                  $sub->whereIn('group_id', $groupIds)
+                      ->whereHas('group', function ($q) {
+                          $q->where('status', 1); // ✅ only active groups
+                      });
+              });
     })
     ->orderBy('created_at', 'desc')
     ->get()
@@ -224,7 +232,7 @@ class FeedController extends Controller
             'group_image' => $post->group->image ?? null,
             'group_id' => $post->group_id,
         ];
-    }); 
+    });
 
     return view('user.feed', compact('memberId', 'posts', 'user', 'story','storiesByMember', 'broadcast','events', 'forums', 'groupNames', 'members'));
     }
@@ -232,7 +240,7 @@ class FeedController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'content' => 'nullable|string|max:1000',
+            'content' => ['nullable', 'string', 'max:1000', new NoHtmlOrScript()],
             'media.*' => 'nullable|file|mimes:jpg,jpeg,png,mp4,mov,avi|max:30720', // 30MB
         ]);
 
@@ -317,7 +325,7 @@ class FeedController extends Controller
     public function storePostComment(Request $request, $id)
     {
         $request->validate([
-            'comment' => 'required|string|max:1000',
+            'comment' => ['required', 'string', 'max:1000', new NoHtmlOrScript()],
         ]);
 
         $post = Post::findOrFail($id);
@@ -338,7 +346,7 @@ class FeedController extends Controller
  public function storeComment(Request $request, $id)
     {
         $request->validate([
-            'comment' => 'required|string|max:1000',
+            'comment' => ['required', 'string', 'max:1000', new NoHtmlOrScript()],
         ]);
 
         $post = Post::findOrFail($id);
@@ -383,7 +391,7 @@ class FeedController extends Controller
     public function replyToComment(Request $request, $id)
     {
         $request->validate([
-            'reply' => 'required|string|max:1000',
+            'reply' => ['required', 'string', 'max:1000', new NoHtmlOrScript()],
         ]);
         $comment = Comment::findOrFail($id);
         $userId = auth('user')->id();
@@ -438,6 +446,8 @@ public function getPostByGroup($group_id)
     // Posts with relations
     $posts = Post::with(['member', 'media'])
         ->where('group_id', $group_id)
+        ->where('status', 1) // only show active posts
+
         ->latest()
         ->get();
     // Group
@@ -483,6 +493,77 @@ if ($group) {
 ->get();
         // print_r($grp_members);die;
     return view('user.grouppost_details', compact('posts','group','isMentee','grp_members','members'));
+}
+function edit_data_get($id){
+     $post = Post::select('id', 'content', 'video_link')
+        ->with(['media:id,post_id,file_path'])
+        ->findOrFail($id);
+
+    return response()->json([
+        'post' => $post
+    ]);
+}
+public function deleteMedia($id)
+{
+    $media = PostMedia::findOrFail($id);
+
+    // file delete
+    \Storage::delete('public/' . $media->file_path);
+
+    // db delete
+    $media->delete();
+
+    return response()->json(['success' => true]);
+}
+function update_topic_details(Request $request)
+    {
+        $request->validate([
+        'post_id' => 'required|exists:posts,id',
+        'content' => ['required', 'string', new NoHtmlOrScript()],
+        'video_link' => 'nullable|url',
+        'postMedia.*' => 'image|mimes:jpg,jpeg,png,gif,webp|max:2048'
+    ]);
+       $videoId = null;
+ if ($request->video_link) {
+
+$url = $request->video_link;
+    // Agar query string wala link hai (watch?v=xxxx)
+    if (strpos($url, 'watch?v=') !== false) {
+        parse_str(parse_url($url, PHP_URL_QUERY), $query);
+        $videoId = $query['v'] ?? null;
+    }
+    // Agar short link hai (youtu.be/xxxx)
+    elseif (strpos($url, 'youtu.be/') !== false) {
+        $videoId = basename(parse_url($url, PHP_URL_PATH));
+    }
+    // Agar embed link hai (youtube.com/embed/xxxx)
+    elseif (strpos($url, '/embed/') !== false) {
+        $videoId = basename(parse_url($url, PHP_URL_PATH));
+    }
+    // Agar shorts link hai (youtube.com/shorts/xxxx)
+    elseif (strpos($url, '/shorts/') !== false) {
+        $videoId = basename(parse_url($url, PHP_URL_PATH));
+    }
+            }
+    $post = Post::findOrFail($request->post_id);
+    $post->content = $request->content;
+    $post->video_link = $videoId ? "https://www.youtube.com/embed/" . $videoId : null;
+    $post->save();
+
+    // 2. Add new media (jo user ne abhi upload kiya h)
+    if ($request->hasFile('postMedia')) {
+        foreach ($request->file('postMedia') as $file) {
+            $path = $file->store('posts', 'public');
+
+            PostMedia::create([
+                'post_id' => $post->id,
+                'file_path' => $path,
+            ]);
+        }
+    }
+
+    return redirect()->back()->with('success', 'Post updated successfully.');
+
 }
     public function getPostByGroup_bkp($group_id)
     {
@@ -562,9 +643,9 @@ function submitGrievance(Request $request)
     $email = $user->email;
 
     $validatedData = $request->validate([
-        'typeSelect' => 'required|string|max:255',
-        'userSubject' => 'required|string|max:255',
-        'userMessage' => 'required|string|max:1000',
+        'typeSelect' => ['required', 'string', 'max:255', new NoHtmlOrScript()],
+        'userSubject' => ['required', 'string', 'max:255', new NoHtmlOrScript()],
+        'userMessage' => ['required', 'string', 'max:1000', new NoHtmlOrScript()],
         'userAttachment' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:5120', // 5MB
     ]);
 
