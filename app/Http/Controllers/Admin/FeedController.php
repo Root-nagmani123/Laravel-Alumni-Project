@@ -51,7 +51,7 @@ class FeedController extends Controller
                 'Posts',
                 auth()->guard('admin')->id(),
                 'Post approved successfully',
-                2,
+                1,
                 $post->id
             );
             return redirect()->route('admin.feeds.index')->with('success', 'Post approved successfully.');
