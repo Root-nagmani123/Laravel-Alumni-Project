@@ -26,6 +26,7 @@ class UserManagementController extends Controller
             ->where('is_moderator', false)
             ->select('name', 'id')
             ->whereRaw('LOWER(service) = ?', ['ias'])
+            ->orderBy('name', 'asc')
             ->get();
         return response()->json($members);
     }
