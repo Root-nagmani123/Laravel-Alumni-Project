@@ -76,9 +76,25 @@ class FeedController extends Controller
         $post->save();
 
         if(auth()->guard('admin')->check()) {
+            $this->recentActivityService->logActivity(
+                'Post rejected',
+                'Posts',
+                auth()->guard('admin')->id(),
+                'Post rejected successfully',
+                1,
+                $post->id
+            );
             return redirect()->route('admin.feeds.index')->with('success', 'Post declined successfully.');
         }
         else {
+            $this->recentActivityService->logActivity(
+                'Post rejected',
+                'Posts',
+                auth()->guard('user')->id(),
+                'Post rejected successfully',
+                2,
+                $post->id
+            );
             return redirect()->route('user.moderation')->with('success', 'Post declined successfully.');
         }
     }
