@@ -123,10 +123,10 @@ public function store_chnagefor_video_link(Request $request)
     $notification = $this->notificationService->notifyAllMembers('post', $post->content . ' post has been created.', $post->id, 'SinglePost',Auth::id());
 
     $this->recentActivityService->logActivity(
-        'Post Created',
+        'Post Submitted',
         'Posts',
         auth()->guard('user')->id(),
-        'New Post Created',
+        'New post submitted and pending for approval',
         2,
         $post->id
     );
