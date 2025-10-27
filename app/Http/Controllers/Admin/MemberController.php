@@ -120,9 +120,9 @@ if ($request->hasFile('profile_pic')) {
     }
     
 // Agar password filled hai to add karo
-if ($request->filled('password')) {
-    $data['password'] = Hash::make($request->password);
-}
+// if ($request->filled('password')) {
+//     $data['password'] = Hash::make($request->password);
+// }
 
 $member = Member::create($data);
         $this->recentActivityService->logActivity(
@@ -183,7 +183,7 @@ public function edit($id)
             'username' => 'required|string|max:255|unique:members,username,' . $member->id,
             'mobile' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:members,email,' . $member->id,
-            'password' => 'nullable|string|min:8',
+            
             'cader' => 'required|string|max:255',
             'designation' => 'required|string|max:255',
             'batch' => 'required|integer',
@@ -207,9 +207,9 @@ public function edit($id)
         $member->name = $request->name;
         $member->mobile = $request->mobile;
         $member->email = $request->email;
-        if ($request->filled('password')) {
-            $member->password = Hash::make($request->password);
-        }
+        // if ($request->filled('password')) {
+        //     $member->password = Hash::make($request->password);
+        // }
         $member->cader = $request->cader;
         $member->designation = $request->designation;
         $member->batch = $request->batch;

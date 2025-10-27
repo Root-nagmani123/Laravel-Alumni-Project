@@ -25,7 +25,14 @@ class AdminController extends Controller
     }
 
     public function index(){
-        return view('admin.login');
+         $salt = base64_encode(random_bytes(32)); // opaque token
+        // Store in session with expiry (example: 30 seconds)
+        session([
+            'password_salt_token' => $salt,
+            'password_salt_expire' => now()->addSeconds(30)
+        ]);
+
+          return view('admin.login', ['passwordSaltToken' => $salt]);
     }
 
 
@@ -45,16 +52,29 @@ public function loginAuth(Request $request)
         'password' => 'required|string',
          'g-recaptcha-response' => 'required'
     ];
-      $enc = $request->input('password_salt');
-
+    
         try {
-            // Decrypt timestamp
-            $timestamp = (int) Crypt::decryptString($enc);
+      $tokenFromRequest = $request->input('check_data');
+        $tokenInSession = session('password_salt_token');
+        $expiresAt = session('password_salt_expire');
 
-            // Verify: should not be expired (30 sec ahead)
-            if (now()->timestamp > $timestamp) {
-                return back()->withErrors([ 'email' => 'Invalid login credentials or unauthorized access.']);
-            }
+        // Basic validation
+        if (! $tokenInSession || ! hash_equals($tokenInSession, (string) $tokenFromRequest)) {
+            // token mismatch or not set
+            return back()->withErrors(['password' => 'Invalid or missing form token. Please try again.']);
+        }
+
+        // expiry check
+        if ($expiresAt && now()->greaterThan($expiresAt)) {
+           
+            // expired
+            // remove token
+            session()->forget(['password_salt_token','password_salt_expire']);
+            return back()->withErrors(['password' => 'Form token expired. Please reload the page and try again.']);
+        }
+
+        // Single-use: remove token immediately so it cannot be reused
+        session()->forget(['password_salt_token','password_salt_expire']);
             
               $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
         'secret' => '6LcxQc0rAAAAAN5Wl6h1kH78PHIszwHdLitSdPi8',
@@ -106,6 +126,19 @@ public function loginAuth(Request $request)
     if ($target && array_key_exists($target, $allowedRedirects)) {
         return redirect($allowedRedirects[$target]);
     }
+     $url = $request->input('redirect');
+
+        // External whitelist
+        $trustedHosts = ['alumni.lbsnaa.gov.in', 'http://127.0.0.1:9000'];
+        $host = parse_url($url, PHP_URL_HOST);
+
+        if ($host && in_array($host, $trustedHosts)) {
+            return redirect($url); // safe external redirect
+        }
+        $Referer = $request->headers->get('Referer');
+        if ($Referer && !in_array(parse_url($Referer, PHP_URL_HOST), $trustedHosts)) {
+            return back()->withErrors(['email' => 'Invalid login credentials or unauthorized access.']);
+        }
 
     // Check if remember checkbox is checked
     $remember = $request->has('remember');

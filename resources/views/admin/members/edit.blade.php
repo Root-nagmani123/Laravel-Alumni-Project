@@ -81,7 +81,7 @@
                                     @enderror
                                 </div>
                             </div>
-                            <div class="col-6">
+                            <!-- <div class="col-6">
                                 <div class="mb-3">
                                     <label class="form-label">Password (leave blank to keep current password)</label>
                                     <input type="password" name="password" class="form-control">
@@ -98,7 +98,7 @@
                                     <div class="text-danger">{{ $message }}</div>
                                     @enderror
                                 </div>
-                            </div>
+                            </div> -->
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label class="form-label">Service<span class="required text-danger">*</span></label>
