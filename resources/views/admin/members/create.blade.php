@@ -84,25 +84,7 @@
                                         @enderror
                                     </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">Password</label>
-                                        <input type="password" name="password" id="password" class="form-control">
-                                        @error('password')
-                                        <div class="text-danger">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">Confirm Password</label>
-                                        <input type="password" name="password_confirmation" id="confirm_password"
-                                            class="form-control">
-                                               @error('password_confirmation')
-                                        <div class="text-danger">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>
+                               
                                 
                                 <div class="col-md-6">
                                     <div class="mb-3">

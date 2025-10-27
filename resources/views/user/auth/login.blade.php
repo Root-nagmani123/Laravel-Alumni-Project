@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 
     <link id="change-link" rel="stylesheet" type="text/css" href="{{asset('feed_assets/css/style.css')}}">
-    <style>
+    <style nonce="{{ $cspNonce }}">
     body {
         background-color: #fff;
         color: #af2910;
@@ -256,7 +256,7 @@
         color: #004a93;
     }
     </style>
-    <style>
+    <style nonce="{{ $cspNonce }}">
     .login-card {
         background-color: rgba(255, 255, 255, 0.9);
         border-radius: 10px;
@@ -313,6 +313,8 @@
         /* text white */
     }
     </style>
+   
+
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 
@@ -475,7 +477,8 @@
                             <div class="mb-3">
                                 <label class="form-label fw-bold">Password</label>
                                 <input type="password" name="password" id="password" class="form-control"
-                                    placeholder="Enter your password" required>
+    placeholder="Enter your password" required autocomplete="new-password">
+
 
                                 @php
                                 $ts = now()->addSeconds(30)->timestamp;
@@ -577,7 +580,12 @@
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label fw-bold">Service <span class="text-danger">*</span></label>
-                                    <input type="text" name="service" class="form-control" required>
+                                    <select name="service" class="form-control" required>
+                                        <option value="" disabled selected>Select your service</option>
+                                        @foreach($services as $service)
+                                        <option value="{{ $service }}">{{ $service }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label fw-bold">Batch <span class="text-danger">*</span></label>
@@ -981,7 +989,7 @@
     <script src="{{ asset('user_assets/js/script.js') }}"></script>
 
     <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer></script>
-    <script>
+   <script nonce="{{ $cspNonce }}">
     let captchaLdap, captchaOtp;
 
     function onloadCallback() {
@@ -997,7 +1005,7 @@
         });
     }
     </script>
-    <script>
+   <script nonce="{{ $cspNonce }}">
     // Collect digits into hidden field
     document.addEventListener("input", function(e) {
         if (e.target.classList.contains("otp-input")) {
@@ -1070,7 +1078,7 @@
             });
     });
     </script>
-    <script>
+   <script nonce="{{ $cspNonce }}">
     $(document).on('click', '.close-panel', function() {
         $(this).closest('.card').addClass('d-none'); // hide the panel
     });
@@ -1088,7 +1096,7 @@
         });
     });
     </script>
-    <script>
+   <script nonce="{{ $cspNonce }}">
     // Collect digits into hidden OTP field
     document.querySelectorAll('.otp-input').forEach((input, index, inputs) => {
         input.addEventListener('keyup', function(e) {
@@ -1159,7 +1167,7 @@
             });
     });
     </script>
-    <script>
+   <script nonce="{{ $cspNonce }}">
     document.addEventListener("DOMContentLoaded", function() {
         const inputs = document.querySelectorAll(".otp-input");
         const hiddenOtp = document.getElementById("otp_code");
@@ -1188,7 +1196,7 @@
     });
     </script>
 
-    <script>
+   <script nonce="{{ $cspNonce }}">
     document.addEventListener("DOMContentLoaded", function() {
         const inputs = document.querySelectorAll(".otp-input");
         const hiddenOtp = document.getElementById("otp_code");
@@ -1218,7 +1226,7 @@
 
 
 
-    <script>
+   <script nonce="{{ $cspNonce }}">
     feather.replace();
     $(".emojiPicker").emojioneArea({
         inline: true,
