@@ -113,7 +113,7 @@
                                                 <div class="p-3 border rounded bg-light">
                                                     <!-- Personal Information form goes here -->
                                                     <form
-                                                        action="{{ route('user.profile.update', ['id' => $user->id]) }}"
+                                                        action="{{ route('user.profile.update') }}"
                                                         method="post" id="myForm" enctype="multipart/form-data">
                                                         @csrf
                                                         @method('PUT')
@@ -298,7 +298,7 @@
                                                 <div class="p-3 border rounded bg-light">
                                                     <!-- Educational Background form goes here -->
                                                     <form
-                                                        action="{{ route('user.profile.eduinfo', ['id' => $user->id]) }}"
+                                                        action="{{ route('user.profile.eduinfo') }}"
                                                         method="post" id="myForm" enctype="multipart/form-data">
                                                         @csrf
                                                         @method('PUT')
@@ -433,7 +433,7 @@
                                                 <div class="p-3 border rounded bg-light">
                                                     <!-- Professional Information form goes here -->
                                                     <form
-                                                        action="{{ route('user.profile.proinfo', ['id' => $user->id]) }}"
+                                                        action="{{ route('user.profile.proinfo') }}"
                                                         method="post" id="myForm" enctype="multipart/form-data">
                                                         @csrf
                                                         @method('PUT')
@@ -608,7 +608,7 @@
 
                                             <div class="tab-pane fade" id="sector-ministries" role="tabpanel">
                                                 <form
-                                                    action="{{ route('user.profile.sector_departments.update', ['id' => $user->id]) }}"
+                                                    action="{{ route('user.profile.sector_departments.update') }}"
                                                     method="post" id="myForm">
                                                     @csrf
                                                     @method('PUT')
