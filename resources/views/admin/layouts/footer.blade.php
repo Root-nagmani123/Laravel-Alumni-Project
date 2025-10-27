@@ -45,9 +45,11 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
   <!-- Toggle button JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
-<!-- Sweet Aert JS -->
+ <!-- Sweet Aert JS -->
  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
  <script src="{{ asset('feed_assets/js/group.js') }}"></script>
+ <!-- HTML/JavaScript Validation Script -->
+ <script src="{{ asset('js/html-validation.js') }}"></script>
 <script>
     $(document).ready(function() {
         $('.js-example-basic-multiple').select2();

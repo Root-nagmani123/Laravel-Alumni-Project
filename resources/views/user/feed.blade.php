@@ -44,8 +44,25 @@
                             alt="User Avatar" loading="lazy" decoding="async">
                     </div>
                     <!-- Post textarea -->
-                    <textarea class="form-control pe-4 fs-3 lh-1 border-0" name="modalContent" rows="5"
-                        placeholder="Share your thoughts..." required></textarea>
+                    <div class="flex-grow-1">
+
+                        <textarea class="form-control pe-4 fs-3 lh-1 border-0 @error('modalContent') is-invalid @enderror"
+
+                                  name="modalContent"
+
+                                  rows="5"
+
+                                  placeholder="Share your thoughts..."
+
+                                  required>{{ old('modalContent') }}</textarea>
+
+                        @error('modalContent')
+
+                            <div class="invalid-feedback d-block">{{ $message }}</div>
+
+                        @enderror
+
+                    </div>
                 </div>
 
                 <!-- File upload -->

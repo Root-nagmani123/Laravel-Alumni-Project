@@ -18,6 +18,7 @@ use App\Models\Post;
 use App\Models\PostMedia;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Storage;
+use App\Rules\NoHtmlOrScript;
 
 class GroupController extends Controller
 {
@@ -51,7 +52,7 @@ class GroupController extends Controller
     {
         //Array ( [name] => Dhananjay [mentor_id] => 1 [user_id] => Array ( [0] => 4 [1] => 5 ) [status] => 1 )
          $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => ['required', 'string', 'max:255', new NoHtmlOrScript()],
             'state_id' => 'nullable|integer',
             'status' => 'nullable|integer',
             'created_by' => 'nullable|integer',
@@ -65,7 +66,7 @@ class GroupController extends Controller
     {
 
         $request->validate([
-            'name'        => 'required|string|max:255',
+            'name'        => ['required', 'string', 'max:255', new NoHtmlOrScript()],
             'status'      => 'nullable|integer|in:0,1',
             'end_date'    => 'nullable|date|after_or_equal:today',
             'image'       => 'nullable|image|mimes:jpeg,png,jpg,avif|max:2048',
@@ -130,7 +131,7 @@ class GroupController extends Controller
 public function update(Request $request, Group $group)
 {
     $request->validate([
-        'name' => 'required|string|max:255',
+        'name' => ['required', 'string', 'max:255', new NoHtmlOrScript()],
         // 'mentor_id' => 'required|integer',
         // 'user_id' => 'required|array',
         'status' => 'nullable|integer',
@@ -291,8 +292,8 @@ public function update(Request $request, Group $group)
     public function save_topic_bkp(Request $request, $id)
         {
             $request->validate([
-                'title' => 'required|string|max:255',
-                'description' => 'nullable|string',
+                'title' => ['required', 'string', 'max:255', new NoHtmlOrScript()],
+                'description' => ['nullable', 'string', new NoHtmlOrScript()],
                 'video_link' => 'nullable|url',
                 'video_caption' => 'nullable|string',
                 'status' => 'required|integer',
@@ -412,9 +413,9 @@ public function update(Request $request, Group $group)
         $group_id = decrypt($group_id);
         // 1️⃣ Validation
         $request->validate([
-            'description' => 'required|string',
+            'description' => ['required', 'string', new NoHtmlOrScript()],
             'video_link' => 'nullable|url',
-            'video_caption' => 'nullable|string',
+            'video_caption' => ['nullable', 'string', new NoHtmlOrScript()],
             'status' => 'required|integer',
             'doc' => 'nullable|file|mimes:pdf,jpg,png,gif',
             //'topic_image' => 'nullable|file|mimes:jpg,png,gif',
@@ -580,7 +581,7 @@ $authUser = Auth::guard('admin')->check()
 
     // 2️⃣ Validation
     $request->validate([
-        'description'   => 'required|string',
+        'description'   => ['required', 'string', new NoHtmlOrScript()],
         'video_link'    => 'nullable|url',
         'status'        => 'required|integer',
         'topic_image'   => 'nullable|array',
@@ -897,7 +898,7 @@ public function deleteTopic($id)
              * ---------------------------------------------------
              */
             $request->validate([
-                'group_name'  => 'required|string|max:255',
+                'group_name'  => ['required', 'string', 'max:255', new NoHtmlOrScript()],
                 'mentees'     => 'required|array',
                 'grp_image'   => 'required|image|mimes:jpeg,png,jpg,avif|max:2048',
                 'end_date'    => 'required|date|after_or_equal:today',

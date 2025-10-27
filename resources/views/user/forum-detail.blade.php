@@ -107,7 +107,6 @@
 
                             @php
 
-
                             $commentText = preg_replace_callback(
                             '/@([a-zA-Z0-9_.]+)/',
                             function ($matches) {
@@ -305,7 +304,7 @@
                                     if (!res.ok) throw new Error('Update failed');
                                     const data = await res.json();
                                     if (data && data.success) {
-                                        textEl.textContent = newText;
+                                        textEl.textContent = data.comment || newText;
                                     }
                                 } catch (e) {
                                     console.error(e);

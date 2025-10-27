@@ -96,7 +96,11 @@ class CommentController extends Controller
     $comment->comment = strip_tags($request->comment);
     $comment->save();
 
-    return response()->json(['success' => true, 'message' => 'Comment updated']);
+    return response()->json([
+        'success' => true, 
+        'message' => 'Comment updated',
+        'comment' => $comment->comment
+    ]);
     }
 
  public function destroy($id)

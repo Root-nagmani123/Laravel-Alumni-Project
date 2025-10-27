@@ -13,6 +13,7 @@ use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Crypt;
 use App\Services\RecentActivityService;
+use App\Rules\NoHtmlOrScript;
 
 class MemberController extends Controller
 {
@@ -80,13 +81,13 @@ Paginator::useBootstrap();
         
         // Validate the incoming request
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'username' => 'required|string|max:255|unique:members',
-            'mobile' => 'required|string|max:255',
+            'name' => ['required', 'string', 'max:255', new NoHtmlOrScript()],
+            'username' => ['required', 'string', 'max:255', 'unique:members', new NoHtmlOrScript()],
+            'mobile' => ['required', 'string', 'max:255', new NoHtmlOrScript()],
             'email' => 'required|string|email|max:255|unique:members',
             
-            'cader' => 'required|string|max:255',
-            'designation' => 'required|string|max:255',
+            'cader' => ['required', 'string', 'max:255', new NoHtmlOrScript()],
+            'designation' => ['required', 'string', 'max:255', new NoHtmlOrScript()],
             'batch' => 'required',
             'sector' => 'nullable',
             'service' => 'nullable',
@@ -179,13 +180,13 @@ public function edit($id)
     {
         // Validate the incoming request
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'username' => 'required|string|max:255|unique:members,username,' . $member->id,
-            'mobile' => 'required|string|max:255',
+            'name' => ['required', 'string', 'max:255', new NoHtmlOrScript()],
+            'username' => ['required', 'string', 'max:255', 'unique:members,username,' . $member->id, new NoHtmlOrScript()],
+            'mobile' => ['required', 'string', 'max:255', new NoHtmlOrScript()],
             'email' => 'required|string|email|max:255|unique:members,email,' . $member->id,
             'password' => 'nullable|string|min:8',
-            'cader' => 'required|string|max:255',
-            'designation' => 'required|string|max:255',
+            'cader' => ['required', 'string', 'max:255', new NoHtmlOrScript()],
+            'designation' => ['required', 'string', 'max:255', new NoHtmlOrScript()],
             'batch' => 'required|integer',
             'sector' => 'nullable|string',
             'service' => 'nullable|string',

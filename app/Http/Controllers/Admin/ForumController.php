@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use App\Services\NotificationService;
 use App\Services\RecentActivityService;
+use App\Rules\NoHtmlOrScript;
 
 class ForumController extends Controller
 {
@@ -41,8 +42,8 @@ class ForumController extends Controller
     public function store(Request $request)
         {
     $validator = Validator::make($request->all(), [
-        'name' => 'required|string|max:255',
-        'forumdescription' => 'required|string|max:1000',
+        'name' => ['required', 'string', 'max:255', new NoHtmlOrScript()],
+        'forumdescription' => ['required', 'string', 'max:1000', new NoHtmlOrScript()],
         'end_date' => 'required|date|after_or_equal:today',
         'images' => 'nullable|image|mimes:jpeg,png,jpg|max:1028', 
         'status' => 'required|in:1,0',
@@ -99,8 +100,8 @@ class ForumController extends Controller
 {
     
     $validator = Validator::make($request->all(), [
-        'name' => 'required|string|max:255',
-        'forumdescription' => 'required|string|max:1000',
+        'name' => ['required', 'string', 'max:255', new NoHtmlOrScript()],
+        'forumdescription' => ['required', 'string', 'max:1000', new NoHtmlOrScript()],
         'cat_id' => 'nullable|integer',
         'status' => 'required|integer',
         'forum_image' => 'nullable|forum_image|mimes:jpeg,png,jpg|max:1048', // Optional image validation
@@ -247,7 +248,7 @@ class ForumController extends Controller
     public function save_topic(Request $request)
 {
     $request->validate([
-        'description' => 'required|string',
+        'description' => ['required', 'string', new NoHtmlOrScript()],
         'status'      => 'required|in:0,1',
         'forum_id'    => 'required|exists:forums,id',
     ]);
@@ -357,7 +358,7 @@ class ForumController extends Controller
 
     $request->validate([
         // 'title' => 'required|string|max:255',
-        'description' => 'required|string',
+        'description' => ['required', 'string', new NoHtmlOrScript()],
         // 'images' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         // 'doc' => 'nullable|mimes:pdf|max:10000',
         // 'video_link' => 'nullable|url',
@@ -459,8 +460,8 @@ class ForumController extends Controller
     public function update_forum(Request $request, Forum $forum)
     {
     $request->validate([
-        'forumname' => 'required|string|max:255',
-        'forumdescription' => 'required|string|max:1000',
+        'forumname' => ['required', 'string', 'max:255', new NoHtmlOrScript()],
+        'forumdescription' => ['required', 'string', 'max:1000', new NoHtmlOrScript()],
         'forumstatus' => 'required|in:0,1',
         'end_date' => 'required|date|after_or_equal:today', // Ensure end date is valid
         'forum_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048', // Optional image validation

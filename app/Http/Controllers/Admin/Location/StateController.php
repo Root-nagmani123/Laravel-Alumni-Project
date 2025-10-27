@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\State;
 use App\Models\Country;
 use Illuminate\Support\Facades\Validator;
+use App\Rules\NoHtmlOrScript;
 
 class StateController extends Controller
 {
@@ -26,7 +27,7 @@ class StateController extends Controller
     {
         // Validate the incoming request
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
+            'name' => ['required', 'string', 'max:255', new NoHtmlOrScript()],
             'country_id' => 'required|exists:tbl_countries,id'
         ]);
 
@@ -57,7 +58,7 @@ class StateController extends Controller
     {
         // Validate the incoming request
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
+            'name' => ['required', 'string', 'max:255', new NoHtmlOrScript()],
             'country_id' => 'required|exists:tbl_countries,id'
         ]);
 
