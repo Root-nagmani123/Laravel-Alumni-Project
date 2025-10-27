@@ -71,7 +71,7 @@ class CommentController extends Controller
                 'parsed_comment' => $parsed_comment, // <-- Add this line
                 'member_name' => $member->name ?? 'Anonymous',
                 'member_profile_url' => $member ? route('user.profile.data', ['id' => Crypt::encrypt($member->id)]) : '#',
-                'member_avatar' => $member && $member->profile_pic ? asset('storage/' . $member->profile_pic) : asset('feed_assets/images/avatar/07.jpg'),
+                'member_avatar' => $member && $member->profile_pic ? route('profile.pic', $member->profile_pic) : asset('feed_assets/images/avatar/07.jpg'),
             ]
         ]);
 

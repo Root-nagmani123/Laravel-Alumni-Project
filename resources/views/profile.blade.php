@@ -277,7 +277,7 @@
                                                                     <div class="mt-2">
                                                                         @if($user->profile_pic)
                                                                         <img id="previewImageEdit"
-                                                                            src="{{ asset('storage/' . $user->profile_pic) }}"
+                                                                            src="{{ route('profile.pic', $user->profile_pic) }}"
                                                                             alt="Profile Picture"
                                                                             style="max-width: 150px;">
                                                                         @endif
