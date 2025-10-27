@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Country;
 use Illuminate\Support\Facades\Validator;
+use App\Rules\NoHtmlOrScript;
 
 class CountryController extends Controller
 {
@@ -24,8 +25,8 @@ class CountryController extends Controller
     {
         // Validate the incoming request
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255|unique:tbl_countries',
-            'sortname' => 'required|string|max:3|unique:tbl_countries',
+            'name' => ['required', 'string', 'max:255', 'unique:tbl_countries', new NoHtmlOrScript()],
+            'sortname' => ['required', 'string', 'max:3', 'unique:tbl_countries', new NoHtmlOrScript()],
         ]);
 
         // Check if validation fails
@@ -54,8 +55,8 @@ class CountryController extends Controller
     {
         // Validate the incoming request
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255|unique:tbl_countries,name,' . $country->id,
-            'sortname' => 'required|string|max:3|unique:tbl_countries,sortname,' . $country->id,
+            'name' => ['required', 'string', 'max:255', 'unique:tbl_countries,name,' . $country->id, new NoHtmlOrScript()],
+            'sortname' => ['required', 'string', 'max:3', 'unique:tbl_countries,sortname,' . $country->id, new NoHtmlOrScript()],
         ]);
 
         if ($validator->fails()) {

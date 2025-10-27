@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\DB; // For database operations
 use App\Models\member;
 use App\Models\UserSectordepartment;
 use Illuminate\Support\Facades\Crypt; // For encrypting and decrypting IDs
+use App\Rules\NoHtmlOrScript;
 
 
 class ProfileController extends Controller
@@ -95,13 +96,13 @@ public function showById_data(Request $request, $id): View
     public function update(Request $request): RedirectResponse
 {
     $request->validate([
-        'name' => 'required|string|max:255',
+        'name' => ['required', 'string', 'max:255', new NoHtmlOrScript()],
         'date_of_birth' => 'required|date',
-        'place_of_birth' => 'required|string',
+        'place_of_birth' => ['required', 'string', new NoHtmlOrScript()],
         'gender' => 'required|in:male,female,other',
         'mobile' => 'required|digits:10',
-        'address' => 'required|string',
-        'bio' => 'required|string',
+        'address' => ['required', 'string', new NoHtmlOrScript()],
+        'bio' => ['required', 'string', new NoHtmlOrScript()],
         'marital_status' => 'required|in:single,married,divorced',
     ]);
 
@@ -134,13 +135,13 @@ public function showById_data(Request $request, $id): View
         $currentYear = date('Y');
 
          $validatedData = $request->validate([
-        'school_name'        => 'required|string|max:255',
+        'school_name'        => ['required', 'string', 'max:255', new NoHtmlOrScript()],
         'school_year'        => "required|integer|min:1900|max:$currentYear",
-        'undergrad_college'  => 'required|string|max:255',
-        'undergrad_degree'   => 'required|string|max:255',
+        'undergrad_college'  => ['required', 'string', 'max:255', new NoHtmlOrScript()],
+        'undergrad_degree'   => ['required', 'string', 'max:255', new NoHtmlOrScript()],
         'undergrad_year'     => "required|integer|min:1900|max:$currentYear",
-        'postgrad_college'   => 'nullable|string|max:255',
-        'postgrad_degree'    => 'nullable|string|max:255',
+        'postgrad_college'   => ['nullable', 'string', 'max:255', new NoHtmlOrScript()],
+        'postgrad_degree'    => ['nullable', 'string', 'max:255', new NoHtmlOrScript()],
         'postgrad_year'      => "nullable|integer|min:1900|max:$currentYear",
     ]);
 
@@ -158,11 +159,11 @@ public function showById_data(Request $request, $id): View
         $currentYear = date('Y');
 
          $validatedData = $request->validate([
-        'current_designation'        => 'required|string|max:255',
-        'current_department'  => 'required|string|max:255',
-        'current_location'   => 'required|string|max:255',
-        'previous_postings'     => 'required|string|max:255',
-        'service' => 'required|string|max:255',
+        'current_designation'        => ['required', 'string', 'max:255', new NoHtmlOrScript()],
+        'current_department'  => ['required', 'string', 'max:255', new NoHtmlOrScript()],
+        'current_location'   => ['required', 'string', 'max:255', new NoHtmlOrScript()],
+        'previous_postings'     => ['required', 'string', 'max:255', new NoHtmlOrScript()],
+        'service' => ['required', 'string', 'max:255', new NoHtmlOrScript()],
 
     ]);
 

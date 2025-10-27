@@ -2183,7 +2183,7 @@ function saveEditedComment(id) {
         .then(res => res.json())
         .then(data => {
             if (data.success) {
-                document.getElementById(`comment-text-${id}`).innerHTML = newComment;
+                document.getElementById(`comment-text-${id}`).textContent = data.comment || newComment;
             } else {
                 alert(data.message || 'Failed to update comment');
             }

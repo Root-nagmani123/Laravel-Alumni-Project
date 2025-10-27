@@ -11,6 +11,7 @@ use App\Services\NotificationService;
 use App\Models\Member;
 use App\Models\EventRsvp;
 use App\Services\RecentActivityService;
+use App\Rules\NoHtmlOrScript;
 
 
 class EventsController extends Controller
@@ -39,10 +40,10 @@ class EventsController extends Controller
     public function store(Request $request)
 	{
 		$validator = Validator::make($request->all(), [
-			'title'          => 'required|string|max:255',
-			'description'    => 'nullable|string',
+			'title'          => ['required', 'string', 'max:255', new NoHtmlOrScript()],
+			'description'    => ['nullable', 'string', new NoHtmlOrScript()],
 			'venue'          => 'required|in:online,physical',
-			'location'       => 'nullable|string|max:255',
+			'location'       => ['nullable', 'string', 'max:255', new NoHtmlOrScript()],
 			'url'            => 'nullable|url|max:255',
 			'start_datetime' => 'required|date',
 			'end_datetime'   => 'required|date|after_or_equal:start_datetime',
@@ -119,10 +120,10 @@ return redirect()->route('events.index')->with('error', 'Event not found!');retu
         $event = Events::findOrFail($id);
 
         $validator = Validator::make($request->all(), [
-            'title'          => 'required|string|max:255',
-            'description'    => 'nullable|string',
+            'title'          => ['required', 'string', 'max:255', new NoHtmlOrScript()],
+            'description'    => ['nullable', 'string', new NoHtmlOrScript()],
             'venue'          => 'required|in:online,physical',
-            'location'       => 'nullable|string|max:255',
+            'location'       => ['nullable', 'string', 'max:255', new NoHtmlOrScript()],
             'url'            => 'nullable|url|max:255',
             'start_datetime' => 'required|date',
             'end_datetime'   => 'nullable|date|after_or_equal:start_datetime',

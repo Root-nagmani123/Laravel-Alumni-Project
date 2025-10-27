@@ -803,7 +803,7 @@ function saveEditedComment(id) {
         },
         success: function(data) {
             if (data.success) {
-                $(`#comment-text-${id}`).text(newComment);
+                $(`#comment-text-${id}`).text(data.comment || newComment);
             } else {
                 alert(data.message || 'Failed to update comment');
             }

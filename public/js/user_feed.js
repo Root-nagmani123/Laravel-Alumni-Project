@@ -337,7 +337,7 @@
             .then(function (data) {
                 if (data.success) {
                     var el = document.getElementById("comment-text-" + id);
-                    if (el) el.innerHTML = newComment;
+                    if (el) el.textContent = data.comment || newComment;
                 } else {
                     alert(data.message || "Failed to update comment");
                 }
