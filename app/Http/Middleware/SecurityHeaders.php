@@ -9,7 +9,13 @@ class SecurityHeaders
 {
     public function handle(Request $request, Closure $next)
     {
+         $nonce = base64_encode(random_bytes(16));
+    
+    // share with Blade
+    view()->share('cspNonce', $nonce);
+
         $response = $next($request);
+        
 
         // Add security headers
         $response->headers->set('X-Frame-Options', 'DENY'); // Prevent clickjacking
@@ -43,7 +49,9 @@ class SecurityHeaders
             "connect-src 'self' https://www.google-analytics.com https://www.googletagmanager.com https://www.google.com https://www.gstatic.com"
         ];
 
-        $response->headers->set('Content-Security-Policy', implode('; ', $csp));
+        
+       $policy = implode('; ', $csp);
+    $response->headers->set('Content-Security-Policy', $policy);
 
         return $response;
     }
