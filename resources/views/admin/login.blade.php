@@ -49,7 +49,7 @@
                                                 <form action="{{ url('admin/authlogin') }}" method="post" id="loginForm">
                                                     {{-- CSRF Token --}}
                                                     @csrf
-<input type="hidden" id="check_data" name="check_data" value="{{ $passwordSaltToken }}">
+                                                <input type="hidden" id="check_data" name="check_data" value="{{ $passwordSaltToken }}">
                                                     {{-- Email Field --}}
                                                     <div class="mb-3">
                                                         <label for="exampleInputEmail1" class="form-label">Email

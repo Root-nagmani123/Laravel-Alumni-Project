@@ -54,7 +54,7 @@ public function loginAuth(Request $request)
     ];
     
         try {
-      $tokenFromRequest = $request->input('password_salt');
+      $tokenFromRequest = $request->input('check_data');
         $tokenInSession = session('password_salt_token');
         $expiresAt = session('password_salt_expire');
 
@@ -66,6 +66,7 @@ public function loginAuth(Request $request)
 
         // expiry check
         if ($expiresAt && now()->greaterThan($expiresAt)) {
+           
             // expired
             // remove token
             session()->forget(['password_salt_token','password_salt_expire']);
