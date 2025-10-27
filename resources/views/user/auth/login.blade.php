@@ -933,6 +933,9 @@
     <script src="{{ asset('user_assets/js/lazysizes.min.js') }}"></script>
     <script src="{{ asset('user_assets/js/theme-setting.js') }}"></script>
     <script src="{{ asset('user_assets/js/script.js') }}"></script>
+<script nonce="{{ $cspNonce }}">
+    console.log("This inline script is CSP-safe");
+</script>
 
     <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer></script>
    <script nonce="{{ $cspNonce }}">
