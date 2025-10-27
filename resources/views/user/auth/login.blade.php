@@ -471,7 +471,7 @@
                             <div class="mb-3">
                                 <label class="form-label fw-bold">Password</label>
                                 <input type="password" name="password" id="password" class="form-control"
-    placeholder="Enter your password" required autocomplete="new-password">
+    placeholder="Enter your password" required autocomplete="off">
 
 
                                 @php
