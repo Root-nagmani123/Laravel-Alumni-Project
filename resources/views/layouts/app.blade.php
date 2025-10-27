@@ -31,6 +31,30 @@
     z-index: 2;
 }
 
+    /* Error message styling for HTML validation */
+    .html-validation-error {
+        display: block;
+        width: 100%;
+        clear: both;
+        word-wrap: break-word;
+    }
+
+    /* Ensure error messages don't overlap with input groups */
+    .input-group ~ .html-validation-error {
+        display: block;
+        margin-top: 0.25rem;
+    }
+
+    /* Form validation state styling */
+    .html-validation-invalid {
+        opacity: 0.8;
+    }
+
+    .html-validation-invalid .btn[type="submit"] {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+
 
 </style>
 

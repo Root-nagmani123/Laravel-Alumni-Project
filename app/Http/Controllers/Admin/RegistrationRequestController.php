@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Http;
+use App\Rules\NoHtmlOrScript;
 
 
 use App\Models\Member;
@@ -24,7 +25,7 @@ class RegistrationRequestController extends Controller
     public function registrationRequestsStore(Request $request)
     {
        $request->validate([
-            'name'   => 'required|string|max:255|regex:/^[a-zA-Z\s]+$/',
+            'name'   => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s]+$/', new NoHtmlOrScript()],
             'email'  => 'required|email',
             'mobile' => 'required|digits:10',
             'service'=> 'required',

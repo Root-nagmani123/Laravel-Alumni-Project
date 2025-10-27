@@ -17,6 +17,7 @@ use App\Models\Member;
 use App\Services\NotificationService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
+use App\Rules\NoHtmlOrScript;
 
 
 
@@ -129,7 +130,7 @@ function activateGroup(Request $request) : RedirectResponse {
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'group_name' => 'required|string|max:255',
+            'group_name' => ['required', 'string', 'max:255', new NoHtmlOrScript()],
             'mentees' => 'required|array',
             'end_date' => 'required|date',
             'grp_image' => 'required|image|mimes:jpeg,png,jpg|max:1048', // Validate image file
@@ -205,5 +206,18 @@ function post_destroy(Request $request, $id) : RedirectResponse {
     }
     $post->delete();
     return redirect()->back()->with('success', 'Post deleted successfully.');
+}
+
+function updateGroupName(Request $request) {
+    $request->validate([
+        'group_id' => 'required|exists:groups,id',
+        'name' => ['required', 'string', 'max:255', new NoHtmlOrScript()],
+    ]);
+
+    $group = Group::find($request->input('group_id'));
+    $group->name = $request->input('name');
+    $group->save();
+
+    return redirect()->back()->with('success', 'Group name updated successfully.');
 }
 }

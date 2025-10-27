@@ -6,7 +6,7 @@
 (function() {
     'use strict';
 
-    // HTML/JS detection patterns
+    // HTML/JS detection patterns - Enhanced for strict validation
     const patterns = {
         htmlTags: /<[^>]*>/g,
         scriptTags: /<script\b[^>]*>[\s\S]*?<\/script>/gi,
@@ -15,6 +15,11 @@
         objectTags: /<object\b[^>]*>[\s\S]*?<\/object>/gi,
         embedTags: /<embed\b[^>]*>/gi,
         appletTags: /<applet\b[^>]*>[\s\S]*?<\/applet>/gi,
+        formTags: /<form\b[^>]*>[\s\S]*?<\/form>/gi,
+        inputTags: /<input\b[^>]*>/gi,
+        textareaTags: /<textarea\b[^>]*>[\s\S]*?<\/textarea>/gi,
+        selectTags: /<select\b[^>]*>[\s\S]*?<\/select>/gi,
+        buttonTags: /<button\b[^>]*>[\s\S]*?<\/button>/gi,
         javascriptProtocol: /\bjavascript\s*:/gi,
         vbscriptProtocol: /\bvbscript\s*:/gi,
         dataProtocol: /\bdata\s*:[^,]*,?/gi,
@@ -22,26 +27,39 @@
         cssExpressions: /expression\s*\(/gi,
         dangerousChars: /[;&|`$(){}[\]]/g,
         sqlPatterns: /(\bunion\b|\bselect\b|\binsert\b|\bupdate\b|\bdelete\b|\bdrop\b|\bcreate\b|\balter\b)\s+/gi,
-        controlChars: /[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g
+        controlChars: /[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g,
+        firstCharSpecial: /^[^a-zA-Z0-9\s]/g,
+        htmlEntities: /&[a-zA-Z0-9#]+;/g,
+        urlEncodedScript: /(%3C|%3c).*script.*(%3E|%3e)/gi,
+        unicodeScript: /\x3c.*script.*\x3e/gi,
     };
 
-    // Error messages
+    // Error messages - Updated to match server-side strict validation
     const messages = {
-        htmlTags: 'HTML tags are not allowed.',
-        scriptTags: 'JavaScript code is not allowed.',
-        styleTags: 'CSS code is not allowed.',
-        iframeTags: 'Iframe tags are not allowed.',
-        objectTags: 'Object tags are not allowed.',
-        embedTags: 'Embed tags are not allowed.',
-        appletTags: 'Applet tags are not allowed.',
-        javascriptProtocol: 'JavaScript protocols are not allowed.',
-        vbscriptProtocol: 'VBScript protocols are not allowed.',
-        dataProtocol: 'Data URLs are not allowed.',
-        eventHandlers: 'Event handlers are not allowed.',
-        cssExpressions: 'CSS expressions are not allowed.',
+        htmlTags: '❌ Validation failed — HTML tags or JavaScript are not allowed.',
+        scriptTags: '❌ Validation failed — HTML tags or JavaScript are not allowed.',
+        styleTags: '❌ Validation failed — HTML tags or JavaScript are not allowed.',
+        iframeTags: '❌ Validation failed — HTML tags or JavaScript are not allowed.',
+        objectTags: '❌ Validation failed — HTML tags or JavaScript are not allowed.',
+        embedTags: '❌ Validation failed — HTML tags or JavaScript are not allowed.',
+        appletTags: '❌ Validation failed — HTML tags or JavaScript are not allowed.',
+        formTags: '❌ Validation failed — HTML tags or JavaScript are not allowed.',
+        inputTags: '❌ Validation failed — HTML tags or JavaScript are not allowed.',
+        textareaTags: '❌ Validation failed — HTML tags or JavaScript are not allowed.',
+        selectTags: '❌ Validation failed — HTML tags or JavaScript are not allowed.',
+        buttonTags: '❌ Validation failed — HTML tags or JavaScript are not allowed.',
+        firstCharSpecial: 'The first character of the field cannot be a special character.',
+        javascriptProtocol: '❌ Validation failed — HTML tags or JavaScript are not allowed.',
+        vbscriptProtocol: '❌ Validation failed — HTML tags or JavaScript are not allowed.',
+        dataProtocol: '❌ Validation failed — HTML tags or JavaScript are not allowed.',
+        eventHandlers: '❌ Validation failed — HTML tags or JavaScript are not allowed.',
+        cssExpressions: '❌ Validation failed — HTML tags or JavaScript are not allowed.',
         dangerousChars: 'Potentially dangerous characters are not allowed.',
         sqlPatterns: 'SQL injection patterns are not allowed.',
-        controlChars: 'Invalid characters are not allowed.'
+        controlChars: 'Invalid characters are not allowed.',
+        htmlEntities: '❌ Validation failed — HTML tags or JavaScript are not allowed.',
+        urlEncodedScript: '❌ Validation failed — HTML tags or JavaScript are not allowed.',
+        unicodeScript: '❌ Validation failed — HTML tags or JavaScript are not allowed.',
     };
 
     /**
@@ -84,7 +102,17 @@
             const errorElement = document.createElement('div');
             errorElement.className = 'html-validation-error text-danger small mt-1';
             errorElement.style.display = 'none';
-            field.parentNode.insertBefore(errorElement, field.nextSibling);
+            
+            // Find the parent input-group if it exists, otherwise use the field's parent
+            const inputGroup = field.closest('.input-group');
+            const targetParent = inputGroup ? inputGroup.parentNode : field.parentNode;
+            
+            // Insert error after the input-group or field
+            if (inputGroup) {
+                targetParent.insertBefore(errorElement, inputGroup.nextSibling);
+            } else {
+                targetParent.insertBefore(errorElement, field.nextSibling);
+            }
 
             // Add event listeners
             field.addEventListener('input', function() {
@@ -116,17 +144,36 @@
             errorElement.style.display = 'block';
             field.classList.add('is-invalid');
             
-            // Prevent form submission
-            const form = field.closest('form');
-            if (form) {
-                form.addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    return false;
-                });
-            }
+            // Mark field as invalid for form validation
+            field.dataset.htmlValidationInvalid = 'true';
         } else {
             errorElement.style.display = 'none';
             field.classList.remove('is-invalid');
+            
+            // Mark field as valid for form validation
+            field.dataset.htmlValidationInvalid = 'false';
+        }
+        
+        // Update form validation state
+        updateFormValidationState(field);
+    }
+
+    /**
+     * Update form validation state based on field validation
+     */
+    function updateFormValidationState(field) {
+        const form = field.closest('form');
+        if (!form) return;
+
+        // Check if any field in the form is invalid
+        const invalidFields = form.querySelectorAll('[data-html-validation-invalid="true"]');
+        const hasInvalidFields = invalidFields.length > 0;
+
+        // Add or remove form validation class
+        if (hasInvalidFields) {
+            form.classList.add('html-validation-invalid');
+        } else {
+            form.classList.remove('html-validation-invalid');
         }
     }
 
@@ -148,9 +195,20 @@
                     errorElement.style.display = 'block';
                 }
                 field.classList.add('is-invalid');
+                field.dataset.htmlValidationInvalid = 'true';
                 isValid = false;
+            } else {
+                field.classList.remove('is-invalid');
+                field.dataset.htmlValidationInvalid = 'false';
             }
         });
+
+        // Update form validation state
+        if (isValid) {
+            form.classList.remove('html-validation-invalid');
+        } else {
+            form.classList.add('html-validation-invalid');
+        }
 
         return isValid;
     }
@@ -180,6 +238,14 @@
         document.addEventListener('submit', function(e) {
             const form = e.target;
             if (form.tagName === 'FORM') {
+                // Check if form has invalid fields
+                const hasInvalidFields = form.classList.contains('html-validation-invalid');
+                if (hasInvalidFields) {
+                    e.preventDefault();
+                    return false;
+                }
+                
+                // Double-check with full validation
                 if (!validateForm(form)) {
                     e.preventDefault();
                     return false;

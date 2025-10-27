@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\City;
 use App\Models\State;
 use Illuminate\Support\Facades\Validator;
+use App\Rules\NoHtmlOrScript;
 use App\Models\Country;
 
 class CityController extends Controller
@@ -27,7 +28,7 @@ class CityController extends Controller
     {
         // Validate the incoming request
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
+            'name' => ['required', 'string', 'max:255', new NoHtmlOrScript()],
             'state_id' => 'required|exists:tbl_states,id'
         ]);
 
@@ -59,7 +60,7 @@ class CityController extends Controller
     {
         // Validate the incoming request
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
+            'name' => ['required', 'string', 'max:255', new NoHtmlOrScript()],
             'state_id' => 'required|exists:tbl_states,id'
         ]);
 

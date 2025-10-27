@@ -17,6 +17,9 @@ use Illuminate\Support\Str;
 use App\Models\Post;
 use App\Models\PostMedia;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Storage;
+use App\Rules\NoHtmlOrScript;
+
 class GroupController extends Controller
 {
 
@@ -49,7 +52,7 @@ class GroupController extends Controller
     {
         //Array ( [name] => Dhananjay [mentor_id] => 1 [user_id] => Array ( [0] => 4 [1] => 5 ) [status] => 1 )
          $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => ['required', 'string', 'max:255', new NoHtmlOrScript()],
             'state_id' => 'nullable|integer',
             'status' => 'nullable|integer',
             'created_by' => 'nullable|integer',
@@ -63,7 +66,7 @@ class GroupController extends Controller
     {
 
         $request->validate([
-            'name'        => 'required|string|max:255',
+            'name'        => ['required', 'string', 'max:255', new NoHtmlOrScript()],
             'status'      => 'nullable|integer|in:0,1',
             'end_date'    => 'nullable|date|after_or_equal:today',
             'image'       => 'nullable|image|mimes:jpeg,png,jpg,avif|max:2048',
@@ -128,7 +131,7 @@ class GroupController extends Controller
 public function update(Request $request, Group $group)
 {
     $request->validate([
-        'name' => 'required|string|max:255',
+        'name' => ['required', 'string', 'max:255', new NoHtmlOrScript()],
         // 'mentor_id' => 'required|integer',
         // 'user_id' => 'required|array',
         'status' => 'nullable|integer',
@@ -289,8 +292,8 @@ public function update(Request $request, Group $group)
     public function save_topic_bkp(Request $request, $id)
         {
             $request->validate([
-                'title' => 'required|string|max:255',
-                'description' => 'nullable|string',
+                'title' => ['required', 'string', 'max:255', new NoHtmlOrScript()],
+                'description' => ['nullable', 'string', new NoHtmlOrScript()],
                 'video_link' => 'nullable|url',
                 'video_caption' => 'nullable|string',
                 'status' => 'required|integer',
@@ -405,19 +408,19 @@ public function update(Request $request, Group $group)
 //     return redirect()->route('group.index')->with('success', 'Group post (topic) added successfully.');
 // }
 
-public function save_topic(Request $request, $group_id)
-{
-    $group_id = decrypt($group_id);
-    // 1️⃣ Validation
-    $request->validate([
-        'description' => 'nullable|string',
-        'video_link' => 'nullable|url',
-        'video_caption' => 'nullable|string',
-        'status' => 'required|integer',
-        'doc' => 'nullable|file|mimes:pdf,jpg,png,gif',
-        'topic_image' => 'nullable|file|mimes:jpg,png,gif',
-        'video' => 'nullable|file|mimes:mp4,mov,avi,wmv|max:102400'
-    ]);
+    public function save_topic(Request $request, $group_id)
+    {
+        $group_id = decrypt($group_id);
+        // 1️⃣ Validation
+        $request->validate([
+            'description' => ['required', 'string', new NoHtmlOrScript()],
+            'video_link' => 'nullable|url',
+            'video_caption' => ['nullable', 'string', new NoHtmlOrScript()],
+            'status' => 'required|integer',
+            'doc' => 'nullable|file|mimes:pdf,jpg,png,gif',
+            //'topic_image' => 'nullable|file|mimes:jpg,png,gif',
+            'topic_image'   => 'nullable|array',
+            'topic_image.*' => 'nullable|file|mimes:jpg,png,gif|max:5120', // file max 5MB
 
     // 2️⃣ Handle topic image
     $imageFile = $request->hasFile('topic_image')
@@ -529,6 +532,105 @@ public function save_topic(Request $request, $group_id)
     //return redirect()->route('group.topics_list')->with('success', 'Topic added successfully.');
     }
 
+    public function updateTopic(Request $request, $id)
+    {
+    try {
+        $topicId = decrypt($id);
+    } catch (\Exception $e) {
+        return back()->with('error', 'Invalid post ID.');
+    }
+
+    $topic = Post::with('media')->findOrFail($topicId);
+
+$authUser = Auth::guard('admin')->check()
+        ? Auth::guard('admin')->user()
+        : Auth::guard('member')->user();
+
+    //  If post is not owned by member_id = 1 → block
+    if ($topic->member_id != 1) {
+        return back()->with('error', 'You are not allowed to edit this post.');
+    }
+
+    // If user is not admin → block
+    if (!$authUser || $authUser->isAdmin != 1) {
+        return back()->with('error', 'You are not allowed to edit this post.');
+    }
+
+    // 2️⃣ Validation
+    $request->validate([
+        'description'   => ['required', 'string', new NoHtmlOrScript()],
+        'video_link'    => 'nullable|url',
+        'status'        => 'required|integer',
+        'topic_image'   => 'nullable|array',
+        'topic_image.*' => 'nullable|file|mimes:jpg,jpeg,png,gif|max:5120', // 5MB max
+    ]);
+
+    // 3️⃣ Update video link (convert to embed)
+    $embedLink = '';
+    if ($request->video_link) {
+        parse_str(parse_url($request->video_link, PHP_URL_QUERY), $query);
+        $embedLink = isset($query['v']) ? "https://www.youtube.com/embed/" . $query['v'] : $request->video_link;
+    }
+
+    // 4️⃣ Handle new images (upload + save in PostMedia)
+    $imageFiles = [];
+    if ($request->hasFile('topic_image')) {
+        foreach ($request->file('topic_image') as $image) {
+            $imageFiles[] = $image->store('uploads/topics', 'public');
+        }
+    }
+
+    // 5️⃣ Update media_type
+    $media_type = null;
+    if ($imageFiles && $embedLink) {
+        $media_type = 'photo_video';
+    } elseif ($imageFiles) {
+        $media_type = 'photo';
+    } elseif ($embedLink) {
+        $media_type = 'video';
+    }
+
+    // 6️⃣ Update post
+    $topic->update([
+        'content'     => $request->description,
+        'media_type'  => $media_type,
+        'video_link'  => $embedLink,
+        'status'      => $request->status,
+    ]);
+
+    // 7️⃣ Save new images in PostMedia
+    if (!empty($imageFiles)) {
+        foreach ($imageFiles as $filePath) {
+            PostMedia::create([
+                'post_id'   => $topic->id,
+                'file_path' => $filePath,
+                'file_type' => 'image',
+            ]);
+        }
+    }
+
+    return back()->with('success', 'Topic updated successfully.');
+}
+
+public function deleteMedia($id)
+{
+    try {
+        $media = PostMedia::findOrFail($id);
+
+        // Delete the file if it exists
+        if (Storage::disk('public')->exists($media->file_path)) {
+            Storage::disk('public')->delete($media->file_path);
+        }
+
+        // Delete the DB record
+        $media->delete();
+
+        // Return JSON response
+        return response()->json(['success' => true]);
+    } catch (\Exception $e) {
+        return response()->json(['success' => false, 'message' => $e->getMessage()]);
+    }
+}
 
 //     public function deleteTopic($id) {
 //     // post::destroy($id);
@@ -765,7 +867,7 @@ public function deleteTopic($id)
              * ---------------------------------------------------
              */
             $request->validate([
-                'group_name'  => 'required|string|max:255',
+                'group_name'  => ['required', 'string', 'max:255', new NoHtmlOrScript()],
                 'mentees'     => 'required|array',
                 'grp_image'   => 'required|image|mimes:jpeg,png,jpg,avif|max:2048',
                 'end_date'    => 'required|date|after_or_equal:today',
