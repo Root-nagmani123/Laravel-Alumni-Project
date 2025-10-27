@@ -113,8 +113,8 @@ public function showById_data(Request $request, $id): View
     if ($request->hasFile('profile_pic')) {
         $file = $request->file('profile_pic');
 
-        // Store file in storage/app/public/profile_pic and get the path
-        $path = $file->store('profile_pic', 'public'); // saved as storage/app/public/profile_pic/xxxx.jpg
+        // Store file in storage/app/private/profile_pic and get the path
+        $path = $file->store('profile_pic', 'private'); // saved as storage/app/private/profile_pic/xxxx.jpg
 
         $user->profile_pic = $path;
     }

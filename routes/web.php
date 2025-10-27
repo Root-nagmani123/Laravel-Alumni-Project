@@ -39,6 +39,7 @@ Route::resource('post', PostController::class);
 use App\Http\Controllers\User\CommentController;
 use App\Http\Controllers\User\StoryController;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
 
 
 
@@ -580,3 +581,8 @@ Route::post('/admin/feed/view', [App\Http\Controllers\Admin\FeedController::clas
 Route::middleware('auth:admin')->group(function () {
     Route::get('/admin/feed', [App\Http\Controllers\Admin\FeedController::class, 'index'])->name('admin.feeds.index');
 });
+
+Route::get('/profile-pic/{path}', [App\Http\Controllers\FileController::class, 'show'])
+    ->where('path', '.*')  
+    ->middleware('auth:user')   
+    ->name('profile.pic');
