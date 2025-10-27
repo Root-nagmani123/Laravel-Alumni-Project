@@ -49,7 +49,7 @@
                                                 <form action="{{ url('admin/authlogin') }}" method="post" id="loginForm">
                                                     {{-- CSRF Token --}}
                                                     @csrf
-
+<input type="hidden" id="check_data" name="check_data" value="{{ $passwordSaltToken }}">
                                                     {{-- Email Field --}}
                                                     <div class="mb-3">
                                                         <label for="exampleInputEmail1" class="form-label">Email
@@ -82,11 +82,8 @@
                                                                 style="cursor: pointer;">
                                                                 👁️
                                                             </span>
-                                                            @php
-                                                            $ts = now()->addSeconds(30)->timestamp;
-                                                            @endphp
-                                                            <input type="hidden"  id="password"  name="password_salt" value="{{ Crypt::encryptString((string) $ts) }}">
-                                                        </div>
+                                                             
+                                                         </div>
                                                         @error('password')
                                                         <div class="invalid-feedback">
                                                             {{ $message }}

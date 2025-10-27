@@ -8,7 +8,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Crypt;
-use LdapRecord\Container;
+use App\Models\Member;
+
 use LdapRecord\Models\ActiveDirectory\User as LdapUser;
 use App\Services\AuditService;
 
@@ -21,8 +22,14 @@ class AuthController extends Controller
         if (Auth::guard('user')->check()) {
             return redirect()->route('user.feed');
         }
+    $services = Member::selectRaw('DISTINCT(TRIM(UPPER(Service))) as Service')
+    ->whereNotNull('Service')
+    ->orderBy('Service', 'asc')
+    ->pluck('Service');
+
+
        /*  return redirect()->route('user.feed1'); */
-		 return view('user.auth.login');
+		 return view('user.auth.login', compact('services'));
     }
     function showLoginForm_ldap(){
         return view('user.auth.login_ldap');
