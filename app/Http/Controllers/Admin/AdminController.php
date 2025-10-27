@@ -117,28 +117,29 @@ public function loginAuth(Request $request)
         'isAdmin' => 1,
     ];
 
-     $allowedRedirects = [
-        'dashboard' => route('dashboard'),
-    ];
+    $allowedRedirects = [
+    'dashboard' => route('dashboard'),
+];
 
-    $target = $request->input('redirect'); // query param like ?redirect=dashboard
+$target = $request->input('redirect'); // query param like ?redirect=dashboard
 
-    if ($target && array_key_exists($target, $allowedRedirects)) {
-        return redirect($allowedRedirects[$target]);
+if ($target && array_key_exists($target, $allowedRedirects)) {
+    return redirect($allowedRedirects[$target]);
+}
+$url = $request->input('redirect');
+
+    // External whitelist
+    $trustedHosts = ['alumni.lbsnaa.gov.in', 'http://127.0.0.1:9000'];
+    $host = parse_url($url, PHP_URL_HOST);
+
+    if ($host && in_array($host, $trustedHosts)) {
+        return redirect($url); // safe external redirect
     }
-     $url = $request->input('redirect');
+    $Referer = $request->headers->get('Referer');
+    if ($Referer && !in_array(parse_url($Referer, PHP_URL_HOST), $trustedHosts)) {
+        return back()->withErrors(['email' => 'Invalid login credentials or unauthorized access.']);
+    }
 
-        // External whitelist
-        $trustedHosts = ['alumni.lbsnaa.gov.in', 'http://127.0.0.1:9000'];
-        $host = parse_url($url, PHP_URL_HOST);
-
-        if ($host && in_array($host, $trustedHosts)) {
-            return redirect($url); // safe external redirect
-        }
-        $Referer = $request->headers->get('Referer');
-        if ($Referer && !in_array(parse_url($Referer, PHP_URL_HOST), $trustedHosts)) {
-            return back()->withErrors(['email' => 'Invalid login credentials or unauthorized access.']);
-        }
 
     // Check if remember checkbox is checked
     $remember = $request->has('remember');

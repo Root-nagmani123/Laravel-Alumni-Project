@@ -136,13 +136,13 @@ Route::prefix('user')->name('user.')->group(function () {
          Route::get('/profile/{name}', [ProfileController::class, 'showByName'])->where('name', '[a-zA-Z\s]+')->name('profile.name');
 
          Route::get('/profile/data/{id}', [ProfileController::class, 'showById_data'])->name('profile.data');
-         Route::put('/profile/update/{id}', [ProfileController::class, 'update'])->name('profile.update');
+         Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
 
-        Route::put('/eduinfo/update/{id}', [ProfileController::class, 'updateEduinfo'])->name('profile.eduinfo');
-        Route::put('/proinfo/update/{id}', [ProfileController::class, 'updateProinfo'])->name('profile.proinfo');
-        Route::put('/social/update/{id}', [ProfileController::class, 'updateSocial'])->name('profile.social.update');
-        Route::put('/sector_departments/update/{id}', [ProfileController::class, 'updateSectorDepartments'])->name('profile.sector_departments.update');
-        Route::put('/social/update/{id}', [ProfileController::class, 'updateSocial'])->name('profile.social.update');
+        Route::put('/eduinfo/update', [ProfileController::class, 'updateEduinfo'])->name('profile.eduinfo');
+        Route::put('/proinfo/update', [ProfileController::class, 'updateProinfo'])->name('profile.proinfo');
+        Route::put('/social/update', [ProfileController::class, 'updateSocial'])->name('profile.social.update');
+        Route::put('/sector_departments/update', [ProfileController::class, 'updateSectorDepartments'])->name('profile.sector_departments.update');
+        Route::put('/social/update', [ProfileController::class, 'updateSocial'])->name('profile.social.update');
   		Route::post('favorite-user/toggle', [ProfileController::class, 'toggleFavorite'])->name('favorite.user.toggle');
         Route::get('directory', [DashboardController::class, 'directory'])->name('directory');
        //Route::post('/feed/search', [FeedController::class, 'search'])->name('feed.search');
