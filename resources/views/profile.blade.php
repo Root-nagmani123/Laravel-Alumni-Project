@@ -533,7 +533,7 @@
                                                 <div class="p-3 border rounded bg-light">
                                                     <!-- Professional Information form goes here -->
                                                     <form
-                                                        action="{{ route('user.profile.social.update', ['id' => $user->id]) }}"
+                                                        action="{{ route('user.profile.social.update') }}"
                                                         method="post" id="myForm" enctype="multipart/form-data">
                                                         @csrf
                                                         @method('PUT')

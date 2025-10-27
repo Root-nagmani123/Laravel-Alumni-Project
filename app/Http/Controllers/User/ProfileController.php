@@ -92,7 +92,7 @@ public function showById_data(Request $request, $id): View
         }
 
 
-    public function update(Request $request, $id): RedirectResponse
+    public function update(Request $request): RedirectResponse
 {
     $request->validate([
         'name' => 'required|string|max:255',
@@ -105,7 +105,7 @@ public function showById_data(Request $request, $id): View
         'marital_status' => 'required|in:single,married,divorced',
     ]);
 
-    $user = member::findOrFail($id);
+    $user = member::findOrFail(Auth::guard('user')->id());
 
     $user->fill($request->except(['profile_pic']));
 
@@ -129,7 +129,7 @@ public function showById_data(Request $request, $id): View
     ]);
 }
 
-    public function updateEduinfo(Request $request, $id): RedirectResponse
+    public function updateEduinfo(Request $request): RedirectResponse
     {
         $currentYear = date('Y');
 
@@ -144,7 +144,7 @@ public function showById_data(Request $request, $id): View
         'postgrad_year'      => "nullable|integer|min:1900|max:$currentYear",
     ]);
 
-        $user = Member::findOrFail($id);
+        $user = Member::findOrFail(Auth::guard('user')->id());
 
         // Update user fields
         $user->fill($validatedData);
@@ -153,7 +153,7 @@ public function showById_data(Request $request, $id): View
         return redirect()->back()->with('success', 'Educational info updated successfully.');
     }
 
-    public function updateProinfo(Request $request, $id): RedirectResponse
+    public function updateProinfo(Request $request): RedirectResponse
     {
         $currentYear = date('Y');
 
@@ -166,7 +166,7 @@ public function showById_data(Request $request, $id): View
 
     ]);
 
-        $user = Member::findOrFail($id);
+        $user = Member::findOrFail(Auth::guard('user')->id());
 
         // Update user fields
         $user->fill($validatedData);
@@ -197,7 +197,7 @@ public function showById_data(Request $request, $id): View
 
         return Redirect::to('/');
     }
-    public function updateSocial(Request $request, $id)
+    public function updateSocial(Request $request)
     {
         // print_r($request->all());
         // dd($request->all());
@@ -209,7 +209,7 @@ public function showById_data(Request $request, $id): View
             'ehrms' => 'nullable|url|max:255',
         ]);
 
-        $user = Member::findOrFail($id);
+        $user = Member::findOrFail(Auth::guard('user')->id());
         $user->facebook = $request->facebook;
         $user->instagram = $request->instagram;
         $user->linkedin = $request->linkedin;
@@ -261,7 +261,7 @@ function searchFavMembers(Request $request) {
 
     return response()->json($favorites);
 }
-function updateSectorDepartments(Request $request, $id){
+function updateSectorDepartments(Request $request){
     $request->validate([
         'sectors' => 'nullable|array',
        
@@ -269,7 +269,7 @@ function updateSectorDepartments(Request $request, $id){
     $sectors = $request->input('sectors', []);
     // $sectors should be an array of ['name' => ..., 'departments' => [...]]
     UserSectordepartment::updateOrCreate(
-        ['user_id' => $id],
+        ['user_id' => Auth::guard('user')->id()],
         ['sector_departments' => json_encode($sectors)]
     );
 
