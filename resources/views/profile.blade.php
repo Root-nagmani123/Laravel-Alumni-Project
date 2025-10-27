@@ -837,7 +837,7 @@
                                     <div class="avatar avatar-xs me-2">
                                         <a href="{{ route('user.profile.data', ['id' => Crypt::encrypt($user->id)]) }}">
                                             <img class="avatar-img rounded-circle"
-                                                src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}"
+                                                src="{{ $user->profile_pic ? route('profile.pic', $user->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}"
                                                 alt="" loading="lazy" decoding="async">
                                         </a>
                                     </div>
@@ -899,7 +899,7 @@
                                             $member = $post->member ?? null;
 
                                             $profileImage = $member && $member->profile_pic
-                                            ? asset('storage/' . $member->profile_pic)
+                                            ? route('profile.pic', $member->profile_pic)
                                             : asset('feed_assets/images/avatar/07.jpg');
 
                                             $displayName = $member->name ?? 'N/A';

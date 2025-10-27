@@ -139,14 +139,30 @@
 
             <div class="card mb-4">
                 @php
+                // Old code
+                // $defaultImage = asset('feed_assets/images/avatar/07.jpg');
+                // $profileImage = $defaultImage;
+
+                // if ($post->member && $post->member->profile_pic) {
+                // $profilePicPath = public_path('storage/private/' . $post->member->profile_pic);
+                // if (file_exists($profilePicPath)) {
+                // // $profileImage = asset('storage/' . $post->member->profile_pic);
+                // $profileImage = route('profile.pic', $post->member->profile_pic);
+                // }
+                // }
+
+                // New code
                 $defaultImage = asset('feed_assets/images/avatar/07.jpg');
                 $profileImage = $defaultImage;
 
-                if ($post->member && $post->member->profile_pic) {
-                $profilePicPath = public_path('storage/' . $post->member->profile_pic);
-                if (file_exists($profilePicPath)) {
-                $profileImage = asset('storage/' . $post->member->profile_pic);
-                }
+                if (!empty($post->member?->profile_pic)) {
+                    $profilePicPath = storage_path('app/private/' . $post->member->profile_pic);
+
+                    // Use storage_path for private files
+                    if (file_exists($profilePicPath)) {
+                        // Secure route to access private image
+                        $profileImage = route('profile.pic', $post->member->profile_pic);
+                    }
                 }
                 @endphp
 
