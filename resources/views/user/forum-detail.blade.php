@@ -232,8 +232,8 @@
                                 if (/^https?:\/\//i.test(profile)) {
                                     imgSrc = profile;
                                 } else {
-                                    const cleanFile = encodeURIComponent(profile);
-                                    imgSrc = profilePicRoute.replace(':filename', cleanFile);
+                                    // const cleanFile = encodeURIComponent(profile);
+                                    imgSrc = profilePicRoute.replace(':filename', profile);
                                 }
                                 item.innerHTML = `
                                 <img src="${imgSrc}" class="rounded-circle" alt="User" style="width:40px; height:40px; object-fit:cover;">
