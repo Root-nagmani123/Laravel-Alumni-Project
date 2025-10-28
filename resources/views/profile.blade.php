@@ -1201,7 +1201,7 @@
                                             <a
                                                 href="{{ route('user.profile.data', ['id' => Crypt::encrypt(auth()->guard('user')->id())]) }}">
                                                 <img class="avatar-img rounded-circle" src="{{ auth()->guard('user')->user()->profile_pic
-                                ? asset('storage/' . auth()->guard('user')->user()->profile_pic)
+                                ? route('profile.pic', auth()->guard('user')->user()->profile_pic)
                                 : asset('feed_assets/images/avatar/07.jpg') }}"
                                                     alt="{{ auth()->guard('user')->user()->name ?? 'User' }}"
                                                     loading="lazy" decoding="async">
