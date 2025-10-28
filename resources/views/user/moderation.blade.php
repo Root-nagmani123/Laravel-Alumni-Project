@@ -126,7 +126,8 @@
                                                         data-content="{{ $post->content }}"
                                                         data-author="{{ $post->member->name ?? 'Unknown' }}"
                                                         data-post-type="{{ $post->group_id ? 'Group Post' : 'Normal Post' }}"
-                                                        data-date="{{ $post->created_at->format('d M Y, H:i A') }}">
+                                                        data-date="{{ $post->created_at->format('d M Y, H:i A') }}"
+                                                        data-id="{{ $post->id }}">
                                                         <i class="fa-solid fa-eye me-2"></i>View
                                                     </button>
                                                 </li>
@@ -182,166 +183,105 @@
                 </div>
 
 
-                <div class="modal fade" id="viewPostModal" tabindex="-1" aria-labelledby="viewPostModalLabel"
-                    aria-hidden="true">
-                    <div class="modal-dialog modal-lg modal-dialog-centered">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="viewPostModalLabel">Post Details</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                    aria-label="Close"></button>
+              <div class="modal fade" id="userConfirmModal" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content border-0 shadow-sm">
+                            <div class="modal-header bg-light">
+                                <h5 class="modal-title" id="userConfirmTitle">Confirm Action</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                             </div>
-                            <div class="modal-body">
-                                <h4 id="modalPostTitle" class="mb-3"></h4>
-                                <div class="d-flex text-muted mb-3 gap-4">
-                                    <span><i class="fa-solid fa-user me-1"></i> <strong
-                                            id="modalPostAuthor"></strong></span>
-                                    <span><i class="fa-solid fa-tag me-1"></i> <span id="modalPostType"></span></span>
-                                    <span><i class="fa-solid fa-calendar-alt me-1"></i> <span
-                                            id="modalPostDate"></span></span>
-                                </div>
-                                <hr>
-                                <p id="modalPostContent" style="white-space: pre-wrap;"></p>
-                            </div>
+                            <div class="modal-body" id="userConfirmBody">Are you sure you want to proceed?</div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-outline-secondary"
+                                    data-bs-dismiss="modal">Cancel</button>
+                                <button id="userConfirmYes" type="button" class="btn btn-primary">
+                                    <i class="bi bi-check2-circle me-1"></i> Yes, Confirm
+                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Confirm Modal -->
-            <div class="modal fade" id="userConfirmModal" tabindex="-1" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content border-0 shadow-sm">
-                        <div class="modal-header bg-light">
-                            <h5 class="modal-title" id="userConfirmTitle">Confirm Action</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                        </div>
-                        <div class="modal-body" id="userConfirmBody">Are you sure you want to proceed?</div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-outline-secondary"
-                                data-bs-dismiss="modal">Cancel</button>
-                            <button id="userConfirmYes" type="button" class="btn btn-primary">
-                                <i class="bi bi-check2-circle me-1"></i> Yes, Confirm
-                            </button>
+                <!-- View Post Modal -->
+                <div class="modal fade" id="viewPostModal" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-lg modal-dialog-centered">
+                        <div class="modal-content border-0 shadow-sm">
+                            <div class="modal-header bg-light">
+                                <h5 class="modal-title">Post Preview</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body" id="postContent">
+                                <!-- Post content injected dynamically -->
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- View Post Modal -->
-            <div class="modal fade" id="viewPostModal" tabindex="-1" aria-hidden="true">
-                <div class="modal-dialog modal-lg modal-dialog-centered">
-                    <div class="modal-content border-0 shadow-sm">
-                        <div class="modal-header bg-light">
-                            <h5 class="modal-title">Post Preview</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                        </div>
-                        <div class="modal-body" id="viewPostBody">
-                            <!-- Post content injected dynamically -->
+                <!-- Toast Container -->
+                <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1080">
+                    <div id="userToast" class="toast align-items-center border-0 shadow-sm" role="status" aria-live="polite"
+                        aria-atomic="true">
+                        <div class="d-flex">
+                            <div class="toast-body" id="userToastBody">
+                                ✅ Action performed successfully
+                            </div>
+                            <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast"></button>
                         </div>
                     </div>
                 </div>
+
             </div>
 
-            <!-- Toast Container -->
-            <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1080">
-                <div id="userToast" class="toast align-items-center border-0 shadow-sm" role="status" aria-live="polite"
-                    aria-atomic="true">
-                    <div class="d-flex">
-                        <div class="toast-body" id="userToastBody">
-                            ✅ Action performed successfully
-                        </div>
-                        <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast"></button>
-                    </div>
-                </div>
-            </div>
+
 
         </div>
 
-
-
     </div>
+    @section('scripts')
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const postModal = document.getElementById("postModal");
 
-</div>
-@section('scripts')
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-    const postModal = document.getElementById("postModal");
+            postModal.addEventListener("show.bs.modal", function (event) {
+                const button = event.relatedTarget; // Button that triggered the modal
 
-    postModal.addEventListener("show.bs.modal", function(event) {
-        const button = event.relatedTarget; // Button that triggered the modal
+                const title = button.getAttribute("data-title");
+                const content = button.getAttribute("data-content");
 
-        const title = button.getAttribute("data-title");
-        const content = button.getAttribute("data-content");
-
-        // Update modal content
-        postModal.querySelector("#postTitle").textContent = title;
-        postModal.querySelector("#postContent").textContent = content;
-    });
-});
-</script>
-
-<script>
-$(document).ready(function() {
-    $('.btn-view').on('click', function() {
-        const postId = $(this).data('id');
-
-        if (!postId) {
-            $('#postContent').text('Post ID not found.');
-            return;
-        }
-        $.ajax({
-            url: '{{ route("admin.feeds.view") }}',
-            method: 'POST',
-            data: {
-                _token: '{{ csrf_token() }}',
-                post_id: postId
-            },
-            success: function(response) {
-                $('#postContent').html(response.html || 'No content available.');
-            },
-            error: function() {
-                $('#postContent').text('Failed to load post details.');
-            }
+                // Update modal content
+                postModal.querySelector("#postTitle").textContent = title;
+                postModal.querySelector("#postContent").textContent = content;
+            });
         });
-    });
-});
-</script>
-@push('scripts')
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const viewPostModal = document.getElementById('viewPostModal');
-    if (viewPostModal) {
-        viewPostModal.addEventListener('show.bs.modal', function(event) {
-            // Button that triggered the modal
-            const button = event.relatedTarget;
+    </script>
 
-            // Extract info from data-* attributes
-            const title = button.getAttribute('data-title');
-            const content = button.getAttribute('data-content');
-            const author = button.getAttribute('data-author');
-            const postType = button.getAttribute('data-post-type');
-            const date = button.getAttribute('data-date');
+    <script>
 
-            // Update the modal's content.
-            const modalTitle = viewPostModal.querySelector('#modalPostTitle');
-            const modalContent = viewPostModal.querySelector('#modalPostContent');
-            const modalAuthor = viewPostModal.querySelector('#modalPostAuthor');
-            const modalPostType = viewPostModal.querySelector('#modalPostType');
-            const modalDate = viewPostModal.querySelector('#modalPostDate');
-
-            modalTitle.textContent = title;
-            modalContent.textContent = content;
-            modalAuthor.textContent = author;
-            modalPostType.textContent = postType;
-            modalDate.textContent = date;
+        $(document).ready(function() {
+            $('.btn-view').on('click', function() {
+                const postId = $(this).data('id');
+                $('#postContent').html('');
+                if (!postId) {
+                    $('#postContent').text('Post ID not found.');
+                    return;
+                }
+                $.ajax({
+                    url: '{{ route("admin.feeds.view") }}',
+                    method: 'POST',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        post_id: postId
+                    },
+                    success: function(response) {
+                        console.log(response);
+                        $('#postContent').html(response.html || 'No content available.');
+                    },
+                    error: function() {
+                        $('#postContent').text('Failed to load post details.');
+                    }
+                });
+            });
         });
-    }
-});
-</script>
-@endpush
-@endsection
+    </script>
+    @endsection
 @endsection

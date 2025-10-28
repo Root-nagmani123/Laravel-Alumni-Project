@@ -26,77 +26,86 @@
         <div class="card-body">
             <h4 class="card-title mb-3">Grievance List</h4>
             <div class="table-responsive">
-                <table class="table table-bordered align-middle text-nowrap" id="grievanceTable">
-                    <thead>
-                        <tr>
-                            <th class="col">#</th>
-                            <th class="col">Type</th>
-                            <th class="col">Subject</th>
-                            <th class="col">Name</th>
-                            <th class="col">Email</th>
-                            <th class="col">Message</th>
-                            <th class="col">Attachment</th>
-                            <th class="col">Status</th>
-                            <th class="col">Submitted By</th>
-                            <th class="col">Date</th>
-                            <th class="col" width="30%">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse($grievances as $index => $grievance)
-                        <tr>
-                            <td>{{ $index + 1 }}</td>
-                            <td><span class="badge bg-info">{{ ucfirst($grievance->type) }}</span></td>
-                            <td>{{ $grievance->subject }}</td>
-                            <td>{{ $grievance->name }}</td>
-                            <td>{{ $grievance->email }}</td>
-                            <td>{{ Str::limit($grievance->message, 100) }}</td>
-                            <td>
-                                @if($grievance->attachment)
-                                    <a href="{{ asset('storage/' . $grievance->attachment) }}" target="_blank">View Attachment</a>
-                                @else
-                                    N/A
-                                @endif
-                            </td>
-                            <td>
-                                 <!-- Current status badge -->
-                                @php
-                                    $statusClasses = [
-                                        1 => 'bg-warning text-dark',
-                                        2 => 'bg-primary text-white',
-                                        3 => 'bg-success text-white',
-                                    ];
-                                    $statusTexts = [
-                                        1 => 'Pending',
-                                        2 => 'In Progress',
-                                        3 => 'Resolved',
-                                    ];
-                                @endphp
-
-                                <span class="badge {{ $statusClasses[$grievance->status] }}">
-                                    {{ $statusTexts[$grievance->status] }}
-                                </span>
-                            </td>
-                            <td>{{ optional($grievance->member)->name }}</td>
-                            <td>{{ \Carbon\Carbon::parse($grievance->created_at)->format('d-m-Y') }}</td>
-                            <td width="30%">
-                                <form action="{{ route('grievances.updateStatus', $grievance->id) }}" method="POST">
-                                    @csrf
-                                    <select name="status" class="form-select form-select-sm" onchange="this.form.submit()">
+                <table class="table align-middle table-hover mb-0 text-nowrap" id="grievanceTable">
+                <thead class="bg-primary text-white">
+                    <tr>
+                        <th scope="col" class="text-center">#</th>
+                        <th scope="col">Type</th>
+                        <th scope="col">Subject</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Message</th>
+                        <th scope="col">Attachment</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Submitted By</th>
+                        <th scope="col">Date</th>
+                        <th scope="col" class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($grievances as $index => $grievance)
+                    <tr>
+                        <td class="text-center">{{ $index + 1 }}</td>
+                        <td><span class="badge bg-info-subtle text-info fw-semibold">{{ ucfirst($grievance->type) }}</span></td>
+                        <td class="fw-semibold">{{ $grievance->subject }}</td>
+                        <td>{{ $grievance->name }}</td>
+                        <td>
+                            <a href="mailto:{{ $grievance->email }}" class="text-decoration-none text-primary">{{ $grievance->email }}</a>
+                        </td>
+                        <td>
+                            <span title="{{ $grievance->message }}">{{ Str::limit($grievance->message, 80) }}</span>
+                        </td>
+                        <td>
+                            @if($grievance->attachment)
+                                <a href="{{ asset('storage/' . $grievance->attachment) }}" target="_blank" class="btn btn-sm btn-outline-secondary">
+                                    <i class="bi bi-paperclip me-1"></i> View
+                                </a>
+                            @else
+                                <span class="text-muted">N/A</span>
+                            @endif
+                        </td>
+                        <td>
+                            @php
+                                $statusClasses = [
+                                    1 => 'bg-warning text-dark',
+                                    2 => 'bg-primary text-white',
+                                    3 => 'bg-success text-white',
+                                ];
+                                $statusTexts = [
+                                    1 => 'Pending',
+                                    2 => 'In Progress',
+                                    3 => 'Resolved',
+                                ];
+                            @endphp
+                            <span class="badge rounded-pill px-3 py-2 {{ $statusClasses[$grievance->status] }}">
+                                {{ $statusTexts[$grievance->status] }}
+                            </span>
+                        </td>
+                        <td>{{ optional($grievance->member)->name ?? '—' }}</td>
+                        <td>{{ \Carbon\Carbon::parse($grievance->created_at)->format('d M Y') }}</td>
+                        <td class="text-center">
+                            <form action="{{ route('grievances.updateStatus', $grievance->id) }}" method="POST" class="d-inline">
+                                @csrf
+                                <div class="d-flex align-items-center justify-content-center gap-2">
+                                    <select name="status" class="form-select form-select-sm w-auto" aria-label="Select status" onchange="this.form.submit()">
                                         <option value="1" {{ $grievance->status == 1 ? 'selected' : '' }}>Pending</option>
                                         <option value="2" {{ $grievance->status == 2 ? 'selected' : '' }}>In Progress</option>
-                                    <option value="3" {{ $grievance->status == 3 ? 'selected' : '' }}>Resolved</option>
-                                </select>
+                                        <option value="3" {{ $grievance->status == 3 ? 'selected' : '' }}>Resolved</option>
+                                    </select>
+                                </div>
                             </form>
-                            </td>
-                        </tr>
-                        @empty
-                        <tr>
-                            <td colspan="6" class="text-center">No grievance records found.</td>
-                        </tr>
-                        @endforelse
-                    </tbody>
-                </table>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="11" class="text-center text-muted py-4">
+                            <i class="bi bi-inbox fs-3 d-block mb-2"></i>
+                            No grievance records found.
+                        </td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
             </div>
         </div>
     </div>

@@ -46,12 +46,12 @@
                         </div>
                     </div> --}}
                 </div>
-
+<hr class="my-2 mb-3">
                 <form action="{{ route('admin.feeds.index') }}" method="get">
                     
                     {{-- status filter --}}
                     <div class="row mb-3">
-                        <div class="col-md-3">
+                        <div class="col-md-6">
                             <label for="status_filter" class="form-label">Status</label>
                             <select name="status_filter" id="status_filter" class="form-select" onchange="this.form.submit()">
                                 <option value="">All</option>
@@ -61,7 +61,7 @@
                             </select>
                         </div>
                         {{-- filter by post type --}}
-                        <div class="col-md-3">
+                        <div class="col-md-6">
                             <label for="post_type" class="form-label">Post Type</label>
                             <select name="post_type" id="post_type" class="form-select" onchange="this.form.submit()">
                                 <option value="">All</option>
