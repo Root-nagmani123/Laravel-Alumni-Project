@@ -1241,7 +1241,7 @@
                                                     <a
                                                         href="{{ $comment->member ? route('user.profile.data', ['id' => Crypt::encrypt($comment->member->id)]) : '#' }}">
                                                         <img class="avatar-img rounded-circle"
-                                                            src="{{ $comment->member && $comment->member->profile_pic ? asset('storage/' . $comment->member->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}"
+                                                            src="{{ $comment->member && $comment->member->profile_pic ? route('profile.pic', $comment->member->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}"
                                                             alt="" loading="lazy" decoding="async">
                                                     </a>
                                                 </div>
@@ -1295,7 +1295,7 @@
                                                     <a
                                                         href="{{ $comment->member ? route('user.profile.data', ['id' => Crypt::encrypt($comment->member->id)]) : '#' }}">
                                                         <img class="avatar-img rounded-circle"
-                                                            src="{{ $comment->member && $comment->member->profile_pic ? asset('storage/' . $comment->member->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}"
+                                                            src="{{ $comment->member && $comment->member->profile_pic ? route('profile.pic', $comment->member->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}"
                                                             alt="" loading="lazy" decoding="async">
                                                     </a>
                                                 </div>
