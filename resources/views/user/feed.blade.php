@@ -129,4 +129,114 @@
 </div>
 
 <!-- Modal create Feed photo END -->
+ <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const modal = document.getElementById('feedActionPhoto');
+            const form = document.getElementById('feedPhotoForm');
+            const textarea = form.querySelector('textarea[name="modalContent"]');
+            const fileInput = document.getElementById('media');
+            const dropArea = document.getElementById('drop-area');
+            const previewContainer = document.getElementById('preview-feed');
+            const videoLinkInput = form.querySelector('input[name="video_link"]');
+            
+            // Store initial form state for reset
+            const initialFormState = {
+                content: textarea.value,
+                videoLink: videoLinkInput.value,
+                files: []
+            };
+            
+            // File upload functionality
+            dropArea.addEventListener('click', () => fileInput.click());
+            
+            dropArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropArea.classList.add('active');
+            });
+            
+            dropArea.addEventListener('dragleave', () => {
+                dropArea.classList.remove('active');
+            });
+            
+            dropArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropArea.classList.remove('active');
+                if (e.dataTransfer.files.length) {
+                    fileInput.files = e.dataTransfer.files;
+                    handleFiles(e.dataTransfer.files);
+                }
+            });
+            
+            fileInput.addEventListener('change', function() {
+                handleFiles(this.files);
+            });
+            
+            function handleFiles(files) {
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+                    if (!file.type.match('image.*')) continue;
+                    
+                    const reader = new FileReader();
+                    
+                    reader.onload = function(e) {
+                        const previewItem = document.createElement('div');
+                        previewItem.className = 'position-relative';
+                        
+                        const img = document.createElement('img');
+                        img.src = e.target.result;
+                        img.className = 'preview-image';
+                        
+                        const removeBtn = document.createElement('span');
+                        removeBtn.className = 'preview-remove';
+                        removeBtn.innerHTML = '&times;';
+                        removeBtn.onclick = function() {
+                            previewItem.remove();
+                        };
+                        
+                        previewItem.appendChild(img);
+                        previewItem.appendChild(removeBtn);
+                        previewContainer.appendChild(previewItem);
+                    };
+                    
+                    reader.readAsDataURL(file);
+                }
+            }
+            
+            // Reset modal when closed
+            modal.addEventListener('hidden.bs.modal', function() {
+                // Clear textarea
+                textarea.value = '';
+                
+                // Clear file input and previews
+                fileInput.value = '';
+                previewContainer.innerHTML = '';
+                
+                // Clear video link
+                videoLinkInput.value = '';
+                
+                // Remove any validation classes
+                form.classList.remove('was-validated');
+            });
+            
+            // Form submission
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Simple validation
+                if (!textarea.value.trim()) {
+                    alert('Please write something before posting.');
+                    textarea.focus();
+                    return;
+                }
+                
+                // In a real app, you would submit the form here
+                alert('Post submitted successfully!');
+                
+                // Close modal and reset
+                const modalInstance = bootstrap.Modal.getInstance(modal);
+                modalInstance.hide();
+            });
+        });
+    </script>
 @endsection
