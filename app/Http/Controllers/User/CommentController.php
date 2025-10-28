@@ -54,6 +54,37 @@ class CommentController extends Controller
             ]);
         }
 
+        // Parse mentions for AJAX response
+        $parsed_comment = preg_replace_callback(
+            '/@([a-zA-Z0-9_.]+)/',
+            function ($matches) {
+                $username = $matches[1];
+                $user = \App\Models\Member::where('username', $username)->first();
+                if ($user) {
+                    $url = route('user.profile.data', ['id' => Crypt::encrypt($user->id)]);
+                    return "<a href='{$url}' class='mention-badge text-primary fw-semibold text-decoration-none' data-bs-toggle='tooltip' data-bs-placement='top' title='{$user->name} | {$user->designation}'>@{$username}</a>";
+                }
+                return $matches[0];
+            },
+            $comment->comment
+        );
+
+        // Check if request is AJAX
+        if ($request->ajax()) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Comment added successfully!',
+                'comment' => [
+                    'id' => $comment->id,
+                    'comment' => $comment->comment,
+                    'parsed_comment' => $parsed_comment,
+                    'member_name' => $member->name ?? 'Anonymous',
+                    'member_profile_url' => $member ? route('user.profile.data', ['id' => Crypt::encrypt($member->id)]) : '#',
+                    'member_avatar' => $member && $member->profile_pic ? route('profile.pic', $member->profile_pic) : asset('feed_assets/images/avatar/07.jpg'),
+                ]
+            ]);
+        }
+
         // For regular form submission, redirect back with success message
         return back()->with('success', 'Comment added successfully!');
     }
