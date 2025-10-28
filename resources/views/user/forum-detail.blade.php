@@ -71,8 +71,8 @@
                     @foreach($forum->comments as $index => $comment)
                     @php
                     $commentPicPath = $comment->profile_pic
-                        ? (Str::startsWith($comment->profile_pic, 'storage/')
-                            ? asset($comment->profile_pic)
+                        ? (Str::startsWith($comment->profile_pic, 'profile_pic')
+                            ? route('profile.pic', $comment->profile_pic)
                             : asset('storage/' . ltrim($comment->profile_pic, '/')))
 
                         : asset('feed_assets/images/avatar/07.jpg');
@@ -195,6 +195,7 @@
                     const commentsListEl = document.getElementById('commentsList');
                     const updateTpl = commentsListEl?.getAttribute('data-update-url-template') || '';
                     const deleteTpl = commentsListEl?.getAttribute('data-delete-url-template') || '';
+                    const profilePicRoute = "{{ route('profile.pic', ':filename') }}";
                     form?.addEventListener('submit', async function(ev) {
                         ev.preventDefault();
                         const comment = input.value.trim();
@@ -231,9 +232,8 @@
                                 if (/^https?:\/\//i.test(profile)) {
                                     imgSrc = profile;
                                 } else {
-                                    // imgSrc = `{{ asset('storage/') }}` + profile.replace(/^\/+/, '');
-                                    imgSrc = `{{ asset('storage') }}/${profile.replace(/^storage\//, '').replace(/^\/+/, '')}`;
-
+                                    const cleanFile = encodeURIComponent(profile);
+                                    imgSrc = profilePicRoute.replace(':filename', cleanFile);
                                 }
                                 item.innerHTML = `
                                 <img src="${imgSrc}" class="rounded-circle" alt="User" style="width:40px; height:40px; object-fit:cover;">
