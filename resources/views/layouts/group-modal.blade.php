@@ -160,38 +160,69 @@
         </div>
     </div>
 
-    <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        // Target both modal IDs
-        const modals = ['#groupModal', '#addMembersModal'];
+<script>
+document.addEventListener("DOMContentLoaded", function() {
 
-        modals.forEach(modalId => {
-            const modalEl = document.querySelector(modalId);
-            if (modalEl) {
-                modalEl.addEventListener('hidden.bs.modal', function() {
-                    // Reset the form inside modal
-                    const form = modalEl.querySelector('form');
-                    if (form) {
-                        form.reset();
-                    }
+    // 🔹 Group-related modals
+    const groupModals = ['#groupModal', '#addMembersModal', '#editGroupModal'];
 
-                    // Clear select2 or multiple selects if used
-                    $(modalEl).find('select').val(null).trigger('change');
+    groupModals.forEach(modalId => {
+        const modalEl = document.querySelector(modalId);
+        if (modalEl) {
+            modalEl.addEventListener('hidden.bs.modal', function() {
+                const form = modalEl.querySelector('form');
+                if (form) form.reset();
 
-                    // Clear dual list boxes
-                    const available = modalEl.querySelector("#availableMembers");
-                    const selected = modalEl.querySelector("#selectedMembers");
-                    if (selected) selected.innerHTML = "";
+                // Reset select2 fields
+                $(modalEl).find('select').val(null).trigger('change');
 
-                    // Reset preview image
-                    const previewImg = modalEl.querySelector("#preview-image");
-                    if (previewImg) {
-                        previewImg.src = "#";
-                        previewImg.classList.add("d-none");
-                    }
-                });
-            }
+                // Reset dual list boxes
+                const selected = modalEl.querySelector("#selectedMembers");
+                if (selected) selected.innerHTML = "";
+
+                // Reset preview image
+                const previewImg = modalEl.querySelector("#preview-image");
+                if (previewImg) {
+                    previewImg.src = "#";
+                    previewImg.classList.add("d-none");
+                }
+            });
+        }
+    });
+
+
+    // 🔹 Feed / Group Post Modals (Add Post + Group Post)
+    const postModals = ['#feedActionPhoto', '#groupActionpost'];
+
+    postModals.forEach(selector => {
+        const modalEl = document.querySelector(selector);
+        if (!modalEl) return;
+
+        // Reset modal when closed
+        modalEl.addEventListener('hidden.bs.modal', function() {
+            const form = modalEl.querySelector('form');
+            const fileInputs = modalEl.querySelectorAll('input[type="file"]');
+            const previews = modalEl.querySelectorAll('[id^="preview"]');
+            const textareas = modalEl.querySelectorAll('textarea');
+            const videoLinks = modalEl.querySelectorAll('input[name="video_link"]');
+
+            if (form) form.reset();
+            textareas.forEach(t => t.value = '');
+            videoLinks.forEach(v => v.value = '');
+            fileInputs.forEach(f => f.value = '');
+            previews.forEach(p => p.innerHTML = '');
         });
+
+        // Auto-close after submit (only for non-reloading pages)
+        const form = modalEl.querySelector('form');
+        if (form) {
+            form.addEventListener('submit', function() {
+                setTimeout(() => {
+                    const bsModal = bootstrap.Modal.getInstance(modalEl);
+                    if (bsModal) bsModal.hide();
+                }, 800);
+            });
+        }
     });
 
 });
