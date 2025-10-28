@@ -62,22 +62,24 @@ class CommentController extends Controller
             $comment->comment
         );
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Comment added successfully!',
-            'comment' => [
-                'id' => $comment->id,
-                'comment' => $comment->comment,
-                'parsed_comment' => $parsed_comment, // <-- Add this line
-                'member_name' => $member->name ?? 'Anonymous',
-                'member_profile_url' => $member ? route('user.profile.data', ['id' => Crypt::encrypt($member->id)]) : '#',
-                'member_avatar' => $member && $member->profile_pic ? route('profile.pic', $member->profile_pic) : asset('feed_assets/images/avatar/07.jpg'),
-            ]
-        ]);
+        // Check if request is AJAX
+        if ($request->ajax()) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Comment added successfully!',
+                'comment' => [
+                    'id' => $comment->id,
+                    'comment' => $comment->comment,
+                    'parsed_comment' => $parsed_comment,
+                    'member_name' => $member->name ?? 'Anonymous',
+                    'member_profile_url' => $member ? route('user.profile.data', ['id' => Crypt::encrypt($member->id)]) : '#',
+                    'member_avatar' => $member && $member->profile_pic ? route('profile.pic', $member->profile_pic) : asset('feed_assets/images/avatar/07.jpg'),
+                ]
+            ]);
+        }
 
-
-    return back();
-   // return back()->with('success', 'Commentss added successfully!');
+        // For regular form submission, redirect back with success message
+        return back()->with('success', 'Comment added successfully!');
     }
 
    public function update(Request $request, $id)

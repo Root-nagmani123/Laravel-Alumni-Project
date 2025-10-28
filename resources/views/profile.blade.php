@@ -2303,4 +2303,86 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 </script>
+
+<script>
+// Comment form submission handler for profile page
+document.addEventListener('DOMContentLoaded', function() {
+    // Handle comment form submissions
+    document.querySelectorAll('form[id^="commentForm-"]').forEach(function(form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(form);
+            const postId = form.dataset.postId;
+            const textarea = form.querySelector('textarea[name="comment"]');
+            const commentText = textarea.value.trim();
+            
+            if (!commentText) {
+                alert('Please enter a comment.');
+                textarea.focus();
+                return;
+            }
+            
+            // Show loading state
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalContent = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="spinner-border spinner-border-sm"></i>';
+            submitBtn.disabled = true;
+            
+            fetch(form.action, {
+                method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRF-TOKEN': formData.get('_token')
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    // Clear the textarea
+                    textarea.value = '';
+                    
+                    // Show success message
+                    const successToast = document.createElement('div');
+                    successToast.className = 'position-fixed top-0 end-0 p-3';
+                    successToast.style.zIndex = '1100';
+                    successToast.innerHTML = `
+                        <div class="toast align-items-center text-bg-success border-0 show" role="alert">
+                            <div class="d-flex">
+                                <div class="toast-body">${data.message}</div>
+                                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                            </div>
+                        </div>
+                    `;
+                    document.body.appendChild(successToast);
+                    
+                    // Auto-remove toast after 3 seconds
+                    setTimeout(() => {
+                        if (successToast.parentNode) {
+                            successToast.parentNode.removeChild(successToast);
+                        }
+                    }, 3000);
+                    
+                    // Reload the page to show the new comment
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
+                } else {
+                    alert('Error: ' + (data.message || 'Failed to add comment'));
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while adding the comment.');
+            })
+            .finally(() => {
+                // Restore button state
+                submitBtn.innerHTML = originalContent;
+                submitBtn.disabled = false;
+            });
+        });
+    });
+});
+</script>
 @endsection
