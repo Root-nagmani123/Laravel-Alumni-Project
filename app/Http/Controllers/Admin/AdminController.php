@@ -117,28 +117,51 @@ public function loginAuth(Request $request)
         'isAdmin' => 1,
     ];
 
-     $allowedRedirects = [
-        'dashboard' => route('dashboard'),
-    ];
+    $allowedRedirects = [
+    'dashboard' => route('dashboard'),
+];
 
-    $target = $request->input('redirect'); // query param like ?redirect=dashboard
+$target = $request->input('redirect'); // query param like ?redirect=dashboard
 
-    if ($target && array_key_exists($target, $allowedRedirects)) {
-        return redirect($allowedRedirects[$target]);
+if ($target && array_key_exists($target, $allowedRedirects)) {
+    return redirect($allowedRedirects[$target]);
+}
+$url = $request->input('redirect');
+
+if ($url) {
+    $parsedHost = parse_url($url, PHP_URL_HOST);
+
+    // Allow only internal relative URLs OR exact trusted hosts
+    $allowedHosts = ['alumni.lbsnaa.gov.in', '127.0.0.1', '52.140.75.46', 'localhost'];
+
+    if ($parsedHost && !in_array($parsedHost, $allowedHosts)) {
+        abort(403, 'Unauthorized redirect');
     }
-     $url = $request->input('redirect');
 
-        // External whitelist
-        $trustedHosts = ['alumni.lbsnaa.gov.in', 'http://127.0.0.1:9000'];
-        $host = parse_url($url, PHP_URL_HOST);
+    if (!$parsedHost && str_starts_with($url, '/')) {
+        return redirect($url); // internal relative redirect is safe
+    }
+}
+$redirectUrl = $request->input('url') ?? $request->input('redirect_to') ?? $request->input('redirect');
 
-        if ($host && in_array($host, $trustedHosts)) {
-            return redirect($url); // safe external redirect
-        }
-        $Referer = $request->headers->get('Referer');
-        if ($Referer && !in_array(parse_url($Referer, PHP_URL_HOST), $trustedHosts)) {
-            return back()->withErrors(['email' => 'Invalid login credentials or unauthorized access.']);
-        }
+if ($redirectUrl) {
+    $decodedUrl = urldecode($redirectUrl);
+    $host = parse_url($decodedUrl, PHP_URL_HOST);
+
+    $allowedHosts = ['alumni.lbsnaa.gov.in', '52.140.75.46', '127.0.0.1', 'localhost'];
+
+    if ($host && !in_array($host, $allowedHosts, true)) {
+        abort(403, 'Unauthorized redirect target');
+    }
+
+    // Block URLs starting with //
+    if (preg_match('/^\/\//', $decodedUrl)) {
+        abort(403, 'Unauthorized redirect target');
+    }
+}
+
+
+
 
     // Check if remember checkbox is checked
     $remember = $request->has('remember');

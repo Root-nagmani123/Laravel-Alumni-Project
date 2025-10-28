@@ -362,7 +362,8 @@
                         <img class="avatar-img rounded-circle lazyload"
                             src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' fill='%23ddd'/%3E%3C/svg%3E" 
                             data-src="{{ auth()->guard('user')->user()->profile_pic
-                                    ? asset('storage/' . auth()->guard('user')->user()->profile_pic)
+                                    // ? asset('storage/' . auth()->guard('user')->user()->profile_pic)
+                                    ? route('profile.pic', auth()->guard('user')->user()->profile_pic)
                                     : asset('feed_assets/images/avatar/07.jpg') }}"
                             alt="{{ auth()->guard('user')->user()->name ?? 'User' }}"
                             width="40" height="40">
@@ -427,7 +428,7 @@
                             <a href="{{ $comment->member ? route('user.profile.data', ['id' => Crypt::encrypt($comment->member->id)]) : '#' }}">
                                 <img class="avatar-img rounded-circle lazyload"
                                      src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' fill='%23ddd'/%3E%3C/svg%3E" 
-                                     data-src="{{ $comment->member && $comment->member->profile_pic ? asset('storage/' . $comment->member->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}"
+                                     data-src="{{ $comment->member && $comment->member->profile_pic ?  route('profile.pic', $comment->member->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}"
                                      alt="" width="40" height="40">
                             </a>
                         </div>

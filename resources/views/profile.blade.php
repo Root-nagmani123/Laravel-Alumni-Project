@@ -113,7 +113,7 @@
                                                 <div class="p-3 border rounded bg-light">
                                                     <!-- Personal Information form goes here -->
                                                     <form
-                                                        action="{{ route('user.profile.update', ['id' => $user->id]) }}"
+                                                        action="{{ route('user.profile.update') }}"
                                                         method="post" id="myForm" enctype="multipart/form-data">
                                                         @csrf
                                                         @method('PUT')
@@ -277,7 +277,7 @@
                                                                     <div class="mt-2">
                                                                         @if($user->profile_pic)
                                                                         <img id="previewImageEdit"
-                                                                            src="{{ asset('storage/' . $user->profile_pic) }}"
+                                                                            src="{{ route('profile.pic', $user->profile_pic) }}"
                                                                             alt="Profile Picture"
                                                                             style="max-width: 150px;">
                                                                         @endif
@@ -298,7 +298,7 @@
                                                 <div class="p-3 border rounded bg-light">
                                                     <!-- Educational Background form goes here -->
                                                     <form
-                                                        action="{{ route('user.profile.eduinfo', ['id' => $user->id]) }}"
+                                                        action="{{ route('user.profile.eduinfo') }}"
                                                         method="post" id="myForm" enctype="multipart/form-data">
                                                         @csrf
                                                         @method('PUT')
@@ -433,7 +433,7 @@
                                                 <div class="p-3 border rounded bg-light">
                                                     <!-- Professional Information form goes here -->
                                                     <form
-                                                        action="{{ route('user.profile.proinfo', ['id' => $user->id]) }}"
+                                                        action="{{ route('user.profile.proinfo') }}"
                                                         method="post" id="myForm" enctype="multipart/form-data">
                                                         @csrf
                                                         @method('PUT')
@@ -533,7 +533,7 @@
                                                 <div class="p-3 border rounded bg-light">
                                                     <!-- Professional Information form goes here -->
                                                     <form
-                                                        action="{{ route('user.profile.social.update', ['id' => $user->id]) }}"
+                                                        action="{{ route('user.profile.social.update') }}"
                                                         method="post" id="myForm" enctype="multipart/form-data">
                                                         @csrf
                                                         @method('PUT')
@@ -608,7 +608,7 @@
 
                                             <div class="tab-pane fade" id="sector-ministries" role="tabpanel">
                                                 <form
-                                                    action="{{ route('user.profile.sector_departments.update', ['id' => $user->id]) }}"
+                                                    action="{{ route('user.profile.sector_departments.update') }}"
                                                     method="post" id="myForm">
                                                     @csrf
                                                     @method('PUT')
@@ -2183,7 +2183,7 @@ function saveEditedComment(id) {
         .then(res => res.json())
         .then(data => {
             if (data.success) {
-                document.getElementById(`comment-text-${id}`).innerHTML = newComment;
+                document.getElementById(`comment-text-${id}`).textContent = data.comment || newComment;
             } else {
                 alert(data.message || 'Failed to update comment');
             }

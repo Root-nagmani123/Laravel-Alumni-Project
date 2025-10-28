@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\DB; // For database operations
 use App\Models\member;
 use App\Models\UserSectordepartment;
 use Illuminate\Support\Facades\Crypt; // For encrypting and decrypting IDs
+use App\Rules\NoHtmlOrScript;
 
 
 class ProfileController extends Controller
@@ -92,20 +93,20 @@ public function showById_data(Request $request, $id): View
         }
 
 
-    public function update(Request $request, $id): RedirectResponse
+    public function update(Request $request): RedirectResponse
 {
     $request->validate([
-        'name' => 'required|string|max:255',
+        'name' => ['required', 'string', 'max:255', new NoHtmlOrScript()],
         'date_of_birth' => 'required|date',
-        'place_of_birth' => 'required|string',
+        'place_of_birth' => ['required', 'string', new NoHtmlOrScript()],
         'gender' => 'required|in:male,female,other',
         'mobile' => 'required|digits:10',
-        'address' => 'required|string',
-        'bio' => 'required|string',
+        'address' => ['required', 'string', new NoHtmlOrScript()],
+        'bio' => ['required', 'string', new NoHtmlOrScript()],
         'marital_status' => 'required|in:single,married,divorced',
     ]);
 
-    $user = member::findOrFail($id);
+    $user = member::findOrFail(Auth::guard('user')->id());
 
     $user->fill($request->except(['profile_pic']));
 
@@ -129,22 +130,22 @@ public function showById_data(Request $request, $id): View
     ]);
 }
 
-    public function updateEduinfo(Request $request, $id): RedirectResponse
+    public function updateEduinfo(Request $request): RedirectResponse
     {
         $currentYear = date('Y');
 
          $validatedData = $request->validate([
-        'school_name'        => 'required|string|max:255',
+        'school_name'        => ['required', 'string', 'max:255', new NoHtmlOrScript()],
         'school_year'        => "required|integer|min:1900|max:$currentYear",
-        'undergrad_college'  => 'required|string|max:255',
-        'undergrad_degree'   => 'required|string|max:255',
+        'undergrad_college'  => ['required', 'string', 'max:255', new NoHtmlOrScript()],
+        'undergrad_degree'   => ['required', 'string', 'max:255', new NoHtmlOrScript()],
         'undergrad_year'     => "required|integer|min:1900|max:$currentYear",
-        'postgrad_college'   => 'nullable|string|max:255',
-        'postgrad_degree'    => 'nullable|string|max:255',
+        'postgrad_college'   => ['nullable', 'string', 'max:255', new NoHtmlOrScript()],
+        'postgrad_degree'    => ['nullable', 'string', 'max:255', new NoHtmlOrScript()],
         'postgrad_year'      => "nullable|integer|min:1900|max:$currentYear",
     ]);
 
-        $user = Member::findOrFail($id);
+        $user = Member::findOrFail(Auth::guard('user')->id());
 
         // Update user fields
         $user->fill($validatedData);
@@ -153,20 +154,20 @@ public function showById_data(Request $request, $id): View
         return redirect()->back()->with('success', 'Educational info updated successfully.');
     }
 
-    public function updateProinfo(Request $request, $id): RedirectResponse
+    public function updateProinfo(Request $request): RedirectResponse
     {
         $currentYear = date('Y');
 
          $validatedData = $request->validate([
-        'current_designation'        => 'required|string|max:255',
-        'current_department'  => 'required|string|max:255',
-        'current_location'   => 'required|string|max:255',
-        'previous_postings'     => 'required|string|max:255',
-        'service' => 'required|string|max:255',
+        'current_designation'        => ['required', 'string', 'max:255', new NoHtmlOrScript()],
+        'current_department'  => ['required', 'string', 'max:255', new NoHtmlOrScript()],
+        'current_location'   => ['required', 'string', 'max:255', new NoHtmlOrScript()],
+        'previous_postings'     => ['required', 'string', 'max:255', new NoHtmlOrScript()],
+        'service' => ['required', 'string', 'max:255', new NoHtmlOrScript()],
 
     ]);
 
-        $user = Member::findOrFail($id);
+        $user = Member::findOrFail(Auth::guard('user')->id());
 
         // Update user fields
         $user->fill($validatedData);
@@ -197,7 +198,7 @@ public function showById_data(Request $request, $id): View
 
         return Redirect::to('/');
     }
-    public function updateSocial(Request $request, $id)
+    public function updateSocial(Request $request)
     {
         // print_r($request->all());
         // dd($request->all());
@@ -209,7 +210,7 @@ public function showById_data(Request $request, $id): View
             'ehrms' => 'nullable|url|max:255',
         ]);
 
-        $user = Member::findOrFail($id);
+        $user = Member::findOrFail(Auth::guard('user')->id());
         $user->facebook = $request->facebook;
         $user->instagram = $request->instagram;
         $user->linkedin = $request->linkedin;
@@ -261,7 +262,7 @@ function searchFavMembers(Request $request) {
 
     return response()->json($favorites);
 }
-function updateSectorDepartments(Request $request, $id){
+function updateSectorDepartments(Request $request){
     $request->validate([
         'sectors' => 'nullable|array',
        
@@ -269,7 +270,7 @@ function updateSectorDepartments(Request $request, $id){
     $sectors = $request->input('sectors', []);
     // $sectors should be an array of ['name' => ..., 'departments' => [...]]
     UserSectordepartment::updateOrCreate(
-        ['user_id' => $id],
+        ['user_id' => Auth::guard('user')->id()],
         ['sector_departments' => json_encode($sectors)]
     );
 

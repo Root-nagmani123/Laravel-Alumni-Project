@@ -32,6 +32,7 @@ class HtmlValidationTest extends TestCase
             ]);
 
         $response->assertSessionHasErrors(['modalContent']);
+        $response->assertSessionHasErrors(['modalContent' => '❌ Validation failed — HTML tags or JavaScript are not allowed.']);
     }
 
     /** @test */
@@ -129,21 +130,20 @@ class HtmlValidationTest extends TestCase
     }
 
     /** @test */
-    public function it_sanitizes_content_through_middleware()
+    public function it_rejects_content_with_html_through_strict_validation()
     {
         $response = $this->actingAs($this->user, 'user')
             ->post('/post', [
                 'modalContent' => '<script>alert("XSS")</script>Plain text',
             ]);
 
-        // The middleware should sanitize the content, so it should pass validation
-        // but the script tag should be removed
-        $response->assertSessionHasNoErrors();
+        // With strict validation, any HTML content should be rejected
+        $response->assertSessionHasErrors(['modalContent']);
+        $response->assertSessionHasErrors(['modalContent' => '❌ Validation failed — HTML tags or JavaScript are not allowed.']);
         
-        // Verify the content was sanitized
+        // Verify no post was created
         $post = Post::where('member_id', $this->user->id)->latest()->first();
-        $this->assertStringNotContainsString('<script>', $post->content);
-        $this->assertStringContainsString('Plain text', $post->content);
+        $this->assertNull($post);
     }
 
     /** @test */
@@ -191,13 +191,169 @@ class HtmlValidationTest extends TestCase
     }
 
     /** @test */
-    public function it_rejects_data_urls()
+    public function it_rejects_html_tags_in_comment_updates()
+    {
+        $post = Post::factory()->create(['member_id' => $this->user->id]);
+        $comment = Comment::factory()->create([
+            'post_id' => $post->id,
+            'member_id' => $this->user->id,
+            'comment' => 'Original comment'
+        ]);
+
+        $response = $this->actingAs($this->user, 'user')
+            ->put("/user/comments/{$comment->id}", [
+                'comment' => '<b>This is a bold updated comment</b>',
+            ]);
+
+        $response->assertSessionHasErrors(['comment']);
+    }
+
+    /** @test */
+    public function it_rejects_script_tags_in_comment_updates()
+    {
+        $post = Post::factory()->create(['member_id' => $this->user->id]);
+        $comment = Comment::factory()->create([
+            'post_id' => $post->id,
+            'member_id' => $this->user->id,
+            'comment' => 'Original comment'
+        ]);
+
+        $response = $this->actingAs($this->user, 'user')
+            ->put("/user/comments/{$comment->id}", [
+                'comment' => '<script>alert("XSS")</script>Updated comment',
+            ]);
+
+        $response->assertSessionHasErrors(['comment']);
+    }
+
+    /** @test */
+    public function it_sanitizes_html_in_comment_updates()
+    {
+        $post = Post::factory()->create(['member_id' => $this->user->id]);
+        $comment = Comment::factory()->create([
+            'post_id' => $post->id,
+            'member_id' => $this->user->id,
+            'comment' => 'Original comment'
+        ]);
+
+        $response = $this->actingAs($this->user, 'user')
+            ->put("/user/comments/{$comment->id}", [
+                'comment' => '<p>Updated comment with HTML</p>',
+            ]);
+
+        $response->assertStatus(200);
+        $response->assertJson(['success' => true]);
+        
+        // Verify the comment was sanitized
+        $comment->refresh();
+        $this->assertStringNotContainsString('<p>', $comment->comment);
+        $this->assertStringContainsString('Updated comment with HTML', $comment->comment);
+    }
+
+    /** @test */
+    public function it_accepts_plain_text_in_comment_updates()
+    {
+        $post = Post::factory()->create(['member_id' => $this->user->id]);
+        $comment = Comment::factory()->create([
+            'post_id' => $post->id,
+            'member_id' => $this->user->id,
+            'comment' => 'Original comment'
+        ]);
+
+        $response = $this->actingAs($this->user, 'user')
+            ->put("/user/comments/{$comment->id}", [
+                'comment' => 'This is a plain text updated comment.',
+            ]);
+
+        $response->assertStatus(200);
+        $response->assertJson(['success' => true]);
+        
+        // Verify the comment was updated
+        $comment->refresh();
+        $this->assertEquals('This is a plain text updated comment.', $comment->comment);
+    }
+
+    /** @test */
+    public function it_rejects_html_entities_in_strict_mode()
     {
         $response = $this->actingAs($this->user, 'user')
             ->post('/post', [
-                'modalContent' => 'data:text/html,<script>alert("XSS")</script>',
+                'modalContent' => '&lt;script&gt;alert("XSS")&lt;/script&gt;',
             ]);
 
         $response->assertSessionHasErrors(['modalContent']);
+        $response->assertSessionHasErrors(['modalContent' => '❌ Validation failed — HTML tags or JavaScript are not allowed.']);
+    }
+
+    /** @test */
+    public function it_rejects_url_encoded_script_tags()
+    {
+        $response = $this->actingAs($this->user, 'user')
+            ->post('/post', [
+                'modalContent' => '%3Cscript%3Ealert("XSS")%3C/script%3E',
+            ]);
+
+        $response->assertSessionHasErrors(['modalContent']);
+        $response->assertSessionHasErrors(['modalContent' => '❌ Validation failed — HTML tags or JavaScript are not allowed.']);
+    }
+
+    /** @test */
+    public function it_rejects_unicode_script_patterns()
+    {
+        $response = $this->actingAs($this->user, 'user')
+            ->post('/post', [
+                'modalContent' => '\u003cscript\u003ealert("XSS")\u003c/script\u003e',
+            ]);
+
+        $response->assertSessionHasErrors(['modalContent']);
+        $response->assertSessionHasErrors(['modalContent' => '❌ Validation failed — HTML tags or JavaScript are not allowed.']);
+    }
+
+    /** @test */
+    public function it_rejects_form_elements_in_strict_mode()
+    {
+        $response = $this->actingAs($this->user, 'user')
+            ->post('/post', [
+                'modalContent' => '<form action="malicious.php"><input type="text"></form>',
+            ]);
+
+        $response->assertSessionHasErrors(['modalContent']);
+        $response->assertSessionHasErrors(['modalContent' => '❌ Validation failed — HTML tags or JavaScript are not allowed.']);
+    }
+
+    /** @test */
+    public function it_rejects_button_elements_in_strict_mode()
+    {
+        $response = $this->actingAs($this->user, 'user')
+            ->post('/post', [
+                'modalContent' => '<button onclick="alert(\'XSS\')">Click me</button>',
+            ]);
+
+        $response->assertSessionHasErrors(['modalContent']);
+        $response->assertSessionHasErrors(['modalContent' => '❌ Validation failed — HTML tags or JavaScript are not allowed.']);
+    }
+
+    /** @test */
+    public function it_rejects_textarea_elements_in_strict_mode()
+    {
+        $response = $this->actingAs($this->user, 'user')
+            ->post('/post', [
+                'modalContent' => '<textarea>Malicious content</textarea>',
+            ]);
+
+        $response->assertSessionHasErrors(['modalContent']);
+        $response->assertSessionHasErrors(['modalContent' => '❌ Validation failed — HTML tags or JavaScript are not allowed.']);
+    }
+
+    /** @test */
+    public function it_rejects_select_elements_in_strict_mode()
+    {
+        $response = $this->actingAs($this->user, 'user')
+            ->post('/post', [
+                'modalContent' => '<select><option>Malicious option</option></select>',
+            ]);
+
+        $response->assertSessionHasErrors(['modalContent']);
+        $response->assertSessionHasErrors(['modalContent' => '❌ Validation failed — HTML tags or JavaScript are not allowed.']);
     }
 }

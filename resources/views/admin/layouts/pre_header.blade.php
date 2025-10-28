@@ -28,4 +28,39 @@
     <!-- sweetalert -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    <!-- HTML Validation Error Styling -->
+    <style>
+        /* Error message styling for HTML validation */
+        .html-validation-error {
+            display: block;
+            width: 100%;
+            clear: both;
+            word-wrap: break-word;
+            color: #dc3545;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+
+        /* Ensure error messages don't overlap with input groups */
+        .input-group ~ .html-validation-error {
+            display: block;
+            margin-top: 0.25rem;
+        }
+
+        /* Bootstrap validation styling compatibility */
+        .is-invalid {
+            border-color: #dc3545;
+        }
+
+        /* Form validation state styling */
+        .html-validation-invalid {
+            opacity: 0.8;
+        }
+
+        .html-validation-invalid .btn[type="submit"] {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+    </style>
+
     

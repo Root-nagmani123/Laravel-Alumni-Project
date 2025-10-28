@@ -477,7 +477,7 @@
                             <div class="mb-3">
                                 <label class="form-label fw-bold">Password</label>
                                 <input type="password" name="password" id="password" class="form-control"
-    placeholder="Enter your password" required autocomplete="new-password">
+    placeholder="Enter your password" required autocomplete="off">
 
 
                                 @php
@@ -987,6 +987,9 @@
     <script src="{{ asset('user_assets/js/lazysizes.min.js') }}"></script>
     <script src="{{ asset('user_assets/js/theme-setting.js') }}"></script>
     <script src="{{ asset('user_assets/js/script.js') }}"></script>
+<script nonce="{{ $cspNonce }}">
+    console.log("This inline script is CSP-safe");
+</script>
 
     <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer></script>
    <script nonce="{{ $cspNonce }}">
