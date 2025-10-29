@@ -187,8 +187,7 @@
         </form>
     </div>
 </div>
-<script>
-const activateModal = document.getElementById('activateForumModal');
+<script nonce="{{ $cspNonce }}">const activateModal = document.getElementById('activateForumModal');
 activateModal.addEventListener('show.bs.modal', function(event) {
     const button = event.relatedTarget;
     const forumId = button.getAttribute('data-forum-id');

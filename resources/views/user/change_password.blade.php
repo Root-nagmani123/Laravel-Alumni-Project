@@ -161,8 +161,7 @@
 @endsection
 
 @section('scripts')
-<script>
-    document.querySelectorAll('.toggle-password').forEach(function(button) {
+<script nonce="{{ $cspNonce }}">    document.querySelectorAll('.toggle-password').forEach(function(button) {
         button.addEventListener('click', function() {
             var target = document.querySelector(this.getAttribute('data-target'));
             if (target.type === 'password') {

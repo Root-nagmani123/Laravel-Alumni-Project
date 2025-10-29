@@ -339,8 +339,7 @@
     <script src="{{ asset('user_assets/js/lazysizes.min.js') }}"></script>
     <script src="{{ asset('user_assets/js/theme-setting.js') }}"></script>
     <script src="{{ asset('user_assets/js/script.js') }}"></script>
-    <script>
-document.addEventListener("DOMContentLoaded", function () {
+    <script nonce="{{ $cspNonce }}">document.addEventListener("DOMContentLoaded", function () {
     const inputs = document.querySelectorAll(".otp-input");
     const hiddenOtp = document.getElementById("otp_code");
 
@@ -368,8 +367,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 </script>
 
-    <script>
-    document.addEventListener("DOMContentLoaded", function() {
+    <script nonce="{{ $cspNonce }}">    document.addEventListener("DOMContentLoaded", function() {
         const inputs = document.querySelectorAll(".otp-input");
         const hiddenOtp = document.getElementById("otp_code");
 
@@ -425,8 +423,7 @@ document.addEventListener("DOMContentLoaded", function () {
     <!-- Theme js-->
     <script src="{{asset('user_assets/js/script.js')}}"></script>
 
-    <script>
-    feather.replace();
+    <script nonce="{{ $cspNonce }}">    feather.replace();
     $(".emojiPicker").emojioneArea({
         inline: true,
         placement: 'absleft',

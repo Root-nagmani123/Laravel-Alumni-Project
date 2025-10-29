@@ -156,8 +156,7 @@
 </form>
 
 <!-- JS to Toggle Fields -->
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
+<script nonce="{{ $cspNonce }}">    document.addEventListener('DOMContentLoaded', function () {
         const venueSelect = document.getElementById('venue');
         const locationField = document.getElementById('locationField');
         const urlField = document.getElementById('urlField');

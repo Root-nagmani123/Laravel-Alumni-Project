@@ -157,14 +157,12 @@ $pageName = 'Add Forum Topic'; // Set the page name here
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <!-- / Validation Errors -->
 @if ($errors->any())
-<script>
-toastr.error({
+<script nonce="{{ $cspNonce }}">toastr.error({
     !!json_encode($errors - > first()) !!
 });
 </script>
 @endif
-<script>
-$(document).ready(function() {
+<script nonce="{{ $cspNonce }}">$(document).ready(function() {
     // Show/hide Photo Caption
     $('#topicImage').on('change', function() {
         if (this.files && this.files.length > 0) {

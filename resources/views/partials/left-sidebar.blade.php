@@ -183,8 +183,7 @@
 
     <!-- jQuery and SweetAlert2 -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-$(document).ready(function() {
+    <script nonce="{{ $cspNonce }}">$(document).ready(function() {
     // Attach click handler using event delegation
     $(document).on('click', '.rsvp-option', function(e) {
         e.preventDefault();

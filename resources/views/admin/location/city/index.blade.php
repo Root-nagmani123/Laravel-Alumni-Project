@@ -117,8 +117,7 @@
 <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
 
-<script>
-    $(document).ready(function () {
+<script nonce="{{ $cspNonce }}">    $(document).ready(function () {
         // Initialize DataTable with search enabled
         $('#cityTable').DataTable({
             paging: false, // Disable DataTables paging to use Laravel's pagination

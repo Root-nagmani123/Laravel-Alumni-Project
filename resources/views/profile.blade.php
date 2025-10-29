@@ -1739,6 +1739,115 @@
                                         
                                     </div>
                                 </div>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+    @else
+        <div class="alert alert-info mb-0">
+            <i class="bi bi-exclamation-circle me-2"></i>No sector or ministry data available.
+        </div>
+    @endif
+</div>
+
+<!-- Highlight Style -->
+<style>
+    .highlight {
+        background-color: #ffe066; /* soft yellow */
+        font-weight: bold;
+        padding: 0 2px;
+        border-radius: 3px;
+    }
+</style>
+
+<!-- Filter + Highlight + Clear Script -->
+<script nonce="{{ $cspNonce }}">    const searchInput = document.getElementById('sectorSearch');
+    const clearBtn = document.getElementById('clearSearch');
+
+    function highlightMatch(text, filter) {
+        if (!filter) return text;
+        let regex = new RegExp(`(${filter})`, 'gi');
+        return text.replace(regex, '<span class="highlight">$1</span>');
+    }
+
+    function filterSectors() {
+        let filter = searchInput.value.toLowerCase();
+        let foundMatch = false;
+
+        document.querySelectorAll('.sector-item').forEach(function(item) {
+            let sectorNameEl = item.querySelector('.sector-name');
+            let sectorName = sectorNameEl.textContent.trim();
+
+            let departmentEls = item.querySelectorAll('.department-name');
+            let departmentNames = Array.from(departmentEls).map(el => el.textContent.trim());
+
+            let matchSector = sectorName.toLowerCase().includes(filter);
+            let matchDept = departmentNames.some(d => d.toLowerCase().includes(filter));
+            let match = matchSector || matchDept;
+
+            // Show/hide
+            item.style.display = match ? '' : 'none';
+
+            // Reset highlights
+            sectorNameEl.innerHTML = `<i class="fas fa-draw-polygon me-2 text-primary"></i> ${sectorName}`;
+            departmentEls.forEach((el, i) => {
+                el.innerHTML = `<i class="bi bi-building me-2 text-secondary"></i> ${departmentNames[i]}`;
+            });
+
+            // Apply highlighting
+            if (filter) {
+                if (matchSector) {
+                    sectorNameEl.innerHTML = `<i class="fas fa-draw-polygon me-2 text-primary"></i> ${highlightMatch(sectorName, filter)}`;
+                }
+                departmentEls.forEach((el, i) => {
+                    if (departmentNames[i].toLowerCase().includes(filter)) {
+                        el.innerHTML = `<i class="bi bi-building me-2 text-secondary"></i> ${highlightMatch(departmentNames[i], filter)}`;
+                    }
+                });
+            }
+
+            // Auto-expand if department matches
+            let collapse = item.querySelector('.accordion-collapse');
+            let button = item.querySelector('.accordion-button');
+            if (matchDept && collapse && !collapse.classList.contains('show')) {
+                new bootstrap.Collapse(collapse, { show: true, toggle: true });
+                button.classList.remove('collapsed');
+                button.setAttribute('aria-expanded', 'true');
+            }
+
+            if (match) foundMatch = true;
+        });
+
+        // Toggle clear button
+        clearBtn.classList.toggle('d-none', !filter);
+
+        // Show/hide no results message
+        if (!foundMatch && filter) {
+            if (!document.getElementById('noResults')) {
+                let noResults = document.createElement('div');
+                noResults.id = 'noResults';
+                noResults.className = 'alert alert-warning mt-2';
+                noResults.innerHTML = '<i class="bi bi-search"></i> No matching sector or department found.';
+                document.querySelector('#sectorsAccordion').insertAdjacentElement('beforebegin', noResults);
+            }
+        } else {
+            let noResults = document.getElementById('noResults');
+            if (noResults) noResults.remove();
+        }
+    }
+
+    searchInput.addEventListener('keyup', filterSectors);
+
+    clearBtn.addEventListener('click', function() {
+        searchInput.value = '';
+        clearBtn.classList.add('d-none');
+        filterSectors();
+        searchInput.focus();
+    });
+</script>
+
                                 <!-- Card body END -->
                             </div>
                         </div>
@@ -1826,8 +1935,7 @@
     </div>
 </div>
 <!-- Modal create Feed photo END -->
-<script>
-document.querySelectorAll('.toggle-sector').forEach(cb => {
+<script nonce="{{ $cspNonce }}">document.querySelectorAll('.toggle-sector').forEach(cb => {
     cb.addEventListener('change', function() {
         const target = document.querySelector(this.dataset.target);
         target.style.display = this.checked ? 'flex' : 'none';
@@ -1962,8 +2070,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-<script>
-document.addEventListener("DOMContentLoaded", function() {
+<script nonce="{{ $cspNonce }}">document.addEventListener("DOMContentLoaded", function() {
     document.querySelectorAll('.copy-url-btn').forEach(function(el) {
         el.addEventListener('click', function(e) {
             e.preventDefault();
@@ -2114,5 +2221,107 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 });
 </script>
+<script nonce="{{ $cspNonce }}">document.addEventListener("DOMContentLoaded", function () {
+    const modal = document.getElementById("editProfileModal"); // replace with your modal ID
 
+    if (modal) {
+        modal.addEventListener("hidden.bs.modal", function () {
+            // Reset only sector & ministries tab
+            document.querySelectorAll('#sector-ministries input[type="checkbox"]').forEach(cb => {
+                // Restore to server-rendered state (Laravel already printed `checked` if saved)
+                cb.checked = cb.defaultChecked;
+
+                // Handle show/hide for sector groups
+                if (cb.classList.contains("toggle-sector")) {
+                    const target = document.querySelector(cb.dataset.target);
+                    if (target) {
+                        target.style.display = cb.defaultChecked ? "" : "none";
+                    }
+                }
+            });
+        });
+    }
+});
+</script>
+
+<script nonce="{{ $cspNonce }}">// Comment form submission handler for profile page
+document.addEventListener('DOMContentLoaded', function() {
+    // Handle comment form submissions
+    document.querySelectorAll('form[id^="commentForm-"]').forEach(function(form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(form);
+            const postId = form.dataset.postId;
+            const textarea = form.querySelector('textarea[name="comment"]');
+            const commentText = textarea.value.trim();
+            
+            if (!commentText) {
+                alert('Please enter a comment.');
+                textarea.focus();
+                return;
+            }
+            
+            // Show loading state
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalContent = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="spinner-border spinner-border-sm"></i>';
+            submitBtn.disabled = true;
+            
+            fetch(form.action, {
+                method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRF-TOKEN': formData.get('_token')
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    // Clear the textarea
+                    textarea.value = '';
+                    
+                    // Show success message
+                    const successToast = document.createElement('div');
+                    successToast.className = 'position-fixed top-0 end-0 p-3';
+                    successToast.style.zIndex = '1100';
+                    successToast.innerHTML = `
+                        <div class="toast align-items-center text-bg-success border-0 show" role="alert">
+                            <div class="d-flex">
+                                <div class="toast-body">${data.message}</div>
+                                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                            </div>
+                        </div>
+                    `;
+                    document.body.appendChild(successToast);
+                    
+                    // Auto-remove toast after 3 seconds
+                    setTimeout(() => {
+                        if (successToast.parentNode) {
+                            successToast.parentNode.removeChild(successToast);
+                        }
+                    }, 3000);
+                    
+                    // Reload the page to show the new comment
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
+                } else {
+                    alert('Error: ' + (data.message || 'Failed to add comment'));
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while adding the comment.');
+            })
+            .finally(() => {
+                // Restore button state
+                submitBtn.innerHTML = originalContent;
+                submitBtn.disabled = false;
+            });
+        });
+    });
+});
+</script>
 @endsection

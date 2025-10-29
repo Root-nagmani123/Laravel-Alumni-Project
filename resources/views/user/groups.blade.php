@@ -163,8 +163,7 @@
                 </form>
             </div>
         </div>
-        <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        <script nonce="{{ $cspNonce }}">        document.addEventListener('DOMContentLoaded', function() {
             const activateGroupModal = document.getElementById('activateGroupModal');
             activateGroupModal.addEventListener('show.bs.modal', function(event) {
                 const button = event.relatedTarget;

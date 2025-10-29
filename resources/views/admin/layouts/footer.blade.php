@@ -22,8 +22,7 @@
 
 
 
-  <script>
-  hljs.initHighlightingOnLoad();
+  <script nonce="{{ $cspNonce }}">  hljs.initHighlightingOnLoad();
 
 
   document.querySelectorAll("pre.code-view > code").forEach((codeBlock) => {
@@ -48,8 +47,9 @@
 <!-- Sweet Aert JS -->
  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
  <script src="{{ asset('feed_assets/js/group.js') }}"></script>
-<script>
-    $(document).ready(function() {
+ <!-- HTML/JavaScript Validation Script -->
+ <script src="{{ asset('js/html-validation.js') }}"></script>
+<script nonce="{{ $cspNonce }}">    $(document).ready(function() {
         $('.js-example-basic-multiple').select2();
     });
 </script>

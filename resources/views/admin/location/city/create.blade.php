@@ -94,8 +94,7 @@
 </div>
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<script>
-$(document).ready(function() {
+<script nonce="{{ $cspNonce }}">$(document).ready(function() {
     // Setup AJAX to always send CSRF token
     $.ajaxSetup({
         headers: {

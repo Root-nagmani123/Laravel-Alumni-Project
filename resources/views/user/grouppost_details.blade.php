@@ -488,7 +488,62 @@
 
 <!-- Add Members Modal -->
 @section('scripts')
-<script>
+<script nonce="{{ $cspNonce }}">   
+     function editGrp_post(postId) {
+        // Fetch post data using AJAX
+        $.ajax({
+       url: "/user/group/edit_data_get/" + postId + "/edit",
+
+        type: "GET",
+        success: function (response) {
+            // Fill content
+            $("#postContent").val(response.post.content);
+            $("#videoLink").val(response.post.video_link);
+
+            // Empty old previews
+            $("#currentMediaPreview").html("");
+
+            // Load current images
+            if (response.post.media.length > 0) {
+                response.post.media.forEach(function (media) {
+                    let imgHtml = `
+        <div class="position-relative d-inline-block m-2" id="media-${media.id}">
+            <img src="/storage/${media.file_path}" class="img-thumbnail rounded shadow-sm"
+                 style="max-height: 150px; max-width: 150px; object-fit: cover;">
+            <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-1 rounded-circle"
+                    onclick="removeMedia(${media.id})">
+                <i class="fa fa-times"></i>
+            </button>
+        </div>
+    `;
+                    $("#currentMediaPreview").append(imgHtml);
+                });
+            }
+
+            // Set hidden post id
+            $("#editPostId").val(postId);
+
+            // Open Modal
+            $("#editPostModal").modal("show");
+        }
+    });
+    }
+    function removeMedia(mediaId) {
+      
+                 $.ajax({
+        url: "/user/post/media_remove/" + mediaId,
+        type: "DELETE",
+        data: {
+            _token: "{{ csrf_token() }}"
+        },
+        success: function(response) {
+            if(response.success) {
+                $("#media-" + mediaId).remove();
+            }
+        }
+    });
+           
+    }
 $(document).ready(function() {
     // Move to selected
     $('#addMemberBtn').click(function() {

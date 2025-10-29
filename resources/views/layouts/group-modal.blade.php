@@ -160,8 +160,7 @@
         </div>
     </div>
 
-<script>
-document.addEventListener("DOMContentLoaded", function() {
+<script nonce="{{ $cspNonce }}">document.addEventListener("DOMContentLoaded", function() {
 
     // 🔹 Group-related modals
     const groupModals = ['#groupModal', '#addMembersModal', '#editGroupModal'];

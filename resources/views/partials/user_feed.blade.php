@@ -649,12 +649,34 @@ $commentText = preg_replace_callback(
 <!-- Direct Message Modal end -->
 
 @section('scripts')
-<script>
-   var tribute = new Tribute({
-    trigger: '@',
-    itemClass: 'tribute-item',
-    fillAttr: 'username',   // insert @username in comment box
-lookup: 'name',         // still search/display by full name
+<script nonce="{{ $cspNonce }}">// Lazy loading implementation
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize lazy loading for images and iframes
+    if ('IntersectionObserver' in window) {
+        const lazyMediaObserver = new IntersectionObserver(function(entries, observer) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) {
+                    const media = entry.target;
+                    
+                    if (media.tagName === 'IMG') {
+                        media.src = media.dataset.src;
+                        media.classList.remove('lazyload');
+                    } else if (media.tagName === 'VIDEO') {
+                        const source = media.querySelector('source');
+                        if (source) {
+                            source.src = source.dataset.src;
+                        }
+                        media.load();
+                        media.classList.remove('lazyload');
+                    } else if (media.tagName === 'IFRAME') {
+                        media.src = media.dataset.src;
+                        media.classList.remove('lazyload');
+                    }
+                    
+                    lazyMediaObserver.unobserve(media);
+                }
+            });
+        });
 
     values: function (text, cb) {
         fetch(`/user-search?q=${text}`)

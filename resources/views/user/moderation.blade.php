@@ -238,8 +238,7 @@
 
     </div>
     @section('scripts')
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
+    <script nonce="{{ $cspNonce }}">        document.addEventListener("DOMContentLoaded", function () {
             const postModal = document.getElementById("postModal");
 
             postModal.addEventListener("show.bs.modal", function (event) {
@@ -255,8 +254,7 @@
         });
     </script>
 
-    <script>
-
+    <script nonce="{{ $cspNonce }}">
         $(document).ready(function() {
             $('.btn-view').on('click', function() {
                 const postId = $(this).data('id');

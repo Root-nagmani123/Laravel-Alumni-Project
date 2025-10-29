@@ -274,8 +274,7 @@
     </div>
     @endforeach
     @section('scripts')
-    <script>
-    document.querySelectorAll('.delete-topic-btn').forEach(button => {
+    <script nonce="{{ $cspNonce }}">    document.querySelectorAll('.delete-topic-btn').forEach(button => {
         button.addEventListener('click', function() {
             const topicId = this.getAttribute('data-id');
             if (confirm('Are you sure you want to delete?')) {
@@ -291,8 +290,7 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
-    <script>
-    $(document).ready(function() {
+    <script nonce="{{ $cspNonce }}">    $(document).ready(function() {
         // AJAX: Toggle member status with confirmation
         $(document).on('change', '.status-toggle', function(e) {
             let checkbox = $(this);
@@ -345,5 +343,47 @@
         }
     }
     </script>
+
+<script nonce="{{ $cspNonce }}">    document.addEventListener("DOMContentLoaded", function () {
+        const lightbox = GLightbox({
+            selector: '.glightbox',
+            touchNavigation: true,
+            loop: true,
+            zoomable: true,
+        });
+    });
+</script>
+
+<script nonce="{{ $cspNonce }}">document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll(".delete-media-btn").forEach(btn => {
+        btn.addEventListener("click", function () {
+            let url = this.dataset.url; // <-- use the correct route
+            if (!confirm("Are you sure you want to delete this image?")) return;
+
+            fetch(url, {
+                method: "DELETE",
+                headers: {
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                    "Accept": "application/json"
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    this.closest('div.position-relative').remove();
+                } else {
+                    alert("Failed to delete image: " + (data.message || 'Unknown error'));
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert("An error occurred while deleting the image.");
+            });
+        });
+    });
+});
+
+</script>
+
 
     @endsection

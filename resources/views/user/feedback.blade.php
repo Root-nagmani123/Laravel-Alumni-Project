@@ -93,8 +93,7 @@
 </div>
 
 
-<script>
-document.addEventListener("DOMContentLoaded", function () {
+<script nonce="{{ $cspNonce }}">document.addEventListener("DOMContentLoaded", function () {
   // Bind grievance ID to modal when clicking "Add Comment"
   document.querySelectorAll('[data-bs-target="#commentModal"]').forEach(button => {
     button.addEventListener("click", function () {
