@@ -1,28 +1,13 @@
 <!-- Main content START -->
-     <!-- Story START -->
-    <div class="d-flex gap-2 mb-4" style="margin-left:-.5rem;">
-      <div class="position-relative" id="openAddStoryModal">
-  <div class="card border border-2 border-dashed h-150px px-4 px-sm-5 shadow-none d-flex align-items-center justify-content-center text-center">
-    <div>
-      <a class="stretched-link btn btn-light rounded-circle icon-md" href="javascript:void(0);">
-        <i class="fa-solid fa-plus"></i>
-      </a>
-      <h6 class="mt-2 mb-0 small">Post a Story</h6>
-    </div>
-  </div>
-</div>
-
-        <!-- Stories -->
-        <div id="stories" class="storiesWrapper stories-square stories user-icon carousel scroll-enable"></div>
-    </div>
-    <!-- Story END -->
-        <!-- Share feed START -->
-    <div class="card card-body mb-4">
-        <div class="d-flex">
-            <!-- Avatar -->
-            <div class="avatar avatar-xs me-2">
-                <a href="{{ route('user.profile.data', ['id' => Crypt::encrypt($user->id)]) }}"> <img class="avatar-img rounded-circle" src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}"
-                        alt="" loading="lazy" decoding="async"> </a>
+<!-- Story START -->
+<div class="d-flex gap-2 mb-4 ml-n-half">
+    <div class="position-relative" id="openAddStoryModal">
+        <div class="card border border-2 border-dashed h-150px px-4 px-sm-5 shadow-none d-flex align-items-center justify-content-center text-center">
+            <div>
+                <a class="stretched-link btn btn-light rounded-circle icon-md" href="javascript:void(0);">
+                    <i class="fa-solid fa-plus"></i>
+                </a>
+                <h6 class="mt-2 mb-0 small">Post a Story</h6>
             </div>
             <!-- Post input -->
             <form class="w-100">
@@ -276,38 +261,75 @@
                     <img src="{{ asset('storage/' . $media->file_path) }}"
                          class="w-100 rounded"
                          alt="Post Image"
-                         style="height: 195px; object-fit: cover;"
-                         loading="lazy" decoding="async">
+                         class="img-400x100"
+                         loading="lazy">
                 </a>
-            @endforeach
-        </div>
-    </div>
-
-@else
-    {{-- Four or More Images --}}
-    <div class="post-img d-grid gap-2 mt-2" style="grid-template-columns: repeat(2, 1fr); grid-auto-rows: 200px;">
-        @foreach($imageMedia->take(4) as $index => $media)
-            <div class="position-relative">
-                <a href="{{ asset('storage/' . $media->file_path) }}" class="glightbox"
+            </div>
+        @elseif($totalImages === 2)
+            <!-- Two Side by Side -->
+            <div class="post-img d-flex gap-2 mt-2">
+                @foreach($imageMedia as $media)
+                    <a href="{{ asset('storage/' . $media->file_path) }}" class="glightbox flex-fill"
+                        data-gallery="post-gallery-{{ $post->id }}">
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='250' viewBox='0 0 400 250'%3E%3Crect width='400' height='250' fill='%23f5f5f5'/%3E%3C/svg%3E" 
+                             data-src="{{ asset('storage/' . $media->file_path) }}"
+                             class="w-100 rounded lazyload"
+                             alt="Post Image"
+                             class="img-250"
+                             loading="lazy">
+                    </a>
+                @endforeach
+            </div>
+        @elseif($totalImages === 3)
+            <!-- One Large Left, Two Stacked Right -->
+            <div class="post-img d-flex gap-2 mt-2">
+                <a href="{{ asset('storage/' . $imageMedia[0]->file_path) }}" class="glightbox flex-fill"
                     data-gallery="post-gallery-{{ $post->id }}">
                     <img src="{{ asset('storage/' . $media->file_path) }}"
                          alt="Post Image"
-                         loading="lazy"
-                         class="w-100 h-100 rounded"
-                         style="object-fit: cover;">
+                         class="img-400"
+                         loading="lazy">
                 </a>
-
-                {{-- Overlay for extra images --}}
-                @if($index === 3 && $totalImages > 4)
-                    @foreach($imageMedia->slice(4) as $extra)
-                        <a href="{{ asset('storage/' . $extra->file_path) }}" class="glightbox d-none"
-                            data-gallery="post-gallery-{{ $post->id }}"></a>
+                <div class="d-flex flex-column gap-2 w-50p">
+                    @foreach($imageMedia->slice(1, 2) as $media)
+                        <a href="{{ asset('storage/' . $media->file_path) }}" class="glightbox flex-fill"
+                            data-gallery="post-gallery-{{ $post->id }}">
+                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='195' viewBox='0 0 200 195'%3E%3Crect width='200' height='195' fill='%23f5f5f5'/%3E%3C/svg%3E" 
+                                 data-src="{{ asset('storage/' . $media->file_path) }}"
+                                 class="w-100 rounded lazyload"
+                                 alt="Post Image"
+                                 class="img-195"
+                                 loading="lazy">
+                        </a>
                     @endforeach
+                </div>
+            </div>
+        @elseif($totalImages > 0)
+            <!-- Four or More Images -->
+            <div class="post-img grid-2x200 mt-2">
+                @foreach($imageMedia->take(4) as $index => $media)
+                    <div class="position-relative">
+                        <a href="{{ asset('storage/' . $media->file_path) }}" class="glightbox"
+                            data-gallery="post-gallery-{{ $post->id }}">
+                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 200 200'%3E%3Crect width='200' height='200' fill='%23f5f5f5'/%3E%3C/svg%3E" 
+                                 data-src="{{ asset('storage/' . $media->file_path) }}"
+                                 alt="Post Image"
+                                 class="w-100 h-100 rounded lazyload"
+                                 class="object-cover"
+                                 loading="lazy">
+                        </a>
 
-                    <div class="position-absolute top-0 start-0 w-100 h-100 d-flex
-                                align-items-center justify-content-center text-white"
-                         style="background: rgba(0,0,0,0.6); font-size: 2rem; border-radius: 0.5rem;">
-                        +{{ $totalImages - 4 }}
+                        <!-- Overlay for extra images -->
+                        @if($index === 3 && $totalImages > 4)
+                            @foreach($imageMedia->slice(4) as $extra)
+                                <a href="{{ asset('storage/' . $extra->file_path) }}" class="glightbox d-none"
+                                    data-gallery="post-gallery-{{ $post->id }}"></a>
+                            @endforeach
+
+                <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center text-white overlay-dark">
+                                +{{ $totalImages - 4 }}
+                            </div>
+                        @endif
                     </div>
                 @endif
             </div>
