@@ -7,36 +7,27 @@ use Illuminate\Http\Request;
 
 class SafeRedirect
 {
-    public function handle(Request $request, Closure $next)
+     public function handle(Request $request, Closure $next)
     {
-        // Check for redirect or URL parameters that could be abused
-        $redirectUrl = $request->input('url') ?? $request->input('redirect_to');
+        $referer = $request->headers->get('referer');
 
-        if ($redirectUrl) {
-            // Allow only your own trusted domains
-            $allowedHosts = [
-                'alumni.lbsnaa.gov.in',
-                '52.140.75.46',
-                '127.0.0.1',
-                'localhost',
-            ];
+        if ($referer) {
+            $host = strtolower(parse_url($referer, PHP_URL_HOST));
 
-            $host = parse_url($redirectUrl, PHP_URL_HOST);
+            // ✅ Only allow these trusted hosts
+            $allowedHosts = ['alumni.lbsnaa.gov.in', '127.0.0.1', 'localhost'];
 
-            // If external host is not allowed, block the redirect
-            if ($host && !in_array($host, $allowedHosts)) {
-                abort(403, 'Unauthorized redirect target');
-            }
-
-            // Optional: if no host (relative URL like /dashboard), allow it
-            if (!$host && str_starts_with($redirectUrl, '/')) {
-                // safe, continue
-            }
+            // ❌ If host exists and is not in allowed list, block it
+            if ($host && !in_array($host, $allowedHosts, true)) {
+                    \Log::warning("Blocked external referer: {$referer}");
+                    abort(404, 'Access blocked due to external referer.');
+                }
         }
 
+        // If no referer header, allow the request (direct access or same-domain POST)
         $response = $next($request);
 
-        // Security headers
+        // Add standard security headers
         $response->headers->set('Referrer-Policy', 'no-referrer');
         $response->headers->set('X-Frame-Options', 'DENY');
         $response->headers->set('X-Content-Type-Options', 'nosniff');
