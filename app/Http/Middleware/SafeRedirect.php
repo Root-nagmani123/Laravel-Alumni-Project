@@ -15,7 +15,7 @@ class SafeRedirect
             $host = strtolower(parse_url($referer, PHP_URL_HOST));
 
             // ✅ Only allow these trusted hosts
-            $allowedHosts = ['alumni.lbsnaa.gov.in', '127.0.0.1', 'localhost'];
+            $allowedHosts = ['alumni.lbsnaa.gov.in','52.140.75.46', '127.0.0.1', 'localhost'];
 
             // ❌ If host exists and is not in allowed list, block it
             if ($host && !in_array($host, $allowedHosts, true)) {

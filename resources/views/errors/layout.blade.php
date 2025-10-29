@@ -122,7 +122,7 @@
     $currentUrl = url()->current();
 
     // Allowed domains only (same as your middleware)
-    $allowedHosts = ['alumni.lbsnaa.gov.in', '127.0.0.1', 'localhost'];
+    $allowedHosts = ['alumni.lbsnaa.gov.in','52.140.75.46', '127.0.0.1', 'localhost'];
 
     // Extract host from previous URL
     $previousHost = parse_url($previousUrl, PHP_URL_HOST);
