@@ -484,8 +484,9 @@
                                 @php
                                 $ts = now()->addSeconds(30)->timestamp;
                                 @endphp
-                                <input type="hidden" id="password" name="password_salt"
-                                    value="{{ Crypt::encryptString((string) $ts) }}">
+                                
+                                <input type="hidden" id="check_data" name="check_data" value="{{ Crypt::encryptString((string) $ts) }}">
+
                             </div>
                             <div class="mb-3">
                                 <div id="captcha-ldap"></div> <!-- ID for LDAP captcha -->
