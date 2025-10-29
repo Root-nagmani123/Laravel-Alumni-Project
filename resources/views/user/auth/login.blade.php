@@ -23,6 +23,7 @@
         background-color: #fff;
         color: #af2910;
         font-family: 'Segoe UI', sans-serif;
+    /* height: 100vh; now handled by class */
     }
 
     .login-card {
@@ -291,6 +292,8 @@
         background: url('{{ asset('feed_assets/images/bg/Group.svg') }}') top center no-repeat;
         background-size: contain;
         background-color: linear-gradient(to bottom, #af2910 40%, #fff 60%);
+        height: 100vh;
+        overflow: hidden;
     }
 
     .bg-top-bottom::after {
@@ -322,9 +325,10 @@
 </head>
 
 <body>
-@if(session('success'))
-    <div class="position-fixed top-0 end-0 p-3" style="z-index: 1100">
-        <div class="toast align-items-center text-bg-success border-0 show" role="alert" aria-live="assertive" aria-atomic="true">
+    @if(session('success'))
+    <div class="position-fixed top-0 end-0 p-3 z-1100">
+        <div class="toast align-items-center text-bg-success border-0 show" role="alert" aria-live="assertive"
+            aria-atomic="true">
             <div class="d-flex">
                 <div class="toast-body">
                     {{ session('success') }}
@@ -347,15 +351,15 @@
 
     <!-- Simple Bootstrap Loader -->
     <div class="d-flex justify-content-center align-items-center vh-100 bg-white" id="pageLoader">
-        <div class="spinner-border text-danger" role="status" style="width: 3rem; height: 3rem;">
+    <div class="spinner-border text-danger w-3rem h-3rem" role="status">
             <span class="visually-hidden">Loading...</span>
         </div>
     </div>
 
-    <div class="container-fluid d-none d-lg-block">
+    <div class="container-fluid d-none d-lg-block h-100">
         <div class="row">
             <!-- Left Section -->
-            <div class="col-lg-4 p-5 d-flex flex-column justify-content-center bg-top-bottom">
+            <div class="col-lg-4 p-5 d-flex flex-column justify-content-center bg-top-bottom h-100vh">
                 <!-- Your left column content here -->
                 <!-- Logo -->
                 <div class="logo-sec text-center mb-4">
@@ -427,7 +431,7 @@
                     </div>
 
                     <div class="marquee-container flex-grow-1 d-flex align-items-center ms-2"
-                        style="overflow: hidden; height: 100%;">
+                        class="overflow-hidden h-100p">
                         <div class="marquee-text">
                             Inquiry regarding user credentials: Phone: 135-2222346 (Mon–Fri,
                             9:00 AM–5:30 PM) Email:  ithelpdesk[dot]lbsnaa[at]nic[dot]in
@@ -449,13 +453,13 @@
             </div>
 
             <!-- Right Section (Background + Overlay Forms) -->
-            <div class="col-8 p-0 position-relative" style="height: 100vh;">
+            <div class="col-8 p-0 position-relative h-100vh">
                 <!-- Background image -->
                 <img src="{{ asset('user_assets/images/login/login-bg.webp') }}" alt="Employee Services Graphic"
-                    class="w-100 h-100" style="object-fit: cover;">
+                    class="w-100 h-100 obj-cover">
 
                 <!-- Overlay Container -->
-                <div class="position-absolute top-50 start-50 translate-middle w-50" style="z-index: 2;">
+                <div class="position-absolute top-50 start-50 translate-middle w-50 z-2">
                     <!-- LDAP Login -->
                     <div id="ldap-panel" class="card shadow-lg p-4 d-none">
                         <button type="button" class="btn-close position-absolute top-0 end-0 m-3 close-panel"></button>
@@ -557,11 +561,12 @@
                                     <input type="text" name="name" class="form-control" required>
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="form-label fw-bold">Email <span class="text-danger">*</span><span class="text-muted"
-                                            style="font-size:12px;">(.gov or .nic only)</span></label>
+                                    <label class="form-label fw-bold">Email <span class="text-danger">*</span><span
+                                            class="text-muted fz-12">(.gov or .nic
+                                            only)</span></label>
                                     <input type="email" name="email" class="form-control"
                                         pattern="^[^@\s]+@(?:[^@\s]+\.)?(gov|nic)\.in$" required>
-                                    <div class="form-text text-danger" id="emailMsg" style="display:none;">Only .gov.in
+                                    <div class="form-text text-danger d-none" id="emailMsg">Only .gov.in
                                         or
                                         .nic.in email IDs are allowed.</div>
                                 </div>
@@ -628,30 +633,38 @@
         <div id="aadhaarError" class="error-message"></div>
     </div>
 
-    <!-- OTP input (hidden until Aadhaar verified) -->
-    <div id="aadhaarOtpContainer" style="display: none;">
-        <div class="form-group mb-3">
-            <label class="form-label fw-bold">Enter OTP</label>
-            <div class="d-flex gap-2">
-                <input type="text" class="form-control text-center otp-input" maxlength="1" pattern="[0-9]*" inputmode="numeric">
-                <input type="text" class="form-control text-center otp-input" maxlength="1" pattern="[0-9]*" inputmode="numeric">
-                <input type="text" class="form-control text-center otp-input" maxlength="1" pattern="[0-9]*" inputmode="numeric">
-                <input type="text" class="form-control text-center otp-input" maxlength="1" pattern="[0-9]*" inputmode="numeric">
-                <input type="text" class="form-control text-center otp-input" maxlength="1" pattern="[0-9]*" inputmode="numeric">
-                <input type="text" class="form-control text-center otp-input" maxlength="1" pattern="[0-9]*" inputmode="numeric">
-            </div>
+                            <!-- OTP input (hidden until Aadhaar verified) -->
+                            <div id="aadhaarOtpContainer" class="d-none">
+                                <div class="form-group mb-3">
+                                    <label class="form-label fw-bold">Enter OTP</label>
+                                    <div class="d-flex gap-2">
+                                        <input type="text" class="form-control text-center otp-input" maxlength="1"
+                                            pattern="[0-9]*" inputmode="numeric">
+                                        <input type="text" class="form-control text-center otp-input" maxlength="1"
+                                            pattern="[0-9]*" inputmode="numeric">
+                                        <input type="text" class="form-control text-center otp-input" maxlength="1"
+                                            pattern="[0-9]*" inputmode="numeric">
+                                        <input type="text" class="form-control text-center otp-input" maxlength="1"
+                                            pattern="[0-9]*" inputmode="numeric">
+                                        <input type="text" class="form-control text-center otp-input" maxlength="1"
+                                            pattern="[0-9]*" inputmode="numeric">
+                                        <input type="text" class="form-control text-center otp-input" maxlength="1"
+                                            pattern="[0-9]*" inputmode="numeric">
+                                    </div>
 
             <input type="hidden" name="aadhaar_otp_code" id="aadhaar_otp_code">
 
-            <div id="otpError" class="error-message"></div>
-            <div id="otpSuccess" class="success-message"></div>
-            <div id="resendOtp" class="text-primary" style="cursor:pointer;">Didn’t receive OTP? Resend</div>
-        </div>
-    </div>
+                                    <div id="otpError" class="error-message"></div>
+                                    <div id="otpSuccess" class="success-message"></div>
+                                    <div id="resendOtp" class="text-primary cursor-pointer">Didn’t receive OTP?
+                                        Resend</div>
+                                </div>
+                            </div>
 
-    <button type="button" id="sendAadhaarOtpBtn" class="btn btn-primary w-100">Send OTP</button>
-    <button type="button" id="verifyAadhaarOtpBtn" class="btn btn-success w-100 mt-2" style="display:none;">Verify OTP</button>
-</form>
+                            <button type="button" id="sendAadhaarOtpBtn" class="btn btn-primary w-100">Send OTP</button>
+                            <button type="button" id="verifyAadhaarOtpBtn" class="btn btn-success w-100 mt-2"
+                                class="d-none">Verify OTP</button>
+                        </form>
 
                      </div>
                 </div>
@@ -670,9 +683,9 @@
                     <!-- <a href="#!"
                         class="d-flex align-items-center gap-3 text-decoration-none justify-content-center flex-wrap">
                         <img src="{{ asset('admin_assets/images/logos/lbsnaa_logo.jpg') }}" alt="LBSNAA Logo"
-                            style="height: 60px; object-fit: contain;">
+                            class="h-60 obj-contain">
                     </a> -->
-                    <h1 class="fw-bold" style="fotn-size:24px;">Alumni Connect at LBSNAA</h1>
+                    <h1 class="fw-bold fz-24">Alumni Connect at LBSNAA</h1>
                 </div>
 
                 <div class="text-center">
@@ -715,16 +728,16 @@
                     <a href="#" class="btn btn-outline-danger w-100" data-bs-toggle="modal" data-bs-target="#aadhaarModal">Aadhaar Authentication</a>
                 </div>
                 <div class="position-relative w-100 bg-light d-flex align-items-center px-3 mt-4"
-                    style="height: 40px; overflow: hidden; z-index: 1040;">
+                    class="h-40 overflow-hidden z-1040">
                     <div class="position-relative d-flex align-items-center">
                         <button class="btn btn-sm btn-danger position-relative z-1"
-                            style="background-color:#af2910; border: #af2910 1px solid;color:#fff;min-width: 120px;">
+                            class="bg-af2910 border-af2910 text-white minw-120">
                             Helpdesk
                         </button>
                     </div>
 
                     <div class="marquee-container flex-grow-1 d-flex align-items-center ms-2"
-                        style="overflow: hidden; height: 100%;">
+                        class="overflow-hidden h-100p">
                         <div class="marquee-text">
                             Inquiry regarding user credentials: Phone: 135-2222346 (Mon–Fri,
                             9:00 AM–5:30 PM) Email:
@@ -732,7 +745,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="card mt-5 w-100" style="background:transparent !important; border:none !important;">
+                <div class="card mt-5 w-100 bg-transparent border-none">
                     <div class="card-body">
                         <p class="text-center mb-0">
                             © {{ date("Y") }}
@@ -770,32 +783,124 @@
 </div>
 
 
-<!-- ================= Email OTP Login Modal ================= -->
-<div class="modal fade" id="otpModal" tabindex="-1" aria-labelledby="otpModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content shadow-lg p-4">
-      <button type="button" class="btn-close position-absolute top-0 end-0 m-3" data-bs-dismiss="modal"></button>
-      <h4 class="mb-3 fw-bold text-center">Email OTP Login</h4>
-      <hr class="my-2">
-      <form id="otpForm">
-        @csrf
-        <div class="form-group mb-3">
-          <label class="form-label fw-bold">Email Address</label>
-          <input type="email" name="otp_email" id="otp_email" class="form-control" placeholder="Enter your email" required>
-          <div id="emailError" class="error-message"></div>
-          <div id="emailSuccess" class="success-message"></div>
+    <!-- ================= Registration Modal ================= -->
+    <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content shadow-lg p-4">
+                <button type="button" class="btn-close position-absolute top-0 end-0 m-3"
+                    data-bs-dismiss="modal"></button>
+                <h4 class="mb-3 fw-bold text-center">Registration</h4>
+                <hr class="my-2">
+                <form>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Name <span class="text-danger">*</span></label>
+                            <input type="text" name="name" class="form-control" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Email <span class="text-muted"
+                                    class="fz-12">(.gov or .nic only)</span></label>
+                            <input type="email" name="email" class="form-control"
+                                pattern="^[^@\s]+@(?:[^@\s]+\.)?(gov|nic)\.in$" required>
+                            <div class="form-text text-danger d-none" id="emailMsg">
+                                Only .gov.in or .nic.in email IDs are allowed.
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Mobile Number <span class="text-danger">*</span></label>
+                            <input type="number" name="mobile" class="form-control" pattern="^[6-9]\d{9}$"
+                                maxlength="10" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Service <span class="text-danger">*</span></label>
+                            <input type="text" name="service" class="form-control" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Batch <span class="text-danger">*</span></label>
+                            <input type="number" name="batch" class="form-control" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Cadre <span class="text-muted">(Optional)</span></label>
+                            <input type="text" name="cadre" class="form-control">
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label fw-bold">Course Attended in LBSNAA <span
+                                    class="text-danger">*</span></label>
+                            <input type="text" name="course_attended" class="form-control" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Upload Photo</label>
+                            <input type="file" name="photo" class="form-control" accept="image/*">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Upload Govt. ID <span class="text-danger">*</span></label>
+                            <input type="file" name="govt_id" class="form-control" accept="image/*,.pdf" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 mt-3">Register</button>
+                </form>
+            </div>
         </div>
 
-        <div id="otpInputContainer">
-          <div class="form-group mb-3">
-            <label class="form-label fw-bold">Enter OTP</label>
-            <div class="d-flex gap-2">
-              <input type="text" class="form-control text-center otp-input" maxlength="1" pattern="[0-9]*" inputmode="numeric">
-              <input type="text" class="form-control text-center otp-input" maxlength="1" pattern="[0-9]*" inputmode="numeric">
-              <input type="text" class="form-control text-center otp-input" maxlength="1" pattern="[0-9]*" inputmode="numeric">
-              <input type="text" class="form-control text-center otp-input" maxlength="1" pattern="[0-9]*" inputmode="numeric">
-              <input type="text" class="form-control text-center otp-input" maxlength="1" pattern="[0-9]*" inputmode="numeric">
-              <input type="text" class="form-control text-center otp-input" maxlength="1" pattern="[0-9]*" inputmode="numeric">
+    <!-- Aadhaar Authentication Modal -->
+    <div class="modal fade" id="aadhaarModal" tabindex="-1" aria-labelledby="aadhaarModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content shadow-lg rounded-3">
+
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold" id="aadhaarModalLabel">Aadhaar Authentication</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <form id="aadhaarAuthForm">
+                        @csrf
+
+                        <!-- Aadhaar Number -->
+                        <div class="form-group mb-3">
+                            <label class="form-label fw-bold">Aadhaar Number</label>
+                            <input type="text" name="aadhaar_no" id="aadhaar_no" class="form-control"
+                                placeholder="Enter your 12-digit Aadhaar Number" maxlength="12" pattern="[0-9]{12}"
+                                inputmode="numeric" required>
+                            <div id="aadhaarError" class="error-message text-danger small mt-1"></div>
+                        </div>
+
+                        <!-- OTP Section (hidden until Aadhaar OTP sent) -->
+                        <div id="aadhaarOtpContainer" class="d-none">
+                            <div class="form-group mb-3">
+                                <label class="form-label fw-bold">Enter OTP</label>
+                                <div class="d-flex gap-2">
+                                    <input type="text" class="form-control text-center otp-input" maxlength="1"
+                                        pattern="[0-9]*" inputmode="numeric">
+                                    <input type="text" class="form-control text-center otp-input" maxlength="1"
+                                        pattern="[0-9]*" inputmode="numeric">
+                                    <input type="text" class="form-control text-center otp-input" maxlength="1"
+                                        pattern="[0-9]*" inputmode="numeric">
+                                    <input type="text" class="form-control text-center otp-input" maxlength="1"
+                                        pattern="[0-9]*" inputmode="numeric">
+                                    <input type="text" class="form-control text-center otp-input" maxlength="1"
+                                        pattern="[0-9]*" inputmode="numeric">
+                                    <input type="text" class="form-control text-center otp-input" maxlength="1"
+                                        pattern="[0-9]*" inputmode="numeric">
+                                </div>
+
+                                <input type="hidden" name="aadhaar_otp_code" id="aadhaar_otp_code">
+
+                                <div id="otpError" class="error-message text-danger small mt-1"></div>
+                                <div id="otpSuccess" class="success-message text-success small mt-1"></div>
+                                <div id="resendOtp" class="text-primary small mt-2 cursor-pointer">Didn’t
+                                    receive OTP? Resend</div>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="d-grid">
+                            <button type="button" id="sendAadhaarOtpBtn" class="btn btn-primary">Send OTP</button>
+                            <button type="button" id="verifyAadhaarOtpBtn" class="btn btn-success mt-2"
+                                style="display:none;">Verify OTP</button>
+                        </div>
+                    </form>
+                </div>
             </div>
             <input type="hidden" name="otp_code" id="otp_code">
             <div id="otpError" class="error-message"></div>
