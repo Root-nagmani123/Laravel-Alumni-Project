@@ -61,7 +61,6 @@ $Service_data  = Member::select('Service')->groupBy('Service')->get();
 
 public function showById_data(Request $request, $id): View
 {
-
     //$user = auth()->guard('user')->user();
  $Service_data  = Member::select('Service')->groupBy('Service')->get();
 
@@ -69,8 +68,7 @@ public function showById_data(Request $request, $id): View
     $user = Member::findOrFail($id);
 
     $userId = $user->id;
-
-         $posts = Post::with(['member', 'media', 'likes', 'comments.member'])
+    $posts = Post::with(['member', 'media', 'likes', 'comments.member'])
         ->orderBy('created_at', 'desc')
         ->where('member_id', $userId)
         ->where('approved_by_moderator', 1)
