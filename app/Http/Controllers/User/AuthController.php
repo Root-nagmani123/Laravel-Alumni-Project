@@ -133,7 +133,7 @@ public function login_ldap(Request $request)
         ])->withInput();
     }
 
-     $enc = $request->input('password_salt');
+     $enc = $request->input('check_data');
 
         try {
             // Decrypt timestamp
