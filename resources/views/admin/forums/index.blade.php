@@ -137,8 +137,7 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
-<script>
-// AJAX to Update the status
+<script nonce="{{ $cspNonce }}">// AJAX to Update the status
 $(document).on('change', '.status-toggle', function() {
     let checkbox = $(this);
     let status = checkbox.prop('checked') ? 1 : 0;

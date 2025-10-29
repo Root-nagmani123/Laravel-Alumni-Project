@@ -110,8 +110,7 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
-<script>
-    $(document).ready(function () {
+<script nonce="{{ $cspNonce }}">    $(document).ready(function () {
         // AJAX: Toggle country status with confirmation
         $(document).on('change', '.status-toggle', function (e) {
             let checkbox = $(this);

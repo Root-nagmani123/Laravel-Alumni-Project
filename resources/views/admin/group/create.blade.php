@@ -91,8 +91,7 @@
 <!-- end Vertical Steps Example -->
 
 <!-- Script -->
-<script>
-const allMembers = document.getElementById('allMembers');
+<script nonce="{{ $cspNonce }}">const allMembers = document.getElementById('allMembers');
 const selectedMembers = document.getElementById('selectedMembers');
 
 // Move instantly on check/uncheck
@@ -115,8 +114,7 @@ document.addEventListener('change', function(e) {
 </div>
 <!-- image preview js -->
 @section('scripts')
-<script>
-document.getElementById('image').addEventListener('change', function(event) {
+<script nonce="{{ $cspNonce }}">document.getElementById('image').addEventListener('change', function(event) {
     const preview = document.getElementById('preview-image');
     const file = event.target.files[0];
 

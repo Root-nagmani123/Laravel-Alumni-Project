@@ -60,8 +60,7 @@
 
 </style>
 
-<script>
-    window.addEventListener('load', function () {
+<script nonce="{{ $cspNonce }}">    window.addEventListener('load', function () {
         const loader = document.getElementById('pageLoader');
         if (loader) {
             loader.classList.add('hide');
@@ -118,8 +117,7 @@
     @include('layouts.footer')
     @yield('scripts')
 
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    <script nonce="{{ $cspNonce }}">    document.addEventListener('DOMContentLoaded', function() {
         const fileInput = document.getElementById('story_file');
         const fileError = document.getElementById('fileError');
         const fileInfo = document.getElementById('fileInfo');
@@ -182,8 +180,7 @@
         }); */
     });
     </script>
-    <script>
-    window.addEventListener('load', function () {
+    <script nonce="{{ $cspNonce }}">    window.addEventListener('load', function () {
         const loader = document.getElementById('pageLoader');
         if (loader) {
             loader.style.display = 'none';
@@ -323,8 +320,7 @@
         }
 </script>
 
-<script>
-document.addEventListener("DOMContentLoaded", function () {
+<script nonce="{{ $cspNonce }}">document.addEventListener("DOMContentLoaded", function () {
     var myCollapsible = document.getElementById('offcanvasChat');
 
     myCollapsible.addEventListener('shown.bs.offcanvas', function (event) {

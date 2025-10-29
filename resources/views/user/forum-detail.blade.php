@@ -143,8 +143,7 @@
                     </form>
                 </div>
 
-                <script>
-                (function() {
+                <script nonce="{{ $cspNonce }}">                (function() {
                     // Delete forum
                     const delBtn = document.getElementById('deleteForumBtn');
                     delBtn?.addEventListener('click', function() {
@@ -400,8 +399,7 @@
 @endsection
 
 @push('scripts')
-<script>
-function toggleComments(topicId) {
+<script nonce="{{ $cspNonce }}">function toggleComments(topicId) {
     // This function can be used to show/hide comments if needed
     console.log('Toggle comments for topic: ' + topicId);
 }

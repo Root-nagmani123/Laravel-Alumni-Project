@@ -155,8 +155,7 @@
 </a>
 
 {{-- Script --}}
-<script>
-  let seconds = 10;
+<script nonce="{{ $cspNonce }}">  let seconds = 10;
   const timer = document.getElementById("timer");
 
   const countdown = setInterval(() => {

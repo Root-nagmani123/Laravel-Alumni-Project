@@ -99,8 +99,7 @@
 </div>
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<script>
-$(document).ready(function() {
+<script nonce="{{ $cspNonce }}">$(document).ready(function() {
     $('#country_id').on('change', function() {
         var countryId = $(this).val();
         if(countryId) {

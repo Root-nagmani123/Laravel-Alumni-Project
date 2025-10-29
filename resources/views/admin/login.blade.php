@@ -136,8 +136,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-    <script>
-    @if(session('success'))
+    <script nonce="{{ $cspNonce }}">    @if(session('success'))
     toastr.success("{{ session('success') }}");
     @endif
     // JS to make password visible

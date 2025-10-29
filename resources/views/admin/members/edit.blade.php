@@ -214,8 +214,7 @@
 
 @endsection
 @push('scripts')
-    <script>
-        document.getElementById('profile_pic').addEventListener('change', function(event) {
+    <script nonce="{{ $cspNonce }}">        document.getElementById('profile_pic').addEventListener('change', function(event) {
             const preview = document.getElementById('preview-image');
             const file = event.target.files[0];
 

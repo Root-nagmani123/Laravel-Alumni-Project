@@ -149,8 +149,7 @@
 
 
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
+<script nonce="{{ $cspNonce }}">document.addEventListener('DOMContentLoaded', function() {
     const modal = document.getElementById('groupActionpost');
     modal.addEventListener('show.bs.modal', function(event) {
         const button = event.relatedTarget;

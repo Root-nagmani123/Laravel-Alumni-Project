@@ -130,8 +130,7 @@
     </div>
 </div>
 
-<script>
-document.getElementById('forum-image').addEventListener('change', function(event) {
+<script nonce="{{ $cspNonce }}">document.getElementById('forum-image').addEventListener('change', function(event) {
     const input = event.target;
     const preview = document.getElementById('forum-preview');
 

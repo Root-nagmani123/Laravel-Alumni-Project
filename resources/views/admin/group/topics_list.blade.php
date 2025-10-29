@@ -404,8 +404,7 @@
 
     @endforeach
     @section('scripts')
-    <script>
-    document.querySelectorAll('.delete-topic-btn').forEach(button => {
+    <script nonce="{{ $cspNonce }}">    document.querySelectorAll('.delete-topic-btn').forEach(button => {
         button.addEventListener('click', function() {
             const topicId = this.getAttribute('data-id');
             if (confirm('Are you sure you want to delete?')) {
@@ -426,8 +425,7 @@
 <!-- Glightbox JS -->
 <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
 
-    <script>
-    $(document).ready(function() {
+    <script nonce="{{ $cspNonce }}">    $(document).ready(function() {
         // AJAX: Toggle member status with confirmation
         $(document).on('change', '.status-toggle', function(e) {
             let checkbox = $(this);
@@ -481,8 +479,7 @@
     }
     </script>
 
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
+<script nonce="{{ $cspNonce }}">    document.addEventListener("DOMContentLoaded", function () {
         const lightbox = GLightbox({
             selector: '.glightbox',
             touchNavigation: true,
@@ -492,8 +489,7 @@
     });
 </script>
 
-<script>
-document.addEventListener("DOMContentLoaded", function () {
+<script nonce="{{ $cspNonce }}">document.addEventListener("DOMContentLoaded", function () {
     document.querySelectorAll(".delete-media-btn").forEach(btn => {
         btn.addEventListener("click", function () {
             let url = this.dataset.url; // <-- use the correct route

@@ -113,13 +113,11 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
 @if(session('success'))
-<script>
-toastr.success("{{ session('success') }}");
+<script nonce="{{ $cspNonce }}">toastr.success("{{ session('success') }}");
 </script>
 @endif
 
-<script>
-$(document).on('change', '.status-toggle', function() {
+<script nonce="{{ $cspNonce }}">$(document).on('change', '.status-toggle', function() {
     let checkbox = $(this);
     let status = checkbox.prop('checked') ? 1 : 0;
     let memberId = checkbox.data('id');

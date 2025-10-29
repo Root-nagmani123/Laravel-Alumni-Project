@@ -504,8 +504,7 @@
 }
 </style>
 
-<script>
-function handleNotificationClick(event, element) {
+<script nonce="{{ $cspNonce }}">function handleNotificationClick(event, element) {
     event.preventDefault();
     const url = element.dataset.url;
 
@@ -551,8 +550,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
-<script>
-// function clearNotifications(event) {
+<script nonce="{{ $cspNonce }}">// function clearNotifications(event) {
 //     event.preventDefault();
     
 
@@ -719,8 +717,7 @@ function clearNotifications(event) {
 
 
 </style>
-<script>
-document.addEventListener('click', function (event) {
+<script nonce="{{ $cspNonce }}">document.addEventListener('click', function (event) {
     const searchContainer = document.querySelector('.position-relative'); // wrapper div
     const searchResults = document.getElementById('searchResults');
 

@@ -1840,8 +1840,7 @@
 </style>
 
 <!-- Filter + Highlight + Clear Script -->
-<script>
-    const searchInput = document.getElementById('sectorSearch');
+<script nonce="{{ $cspNonce }}">    const searchInput = document.getElementById('sectorSearch');
     const clearBtn = document.getElementById('clearSearch');
 
     function highlightMatch(text, filter) {
@@ -2013,8 +2012,7 @@
     </div>
 </div>
 <!-- Modal create Feed photo END -->
-<script>
-document.querySelectorAll('.toggle-sector').forEach(cb => {
+<script nonce="{{ $cspNonce }}">document.querySelectorAll('.toggle-sector').forEach(cb => {
     cb.addEventListener('change', function() {
         const target = document.querySelector(this.dataset.target);
         target.style.display = this.checked ? 'flex' : 'none';
@@ -2149,8 +2147,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-<script>
-document.addEventListener("DOMContentLoaded", function() {
+<script nonce="{{ $cspNonce }}">document.addEventListener("DOMContentLoaded", function() {
     document.querySelectorAll('.copy-url-btn').forEach(function(el) {
         el.addEventListener('click', function(e) {
             e.preventDefault();
@@ -2269,8 +2266,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 });
 </script>
-<script>
-document.addEventListener("DOMContentLoaded", function () {
+<script nonce="{{ $cspNonce }}">document.addEventListener("DOMContentLoaded", function () {
     const modal = document.getElementById("editProfileModal"); // replace with your modal ID
 
     if (modal) {
@@ -2293,8 +2289,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 </script>
 
-<script>
-// Comment form submission handler for profile page
+<script nonce="{{ $cspNonce }}">// Comment form submission handler for profile page
 document.addEventListener('DOMContentLoaded', function() {
     // Handle comment form submissions
     document.querySelectorAll('form[id^="commentForm-"]').forEach(function(form) {

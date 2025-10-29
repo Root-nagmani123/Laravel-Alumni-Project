@@ -127,14 +127,12 @@
             </div>
         </div>
 
-        <script>
-
+        <script nonce="{{ $cspNonce }}">
         </script>
 @endsection
 
     @push('scripts')
-        <script>
-            function toggleNewRole(select) {
+        <script nonce="{{ $cspNonce }}">            function toggleNewRole(select) {
                 const newRoleInput = document.getElementById('newRoleInput');
                 if (select.value === '__new') {
                     newRoleInput.classList.remove('d-none');

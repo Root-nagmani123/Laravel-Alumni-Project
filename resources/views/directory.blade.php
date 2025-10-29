@@ -156,8 +156,7 @@
 </script>
 
 <!-- Filter Logic -->
-<script>
-$(document).ready(function() {
+<script nonce="{{ $cspNonce }}">$(document).ready(function() {
     var table = $('#memberTable').DataTable();
 
     // Filter by Service

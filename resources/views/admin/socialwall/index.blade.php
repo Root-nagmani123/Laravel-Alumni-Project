@@ -142,8 +142,7 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
-<script>
-$(document).ready(function() {
+<script nonce="{{ $cspNonce }}">$(document).ready(function() {
     @if(session('success'))
     toastr.success("{{ session('success') }}");
     @endif
@@ -211,8 +210,7 @@ $(document).ready(function() {
 });
 </script>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
+<script nonce="{{ $cspNonce }}">document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.read-toggle').forEach(function(btn) {
         btn.addEventListener('click', function() {
             const postId = this.getAttribute('data-post-id');

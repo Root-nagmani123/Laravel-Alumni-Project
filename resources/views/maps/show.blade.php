@@ -23,8 +23,7 @@
     <div id="region_map"></div>
 
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-    <script>
-        const regionMap = L.map('region_map').setView([26.8, 88.5], 5);
+    <script nonce="{{ $cspNonce }}">        const regionMap = L.map('region_map').setView([26.8, 88.5], 5);
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; OSM Contributors'

@@ -609,8 +609,7 @@
     </div>
 </div>
 @section('scripts')
-<script>
-   
+<script nonce="{{ $cspNonce }}">   
      function editGrp_post(postId) {
         // Fetch post data using AJAX
         $.ajax({

@@ -474,8 +474,7 @@
 @include('partials.user_feed_modals')
 
 @section('scripts')
-<script>
-// Lazy loading implementation
+<script nonce="{{ $cspNonce }}">// Lazy loading implementation
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize lazy loading for images and iframes
     if ('IntersectionObserver' in window) {

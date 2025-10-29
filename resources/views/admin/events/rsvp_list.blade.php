@@ -101,8 +101,7 @@
 
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<script>
-//Toastr message
+<script nonce="{{ $cspNonce }}">//Toastr message
     $(document).ready(function() {
         @if (session('success'))
             toastr.success("{{ session('success') }}");

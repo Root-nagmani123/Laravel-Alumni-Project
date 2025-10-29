@@ -98,8 +98,7 @@
 </div>
 <!-- Tom Select JS -->
 <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
-<script>
-new TomSelect('#memberSelect', {
+<script nonce="{{ $cspNonce }}">new TomSelect('#memberSelect', {
     plugins: ['remove_button'],
     placeholder: 'Select members...',
     persist: false,
