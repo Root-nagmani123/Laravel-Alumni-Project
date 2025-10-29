@@ -1,6 +1,6 @@
 <!-- Main content START -->
 <!-- Story START -->
-<div class="d-flex gap-2 mb-4" style="margin-left:-.5rem;">
+<div class="d-flex gap-2 mb-4 ml-n-half">
     <div class="position-relative" id="openAddStoryModal">
         <div class="card border border-2 border-dashed h-150px px-4 px-sm-5 shadow-none d-flex align-items-center justify-content-center text-center">
             <div>
@@ -249,7 +249,7 @@
                          data-src="{{ asset('storage/' . $imageMedia[0]->file_path) }}"
                          class="w-100 rounded lazyload"
                          alt="Post Image"
-                         style="width: 100%; height: 400px; object-fit: cover;"
+                         class="img-400x100"
                          loading="lazy">
                 </a>
             </div>
@@ -263,7 +263,7 @@
                              data-src="{{ asset('storage/' . $media->file_path) }}"
                              class="w-100 rounded lazyload"
                              alt="Post Image"
-                             style="height: 250px; object-fit: cover;"
+                             class="img-250"
                              loading="lazy">
                     </a>
                 @endforeach
@@ -277,10 +277,10 @@
                          data-src="{{ asset('storage/' . $imageMedia[0]->file_path) }}"
                          class="w-100 rounded lazyload"
                          alt="Post Image"
-                         style="height: 400px; object-fit: cover;"
+                         class="img-400"
                          loading="lazy">
                 </a>
-                <div class="d-flex flex-column gap-2" style="width: 50%;">
+                <div class="d-flex flex-column gap-2 w-50p">
                     @foreach($imageMedia->slice(1, 2) as $media)
                         <a href="{{ asset('storage/' . $media->file_path) }}" class="glightbox flex-fill"
                             data-gallery="post-gallery-{{ $post->id }}">
@@ -288,7 +288,7 @@
                                  data-src="{{ asset('storage/' . $media->file_path) }}"
                                  class="w-100 rounded lazyload"
                                  alt="Post Image"
-                                 style="height: 195px; object-fit: cover;"
+                                 class="img-195"
                                  loading="lazy">
                         </a>
                     @endforeach
@@ -296,7 +296,7 @@
             </div>
         @elseif($totalImages > 0)
             <!-- Four or More Images -->
-            <div class="post-img d-grid gap-2 mt-2" style="grid-template-columns: repeat(2, 1fr); grid-auto-rows: 200px;">
+            <div class="post-img grid-2x200 mt-2">
                 @foreach($imageMedia->take(4) as $index => $media)
                     <div class="position-relative">
                         <a href="{{ asset('storage/' . $media->file_path) }}" class="glightbox"
@@ -305,7 +305,7 @@
                                  data-src="{{ asset('storage/' . $media->file_path) }}"
                                  alt="Post Image"
                                  class="w-100 h-100 rounded lazyload"
-                                 style="object-fit: cover;"
+                                 class="object-cover"
                                  loading="lazy">
                         </a>
 
@@ -316,9 +316,7 @@
                                     data-gallery="post-gallery-{{ $post->id }}"></a>
                             @endforeach
 
-                            <div class="position-absolute top-0 start-0 w-100 h-100 d-flex
-                                        align-items-center justify-content-center text-white"
-                                 style="background: rgba(0,0,0,0.6); font-size: 2rem; border-radius: 0.5rem;">
+                <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center text-white overlay-dark">
                                 +{{ $totalImages - 4 }}
                             </div>
                         @endif

@@ -312,13 +312,32 @@
         color: #fff !important;
         /* text white */
     }
+
+    .register {
+        background-color: #af2910;
+        border: #af2910 1px solid;
+        color: #fff;
+    }
+
+    .helpdesk-btn {
+        background-color: #af2910;
+        border: #af2910 1px solid;
+        color: #fff;
+        min-width: 120px;
+    }
+
+    .helpdesk {
+        height: 40px;
+        overflow: hidden;
+        z-index: 1040;
+    }
+
+    .foter {
+        background: transparent !important;
+        border: none !important;
+    }
     </style>
-   
-
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-
-
 </head>
 
 <body>
@@ -361,17 +380,6 @@
                 <!-- Your left column content here -->
                 <!-- Logo -->
                 <div class="logo-sec text-center mb-4">
-                    <!-- <a href="#!"
-                        class="d-flex align-items-center gap-3 text-decoration-none justify-content-center flex-wrap">
-                        <img src="{{ asset('admin_assets/images/logos/lbsnaa_logo.jpg') }}" alt="LBSNAA Logo"
-                            style="height: 60px; object-fit: contain;">
-                        <div class="d-flex flex-column text-start">
-                            <span style="color: #000;font-weight: bold;font-size: 24px;">Alumni</span>
-                            <span style="font-size: 16px; font-weight: 500;color: #af2910;">
-                                Lal Bahadur Shastri National Academy of Administration
-                            </span>
-                        </div>
-                    </a> -->
                     <div class="d-flex flex-column text-start">
                         <h1 class="fw-bold text-dark">Alumni Connect at LBSNAA</h1>
                     </div>
@@ -414,20 +422,13 @@
 
 
                 <div class="mt-3 justify-content-center d-flex">
-                    <a href="#" class="btn btn-outline-danger open-panel" data-panel="register"
-                        style="background-color:#af2910; border: #af2910 1px solid;color:#fff;">
+                    <a href="#" class="btn btn-outline-danger open-panel register" data-panel="register">
                         For Registration Click Here
                     </a>
-                    <!-- <a href="#" class="btn btn-outline-danger open-panel" data-panel="forgot-password"
-                        style="background-color:#af2910; border: #af2910 1px solid;color:#fff;">
-                        Aadhar Authentication
-                    </a> -->
                 </div>
-                <div class="position-relative w-100 bg-light d-flex align-items-center px-3 mt-4"
-                    style="height: 40px; overflow: hidden; z-index: 1040;">
+                <div class="position-relative w-100 bg-light d-flex align-items-center mt-4 helpdesk">
                     <div class="position-relative d-flex align-items-center">
-                        <button class="btn btn-sm btn-danger position-relative z-1"
-                            style="background-color:#af2910; border: #af2910 1px solid;color:#fff;min-width: 120px;">
+                        <button class="btn btn-sm btn-danger position-relative z-1 helpdesk-btn">
                             Helpdesk
                         </button>
                     </div>
@@ -441,7 +442,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="card mt-5 w-100" style="background:transparent !important; border:none !important;">
+                <div class="card mt-5 w-100 foter">
                     <div class="card-body">
                         <p class="text-center mb-0">
                             © {{ date("Y") }}
@@ -477,7 +478,7 @@
                             <div class="mb-3">
                                 <label class="form-label fw-bold">Password</label>
                                 <input type="password" name="password" id="password" class="form-control"
-    placeholder="Enter your password" required autocomplete="off">
+                                    placeholder="Enter your password" required autocomplete="off">
 
 
                                 @php
@@ -987,12 +988,12 @@
     <script src="{{ asset('user_assets/js/lazysizes.min.js') }}"></script>
     <script src="{{ asset('user_assets/js/theme-setting.js') }}"></script>
     <script src="{{ asset('user_assets/js/script.js') }}"></script>
-<script nonce="{{ $cspNonce }}">
+    <script nonce="{{ $cspNonce }}">
     console.log("This inline script is CSP-safe");
-</script>
+    </script>
 
     <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer></script>
-   <script nonce="{{ $cspNonce }}">
+    <script nonce="{{ $cspNonce }}">
     let captchaLdap, captchaOtp;
 
     function onloadCallback() {
@@ -1008,7 +1009,7 @@
         });
     }
     </script>
-   <script nonce="{{ $cspNonce }}">
+    <script nonce="{{ $cspNonce }}">
     // Collect digits into hidden field
     document.addEventListener("input", function(e) {
         if (e.target.classList.contains("otp-input")) {
@@ -1081,7 +1082,7 @@
             });
     });
     </script>
-   <script nonce="{{ $cspNonce }}">
+    <script nonce="{{ $cspNonce }}">
     $(document).on('click', '.close-panel', function() {
         $(this).closest('.card').addClass('d-none'); // hide the panel
     });
@@ -1099,7 +1100,7 @@
         });
     });
     </script>
-   <script nonce="{{ $cspNonce }}">
+    <script nonce="{{ $cspNonce }}">
     // Collect digits into hidden OTP field
     document.querySelectorAll('.otp-input').forEach((input, index, inputs) => {
         input.addEventListener('keyup', function(e) {
@@ -1170,7 +1171,7 @@
             });
     });
     </script>
-   <script nonce="{{ $cspNonce }}">
+    <script nonce="{{ $cspNonce }}">
     document.addEventListener("DOMContentLoaded", function() {
         const inputs = document.querySelectorAll(".otp-input");
         const hiddenOtp = document.getElementById("otp_code");
@@ -1199,7 +1200,7 @@
     });
     </script>
 
-   <script nonce="{{ $cspNonce }}">
+    <script nonce="{{ $cspNonce }}">
     document.addEventListener("DOMContentLoaded", function() {
         const inputs = document.querySelectorAll(".otp-input");
         const hiddenOtp = document.getElementById("otp_code");
@@ -1229,7 +1230,7 @@
 
 
 
-   <script nonce="{{ $cspNonce }}">
+    <script nonce="{{ $cspNonce }}">
     feather.replace();
     $(".emojiPicker").emojioneArea({
         inline: true,
