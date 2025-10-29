@@ -5,6 +5,7 @@
     @include('layouts.pre_header')
     @vite(['resources/js/app.js'])
     <link rel="stylesheet" href="{{ asset('css/custom-feed.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/custom-login.css') }}">
     <script src="{{ asset('js/html-validation.js') }}"></script>
     @livewireStyles
     <style>
@@ -16,6 +17,9 @@
         opacity: 0;
         visibility: hidden;
         pointer-events: none;
+    }
+    body{
+        height: 100vh;
     }
     .chat-dot {
     position: absolute;
