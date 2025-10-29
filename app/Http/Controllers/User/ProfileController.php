@@ -60,15 +60,13 @@ class ProfileController extends Controller
 
 public function showById_data(Request $request, $id): View
 {
-
     //$user = auth()->guard('user')->user();
     
     $id = Crypt::decrypt($id);
     $user = Member::findOrFail($id);
 
     $userId = $user->id;
-
-         $posts = Post::with(['member', 'media', 'likes', 'comments.member'])
+    $posts = Post::with(['member', 'media', 'likes', 'comments.member'])
         ->orderBy('created_at', 'desc')
         ->where('member_id', $userId)
         ->get();

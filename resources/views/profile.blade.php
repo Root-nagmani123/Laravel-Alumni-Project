@@ -1216,10 +1216,9 @@
                                     </div>
                                     <ul class="comment-wrap list-unstyled">
                                         <!-- Comment item START -->
-                                        {{--@foreach ($post->comments as $comment)--}}
-                                        @foreach ($post->comments->take(2) as $comment)
+                                        @foreach ($post->comments as $index => $comment)
                                         @if(isset($member->id) && $member->id === auth()->guard('user')->id())
-                                        <li class="comment-item mb-3" id="comment-{{ $comment->id }}">
+                                        <li class="comment-item mb-3 {{ $index >= 2 ? 'd-none' : '' }}" id="comment-{{ $comment->id }}">
                                             <div class="d-flex position-relative">
                                                 <!-- Avatar -->
                                                 <div class="avatar avatar-xs">
@@ -1273,7 +1272,7 @@
                                             <!-- Comment item nested END -->
                                         </li>
                                         @elseif(auth()->guard('user')->id() === $comment->member_id)
-                                        <li class="comment-item mb-3" id="comment-{{ $comment->id }}">
+                                        <li class="comment-item mb-3 {{ $index >= 2 ? 'd-none' : '' }}" id="comment-{{ $comment->id }}">
                                             <div class="d-flex position-relative">
                                                 <!-- Avatar -->
                                                 <div class="avatar avatar-xs">
@@ -1326,26 +1325,48 @@
                                             </div>
                                             <!-- Comment item nested END -->
                                         </li>
+                                        @else
+                                        <li class="comment-item mb-3 {{ $index >= 2 ? 'd-none' : '' }}" id="comment-{{ $comment->id }}">
+                                            <div class="d-flex position-relative">
+                                                <!-- Avatar -->
+                                                <div class="avatar avatar-xs">
+                                                    <a href="{{ $comment->member ? route('user.profile.data', ['id' => Crypt::encrypt($comment->member->id)]) : '#' }}">
+                                                        <img class="avatar-img rounded-circle"
+                                                            src="{{ $comment->member && $comment->member->profile_pic ? asset('storage/' . $comment->member->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}"
+                                                            alt="" loading="lazy" decoding="async">
+                                                    </a>
+                                                </div>
+                                                <div class="ms-2 w-100">
+                                                    <!-- Comment by -->
+                                                    <div class="bg-light rounded-start-top-0 p-3 rounded">
+                                                        <div class="d-flex justify-content-between">
+                                                            <h6 class="mb-1"> <a href="#!">
+                                                                    {{ $comment->member->name ?? 'Anonymous' }} </a>
+                                                            </h6>
+                                                            <small class="ms-2">{{$comment->created_at->diffForHumans()}}</small>
+                                                        </div>
+                                                        <p class="small mb-0" id="comment-text-{{ $comment->id }}">
+                                                            {{ $comment->comment }}</p>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-6">
+                                                            <a href="#!" class="text-secondary small me-2">Like</a>
+                                                            <a href="#!" class="text-secondary small">Reply</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- Comment item nested END -->
+                                        </li>
                                         @endif
                                         @endforeach
                                         <!-- Comment item END -->
                                     </ul>
                                     <!-- Card body END -->
-                                    @if(isset($member->id) && $member->id === auth()->guard('user')->id())
-
                                     @if ($post->comments->count() > 2)
                                     <div class="card-footer border-0 pt-0">
-                                        <a href="#!" class="btn btn-link btn-sm text-secondary load-more-comments"
-                                            data-post-id="{{ $post->id }}" data-offset="2">
-                                            <div class="spinner-dots me-2 d-none" id="spinner-{{ $post->id }}">
-                                                <span class="spinner-dot"></span>
-                                                <span class="spinner-dot"></span>
-                                                <span class="spinner-dot"></span>
-                                            </div>
-                                            Load more comments
-                                        </a>
+                                        <a href="#" class="btn btn-link btn-sm text-secondary load-more-comments" data-step="5">Load more comments</a>
                                     </div>
-                                    @endif
                                     @endif
                                     <!-- Card footer END -->
                                 </div>
@@ -2162,55 +2183,23 @@ function deleteComment(commentId) {
 
 
 document.addEventListener('DOMContentLoaded', function() {
-    document.querySelectorAll('.load-more-comments').forEach(function(btn) {
-        btn.addEventListener('click', function(e) {
+    // Lazy load comments when "Load more" is clicked
+    document.querySelectorAll('.load-more-comments').forEach(function(button) {
+        button.addEventListener('click', function(e) {
             e.preventDefault();
-            const postId = btn.dataset.postId;
-            let offset = parseInt(btn.dataset.offset);
-            const spinner = document.getElementById('spinner-' + postId);
-            spinner.classList.remove('d-none');
-
-            fetch(`load-comments/${postId}?offset=${offset}`)
-                .then(res => res.json())
-                .then(data => {
-                    spinner.classList.add('d-none');
-
-                    if (data.comments.length === 0) {
-                        btn.remove(); // No more comments
-                        return;
-                    }
-
-                    let commentHtml = '';
-                    data.comments.forEach(comment => {
-                        commentHtml += `
-                            <li class="comment-item mb-3" id="comment-${comment.id}">
-                                <div class="d-flex position-relative">
-                                    <div class="avatar avatar-xs">
-                                        <a href="#!"><img class="avatar-img rounded-circle"
-                                            src="${comment.member && comment.member.profile_pic ? '/storage/' + comment.member.profile_pic : '/feed_assets/images/avatar/07.jpg'}"
-                                            alt="" loading="lazy" decoding="async"></a>
-                                    </div>
-                                    <div class="ms-2 w-100">
-                                        <div class="bg-light rounded-start-top-0 p-3 rounded">
-                                            <div class="d-flex justify-content-between">
-                                                <h6 class="mb-1"><a href="#!">${comment.member?.name || 'Anonymous'}</a></h6>
-                                                <small class="ms-2">${comment.created_at_human || comment.created_at || ''}</small>
-                                            </div>
-                                            <p class="small mb-0">${comment.comment}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>`;
-                    });
-
-                    btn.closest('.card-footer').insertAdjacentHTML('beforebegin',
-                        commentHtml);
-                    btn.dataset.offset = offset + data.comments.length;
-                })
-                .catch(err => {
-                    spinner.classList.add('d-none');
-                    console.error('Failed to load comments:', err);
-                });
+            const postElement = this.closest('.card');
+            const hiddenComments = postElement.querySelectorAll('.comment-item.d-none');
+            const step = parseInt(this.dataset.step) || 5;
+            
+            // Show next batch of comments
+            for (let i = 0; i < Math.min(step, hiddenComments.length); i++) {
+                hiddenComments[i].classList.remove('d-none');
+            }
+            
+            // Hide button if no more comments to load
+            if (hiddenComments.length <= step) {
+                this.style.display = 'none';
+            }
         });
     });
 });
