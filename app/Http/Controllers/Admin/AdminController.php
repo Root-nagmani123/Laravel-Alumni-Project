@@ -123,6 +123,7 @@ public function loginAuth(Request $request)
 ];
 
 $target = $request->input('redirect'); // query param like ?redirect=dashboard
+$referer = $request->headers->get('Referer');
 
 if ($target && array_key_exists($target, $allowedRedirects)) {
     return redirect($allowedRedirects[$target]);
@@ -147,6 +148,21 @@ $redirectUrl = $request->input('url') ?? $request->input('redirect_to') ?? $requ
 
 if ($redirectUrl) {
     $decodedUrl = urldecode($redirectUrl);
+    $host = parse_url($decodedUrl, PHP_URL_HOST);
+
+    $allowedHosts = ['alumni.lbsnaa.gov.in', '52.140.75.46', '127.0.0.1', 'localhost'];
+
+    if ($host && !in_array($host, $allowedHosts, true)) {
+        abort(403, 'Unauthorized redirect target');
+    }
+
+    // Block URLs starting with //
+    if (preg_match('/^\/\//', $decodedUrl)) {
+        abort(403, 'Unauthorized redirect target');
+    }
+}
+if ($referer) {
+    $decodedUrl = urldecode($referer);
     $host = parse_url($decodedUrl, PHP_URL_HOST);
 
     $allowedHosts = ['alumni.lbsnaa.gov.in', '52.140.75.46', '127.0.0.1', 'localhost'];
