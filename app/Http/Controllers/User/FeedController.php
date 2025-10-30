@@ -203,8 +203,6 @@ class FeedController extends Controller
         },
         'group'
     ])
-    ->where('status', 1)
-    ->where('approved_by_moderator', 1)
     ->where(function ($query) use ($groupIds) {
        $query->whereNull('group_id')
               ->orWhere(function ($sub) use ($groupIds) {
