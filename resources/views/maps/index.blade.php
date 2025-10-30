@@ -4,8 +4,7 @@
 
 <div id="region_map" style="height: 600px;"></div>
 
-<script>
-    const map = L.map('region_map').setView([26.8, 88.5], 5);
+<script nonce="{{ $cspNonce }}">    const map = L.map('region_map').setView([26.8, 88.5], 5);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; OpenStreetMap contributors'

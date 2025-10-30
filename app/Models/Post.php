@@ -20,6 +20,7 @@ class Post extends Model
         'media_path',
         'group_id',
         'video_link',
+        'status',
     ];
 
     // Optional: set default attributes
@@ -42,12 +43,6 @@ class Post extends Model
 			return $this->hasMany(PostMedia::class);
 		}
 
-		/*public function user()
-		{
-			return $this->belongsTo(User::class);
-		}
-            */
-
             public function user()
             {
                 return $this->belongsTo(User::class, 'member_id'); // 'member_id' is your foreign key in `posts` table
@@ -60,7 +55,7 @@ class Post extends Model
 
     public function comments()
     {
-        //return $this->hasMany(Comment::class);
+
          return $this->hasMany(Comment::class)->orderBy('created_at', 'desc');
     }
   public function group()

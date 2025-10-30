@@ -71,8 +71,8 @@
                     @foreach($forum->comments as $index => $comment)
                     @php
                     $commentPicPath = $comment->profile_pic
-                        ? (Str::startsWith($comment->profile_pic, 'storage/')
-                            ? asset($comment->profile_pic)
+                        ? (Str::startsWith($comment->profile_pic, 'profile_pic')
+                            ? route('profile.pic', $comment->profile_pic)
                             : asset('storage/' . ltrim($comment->profile_pic, '/')))
 
                         : asset('feed_assets/images/avatar/07.jpg');
@@ -106,7 +106,6 @@
                             </div>
 
                             @php
-
 
                             $commentText = preg_replace_callback(
                             '/@([a-zA-Z0-9_.]+)/',
@@ -144,8 +143,7 @@
                     </form>
                 </div>
 
-                <script>
-                (function() {
+                <script nonce="{{ $cspNonce }}">                (function() {
                     // Delete forum
                     const delBtn = document.getElementById('deleteForumBtn');
                     delBtn?.addEventListener('click', function() {
@@ -196,6 +194,7 @@
                     const commentsListEl = document.getElementById('commentsList');
                     const updateTpl = commentsListEl?.getAttribute('data-update-url-template') || '';
                     const deleteTpl = commentsListEl?.getAttribute('data-delete-url-template') || '';
+                    const profilePicRoute = "{{ route('profile.pic', ':filename') }}";
                     form?.addEventListener('submit', async function(ev) {
                         ev.preventDefault();
                         const comment = input.value.trim();
@@ -232,9 +231,8 @@
                                 if (/^https?:\/\//i.test(profile)) {
                                     imgSrc = profile;
                                 } else {
-                                    // imgSrc = `{{ asset('storage/') }}` + profile.replace(/^\/+/, '');
-                                    imgSrc = `{{ asset('storage') }}/${profile.replace(/^storage\//, '').replace(/^\/+/, '')}`;
-
+                                    // const cleanFile = encodeURIComponent(profile);
+                                    imgSrc = profilePicRoute.replace(':filename', profile);
                                 }
                                 item.innerHTML = `
                                 <img src="${imgSrc}" class="rounded-circle" alt="User" style="width:40px; height:40px; object-fit:cover;">
@@ -305,7 +303,7 @@
                                     if (!res.ok) throw new Error('Update failed');
                                     const data = await res.json();
                                     if (data && data.success) {
-                                        textEl.textContent = newText;
+                                        textEl.textContent = data.comment || newText;
                                     }
                                 } catch (e) {
                                     console.error(e);
@@ -401,8 +399,7 @@
 @endsection
 
 @push('scripts')
-<script>
-function toggleComments(topicId) {
+<script nonce="{{ $cspNonce }}">function toggleComments(topicId) {
     // This function can be used to show/hide comments if needed
     console.log('Toggle comments for topic: ' + topicId);
 }

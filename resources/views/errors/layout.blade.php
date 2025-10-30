@@ -117,15 +117,32 @@
     @endif
   </p>
 
-  @php
+ @php
     $previousUrl = url()->previous();
     $currentUrl = url()->current();
-    // if previous page is same as current (direct visit / refresh), fallback to home
-    $goBackUrl = ($previousUrl && $previousUrl !== $currentUrl) ? $previousUrl : url('/');
-    $isHome = $goBackUrl === url('/');
-    $redirectText = $isHome ? 'Home' : 'Previous Page';
-    $buttonText = $isHome ? 'Back to Home' : 'Back to Previous Page';
+
+    // Allowed domains only (same as your middleware)
+    $allowedHosts = ['alumni.lbsnaa.gov.in','52.140.75.46', '127.0.0.1', 'localhost'];
+
+    // Extract host from previous URL
+    $previousHost = parse_url($previousUrl, PHP_URL_HOST);
+
+    // Check if previous URL is valid and internal
+    $isInternal = $previousHost && in_array($previousHost, $allowedHosts, true);
+
+    // Determine final redirect target
+    if ($isInternal && $previousUrl !== $currentUrl) {
+        $goBackUrl = $previousUrl;
+    } else {
+        // Fallback to your login route instead of external or same-page redirect
+        $goBackUrl = url('admin/login');
+    }
+
+    $isLogin = $goBackUrl === url('admin/login');
+    $redirectText = $isLogin ? 'Login Page' : 'Previous Page';
+    $buttonText = $isLogin ? 'Back to Login' : 'Back to Previous Page';
 @endphp
+
 
 {{-- Countdown --}}
 <p class="countdown">
@@ -138,8 +155,7 @@
 </a>
 
 {{-- Script --}}
-<script>
-  let seconds = 10;
+<script nonce="{{ $cspNonce }}">  let seconds = 10;
   const timer = document.getElementById("timer");
 
   const countdown = setInterval(() => {

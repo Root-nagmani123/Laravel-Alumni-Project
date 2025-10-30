@@ -84,25 +84,7 @@
                                         @enderror
                                     </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">Password</label>
-                                        <input type="password" name="password" id="password" class="form-control">
-                                        @error('password')
-                                        <div class="text-danger">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">Confirm Password</label>
-                                        <input type="password" name="password_confirmation" id="confirm_password"
-                                            class="form-control">
-                                               @error('password_confirmation')
-                                        <div class="text-danger">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>
+                               
                                 
                                 <div class="col-md-6">
                                     <div class="mb-3">
@@ -206,7 +188,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label class="form-label">Profile Photo</label>
+                                    <label class="form-label">Profile Photo <span class="required text-danger">*</span></label>
                                     <input type="file" name="profile_pic" id="profile_pic" class="form-control" accept="image/*">
                                     @error('profile_pic')
                                     <div class="text-danger">{{ $message }}</div>
@@ -273,8 +255,7 @@
 
 
 @push('scripts')
-    <script>
-        document.getElementById('profile_pic').addEventListener('change', function(event) {
+    <script nonce="{{ $cspNonce }}">        document.getElementById('profile_pic').addEventListener('change', function(event) {
             const preview = document.getElementById('preview-image');
             const file = event.target.files[0];
 

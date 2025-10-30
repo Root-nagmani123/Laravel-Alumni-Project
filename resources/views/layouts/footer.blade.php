@@ -129,8 +129,7 @@ JS libraries, plugins and custom scripts -->
 <script src="{{asset('feed_assets/js/select2.min.js')}}"></script>
 <script src="https://cdn.jsdelivr.net/npm/tributejs@5.1.3/dist/tribute.min.js"></script>
 <script src="{{asset('feed_assets/js/group.js')}}"></script>
-<script>
-    $(document).ready(function () {
+<script nonce="{{ $cspNonce }}">    $(document).ready(function () {
         // Move to selected
         $('#addMemberBtn').click(function () {
             $('#availableMembers option:selected').each(function () {

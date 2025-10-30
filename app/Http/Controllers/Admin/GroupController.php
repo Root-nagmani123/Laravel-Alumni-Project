@@ -17,6 +17,9 @@ use Illuminate\Support\Str;
 use App\Models\Post;
 use App\Models\PostMedia;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Storage;
+use App\Rules\NoHtmlOrScript;
+
 class GroupController extends Controller
 {
 
@@ -49,7 +52,7 @@ class GroupController extends Controller
     {
         //Array ( [name] => Dhananjay [mentor_id] => 1 [user_id] => Array ( [0] => 4 [1] => 5 ) [status] => 1 )
          $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => ['required', 'string', 'max:255', new NoHtmlOrScript()],
             'state_id' => 'nullable|integer',
             'status' => 'nullable|integer',
             'created_by' => 'nullable|integer',
@@ -63,7 +66,7 @@ class GroupController extends Controller
     {
 
         $request->validate([
-            'name'        => 'required|string|max:255',
+            'name'        => ['required', 'string', 'max:255', new NoHtmlOrScript()],
             'status'      => 'nullable|integer|in:0,1',
             'end_date'    => 'nullable|date|after_or_equal:today',
             'image'       => 'nullable|image|mimes:jpeg,png,jpg,avif|max:2048',
@@ -128,7 +131,7 @@ class GroupController extends Controller
 public function update(Request $request, Group $group)
 {
     $request->validate([
-        'name' => 'required|string|max:255',
+        'name' => ['required', 'string', 'max:255', new NoHtmlOrScript()],
         // 'mentor_id' => 'required|integer',
         // 'user_id' => 'required|array',
         'status' => 'nullable|integer',
@@ -289,8 +292,8 @@ public function update(Request $request, Group $group)
     public function save_topic_bkp(Request $request, $id)
         {
             $request->validate([
-                'title' => 'required|string|max:255',
-                'description' => 'nullable|string',
+                'title' => ['required', 'string', 'max:255', new NoHtmlOrScript()],
+                'description' => ['nullable', 'string', new NoHtmlOrScript()],
                 'video_link' => 'nullable|url',
                 'video_caption' => 'nullable|string',
                 'status' => 'required|integer',
@@ -405,111 +408,133 @@ public function update(Request $request, Group $group)
 //     return redirect()->route('group.index')->with('success', 'Group post (topic) added successfully.');
 // }
 
-public function save_topic(Request $request, $group_id)
-{
-    $group_id = decrypt($group_id);
-    // 1️⃣ Validation
-    $request->validate([
-        'description' => 'nullable|string',
-        'video_link' => 'nullable|url',
-        'video_caption' => 'nullable|string',
-        'status' => 'required|integer',
-        'doc' => 'nullable|file|mimes:pdf,jpg,png,gif',
-        'topic_image' => 'nullable|file|mimes:jpg,png,gif',
-        'video' => 'nullable|file|mimes:mp4,mov,avi,wmv|max:102400'
-    ]);
+    public function save_topic(Request $request, $group_id)
+    {
+        $group_id = decrypt($group_id);
+        // 1️⃣ Validation
+        $request->validate([
+            'description' => ['required', 'string', new NoHtmlOrScript()],
+            'video_link' => 'nullable|url',
+            'video_caption' => ['nullable', 'string', new NoHtmlOrScript()],
+            'status' => 'required|integer',
+            'doc' => 'nullable|file|mimes:pdf,jpg,png,gif',
+            //'topic_image' => 'nullable|file|mimes:jpg,png,gif',
+            'topic_image'   => 'nullable|array',
+            'topic_image.*' => 'nullable|file|mimes:jpg,png,gif|max:5120', // file max 5MB
 
-    // 2️⃣ Handle topic image
-    $imageFile = $request->hasFile('topic_image')
-        ? $request->file('topic_image')->store('uploads/topics', 'public')
-        : null;
-
-    // 3️⃣ Handle YouTube embed link
-    $embedLink = '';
-    if ($request->video_link) {
-        parse_str(parse_url($request->video_link, PHP_URL_QUERY), $query);
-        $embedLink = isset($query['v']) ? "https://www.youtube.com/embed/" . $query['v'] : $request->video_link;
-    }
-
-    // 4️⃣ Determine media type
-    $media_type = null;
-    if ($imageFile && $embedLink) {
-        $media_type = 'photo_video';
-    } elseif ($imageFile) {
-        $media_type = 'photo';
-    } elseif ($embedLink) {
-        $media_type = 'video';
-    }
-
-    // 5️⃣ Save post
-    $post = Post::create([
-        'group_id'    => $group_id,
-        'member_id'   => Auth::id(),
-        'content'     => $request->description,
-        'media_type'  => $media_type,
-        'video_link'  => $embedLink,
-        'status'      => $request->status
-    ]);
-
-    // 6️⃣ Save topic image as PostMedia
-    if ($imageFile) {
-        PostMedia::create([
-            'post_id'   => $post->id,
-            'file_path' => $imageFile,
-            'file_type' => 'image',
+            'video' => 'nullable|file|mimes:mp4,mov,avi,wmv|max:102400'
         ]);
-    }
 
-    // 7️⃣ Get group members (mentor + mentees)
-    $groupMember = DB::table('group_member')->where('group_id', $group_id)->first();
+        // 2️⃣ Handle topic image
+        /*$imageFile = $request->hasFile('topic_image')
+            ? $request->file('topic_image')->store('uploads/topics', 'public')
+            : null;
+            */
 
-    $memberIds = [];
+          //  Handle multiple topic images
+            $imageFiles = [];
+            if ($request->hasFile('topic_image')) {
+                foreach ($request->file('topic_image') as $image) {
+                    $imageFiles[] = $image->store('uploads/topics', 'public');
+                }
+            }
 
-    if ($groupMember) {
-        // Add mentor
-        if ($groupMember->mentor) {
-            $memberIds[] = $groupMember->mentor;
+        // 3️⃣ Handle YouTube embed link
+        $embedLink = '';
+        if ($request->video_link) {
+            parse_str(parse_url($request->video_link, PHP_URL_QUERY), $query);
+            $embedLink = isset($query['v']) ? "https://www.youtube.com/embed/" . $query['v'] : $request->video_link;
         }
 
-        // Add mentees
-        if ($groupMember->mentiee) {
-            $mentees = json_decode($groupMember->mentiee, true);
-            if (!empty($mentees)) {
-                $memberIds = array_merge($memberIds, $mentees);
+        // 4️⃣ Determine media type
+        $media_type = null;
+        if ($imageFiles && $embedLink) {
+            $media_type = 'photo_video';
+        } elseif ($imageFiles) {
+            $media_type = 'photo';
+        } elseif ($embedLink) {
+            $media_type = 'video';
+        }
+
+        // 5️⃣ Save post
+        $post = Post::create([
+            'group_id'    => $group_id,
+            'member_id'   => Auth::id(),
+            'content'     => $request->description,
+            'media_type'  => $media_type,
+            'video_link'  => $embedLink,
+            'status'      => $request->status
+        ]);
+
+        // 6️⃣ Save topic image as PostMedia
+        /*if ($imageFiles) {
+            PostMedia::create([
+                'post_id'   => $post->id,
+                'file_path' => $imageFiles,
+                'file_type' => 'image',
+            ]);
+        }*/
+
+        if (!empty($imageFiles)) {
+            foreach ($imageFiles as $filePath) {
+                PostMedia::create([
+                    'post_id'   => $post->id,
+                    'file_path' => $filePath,
+                    'file_type' => 'image',
+                ]);
             }
         }
+
+        // 7️⃣ Get group members (mentor + mentees)
+        $groupMember = DB::table('group_member')->where('group_id', $group_id)->first();
+
+        $memberIds = [];
+
+        if ($groupMember) {
+            // Add mentor
+            if ($groupMember->mentor) {
+                $memberIds[] = $groupMember->mentor;
+            }
+
+            // Add mentees
+            if ($groupMember->mentiee) {
+                $mentees = json_decode($groupMember->mentiee, true);
+                if (!empty($mentees)) {
+                    $memberIds = array_merge($memberIds, $mentees);
+                }
+            }
+        }
+
+        // 8️⃣ Send notifications to all members
+        if (!empty($memberIds)) {
+            $groupName = DB::table('groups')->where('id', $group_id)->value('name');
+
+            $message = $groupName . ' new topic has been posted: ' . Str::limit($request->description, 50);
+
+            $this->notificationService->notifyMemberAdded(
+                $memberIds,
+                'admin_group_topic',
+                $message,
+                $group_id,
+                'group',
+                Auth::id()
+            );
+        }
+
+        // 9️⃣ Redirect with success
+        return redirect()->route('group.index')->with('success', 'Group topic added successfully.');
     }
-
-    // 8️⃣ Send notifications to all members
-    if (!empty($memberIds)) {
-        $groupName = DB::table('groups')->where('id', $group_id)->value('name');
-
-        $message = $groupName . ' new topic has been posted: ' . Str::limit($request->description, 50);
-
-        $this->notificationService->notifyMemberAdded(
-            $memberIds,
-            'admin_group_topic',
-            $message,
-            $group_id,
-            'group',
-            Auth::id()
-        );
-    }
-
-    // 9️⃣ Redirect with success
-    return redirect()->route('group.index')->with('success', 'Group topic added successfully.');
-}
 
     public function view_topic($id)
         {
             $groupId = decrypt($id);
             $pageName = 'Group';
             $group = Group::findOrFail($groupId);
-            $topics = Post::where('group_id', $groupId)->with('member', 'media')->get();
-            // print_r($topics);die;
+            $topics = Post::where('group_id', $groupId)->with('member', 'media')->latest('created_at')->get();
+           // print_r($topics);die;
             return view('admin.group.topics_list', compact('group', 'topics','pageName'));
         }
-   public function updateTopic(Request $request, $id) {
+   /*public function updateTopic(Request $request, $id) {
         $topic = Post::findOrFail($id);
         $topic->title = $request->title;
         $topic->description = $request->description;
@@ -528,7 +553,107 @@ public function save_topic(Request $request, $group_id)
         return back()->with('success', 'Topic added successfully.');
     //return redirect()->route('group.topics_list')->with('success', 'Topic added successfully.');
     }
+    */
 
+    public function updateTopic(Request $request, $id)
+    {
+    try {
+        $topicId = decrypt($id);
+    } catch (\Exception $e) {
+        return back()->with('error', 'Invalid post ID.');
+    }
+
+    $topic = Post::with('media')->findOrFail($topicId);
+
+$authUser = Auth::guard('admin')->check()
+        ? Auth::guard('admin')->user()
+        : Auth::guard('member')->user();
+
+    //  If post is not owned by member_id = 1 → block
+    if ($topic->member_id != 1) {
+        return back()->with('error', 'You are not allowed to edit this post.');
+    }
+
+    // If user is not admin → block
+    if (!$authUser || $authUser->isAdmin != 1) {
+        return back()->with('error', 'You are not allowed to edit this post.');
+    }
+
+    // 2️⃣ Validation
+    $request->validate([
+        'description'   => ['required', 'string', new NoHtmlOrScript()],
+        'video_link'    => 'nullable|url',
+        'status'        => 'required|integer',
+        'topic_image'   => 'nullable|array',
+        'topic_image.*' => 'nullable|file|mimes:jpg,jpeg,png,gif|max:5120', // 5MB max
+    ]);
+
+    // 3️⃣ Update video link (convert to embed)
+    $embedLink = '';
+    if ($request->video_link) {
+        parse_str(parse_url($request->video_link, PHP_URL_QUERY), $query);
+        $embedLink = isset($query['v']) ? "https://www.youtube.com/embed/" . $query['v'] : $request->video_link;
+    }
+
+    // 4️⃣ Handle new images (upload + save in PostMedia)
+    $imageFiles = [];
+    if ($request->hasFile('topic_image')) {
+        foreach ($request->file('topic_image') as $image) {
+            $imageFiles[] = $image->store('uploads/topics', 'public');
+        }
+    }
+
+    // 5️⃣ Update media_type
+    $media_type = null;
+    if ($imageFiles && $embedLink) {
+        $media_type = 'photo_video';
+    } elseif ($imageFiles) {
+        $media_type = 'photo';
+    } elseif ($embedLink) {
+        $media_type = 'video';
+    }
+
+    // 6️⃣ Update post
+    $topic->update([
+        'content'     => $request->description,
+        'media_type'  => $media_type,
+        'video_link'  => $embedLink,
+        'status'      => $request->status,
+    ]);
+
+    // 7️⃣ Save new images in PostMedia
+    if (!empty($imageFiles)) {
+        foreach ($imageFiles as $filePath) {
+            PostMedia::create([
+                'post_id'   => $topic->id,
+                'file_path' => $filePath,
+                'file_type' => 'image',
+            ]);
+        }
+    }
+
+    return back()->with('success', 'Topic updated successfully.');
+}
+
+public function deleteMedia($id)
+{
+    try {
+        $media = PostMedia::findOrFail($id);
+
+        // Delete the file if it exists
+        if (Storage::disk('public')->exists($media->file_path)) {
+            Storage::disk('public')->delete($media->file_path);
+        }
+
+        // Delete the DB record
+        $media->delete();
+
+        // Return JSON response
+        return response()->json(['success' => true]);
+    } catch (\Exception $e) {
+        return response()->json(['success' => false, 'message' => $e->getMessage()]);
+    }
+}
 
 //     public function deleteTopic($id) {
 //     // post::destroy($id);
@@ -620,12 +745,20 @@ public function deleteTopic($id)
 
   public function topicToggleStatus(Request $request)
     {
-        $topic = Topic::findOrFail($request->id);
+        /* $topic = Post::findOrFail($request->id);
         $oldStatus = $topic->status;
         $topic->status = $request->status;
-        $topic->save();
+        $topic->save(); */
 
-        if ($oldStatus == 0 && $topic->status == 1) {
+		$topic = Post::find($request->id);
+
+		if (!$topic) {
+			return response()->json(['message' => 'Topic not found'], 404);
+		}
+		$topic->status = $request->status;
+		$topic->save();
+
+        if ($topic->status == 0 && $request->status == 1) {
             $groupMembers = GroupMember::where('group_id', $topic->group_id)->first();
             if ($groupMembers) {
                 $mentorId = $groupMembers->mentor;
@@ -708,7 +841,7 @@ public function deleteTopic($id)
                  * 🔔 Notify only NEW members (not creator)
                  */
                 if (!empty($added)) {
-                    $newMemberMessage = 'You have been added to the group ' . $group->name;                
+                    $newMemberMessage = 'You have been added to the group ' . $group->name;
                     $this->notificationService->notifyMemberAdded(
                         $added,
                         'group_member_added',
@@ -765,7 +898,7 @@ public function deleteTopic($id)
              * ---------------------------------------------------
              */
             $request->validate([
-                'group_name'  => 'required|string|max:255',
+                'group_name'  => ['required', 'string', 'max:255', new NoHtmlOrScript()],
                 'mentees'     => 'required|array',
                 'grp_image'   => 'required|image|mimes:jpeg,png,jpg,avif|max:2048',
                 'end_date'    => 'required|date|after_or_equal:today',
@@ -898,15 +1031,88 @@ public function deleteTopic($id)
 
         // Find only newly added mentees
         $addedMentees = array_diff($newMentees, $previousMentees);
+$removedMentees = array_diff($previousMentees, $newMentees);
 
+        $remainingMentees = array_intersect($newMentees, $previousMentees);
         // Update mentee list in DB
         GroupMember::updateOrCreate(
             ['group_id' => $group->id],
             [
                 'mentiee' => json_encode($newMentees),
+                'member_id' => auth()->guard('admin')->id(),
+                'mentor'=>auth()->guard('admin')->id(),
                 'status' => 1,
             ]
         );
+        // 1️⃣ Notify newly added mentees
+
+        if (!empty($addedMentees)) {
+
+            $this->notificationService->notifyMemberAdded(
+
+                $addedMentees,
+
+                'group_member_added',
+
+                'You have been added to the group ' . $group->name,
+
+                $group->id,
+
+                'group',
+
+                auth()->guard('admin')->id()
+
+            );
+
+        }
+
+
+
+        // 2️⃣ Notify removed mentees
+
+        if (!empty($removedMentees)) {
+
+            $this->notificationService->notifyMemberAdded(
+
+                $removedMentees,
+
+                'group_member_removed',
+
+                'You have been removed from the group ' . $group->name,
+
+                $group->id,
+
+                'remove_member',
+
+                auth()->guard('admin')->id()
+
+            );
+
+        }
+
+
+
+        // 3️⃣ Notify remaining mentees about removal
+
+        if (!empty($removedMentees) && !empty($remainingMentees)) {
+
+            $this->notificationService->notifyMemberAdded(
+
+                $remainingMentees,
+
+                'group_members_removed',
+
+                'Some members have been removed from the group ' . $group->name,
+
+                $group->id,
+
+                'remove_member',
+
+                auth()->guard('admin')->id()
+
+            );
+
+        }
 
         $this->recentActivityService->logActivity(
             'Group Members Updated',
@@ -916,18 +1122,6 @@ public function deleteTopic($id)
             1,
             $group->id
         );
-
-        // Notify only newly added mentees
-        if (!empty($addedMentees)) {
-            $this->notificationService->notifyMemberAdded(
-                $addedMentees,
-                'group_member',
-                'You have been added to the group: ' . $group->name,
-                $group->id,
-                'group',
-                auth()->guard('admin')->id()
-            );
-        }
 
         return response()->json([
             'success' => true,

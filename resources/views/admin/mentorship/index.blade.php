@@ -91,8 +91,7 @@ body .select2-container {
 </div>
 @endsection
 @section('scripts')
-<script>
-$('#searchBtn').on('click', function() {
+<script nonce="{{ $cspNonce }}">$('#searchBtn').on('click', function() {
     let memberId = $('#memberSelect').val();
     let role = $('input[name="role"]:checked').val();
 

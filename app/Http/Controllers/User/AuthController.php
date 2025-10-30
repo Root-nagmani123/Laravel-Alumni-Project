@@ -5,10 +5,12 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Http;
 use LdapRecord\Container;
+use Illuminate\Support\Facades\Crypt;
+use App\Models\Member;
+
 use LdapRecord\Models\ActiveDirectory\User as LdapUser;
 use App\Services\AuditService;
 
@@ -21,8 +23,14 @@ class AuthController extends Controller
         if (Auth::guard('user')->check()) {
             return redirect()->route('user.feed');
         }
+    $services = Member::selectRaw('DISTINCT(TRIM(UPPER(Service))) as Service')
+    ->whereNotNull('Service')
+    ->orderBy('Service', 'asc')
+    ->pluck('Service');
+
+
        /*  return redirect()->route('user.feed1'); */
-		 return view('user.auth.login');
+		 return view('user.auth.login', compact('services'));
     }
     function showLoginForm_ldap(){
         return view('user.auth.login_ldap');
@@ -139,7 +147,7 @@ public function login_ldap(Request $request)
         ])->withInput();
     }
 
-     $enc = $request->input('password_salt');
+     $enc = $request->input('check_data');
 
         try {
             // Decrypt timestamp
@@ -177,15 +185,19 @@ public function login_ldap(Request $request)
 
      try {
         if (in_array($serverHost, ['localhost', '127.0.0.1', 'dev.local','52.140.75.46'])) {
-           
+          
             // 👨‍💻 Localhost: Normal DB-based login
             $user = \App\Models\Member::where('username', $username)
                         ->where('status', 1) // only active users
                         ->first();
-                        // print_r($user);die;
-                       
 
             if ($user) {
+                // Update the user's password with the consistent hash if it's different
+                if (!Hash::check($password, $user->password) || $user->password !== $hashedPassword) {
+                    $user->password = $hashedPassword;
+                    $user->save();
+                }
+                
                 Auth::guard('user')->login($user);
                 $request->session()->regenerate();
                 // Update online status

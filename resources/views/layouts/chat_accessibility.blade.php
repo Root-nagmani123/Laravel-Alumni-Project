@@ -1,19 +1,31 @@
-<div class="d-none d-lg-block position-relative">
+@if(strtolower(auth()->guard('user')->user()->Service) == 'ias')
+@php $unreadCount = App\Models\Member::find(auth()->guard('user')->id())->unreadMessages->count(); @endphp
+<div class="d-none d-lg-block position-fixed bottom-0 end-0 m-4">
+    <!-- Floating Chat Button -->
     <a data-bs-toggle="offcanvas" href="#offcanvasChat" role="button" aria-controls="offcanvasChat"
-        class="floating-chat-btn">
+       class="btn btn-primary rounded-circle shadow-lg position-relative p-3"
+       style="width:60px; height:60px; display:flex; align-items:center; justify-content:center; bottom:130px; background-color: #792421; right: 10px;">
 
-        <div class="chat-icon">
-            <i class="bi bi-chat-left-text-fill" style="font-size: 20px; color: #fff;"></i>
-            <span class="chat-dot d-none" id="unread-count-{{ auth()->guard('user')->id() }}"></span>
-        </div>
-        <span class="chat-text">Mentor/Mentee Conversation</span>
+        <i class="bi bi-chat-left-text-fill fs-4 text-white"></i>
+
+        <!-- Unread Badge -->
+        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill"
+              id="unread-count-{{ auth()->guard('user')->id() }}" style="    background: #792421;
+    border: 1px solid #ffffff; display: {{ $unreadCount > 0 ? 'inline' : 'none' }};">
+            {{ $unreadCount ?? '' }}
+        </span>
     </a>
+</div>
 
-    <div class="offcanvas offcanvas-end" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1"
-        id="offcanvasChat">
+<!-- Offcanvas Chat -->
+<div class="offcanvas offcanvas-end shadow-lg" data-bs-scroll="true" data-bs-backdrop="false"
+     tabindex="-1" id="offcanvasChat">
+    <div class="offcanvas-body p-0">
         <livewire:chat.chat-list />
     </div>
 </div>
+
+@endif
 
 
 <!-- accessibility panel -->

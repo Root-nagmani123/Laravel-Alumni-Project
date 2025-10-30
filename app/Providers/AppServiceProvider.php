@@ -25,17 +25,27 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Share notifications with header view
+        // ✅ Add CSP nonce globally (for every view)
+        View::composer('*', function ($view) {
+            $nonce = base64_encode(random_bytes(16));
+            $view->with('cspNonce', $nonce);
+        });
+
+        // ✅ Share notifications with header view
         View::composer('layouts.header', function ($view) {
             if (Auth::guard('user')->check()) {
                 $userId = Auth::guard('user')->id();
-                
-                $notifications = Notification::where(function ($query) use ($userId) {
-                    $query->whereIn('type', ['event', 'broadcast','event_deactivated','broadcast_deactivated','forum_admin','forum_topic','forum_deleted','birthday']) // show to all users
-                          ->orWhere(function ($q) use ($userId) {
-                              $q->whereNotIn('type', ['event', 'broadcast','event_deactivated','broadcast_deactivated','forum_admin','forum_topic','forum_deleted','birthday']) // exclude these types
-                                ->where('user_id', $userId); // user-specific notifications
-                          });
+
+                $notifications = \App\Models\Notification::where(function ($query) use ($userId) {
+                    $query->whereIn('type', [
+                        'event', 'broadcast', 'event_deactivated', 'broadcast_deactivated',
+                        'forum_admin', 'forum_topic', 'forum_deleted', 'birthday'
+                    ])->orWhere(function ($q) use ($userId) {
+                        $q->whereNotIn('type', [
+                            'event', 'broadcast', 'event_deactivated', 'broadcast_deactivated',
+                            'forum_admin', 'forum_topic', 'forum_deleted', 'birthday'
+                        ])->where('user_id', $userId);
+                    });
                 })
                 ->orderBy('created_at', 'desc')
                 ->where('user_id', $userId)
@@ -47,8 +57,7 @@ class AppServiceProvider extends ServiceProvider
             }
         });
 
-        // Group::observe(RecentActivityObserver::class);
-        // Broadcast::observe(RecentActivityObserver::class);
+        // Use Bootstrap pagination style
         Paginator::useBootstrap();
     }
 }

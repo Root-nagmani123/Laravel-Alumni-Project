@@ -37,6 +37,11 @@ return [
             'throw' => false,
             'report' => false,
         ],
+        'private' => [
+        'driver' => 'local',
+        'root'   => storage_path('app/private'), // move files here
+        'visibility' => 'private',
+    ],
 
         'public' => [
             'driver' => 'local',
@@ -58,6 +63,13 @@ return [
             'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
             'throw' => false,
             'report' => false,
+        ],
+
+        'private' => [
+            'driver' => 'local',
+            'root' => storage_path('app/private'),
+            'visibility' => 'private',
+            // 'throw' => true,
         ],
 
     ],

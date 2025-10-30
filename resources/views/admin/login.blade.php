@@ -21,7 +21,7 @@
 
         <img src="{{ asset('admin_assets/images/logos/favicon.ico') }}" alt="loader" class="lds-ripple img-fluid">
     </div>
-    <div id="main-wrapper" style="background-image: url({{asset('admin_assets/images/backgrounds/login-bg.webp')}});">
+    <div id="main-wrapper" style="background-image: url({{asset('admin_assets/images/backgrounds/login-bg.jpg')}});">
         <div class="position-relative overflow-hidden auth-bg min-vh-100 w-100 d-flex align-items-center justify-content-center">
             <div class="d-flex align-items-center justify-content-center w-100">
                 <div class="row justify-content-center w-100 my-5 my-xl-0">
@@ -49,7 +49,7 @@
                                                 <form action="{{ url('admin/authlogin') }}" method="post" id="loginForm">
                                                     {{-- CSRF Token --}}
                                                     @csrf
-
+                                                <input type="hidden" id="check_data" name="check_data" value="{{ $passwordSaltToken }}">
                                                     {{-- Email Field --}}
                                                     <div class="mb-3">
                                                         <label for="exampleInputEmail1" class="form-label">Email
@@ -82,11 +82,8 @@
                                                                 style="cursor: pointer;">
                                                                 👁️
                                                             </span>
-                                                            @php
-                                                            $ts = now()->addSeconds(30)->timestamp;
-                                                            @endphp
-                                                            <input type="hidden"  id="password"  name="password_salt" value="{{ Crypt::encryptString((string) $ts) }}">
-                                                        </div>
+                                                             
+                                                         </div>
                                                         @error('password')
                                                         <div class="invalid-feedback">
                                                             {{ $message }}
@@ -139,8 +136,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-    <script>
-    @if(session('success'))
+    <script nonce="{{ $cspNonce }}">    @if(session('success'))
     toastr.success("{{ session('success') }}");
     @endif
     // JS to make password visible

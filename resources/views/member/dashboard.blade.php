@@ -35,8 +35,7 @@
 @endsection
 
 @section('scripts')
-<script>
-    $.ajaxSetup({
+<script nonce="{{ $cspNonce }}">    $.ajaxSetup({
         headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}'}
     });
 

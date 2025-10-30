@@ -94,8 +94,7 @@
     <!-- end Vertical Steps Example -->
 </div>
 
-<script>
-document.getElementById('image').addEventListener('change', function(e) {
+<script nonce="{{ $cspNonce }}">document.getElementById('image').addEventListener('change', function(e) {
     const preview = document.getElementById('preview-image');
     const file = e.target.files[0];
 
@@ -113,8 +112,7 @@ document.getElementById('image').addEventListener('change', function(e) {
 });
 </script>
 
-<script>
-$(document).ready(function() {
+<script nonce="{{ $cspNonce }}">$(document).ready(function() {
     $('.form-select').select2();
     $('.js-example-basic-multiple').select2();
 

@@ -81,11 +81,11 @@
 
                                     <td>
                                         <div class="d-flex gap-2">
-                                            <!--<a href="{{--route('group.add_topic', ['id' => encrypt($group->id)]) --}}"
+                                            <!--<a href="{{-- route('group.add_topic', ['id' => encrypt($group->id)]) --}}"
                                                 class="btn btn-sm btn-primary" data-bs-toggle="tooltip"
                                                 data-bs-placement="top" title="Add Group Topics"><i
                                                     class="bi bi-plus"></i></a>-->
-                                            <a href="{{route('group.add_topic', ['id' => encrypt((string) $group->id)]) }}"
+                                                    <a href="{{route('group.add_topic', ['id' => encrypt((string) $group->id)]) }}"
                                                 class="btn btn-sm btn-primary" data-bs-toggle="tooltip"
                                                 data-bs-placement="top" title="Add Group Topics"><i
                                                     class="bi bi-plus"></i></a>
@@ -104,7 +104,7 @@
                                         {{ \Carbon\Carbon::parse($group->end_date)->format('d-m-Y') }}
                                         @endif
                                     </td>
-                                    <td>{{ optional($group->groupMember)->getMembersCount() ?? 0 }} | <a href="javascript:void(0)"
+                                    <td>{{ count($group->all_members) ?? 0 }} | <a href="javascript:void(0)"
                                             data-bs-toggle="modal" data-bs-target="#addMemberModal" class="btn btn-primary btn-sm add_member_" data-id="{{ $group->id }}">
                                             Add Members
                                         </a></td>
@@ -160,8 +160,7 @@
     </div>
 </div>
 
-<script>
-$(document).ready(function () {
+<script nonce="{{ $cspNonce }}">$(document).ready(function () {
 
     // Fetch members with filters
     function fetchMembers() {
@@ -219,8 +218,7 @@ $(document).ready(function () {
                 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
                 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
-                <script>
-                //Toastr message
+                <script nonce="{{ $cspNonce }}">                //Toastr message
                 /*$(document).ready(function() {
                     @if (session('success'))
                         toastr.success("{{ session('success') }}");

@@ -4,257 +4,135 @@
 
 @section('content')
 <div class="container-fluid">
-    <div class="card card-body py-3">
-        <div class="row align-items-center">
-            <div class="col-12">
-                <div class="d-sm-flex align-items-center justify-space-between">
-                    <h4 class="mb-4 mb-sm-0 card-title">Social Wall</h4>
-                    <nav aria-label="breadcrumb" class="ms-auto">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item d-flex align-items-center">
-                                <a class="text-muted text-decoration-none d-flex" href="../main/index.html">
-                                    <iconify-icon icon="solar:home-2-line-duotone" class="fs-6"></iconify-icon>
-                                </a>
-                            </li>
-                            <li class="breadcrumb-item" aria-current="page">
-                                <span class="badge fw-medium fs-2 bg-primary-subtle text-primary">
-                                    Social Wall
-                                </span>
-                            </li>
-                        </ol>
-                    </nav>
-                </div>
+    <div class="card card-body py-3 bg-light border-0 shadow-sm mb-4">
+    <div class="row align-items-center">
+        <div class="col-12">
+            <div class="d-sm-flex align-items-center justify-content-between">
+                <h4 class="mb-4 mb-sm-0 fw-semibold text-primary">📢 Social Wall</h4>
+                <nav aria-label="breadcrumb" class="ms-auto">
+                    <ol class="breadcrumb mb-0">
+                        <li class="breadcrumb-item">
+                            <a href="{{ route('dashboard') }}" class="text-decoration-none text-muted">
+                                <i class="bi bi-house-door-fill me-1"></i> Home
+                            </a>
+                        </li>
+                        <li class="breadcrumb-item active">
+                            <span class="badge bg-primary-subtle text-primary fw-medium">Social Wall</span>
+                        </li>
+                    </ol>
+                </nav>
             </div>
         </div>
     </div>
+</div>
+
     @if(session('success'))
     <div class="alert alert-success">{{ session('success') }}</div>
     @endif
     @php use Illuminate\Support\Str; @endphp
-        <div class="row align-items-center mb-3">
-            <div class="col-md-6">
-                <form method="GET" action="{{ route('socialwall.index') }}" id="filterForm">
-                    <div class="input-group">
-                        <select name="year" class="form-select" onchange="this.form.submit()">
-                            <option value="">All Years</option>
-                            @foreach($years as $year)
-                                <option value="{{ $year }}" {{ request('year') == $year ? 'selected' : '' }}>
-                                    {{ $year }}
-                                </option>
-                            @endforeach
-                        </select>
-                        <select name="month" class="form-select" onchange="this.form.submit()">
-                            <option value="">All Months</option>
-                            @foreach(range(1, 12) as $month)
-                                <option value="{{ $month }}" {{ request('month') == $month ? 'selected' : '' }}>
-                                    {{ \Carbon\Carbon::create()->month($month)->format('F') }}
-                                </option>
-                            @endforeach
-                        </select>
-                        <select name="day" class="form-select" onchange="this.form.submit()">
-                            <option value="">All Days</option>
-                            @foreach($days as $day)
-                                <option value="{{ $day }}" {{ request('day') == $day ? 'selected' : '' }}>
-                                    {{ $day }}
-                                </option>
-                            @endforeach
-                        </select>
-                        <button type="button" class="btn btn-primary" id="clearFilterBtn">Clear Filter</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-
-    @if($groupedPosts->isEmpty())
-    <div class="alert alert-warning text-center my-4">
-        No post found against applied filter
-    </div>
-    @endif
-
-    @foreach($groupedPosts as $post)
-    <div class="card rounded" id="feed-{{ $post['post_id'] }}">
-        <div class="card-header position-relative">
-    <div class="d-flex align-items-center gap-3">
-        @php
-
-                $profilePath = public_path('storage/' .
-                $post['member_profile_pic']);
-                $profilePic = !empty( $post['member_profile_pic']) &&
-                file_exists($profilePath)
-                ? asset('storage/' . $post['member_profile_pic'])
-                : asset('admin_assets/images/profile/user-1.webp');
-                @endphp
-        <img src="{{ $profilePic }}" alt="prd1" width="48" class="rounded">
-        <div>
-            <h6 class="mb-0">
-                 {{ $post['member_name'] }}
-                @if(!empty($post['group_id']))
-                    <span title="Group Post">
-                        <i class="bi bi-people-fill text-primary"></i>
-                    </span>
-                @else
-                    <span title="Single Post">
-                        <i class="bi bi-person-fill text-secondary"></i>
-                    </span>
-                @endif
-            </h6>
-            <span>{{ \Carbon\Carbon::parse($post['created_at'])->format('d-M-Y h:i A') }}</span>
-        </div>
-    </div>
-
-    <!-- Post Toggle in same style as comment -->
-    <div class="form-check form-switch position-absolute top-0 end-0 me-3 mt-2">
-        <input class="form-check-input feed-status-toggle" 
-               type="checkbox" 
-               role="switch"
-               id="feedStatusSwitch-{{ $post['post_id'] }}" 
-               data-id="{{ $post['post_id'] }}"
-               {{ $post['status'] == 1 ? 'checked' : '' }}>
-        <label class="form-check-label small" for="feedStatusSwitch-{{ $post['post_id'] }}">
-            {{ $post['status'] == 1 ? 'Active' : 'Inactive' }}
-        </label>
-    </div>
-</div>
-
-        <div class="card-body">
-            @if(!empty($post['content']))
-            @php
-            $words = str_word_count(strip_tags($post['content']), 1);
-            $wordCount = count($words);
-            $contentPreview = implode(' ', array_slice($words, 0, 100));
-            @endphp
-
-            <p class="mb-3 tx-14">
-                {!! $wordCount > 100 ? '<span class="short-content" id="short-'.$post['post_id'].'">' . $contentPreview
-                    . '...</span>
-                <span class="full-content d-none" id="full-'.$post['post_id'].'">' . $post['content'] . '</span>
-                <a href="javascript:void(0);" class="text-primary read-toggle" data-post-id="'.$post['post_id'].'">Read
-                    more</a>' : $post['content'] !!}
-            </p>
-
-            @endif
-
-            @if($post['media']->isNotEmpty())
-            <div class="row">
-                @foreach($post['media'] as $media)
-                <div class="col-md-2 mb-3">
-                    @if(Str::startsWith($media['file_type'], 'image'))
-                    <img src="{{ asset('storage/' . $media['file_path']) }}" class="img-fluid rounded"
-                        style="width: 200px; object-fit: cover;height: 200px;" />
-                    @else
-                    <a href="{{ asset('storage/' . $media['file_path']) }}" target="_blank">View
-                        File</a>
-                    @endif
+        <div class="card shadow-sm border-0 mb-4">
+    <div class="card-body">
+        <form method="GET" action="{{ route('socialwall.index') }}" id="filterForm">
+            <div class="row g-2">
+                <div class="col-md-3">
+                    <select name="year" class="form-select" onchange="this.form.submit()">
+                        <option value="">All Years</option>
+                        @foreach($years as $year)
+                            <option value="{{ $year }}" {{ request('year') == $year ? 'selected' : '' }}>
+                                {{ $year }}
+                            </option>
+                        @endforeach
+                    </select>
                 </div>
-                @endforeach
+                <div class="col-md-3">
+                    <select name="month" class="form-select" onchange="this.form.submit()">
+                        <option value="">All Months</option>
+                        @foreach(range(1, 12) as $month)
+                            <option value="{{ $month }}" {{ request('month') == $month ? 'selected' : '' }}>
+                                {{ \Carbon\Carbon::create()->month($month)->format('F') }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select name="day" class="form-select" onchange="this.form.submit()">
+                        <option value="">All Days</option>
+                        @foreach($days as $day)
+                            <option value="{{ $day }}" {{ request('day') == $day ? 'selected' : '' }}>
+                                {{ $day }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-md-3 d-flex align-items-center">
+                    <button type="button" class="btn btn-outline-secondary w-100" id="clearFilterBtn">
+                        <i class="bi bi-x-circle me-1"></i> Clear Filters
+                    </button>
+                </div>
             </div>
-            @endif
-
-            @if(!empty($post['video_link']))
-    <div class="mb-3">
-        @if(Str::contains($post['video_link'], 'youtube.com') || Str::contains($post['video_link'], 'youtu.be'))
-            @php
-                // Extract YouTube video ID from URL
-                preg_match('/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?|shorts)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})/', $post['video_link'], $matches);
-                $youtubeId = $matches[1] ?? null;
-            @endphp
-            @if($youtubeId)
-                <iframe width="320" height="240" src="https://www.youtube.com/embed/{{ $youtubeId }}" frameborder="0" allowfullscreen></iframe>
-            @else
-                <a href="{{ $post['video_link'] }}" target="_blank">View Video</a>
-            @endif
-        @else
-            <video width="320" height="240" controls>
-                <source src="{{ $post['video_link'] }}" type="video/mp4">
-                Your browser does not support the video tag.
-            </video>
-        @endif
-    </div>
-    @endif
-        </div>
-        <!-- Comments Section -->
-        <div class="card-footer border-top">
-            <div class="d-flex gap-4 mb-3">
-                <h6>Likes ({{ $post['likes_count'] }})</h6>
-                <h6>Comments ({{ count($post['comments']) }})</h6>
-            </div>
-
-           <!-- Comments Accordion Wrapper -->
-<div class="accordion mt-3" id="postCommentsAccordion-{{ $post['post_id'] }}">
-    <div class="accordion-item">
-        <h2 class="accordion-header" id="heading-comments-{{ $post['post_id'] }}">
-            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                data-bs-target="#collapse-comments-{{ $post['post_id'] }}" aria-expanded="false"
-                aria-controls="collapse-comments-{{ $post['post_id'] }}">
-                💬 View Comments ({{ count($post['comments']) }})
-            </button>
-        </h2>
-
-        <div id="collapse-comments-{{ $post['post_id'] }}" class="accordion-collapse collapse"
-            aria-labelledby="heading-comments-{{ $post['post_id'] }}"
-            data-bs-parent="#postCommentsAccordion-{{ $post['post_id'] }}">
-            <div class="accordion-body">
-
-                @foreach($post['comments'] as $comment)
-                    @php
-                        $commentProfilePath = public_path('storage/' . $comment->member_profile_pic);
-                        $commentProfilePic = !empty($comment->member_profile_pic) && file_exists($commentProfilePath)
-                            ? asset('storage/' . $comment->member_profile_pic)
-                            : asset('admin_assets/images/profile/user-1.webp');
-
-                        $commentText = preg_replace_callback(
-                            '/@([a-zA-Z0-9_.]+)/',
-                            function ($matches) {
-                                $name = $matches[1];
-                                $user = \App\Models\Member::where('name', $name)->first();
-                                if ($user) {
-                                    return "<a href='javascript:void(0);' class='mention-badge'>@{$user->name}</a>";
-                                }
-                                return "@{$name}";
-                            },
-                            e($comment->comment)
-                        );
-                    @endphp
-
-                    <!-- Comment Card -->
-                    <div class="d-flex mb-3 align-items-start">
-                        <img src="{{ $commentProfilePic }}" alt="commenter" width="36" height="36" class="rounded me-2">
-                        <div class="bg-light rounded p-2 w-100 position-relative">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <strong>{{ $comment->member_name }}</strong>
-                                <span class="text-muted" style="font-size:12px;">
-                                    {{ \Carbon\Carbon::parse($comment->created_at)->format('d-M-Y h:i A') }}
-                                </span>
-                            </div>
-                            <p class="mb-1">{!! $commentText !!}</p>
-
-                            <!-- Toggle switch -->
-                            <div class="form-check form-switch position-absolute top-0 end-0 me-3 mt-2">
-                                <input class="form-check-input comment-status-toggle" 
-                                    type="checkbox" 
-                                    role="switch"
-                                    id="commentStatusSwitch-{{ $comment->id }}"
-                                    data-id="{{ $comment->id }}"
-                                    {{ $comment->status == 1 ? 'checked' : '' }}>
-                                <label class="form-check-label small" for="commentStatusSwitch-{{ $comment->id }}">
-                                    {{ $comment->status == 1 ? 'Active' : 'Inactive' }}
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                @endforeach
-
-            </div>
-        </div>
+        </form>
     </div>
 </div>
 
 
+   @if($groupedPosts->isEmpty())
+    <div class="alert alert-warning text-center my-4 rounded-3 shadow-sm">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        No posts found against the applied filter
+    </div>
+@else
+    <!-- Tabs -->
+    <ul class="nav nav-pills justify-content-center gap-3 mb-4" id="postsTab" role="tablist">
+    <li class="nav-item">
+        <button class="nav-link active d-flex align-items-center px-4 py-2 rounded-pill shadow-sm fw-medium"
+            id="active-tab" data-bs-toggle="tab" data-bs-target="#active-posts" type="button">
+            <i class="bi bi-check-circle-fill text-success me-2"></i> Active Posts
+            <span class="badge bg-success-subtle text-success ms-2">
+                {{ $groupedPosts->where('status', 1)->count() }}
+            </span>
+        </button>
+    </li>
+    <li class="nav-item">
+        <button class="nav-link d-flex align-items-center px-4 py-2 rounded-pill shadow-sm fw-medium"
+            id="inactive-tab" data-bs-toggle="tab" data-bs-target="#inactive-posts" type="button">
+            <i class="bi bi-x-circle-fill text-danger me-2"></i> Inactive Posts
+            <span class="badge bg-danger-subtle text-danger ms-2">
+                {{ $groupedPosts->where('status', 0)->count() }}
+            </span>
+        </button>
+    </li>
+</ul>
+
+
+    <!-- Tab Content -->
+    <div class="tab-content">
+        <!-- Active Posts -->
+        <div class="tab-pane fade show active" id="active-posts">
+            @php $activePosts = $groupedPosts->filter(fn($p) => $p['status'] == 1); @endphp
+            @forelse($activePosts as $post)
+                @include('partials.post-card', ['post' => $post])
+            @empty
+                <div class="alert alert-info text-center rounded-3 shadow-sm my-4">
+                    <i class="bi bi-info-circle-fill me-2"></i>No active posts available
+                </div>
+            @endforelse
         </div>
 
-
+        <!-- Inactive Posts -->
+        <div class="tab-pane fade" id="inactive-posts">
+            @php $inactivePosts = $groupedPosts->filter(fn($p) => $p['status'] == 0); @endphp
+            @forelse($inactivePosts as $post)
+                @include('partials.post-card', ['post' => $post])
+            @empty
+                <div class="alert alert-info text-center rounded-3 shadow-sm my-4">
+                    <i class="bi bi-info-circle-fill me-2"></i>No inactive posts available
+                </div>
+            @endforelse
+        </div>
     </div>
-    @endforeach
+@endif
+
+
 
 
 
@@ -264,8 +142,7 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
-<script>
-$(document).ready(function() {
+<script nonce="{{ $cspNonce }}">$(document).ready(function() {
     @if(session('success'))
     toastr.success("{{ session('success') }}");
     @endif
@@ -333,8 +210,7 @@ $(document).ready(function() {
 });
 </script>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
+<script nonce="{{ $cspNonce }}">document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.read-toggle').forEach(function(btn) {
         btn.addEventListener('click', function() {
             const postId = this.getAttribute('data-post-id');

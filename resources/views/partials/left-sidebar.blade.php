@@ -15,7 +15,7 @@
                                     $profilePic = $user->profile_pic ?? null;
                                     @endphp
                                     <img id="existingImage"
-                                        src="{{ $profilePic ? asset('storage/' . $profilePic) : asset('feed_assets/images/avatar/07.jpg') }}"
+                                        src="{{ $profilePic ? route('profile.pic', $profilePic) : asset('feed_assets/images/avatar/07.jpg') }}"
                                         class="rounded-circle avatar-img" height="30" width="30" alt="User"
                                         loading="lazy" decoding="async">
                                 </div>
@@ -183,8 +183,7 @@
 
     <!-- jQuery and SweetAlert2 -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-$(document).ready(function() {
+    <script nonce="{{ $cspNonce }}">$(document).ready(function() {
     // Attach click handler using event delegation
     $(document).on('click', '.rsvp-option', function(e) {
         e.preventDefault();

@@ -39,6 +39,7 @@ Route::resource('post', PostController::class);
 use App\Http\Controllers\User\CommentController;
 use App\Http\Controllers\User\StoryController;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
 
 
 
@@ -124,7 +125,7 @@ Route::prefix('user')->name('user.')->group(function () {
         ->middleware(CheckProfile::class)
         ->name('feed');
 
-        
+
         Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 		Route::put('/post/update/{id}', [PostController::class, 'update'])->name('post.update');
 		Route::post('/post', [PostController::class, 'store'])->name('post.store');
@@ -148,20 +149,20 @@ Route::prefix('user')->name('user.')->group(function () {
         Route::post('/forum-store', [PostController::class, 'forum_store'])->name('forum.store');
 
 		Route::post('/post/{post}/like', [PostController::class, 'toggleLike'])->name('post.like');
-		
 
-  
+
+
          Route::get('/profile/{id}', [ProfileController::class, 'showById'])->where('id', '[0-9]+')->name('profile');
          Route::get('/profile/{name}', [ProfileController::class, 'showByName'])->where('name', '[a-zA-Z\s]+')->name('profile.name');
 
          Route::get('/profile/data/{id}', [ProfileController::class, 'showById_data'])->name('profile.data');
-         Route::put('/profile/update/{id}', [ProfileController::class, 'update'])->name('profile.update');
+         Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
 
-        Route::put('/eduinfo/update/{id}', [ProfileController::class, 'updateEduinfo'])->name('profile.eduinfo');
-        Route::put('/proinfo/update/{id}', [ProfileController::class, 'updateProinfo'])->name('profile.proinfo');
-        Route::put('/social/update/{id}', [ProfileController::class, 'updateSocial'])->name('profile.social.update');
-        Route::put('/sector_departments/update/{id}', [ProfileController::class, 'updateSectorDepartments'])->name('profile.sector_departments.update');
-        Route::put('/social/update/{id}', [ProfileController::class, 'updateSocial'])->name('profile.social.update');
+        Route::put('/eduinfo/update', [ProfileController::class, 'updateEduinfo'])->name('profile.eduinfo');
+        Route::put('/proinfo/update', [ProfileController::class, 'updateProinfo'])->name('profile.proinfo');
+        Route::put('/social/update', [ProfileController::class, 'updateSocial'])->name('profile.social.update');
+        Route::put('/sector_departments/update', [ProfileController::class, 'updateSectorDepartments'])->name('profile.sector_departments.update');
+        Route::put('/social/update', [ProfileController::class, 'updateSocial'])->name('profile.social.update');
   		Route::post('favorite-user/toggle', [ProfileController::class, 'toggleFavorite'])->name('favorite.user.toggle');
         Route::get('directory', [DashboardController::class, 'directory'])->name('directory');
        //Route::post('/feed/search', [FeedController::class, 'search'])->name('feed.search');
@@ -172,18 +173,22 @@ Route::prefix('user')->name('user.')->group(function () {
 	   Route::get('/all-events', [DashboardController::class, 'allevents'])->name('allevents');
       Route::get('/broadcast/{id}', [FeedController::class, 'broadcastDetails'])->name('broadcastDetails');
       Route::get('/group-post/{id}', [FeedController::class, 'getPostByGroup'])->name('group-post');
-      Route::get('/library', [LibraryController::class, 'index'])->name('library');
+      Route::get('/group/edit_data_get/{id}/edit', [FeedController::class, 'edit_data_get']);
+      Route::delete('/post/media_remove/{id}', [FeedController::class, 'deleteMedia']);
+
+      Route::put('/update-post-details', [FeedController::class, 'update_topic_details'])->name('update_topic_details');
+        Route::get('/library', [LibraryController::class, 'index'])->name('library');
   	Route::post('/groups-leave', [FeedController::class, 'leaveGroup'])->name('groups.leave');
 	Route::post('/grievance.submit', [FeedController::class, 'submitGrievance'])->name('grievance.submit');
 
     });
 
     Route::middleware('auth:user')->group(function () {
-       
+
         Route::get('/mentor-mentee', [MentorMenteeController::class, 'index'])->name('mentor_mentee');
         Route::post('/mentee/toggle/{id}', [MentorMenteeController::class, 'toggleStatus'])->name('mentee.toggle');
 
-       
+
 		Route::post('/get-years', [MentorMenteeController::class, 'getYears'])->name('get.years');
 		Route::post('/get-cadres', [MentorMenteeController::class, 'getCadres'])->name('get.cadres');
 		Route::post('/get-sectors', [MentorMenteeController::class, 'getSectors'])->name('get.sectors');
@@ -205,7 +210,7 @@ Route::prefix('user')->name('user.')->group(function () {
         Route::post('user/forum/topic/{id}/like', [MemberForumController::class, 'like'])->name('forum.topic.like');
         Route::post('user/forum/topic/{id}/unlike', [MemberForumController::class, 'unlike'])->name('forum.topic.unlike');
         Route::post('user/forum/topic/{id}/comment', [MemberForumController::class, 'comment'])->name('forum.topic.comment');
-      
+
         Route::post('user/forum/topic/{id}/store', [MemberForumController::class, 'member_store_topic'])->name('forum.topic.store');
        Route::post('user/forum/delete', [MemberForumController::class, 'deleteforum'])->name('forum.delete');
         Route::get('/notifications', [App\Http\Controllers\Member\NotificationController::class, 'getNotifications'])->name('notifications.get');
@@ -215,7 +220,7 @@ Route::prefix('user')->name('user.')->group(function () {
 
         Route::post('/notifications/read/{notifId}', [App\Http\Controllers\Member\NotificationController::class, 'markAsRead'])->name('notifications.read');
         Route::get('/get-members', [MemberController::class, 'getMembers'])->name('members.list');
-        
+
 
     });
 
@@ -296,7 +301,7 @@ Route::prefix('admin')->middleware('auth:admin')->controller(AdminController::cl
 
    // Location Routes
     Route::prefix('location')->name('admin.location.')->group(function () {
-       
+
 
         // Country Routes
         Route::get('/country', [App\Http\Controllers\Admin\Location\CountryController::class, 'index'])->name('country');
@@ -375,7 +380,7 @@ Route::prefix('group')->name('group.')->group(function () {
 		Route::get('/', [GroupController::class, 'index'])->name('index');
 		Route::get('/create', [GroupController::class, 'create'])->name('create');
 		Route::post('/', [GroupController::class, 'store'])->name('store');
-		
+
 		Route::get('/{group}/edit', [GroupController::class, 'edit'])->name('edit');
 		Route::put('/{group}', [GroupController::class, 'update'])->name('update');
 		Route::delete('/{group}', [GroupController::class, 'destroy'])->name('destroy');
@@ -386,6 +391,9 @@ Route::prefix('group')->name('group.')->group(function () {
         Route::put('topics/{id}/update', [GroupController::class, 'updateTopic'])->name('topics_update');
         Route::delete('topics/{id}', [GroupController::class, 'deleteTopic'])->name('topics.delete');
         Route::post('topicToggleStatus', [GroupController::class, 'topicToggleStatus'])->name('topicToggleStatus');
+        Route::delete('media/{id}', [GroupController::class, 'deleteMedia'])->name('delete_media');
+        Route::post('media/upload/{id}', [GroupController::class, 'uploadMedia'])->name('media_upload');
+
     });
 
 
@@ -458,14 +466,15 @@ Route::get('/user_login', function () {
          Route::get('/user/library', function () {
             return view('user.library');
         })->name('user.library');
-        // Route::get('/user/forum', function () {
-        //     return view('user.forum');
-        // })->name('user.forum');
-        // Route::get('/user/group', function () {
-        //     return view('user.groups');
-        // })->name('user.groups');
-        
-         
+        Route::get('/user/feedback', function () {
+            return view('user.feedback');
+        })->name('user.feedback');
+
+        // Route::get('/admin/user_management', function () {
+        //     return view('admin.user_management.index');
+        // })->name('admin.user_management.index');
+
+
         Route::get('/admin/mentorship/create', function () {
             return view('admin.mentorship.create');
         })->name('admin.mentorship.create');
@@ -478,13 +487,13 @@ Route::get('/user_login', function () {
         Route::get('/admin/topics', function () {
             return view('admin.topics.index');
         })->name('admin.topics.index');
+        
 
 
         Route::middleware('auth:admin')->group(function () {
                 Route::get('/admin/registration', [App\Http\Controllers\Admin\RegistrationRequestController::class, 'index'])->name('admin.registration.index');
                 Route::put('/admin/registration_requests/update/{id}', [App\Http\Controllers\Admin\RegistrationRequestController::class, 'requests_update_status'])->name('admin.registration_requests.update');
         });
-        
 require __DIR__.'/auth.php';
 
 
@@ -494,11 +503,12 @@ Route::get('/mapshow', [MapController::class, 'Map'])->name('maps.show');
 
 // User Change Password
 Route::middleware(['auth:user'])->group(function () {
+    Route::get('/user/moderation', [App\Http\Controllers\Admin\FeedController::class, 'userPostModeration'])->name('user.moderation');
     Route::get('/user/change-password', [ChangePasswordController::class, 'showForm'])->name('user.change-password.form');
     Route::post('/user/change-password', [ChangePasswordController::class, 'changePassword'])->name('user.change-password');
 
     Route::prefix('group')->name('user.group.')->group(function () {
-         
+
         Route::post('/activate-group', [MemberGroupController::class, 'activateGroup'])->name('activate-group');
         Route::get('/', [MemberGroupController::class, 'index'])->name('index');
         Route::get('/create', [MemberGroupController::class, 'create'])->name('create');
@@ -507,13 +517,13 @@ Route::middleware(['auth:user'])->group(function () {
         Route::put('/{group}', [MemberGroupController::class, 'update'])->name('update');
         Route::delete('/{group}', [MemberGroupController::class, 'destroy'])->name('destroy');
 
-   
+
         Route::delete('group_post_data/{post}', [MemberGroupController::class, 'post_destroy'])->name('post.destroy');
 
 
     });
 
-    
+
 });
 
 Route::get('/user-search', [MemberController::class, 'user_search'])->name('user.search');
@@ -525,8 +535,8 @@ Route::get('/admin/members/list', [App\Http\Controllers\Admin\GroupController::c
 Route::get('/admin/group/members', [App\Http\Controllers\Admin\GroupController::class, 'getGroupMembers'])
     ->name('admin.group.members');
 Route::post('/admin/get-year', function (Illuminate\Http\Request $request) {
-    
-    $service = $request->input('service'); 
+
+    $service = $request->input('service');
          $years = App\Models\Member::where('service', $service)
     ->whereNotNull('batch')
     ->where('batch', '!=', 'NA')
@@ -568,10 +578,36 @@ Route::post('/custom-broadcasting-auth', function(\Illuminate\Http\Request $requ
     return response()->json([
         'auth' => hash('sha256', $request->socket_id . ':' . $request->channel_name . ':bypass')
     ]);
-})->withoutMiddleware(\Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class); 
+})->withoutMiddleware(\Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class);
 
 Route::post('/admin/socialwall/toggle-status', [SocialWallController::class, 'togglePostStatus'])->name('socialwall.toggleStatus');
 Route::post('/admin/socialwall/toggle-comment-status', [SocialWallController::class, 'toggleCommentStatus'])->name('socialwall.toggleCommentStatus');
 
 Route::get('admin/group/existing_member', [App\Http\Controllers\Admin\GroupController::class, 'getExistingMembers'])->name('admin.group.existing_member');
+Route::PUT('group_name_update', [App\Http\Controllers\Member\GroupController::class, 'updateGroupName'])->name('group_name_update');
 
+Route::middleware('auth:admin')->group(function () {
+    Route::prefix('admin')->group(function () {
+        Route::get('user_management', [App\Http\Controllers\Admin\UserManagementController::class, 'index'])
+            ->name('admin.user_management.index');
+        Route::get('user_management/search', [App\Http\Controllers\Admin\UserManagementController::class, 'searchUser'])
+            ->name('admin.user_management.search');
+        Route::post('user_management/assign_role_permissions', [App\Http\Controllers\Admin\UserManagementController::class, 'assignRolePermissions'])
+            ->name('admin.user_management.assign_role_permissions');
+        Route::post('toggleStatus', [App\Http\Controllers\Admin\UserManagementController::class, 'toggleStatus'])
+            ->name('admin.user_management.toggleStatus');
+    });
+});
+
+Route::post('/admin/feed/approve', [App\Http\Controllers\Admin\FeedController::class, 'approve'])->name('admin.feeds.approve');
+Route::post('/admin/feed/decline', [App\Http\Controllers\Admin\FeedController::class, 'decline'])->name('admin.feeds.decline');
+Route::post('/admin/feed/view', [App\Http\Controllers\Admin\FeedController::class, 'view'])->name('admin.feeds.view');
+
+Route::middleware('auth:admin')->group(function () {
+    Route::get('/admin/feed', [App\Http\Controllers\Admin\FeedController::class, 'index'])->name('admin.feeds.index');
+});
+
+Route::get('/profile-pic/{path}', [App\Http\Controllers\FileController::class, 'show'])
+    ->where('path', '.*')  
+    ->middleware('auth:user')   
+    ->name('profile.pic');

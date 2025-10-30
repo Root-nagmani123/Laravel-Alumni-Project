@@ -589,8 +589,7 @@
 
 
 <!-- Filter Logic -->
-<script>
-$(document).ready(function() {
+<script nonce="{{ $cspNonce }}">$(document).ready(function() {
     // Mentor Filter
     $(document).on('click', '#filterbecomeMentor', function(e) {
         e.preventDefault();
@@ -701,8 +700,7 @@ $(document).ready(function() {
     });
 });
 </script>
-<script>
-document.addEventListener("DOMContentLoaded", function() {
+<script nonce="{{ $cspNonce }}">document.addEventListener("DOMContentLoaded", function() {
     const selectAll = document.getElementById("selectAll");
     selectAll.addEventListener("change", function() {
         document.querySelectorAll('.row-checkbox').forEach(cb => {
@@ -729,8 +727,7 @@ $(document).ready(function() {
     });
 });
 </script>
-<script>
-$(document).ready(function() {
+<script nonce="{{ $cspNonce }}">$(document).ready(function() {
 
     // ===== TAB MAPPING DEFINITION ===== //
     const tabMap = {
@@ -790,8 +787,7 @@ $(document).ready(function() {
 });
 </script>
 
-<script>
-function openDirectChat(userId) {
+<script nonce="{{ $cspNonce }}">function openDirectChat(userId) {
     setTimeout(() => {
         const el = $('.user-' + userId);
         console.log('Element found:', el.length > 0);

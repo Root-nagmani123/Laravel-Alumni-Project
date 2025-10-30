@@ -85,8 +85,7 @@
     <a href="javascript:void(0);" class="read-more">Read More</a>
 </p>
 
-<script>
-document.addEventListener("DOMContentLoaded", function () {
+<script nonce="{{ $cspNonce }}">document.addEventListener("DOMContentLoaded", function () {
     document.querySelectorAll(".event-description").forEach(function (desc) {
         let fullText = desc.getAttribute("data-full");
         let shortText = desc.innerText.trim().replace("Read More", "").trim();
@@ -273,8 +272,7 @@ document.addEventListener("DOMContentLoaded", function () {
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     
-<script>
-$(document).ready(function() {
+<script nonce="{{ $cspNonce }}">$(document).ready(function() {
     // Attach click handler using event delegation
     $(document).on('change', '.rsvp-select', function(e) {
         e.preventDefault();

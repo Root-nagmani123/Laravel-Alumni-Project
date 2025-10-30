@@ -227,8 +227,7 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
-<script>
-
+<script nonce="{{ $cspNonce }}">
     $(document).ready(function () {
     // AJAX: Toggle member status with confirmation
     $(document).on('change', '.status-toggle', function (e) {
@@ -355,8 +354,7 @@ $(document).ready(function() {
 // Populate Update Modal Ends
 </script>
 
-<script>
-// for Edit functionality
+<script nonce="{{ $cspNonce }}">// for Edit functionality
 function readURL(input) {
     if (input.files && input.files[0]) {
         var reader = new FileReader();
@@ -380,8 +378,7 @@ $(document).ready(function() {
 </script>
 
 @if ($errors->any())
-<script>
-$(function(){
+<script nonce="{{ $cspNonce }}">$(function(){
     const id = @json(old('broadcast_id'));
     if (id) {
         $('#broadcast_id').val(id);

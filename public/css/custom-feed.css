@@ -1,0 +1,47 @@
+/* Custom classes for user_feed.blade.php and user_feed.js */
+
+.ml-n-half {
+  margin-left: -0.5rem !important;
+}
+
+.img-400x100 {
+  width: 100% !important;
+  height: 400px !important;
+  object-fit: cover !important;
+}
+
+.img-250 {
+  height: 250px !important;
+  object-fit: cover !important;
+}
+
+.img-400 {
+  height: 400px !important;
+  object-fit: cover !important;
+}
+
+.img-195 {
+  height: 195px !important;
+  object-fit: cover !important;
+}
+
+.grid-2x200 {
+  display: grid !important;
+  grid-template-columns: repeat(2, 1fr) !important;
+  grid-auto-rows: 200px !important;
+  gap: 0.5rem !important;
+}
+
+.overlay-dark {
+  background: rgba(0,0,0,0.6) !important;
+  font-size: 2rem !important;
+  border-radius: 0.5rem !important;
+}
+
+.w-50p {
+  width: 50% !important;
+}
+
+.object-cover {
+  object-fit: cover !important;
+}

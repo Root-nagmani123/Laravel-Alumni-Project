@@ -12,17 +12,30 @@ use App\Services\NotificationService;
 use Illuminate\Support\Facades\Mail;
 use App\Events\UserTyping;
 use Illuminate\Support\Facades\DB;
+use Livewire\WithFileUploads;
 
 class ChatList extends Component
 {
+    use WithFileUploads;
+    public $attachment;
     public $search = '';
 
     public $newMessage = '';
-    public $messages = [];
+    public $chatMessages = [];
     public $selectedChat = null;
     public $senderId;
     public $messageLimit = 20;
     public $hasMoreMessages = false;
+    protected $rules = [
+        'newMessage' => 'nullable|string|max:5000',
+        'attachment' => 'nullable|file|max:5120|mimes:jpg,jpeg,png,gif',
+        // ,webp,mp4,mov,avi,mkv,pdf,doc,docx,xls,xlsx,zip
+    ];
+    protected $messages = [
+        'attachment.mimes' => 'This file type is not allowed. Please upload an image (jpg, png, gif, webp), video (mp4, mov, avi, mkv), or document (pdf, doc, docx, xls, xlsx, zip).',
+        'attachment.max'   => 'The file is too large. Maximum allowed size is 5 MB.',
+        'newMessage.max'   => 'Message text should not exceed 5000 characters.',
+    ];
 
 
     public function loadOlderMessages()
@@ -75,7 +88,7 @@ class ChatList extends Component
         //     ->where('is_read', 0)
         //     ->update(['is_read' => 1]);
 
-        //     $this->messages = Message::where(function ($query) {
+        //     $this->chatMessages = Message::where(function ($query) {
         //         $query->where('sender_id', auth()->guard('user')->id())
         //             ->where('receiver_id', $this->selectedChat);
         //     })
@@ -102,7 +115,7 @@ class ChatList extends Component
 
             $this->hasMoreMessages = $totalMessages > $this->messageLimit;
 
-            $this->messages = $query
+            $this->chatMessages = $query
                 ->orderBy('created_at', 'desc')
                 ->limit($this->messageLimit)
                 ->get()
@@ -123,7 +136,7 @@ class ChatList extends Component
 
     public function submit()
     {
-        if (empty($this->newMessage)) {
+        if (empty($this->newMessage) && !$this->attachment ) {
             return;
         }
 
@@ -131,8 +144,24 @@ class ChatList extends Component
         $message->sender_id = auth()->guard('user')->id();
         $message->receiver_id = $this->selectedChat;
         $message->message = $this->newMessage;
+        
+        if ($this->attachment) {
+            $path = $this->attachment->store('chat_uploads', 'public');
+            $message->file_path = $path;
+
+            // Detect type
+            $ext = $this->attachment->getClientOriginalExtension();
+            if (in_array(strtolower($ext), ['jpg','jpeg','png','gif','webp'])) {
+                $message->file_type = 'image';
+            } elseif (in_array(strtolower($ext), ['mp4','mov','avi','mkv'])) {
+                $message->file_type = 'video';
+            } else {
+                $message->file_type = 'document';
+            }
+        }
+
         $message->save();
-        $this->messages[] = $message;
+        $this->chatMessages[] = $message;
         
         broadcast(new MessageSentEvent($message))->toOthers();
         
@@ -160,6 +189,8 @@ class ChatList extends Component
         $unreadCount = $this->getUnreadMessagesCount();
         broadcast(new UnreadMessage($this->selectedChat, $user->id ?? null, $unreadCount))->toOthers();
         $this->reset(['newMessage']);
+        $this->attachment = null;
+        $this->dispatch('messageSent');
     }
 
     #[On('echo-private:chat-channel.{senderId},MessageSentEvent')]
@@ -168,7 +199,7 @@ class ChatList extends Component
         # Convert the event message array into an Eloquent model with relationships
         $newMessage = Message::find($event['message']['id'])->load('sender:id,name', 'receiver:id,name');
 
-        $this->messages[] = $newMessage;
+        $this->chatMessages[] = $newMessage;
     }
 
     public function getUnreadMessagesCount()
@@ -194,7 +225,7 @@ class ChatList extends Component
         // return view('livewire.chat.chat-list', [
         //     'chats' => $chats,
         //     'selectChat' => $selectChat,
-        //     'messages' => $this->messages,
+        //     'messages' => $this->chatMessages,
         // ]);
 
         $mentorList = $this->MentorList();
@@ -222,7 +253,7 @@ class ChatList extends Component
         return view('livewire.chat.chat-list', [
             'chats' => $chats,
             'selectChat' => $selectChat,
-            'messages' => $this->messages,
+            'chatMessages' => $this->chatMessages,
         ]);
     }
 
@@ -233,6 +264,8 @@ class ChatList extends Component
         $results = DB::table('mentor_mentee_connection')
         ->join('members as mentors', 'mentor_mentee_connection.mentee_id', '=', 'mentors.id')
         ->where('mentor_mentee_connection.mentor_id', $user_id)
+        ->where(strtolower('mentors.Service'), 'ias')
+        ->where('mentor_mentee_connection.status', 1)
         ->select('mentors.id as member_id', 'mentors.name as name', 'mentors.cader as cadre', 'mentors.batch', 'mentors.sector', 'mentors.profile_pic', DB::raw("'mentee' as role_type"))
         ->get();
 
@@ -246,6 +279,8 @@ class ChatList extends Component
         $results = DB::table('mentor_mentee_connection')
             ->join('members as mentors', 'mentor_mentee_connection.mentor_id', '=', 'mentors.id')
             ->where('mentor_mentee_connection.mentee_id', $user_id)
+            ->where(strtolower('mentors.Service'), 'ias')
+            ->where('mentor_mentee_connection.status', 1)
             ->select('mentors.id as member_id', 'mentors.name as name', 'mentors.cader as cadre', 'mentors.batch', 'mentors.sector', 'mentors.profile_pic', DB::raw("'mentor' as role_type"))
             ->get();
 
@@ -259,7 +294,7 @@ class ChatList extends Component
         // Only sender can delete their message
         if ($message && $message->sender_id === auth()->guard('user')->id()) {
             $message->delete();
-            $this->messages = $this->messages->filter(fn($msg) => $msg->id !== $messageId);
+            $this->chatMessages = $this->chatMessages->filter(fn($msg) => $msg->id !== $messageId);
         }
     }
 

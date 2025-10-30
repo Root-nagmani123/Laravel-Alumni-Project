@@ -26,8 +26,16 @@ class AdminController extends Controller
     }
 
     public function index(){
-        return view('admin.login');
+         $salt = base64_encode(random_bytes(32)); // opaque token
+        // Store in session with expiry (example: 30 seconds)
+        session([
+            'password_salt_token' => $salt,
+            'password_salt_expire' => now()->addSeconds(30)
+        ]);
+
+          return view('admin.login', ['passwordSaltToken' => $salt]);
     }
+
 
 
 public function loginAuth(Request $request)
@@ -44,30 +52,7 @@ public function loginAuth(Request $request)
     $rules = [
         'email' => 'required|email',
         'password' => 'required|string',
-         'g-recaptcha-response' => 'required'
     ];
-      $enc = $request->input('password_salt');
-
-        try {
-            // Decrypt timestamp
-            $timestamp = (int) Crypt::decryptString($enc);
-
-            // Verify: should not be expired (30 sec ahead)
-            if (now()->timestamp > $timestamp) {
-                return back()->withErrors([ 'email' => 'Invalid login credentials or unauthorized access.']);
-            }
-            
-              $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
-        'secret' => '6LcxQc0rAAAAAN5Wl6h1kH78PHIszwHdLitSdPi8',
-        'response' => $request->input('g-recaptcha-response'),
-        'remoteip' => $request->ip(),
-    ]);
-     $result = $response->json();
-
-    if (!$result['success']) {
-        return back()->withErrors(['captcha' => 'Captcha verification failed. Please try again.'])->withInput();
-    }
-    
      $encodedKey = config('app.key'); // Get APP_KEY
    if (strpos($encodedKey, 'base64:') === 0) {
        $encodedKey = substr($encodedKey, 7); // Remove "base64:" prefix
@@ -97,16 +82,6 @@ public function loginAuth(Request $request)
         'password' => $decryptedPassword,
         'isAdmin' => 1,
     ];
-
-     $allowedRedirects = [
-        'dashboard' => route('dashboard'),
-    ];
-
-    $target = $request->input('redirect'); // query param like ?redirect=dashboard
-
-    if ($target && array_key_exists($target, $allowedRedirects)) {
-        return redirect($allowedRedirects[$target]);
-    }
 
     // Check if remember checkbox is checked
     $remember = $request->has('remember');
@@ -149,11 +124,6 @@ public function loginAuth(Request $request)
     return redirect()->back()->withErrors([
         'email' => 'Invalid login credentials or unauthorized access.',
     ]);
-     } catch (\Exception $e) {
-            // Log failed login attempt
-            AuditService::logFailedLogin($request, $request->input('email'), 'Exception: ' . $e->getMessage());
-            return back()->withErrors([ 'email' => 'Invalid login credentials or unauthorized access.']);
-        }
 }
 
 	public function dashboard(){

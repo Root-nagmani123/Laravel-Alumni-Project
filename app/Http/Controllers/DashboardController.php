@@ -1,25 +1,5 @@
 <?php
 
-/* namespace App\Http\Controllers;
-
-use Illuminate\Support\Facades\Auth;
-
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session;
-use App\Models\DashboardModel;
-
-
-
-class DashboardController extends Controller
-{
-    public function index()
-    {
-        return view('dashboard.index', ['user' => Auth::user()]);
-    }
-}
- */
-
-
 namespace App\Http\Controllers;
 
 // use App\DataTables\TopicsDataTable;

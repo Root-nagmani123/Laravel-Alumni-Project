@@ -87,6 +87,10 @@
                         <a class="nav-link {{ request()->is('user/directory') ? 'active' : '' }}" 
                         href="{{ route('user.directory') }}">Directory</a>
                     </li>
+                     <li class="nav-item">
+                        <a class="nav-link" 
+                        href="#" data-bs-toggle="modal" data-bs-target="#grievanceModal">Feedback / Grievance</a>
+                    </li>
                 </ul>
 
                 <!-- Search Input Group with Dropdown -->
@@ -207,9 +211,18 @@
                                                             break;
                                                         case 'group':
                                                             $group = \App\Models\Group::find($notification->source_id);
-                                                            $notificationStatus = $group ? $group->status : 0;
-                                                            if ($notificationStatus == 1) {
-                                                                $notificationUrl = route('user.group-post', ['id' => $enc_source_id]);
+                                                          
+                                                            if ($group && $group->status == 1) {
+                                                                // Check membership
+                                                                $memberRecord = \App\Models\GroupMember::where('group_id', $group->id)->first();
+                                                                if ($memberRecord) {
+                                                                    $members = json_decode($memberRecord->mentiee, true) ?? [];
+                                                                    $user=Auth::guard('user')->id();
+
+                                                                        if (in_array($user, $members)) {
+                                                                            $notificationUrl = route('user.group-post', ['id' => $enc_source_id]);
+                                                                    }
+                                                                }
                                                             }
                                                             break;
                                                         case 'request':
@@ -323,7 +336,7 @@
                         aria-expanded="false">
                        
                         <img class="avatar-img rounded-2"
-                            src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}"
+                            src="{{ $user->profile_pic ? route('profile.pic', $user->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}"
                             alt="" loading="lazy" decoding="async">
                     </a>
                     <ul class="dropdown-menu dropdown-animation dropdown-menu-end pt-3 small me-md-n3"
@@ -372,7 +385,7 @@
                                 <!-- Avatar -->
                                 <div class="avatar me-3">
                                     <img class="avatar-img rounded-circle"
-                                        src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}"
+                                        src="{{ $user->profile_pic ? route('profile.pic', $user->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}"
                                         alt="avatar" loading="lazy" decoding="async">
                                 </div>
                                 <div>
@@ -390,6 +403,13 @@
                                 class="dropdown-item btn btn-primary-soft btn-sm my-2 text-center">View profile</a>
                             @endif
                         </li>
+                        @if(
+                            ($user->status == 1) && 
+                            ($user->is_moderator == 1) && 
+                            ($user->moderator_active_inactive == 1)
+                        )
+                        <li><a class="dropdown-item" href="{{ route('user.moderation') }}"><i class="bi bi-gear fa-fw me-2"></i>Moderator</a></li>
+                        @endif
                         <li>
                             <form action="{{ route('user.logout') }}" method="POST" style="display: inline;">
                                 @csrf
@@ -484,8 +504,7 @@
 }
 </style>
 
-<script>
-function handleNotificationClick(event, element) {
+<script nonce="{{ $cspNonce }}">function handleNotificationClick(event, element) {
     event.preventDefault();
     const url = element.dataset.url;
 
@@ -531,8 +550,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
-<script>
-// function clearNotifications(event) {
+<script nonce="{{ $cspNonce }}">// function clearNotifications(event) {
 //     event.preventDefault();
     
 
@@ -699,8 +717,7 @@ function clearNotifications(event) {
 
 
 </style>
-<script>
-document.addEventListener('click', function (event) {
+<script nonce="{{ $cspNonce }}">document.addEventListener('click', function (event) {
     const searchContainer = document.querySelector('.position-relative'); // wrapper div
     const searchResults = document.getElementById('searchResults');
 

@@ -4,6 +4,8 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use App\Services\NotificationService;
 use App\Http\Controllers\Auth;
+use Illuminate\Support\Facades\Crypt;
+use App\Rules\NoHtmlOrScript;
 
 use Illuminate\Http\Request;
 
@@ -21,47 +23,69 @@ class CommentController extends Controller
     {
         $request->validate([
             'post_id' => 'required|exists:posts,id',
-             'comment' => 'required|string|max:1000|',
-        // 'comment' => ['required', 'string', 'max:1000', function ($attribute, $value, $fail) {
-        //     if ($value !== strip_tags($value)) {
-        //         $fail('HTML and JavaScript are not allowed in comments.');
-        //     }
-        // }],
+            'comment' => ['required', 'string', 'max:1000', new NoHtmlOrScript()],
     ]);
 
-    $comment = Comment::create([
-        'post_id' => $request->post_id,
-        'member_id' => auth()->guard('user')->id(),
-        'comment' => strip_tags($request->comment),
-    ]);
-
-    $group_id = $comment->post->group_id;
-
-    if($comment){
-        $this->notificationService->notifyPostOwner($comment->post->member_id, auth()->guard('user')->id(), 'comment', "{$comment->member->name} commented on your post", $group_id, 'group');
-    }
-
-    if ($request->ajax()) {
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Comment added successfully!',
-            'comment' => $comment
+        $comment = Comment::create([
+            'post_id' => $request->post_id,
+            'member_id' => auth()->guard('user')->id(),
+            'comment' => strip_tags($request->comment),
         ]);
-    }
 
-    return back();
-   // return back()->with('success', 'Commentss added successfully!');
+        $group_id = $comment->post->group_id;
+        $member = $comment->member;
+
+        // Notify post owner about the new comment
+        if($comment){
+            $this->notificationService->notifyPostOwner(
+                $comment->post->member_id,
+                auth()->guard('user')->id(),
+                'comment',
+                "{$comment->member->name} commented on your post",
+                $group_id,
+                'group'
+            );
+        }
+
+        // Parse mentions for AJAX response
+        $parsed_comment = preg_replace_callback(
+            '/@([a-zA-Z0-9_.]+)/',
+            function ($matches) {
+                $username = $matches[1];
+                $user = \App\Models\Member::where('username', $username)->first();
+                if ($user) {
+                    $url = route('user.profile.data', ['id' => Crypt::encrypt($user->id)]);
+                    return "<a href='{$url}' class='mention-badge text-primary fw-semibold text-decoration-none' data-bs-toggle='tooltip' data-bs-placement='top' title='{$user->name} | {$user->designation}'>@{$username}</a>";
+                }
+                return $matches[0];
+            },
+            $comment->comment
+        );
+
+        // Check if request is AJAX
+        if ($request->ajax()) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Comment added successfully!',
+                'comment' => [
+                    'id' => $comment->id,
+                    'comment' => $comment->comment,
+                    'parsed_comment' => $parsed_comment,
+                    'member_name' => $member->name ?? 'Anonymous',
+                    'member_profile_url' => $member ? route('user.profile.data', ['id' => Crypt::encrypt($member->id)]) : '#',
+                    'member_avatar' => $member && $member->profile_pic ? route('profile.pic', $member->profile_pic) : asset('feed_assets/images/avatar/07.jpg'),
+                ]
+            ]);
+        }
+
+        // For regular form submission, redirect back with success message
+        return back()->with('success', 'Comment added successfully!');
     }
 
    public function update(Request $request, $id)
     {
     $request->validate([
-       'comment' => 'required|string|max:1000',
-    // 'comment' => ['required', 'string', 'max:1000', function ($attribute, $value, $fail) {
-    //     if ($value !== strip_tags($value)) {
-    //         $fail('HTML and JavaScript are not allowed in comments.');
-    //     }
-    // }],
+       'comment' => ['required', 'string', 'max:1000', new NoHtmlOrScript()],
     ]);
 
     $comment = Comment::findOrFail($id);
@@ -74,7 +98,11 @@ class CommentController extends Controller
     $comment->comment = strip_tags($request->comment);
     $comment->save();
 
-    return response()->json(['success' => true, 'message' => 'Comment updated']);
+    return response()->json([
+        'success' => true, 
+        'message' => 'Comment updated',
+        'comment' => $comment->comment
+    ]);
     }
 
  public function destroy($id)

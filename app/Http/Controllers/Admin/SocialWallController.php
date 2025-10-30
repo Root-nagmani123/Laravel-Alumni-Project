@@ -8,6 +8,7 @@ use App\Models\Comment; // <-- Add this line
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use App\Rules\NoHtmlOrScript;
 
 use App\Imports\MembersImport;
 use Maatwebsite\Excel\Facades\Excel;
@@ -33,8 +34,8 @@ class SocialWallController extends Controller
       public function update(Request $request, Post $post)
 {
     $validator = Validator::make($request->all(), [
-        'content' => 'required|string|max:5000',
-        'name' => 'nullable|string|max:255',
+        'content' => ['required', 'string', 'max:5000', new NoHtmlOrScript()],
+        'name' => ['nullable', 'string', 'max:255', new NoHtmlOrScript()],
         'email' => 'nullable|email|max:255',
     ]);
 

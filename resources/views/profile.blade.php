@@ -22,8 +22,9 @@
                         <div>
                             <!-- Avatar -->
                             <div class="avatar avatar-xxl mt-n5 mb-3">
+                                
                                 <img class="avatar-img rounded-circle border border-white border-3"
-                                    src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}"
+                                    src="{{ $user->profile_pic ? route('profile.pic', $user->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}"
                                     alt="" loading="lazy" decoding="async">
                             </div>
                         </div>
@@ -112,7 +113,7 @@
                                                 <div class="p-3 border rounded bg-light">
                                                     <!-- Personal Information form goes here -->
                                                     <form
-                                                        action="{{ route('user.profile.update', ['id' => $user->id]) }}"
+                                                        action="{{ route('user.profile.update') }}"
                                                         method="post" id="myForm" enctype="multipart/form-data">
                                                         @csrf
                                                         @method('PUT')
@@ -276,7 +277,7 @@
                                                                     <div class="mt-2">
                                                                         @if($user->profile_pic)
                                                                         <img id="previewImageEdit"
-                                                                            src="{{ asset('storage/' . $user->profile_pic) }}"
+                                                                            src="{{ route('profile.pic', $user->profile_pic) }}"
                                                                             alt="Profile Picture"
                                                                             style="max-width: 150px;">
                                                                         @endif
@@ -297,7 +298,7 @@
                                                 <div class="p-3 border rounded bg-light">
                                                     <!-- Educational Background form goes here -->
                                                     <form
-                                                        action="{{ route('user.profile.eduinfo', ['id' => $user->id]) }}"
+                                                        action="{{ route('user.profile.eduinfo') }}"
                                                         method="post" id="myForm" enctype="multipart/form-data">
                                                         @csrf
                                                         @method('PUT')
@@ -432,7 +433,7 @@
                                                 <div class="p-3 border rounded bg-light">
                                                     <!-- Professional Information form goes here -->
                                                     <form
-                                                        action="{{ route('user.profile.proinfo', ['id' => $user->id]) }}"
+                                                        action="{{ route('user.profile.proinfo') }}"
                                                         method="post" id="myForm" enctype="multipart/form-data">
                                                         @csrf
                                                         @method('PUT')
@@ -503,10 +504,20 @@
                                                                             style="color: red">*</span></label>
                                                                 </div>
                                                                 <div class="col-9">
-                                                                    <input type="text" id="service" name="service"
+                                                                    <!-- <input type="text" id="service" name="service"
                                                                         value="{{ old('service', $user->Service) }}"
                                                                         class="form-control"
-                                                                        placeholder="Enter your Service">
+                                                                        placeholder="Enter your Service"> -->
+                                                                        <select name="service" id="service" class="form-control">
+                                                                            <option value="">Select Service</option>
+                                                                            @if($Service_data->isEmpty())
+                                                                                <option value="" disabled>No services available</option>
+                                                                            @else
+                                                                                @foreach($Service_data as $Service)
+                                                                                    <option value="{{ $Service->Service }}" {{ old('service', $user->Service) == $Service->Service ? 'selected' : '' }}>{{ $Service->Service }}</option>
+                                                                                @endforeach
+                                                                            @endif
+                                                                        </select>
                                                                 </div>
                                                             </div>
 
@@ -522,7 +533,7 @@
                                                 <div class="p-3 border rounded bg-light">
                                                     <!-- Professional Information form goes here -->
                                                     <form
-                                                        action="{{ route('user.profile.social.update', ['id' => $user->id]) }}"
+                                                        action="{{ route('user.profile.social.update') }}"
                                                         method="post" id="myForm" enctype="multipart/form-data">
                                                         @csrf
                                                         @method('PUT')
@@ -597,7 +608,7 @@
 
                                             <div class="tab-pane fade" id="sector-ministries" role="tabpanel">
                                                 <form
-                                                    action="{{ route('user.profile.sector_departments.update', ['id' => $user->id]) }}"
+                                                    action="{{ route('user.profile.sector_departments.update') }}"
                                                     method="post" id="myForm">
                                                     @csrf
                                                     @method('PUT')
@@ -826,7 +837,7 @@
                                     <div class="avatar avatar-xs me-2">
                                         <a href="{{ route('user.profile.data', ['id' => Crypt::encrypt($user->id)]) }}">
                                             <img class="avatar-img rounded-circle"
-                                                src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}"
+                                                src="{{ $user->profile_pic ? route('profile.pic', $user->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}"
                                                 alt="" loading="lazy" decoding="async">
                                         </a>
                                     </div>
@@ -888,7 +899,7 @@
                                             $member = $post->member ?? null;
 
                                             $profileImage = $member && $member->profile_pic
-                                            ? asset('storage/' . $member->profile_pic)
+                                            ? route('profile.pic', $member->profile_pic)
                                             : asset('feed_assets/images/avatar/07.jpg');
 
                                             $displayName = $member->name ?? 'N/A';
@@ -1190,7 +1201,7 @@
                                             <a
                                                 href="{{ route('user.profile.data', ['id' => Crypt::encrypt(auth()->guard('user')->id())]) }}">
                                                 <img class="avatar-img rounded-circle" src="{{ auth()->guard('user')->user()->profile_pic
-                                ? asset('storage/' . auth()->guard('user')->user()->profile_pic)
+                                ? route('profile.pic', auth()->guard('user')->user()->profile_pic)
                                 : asset('feed_assets/images/avatar/07.jpg') }}"
                                                     alt="{{ auth()->guard('user')->user()->name ?? 'User' }}"
                                                     loading="lazy" decoding="async">
@@ -1216,10 +1227,9 @@
                                     </div>
                                     <ul class="comment-wrap list-unstyled">
                                         <!-- Comment item START -->
-                                        {{--@foreach ($post->comments as $comment)--}}
-                                        @foreach ($post->comments->take(2) as $comment)
+                                        @foreach ($post->comments as $index => $comment)
                                         @if(isset($member->id) && $member->id === auth()->guard('user')->id())
-                                        <li class="comment-item mb-3" id="comment-{{ $comment->id }}">
+                                        <li class="comment-item mb-3 {{ $index >= 2 ? 'd-none' : '' }}" id="comment-{{ $comment->id }}">
                                             <div class="d-flex position-relative">
                                                 <!-- Avatar -->
                                                 <div class="avatar avatar-xs">
@@ -1230,7 +1240,7 @@
                                                     <a
                                                         href="{{ $comment->member ? route('user.profile.data', ['id' => Crypt::encrypt($comment->member->id)]) : '#' }}">
                                                         <img class="avatar-img rounded-circle"
-                                                            src="{{ $comment->member && $comment->member->profile_pic ? asset('storage/' . $comment->member->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}"
+                                                            src="{{ $comment->member && $comment->member->profile_pic ? route('profile.pic', $comment->member->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}"
                                                             alt="" loading="lazy" decoding="async">
                                                     </a>
                                                 </div>
@@ -1273,7 +1283,7 @@
                                             <!-- Comment item nested END -->
                                         </li>
                                         @elseif(auth()->guard('user')->id() === $comment->member_id)
-                                        <li class="comment-item mb-3" id="comment-{{ $comment->id }}">
+                                        <li class="comment-item mb-3 {{ $index >= 2 ? 'd-none' : '' }}" id="comment-{{ $comment->id }}">
                                             <div class="d-flex position-relative">
                                                 <!-- Avatar -->
                                                 <div class="avatar avatar-xs">
@@ -1284,7 +1294,7 @@
                                                     <a
                                                         href="{{ $comment->member ? route('user.profile.data', ['id' => Crypt::encrypt($comment->member->id)]) : '#' }}">
                                                         <img class="avatar-img rounded-circle"
-                                                            src="{{ $comment->member && $comment->member->profile_pic ? asset('storage/' . $comment->member->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}"
+                                                            src="{{ $comment->member && $comment->member->profile_pic ? route('profile.pic', $comment->member->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}"
                                                             alt="" loading="lazy" decoding="async">
                                                     </a>
                                                 </div>
@@ -1326,26 +1336,48 @@
                                             </div>
                                             <!-- Comment item nested END -->
                                         </li>
+                                        @else
+                                        <li class="comment-item mb-3 {{ $index >= 2 ? 'd-none' : '' }}" id="comment-{{ $comment->id }}">
+                                            <div class="d-flex position-relative">
+                                                <!-- Avatar -->
+                                                <div class="avatar avatar-xs">
+                                                    <a href="{{ $comment->member ? route('user.profile.data', ['id' => Crypt::encrypt($comment->member->id)]) : '#' }}">
+                                                        <img class="avatar-img rounded-circle"
+                                                            src="{{ $comment->member && $comment->member->profile_pic ? asset('storage/' . $comment->member->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}"
+                                                            alt="" loading="lazy" decoding="async">
+                                                    </a>
+                                                </div>
+                                                <div class="ms-2 w-100">
+                                                    <!-- Comment by -->
+                                                    <div class="bg-light rounded-start-top-0 p-3 rounded">
+                                                        <div class="d-flex justify-content-between">
+                                                            <h6 class="mb-1"> <a href="#!">
+                                                                    {{ $comment->member->name ?? 'Anonymous' }} </a>
+                                                            </h6>
+                                                            <small class="ms-2">{{$comment->created_at->diffForHumans()}}</small>
+                                                        </div>
+                                                        <p class="small mb-0" id="comment-text-{{ $comment->id }}">
+                                                            {{ $comment->comment }}</p>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-6">
+                                                            <a href="#!" class="text-secondary small me-2">Like</a>
+                                                            <a href="#!" class="text-secondary small">Reply</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- Comment item nested END -->
+                                        </li>
                                         @endif
                                         @endforeach
                                         <!-- Comment item END -->
                                     </ul>
                                     <!-- Card body END -->
-                                    @if(isset($member->id) && $member->id === auth()->guard('user')->id())
-
                                     @if ($post->comments->count() > 2)
                                     <div class="card-footer border-0 pt-0">
-                                        <a href="#!" class="btn btn-link btn-sm text-secondary load-more-comments"
-                                            data-post-id="{{ $post->id }}" data-offset="2">
-                                            <div class="spinner-dots me-2 d-none" id="spinner-{{ $post->id }}">
-                                                <span class="spinner-dot"></span>
-                                                <span class="spinner-dot"></span>
-                                                <span class="spinner-dot"></span>
-                                            </div>
-                                            Load more comments
-                                        </a>
+                                        <a href="#" class="btn btn-link btn-sm text-secondary load-more-comments" data-step="5">Load more comments</a>
                                     </div>
-                                    @endif
                                     @endif
                                     <!-- Card footer END -->
                                 </div>
@@ -1735,10 +1767,164 @@
                                 <!-- Card header END -->
                                 <!-- Card body START -->
                                 <div class="card-body">
-                                    <div class="row g-4">
-                                        
-                                    </div>
+    @if(!empty($selectedSectors))
+        <!-- Search Box with Inline Clear Button -->
+        <div class="mb-3 position-relative">
+            <input type="text" class="form-control pe-5" id="sectorSearch" placeholder="🔍 Search sector or department...">
+            <button class="btn btn-sm btn-light position-absolute top-50 end-0 translate-middle-y me-2 d-none" 
+                    type="button" id="clearSearch" style="border:none; background:transparent;">
+                <i class="bi bi-x-circle text-muted"></i>
+            </button>
+        </div>
+
+        <div class="accordion" id="sectorsAccordion">
+            @foreach($selectedSectors as $index => $sector)
+                <div class="accordion-item sector-item">
+                    <!-- Sector Header -->
+                    <h2 class="accordion-header" id="heading-{{ $index }}">
+                        <button class="accordion-button d-flex justify-content-between align-items-center {{ $index !== 0 ? 'collapsed' : '' }}"
+                                type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#collapse-{{ $index }}"
+                                aria-expanded="{{ $index === 0 ? 'true' : 'false' }}"
+                                aria-controls="collapse-{{ $index }}">
+                            <span class="sector-name">
+                                <i class="fas fa-draw-polygon me-2 text-primary"></i>
+                                {{ $sector['name'] }}
+                            </span>
+                            <span class="badge bg-light text-dark ms-2">
+                                {{ !empty($sector['departments']) ? count($sector['departments']) . ' Depts' : '0 Depts' }}
+                            </span>
+                        </button>
+                    </h2>
+
+                    <!-- Sector Body -->
+                    <div id="collapse-{{ $index }}" 
+                         class="accordion-collapse collapse {{ $index === 0 ? 'show' : '' }}"
+                         aria-labelledby="heading-{{ $index }}"
+                         data-bs-parent="#sectorsAccordion">
+                        <div class="accordion-body">
+                            @if(!empty($sector['departments']))
+                                <ul class="list-group list-group-flush small department-list">
+                                    @foreach($sector['departments'] as $dept)
+                                        <li class="list-group-item px-2 py-1 department-name">
+                                            <i class="bi bi-building me-2 text-secondary"></i>{{ $dept }}
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            @else
+                                <div class="text-muted small fst-italic">
+                                    <i class="bi bi-info-circle me-1"></i>No departments selected
                                 </div>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+    @else
+        <div class="alert alert-info mb-0">
+            <i class="bi bi-exclamation-circle me-2"></i>No sector or ministry data available.
+        </div>
+    @endif
+</div>
+
+<!-- Highlight Style -->
+<style>
+    .highlight {
+        background-color: #ffe066; /* soft yellow */
+        font-weight: bold;
+        padding: 0 2px;
+        border-radius: 3px;
+    }
+</style>
+
+<!-- Filter + Highlight + Clear Script -->
+<script nonce="{{ $cspNonce }}">    const searchInput = document.getElementById('sectorSearch');
+    const clearBtn = document.getElementById('clearSearch');
+
+    function highlightMatch(text, filter) {
+        if (!filter) return text;
+        let regex = new RegExp(`(${filter})`, 'gi');
+        return text.replace(regex, '<span class="highlight">$1</span>');
+    }
+
+    function filterSectors() {
+        let filter = searchInput.value.toLowerCase();
+        let foundMatch = false;
+
+        document.querySelectorAll('.sector-item').forEach(function(item) {
+            let sectorNameEl = item.querySelector('.sector-name');
+            let sectorName = sectorNameEl.textContent.trim();
+
+            let departmentEls = item.querySelectorAll('.department-name');
+            let departmentNames = Array.from(departmentEls).map(el => el.textContent.trim());
+
+            let matchSector = sectorName.toLowerCase().includes(filter);
+            let matchDept = departmentNames.some(d => d.toLowerCase().includes(filter));
+            let match = matchSector || matchDept;
+
+            // Show/hide
+            item.style.display = match ? '' : 'none';
+
+            // Reset highlights
+            sectorNameEl.innerHTML = `<i class="fas fa-draw-polygon me-2 text-primary"></i> ${sectorName}`;
+            departmentEls.forEach((el, i) => {
+                el.innerHTML = `<i class="bi bi-building me-2 text-secondary"></i> ${departmentNames[i]}`;
+            });
+
+            // Apply highlighting
+            if (filter) {
+                if (matchSector) {
+                    sectorNameEl.innerHTML = `<i class="fas fa-draw-polygon me-2 text-primary"></i> ${highlightMatch(sectorName, filter)}`;
+                }
+                departmentEls.forEach((el, i) => {
+                    if (departmentNames[i].toLowerCase().includes(filter)) {
+                        el.innerHTML = `<i class="bi bi-building me-2 text-secondary"></i> ${highlightMatch(departmentNames[i], filter)}`;
+                    }
+                });
+            }
+
+            // Auto-expand if department matches
+            let collapse = item.querySelector('.accordion-collapse');
+            let button = item.querySelector('.accordion-button');
+            if (matchDept && collapse && !collapse.classList.contains('show')) {
+                new bootstrap.Collapse(collapse, { show: true, toggle: true });
+                button.classList.remove('collapsed');
+                button.setAttribute('aria-expanded', 'true');
+            }
+
+            if (match) foundMatch = true;
+        });
+
+        // Toggle clear button
+        clearBtn.classList.toggle('d-none', !filter);
+
+        // Show/hide no results message
+        if (!foundMatch && filter) {
+            if (!document.getElementById('noResults')) {
+                let noResults = document.createElement('div');
+                noResults.id = 'noResults';
+                noResults.className = 'alert alert-warning mt-2';
+                noResults.innerHTML = '<i class="bi bi-search"></i> No matching sector or department found.';
+                document.querySelector('#sectorsAccordion').insertAdjacentElement('beforebegin', noResults);
+            }
+        } else {
+            let noResults = document.getElementById('noResults');
+            if (noResults) noResults.remove();
+        }
+    }
+
+    searchInput.addEventListener('keyup', filterSectors);
+
+    clearBtn.addEventListener('click', function() {
+        searchInput.value = '';
+        clearBtn.classList.add('d-none');
+        filterSectors();
+        searchInput.focus();
+    });
+</script>
+
                                 <!-- Card body END -->
                             </div>
                         </div>
@@ -1826,8 +2012,7 @@
     </div>
 </div>
 <!-- Modal create Feed photo END -->
-<script>
-document.querySelectorAll('.toggle-sector').forEach(cb => {
+<script nonce="{{ $cspNonce }}">document.querySelectorAll('.toggle-sector').forEach(cb => {
     cb.addEventListener('change', function() {
         const target = document.querySelector(this.dataset.target);
         target.style.display = this.checked ? 'flex' : 'none';
@@ -1962,8 +2147,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-<script>
-document.addEventListener("DOMContentLoaded", function() {
+<script nonce="{{ $cspNonce }}">document.addEventListener("DOMContentLoaded", function() {
     document.querySelectorAll('.copy-url-btn').forEach(function(el) {
         el.addEventListener('click', function(e) {
             e.preventDefault();
@@ -2017,7 +2201,7 @@ function saveEditedComment(id) {
         .then(res => res.json())
         .then(data => {
             if (data.success) {
-                document.getElementById(`comment-text-${id}`).innerHTML = newComment;
+                document.getElementById(`comment-text-${id}`).textContent = data.comment || newComment;
             } else {
                 alert(data.message || 'Failed to update comment');
             }
@@ -2055,55 +2239,23 @@ function deleteComment(commentId) {
 
 
 document.addEventListener('DOMContentLoaded', function() {
-    document.querySelectorAll('.load-more-comments').forEach(function(btn) {
-        btn.addEventListener('click', function(e) {
+    // Lazy load comments when "Load more" is clicked
+    document.querySelectorAll('.load-more-comments').forEach(function(button) {
+        button.addEventListener('click', function(e) {
             e.preventDefault();
-            const postId = btn.dataset.postId;
-            let offset = parseInt(btn.dataset.offset);
-            const spinner = document.getElementById('spinner-' + postId);
-            spinner.classList.remove('d-none');
-
-            fetch(`load-comments/${postId}?offset=${offset}`)
-                .then(res => res.json())
-                .then(data => {
-                    spinner.classList.add('d-none');
-
-                    if (data.comments.length === 0) {
-                        btn.remove(); // No more comments
-                        return;
-                    }
-
-                    let commentHtml = '';
-                    data.comments.forEach(comment => {
-                        commentHtml += `
-                            <li class="comment-item mb-3" id="comment-${comment.id}">
-                                <div class="d-flex position-relative">
-                                    <div class="avatar avatar-xs">
-                                        <a href="#!"><img class="avatar-img rounded-circle"
-                                            src="${comment.member && comment.member.profile_pic ? '/storage/' + comment.member.profile_pic : '/feed_assets/images/avatar/07.jpg'}"
-                                            alt="" loading="lazy" decoding="async"></a>
-                                    </div>
-                                    <div class="ms-2 w-100">
-                                        <div class="bg-light rounded-start-top-0 p-3 rounded">
-                                            <div class="d-flex justify-content-between">
-                                                <h6 class="mb-1"><a href="#!">${comment.member?.name || 'Anonymous'}</a></h6>
-                                                <small class="ms-2">${comment.created_at_human || comment.created_at || ''}</small>
-                                            </div>
-                                            <p class="small mb-0">${comment.comment}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>`;
-                    });
-
-                    btn.closest('.card-footer').insertAdjacentHTML('beforebegin',
-                        commentHtml);
-                    btn.dataset.offset = offset + data.comments.length;
-                })
-                .catch(err => {
-                    spinner.classList.add('d-none');
-                    console.error('Failed to load comments:', err);
-                });
+            const postElement = this.closest('.card');
+            const hiddenComments = postElement.querySelectorAll('.comment-item.d-none');
+            const step = parseInt(this.dataset.step) || 5;
+            
+            // Show next batch of comments
+            for (let i = 0; i < Math.min(step, hiddenComments.length); i++) {
+                hiddenComments[i].classList.remove('d-none');
+            }
+            
+            // Hide button if no more comments to load
+            if (hiddenComments.length <= step) {
+                this.style.display = 'none';
+            }
         });
     });
 });
@@ -2114,5 +2266,107 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 });
 </script>
+<script nonce="{{ $cspNonce }}">document.addEventListener("DOMContentLoaded", function () {
+    const modal = document.getElementById("editProfileModal"); // replace with your modal ID
 
+    if (modal) {
+        modal.addEventListener("hidden.bs.modal", function () {
+            // Reset only sector & ministries tab
+            document.querySelectorAll('#sector-ministries input[type="checkbox"]').forEach(cb => {
+                // Restore to server-rendered state (Laravel already printed `checked` if saved)
+                cb.checked = cb.defaultChecked;
+
+                // Handle show/hide for sector groups
+                if (cb.classList.contains("toggle-sector")) {
+                    const target = document.querySelector(cb.dataset.target);
+                    if (target) {
+                        target.style.display = cb.defaultChecked ? "" : "none";
+                    }
+                }
+            });
+        });
+    }
+});
+</script>
+
+<script nonce="{{ $cspNonce }}">// Comment form submission handler for profile page
+document.addEventListener('DOMContentLoaded', function() {
+    // Handle comment form submissions
+    document.querySelectorAll('form[id^="commentForm-"]').forEach(function(form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(form);
+            const postId = form.dataset.postId;
+            const textarea = form.querySelector('textarea[name="comment"]');
+            const commentText = textarea.value.trim();
+            
+            if (!commentText) {
+                alert('Please enter a comment.');
+                textarea.focus();
+                return;
+            }
+            
+            // Show loading state
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalContent = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="spinner-border spinner-border-sm"></i>';
+            submitBtn.disabled = true;
+            
+            fetch(form.action, {
+                method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRF-TOKEN': formData.get('_token')
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    // Clear the textarea
+                    textarea.value = '';
+                    
+                    // Show success message
+                    const successToast = document.createElement('div');
+                    successToast.className = 'position-fixed top-0 end-0 p-3';
+                    successToast.style.zIndex = '1100';
+                    successToast.innerHTML = `
+                        <div class="toast align-items-center text-bg-success border-0 show" role="alert">
+                            <div class="d-flex">
+                                <div class="toast-body">${data.message}</div>
+                                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                            </div>
+                        </div>
+                    `;
+                    document.body.appendChild(successToast);
+                    
+                    // Auto-remove toast after 3 seconds
+                    setTimeout(() => {
+                        if (successToast.parentNode) {
+                            successToast.parentNode.removeChild(successToast);
+                        }
+                    }, 3000);
+                    
+                    // Reload the page to show the new comment
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
+                } else {
+                    alert('Error: ' + (data.message || 'Failed to add comment'));
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while adding the comment.');
+            })
+            .finally(() => {
+                // Restore button state
+                submitBtn.innerHTML = originalContent;
+                submitBtn.disabled = false;
+            });
+        });
+    });
+});
+</script>
 @endsection

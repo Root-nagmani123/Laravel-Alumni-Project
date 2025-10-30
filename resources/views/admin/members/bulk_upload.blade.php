@@ -52,7 +52,7 @@
                             <hr>
                             <div class="mb-2">
                                 <a href="{{ asset('sample-members.csv') }}" class="btn btn-sm btn-link">
-                                    <i class="bi bi-download"></i> Download Sample CSV
+                                    <i class="bi bi-download"></i> Download Sample CSV File
                                 </a>
                             </div>
                             <div class="mb-3">

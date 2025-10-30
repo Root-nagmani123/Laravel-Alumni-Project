@@ -40,12 +40,29 @@
                         $profilePic = $user->profile_pic ?? null;
                         @endphp
                         <img class="avatar-img rounded-circle"
-                            src="{{ $profilePic ? asset('storage/' . $profilePic) : asset('feed_assets/images/avatar/07.jpg') }}"
+                            src="{{ $profilePic ? route('profile.pic', $profilePic) : asset('feed_assets/images/avatar/07.jpg') }}"
                             alt="User Avatar" loading="lazy" decoding="async">
                     </div>
                     <!-- Post textarea -->
-                    <textarea class="form-control pe-4 fs-3 lh-1 border-0" name="modalContent" rows="5"
-                        placeholder="Share your thoughts..." required></textarea>
+                    <div class="flex-grow-1">
+
+                        <textarea class="form-control pe-4 fs-3 lh-1 border-0 @error('modalContent') is-invalid @enderror"
+
+                                  name="modalContent"
+
+                                  rows="5"
+
+                                  placeholder="Share your thoughts..."
+
+                                  required>{{ old('modalContent') }}</textarea>
+
+                        @error('modalContent')
+
+                            <div class="invalid-feedback d-block">{{ $message }}</div>
+
+                        @enderror
+
+                    </div>
                 </div>
 
                 <!-- File upload -->
@@ -94,14 +111,23 @@
                         $profilePic = $user->profile_pic ?? null;
                         @endphp
                         <img class="avatar-img rounded-circle"
-                            src="{{ $profilePic ? asset('storage/' . $profilePic) : asset('feed_assets/images/avatar/07.jpg') }}"
+                            src="{{ $profilePic ? route('profile.pic', $profilePic) : asset('feed_assets/images/avatar/07.jpg') }}"
                             alt="User Avatar" loading="lazy" decoding="async">
                     </div>
 
                     <!-- Post textarea -->
-                    <input type="hidden" name="group_id" class="group_id">
-                    <textarea class="form-control pe-4 fs-3 lh-1 border-0" name="modalContent" rows="5"
-                        placeholder="Share your thoughts..." required></textarea>
+                    <div class="flex-grow-1">
+                        <input type="hidden" name="group_id" class="group_id">
+                        <textarea class="form-control pe-4 fs-3 lh-1 border-0 @error('modalContent') is-invalid @enderror" 
+                                  name="modalContent" 
+                                  rows="5"
+                                  placeholder="Share your thoughts..." 
+                                  required>{{ old('modalContent') }}</textarea>
+                        
+                        @error('modalContent')
+                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                        @enderror
+                    </div>
                 </div>
 
                 <!-- File upload -->
@@ -129,143 +155,4 @@
 </div>
 
 <!-- Modal create Feed photo END -->
-
-
-
-
-
-
-
-<script>
-/*  */
-
-document.addEventListener("DOMContentLoaded", function() {
-    function showFiles(files, previewContainer) {
-        previewContainer.innerHTML = ''; // Clear old previews
-        [...files].forEach(file => {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                let mediaElement;
-                if (file.type.startsWith('image/')) {
-                    mediaElement = document.createElement('img');
-                    mediaElement.src = e.target.result;
-                    mediaElement.style.width = "100px";
-                    mediaElement.style.height = "100px";
-                    mediaElement.style.objectFit = "cover";
-                } else if (file.type.startsWith('video/')) {
-                    mediaElement = document.createElement('video');
-                    mediaElement.src = e.target.result;
-                    mediaElement.controls = true;
-                    mediaElement.style.width = "100px";
-                    mediaElement.style.height = "100px";
-                }
-                previewContainer.appendChild(mediaElement);
-            };
-            reader.readAsDataURL(file);
-        });
-    }
-
-    document.querySelectorAll(".drop-area").forEach(dropArea => {
-        const input = dropArea.querySelector('input[type="file"]');
-        const preview = dropArea.querySelector(
-        'div[id^="preview-"]'); // matches preview-feed, preview-group, etc.
-
-        // Click to open file dialog
-        dropArea.addEventListener("click", () => input.click());
-
-        // File selection from dialog
-        input.addEventListener("change", () => showFiles(input.files, preview));
-
-        // Drag & drop highlight
-        ['dragenter', 'dragover'].forEach(evt =>
-            dropArea.addEventListener(evt, e => {
-                e.preventDefault();
-                dropArea.classList.add('border-primary');
-            })
-        );
-
-        ['dragleave', 'drop'].forEach(evt =>
-            dropArea.addEventListener(evt, e => {
-                e.preventDefault();
-                dropArea.classList.remove('border-primary');
-            })
-        );
-
-        // Handle dropped files
-        dropArea.addEventListener("drop", e => {
-            const files = e.dataTransfer.files;
-            input.files = files;
-            showFiles(files, preview);
-        });
-    });
-});
-
-// Like post
-function bindLikeForms() {
-    document.querySelectorAll('.like-form').forEach(form => {
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const postId = form.dataset.postId;
-            const formData = new FormData(form);
-
-            fetch(form.action, {
-                    method: 'POST',
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest',
-                        'X-CSRF-TOKEN': formData.get('_token')
-                    },
-                    body: formData
-                })
-                .then(response => response.text())
-                .then(html => {
-                    document.getElementById('like-section-' + postId).innerHTML = html;
-                    // 👇 re-bind like button inside the new HTML
-                    bindLikeForms();
-                });
-        });
-    });
-}
-
-// Initial bind when DOM is ready
-document.addEventListener('DOMContentLoaded', bindLikeForms);
-
-
-function toggleComments(postId) {
-    const box = document.getElementById('comments-' + postId);
-    box.style.display = box.style.display === 'none' ? 'block' : 'none';
-}
-
-
-document.addEventListener('DOMContentLoaded', function() {
-    const buttons = document.querySelectorAll('.copy-url-btn');
-
-    buttons.forEach(button => {
-        button.addEventListener('click', function() {
-            const urlToCopy = this.getAttribute('data-url');
-
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(urlToCopy)
-                    .then(() => {
-                        alert('Profile link copied to clipboard!');
-                    })
-                    .catch(err => {
-                        console.error('Clipboard API failed:', err);
-                    });
-            } else {
-                // Fallback method
-                const tempInput = document.createElement('input');
-                document.body.appendChild(tempInput);
-                tempInput.value = urlToCopy;
-                tempInput.select();
-                document.execCommand('copy');
-                document.body.removeChild(tempInput);
-                alert('Profile link copied (fallback method).');
-            }
-        });
-    });
-});
-</script>
-
-
-
 @endsection

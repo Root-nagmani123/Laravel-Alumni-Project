@@ -90,8 +90,7 @@
 
 @endsection
 @section('scripts')
-<script>
-     @if ($errors->any())
+<script nonce="{{ $cspNonce }}">     @if ($errors->any())
         @foreach ($errors->all() as $error)
             toastr.error("{{ $error }}");
         @endforeach

@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="container">
-    <div class="row g-4 py-4" style="margin-top:4rem;">
+    <div class="row g-4 py-4" style="margin-top:2rem;">
 
         <!-- Sidenav START -->
         @include('partials.left_sidebar')
@@ -15,7 +15,7 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">Feedback/Grievance</h5>
-                    <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#grievanceModal">
+                    <a class="btn btn-primary" >
                         Submit Feedback
                     </a>
                 </div>
@@ -93,8 +93,7 @@
 </div>
 
 
-<script>
-document.addEventListener("DOMContentLoaded", function () {
+<script nonce="{{ $cspNonce }}">document.addEventListener("DOMContentLoaded", function () {
   // Bind grievance ID to modal when clicking "Add Comment"
   document.querySelectorAll('[data-bs-target="#commentModal"]').forEach(button => {
     button.addEventListener("click", function () {

@@ -521,8 +521,7 @@
 @endsection
 
 @section('scripts')
-<script>
-    
+<script nonce="{{ $cspNonce }}">    
     document.addEventListener('DOMContentLoaded', function() {
         
         $('#saveFacultyForm').click(function (e) {

@@ -14,9 +14,11 @@ use Illuminate\Support\Facades\DB;
 use App\Models\GroupMember;
 use App\Models\Notification;
 use App\Models\Member;
+use App\Models\PostMedia;
 use App\Services\NotificationService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
+use App\Rules\NoHtmlOrScript;
 
 
 
@@ -129,7 +131,7 @@ function activateGroup(Request $request) : RedirectResponse {
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'group_name' => 'required|string|max:255',
+            'group_name' => ['required', 'string', 'max:255', new NoHtmlOrScript()],
             'mentees' => 'required|array',
             'end_date' => 'required|date',
             'grp_image' => 'required|image|mimes:jpeg,png,jpg|max:1048', // Validate image file
@@ -198,12 +200,42 @@ function activateGroup(Request $request) : RedirectResponse {
         return redirect()->route('user.group.index')->with('error', $e->getMessage());
     }
 }
-function post_destroy(Request $request, $id) : RedirectResponse {
-    $post = Post::find($id);
+public function post_destroy(Request $request, $id) : RedirectResponse
+{
+    // Post with media relation fetch karo
+    $post = Post::with('media')->find($id);
+
     if (!$post) {
         return redirect()->back()->with('error', 'Post not found.');
     }
+
+    // Agar media hai to pehle unhe delete karo
+    if ($post->media) {
+        foreach ($post->media as $media) {
+            // File delete karo agar storage me hai
+            if (\Storage::exists($media->file_path)) {
+                \Storage::delete($media->file_path);
+            }
+            $media->delete();
+        }
+    }
+
+    // Finally post delete
     $post->delete();
+
     return redirect()->back()->with('success', 'Post deleted successfully.');
+}
+
+function updateGroupName(Request $request) {
+    $request->validate([
+        'group_id' => 'required|exists:groups,id',
+        'name' => ['required', 'string', 'max:255', new NoHtmlOrScript()],
+    ]);
+
+    $group = Group::find($request->input('group_id'));
+    $group->name = $request->input('name');
+    $group->save();
+
+    return redirect()->back()->with('success', 'Group name updated successfully.');
 }
 }

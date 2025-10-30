@@ -118,8 +118,7 @@
     </div>
     <!-- end Vertical Steps Example -->
 </div>
-<script>
-document.addEventListener('DOMContentLoaded', function () {
+<script nonce="{{ $cspNonce }}">document.addEventListener('DOMContentLoaded', function () {
         const today = new Date().toISOString().split('T')[0];
         document.getElementById("end_date").setAttribute('min', today);
     });
