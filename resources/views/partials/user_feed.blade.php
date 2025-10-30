@@ -71,6 +71,10 @@
                             $profileLink = route('user.profile.data', ['id' => Crypt::encrypt($member->id)]);
 
                         }
+
+                        // Calculate word count and set content for truncation
+                        $fullContent = $post->content;
+                        $wordCount = \Illuminate\Support\Str::wordCount($fullContent);
                     @endphp
 
 <!-- Info -->
@@ -247,47 +251,6 @@
 
 @elseif($totalImages === 3)
     {{-- One Large Left, Two Stacked Right --}}
-    <div class="post-img d-flex gap-2 mt-2">
-        <a href="{{ asset('storage/' . $imageMedia[0]->file_path) }}" class="glightbox flex-fill"
-            data-gallery="post-gallery-{{ $post->id }}">
-            <img src="{{ asset('storage/' . $imageMedia[0]->file_path) }}"
-                 class="w-100 rounded"
-                 alt="Post Image"
-                 style="height: 400px; object-fit: cover;"
-                 loading="lazy" decoding="async">
-        </a>
-        <div class="d-flex flex-column gap-2" style="width: 50%;">
-            @foreach($imageMedia->slice(1, 2) as $media)
-                <a href="{{ asset('storage/' . $media->file_path) }}" class="glightbox flex-fill"
-                    data-gallery="post-gallery-{{ $post->id }}">
-                    <img src="{{ asset('storage/' . $media->file_path) }}"
-                         class="w-100 rounded"
-                         alt="Post Image"
-                         class="img-400x100"
-                         loading="lazy">
-                </a>
-            </div>
-        @elseif($totalImages === 2)
-            <!-- Two Side by Side -->
-            <div class="post-img d-flex gap-2 mt-2">
-                @foreach($imageMedia as $media)
-                    <a href="{{ asset('storage/' . $media->file_path) }}" class="glightbox flex-fill"
-                        data-gallery="post-gallery-{{ $post->id }}">
-                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='250' viewBox='0 0 400 250'%3E%3Crect width='400' height='250' fill='%23f5f5f5'/%3E%3C/svg%3E" 
-                             data-src="{{ asset('storage/' . $media->file_path) }}"
-                             class="w-100 rounded lazyload"
-                             alt="Post Image"
-                             class="img-250"
-                             loading="lazy">
-                    </a>
-                @endforeach
-            </div>
-        @elseif($totalImages === 3)
-            <!-- One Large Left, Two Stacked Right -->
-            <div class="post-img d-flex gap-2 mt-2">
-                <a href="{{ asset('storage/' . $imageMedia[0]->file_path) }}" class="glightbox flex-fill"
-                    data-gallery="post-gallery-{{ $post->id }}">
-                    <img src="{{ asset('storage/' . $media->file_path) }}"
                          alt="Post Image"
                          class="img-400"
                          loading="lazy">
@@ -333,11 +296,9 @@
                             </div>
                         @endif
                     </div>
-                @endif
+                @endforeach
             </div>
-        @endforeach
-    </div>
-@endif
+        @endif
   @if($post->type != 'group_post')
             <ul class="nav nav-stack py-3 small">
                 @php
