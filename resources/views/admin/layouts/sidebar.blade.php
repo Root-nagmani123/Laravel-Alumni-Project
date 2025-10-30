@@ -38,12 +38,12 @@
                                 <span class="icon-small"></span> Dashboard
                             </a>
                         </li>
-                         <li class="sidebar-item">
+                         <!-- <li class="sidebar-item">
                             <a class="sidebar-link" href="{{ route('admin.user_management.index') }}">
                                 <iconify-icon icon="solar:user-id-bold-duotone"></iconify-icon>
                                 <span class="icon-small"></span> Moderator List
                             </a>
-                        </li>
+                        </li> -->
                         <li class="sidebar-item">
                             <a class="sidebar-link" href="{{ route('admin.registration.index') }}">
                                 <iconify-icon icon="solar:document-bold-duotone"></iconify-icon>
@@ -103,12 +103,12 @@
                                 <span class="icon-small"></span> Grievance/Feedback
                             </a>
                         </li>
-                        <li class="sidebar-item">
+                        <!-- <li class="sidebar-item">
                             <a class="sidebar-link" href="{{ route('admin.feeds.index') }}">
                                 <iconify-icon icon="solar:move-to-folder-bold-duotone"></iconify-icon>
                                 <span class="icon-small"></span> Moderation
                             </a>
-                        </li>
+                        </li> -->
                         <!-- <li class="sidebar-item">
                             <a class="sidebar-link has-arrow" href="javascript:void(0)" aria-expanded="false">
                                 <iconify-icon icon="solar:map-point-wave-bold-duotone"></iconify-icon>
