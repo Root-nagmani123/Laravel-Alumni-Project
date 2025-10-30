@@ -26,11 +26,21 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         // ✅ Add CSP nonce globally (for every view)
-        View::composer('*', function ($view) {
-            $nonce = base64_encode(random_bytes(16));
-            $view->with('cspNonce', $nonce);
-        });
+      
+  View::composer('*', function ($view) {
+        $request = request();
 
+        // try to get nonce from request attributes (set by middleware)
+        $nonce = $request->attributes->get('cspNonce');
+
+        if (!$nonce) {
+            // if not set (middleware not applied for this route), generate one and store it
+            $nonce = base64_encode(random_bytes(16));
+            $request->attributes->set('cspNonce', $nonce);
+        }
+
+        $view->with('cspNonce', $nonce);
+    });
         // ✅ Share notifications with header view
         View::composer('layouts.header', function ($view) {
             if (Auth::guard('user')->check()) {
