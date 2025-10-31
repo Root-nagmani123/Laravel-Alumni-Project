@@ -47,7 +47,7 @@
                                     <!-- Thumbnail -->
                                     <div class="flex-shrink-0 me-3">
                                         <a href="{{ route('user.forum.show', $forum->enc_id) }}">
-                                            <img src="{{ asset('storage/uploads/images/forums_img/' . ($forum->images ?? 'default-forum.jpg')) }}"
+                                            <img src="{{ $forum->images ? route('secure.file', ['type'=>'forum','path'=>$forum->images]) : asset('feed_assets/images/avatar/07.jpg') }}"
                                                 alt="Forum Image" class="rounded"
                                                 style="width:60px; height:60px; object-fit:cover;">
                                         </a>
@@ -97,7 +97,7 @@
             <!-- Thumbnail -->
             <div class="flex-shrink-0 me-3">
                 <a href="{{ route('user.forum.show', $forum->enc_id) }}">
-                    <img src="{{ asset('storage/uploads/images/forums_img/' . ($forum->images ?? 'default-forum.jpg')) }}"
+                    <img src="{{ $forum->images ? route('secure.file', ['type'=>'forum','path'=>$forum->images]) : asset('feed_assets/images/avatar/07.jpg') }}"
                          alt="Forum Image" class="rounded"
                          style="width:60px; height:60px; object-fit:cover;">
                 </a>

@@ -101,7 +101,7 @@ public function store(Request $request)
     }
     // ✅ generate dynamic safe filename
     $filename = uniqid('img_', true) . '.' . $image->getClientOriginalExtension();
-    $imageUrl = $image->storeAs('uploads/broadcasts', $filename, 'public');
+    $imageUrl = $image->storeAs('uploads/broadcasts', $filename, 'private'); // SECURED to 'private' disk
 }
 
     // Save to DB
@@ -221,7 +221,7 @@ public function destroybroadcast(Broadcast $broadcast)
 
     // Generate safe unique filename and store
     $filename = uniqid('img_', true) . '.' . $extension;
-    $path = $file->storeAs('uploads/broadcasts', $filename, 'public');
+    $path = $file->storeAs('uploads/broadcasts', $filename, 'private'); // SECURED to 'private' disk
 
     // Save only relative path; use asset() when rendering
     $broadcast->image_url = $path;

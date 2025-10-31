@@ -46,7 +46,7 @@
                         $user = App\Models\Member::find($chat->member_id);
                         if ($user && !empty($user->profile_pic) && Storage::disk('public')->exists($user->profile_pic))
                         {
-                        $profileImage = asset('storage/' . $user->profile_pic);
+                        $profileImage = route('secure.file', ['type'=>'profile','path'=>$user->profile_pic]);
                         } else {
                         $profileImage = asset('feed_assets/images/avatar/07.jpg');
                         }
@@ -147,7 +147,7 @@
                                 $user = App\Models\Member::find($selectedChat);
                                 $profileImage = $user && $user->profile_pic &&
                                 Storage::disk('public')->exists($user->profile_pic)
-                                ? asset('storage/'.$user->profile_pic)
+                                ? route('secure.file', ['type'=>'profile','path'=>$user->profile_pic])
                                 : asset('feed_assets/images/avatar/07.jpg');
                                 $lastSeen = $user && $user->last_seen ?
                                 \Carbon\Carbon::parse($user->last_seen)->diffForHumans() : null;
@@ -214,14 +214,14 @@
                                     style="max-width:230px;">
                                     @if($msg->file_path)
                                     @if($msg->file_type == 'image')
-                                    <img src="{{ asset('storage/'.$msg->file_path) }}" class="rounded mb-1"
+                                    <img src="{{ route('secure.file', ['type'=>'post','path'=>$msg->file_path]) }}" class="rounded mb-1"
                                         style="max-width:200px;">
                                     @elseif($msg->file_type == 'video')
                                     <video controls class="rounded mb-1" style="max-width:200px;">
-                                        <source src="{{ asset('storage/'.$msg->file_path) }}" type="video/mp4">
+                                        <source src="{{ route('secure.file', ['type'=>'post','path'=>$msg->file_path]) }}" type="video/mp4">
                                     </video>
                                     @else
-                                    <a href="{{ asset('storage/'.$msg->file_path) }}" target="_blank"
+                                    <a href="{{ route('secure.file', ['type'=>'post','path'=>$msg->file_path]) }}" target="_blank"
                                         class="d-block text-decoration-none">
                                         <i class="fa-solid fa-file me-1"></i> {{ basename($msg->file_path) }}
                                     </a>
@@ -242,14 +242,14 @@
                                     style="background-color:#dcf8c6; max-width:250px; border-bottom-right-radius:4px;">
                                     @if($msg->file_path)
                                     @if($msg->file_type == 'image')
-                                    <img src="{{ asset('storage/'.$msg->file_path) }}" class="rounded mb-1"
+                                    <img src="{{ route('secure.file', ['type'=>'post','path'=>$msg->file_path]) }}" class="rounded mb-1"
                                         style="max-width:200px;">
                                     @elseif($msg->file_type == 'video')
                                     <video controls class="rounded mb-1" style="max-width:200px;">
-                                        <source src="{{ asset('storage/'.$msg->file_path) }}" type="video/mp4">
+                                        <source src="{{ route('secure.file', ['type'=>'post','path'=>$msg->file_path]) }}" type="video/mp4">
                                     </video>
                                     @else
-                                    <a href="{{ asset('storage/'.$msg->file_path) }}" target="_blank"
+                                    <a href="{{ route('secure.file', ['type'=>'post','path'=>$msg->file_path]) }}" target="_blank"
                                         class="text-dark d-block text-decoration-none">
                                         <i class="fa-solid fa-file me-1"></i> {{ basename($msg->file_path) }}
                                     </a>
@@ -303,7 +303,7 @@
                         {{-- Existing File (from DB / storage) --}}
                         @if(in_array(pathinfo($attachment, PATHINFO_EXTENSION), ['jpg','jpeg','png','gif','webp']))
                         <div class="position-relative d-inline-block">
-                            <img src="{{ asset('storage/' . $attachment) }}" class="rounded-3 shadow-sm border"
+                            <img src="{{ route('secure.file', ['type'=>'post','path'=>$attachment]) }}" class="rounded-3 shadow-sm border"
                                 style="max-height:120px; max-width:160px; object-fit:cover;">
                             <button type="button" wire:click="$set('attachment', null)"
                                 class="border rounded-circle position-absolute top-0 end-0 m-1 shadow"

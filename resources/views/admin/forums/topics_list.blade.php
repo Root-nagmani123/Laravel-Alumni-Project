@@ -157,14 +157,14 @@
                                             </div>
 
                                             <!-- Image -->
-                                            <!-- <div class="mb-3">
+                                            <div class="mb-3">
                                                 <label>Current Image</label><br>
                                                 @if ($topic->images)
-                                                <img src="{{ asset('storage/' . $topic->images) }}"
+                                                <img src="{{ route('secure.file', ['type' => 'forum', 'path' => $topic->images]) }}"
                                                     class="img-fluid mb-2" style="max-height: 200px;">
                                                 @endif
                                                 <input type="file" name="images" accept="image/*" class="form-control">
-                                            </div> -->
+                                            </div>
 
                                             <!-- Photo Caption -->
                                             <!-- <div class="mb-3">

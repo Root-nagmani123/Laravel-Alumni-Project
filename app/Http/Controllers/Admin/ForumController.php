@@ -57,7 +57,7 @@ class ForumController extends Controller
         }
         $imagePath = null;
         if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('uploads/images/forums_img', 'public');
+            $imagePath = $request->file('image')->store('uploads/images/forums_img', 'private');
         }
     
         $forum = Forum::create([
@@ -66,7 +66,7 @@ class ForumController extends Controller
             'status' => $request->input('status'),
             'created_by' => session('LoginID'),
             'end_date' => $request->input('end_date'),
-            'images' => $imagePath ? basename($imagePath) : null,
+            'images' => $imagePath, // Store full path for secure route
             'notified_at' => 0,
         ]);
 
@@ -115,8 +115,8 @@ class ForumController extends Controller
     }
 
     if ($request->hasFile('forum_image')) {
-            $imagePath = $request->file('forum_image')->store('uploads/images/forums_img', 'public');
-            $data['images'] = basename($imagePath);
+            $imagePath = $request->file('forum_image')->store('uploads/images/forums_img', 'private');
+            $data['images'] = $imagePath; // Store full path for secure route
         }
 
     $forum->name = $request->name;
@@ -127,7 +127,12 @@ class ForumController extends Controller
     if (isset($data['images'])) {
         // Delete old image if exists
         if ($forum->images) {
-            Storage::disk('public')->delete('uploads/images/forums_img/' . $forum->images);
+            // Try private first, then public for backward compatibility
+            if (Storage::disk('private')->exists($forum->images)) {
+                Storage::disk('private')->delete($forum->images);
+            } elseif (Storage::disk('public')->exists('uploads/images/forums_img/' . basename($forum->images))) {
+                Storage::disk('public')->delete('uploads/images/forums_img/' . basename($forum->images));
+            }
         }
         $forum->images = $data['images'];
     }
@@ -469,11 +474,16 @@ class ForumController extends Controller
     ]);
     // Handle image upload if provided
     if ($request->hasFile('forum_image')) {
-        $imagePath = $request->file('forum_image')->store('uploads/images/forums_img', 'public');
-        $data['images'] = basename($imagePath);
+        $imagePath = $request->file('forum_image')->store('uploads/images/forums_img', 'private');
+        $data['images'] = $imagePath; // Store full path for secure route
         // Delete old image if exists
         if ($forum->images) {
-            Storage::disk('public')->delete('uploads/images/forums_img/' . $forum->images);
+            // Try private first, then public for backward compatibility
+            if (Storage::disk('private')->exists($forum->images)) {
+                Storage::disk('private')->delete($forum->images);
+            } elseif (Storage::disk('public')->exists('uploads/images/forums_img/' . basename($forum->images))) {
+                Storage::disk('public')->delete('uploads/images/forums_img/' . basename($forum->images));
+            }
         }
         $forum->images = $data['images'];
     }

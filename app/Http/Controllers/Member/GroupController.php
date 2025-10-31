@@ -138,8 +138,8 @@ function activateGroup(Request $request) : RedirectResponse {
         ]);
 
         if ($request->hasFile('grp_image')) {
-            $imagePath = $request->file('grp_image')->store('uploads/images/grp_img', 'public');
-            $data['images'] = basename($imagePath);
+            $imagePath = $request->file('grp_image')->store('uploads/images/grp_img', 'private');
+            $data['images'] = $imagePath; // Store full path for secure route
         }
         $data_id = DB::table('groups')->insertGetId([
             'name' => $validated['group_name'],

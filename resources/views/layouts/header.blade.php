@@ -336,7 +336,7 @@
                         aria-expanded="false">
                        
                         <img class="avatar-img rounded-2"
-                            src="{{ $user->profile_pic ? route('profile.pic', $user->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}"
+                            src="{{ $user->profile_pic ? route('secure.file', ['type'=>'profile','path'=>$user->profile_pic]) : asset('feed_assets/images/avatar/07.jpg') }}"
                             alt="" loading="lazy" decoding="async">
                     </a>
                     <ul class="dropdown-menu dropdown-animation dropdown-menu-end pt-3 small me-md-n3"
@@ -385,7 +385,7 @@
                                 <!-- Avatar -->
                                 <div class="avatar me-3">
                                     <img class="avatar-img rounded-circle"
-                                        src="{{ $user->profile_pic ? route('profile.pic', $user->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}"
+                                        src="{{ $user->profile_pic ? route('secure.file', ['type'=>'profile','path'=>$user->profile_pic]) : asset('feed_assets/images/avatar/07.jpg') }}"
                                         alt="avatar" loading="lazy" decoding="async">
                                 </div>
                                 <div>

@@ -62,7 +62,7 @@
             <div class="card-header">
                 <div class="d-flex align-items-center gap-6">
                     <img src="{{ $topic->member && $topic->member->profile_pic
-                                    ? asset('storage/' . $topic->member->profile_pic)
+                                    ? route('secure.file', ['type'=>'group','path'=>$topic->member->profile_pic])
                                     : asset('feed_assets/images/avatar/07.jpg') }}"
                          alt="profile" width="48" class="rounded">
 
@@ -170,7 +170,7 @@
             <div class="d-flex flex-wrap" id="existingImages{{ $topic->id }}">
                 @foreach($topic->media as $media)
                     <div class="position-relative m-1" id="media-{{ $media->id }}">
-                        <img src="{{ asset('storage/' . $media->file_path) }}"
+                        <img src="{{ route('secure.file', ['type'=>'group','path'=>$media->file_path]) }}"
                              alt="Topic Image" class="img-thumbnail" width="100">
 
                         <!-- Delete button -->
@@ -225,7 +225,7 @@
 
                 @php
                     $validMedia = $topic->media->filter(function($media) {
-                        return file_exists(storage_path('app/public/' . $media->file_path));
+                        return file_exists(storage_path('app/private/' . $media->file_path)) || file_exists(storage_path('app/public/' . $media->file_path));
                     });
 
                     $imageMedia = $validMedia->where('file_type', 'image')->values();
@@ -247,7 +247,7 @@
                     <div class="post-video mt-2">
                         @foreach($videoMedia as $video)
                             <video controls class="w-100 rounded mb-2" preload="metadata">
-                                <source src="{{ asset('storage/' . $video->file_path) }}" type="video/mp4">
+                                <source src="{{ route('secure.file', ['type' => 'group', 'path' => $video->file_path]) }}" type="video/mp4">
                                 Your browser does not support the video tag.
                             </video>
                         @endforeach
@@ -257,10 +257,10 @@
                 {{-- Uploaded images --}}
                 @if($totalImages === 1)
                     <div class="post-img mt-2">
-                        <a href="{{ asset('storage/' . $imageMedia[0]->file_path) }}"
+                        <a href="{{ route('secure.file', ['type' => 'group', 'path' => $imageMedia[0]->file_path]) }}"
                            class="glightbox"
                            data-gallery="post-gallery-{{ $topic->id }}">
-                            <img src="{{ asset('storage/' . $imageMedia[0]->file_path) }}"
+                            <img src="{{ route('secure.file', ['type' => 'group', 'path' => $imageMedia[0]->file_path]) }}"
                                  class="img-fluid rounded"
                                  style="max-height: 400px; object-fit: cover;"
                                  alt="Post Image">
@@ -270,21 +270,21 @@
                     <div class="post-img d-flex justify-content-between flex-wrap gap-2 gap-lg-3 mt-2">
                         @foreach($imageMedia->take(4) as $index => $media)
                             <div class="position-relative" style="width: 48%;">
-                                <a href="{{ asset('storage/' . $media->file_path) }}"
+                                <a href="{{ route('secure.file', ['type' => 'group', 'path' => $media->file_path]) }}"
                                    class="glightbox"
                                    data-gallery="post-gallery-{{ $topic->id }}">
-                                    <img src="{{ asset('storage/' . $media->file_path) }}" alt="Post Image" class="w-100">
+                                    <img src="{{ route('secure.file', ['type' => 'group', 'path' => $media->file_path]) }}" alt="Post Image" class="w-100">
                                 </a>
 
                                 {{-- Overlay if more than 4 images --}}
                                 @if($index === 3 && $totalImages > 4)
                                     @foreach($imageMedia->slice(4) as $extra)
-                                        <a href="{{ asset('storage/' . $extra->file_path) }}"
+                                        <a href="{{ route('secure.file', ['type' => 'group', 'path' => $extra->file_path]) }}"
                                            class="glightbox d-none"
                                            data-gallery="post-gallery-{{ $topic->id }}"></a>
                                     @endforeach
 
-                                    <a href="{{ asset('storage/' . $imageMedia[4]->file_path) }}"
+                                    <a href="{{ route('secure.file', ['type' => 'group', 'path' => $imageMedia[4]->file_path]) }}"
                                        class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center text-white glightbox"
                                        style="background-color: rgba(0,0,0,0.6); font-size: 2rem; cursor: pointer;"
                                        data-gallery="post-gallery-{{ $topic->id }}">
@@ -359,7 +359,7 @@
     <div class="col-sm-9 d-flex flex-wrap gap-3">
         @foreach ($topic->media as $media)
             <div class="position-relative">
-                <img src="{{ asset('storage/' . $media->file_path) }}"
+                <img src="{{ route('secure.file', ['type'=>'group','path'=>$media->file_path]) }}"
                      alt="Topic Image" style="max-height:100px;">
                 <a href="{{-- route('group.delete_media', $media->id) --}}"
                    class="btn btn-sm btn-danger position-absolute top-0 end-0">X</a>

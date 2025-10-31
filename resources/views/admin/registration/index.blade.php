@@ -82,12 +82,12 @@
                                     <td>{{ $request->course_attended }}</td>
                                     <td>
                                         @if($request->photo)
-                                        <a href="{{ asset('storage/' . $request->photo) }}" target="_blank">View</a>
+                                        <a href="{{ route('secure.file', ['type'=>'register','path'=>$request->photo]) }}" target="_blank">View</a>
                                         @endif
                                     </td>
                                     <td>
                                         @if($request->govt_id)
-                                        <a href="{{ asset('storage/' . $request->govt_id) }}" target="_blank">View</a>
+                                        <a href="{{ route('secure.file', ['type'=>'register','path'=>$request->govt_id]) }}" target="_blank">View</a>
                                         @endif
                                     </td>
                                     <td>{{ \Carbon\Carbon::parse($request->created_at)->format('d-m-Y') }}</td>

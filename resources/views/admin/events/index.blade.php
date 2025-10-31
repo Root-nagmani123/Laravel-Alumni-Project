@@ -123,7 +123,7 @@
     </td>
     <td>
         <img class="avatar-img rounded-circle"
-             src="{{ $event->image ? asset('storage/' . $event->image) : asset('feed_assets/images/avatar/12.jpg') }}"
+             src="{{ $event->image ? route('secure.file', ['type' => 'event', 'path' => $event->image]) : asset('feed_assets/images/avatar/12.jpg') }}"
              alt="" height="70" width="70">
     </td>
     <td>
@@ -195,7 +195,7 @@
     </td>
     <td>
         <img class="avatar-img rounded-circle"
-             src="{{ $event->image ? asset('storage/' . $event->image) : asset('feed_assets/images/avatar/12.jpg') }}"
+             src="{{ $event->image ? route('secure.file', ['type' => 'event', 'path' => $event->image]) : asset('feed_assets/images/avatar/12.jpg') }}"
              alt="" height="70" width="70">
     </td>
     <td>

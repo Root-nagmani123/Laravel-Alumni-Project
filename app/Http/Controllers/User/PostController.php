@@ -52,7 +52,7 @@ public function store_chnagefor_video_link(Request $request)
         if ($mediaFiles) {
             foreach ($mediaFiles as $file) {
                 $filename = uniqid() . '_' . $file->getClientOriginalName(); // avoid conflicts
-                $path = $file->storeAs('posts/media', $filename, 'public');
+                $path = $file->storeAs('posts/media', $filename, 'private');
 
                 $mime = $file->getMimeType();
                 $fileType = str_starts_with($mime, 'video') ? 'video' : 'image';
@@ -105,7 +105,7 @@ public function store_chnagefor_video_link(Request $request)
     if ($mediaFiles) {
         foreach ($mediaFiles as $file) {
             $filename = uniqid() . '_' . $file->getClientOriginalName();
-            $path = $file->storeAs('posts/media', $filename, 'public');
+            $path = $file->storeAs('posts/media', $filename, 'private');
 
             $mime = $file->getMimeType();
             $fileType = str_starts_with($mime, 'video') ? 'video' : 'image';
@@ -161,7 +161,7 @@ public function group_post_store(Request $request)
     if ($mediaFiles) {
         foreach ($mediaFiles as $file) {
             $filename = uniqid() . '_' . $file->getClientOriginalName();
-            $path = $file->storeAs('posts/media', $filename, 'public');
+            $path = $file->storeAs('posts/media', $filename, 'private');
 
             PostMedia::create([
                 'post_id' => $post->id,
@@ -203,7 +203,7 @@ public function group_post_store(Request $request)
     if ($mediaFiles) {
         foreach ($mediaFiles as $file) {
             $filename = uniqid() . '_' . $file->getClientOriginalName();
-            $path = $file->storeAs('posts/media', $filename, 'public');
+            $path = $file->storeAs('posts/media', $filename, 'private');
 
             $mime = $file->getMimeType();
             $fileType = str_starts_with($mime, 'video') ? 'video' : 'image';
@@ -315,7 +315,7 @@ public function storePostComment(Request $request, $id)
 
         // Delete associated media
         foreach ($post->media as $media) {
-            Storage::disk('public')->delete($media->file_path);
+            Storage::disk('private')->delete($media->file_path);
             $media->delete();
         }
 
@@ -375,8 +375,8 @@ function forum_store(Request $request)
             ->withInput();
         }
          if ($request->hasFile('forum_image')) {
-            $imagePath = $request->file('forum_image')->store('uploads/images/forums_img', 'public');
-            $data['images'] = basename($imagePath);
+            $imagePath = $request->file('forum_image')->store('uploads/images/forums_img', 'private');
+            $data['images'] = $imagePath; // Store full path for secure route
         }
 
         $forum = Forum::create([
