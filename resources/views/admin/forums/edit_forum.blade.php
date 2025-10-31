@@ -76,14 +76,25 @@
                                     accept="image/*">
                             </div>
                             <div class="mt-2">
-        <img
-            id="preview-image"
-            src="{{ isset($forum->images) ? route('secure.file', ['type' => 'forum', 'path' => $forum->images]) : '#' }}"
-            alt="Image Preview"
-            class="img-fluid rounded {{ isset($forum->images) ? '' : 'd-none' }}"
-            style="max-height: 200px;"
-        />
-    </div>
+                            @php
+                                $imagePath = null;
+                                if (isset($forum->images) && $forum->images) {
+                                    // If it's already a full path, use it; otherwise prepend the folder
+                                    if (str_contains($forum->images, 'uploads/images/forums_img/')) {
+                                        $imagePath = $forum->images;
+                                    } else {
+                                        $imagePath = 'uploads/images/forums_img/' . $forum->images;
+                                    }
+                                }
+                            @endphp
+                            <img
+                                id="preview-image"
+                                src="{{ $imagePath ? route('secure.file', ['type' => 'forum', 'path' => $imagePath]) : '#' }}"
+                                alt="Image Preview"
+                                class="img-fluid rounded {{ $imagePath ? '' : 'd-none' }}"
+                                style="max-height: 200px;"
+                            />
+                        </div>
                         </div>
                         <div class="col-6">
                             <label for="status" class="form-label">Status<span

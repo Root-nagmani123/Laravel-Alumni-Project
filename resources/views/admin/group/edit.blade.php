@@ -54,10 +54,21 @@
 
                         <!-- Preview -->
                         <div class="mt-2">
+                            @php
+                                $imagePath = null;
+                                if (isset($group->image) && $group->image) {
+                                    // If it's already a full path, use it; otherwise prepend the folder
+                                    if (str_contains($group->image, 'uploads/images/grp_img/')) {
+                                        $imagePath = $group->image;
+                                    } else {
+                                        $imagePath = 'uploads/images/grp_img/' . $group->image;
+                                    }
+                                }
+                            @endphp
                             <img id="preview-image"
-                                src="{{ isset($group->image) ? route('secure.file', ['type' => 'group', 'path' => $group->image]) : '#' }}"
+                                src="{{ $imagePath ? route('secure.file', ['type' => 'group', 'path' => $imagePath]) : '#' }}"
                                 alt="Image Preview"
-                                class="img-fluid rounded {{ isset($group->image) ? '' : 'd-none' }}"
+                                class="img-fluid rounded {{ $imagePath ? '' : 'd-none' }}"
                                 style="max-height: 200px;" />
                         </div>
                     </div>
