@@ -55,7 +55,7 @@
                     <div class="mb-2">
                         <a class="testing" href="{{ route('user.broadcastDetails', $broadcast->enc_id) }}">
                             @if($broadcast->image_url)
-                            <img class="avatar-img rounded" src="{{ asset('storage/' . $broadcast->image_url) }}" alt=""
+                            <img class="avatar-img rounded" src="{{ route('secure.file', ['type'=>'broadcast','path'=>$broadcast->image_url]) }}" alt=""
                                 height="45" data-bs-toggle="tooltip" data-bs-placement="top"
                                 title="{{ $broadcast->title }}" style="height: 85px; object-fit: cover;" loading="lazy"
                                 decoding="async">
@@ -107,7 +107,7 @@
                     <!-- Group Image -->
                     <div class="avatar avatar-md">
                         <a href="{{ route('user.group-post',($recent->enc_id)) }}">
-                            <img src="{{asset('storage/uploads/images/grp_img/' . ($recent->image ?? 'default-group.png')) }}"
+                            <img src="{{ $recent->image ? route('secure.file', ['type'=>'group','path'=>$recent->image]) : asset('feed_assets/images/avatar/07.jpg') }}"
                                 alt="Group Image" class="rounded-circle img-fluid"
                                 style="width: 48px; height: 48px; object-fit: cover;">
                         </a>

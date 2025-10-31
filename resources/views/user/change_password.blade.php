@@ -48,7 +48,7 @@
                                     $member = $post->member ?? null;
 
                                     $profileImage = $member && $member->profile_image
-                                    ? asset('storage/' . $member->profile_image)
+                                    ? route('secure.file', ['type'=>'profile','path'=>$member->profile_image])
                                     : asset('feed_assets/images/avatar/07.jpg');
 
                                     $displayName = $member->name ?? 'Unknown';
@@ -58,16 +58,15 @@
                                     else {
                                     // Default user profile
                                     $user = Auth::guard('user')->user();
-                                    $profileImage = $user->profile_pic
-                                    ? asset('storage/' . $user->profile_pic)
-                                    : asset('feed_assets/images/avatar-1.png');
+                                    $profileImage = $user->profile_pic ? route('secure.file', ['type'=>'profile','path'=>$user->profile_pic]) :
+                                    asset('feed_assets/images/avatar-1.png');
 
                                     $displayName = $user->name ?? 'Guest User';
                                     $designation = $user->designation ?? 'Guest';
                                     $profileLink = url('/user/profile/' . ($user->id ?? 0));
                                     }
                                     $user = Auth::guard('user')->user();
-                                    $profileImage = $user->profile_pic ? asset('storage/' . $user->profile_pic) :
+                                    $profileImage = $user->profile_pic ? route('secure.file', ['type'=>'profile','path'=>$user->profile_pic]) :
                                     asset('feed_assets/images/avatar-1.png');
                                     $displayName = $user->name ?? 'Guest User';
                                     $designation = $user->designation ?? 'Guest';
@@ -75,7 +74,7 @@
                                     @endphp
                                     <div class="avatar avatar-lg mt-n5 mb-3">
                                         <a href="#!"><img class="avatar-img rounded-circle"
-                                                src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('feed_assets/images/avatar-1.png') }}"
+                                                src="{{ $user->profile_pic ? route('secure.file', ['type'=>'profile','path'=>$user->profile_pic]) : asset('feed_assets/images/avatar-1.png') }}"
                                                 alt=""></a>
                                     </div>
                                     <!-- Info -->

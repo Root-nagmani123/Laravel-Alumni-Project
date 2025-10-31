@@ -24,7 +24,7 @@
                             <div class="avatar avatar-xxl mt-n5 mb-3">
                                 
                                 <img class="avatar-img rounded-circle border border-white border-3"
-                                    src="{{ $user->profile_pic ? route('profile.pic', $user->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}"
+                                    src="{{ $user->profile_pic ? route('secure.file', ['type' => 'profile', 'path' => $user->profile_pic]) : asset('feed_assets/images/avatar/07.jpg') }}"
                                     alt="" loading="lazy" decoding="async">
                             </div>
                         </div>
@@ -277,7 +277,7 @@
                                                                     <div class="mt-2">
                                                                         @if($user->profile_pic)
                                                                         <img id="previewImageEdit"
-                                                                            src="{{ route('profile.pic', $user->profile_pic) }}"
+                                                                            src="{{ route('secure.file', ['type' => 'profile', 'path' => $user->profile_pic]) }}"
                                                                             alt="Profile Picture"
                                                                             style="max-width: 150px;">
                                                                         @endif
@@ -606,7 +606,7 @@
 
                                             <!-- sector & ministries -->
 
-                                            <div class="tab-pane fade" id="sector-ministries" role="tabpanel">
+                                            <div class="tab-pane fade" id="sector-ministries" role="tabpanel" aria-labelledby="sector_ministries-tab">
                                                 <form
                                                     action="{{ route('user.profile.sector_departments.update') }}"
                                                     method="post" id="myForm">
@@ -837,7 +837,7 @@
                                     <div class="avatar avatar-xs me-2">
                                         <a href="{{ route('user.profile.data', ['id' => Crypt::encrypt($user->id)]) }}">
                                             <img class="avatar-img rounded-circle"
-                                                src="{{ $user->profile_pic ? route('profile.pic', $user->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}"
+                                                src="{{ $user->profile_pic ? route('secure.file', ['type' => 'profile', 'path' => $user->profile_pic]) : asset('feed_assets/images/avatar/07.jpg') }}"
                                                 alt="" loading="lazy" decoding="async">
                                         </a>
                                     </div>
@@ -899,7 +899,7 @@
                                             $member = $post->member ?? null;
 
                                             $profileImage = $member && $member->profile_pic
-                                            ? route('profile.pic', $member->profile_pic)
+                                            ? route('secure.file', ['type' => 'profile', 'path' => $member->profile_pic])
                                             : asset('feed_assets/images/avatar/07.jpg');
 
                                             $displayName = $member->name ?? 'N/A';
@@ -1035,7 +1035,7 @@
                                     <!-- Card img -->
                                     @php
                                     $validMedia = $post->media->filter(function($media) {
-                                    return file_exists(storage_path('app/public/' . $media->file_path));
+                                    return file_exists(storage_path('app/private/' . $media->file_path)) || file_exists(storage_path('app/public/' . $media->file_path));
                                     });
 
                                     $imageMedia = $validMedia->where('file_type', 'image')->values();
@@ -1057,7 +1057,7 @@
                                     <div class="post-video mt-2">
                                         @foreach($videoMedia as $video)
                                         <video controls class="w-100 rounded mb-2" preload="metadata">
-                                            <source src="{{ asset('storage/' . $video->file_path) }}" type="video/mp4">
+                                            <source src="{{ route('secure.file', ['type' => 'post', 'path' => $video->file_path]) }}" type="video/mp4">
                                             Your browser does not support the video tag.
                                         </video>
                                         @endforeach
@@ -1069,9 +1069,9 @@
                                     @if($totalImages === 1)
                                     {{-- Single Image --}}
                                     <div class="post-img mt-2">
-                                        <a href="{{ asset('storage/' . $imageMedia[0]->file_path) }}" class="glightbox"
+                                        <a href="{{ route('secure.file', ['type' => 'post', 'path' => $imageMedia[0]->file_path]) }}" class="glightbox"
                                             data-gallery="post-gallery-{{ $post->id }}">
-                                            <img src="{{ asset('storage/' . $imageMedia[0]->file_path) }}"
+                                            <img src="{{ route('secure.file', ['type' => 'post', 'path' => $imageMedia[0]->file_path]) }}"
                                                 class="w-100 rounded" alt="Post Image"
                                                 style="width: 100%; height: 400px; object-fit: cover;" loading="lazy"
                                                 decoding="async">
@@ -1082,9 +1082,9 @@
                                     {{-- Two Side by Side --}}
                                     <div class="post-img d-flex gap-2 mt-2">
                                         @foreach($imageMedia as $media)
-                                        <a href="{{ asset('storage/' . $media->file_path) }}"
+                                        <a href="{{ route('secure.file', ['type' => 'post', 'path' => $media->file_path]) }}"
                                             class="glightbox flex-fill" data-gallery="post-gallery-{{ $post->id }}">
-                                            <img src="{{ asset('storage/' . $media->file_path) }}" class="w-100 rounded"
+                                            <img src="{{ route('secure.file', ['type' => 'post', 'path' => $media->file_path]) }}" class="w-100 rounded"
                                                 alt="Post Image" style="height: 250px; object-fit: cover;"
                                                 loading="lazy" decoding="async">
                                         </a>
@@ -1094,18 +1094,18 @@
                                     @elseif($totalImages === 3)
                                     {{-- One Large Left, Two Stacked Right --}}
                                     <div class="post-img d-flex gap-2 mt-2">
-                                        <a href="{{ asset('storage/' . $imageMedia[0]->file_path) }}"
+                                        <a href="{{ route('secure.file', ['type' => 'post', 'path' => $imageMedia[0]->file_path]) }}"
                                             class="glightbox flex-fill" data-gallery="post-gallery-{{ $post->id }}">
-                                            <img src="{{ asset('storage/' . $imageMedia[0]->file_path) }}"
+                                            <img src="{{ route('secure.file', ['type' => 'post', 'path' => $imageMedia[0]->file_path]) }}"
                                                 class="w-100 rounded" alt="Post Image"
                                                 style="height: 400px; object-fit: cover;" loading="lazy"
                                                 decoding="async">
                                         </a>
                                         <div class="d-flex flex-column gap-2" style="width: 50%;">
                                             @foreach($imageMedia->slice(1, 2) as $media)
-                                            <a href="{{ asset('storage/' . $media->file_path) }}"
+                                            <a href="{{ route('secure.file', ['type' => 'post', 'path' => $media->file_path]) }}"
                                                 class="glightbox flex-fill" data-gallery="post-gallery-{{ $post->id }}">
-                                                <img src="{{ asset('storage/' . $media->file_path) }}"
+                                                <img src="{{ route('secure.file', ['type' => 'post', 'path' => $media->file_path]) }}"
                                                     class="w-100 rounded" alt="Post Image"
                                                     style="height: 195px; object-fit: cover;" loading="lazy"
                                                     decoding="async">
@@ -1120,9 +1120,9 @@
                                         style="grid-template-columns: repeat(2, 1fr); grid-auto-rows: 200px;">
                                         @foreach($imageMedia->take(4) as $index => $media)
                                         <div class="position-relative">
-                                            <a href="{{ asset('storage/' . $media->file_path) }}" class="glightbox"
+                                            <a href="{{ route('secure.file', ['type' => 'post', 'path' => $media->file_path]) }}" class="glightbox"
                                                 data-gallery="post-gallery-{{ $post->id }}">
-                                                <img src="{{ asset('storage/' . $media->file_path) }}" alt="Post Image"
+                                                <img src="{{ route('secure.file', ['type' => 'post', 'path' => $media->file_path]) }}" alt="Post Image"
                                                     loading="lazy" class="w-100 h-100 rounded"
                                                     style="object-fit: cover;">
                                             </a>
@@ -1130,7 +1130,7 @@
                                             {{-- Overlay for extra images --}}
                                             @if($index === 3 && $totalImages > 4)
                                             @foreach($imageMedia->slice(4) as $extra)
-                                            <a href="{{ asset('storage/' . $extra->file_path) }}"
+                                            <a href="{{ route('secure.file', ['type' => 'post', 'path' => $extra->file_path]) }}"
                                                 class="glightbox d-none"
                                                 data-gallery="post-gallery-{{ $post->id }}"></a>
                                             @endforeach
@@ -1201,7 +1201,7 @@
                                             <a
                                                 href="{{ route('user.profile.data', ['id' => Crypt::encrypt(auth()->guard('user')->id())]) }}">
                                                 <img class="avatar-img rounded-circle" src="{{ auth()->guard('user')->user()->profile_pic
-                                ? route('profile.pic', auth()->guard('user')->user()->profile_pic)
+                                ? route('secure.file', ['type' => 'profile', 'path' => auth()->guard('user')->user()->profile_pic])
                                 : asset('feed_assets/images/avatar/07.jpg') }}"
                                                     alt="{{ auth()->guard('user')->user()->name ?? 'User' }}"
                                                     loading="lazy" decoding="async">
@@ -1240,7 +1240,7 @@
                                                     <a
                                                         href="{{ $comment->member ? route('user.profile.data', ['id' => Crypt::encrypt($comment->member->id)]) : '#' }}">
                                                         <img class="avatar-img rounded-circle"
-                                                            src="{{ $comment->member && $comment->member->profile_pic ? route('profile.pic', $comment->member->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}"
+                                                            src="{{ $comment->member && $comment->member->profile_pic ? route('secure.file', ['type' => 'profile', 'path' => $comment->member->profile_pic]) : asset('feed_assets/images/avatar/07.jpg') }}"
                                                             alt="" loading="lazy" decoding="async">
                                                     </a>
                                                 </div>
@@ -1294,7 +1294,7 @@
                                                     <a
                                                         href="{{ $comment->member ? route('user.profile.data', ['id' => Crypt::encrypt($comment->member->id)]) : '#' }}">
                                                         <img class="avatar-img rounded-circle"
-                                                            src="{{ $comment->member && $comment->member->profile_pic ? route('profile.pic', $comment->member->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}"
+                                                            src="{{ $comment->member && $comment->member->profile_pic ? route('secure.file', ['type' => 'profile', 'path' => $comment->member->profile_pic]) : asset('feed_assets/images/avatar/07.jpg') }}"
                                                             alt="" loading="lazy" decoding="async">
                                                     </a>
                                                 </div>

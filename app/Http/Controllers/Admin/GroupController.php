@@ -74,7 +74,7 @@ class GroupController extends Controller
 
         $imagePath = null;
         if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('uploads/images/grp_img', 'public');
+            $imagePath = $request->file('image')->store('uploads/images/grp_img', 'private');
         }
 
         $group = Group::create([
@@ -83,7 +83,7 @@ class GroupController extends Controller
             'created_by'  => auth()->guard('admin')->id(),
             'member_type' => 1,
             'end_date'    => $request->input('end_date'),
-            'image'       => $imagePath ? basename($imagePath) : null,
+            'image'       => $imagePath, // Store full path for secure route
 
         ]);
 
@@ -141,11 +141,16 @@ public function update(Request $request, Group $group)
 
     // Handle image upload
     if ($request->hasFile('image')) {
-        $imagePath = $request->file('image')->store('uploads/images/grp_img', 'public');
+        $imagePath = $request->file('image')->store('uploads/images/grp_img', 'private');
         if ($group->image) {
-            Storage::disk('public')->delete('uploads/images/grp_img/' . $group->image);
+            // Try private first, then public for backward compatibility
+            if (Storage::disk('private')->exists($group->image)) {
+                Storage::disk('private')->delete($group->image);
+            } elseif (Storage::disk('public')->exists('uploads/images/grp_img/' . basename($group->image))) {
+                Storage::disk('public')->delete('uploads/images/grp_img/' . basename($group->image));
+            }
         }
-        $group->image = basename($imagePath);
+        $group->image = $imagePath; // Store full path for secure route
     }
 
     // Track if data has changed
@@ -435,7 +440,7 @@ public function update(Request $request, Group $group)
             $imageFiles = [];
             if ($request->hasFile('topic_image')) {
                 foreach ($request->file('topic_image') as $image) {
-                    $imageFiles[] = $image->store('uploads/topics', 'public');
+                    $imageFiles[] = $image->store('uploads/topics', 'private');
                 }
             }
 
@@ -907,7 +912,7 @@ public function deleteTopic($id)
             // Handle image upload
             $imagePath = null;
             if ($request->hasFile('grp_image')) {
-                $imagePath = $request->file('grp_image')->store('uploads/images/grp_img', 'public');
+                $imagePath = $request->file('grp_image')->store('uploads/images/grp_img', 'private');
             }
 
             // Create group
@@ -916,7 +921,7 @@ public function deleteTopic($id)
                 'end_date'    => $request->input('end_date'),
                 'status'      => 1,
                 'created_by'  => $creatorId,
-                'image'       => $imagePath ? basename($imagePath) : null,
+                'image'       => $imagePath, // Store full path for secure route
                 'member_type' => 2, // 2 = created by user
             ]);
 

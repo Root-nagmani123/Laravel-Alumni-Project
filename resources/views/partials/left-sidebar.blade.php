@@ -15,7 +15,7 @@
                                     $profilePic = $user->profile_pic ?? null;
                                     @endphp
                                     <img id="existingImage"
-                                        src="{{ $profilePic ? route('profile.pic', $profilePic) : asset('feed_assets/images/avatar/07.jpg') }}"
+                                        src="{{ $profilePic ? route('secure.file', ['type'=>'profile','path'=>$profilePic]) : asset('feed_assets/images/avatar/07.jpg') }}"
                                         class="rounded-circle avatar-img" height="30" width="30" alt="User"
                                         loading="lazy" decoding="async">
                                 </div>
@@ -73,7 +73,7 @@
                     <!-- Avatar -->
                     <div class="avatar">
                         <a href="{{ route('user.allevents') }}"><img class="avatar-img rounded-circle"
-                                src="{{ isset($event->image) && $event->image ? asset('storage/' . $event->image) : asset('feed_assets/images/avatar/07.jpg') }}"
+                                src="{{ isset($event->image) && $event->image ? route('secure.file', ['type'=>'event','path'=>$event->image]) : asset('feed_assets/images/avatar/07.jpg') }}"
                                 alt="" loading="lazy" decoding="async"></a>
                     </div>
 
@@ -146,7 +146,7 @@
                         <a href="{{ route('user.forum.show', ['id' => $forum->enc_id]) }}"><img
                                 class="avatar-img rounded-circle"
                                src="{{ isset($forum->images) && $forum->images 
-        ? asset('storage/uploads/images/forums_img/' . $forum->images) 
+        ? route('secure.file', ['type'=>'forum','path'=>$forum->images]) 
         : asset('feed_assets/images/avatar/01.webp') }}"
                                
                                 alt="" loading="lazy" decoding="async"></a>

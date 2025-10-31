@@ -55,7 +55,7 @@
                         <!-- Preview -->
                         <div class="mt-2">
                             <img id="preview-image"
-                                src="{{ isset($group->image) ? asset('storage/uploads/images/grp_img/' . $group->image) : '#' }}"
+                                src="{{ isset($group->image) ? route('secure.file', ['type' => 'group', 'path' => $group->image]) : '#' }}"
                                 alt="Image Preview"
                                 class="img-fluid rounded {{ isset($group->image) ? '' : 'd-none' }}"
                                 style="max-height: 200px;" />

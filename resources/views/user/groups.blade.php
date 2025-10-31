@@ -36,7 +36,7 @@
                         <div class="col-sm-6 col-lg-4">
                             <div class="card border h-100 d-flex flex-column">
                                 <div class="h-100px rounded-top"
-                                    style="height: 100px; background-image:url({{ asset('storage/uploads/images/grp_img/' . ($recent->image ?? 'default-group.png')) }}); background-position: center; background-size: cover;">
+                                    style="height: 100px; background-image:url({{ $recent->image ? route('secure.file', ['type'=>'group','path'=>$recent->image]) : asset('feed_assets/images/avatar/07.jpg') }}); background-position: center; background-size: cover;">
                                 </div>
 
                                 <div
@@ -88,7 +88,7 @@
                         <div class="col-sm-6 col-lg-4">
                             <div class="card border h-100 d-flex flex-column">
                                 <div class="h-100px rounded-top"
-                                    style="height: 100px; background-image:url({{ asset('storage/uploads/images/grp_img/' . ($recent->image ?? 'default-group.png')) }}); background-position: center; background-size: cover;">
+                                    style="height: 100px; background-image:url({{ $recent->image ? route('secure.file', ['type'=>'group','path'=>$recent->image]) : asset('feed_assets/images/avatar/07.jpg') }}); background-position: center; background-size: cover;">
                                 </div>
 
                                 <div

@@ -607,7 +607,6 @@ Route::middleware('auth:admin')->group(function () {
     Route::get('/admin/feed', [App\Http\Controllers\Admin\FeedController::class, 'index'])->name('admin.feeds.index');
 });
 
-Route::get('/profile-pic/{path}', [App\Http\Controllers\FileController::class, 'show'])
-    ->where('path', '.*')  
-    ->middleware('auth:user')   
-    ->name('profile.pic');
+Route::get('/secure-file/{type}/{path}', [App\Http\Controllers\FileController::class, 'secureShow'])
+    ->where(['type' => '[a-zA-Z0-9_-]+', 'path' => '.*'])
+    ->name('secure.file');

@@ -81,7 +81,7 @@
 
                                         <div class="d-flex align-items-center gap-6">
                                         @if($broadcast->image_url)
-                                        <img src="{{ asset('storage/' . $broadcast->image_url) }}" alt="Broadcast Image"  height="100" width="150">
+                                        <img src="{{ $broadcast->image_url ? route('secure.file', ['type' => 'broadcast', 'path' => $broadcast->image_url]) : asset('feed_assets/images/avatar/12.jpg') }}" alt="Broadcast Image"  height="100" width="150">
                                         @else
                                         <img src="{{ asset('assets/images/no-image.png') }}" width="45"
                                         class="rounded-circle" data-bs-toggle="tooltip" data-bs-placement="top" title="No image available" alt="No image">
@@ -103,7 +103,7 @@
                                             <a href="javascript:void(0)" class="btn btn-success text-white btn-sm edit-broadcast-btn"
                                                 data-id="{{ $broadcast->id }}" data-title="{{ $broadcast->title }}"
                                                 data-description="{{ $broadcast->description }}"
-                                                data-image="{{ asset('storage/' . $broadcast->image_url) }}"
+                                                data-image="{{ $broadcast->image_url ? route('secure.file', ['type' => 'broadcast', 'path' => $broadcast->image_url]) : asset('feed_assets/images/avatar/12.jpg') }}"
                                                 data-video="{{$broadcast->video_url}}"
                                                 data-status="{{ $broadcast->status }}">
                                                 Edit
@@ -178,7 +178,7 @@
                         <div class="text-danger small">{{ $message }}</div>
                         @enderror
                     </div>
-{{-- asset('storage/' . $broadcast->image_url) --}}
+{{-- route('secure.file', ['type' => 'broadcast', 'path' => $broadcast->image_url]) --}}
 			    <div class="mb-3">
                 <label class="form-label">Current Image</label>
                 <img id="current_image"

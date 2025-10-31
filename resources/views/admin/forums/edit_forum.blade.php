@@ -78,7 +78,7 @@
                             <div class="mt-2">
         <img
             id="preview-image"
-            src="{{ isset($forum->images) ? asset('storage/uploads/images/forums_img/' . $forum->images) : '#' }}"
+            src="{{ isset($forum->images) ? route('secure.file', ['type' => 'forum', 'path' => $forum->images]) : '#' }}"
             alt="Image Preview"
             class="img-fluid rounded {{ isset($forum->images) ? '' : 'd-none' }}"
             style="max-height: 200px;"
