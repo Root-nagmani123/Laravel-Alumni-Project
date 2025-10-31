@@ -33,7 +33,7 @@
 
                 </div>
                 @if ($broadcast->image_url)
-                <img class="rounded w-100 mb-3" src="{{ asset('storage/' . $broadcast->image_url) }}"
+                <img class="rounded w-100 mb-3" src="{{ route('secure.file', ['type'=>'broadcast','path'=>$broadcast->image_url]) }}"
                     alt="Broadcast Image" style="height: 400px; object-fit: cover;" loading="lazy" decoding="async">
                 @endif
 

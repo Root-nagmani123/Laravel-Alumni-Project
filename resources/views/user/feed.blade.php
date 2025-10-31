@@ -40,7 +40,7 @@
                         $profilePic = $user->profile_pic ?? null;
                         @endphp
                         <img class="avatar-img rounded-circle"
-                            src="{{ $profilePic ? route('profile.pic', $profilePic) : asset('feed_assets/images/avatar/07.jpg') }}"
+                            src="{{ $profilePic ? route('secure.file', ['type'=>'profile','path'=>$profilePic]) : asset('feed_assets/images/avatar/07.jpg') }}"
                             alt="User Avatar" loading="lazy" decoding="async">
                     </div>
                     <!-- Post textarea -->
@@ -111,7 +111,7 @@
                         $profilePic = $user->profile_pic ?? null;
                         @endphp
                         <img class="avatar-img rounded-circle"
-                            src="{{ $profilePic ? route('profile.pic', $profilePic) : asset('feed_assets/images/avatar/07.jpg') }}"
+                            src="{{ $profilePic ? route('secure.file', ['type'=>'profile','path'=>$profilePic]) : asset('feed_assets/images/avatar/07.jpg') }}"
                             alt="User Avatar" loading="lazy" decoding="async">
                     </div>
 

@@ -131,7 +131,7 @@
             @forelse($posts as $post)
             @php
             $validMedia = $post->media->filter(function($media) {
-            return file_exists(storage_path('app/public/' . $media->file_path));
+            return file_exists(storage_path('app/private/' . $media->file_path)) || file_exists(storage_path('app/public/' . $media->file_path));
             });
             $imageMedia = $validMedia->where('file_type', 'image')->values();
             $totalImages = $imageMedia->count();
@@ -161,7 +161,7 @@
                     // Use storage_path for private files
                     if (file_exists($profilePicPath)) {
                         // Secure route to access private image
-                        $profileImage = route('profile.pic', $post->member->profile_pic);
+                        $profileImage = route('secure.file', ['type' => 'profile', 'path' => $post->member->profile_pic]);
                     }
                 }
                 @endphp
@@ -253,9 +253,9 @@
                     <p>{{ \Illuminate\Support\Str::words(strip_tags($post->content), 50, '...') }}</p>
                     @if($totalImages === 1)
                     <!-- Single Image -->
-                    <a href="{{ asset('storage/' . $imageMedia[0]->file_path) }}" class="glightbox"
+                    <a href="{{ route('secure.file', ['type'=>'group','path'=>$imageMedia[0]->file_path]) }}" class="glightbox"
                         data-gallery="post-gallery-{{ $post->id }}">
-                        <img class="w-100 rounded" src="{{ asset('storage/' . $imageMedia[0]->file_path) }}" alt="Post"
+                        <img class="w-100 rounded" src="{{ route('secure.file', ['type'=>'group','path'=>$imageMedia[0]->file_path]) }}" alt="Post"
                             style="max-height: 500px; object-fit: cover;">
                     </a>
 
@@ -263,9 +263,9 @@
                     <!-- Two Images Side by Side -->
                     <div class="d-flex gap-2">
                         @foreach($imageMedia->take(2) as $media)
-                        <a href="{{ asset('storage/' . $media->file_path) }}" class="glightbox flex-fill"
+                        <a href="{{ route('secure.file', ['type'=>'group','path'=>$media->file_path]) }}" class="glightbox flex-fill"
                             data-gallery="post-gallery-{{ $post->id }}">
-                            <img class="w-100 rounded" src="{{ asset('storage/' . $media->file_path) }}" alt="Post"
+                            <img class="w-100 rounded" src="{{ route('secure.file', ['type'=>'group','path'=>$media->file_path]) }}" alt="Post"
                                 style="height: 300px; object-fit: cover;">
                         </a>
                         @endforeach
@@ -275,17 +275,17 @@
                     <!-- Three Images: 1 big left + 2 stacked right -->
                     <div class="d-flex gap-2">
                         <div class="flex-fill">
-                            <a href="{{ asset('storage/' . $imageMedia[0]->file_path) }}" class="glightbox"
+                            <a href="{{ route('secure.file', ['type'=>'group','path'=>$imageMedia[0]->file_path]) }}" class="glightbox"
                                 data-gallery="post-gallery-{{ $post->id }}">
-                                <img class="w-100 rounded" src="{{ asset('storage/' . $imageMedia[0]->file_path) }}"
+                                <img class="w-100 rounded" src="{{ route('secure.file', ['type'=>'group','path'=>$imageMedia[0]->file_path]) }}"
                                     alt="Post" style="height: 400px; object-fit: cover;">
                             </a>
                         </div>
                         <div class="d-flex flex-column gap-2" style="width: 35%;">
                             @foreach($imageMedia->slice(1, 2) as $media)
-                            <a href="{{ asset('storage/' . $media->file_path) }}" class="glightbox flex-fill"
+                            <a href="{{ route('secure.file', ['type'=>'group','path'=>$media->file_path]) }}" class="glightbox flex-fill"
                                 data-gallery="post-gallery-{{ $post->id }}">
-                                <img class="w-100 rounded" src="{{ asset('storage/' . $media->file_path) }}" alt="Post"
+                                <img class="w-100 rounded" src="{{ route('secure.file', ['type'=>'group','path'=>$media->file_path]) }}" alt="Post"
                                     style="height: 195px; object-fit: cover;">
                             </a>
                             @endforeach
@@ -297,9 +297,9 @@
                     <div class="row g-2">
                         @foreach($imageMedia->take(4) as $media)
                         <div class="col-6">
-                            <a href="{{ asset('storage/' . $media->file_path) }}" class="glightbox"
+                            <a href="{{ route('secure.file', ['type'=>'group','path'=>$media->file_path]) }}" class="glightbox"
                                 data-gallery="post-gallery-{{ $post->id }}">
-                                <img class="w-100 rounded" src="{{ asset('storage/' . $media->file_path) }}" alt="Post"
+                                <img class="w-100 rounded" src="{{ route('secure.file', ['type'=>'group','path'=>$media->file_path]) }}" alt="Post"
                                     style="height: 250px; object-fit: cover;">
                             </a>
                         </div>
@@ -311,15 +311,15 @@
                     <div class="row g-2">
                         @foreach($imageMedia->take(4) as $index => $media)
                         <div class="col-6 position-relative">
-                            <a href="{{ asset('storage/' . $media->file_path) }}" class="glightbox d-block"
+                            <a href="{{ route('secure.file', ['type'=>'group','path'=>$media->file_path]) }}" class="glightbox d-block"
                                 data-gallery="post-gallery-{{ $post->id }}">
-                                <img class="w-100 rounded" src="{{ asset('storage/' . $media->file_path) }}" alt="Post"
+                                <img class="w-100 rounded" src="{{ route('secure.file', ['type'=>'group','path'=>$media->file_path]) }}" alt="Post"
                                     style="height: 250px; object-fit: cover;">
                             </a>
 
                             @if($index === 3)
                             @foreach($imageMedia->slice(4) as $extra)
-                            <a href="{{ asset('storage/' . $extra->file_path) }}" class="glightbox d-none"
+                            <a href="{{ route('secure.file', ['type'=>'group','path'=>$extra->file_path]) }}" class="glightbox d-none"
                                 data-gallery="post-gallery-{{ $post->id }}"></a>
                             @endforeach
                             <div
@@ -525,7 +525,7 @@
                             $defaultImage = asset('feed_assets/images/avatar/07.jpg');
                             $profileImage = $defaultImage;
                             if ($member->profile_pic && file_exists(public_path('storage/' . $member->profile_pic))) {
-                            $profileImage = asset('storage/' . $member->profile_pic);
+                            $profileImage = route('secure.file', ['type'=>'profile', 'path'=>$member->profile_pic]);
                             }
                             @endphp
                             <a

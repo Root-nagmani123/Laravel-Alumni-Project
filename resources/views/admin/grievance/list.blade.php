@@ -57,7 +57,7 @@
                         </td>
                         <td>
                             @if($grievance->attachment)
-                                <a href="{{ asset('storage/' . $grievance->attachment) }}" target="_blank" class="btn btn-sm btn-outline-secondary">
+                                <a href="{{ route('secure.file', ['type'=>'grievance','path'=>$grievance->attachment]) }}" target="_blank" class="btn btn-sm btn-outline-secondary">
                                     <i class="bi bi-paperclip me-1"></i> View
                                 </a>
                             @else

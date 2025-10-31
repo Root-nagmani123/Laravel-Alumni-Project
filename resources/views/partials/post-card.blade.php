@@ -64,10 +64,10 @@
                 @foreach($post['media'] as $media)
                     <div class="col-md-2 mb-3">
                         @if(Str::startsWith($media['file_type'], 'image'))
-                            <img src="{{ asset('storage/' . $media['file_path']) }}" class="img-fluid rounded"
+                            <img src="{{ route('secure.file', ['type'=>'post','path'=>$media['file_path']]) }}" class="img-fluid rounded"
                                 style="width:200px; height:200px; object-fit:cover;">
                         @else
-                            <a href="{{ asset('storage/' . $media['file_path']) }}" target="_blank">View File</a>
+                            <a href="{{ route('secure.file', ['type'=>'post','path'=>$media['file_path']]) }}" target="_blank">View File</a>
                         @endif
                     </div>
                 @endforeach
@@ -141,7 +141,7 @@
 
                             <!-- Comment Card -->
                             <div class="d-flex mb-3 align-items-start">
-                                <img src="{{ $commentProfilePic }}" alt="commenter" width="36" height="36" class="rounded me-2">
+                                <img src="{{ route('secure.file', ['type'=>'profile','path'=>$comment->member_profile_pic]) }}" alt="commenter" width="36" height="36" class="rounded me-2">
                                 <div class="bg-light rounded p-2 w-100 position-relative">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <strong>{{ $comment->member_name }}</strong>

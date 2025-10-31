@@ -188,7 +188,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="mt-2">
-                                    <img id="preview-image" src="{{ $member->profile_pic ? asset('storage/' . $member->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}" alt="Image Preview" class="img-fluid rounded "
+                                    <img id="preview-image" src="{{ $member->profile_pic ? route('secure.file', ['type'=>'profile','path'=>$member->profile_pic]) : asset('feed_assets/images/avatar/07.jpg') }}" alt="Image Preview" class="img-fluid rounded "
                                         style="max-height: 200px;" />
                                 </div>
                             </div>

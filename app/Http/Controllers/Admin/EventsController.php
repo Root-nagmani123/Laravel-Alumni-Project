@@ -63,7 +63,7 @@ class EventsController extends Controller
 
 		// Check and store uploaded image
 		if ($request->hasFile('image')) {
-			$imagePath = $request->file('image')->store('events', 'public');
+			$imagePath = $request->file('image')->store('events', 'private'); // SECURED: stored on private disk
 		}
 
 		// Create the event
@@ -142,7 +142,7 @@ return redirect()->route('events.index')->with('error', 'Event not found!');retu
             if ($event->image && \Storage::disk('public')->exists($event->image)) {
                 \Storage::disk('public')->delete($event->image);
             }
-            $imagePath = $request->file('image')->store('events', 'public');
+            $imagePath = $request->file('image')->store('events', 'private'); // SECURED: stored on private disk for update
             $data['image'] = $imagePath;
         }
 

@@ -24,7 +24,7 @@
         <div class="avatar avatar-xs me-2">
             <a href="{{ route('user.profile.data', ['id' => Crypt::encrypt($user->id)]) }}"> 
                 <img class="avatar-img rounded-circle lazyload" 
-                     data-src="{{ $user->profile_pic ? route('profile.pic', $user->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}"
+                     data-src="{{ $user->profile_pic ? route('secure.file', ['type' => 'profile', 'path' => $user->profile_pic]) : asset('feed_assets/images/avatar/07.jpg') }}"
                      alt="User Profile" width="40" height="40">
             </a>
         </div>
@@ -66,7 +66,7 @@
                     if ($post->type === 'group_post') {
                         // Group post ke liye
                         $profileImage = $post->group_image
-                            ? asset('storage/uploads/images/grp_img/' . $post->group_image)
+                            ? route('secure.file', ['type' => 'group', 'path' => $post->group_image])
                             : asset('feed_assets/images/avatar/07.jpg'); // fallback image
 
                         $displayName = $post->group_name ?? 'Unknown Group';
@@ -82,7 +82,7 @@
                         $member = $post->member ?? null;
 
                         $profileImage = $member && $member->profile_pic
-                            ? route('profile.pic', $member->profile_pic)
+                            ? route('secure.file', ['type' => 'profile', 'path' => $member->profile_pic])
                             : asset('feed_assets/images/avatar/07.jpg');
 
                         $displayName = $member->name ?? 'N/A';
@@ -212,7 +212,7 @@
         <!-- Media content -->
         @php
             $validMedia = $post->media->filter(function($media) {
-                return file_exists(storage_path('app/public/' . $media->file_path));
+                return file_exists(storage_path('app/private/' . $media->file_path)) || file_exists(storage_path('app/public/' . $media->file_path));
             });
 
             $imageMedia = $validMedia->where('file_type', 'image')->values();
@@ -231,8 +231,8 @@
             <!-- Uploaded Video Files -->
             <div class="post-video mt-2">
                 @foreach($videoMedia as $video)
-                    <video controls class="w-100 rounded mb-2 lazyload" preload="none" data-poster="{{ asset('storage/thumbnails/' . pathinfo($video->file_path, PATHINFO_FILENAME) . '.jpg') }}">
-                        <source data-src="{{ asset('storage/' . $video->file_path) }}" type="video/mp4">
+                    <video controls class="w-100 rounded mb-2 lazyload" preload="none" data-poster="{{ route('secure.file', ['type'=>'post','path'=>'thumbnails/' . pathinfo($video->file_path, PATHINFO_FILENAME) . '.jpg']) }}">
+                        <source data-src="{{ route('secure.file', ['type'=>'post','path'=>$video->file_path]) }}" type="video/mp4">
                         Your browser does not support the video tag.
                     </video>
                 @endforeach
@@ -243,10 +243,10 @@
         @if($totalImages === 1)
             <!-- Single Image -->
             <div class="post-img mt-2">
-                <a href="{{ asset('storage/' . $imageMedia[0]->file_path) }}" class="glightbox"
+                <a href="{{ route('secure.file', ['type'=>'post','path'=>$imageMedia[0]->file_path]) }}" class="glightbox"
                     data-gallery="post-gallery-{{ $post->id }}">
                     <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='400' viewBox='0 0 800 400'%3E%3Crect width='800' height='400' fill='%23f5f5f5'/%3E%3C/svg%3E" 
-                         data-src="{{ asset('storage/' . $imageMedia[0]->file_path) }}"
+                         data-src="{{ route('secure.file', ['type'=>'post','path'=>$imageMedia[0]->file_path]) }}"
                          class="w-100 rounded lazyload"
                          alt="Post Image"
                          class="img-400x100"
@@ -257,10 +257,10 @@
             <!-- Two Side by Side -->
             <div class="post-img d-flex gap-2 mt-2">
                 @foreach($imageMedia as $media)
-                    <a href="{{ asset('storage/' . $media->file_path) }}" class="glightbox flex-fill"
+                    <a href="{{ route('secure.file', ['type'=>'post','path'=>$media->file_path]) }}" class="glightbox flex-fill"
                         data-gallery="post-gallery-{{ $post->id }}">
                         <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='250' viewBox='0 0 400 250'%3E%3Crect width='400' height='250' fill='%23f5f5f5'/%3E%3C/svg%3E" 
-                             data-src="{{ asset('storage/' . $media->file_path) }}"
+                             data-src="{{ route('secure.file', ['type'=>'post','path'=>$media->file_path]) }}"
                              class="w-100 rounded lazyload"
                              alt="Post Image"
                              class="img-250"
@@ -271,10 +271,10 @@
         @elseif($totalImages === 3)
             <!-- One Large Left, Two Stacked Right -->
             <div class="post-img d-flex gap-2 mt-2">
-                <a href="{{ asset('storage/' . $imageMedia[0]->file_path) }}" class="glightbox flex-fill"
+                <a href="{{ route('secure.file', ['type'=>'post','path'=>$imageMedia[0]->file_path]) }}" class="glightbox flex-fill"
                     data-gallery="post-gallery-{{ $post->id }}">
                     <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400' viewBox='0 0 400 400'%3E%3Crect width='400' height='400' fill='%23f5f5f5'/%3E%3C/svg%3E" 
-                         data-src="{{ asset('storage/' . $imageMedia[0]->file_path) }}"
+                         data-src="{{ route('secure.file', ['type'=>'post','path'=>$imageMedia[0]->file_path]) }}"
                          class="w-100 rounded lazyload"
                          alt="Post Image"
                          class="img-400"
@@ -282,10 +282,10 @@
                 </a>
                 <div class="d-flex flex-column gap-2 w-50p">
                     @foreach($imageMedia->slice(1, 2) as $media)
-                        <a href="{{ asset('storage/' . $media->file_path) }}" class="glightbox flex-fill"
+                        <a href="{{ route('secure.file', ['type'=>'post','path'=>$media->file_path]) }}" class="glightbox flex-fill"
                             data-gallery="post-gallery-{{ $post->id }}">
                             <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='195' viewBox='0 0 200 195'%3E%3Crect width='200' height='195' fill='%23f5f5f5'/%3E%3C/svg%3E" 
-                                 data-src="{{ asset('storage/' . $media->file_path) }}"
+                                 data-src="{{ route('secure.file', ['type'=>'post','path'=>$media->file_path]) }}"
                                  class="w-100 rounded lazyload"
                                  alt="Post Image"
                                  class="img-195"
@@ -299,10 +299,10 @@
             <div class="post-img grid-2x200 mt-2">
                 @foreach($imageMedia->take(4) as $index => $media)
                     <div class="position-relative">
-                        <a href="{{ asset('storage/' . $media->file_path) }}" class="glightbox"
+                        <a href="{{ route('secure.file', ['type'=>'post','path'=>$media->file_path]) }}" class="glightbox"
                             data-gallery="post-gallery-{{ $post->id }}">
                             <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 200 200'%3E%3Crect width='200' height='200' fill='%23f5f5f5'/%3E%3C/svg%3E" 
-                                 data-src="{{ asset('storage/' . $media->file_path) }}"
+                                 data-src="{{ route('secure.file', ['type'=>'post','path'=>$media->file_path]) }}"
                                  alt="Post Image"
                                  class="w-100 h-100 rounded lazyload"
                                  class="object-cover"
@@ -312,7 +312,7 @@
                         <!-- Overlay for extra images -->
                         @if($index === 3 && $totalImages > 4)
                             @foreach($imageMedia->slice(4) as $extra)
-                                <a href="{{ asset('storage/' . $extra->file_path) }}" class="glightbox d-none"
+                                <a href="{{ route('secure.file', ['type'=>'post','path'=>$extra->file_path]) }}" class="glightbox d-none"
                                     data-gallery="post-gallery-{{ $post->id }}"></a>
                             @endforeach
 
@@ -361,7 +361,7 @@
                             src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' fill='%23ddd'/%3E%3C/svg%3E" 
                             data-src="{{ auth()->guard('user')->user()->profile_pic
                                     // ? asset('storage/' . auth()->guard('user')->user()->profile_pic)
-                                    ? route('profile.pic', auth()->guard('user')->user()->profile_pic)
+                                    ? route('secure.file', ['type' => 'profile', 'path' => auth()->guard('user')->user()->profile_pic])
                                     : asset('feed_assets/images/avatar/07.jpg') }}"
                             alt="{{ auth()->guard('user')->user()->name ?? 'User' }}"
                             width="40" height="40">
@@ -426,7 +426,7 @@
                             <a href="{{ $comment->member ? route('user.profile.data', ['id' => Crypt::encrypt($comment->member->id)]) : '#' }}">
                                 <img class="avatar-img rounded-circle lazyload"
                                      src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' fill='%23ddd'/%3E%3C/svg%3E" 
-                                     data-src="{{ $comment->member && $comment->member->profile_pic ?  route('profile.pic', $comment->member->profile_pic) : asset('feed_assets/images/avatar/07.jpg') }}"
+                                     data-src="{{ $comment->member && $comment->member->profile_pic ?  route('secure.file', ['type' => 'profile', 'path' => $comment->member->profile_pic]) : asset('feed_assets/images/avatar/07.jpg') }}"
                                      alt="" width="40" height="40">
                             </a>
                         </div>
@@ -578,7 +578,7 @@ window.deleteStoryRouteTemplate = "{{ route('user.stories.destroy', ['id' => '__
                             id: "story-{{ $story->id }}",
                             type: "{{ $isVideo ? 'video' : 'photo' }}",
                             length: {{ $isVideo ? 15 : 5 }},
-                            src: "{{ asset('storage/' . $story->story_image) }}",
+                            src: "{{ route('secure.file', ['type'=>'story','path'=>$story->story_image]) }}",
                             preview: "{{ asset($previewImage) }}",
                             time: {{ \Carbon\Carbon::parse($story->created_at)->timestamp }}
                         }@if(!$loop->last),@endif
@@ -616,7 +616,7 @@ window.deleteStoryRouteTemplate = "{{ route('user.stories.destroy', ['id' => '__
                             id: "story-{{ $story->id }}",
                             type: "{{ $isVideo ? 'video' : 'photo' }}",
                             length: {{ $isVideo ? 15 : 5 }},
-                            src: "{{ asset('storage/' . $story->story_image) }}",
+                            src: "{{ route('secure.file', ['type'=>'story','path'=>$story->story_image]) }}",
                             preview: "{{ asset($previewImage) }}",
                             time: {{ \Carbon\Carbon::parse($story->created_at)->timestamp }}
                         }@if(!$loop->last),@endif

@@ -72,8 +72,8 @@
                     @php
                     $commentPicPath = $comment->profile_pic
                         ? (Str::startsWith($comment->profile_pic, 'profile_pic')
-                            ? route('profile.pic', $comment->profile_pic)
-                            : asset('storage/' . ltrim($comment->profile_pic, '/')))
+                            ? route('secure.file', ['type' => 'profile', 'path' => $comment->profile_pic])
+                            : route('secure.file', ['type'=>'profile','path'=>$comment->profile_pic]))
 
                         : asset('feed_assets/images/avatar/07.jpg');
 
@@ -194,7 +194,7 @@
                     const commentsListEl = document.getElementById('commentsList');
                     const updateTpl = commentsListEl?.getAttribute('data-update-url-template') || '';
                     const deleteTpl = commentsListEl?.getAttribute('data-delete-url-template') || '';
-                    const profilePicRoute = "{{ route('profile.pic', ':filename') }}";
+                    const profilePicRoute = "{{ route('secure.file', ['type' => 'profile', 'path' => ':filename']) }}";
                     form?.addEventListener('submit', async function(ev) {
                         ev.preventDefault();
                         const comment = input.value.trim();

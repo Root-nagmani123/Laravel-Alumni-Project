@@ -133,7 +133,7 @@
                     <span>image type: jpg, jpeg, png</span>
                     <div class="mt-2">
                         <img id="imagePreview"
-                             src="{{ $event->image ? asset('storage/' . $event->image) : '#' }}"
+                             src="{{ $event->image ? route('secure.file', ['type' => 'event', 'path' => $event->image]) : '#' }}"
                              alt="Preview"
                              style="{{ $event->image ? '' : 'display:none;' }} max-height:150px; border:1px solid #ccc; padding:5px;">
                     </div>

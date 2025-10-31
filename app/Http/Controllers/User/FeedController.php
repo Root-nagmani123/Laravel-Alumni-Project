@@ -268,11 +268,11 @@ class FeedController extends Controller
 
         if ($request->hasFile('media')) {
             foreach ($request->file('media') as $file) {
-                $path = $file->store('public/posts');
+                $path = $file->store('posts', 'private');
                 PostMedia::create([
                     'post_id' => $post->id,
-                    'media_type' => str_starts_with($file->getMimeType(), 'video') ? 'video' : 'image',
-                    'media_url' => Storage::url($path),
+                    'file_path' => $path,
+                    'file_type' => str_starts_with($file->getMimeType(), 'video') ? 'video' : 'image',
                 ]);
             }
         }
@@ -552,7 +552,7 @@ $url = $request->video_link;
     // 2. Add new media (jo user ne abhi upload kiya h)
     if ($request->hasFile('postMedia')) {
         foreach ($request->file('postMedia') as $file) {
-            $path = $file->store('posts', 'public');
+            $path = $file->store('posts', 'private');
 
             PostMedia::create([
                 'post_id' => $post->id,

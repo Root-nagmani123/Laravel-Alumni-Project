@@ -34,7 +34,7 @@ class StoryController extends Controller
     $filename = 'story_' . Auth::guard('user')->id() . '_' . time() . '.' . $extension;
 
     // store with custom name
-    $path = $request->file('story_file')->storeAs('stories', $filename, 'public');
+    $path = $request->file('story_file')->storeAs('stories', $filename, 'private');
 
 
         $story = Story::create([
@@ -64,8 +64,8 @@ class StoryController extends Controller
         }
 
         // Optional: Delete file from storage
-       if ($story->story_image && \Storage::disk('public')->exists($story->story_image)) {
-                \Storage::disk('public')->delete($story->story_image);
+       if ($story->story_image && \Storage::disk('private')->exists($story->story_image)) {
+                \Storage::disk('private')->delete($story->story_image);
             }
 
         $story->delete();
