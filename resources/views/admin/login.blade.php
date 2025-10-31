@@ -49,8 +49,12 @@
                                                 <form action="{{ url('admin/authlogin') }}" method="post" id="loginForm">
                                                     {{-- CSRF Token --}}
                                                     @csrf
-                                                <input type="hidden" name="challenge_id" id="challenge_id" value="{{ $challengeId }}">
-                                                    {{-- Email Field --}}
+                                                @php
+                                $ts = now()->addSeconds(30)->timestamp;
+                                @endphp
+                                
+                                <input type="hidden" id="check_data" name="check_data" value="{{ Crypt::encryptString((string) $ts) }}">
+         {{-- Email Field --}}
                                                     <div class="mb-3">
                                                         <label for="exampleInputEmail1" class="form-label">Email
                                                             Address</label>
