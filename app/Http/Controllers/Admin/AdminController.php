@@ -26,14 +26,9 @@ class AdminController extends Controller
     }
 
     public function index(){
-         $salt = base64_encode(random_bytes(32)); // opaque token
-        // Store in session with expiry (example: 30 seconds)
-        session([
-            'password_salt_token' => $salt,
-            'password_salt_expire' => now()->addSeconds(30)
-        ]);
+        
 
-          return view('admin.login', ['passwordSaltToken' => $salt]);
+          return view('admin.login');
     }
 
 
@@ -52,7 +47,30 @@ public function loginAuth(Request $request)
     $rules = [
         'email' => 'required|email',
         'password' => 'required|string',
+         'g-recaptcha-response' => 'required'
     ];
+    
+       try {
+            $enc = $request->input('check_data');
+            // Decrypt timestamp
+            $timestamp = (int) Crypt::decryptString($enc);
+
+            // Verify: should not be expired (30 sec ahead)
+            if (now()->timestamp > $timestamp) {
+                return back()->withErrors([ 'error' => 'Invalid login credentials or unauthorized access.']);
+            }
+            
+              $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
+        'secret' => '6LcxQc0rAAAAAN5Wl6h1kH78PHIszwHdLitSdPi8',
+        'response' => $request->input('g-recaptcha-response'),
+        'remoteip' => $request->ip(),
+    ]);
+     $result = $response->json();
+
+    if (!$result['success']) {
+        return back()->withErrors(['captcha' => 'Captcha verification failed. Please try again.'])->withInput();
+    }
+    
      $encodedKey = config('app.key'); // Get APP_KEY
    if (strpos($encodedKey, 'base64:') === 0) {
        $encodedKey = substr($encodedKey, 7); // Remove "base64:" prefix
@@ -83,6 +101,68 @@ public function loginAuth(Request $request)
         'isAdmin' => 1,
     ];
 
+    $allowedRedirects = [
+    'dashboard' => route('dashboard'),
+];
+
+$target = $request->input('redirect'); // query param like ?redirect=dashboard
+$referer = $request->headers->get('Referer');
+
+if ($target && array_key_exists($target, $allowedRedirects)) {
+    return redirect($allowedRedirects[$target]);
+}
+$url = $request->input('redirect');
+
+if ($url) {
+    $parsedHost = parse_url($url, PHP_URL_HOST);
+
+    // Allow only internal relative URLs OR exact trusted hosts
+    $allowedHosts = ['alumni.lbsnaa.gov.in', '127.0.0.1', '52.140.75.46', 'localhost'];
+
+    if ($parsedHost && !in_array($parsedHost, $allowedHosts)) {
+        abort(403, 'Unauthorized redirect');
+    }
+
+    if (!$parsedHost && str_starts_with($url, '/')) {
+        return redirect($url); // internal relative redirect is safe
+    }
+}
+$redirectUrl = $request->input('url') ?? $request->input('redirect_to') ?? $request->input('redirect');
+
+if ($redirectUrl) {
+    $decodedUrl = urldecode($redirectUrl);
+    $host = parse_url($decodedUrl, PHP_URL_HOST);
+
+    $allowedHosts = ['alumni.lbsnaa.gov.in', '52.140.75.46', '127.0.0.1', 'localhost'];
+
+    if ($host && !in_array($host, $allowedHosts, true)) {
+        abort(403, 'Unauthorized redirect target');
+    }
+
+    // Block URLs starting with //
+    if (preg_match('/^\/\//', $decodedUrl)) {
+        abort(403, 'Unauthorized redirect target');
+    }
+}
+if ($referer) {
+    $decodedUrl = urldecode($referer);
+    $host = parse_url($decodedUrl, PHP_URL_HOST);
+
+    $allowedHosts = ['alumni.lbsnaa.gov.in', '52.140.75.46', '127.0.0.1', 'localhost'];
+
+    if ($host && !in_array($host, $allowedHosts, true)) {
+        abort(403, 'Unauthorized redirect target');
+    }
+
+    // Block URLs starting with //
+    if (preg_match('/^\/\//', $decodedUrl)) {
+        abort(403, 'Unauthorized redirect target');
+    }
+}
+
+
+
+
     // Check if remember checkbox is checked
     $remember = $request->has('remember');
 
@@ -112,18 +192,15 @@ public function loginAuth(Request $request)
             'logged_in'  => true,
         ]);
 
-        // Log successful login
-        AuditService::logSuccessfulLogin($request, $admin->email);
-
         return redirect()->route('dashboard')->with('success', 'Welcome back, ' . $admin->name . '!');
     }
-
-    // Log failed login attempt
-    AuditService::logFailedLogin($request, $request->input('email'), 'Invalid credentials');
 
     return redirect()->back()->withErrors([
         'email' => 'Invalid login credentials or unauthorized access.',
     ]);
+     } catch (\Exception $e) {
+            return back()->withErrors([ 'email' => 'Invalid login credentials or unauthorized access.']);
+        }
 }
 
 	public function dashboard(){
