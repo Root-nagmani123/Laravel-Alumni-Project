@@ -13,6 +13,8 @@ use App\Models\Member;
 
 use LdapRecord\Models\ActiveDirectory\User as LdapUser;
 use App\Services\AuditService;
+use Illuminate\Support\Str;
+
 
 class AuthController extends Controller
 {
@@ -27,10 +29,13 @@ class AuthController extends Controller
     ->whereNotNull('Service')
     ->orderBy('Service', 'asc')
     ->pluck('Service');
+$challengeId = (string) Str::uuid();
+        $nonce = base64_encode(random_bytes(32));
 
+        session()->put("ldap_challenge.{$challengeId}", $nonce);
 
        /*  return redirect()->route('user.feed1'); */
-		 return view('user.auth.login', compact('services'));
+		 return view('user.auth.login', compact('services', 'challengeId'));
     }
     function showLoginForm_ldap(){
         return view('user.auth.login_ldap');
@@ -125,13 +130,14 @@ if ($connection->auth()->attempt($username, $password)) {
         'email' => 'The provided credentials do not match our records or your account is inactive.',
     ]);
 }
-public function login_ldap(Request $request)
+ public function login_ldap(Request $request)
 {
    
     $request->validate([
         'username' => 'required|string',
         'password' => 'required|string',
         'g-recaptcha-response' => 'required', // reCAPTCHA validation
+         'challenge_id' => 'required|string',
     ]);
        $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
         'secret' => '6LcxQc0rAAAAAN5Wl6h1kH78PHIszwHdLitSdPi8', // apna secret key
@@ -147,19 +153,31 @@ public function login_ldap(Request $request)
         ])->withInput();
     }
 
-     $enc = $request->input('check_data');
+    
 
         try {
             // Decrypt timestamp
-            $timestamp = (int) Crypt::decryptString($enc);
+         $submitted = $request->input('password'); // expected "realPassword::challengeId"
+        $separator = '::';
 
-            // Verify: should not be expired (30 sec ahead)
-            if (now()->timestamp > $timestamp) {
-                return back()->withErrors([ 'email' => 'Invalid login credentials or unauthorized access.']);
-            }
+        if (! str_contains($submitted, $separator)) {
+            return back()->withErrors(['email' => 'Invalid login format. Please refresh the page and try again.']);
+        }
 
+        // split from the right in case password also contains '::'
+        $parts = explode($separator, $submitted);
+        // last element is challengeId, rest join back as password (handles separators inside password)
+        $challengeId = array_pop($parts);
+        $realPassword = implode($separator, $parts);
+
+        // 2) retrieve and consume nonce server-side using challengeId
+        $sessionKey = "ldap_challenge.{$challengeId}";
+        $nonce = session()->pull($sessionKey); // pull = get + delete (single-use)
+        if (! $nonce) {
+            return back()->withErrors(['email' => 'Invalid or replayed login attempt. Please refresh the login page and try again.']);
+        }
     $username = trim($request->input('username'));
-    $password = $request->input('password');
+    $request->password = $realPassword;
      $encodedKey = config('app.key'); // Get APP_KEY
    if (strpos($encodedKey, 'base64:') === 0) {
        $encodedKey = substr($encodedKey, 7); // Remove "base64:" prefix
@@ -204,14 +222,8 @@ public function login_ldap(Request $request)
                 $user->is_online = 1;
                 $user->last_seen = now();
                 $user->save();
-                
-                // Log successful login
-                AuditService::logSuccessfulLogin($request, $user->username, 'user_ldap_local');
-                
                 return redirect()->intended('/user/feed');
             }else{
-                // Log failed login attempt
-                AuditService::logFailedLogin($request, $username, 'User not found or inactive', 'user_ldap_local');
                 return back()->with('error', 'Invalid username or password.');
 
             }
@@ -230,8 +242,6 @@ public function login_ldap(Request $request)
 
         if (! $ldapUser) {
             logger("LDAP: User '{$username}' not found.");
-            // Log failed login attempt
-            AuditService::logFailedLogin($request, $username, 'User not found in LDAP directory', 'user_ldap_production');
             return back()->with('error', 'User not found in LDAP directory.');
         }
 
@@ -256,8 +266,6 @@ public function login_ldap(Request $request)
 
         if (! $bindSuccess) {
             logger("LDAP: Invalid credentials for '{$username}'. Tried formats: " . implode(', ', $bindAttempts));
-            // Log failed login attempt
-            AuditService::logFailedLogin($request, $username, 'Invalid LDAP credentials', 'user_ldap_production');
             return back()->with('error', 'Invalid username or password.');
         }
 
@@ -268,8 +276,6 @@ public function login_ldap(Request $request)
 
         if (! $localUser) {
             logger("LDAP auth passed but no local Member found for '{$username}'.");
-            // Log failed login attempt
-            AuditService::logFailedLogin($request, $username, 'LDAP auth passed but user not registered locally', 'user_ldap_production');
             return back()->with('error', 'LDAP auth passed, but user not registered locally.');
         }
 
@@ -281,14 +287,6 @@ public function login_ldap(Request $request)
 
         Auth::guard('user')->login($localUser);
         $request->session()->regenerate();
-
-        // Update online status
-        $localUser->is_online = 1;
-        $localUser->last_seen = now();
-        $localUser->save();
-
-        // Log successful login
-        AuditService::logSuccessfulLogin($request, $localUser->username, 'user_ldap_production');
 
         logger("LDAP: Login successful for '{$username}'.");
         return redirect()->intended('/user/feed');

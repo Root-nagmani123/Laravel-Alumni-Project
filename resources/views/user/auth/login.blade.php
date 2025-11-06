@@ -473,6 +473,8 @@
                         <hr class="my-2">
                         <form method="POST" action="{{ route('user.login.submit_ldap') }}" id="loginForm">
                             @csrf
+                              <input type="hidden" name="challenge_id" id="challenge_id" value="{{ $challengeId }}">
+
                             <div class="mb-3">
                                 <label class="form-label fw-bold">User Name</label>
                                 <input type="text" name="username" class="form-control"
@@ -484,11 +486,6 @@
                                     placeholder="Enter your password" required autocomplete="off">
 
 
-                                @php
-                                $ts = now()->addSeconds(30)->timestamp;
-                                @endphp
-                                
-                                <input type="hidden" id="check_data" name="check_data" value="{{ Crypt::encryptString((string) $ts) }}">
 
                             </div>
                             <div class="mb-3">
@@ -1425,12 +1422,19 @@
     }
 
     document.getElementById("loginForm").addEventListener("submit", async function(e) {
-        e.preventDefault();
+    // append challenge id to password to send both values in one field (optional)
         let passwordField = document.getElementById("password");
         let encryptedPassword = await encryptPassword(passwordField.value);
         passwordField.value = encryptedPassword; // Send encrypted password
-        this.submit(); // Now submit the form
-    });
+
+    const sep = '::';
+    const pwdField = document.getElementById('password');
+    const challengeId = document.getElementById('challenge_id').value;
+    if (!pwdField.value.includes(sep + challengeId)) {
+        pwdField.value = encryptedPassword + sep + challengeId;
+    }
+    // let form submit normally
+});
     </script>
 
 </body>
