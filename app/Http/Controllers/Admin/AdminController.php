@@ -26,9 +26,12 @@ class AdminController extends Controller
     }
 
     public function index(){
-        
+       $challengeId = (string) Str::uuid();
+        $nonce = base64_encode(random_bytes(32));
 
-          return view('admin.login');
+        session()->put("ldap_challenge.{$challengeId}", $nonce);
+
+          return view('admin.login', ['challengeId' => $challengeId]);
     }
 
 
@@ -49,15 +52,8 @@ public function loginAuth(Request $request)
          'g-recaptcha-response' => 'required'
     ];
     
-       try {
-            $enc = $request->input('check_data');
-            // Decrypt timestamp
-            $timestamp = (int) Crypt::decryptString($enc);
-
-            // Verify: should not be expired (30 sec ahead)
-            if (now()->timestamp > $timestamp) {
-                return back()->withErrors([ 'error' => 'Invalid login credentials or unauthorized access.']);
-            }
+        try {
+     
             
               $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
         'secret' => '6LcxQc0rAAAAAN5Wl6h1kH78PHIszwHdLitSdPi8',
@@ -69,7 +65,27 @@ public function loginAuth(Request $request)
     if (!$result['success']) {
         return back()->withErrors(['captcha' => 'Captcha verification failed. Please try again.'])->withInput();
     }
-    
+      $submitted = $request->input('password'); // expected "realPassword::challengeId"
+        $separator = '::';
+
+        if (! str_contains($submitted, $separator)) {
+            return back()->withErrors(['email' => 'Invalid login format. Please refresh the page and try again.']);
+        }
+
+        // split from the right in case password also contains '::'
+        $parts = explode($separator, $submitted);
+        // last element is challengeId, rest join back as password (handles separators inside password)
+        $challengeId = array_pop($parts);
+        $realPassword = implode($separator, $parts);
+
+        // 2) retrieve and consume nonce server-side using challengeId
+        $sessionKey = "ldap_challenge.{$challengeId}";
+        $nonce = session()->pull($sessionKey); // pull = get + delete (single-use)
+        if (! $nonce) {
+            return back()->withErrors(['email' => 'Invalid or replayed login attempt. Please refresh the login page and try again.']);
+        }
+         $request->password = $realPassword;
+
      $encodedKey = config('app.key'); // Get APP_KEY
    if (strpos($encodedKey, 'base64:') === 0) {
        $encodedKey = substr($encodedKey, 7); // Remove "base64:" prefix

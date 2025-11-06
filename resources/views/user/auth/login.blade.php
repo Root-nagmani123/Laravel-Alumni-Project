@@ -473,6 +473,8 @@
                         <hr class="my-2">
                         <form method="POST" action="{{ route('user.login.submit_ldap') }}" id="loginForm">
                             @csrf
+                              <input type="hidden" name="challenge_id" id="challenge_id" value="{{ $challengeId }}">
+
                             <div class="mb-3">
                                 <label class="form-label fw-bold">User Name</label>
                                 <input type="text" name="username" class="form-control"
@@ -484,7 +486,6 @@
                                     placeholder="Enter your password" required autocomplete="off">
 
 
-                               <input type="hidden" name="challenge_id" id="challenge_id" value="{{ $challengeId }}">
                             </div>
                             <div class="mb-3">
                                 <div id="captcha-ldap"></div> <!-- ID for LDAP captcha -->
@@ -1419,23 +1420,7 @@
         return encrypted.toString();
     }
 
-    // document.getElementById("loginForm").addEventListener("submit", async function(e) {
-    //     e.preventDefault();
-    //     // let passwordField = document.getElementById("password");
-    //     // let encryptedPassword = await encryptPassword(passwordField.value);
-    //     // passwordField.value = encryptedPassword; // Send encrypted password
-
-    //      const sep = '::';
-    // const pwdField = document.getElementById('password');
-    // const challengeId = document.getElementById('challengeId').value;
-    // // Make sure we don't append multiple times if user clicks twice
-    // if (!pwdField.value.includes(sep + challengeId)) {
-    //     pwdField.value = pwdField.value + sep + challengeId;
-    // }
-
-    //     this.submit(); // Now submit the form
-    // });
-   document.getElementById("loginForm").addEventListener("submit", async function(e) {
+    document.getElementById("loginForm").addEventListener("submit", async function(e) {
     // append challenge id to password to send both values in one field (optional)
         let passwordField = document.getElementById("password");
         let encryptedPassword = await encryptPassword(passwordField.value);
@@ -1449,7 +1434,6 @@
     }
     // let form submit normally
 });
-
     </script>
 
 </body>

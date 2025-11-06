@@ -17,6 +17,8 @@ use Illuminate\Support\Str;
 
 use LdapRecord\Models\ActiveDirectory\User as LdapUser;
 use App\Services\AuditService;
+use Illuminate\Support\Str;
+
 
 class AuthController extends Controller
 {
@@ -132,7 +134,7 @@ if ($connection->auth()->attempt($username, $password)) {
         'email' => 'The provided credentials do not match our records or your account is inactive.',
     ]);
 }
-public function login_ldap(Request $request)
+ public function login_ldap(Request $request)
 {
    
     $request->validate([
@@ -146,19 +148,6 @@ public function login_ldap(Request $request)
         'response' => $request->input('g-recaptcha-response'),
         'remoteip' => $request->ip(),
     ]);
-       $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
-        'secret' => '6LcxQc0rAAAAAN5Wl6h1kH78PHIszwHdLitSdPi8', // apna secret key
-        'response' => $request->input('g-recaptcha-response'),
-        'remoteip' => $request->ip(),
-    ]);
-
-    $result = $response->json();
-
-    if (empty($result['success']) || $result['success'] !== true) {
-        return back()->withErrors([
-            'captcha' => 'Captcha verification failed. Please try again.'
-        ])->withInput();
-    }
 
     $result = $response->json();
 
@@ -237,14 +226,8 @@ public function login_ldap(Request $request)
                 $user->is_online = 1;
                 $user->last_seen = now();
                 $user->save();
-                
-                // Log successful login
-                AuditService::logSuccessfulLogin($request, $user->username, 'user_ldap_local');
-                
                 return redirect()->intended('/user/feed');
             }else{
-                // Log failed login attempt
-                AuditService::logFailedLogin($request, $username, 'User not found or inactive', 'user_ldap_local');
                 return back()->with('error', 'Invalid username or password.');
 
             }
@@ -263,8 +246,6 @@ public function login_ldap(Request $request)
 
         if (! $ldapUser) {
             logger("LDAP: User '{$username}' not found.");
-            // Log failed login attempt
-            AuditService::logFailedLogin($request, $username, 'User not found in LDAP directory', 'user_ldap_production');
             return back()->with('error', 'User not found in LDAP directory.');
         }
 
@@ -289,8 +270,6 @@ public function login_ldap(Request $request)
 
         if (! $bindSuccess) {
             logger("LDAP: Invalid credentials for '{$username}'. Tried formats: " . implode(', ', $bindAttempts));
-            // Log failed login attempt
-            AuditService::logFailedLogin($request, $username, 'Invalid LDAP credentials', 'user_ldap_production');
             return back()->with('error', 'Invalid username or password.');
         }
 
@@ -301,8 +280,6 @@ public function login_ldap(Request $request)
 
         if (! $localUser) {
             logger("LDAP auth passed but no local Member found for '{$username}'.");
-            // Log failed login attempt
-            AuditService::logFailedLogin($request, $username, 'LDAP auth passed but user not registered locally', 'user_ldap_production');
             return back()->with('error', 'LDAP auth passed, but user not registered locally.');
         }
 
@@ -314,14 +291,6 @@ public function login_ldap(Request $request)
 
         Auth::guard('user')->login($localUser);
         $request->session()->regenerate();
-
-        // Update online status
-        $localUser->is_online = 1;
-        $localUser->last_seen = now();
-        $localUser->save();
-
-        // Log successful login
-        AuditService::logSuccessfulLogin($request, $localUser->username, 'user_ldap_production');
 
         logger("LDAP: Login successful for '{$username}'.");
         return redirect()->intended('/user/feed');
