@@ -49,7 +49,7 @@
                                                 <form action="{{ url('admin/authlogin') }}" method="post" id="loginForm">
                                                     {{-- CSRF Token --}}
                                                     @csrf
-                                                <input type="hidden" id="check_data" name="check_data" value="{{ $passwordSaltToken }}">
+                                                <input type="hidden" name="challenge_id" id="challenge_id" value="{{ $challengeId }}">
                                                     {{-- Email Field --}}
                                                     <div class="mb-3">
                                                         <label for="exampleInputEmail1" class="form-label">Email
@@ -155,8 +155,15 @@ async function encryptPassword(password) {
 document.getElementById("loginForm").addEventListener("submit", async function (e) {
     e.preventDefault();
     let passwordField = document.getElementById("password");
-    let encryptedPassword = await encryptPassword(passwordField.value);
-    passwordField.value = encryptedPassword; // Send encrypted password
+        let encryptedPassword = await encryptPassword(passwordField.value);
+        passwordField.value = encryptedPassword; // Send encrypted password
+
+    const sep = '::';
+    const pwdField = document.getElementById('password');
+    const challengeId = document.getElementById('challenge_id').value;
+    if (!pwdField.value.includes(sep + challengeId)) {
+        pwdField.value = encryptedPassword + sep + challengeId;
+    }
     this.submit(); // Now submit the form
 });
 

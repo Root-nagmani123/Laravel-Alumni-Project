@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Http;
 use LdapRecord\Container;
 use Illuminate\Support\Facades\Crypt;
 use App\Models\Member;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Str;
 
 use LdapRecord\Models\ActiveDirectory\User as LdapUser;
 
@@ -26,10 +28,13 @@ class AuthController extends Controller
     ->whereNotNull('Service')
     ->orderBy('Service', 'asc')
     ->pluck('Service');
+$challengeId = (string) Str::uuid();
+        $nonce = base64_encode(random_bytes(32));
 
+        session()->put("ldap_challenge.{$challengeId}", $nonce);
 
        /*  return redirect()->route('user.feed1'); */
-		 return view('user.auth.login', compact('services'));
+		 return view('user.auth.login', compact('services', 'challengeId'));
     }
     function showLoginForm_ldap(){
         return view('user.auth.login_ldap');
@@ -118,6 +123,7 @@ public function login_ldap(Request $request)
         'username' => 'required|string',
         'password' => 'required|string',
         'g-recaptcha-response' => 'required', // reCAPTCHA validation
+         'challenge_id' => 'required|string',
     ]);
        $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
         'secret' => '6LcxQc0rAAAAAN5Wl6h1kH78PHIszwHdLitSdPi8', // apna secret key
@@ -133,19 +139,31 @@ public function login_ldap(Request $request)
         ])->withInput();
     }
 
-     $enc = $request->input('check_data');
+    
 
         try {
             // Decrypt timestamp
-            $timestamp = (int) Crypt::decryptString($enc);
+         $submitted = $request->input('password'); // expected "realPassword::challengeId"
+        $separator = '::';
 
-            // Verify: should not be expired (30 sec ahead)
-            if (now()->timestamp > $timestamp) {
-                return back()->withErrors([ 'email' => 'Invalid login credentials or unauthorized access.']);
-            }
+        if (! str_contains($submitted, $separator)) {
+            return back()->withErrors(['email' => 'Invalid login format. Please refresh the page and try again.']);
+        }
 
+        // split from the right in case password also contains '::'
+        $parts = explode($separator, $submitted);
+        // last element is challengeId, rest join back as password (handles separators inside password)
+        $challengeId = array_pop($parts);
+        $realPassword = implode($separator, $parts);
+
+        // 2) retrieve and consume nonce server-side using challengeId
+        $sessionKey = "ldap_challenge.{$challengeId}";
+        $nonce = session()->pull($sessionKey); // pull = get + delete (single-use)
+        if (! $nonce) {
+            return back()->withErrors(['email' => 'Invalid or replayed login attempt. Please refresh the login page and try again.']);
+        }
     $username = trim($request->input('username'));
-    $password = $request->input('password');
+    $request->password = $realPassword;
      $encodedKey = config('app.key'); // Get APP_KEY
    if (strpos($encodedKey, 'base64:') === 0) {
        $encodedKey = substr($encodedKey, 7); // Remove "base64:" prefix

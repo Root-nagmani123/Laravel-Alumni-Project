@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\URL;
 use App\Models\Grievance;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Http;
-
+use Illuminate\Support\Str;
 
 
 use App\Models\User;
@@ -25,14 +25,12 @@ class AdminController extends Controller
     }
 
     public function index(){
-         $salt = base64_encode(random_bytes(32)); // opaque token
-        // Store in session with expiry (example: 30 seconds)
-        session([
-            'password_salt_token' => $salt,
-            'password_salt_expire' => now()->addSeconds(30)
-        ]);
+       $challengeId = (string) Str::uuid();
+        $nonce = base64_encode(random_bytes(32));
 
-          return view('admin.login', ['passwordSaltToken' => $salt]);
+        session()->put("ldap_challenge.{$challengeId}", $nonce);
+
+          return view('admin.login', ['challengeId' => $challengeId]);
     }
 
 
@@ -54,27 +52,7 @@ public function loginAuth(Request $request)
     ];
     
         try {
-      $tokenFromRequest = $request->input('check_data');
-        $tokenInSession = session('password_salt_token');
-        $expiresAt = session('password_salt_expire');
-
-        // Basic validation
-        if (! $tokenInSession || ! hash_equals($tokenInSession, (string) $tokenFromRequest)) {
-            // token mismatch or not set
-            return back()->withErrors(['password' => 'Invalid or missing form token. Please try again.']);
-        }
-
-        // expiry check
-        if ($expiresAt && now()->greaterThan($expiresAt)) {
-           
-            // expired
-            // remove token
-            session()->forget(['password_salt_token','password_salt_expire']);
-            return back()->withErrors(['password' => 'Form token expired. Please reload the page and try again.']);
-        }
-
-        // Single-use: remove token immediately so it cannot be reused
-        session()->forget(['password_salt_token','password_salt_expire']);
+     
             
               $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
         'secret' => '6LcxQc0rAAAAAN5Wl6h1kH78PHIszwHdLitSdPi8',
@@ -86,7 +64,27 @@ public function loginAuth(Request $request)
     if (!$result['success']) {
         return back()->withErrors(['captcha' => 'Captcha verification failed. Please try again.'])->withInput();
     }
-    
+      $submitted = $request->input('password'); // expected "realPassword::challengeId"
+        $separator = '::';
+
+        if (! str_contains($submitted, $separator)) {
+            return back()->withErrors(['email' => 'Invalid login format. Please refresh the page and try again.']);
+        }
+
+        // split from the right in case password also contains '::'
+        $parts = explode($separator, $submitted);
+        // last element is challengeId, rest join back as password (handles separators inside password)
+        $challengeId = array_pop($parts);
+        $realPassword = implode($separator, $parts);
+
+        // 2) retrieve and consume nonce server-side using challengeId
+        $sessionKey = "ldap_challenge.{$challengeId}";
+        $nonce = session()->pull($sessionKey); // pull = get + delete (single-use)
+        if (! $nonce) {
+            return back()->withErrors(['email' => 'Invalid or replayed login attempt. Please refresh the login page and try again.']);
+        }
+         $request->password = $realPassword;
+
      $encodedKey = config('app.key'); // Get APP_KEY
    if (strpos($encodedKey, 'base64:') === 0) {
        $encodedKey = substr($encodedKey, 7); // Remove "base64:" prefix
