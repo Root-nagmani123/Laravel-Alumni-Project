@@ -62,14 +62,22 @@
         @if($post['media']->isNotEmpty())
             <div class="row">
                 @foreach($post['media'] as $media)
-                    <div class="col-md-2 mb-3">
-                        @if(Str::startsWith($media['file_type'], 'image'))
-                            <img src="{{ route('secure.file', ['type'=>'post','path'=>$media['file_path']]) }}" class="img-fluid rounded"
-                                style="width:200px; height:200px; object-fit:cover;">
-                        @else
-                            <a href="{{ route('secure.file', ['type'=>'post','path'=>$media['file_path']]) }}" target="_blank">View File</a>
-                        @endif
-                    </div>
+                    @php
+                        $mediaPath = $media['file_path'] ?? null;
+                        $mediaUrl = $mediaPath
+                            ? route('secure.file', ['type' => 'post', 'path' => $mediaPath])
+                            : null;
+                    @endphp
+                    @if($mediaUrl)
+                        <div class="col-md-2 mb-3">
+                            @if(Str::startsWith($media['file_type'], 'image'))
+                                <img src="{{ $mediaUrl }}" class="img-fluid rounded"
+                                    style="width:200px; height:200px; object-fit:cover;" alt="Post media">
+                            @else
+                                <a href="{{ $mediaUrl }}" target="_blank">View File</a>
+                            @endif
+                        </div>
+                    @endif
                 @endforeach
             </div>
         @endif
@@ -141,7 +149,13 @@
 
                             <!-- Comment Card -->
                             <div class="d-flex mb-3 align-items-start">
-                                <img src="{{ route('secure.file', ['type'=>'profile','path'=>$comment->member_profile_pic]) }}" alt="commenter" width="36" height="36" class="rounded me-2">
+                                @php
+                                    $commentProfilePicPath = $comment->member_profile_pic ?? null;
+                                    $commentProfilePicUrl = $commentProfilePicPath
+                                        ? route('secure.file', ['type' => 'profile', 'path' => $commentProfilePicPath])
+                                        : $commentProfilePic;
+                                @endphp
+                                <img src="{{ $commentProfilePicUrl }}" alt="commenter" width="36" height="36" class="rounded me-2">
                                 <div class="bg-light rounded p-2 w-100 position-relative">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <strong>{{ $comment->member_name }}</strong>
