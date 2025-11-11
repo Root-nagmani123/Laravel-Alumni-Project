@@ -486,6 +486,10 @@
                                     placeholder="Enter your password" required autocomplete="off">
 
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c6ca93c338c5350ee93fa76753d44f745a0e42bd
                             </div>
                             <div class="mb-3">
                                 <div id="captcha-ldap"></div> <!-- ID for LDAP captcha -->
