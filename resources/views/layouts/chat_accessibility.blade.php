@@ -1,9 +1,9 @@
 @if(strtolower(auth()->guard('user')->user()->Service) == 'ias')
 @php $unreadCount = App\Models\Member::find(auth()->guard('user')->id())->unreadMessages->count(); @endphp
-<div class="d-none d-lg-block position-fixed bottom-0 end-0 m-4">
+<div class="position-fixed bottom-0 end-0 m-4">
     <!-- Floating Chat Button -->
     <a data-bs-toggle="offcanvas" href="#offcanvasChat" role="button" aria-controls="offcanvasChat"
-       class="btn btn-primary rounded-circle shadow-lg position-relative p-3"
+       class="btn btn-primary rounded-circle shadow-lg position-relative p-3 floating-btn"
        style="width:60px; height:60px; display:flex; align-items:center; justify-content:center; bottom:130px; background-color: #792421; right: 10px;">
 
         <i class="bi bi-chat-left-text-fill fs-4 text-white"></i>
@@ -160,8 +160,8 @@
         class="text-white">Accessibility
         Options</span></button><!-- accessibility panel end-->
 
-<div class="d-none d-lg-block position-relative">
-    <a href="https://www.lbsnaa.gov.in/footer_menu/contact-us" target="_blank" class="floating-btn d-none d-lg-flex"
+<div class="position-relative">
+    <a href="https://www.lbsnaa.gov.in/footer_menu/contact-us" target="_blank" class="floating-btn"
         style="margin-right: 0.5rem !important;margin-bottom:-1rem;">
         <div class="chat-icon">
             <i class="bi bi-person-lines-fill"></i>
