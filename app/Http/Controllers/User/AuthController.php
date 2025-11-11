@@ -7,17 +7,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Crypt;
 use LdapRecord\Container;
-use Illuminate\Support\Facades\Crypt;
 use App\Models\Member;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 
 use LdapRecord\Models\ActiveDirectory\User as LdapUser;
 use App\Services\AuditService;
-use Illuminate\Support\Str;
 
 
 class AuthController extends Controller
