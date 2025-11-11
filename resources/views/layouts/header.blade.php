@@ -87,10 +87,10 @@
                         <a class="nav-link {{ request()->is('user/directory') ? 'active' : '' }}" 
                         href="{{ route('user.directory') }}">Directory</a>
                     </li>
-                     <!-- <li class="nav-item">
+                     <li class="nav-item">
                         <a class="nav-link" 
                         href="#" data-bs-toggle="modal" data-bs-target="#grievanceModal">Feedback / Grievance</a>
-                    </li> -->
+                    </li>
                 </ul>
 
                 <!-- Search Input Group with Dropdown -->
@@ -403,14 +403,14 @@
                                 class="dropdown-item btn btn-primary-soft btn-sm my-2 text-center">View profile</a>
                             @endif
                         </li>
-                        <!-- @if(
+                        @if(
                             ($user->status == 1) && 
                             ($user->is_moderator == 1) && 
                             ($user->moderator_active_inactive == 1)
                         )
                         <li><a class="dropdown-item" href="{{ route('user.moderation') }}"><i class="bi bi-gear fa-fw me-2"></i>Moderator</a></li>
                         @endif
-                        <li> -->
+                        <li>
                             <form action="{{ route('user.logout') }}" method="POST" style="display: inline;">
                                 @csrf
                                 <button type="submit" class="dropdown-item d-flex align-items-center">
