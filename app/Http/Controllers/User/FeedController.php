@@ -212,6 +212,7 @@ class FeedController extends Controller
                       });
               });
     })
+    ->where('approved_by_moderator', 1)
     ->orderBy('created_at', 'desc')
     ->get()
     ->map(function ($post) {
