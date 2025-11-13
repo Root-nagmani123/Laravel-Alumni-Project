@@ -124,6 +124,7 @@ Route::prefix('user')->name('user.')->group(function () {
     Route::get('/feed', [FeedController::class, 'index'])
         ->middleware(CheckProfile::class)
         ->name('feed');
+        Route::get('/feed/load', [FeedController::class, 'loadMore'])->name('feed.load');
 
 
         Route::post('/logout', [AuthController::class, 'logout'])->name('logout');

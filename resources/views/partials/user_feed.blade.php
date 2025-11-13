@@ -49,433 +49,88 @@
 <!-- Share feed END -->
 
 <!-- Card feed item START -->
-@foreach($posts as $post)
-<div class="card mb-4" data-post-id="{{ $post->id }}">
-    <!-- Card header START -->
-    <div class="card-header border-0 pb-0">
-        <div class="d-flex align-items-center justify-content-between">
-            <div class="d-flex align-items-center">
-                <!-- Avatar -->
-                @php
-                    $profileImage = '';
-                    $displayName = '';
-                    $designation = '';
-                    $Service = '';
-                    $profileLink = '#';
 
-                    if ($post->type === 'group_post') {
-                        // Group post ke liye
-                        $profileImage = $post->group_image
-                            ? route('secure.file', ['type' => 'group', 'path' => $post->group_image])
-                            : asset('feed_assets/images/avatar/07.jpg'); // fallback image
-
-                        $displayName = $post->group_name ?? 'Unknown Group';
-                        $designation = 'Group Post';
-                        $created_by = $post->member->name;
-
-                        // Optional: if you have a group detail page
-                        $profileLink =  route('user.profile.data', ['id' => Crypt::encrypt($post->member->id)]);
-
-                        $groupLink = route('user.group-post',['id' => encrypt($post->group_id)]);
-                    } else {
-                        // Member/user post
-                        $member = $post->member ?? null;
-
-                        $profileImage = $member && $member->profile_pic
-                            ? route('secure.file', ['type' => 'profile', 'path' => $member->profile_pic])
-                            : asset('feed_assets/images/avatar/07.jpg');
-
-                        $displayName = $member->name ?? 'N/A';
-                        $designation = $member->Service ?? 'N/A';
-                        $profileLink = route('user.profile.data', ['id' => Crypt::encrypt($member->id)]);
-                    }
-                @endphp
-
-                <!-- Info -->
-                <div class="d-flex align-items-center">
-                    <!-- Avatar -->
-                    <div class="me-4 flex-shrink-0 avatar">
-                        @if($post->type === 'group_post')
-                            <a href="{{ $groupLink }}">
-                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' fill='%23ddd'/%3E%3C/svg%3E" 
-                                     data-src="{{ $profileImage }}" 
-                                     alt="Group Picture"
-                                     class="img-fluid avatar-img rounded-circle lazyload" 
-                                     width="40" height="40">
-                            </a>
-                        @else
-                            <a href="{{ $profileLink }}">
-                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' fill='%23ddd'/%3E%3C/svg%3E" 
-                                     data-src="{{ $profileImage }}" 
-                                     alt="Profile Picture"
-                                     class="img-fluid avatar-img rounded-circle lazyload" 
-                                     width="40" height="40">
-                            </a>
-                        @endif
-                    </div>
-
-                    <!-- Text content -->
-                    <div>
-                        <!-- Name -->
-                        @if($post->type === 'group_post')
-                            <h6 class="mb-1">
-                                <i class="fa-solid fa-users fa-fw pe-2"></i> <a href="{{ $groupLink }}">{{ $displayName }}</a>
-                            </h6>
-                        @else
-                            <h6 class="mb-1">
-                                <a href="{{ $profileLink }}" class="text-dark">{{ $displayName }}</a>
-                            </h6>
-                        @endif
-
-                        <!-- Group post info + Time -->
-                        @php
-                            $createdAt = \Carbon\Carbon::parse($post->created_at)->setTimezone('Asia/Kolkata');
-                            $now = \Carbon\Carbon::now('Asia/Kolkata');
-                            $diff = $createdAt->diff($now);
-                            if ($diff->y > 0) {
-                                $timeDiff = $diff->y . 'y';
-                            } elseif ($diff->m > 0) {
-                                $timeDiff = $diff->m . 'mo';
-                            } elseif ($diff->d > 0) {
-                                $timeDiff = $diff->d . 'd';
-                            } elseif ($diff->h > 0) {
-                                $timeDiff = $diff->h . 'hr';
-                            } elseif ($diff->i > 0) {
-                                $timeDiff = $diff->i . 'min';
-                            } else {
-                                $timeDiff = 'Just now';
-                            }
-                        @endphp
-
-                        @if($post->type === 'group_post')
-                            <p class="mb-1">
-                                Group Post | <i class="bi bi-person-fill"></i><a class="text-dark" href="{{ $profileLink }}">{{ $created_by }}</a>
-                            </p>
-                        @else
-                            <!-- Designation -->
-                            <p class="mb-0">
-                                {{ $member->Service ?? 'N/A' }} | {{ $member->current_designation ?? 'N/A' }}
-                            </p>
-                        @endif
-                    </div>
-                </div>
-            </div>
-            <div class="dropdown">
-                <a href="#" class="text-secondary py-1 px-2" id="cardFeedAction-{{ $post->id }}" data-bs-toggle="dropdown" aria-expanded="false">
-                    {{ $timeDiff }} <i class="bi bi-caret-down fa-fw pe-2"></i>
-                </a>
-                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="cardFeedAction-{{ $post->id }}">
-                    <li>
-                        <a class="dropdown-item" onclick="editGrp_post({{ $post->id }})" href="#">
-                            <i class="bi bi-pen fa-fw pe-2"></i>Edit post 
-                        </a>
-                    </li>
-                    <li>
-                        <form action="{{ route('user.group.post.destroy', $post->id) }}" method="POST"
-                            onsubmit="return confirm('Are you sure you want to delete this post?');">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit"
-                                class="text-decoration-none ms-2 border-0 bg-transparent d-flex align-items-center gap-2 text-danger">
-                                <i class="bi bi-trash"></i> Delete Post
-                            </button>
-                        </form>
-                    </li>
-                </ul>
-            </div>
-        </div>
+<div id="post-container">
+        @include('partials.posts', ['posts' => $posts])
     </div>
-    <!-- Card header END -->
-    
-    <!-- Card body START -->
-    <div class="card-body">
-        @php
-            $fullContent = strip_tags($post->content);
-            $wordCount = str_word_count($fullContent);
-        @endphp
-
-        @if ($wordCount > 50)
-            <div x-data="{ expanded: false }">
-                <p x-show="!expanded">
-                    {{ \Illuminate\Support\Str::words($fullContent, 50, '...') }}
-                    <a href="#" @click.prevent="expanded = true" class="text-danger">Read more</a>
-                </p>
-                <p x-show="expanded" x-cloak>
-                    {{ nl2br(e($post->content)) }}
-                    <a href="#" @click.prevent="expanded = false" class="text-danger">Show less</a>
-                </p>
-            </div>
-        @else
-            <p>{{ nl2br(e($post->content)) }}</p>
-        @endif
-
-        <!-- Media content -->
-        @php
-            $validMedia = $post->media->filter(function($media) {
-                return file_exists(storage_path('app/private/' . $media->file_path)) || file_exists(storage_path('app/public/' . $media->file_path));
-            });
-
-            $imageMedia = $validMedia->where('file_type', 'image')->values();
-            $videoMedia = $validMedia->where('file_type', 'video')->values();
-
-            $totalImages = $imageMedia->count();
-            $totalVideos = $videoMedia->count();
-        @endphp
-        
-        @if($post->video_link)
-            <!-- Embedded YouTube Video -->
-            <div class="ratio ratio-16x9 mt-2">
-                <iframe height="315" src="{{ $post->video_link }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen loading="lazy"></iframe>
-            </div>
-        @elseif($totalVideos > 0)
-            <!-- Uploaded Video Files -->
-            <div class="post-video mt-2">
-                @foreach($videoMedia as $video)
-                    <video controls class="w-100 rounded mb-2 lazyload" preload="none" data-poster="{{ route('secure.file', ['type'=>'post','path'=>'thumbnails/' . pathinfo($video->file_path, PATHINFO_FILENAME) . '.jpg']) }}">
-                        <source data-src="{{ route('secure.file', ['type'=>'post','path'=>$video->file_path]) }}" type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>
-                @endforeach
-            </div>
-        @endif
-
-        <!-- Image Display -->
-        @if($totalImages === 1)
-            <!-- Single Image -->
-            <div class="post-img mt-2">
-                <a href="{{ route('secure.file', ['type'=>'post','path'=>$imageMedia[0]->file_path]) }}" class="glightbox"
-                    data-gallery="post-gallery-{{ $post->id }}">
-                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='400' viewBox='0 0 800 400'%3E%3Crect width='800' height='400' fill='%23f5f5f5'/%3E%3C/svg%3E" 
-                         data-src="{{ route('secure.file', ['type'=>'post','path'=>$imageMedia[0]->file_path]) }}"
-                         class="w-100 rounded lazyload"
-                         alt="Post Image"
-                         class="img-400x100"
-                         loading="lazy">
-                </a>
-            </div>
-        @elseif($totalImages === 2)
-            <!-- Two Side by Side -->
-            <div class="post-img d-flex gap-2 mt-2">
-                @foreach($imageMedia as $media)
-                    <a href="{{ route('secure.file', ['type'=>'post','path'=>$media->file_path]) }}" class="glightbox flex-fill"
-                        data-gallery="post-gallery-{{ $post->id }}">
-                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='250' viewBox='0 0 400 250'%3E%3Crect width='400' height='250' fill='%23f5f5f5'/%3E%3C/svg%3E" 
-                             data-src="{{ route('secure.file', ['type'=>'post','path'=>$media->file_path]) }}"
-                             class="w-100 rounded lazyload"
-                             alt="Post Image"
-                             class="img-250"
-                             loading="lazy">
-                    </a>
-                @endforeach
-            </div>
-        @elseif($totalImages === 3)
-            <!-- One Large Left, Two Stacked Right -->
-            <div class="post-img d-flex gap-2 mt-2">
-                <a href="{{ route('secure.file', ['type'=>'post','path'=>$imageMedia[0]->file_path]) }}" class="glightbox flex-fill"
-                    data-gallery="post-gallery-{{ $post->id }}">
-                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400' viewBox='0 0 400 400'%3E%3Crect width='400' height='400' fill='%23f5f5f5'/%3E%3C/svg%3E" 
-                         data-src="{{ route('secure.file', ['type'=>'post','path'=>$imageMedia[0]->file_path]) }}"
-                         class="w-100 rounded lazyload"
-                         alt="Post Image"
-                         class="img-400"
-                         loading="lazy">
-                </a>
-                <div class="d-flex flex-column gap-2 w-50p">
-                    @foreach($imageMedia->slice(1, 2) as $media)
-                        <a href="{{ route('secure.file', ['type'=>'post','path'=>$media->file_path]) }}" class="glightbox flex-fill"
-                            data-gallery="post-gallery-{{ $post->id }}">
-                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='195' viewBox='0 0 200 195'%3E%3Crect width='200' height='195' fill='%23f5f5f5'/%3E%3C/svg%3E" 
-                                 data-src="{{ route('secure.file', ['type'=>'post','path'=>$media->file_path]) }}"
-                                 class="w-100 rounded lazyload"
-                                 alt="Post Image"
-                                 class="img-195"
-                                 loading="lazy">
-                        </a>
-                    @endforeach
-                </div>
-            </div>
-        @elseif($totalImages > 0)
-            <!-- Four or More Images -->
-            <div class="post-img grid-2x200 mt-2">
-                @foreach($imageMedia->take(4) as $index => $media)
-                    <div class="position-relative">
-                        <a href="{{ route('secure.file', ['type'=>'post','path'=>$media->file_path]) }}" class="glightbox"
-                            data-gallery="post-gallery-{{ $post->id }}">
-                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 200 200'%3E%3Crect width='200' height='200' fill='%23f5f5f5'/%3E%3C/svg%3E" 
-                                 data-src="{{ route('secure.file', ['type'=>'post','path'=>$media->file_path]) }}"
-                                 alt="Post Image"
-                                 class="w-100 h-100 rounded lazyload"
-                                 class="object-cover"
-                                 loading="lazy">
-                        </a>
-
-                        <!-- Overlay for extra images -->
-                        @if($index === 3 && $totalImages > 4)
-                            @foreach($imageMedia->slice(4) as $extra)
-                                <a href="{{ route('secure.file', ['type'=>'post','path'=>$extra->file_path]) }}" class="glightbox d-none"
-                                    data-gallery="post-gallery-{{ $post->id }}"></a>
-                            @endforeach
-
-                <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center text-white overlay-dark">
-                                +{{ $totalImages - 4 }}
-                            </div>
-                        @endif
-                    </div>
-                @endforeach
-            </div>
-        @endif
-        
-        @if($post->type != 'group_post')
-            <ul class="nav nav-stack py-3 small">
-                @php
-                    $likeUserList = $post->likes->pluck('member.name')->filter();
-                    $likeUsersTooltip = $likeUserList->implode('<br>');
-                    $hasLiked = $post->likes->contains('member_id', auth('user')->id());
-                @endphp
-
-                <li class="nav-item">
-                    <a href="javascript:void(0);"
-                        class="nav-link like-button {{ $hasLiked ? 'active text-primary' : '' }}"
-                        data-url="{{ route('user.post.like', $post->id) }}" data-post-id="{{ $post->id }}"
-                        data-bs-toggle="tooltip" data-bs-html="true"
-                        data-bs-title="{{ $likeUsersTooltip ?: 'No likes yet' }}">
-                        <i class="bi bi-hand-thumbs-up-fill pe-1"></i>
-                        <span class="like-label">Like</span>
-                        <span class="like-count">{{ $post->likes->count() ? '('.$post->likes->count().')' : '' }}</span>
-                    </a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link" href="#!">
-                        <i class="bi bi-chat-fill pe-1"></i>Comments
-                        <span class="comment-count">{{ $post->comments->count() ? '(' . $post->comments->count() . ')' : '' }}</span>
-                    </a>
-                </li>
-            </ul>
-
-            <div class="d-flex mb-3">
-                <!-- Avatar -->
-                <div class="avatar avatar-xs me-2">
-                    <a href="{{ route('user.profile.data', ['id' => Crypt::encrypt(auth()->guard('user')->id())]) }}">
-                        <img class="avatar-img rounded-circle lazyload"
-                            src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' fill='%23ddd'/%3E%3C/svg%3E" 
-                            data-src="{{ auth()->guard('user')->user()->profile_pic
-                                    // ? asset('storage/' . auth()->guard('user')->user()->profile_pic)
-                                    ? route('secure.file', ['type' => 'profile', 'path' => auth()->guard('user')->user()->profile_pic])
-                                    : asset('feed_assets/images/avatar/07.jpg') }}"
-                            alt="{{ auth()->guard('user')->user()->name ?? 'User' }}"
-                            width="40" height="40">
-                    </a>
-                </div>
-
-                <!-- Comment box -->
-                <form class="nav nav-item w-100 position-relative commentForm" id="commentForm-{{ $post->id }}"
-                    action="{{ route('user.comments.store') }}" method="POST" data-post-id="{{ $post->id }}">
-                    @csrf
-                    <textarea name="comment" class="form-control pe-5 bg-light user_feed_comment commentInput" rows="1"
-                        placeholder="Add a comment..." id="comments-{{ $post->id }}"></textarea>
-                    <input type="hidden" name="post_id" value="{{ $post->id }}">
-                    <button class="nav-link bg-transparent px-3 position-absolute top-50 end-0 translate-middle-y border-0"
-                        type="submit">
-                        <i class="bi bi-send-fill"></i>
-                    </button>
-                    <div class="comment-error text-danger small mt-1"></div>
-                </form>
-            </div>
-        @endif
-        
-        @php
-            $currentUser = auth()->guard('user')->user();
-            $isPostOwner = $currentUser && optional($post->member)->id === $currentUser->id;
-            $filteredComments = $isPostOwner
-                ? $post->comments
-                : $post->comments->filter(function($comment) use ($currentUser) {
-                    if (!$currentUser) { return false; }
-                    if ($comment->member_id === $currentUser->id) { return true; }
-                    preg_match_all('/@([A-Za-z0-9_.]+)/', $comment->comment, $matches);
-                    $handles = array_map('strtolower', $matches[1] ?? []);
-                    return in_array(strtolower($currentUser->username ?? ''), $handles, true);
-                });
-        @endphp
-
-        <ul class="comment-wrap list-unstyled">
-            @foreach ($filteredComments as $comment)
-                @php
-                    $rawComment = $comment->comment;
-                    preg_match_all('/@([A-Za-z0-9_.]+)/', $rawComment, $matches);
-                    $handles = array_unique($matches[1]);
-                    $users = \App\Models\Member::whereIn('username', $handles)->get()->keyBy('username');
-                    $commentText = preg_replace_callback(
-                        '/@([A-Za-z0-9_.]+)/',
-                        function ($m) use ($users) {
-                            $username = $m[1];
-                            $user = $users->get($username);
-                            if ($user) {
-                                $url = route('user.profile.data', ['id' => Crypt::encrypt($user->id)]);
-                                return '<a href="'.$url.'" class="mention-badge">@'.e($user->name).'</a>';
-                            }
-                            return '@'.e($username);
-                        },
-                        e($rawComment)
-                    );
-                    $isCommentOwner = $currentUser && $currentUser->id === $comment->member_id;
-                @endphp
-                <li class="comment-item mb-3 {{ $loop->index >= 2 ? 'd-none' : '' }}" id="comment-{{ $comment->id }}">
-                    <div class="d-flex position-relative">
-                        <div class="avatar avatar-xs">
-                            <a href="{{ $comment->member ? route('user.profile.data', ['id' => Crypt::encrypt($comment->member->id)]) : '#' }}">
-                                <img class="avatar-img rounded-circle lazyload"
-                                     src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' fill='%23ddd'/%3E%3C/svg%3E" 
-                                     data-src="{{ $comment->member && $comment->member->profile_pic ?  route('secure.file', ['type' => 'profile', 'path' => $comment->member->profile_pic]) : asset('feed_assets/images/avatar/07.jpg') }}"
-                                     alt="" width="40" height="40">
-                            </a>
-                        </div>
-                        <div class="ms-2 w-100">
-                            <div class="bg-light rounded-start-top-0 p-3 rounded">
-                                <div class="d-flex justify-content-between">
-                                    <h6 class="mb-1">
-                                        <a href="{{ $comment->member ? route('user.profile.data', ['id' => Crypt::encrypt($comment->member->id)]) : '#' }}">
-                                            {{ $comment->member->name ?? 'Anonymous' }}
-                                        </a>
-                                    </h6>
-                                    <small class="ms-2">{{ $comment->created_at->diffForHumans() }}</small>
-                                </div>
-                                <p class="small mb-0" id="comment-text-{{ $comment->id }}">{{ $commentText }}</p>
-                            </div>
-                            <div class="row">
-                                <div class="col-6"></div>
-                                <div class="col-6 text-end">
-                                    @if($isCommentOwner)
-                                        <button class="btn btn-sm btn-link p-0 text-primary edit-comment-btn"
-                                            data-comment-id="{{ $comment->id }}" data-comment="{{ $comment->comment }}"
-                                            type="button"><i class="bi bi-pencil-fill"></i></button>
-                                        <button class="btn btn-sm btn-link p-0 text-danger delete-comment-btn"
-                                            data-comment-id="{{ $comment->id }}" type="button"><i class="bi bi-trash-fill"></i></button>
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </li>
-            @endforeach
-        </ul>
-
-        @if ($filteredComments->count() > 2)
-            <div class="card-footer border-0 pt-0">
-                <a href="#" class="btn btn-link btn-sm text-secondary load-more-comments" data-step="5">Load more comments</a>
-            </div>
-        @endif
-    </div>
-    <!-- Card body END -->
-</div>
-<!-- Card feed item END -->
-@endforeach
-
 @include('partials.user_feed_modals')
-
+<div id="scroll-sentinel" class="text-center py-4">
+    <div id="infinite-loader" style="display:none;">
+        <div class="spinner-border spinner-border-sm" role="status"></div>
+        <span class="ms-2">Loading...</span>
+    </div>
+    <div id="no-more" style="display:none;">
+        <p class="text-muted mb-0">No more posts</p>
+    </div>
+</div>
 @section('scripts')
 <script nonce="{{ $cspNonce }}">// Lazy loading implementation
 document.addEventListener('DOMContentLoaded', function() {
+
+    const sentinel = document.querySelector('#scroll-sentinel');
+    const postContainer = document.querySelector('#post-container');
+    const loader = document.querySelector('#infinite-loader');
+    const noMore = document.querySelector('#no-more');
+
+    // start page = 1 because first page is server-rendered
+    let page = 1;
+    let loading = false;
+    let finished = false;
+
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting && !loading && !finished) {
+                loadMore();
+            }
+        });
+    }, { root: null, rootMargin: '0px', threshold: 0.3 });
+
+    observer.observe(sentinel);
+
+    function loadMore() {
+        loading = true;
+        page++;
+        loader.style.display = 'inline-block';
+
+        fetch("{{ route('user.feed.load') }}?page=" + page, {
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+        .then(resp => {
+            if (resp.status === 204) return '';
+            if (!resp.ok) throw new Error('Network error');
+            return resp.text();
+        })
+        .then(html => {
+            loader.style.display = 'none';
+            if (!html || html.trim() === '') {
+                finished = true;
+                noMore.style.display = 'block';
+                observer.unobserve(sentinel);
+                return;
+            }
+
+            const temp = document.createElement('div');
+            temp.innerHTML = html;
+            while (temp.firstChild) {
+                postContainer.appendChild(temp.firstChild);
+            }
+
+            // re-init any JS for new nodes
+            initPostBehaviors(postContainer);
+            loading = false;
+        })
+        .catch(err => {
+            console.error(err);
+            loader.style.display = 'none';
+            loading = false;
+        });
+    }
+
+    // initial init
+    initPostBehaviors(document);
+
+
+
     // Initialize lazy loading for images and iframes
     if ('IntersectionObserver' in window) {
         const lazyMediaObserver = new IntersectionObserver(function(entries, observer) {

@@ -193,8 +193,7 @@ class FeedController extends Controller
 ->select('Service', DB::raw('COUNT(*) as count'))
 ->groupBy('Service')
 ->get();
-
-    $posts = Post::with([
+$rawPosts = Post::with([
         'member',
         'media',
         'likes',
@@ -204,37 +203,116 @@ class FeedController extends Controller
         'group'
     ])
     ->where(function ($query) use ($groupIds) {
-       $query->whereNull('group_id')
+        $query->whereNull('group_id')
               ->orWhere(function ($sub) use ($groupIds) {
                   $sub->whereIn('group_id', $groupIds)
                       ->whereHas('group', function ($q) {
-                          $q->where('status', 1); // ✅ only active groups
+                          $q->where('status', 1);
                       });
               });
     })
     ->orderBy('created_at', 'desc')
-    ->get()
-    ->map(function ($post) {
+    ->simplePaginate(5);
+
+// Map over the CURRENT PAGE's collection
+$mapped = $rawPosts->getCollection()->map(function ($post) {
+    return (object)[
+        'id' => $post->id,
+        'content' => $post->content,
+        'created_at' => $post->created_at,
+        'type' => $post->group_id ? 'group_post' : 'post',
+        'group_name' => $post->group->name ?? 'No Group',
+        'member' => $post->member,
+        'media' => $post->media,
+        'likes' => $post->likes,
+        'comments' => $post->comments,
+        'video_link' => $post->video_link,
+        'shares' => $post->shares,
+        'group_image' => $post->group->image ?? null,
+        'group_id' => $post->group_id,
+    ];
+});
+
+// IMPORTANT: set the mapped collection BACK on the paginator object
+$rawPosts->setCollection($mapped);
+
+    return view('user.feed', [
+    'memberId' => $memberId,
+    'posts'    => $rawPosts,
+    'user'     => $user,
+    'story'    => $story,
+    'storiesByMember' => $storiesByMember,
+    'broadcast' => $broadcast,
+    'events'    => $events,
+    'forums'    => $forums,
+    'groupNames'=> $groupNames,
+    'members'   => $members,
+]); 
+ }
+ public function loadMore(Request $request)
+{
+     $user = auth()->guard('user')->user();
+
+        $userId = $user->id;
+        $memberId = $user->id;
+   $groupIds = DB::table('group_member')
+    ->where('status', 1)
+    ->where(function ($query) use ($userId) {
+        $query->where('mentor', $userId)
+              ->orWhereRaw("JSON_CONTAINS(mentiee, '\"$userId\"')");
+    })
+    ->pluck('group_id');
+
+    $rawPosts = Post::with([
+            'member:id,name,profile_pic,Service,current_designation,username',
+            'media',
+            'likes',
+            'comments' => function($q) { $q->where('status',1)->latest()->take(3); },
+            'group:id,name,image'
+        ])
+        ->where(function ($query) use ($groupIds) {
+            $query->whereNull('group_id')
+                  ->orWhere(function ($sub) use ($groupIds) {
+                      $sub->whereIn('group_id', $groupIds)
+                          ->whereHas('group', function ($q) {
+                              $q->where('status', 1);
+                          });
+                  });
+        })
+        ->orderBy('created_at', 'desc')
+        ->simplePaginate(5);
+
+    // map only current page items (optional shaping)
+    $mapped = $rawPosts->getCollection()->map(function ($post) {
         return (object)[
             'id' => $post->id,
             'content' => $post->content,
             'created_at' => $post->created_at,
             'type' => $post->group_id ? 'group_post' : 'post',
-            'group_loaded' => $post->relationLoaded('group') ? 'yes' : 'no',
-            'group_name' => $post->group->name ?? 'No Group',
+            'group_name' => $post->group->name ?? null,
             'member' => $post->member,
             'media' => $post->media,
             'likes' => $post->likes,
-            'comments' => $post->comments, // now only status=1
+            'comments' => $post->comments,
             'video_link' => $post->video_link,
-            'shares' => $post->shares,
             'group_image' => $post->group->image ?? null,
             'group_id' => $post->group_id,
         ];
     });
 
-    return view('user.feed', compact('memberId', 'posts', 'user', 'story','storiesByMember', 'broadcast','events', 'forums', 'groupNames', 'members'));
+    $rawPosts->setCollection($mapped);
+
+    if ($request->ajax()) {
+        // return only the posts HTML partial
+        if ($rawPosts->isEmpty()) {
+            return response('', 204);
+        }
+
+        return view('partials.posts', ['posts' => $rawPosts])->render();
     }
+
+    return view('user.feed', compact('rawPosts')); // fallback
+}
 
     public function store(Request $request)
     {
