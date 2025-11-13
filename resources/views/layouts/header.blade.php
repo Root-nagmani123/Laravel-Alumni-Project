@@ -149,7 +149,7 @@
 
 
 <a class="small clear-all-notifications"
-   href="{{ route('user.notifications.clear', ['id' => Auth::guard('user')->user()->id]) }}"
+   href="{{ route('user.notifications.clear', ['id' => Crypt::encryptString(Auth::guard('user')->user()->id)]) }}"
    onclick="clearNotifications(event)">Mark all as read</a>
 
 

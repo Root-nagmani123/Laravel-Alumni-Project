@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Notification;
 use App\Models\Member;
+use Illuminate\Support\Facades\Crypt;
 
 class NotificationController extends Controller
 {
@@ -55,7 +56,16 @@ class NotificationController extends Controller
     public function clearNotifications(Request $request, $userId)
 {
 
-    if (!$userId) {
+    try {
+        $userId = Crypt::decryptString($userId);
+    } catch (\Exception $exception) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Invalid notification identifier',
+        ], 400);
+    }
+
+    if (!$userId || (int) $userId !== auth('user')->id()) {
         return response()->json([
             'success' => false,
             'message' => 'Unauthorized',
