@@ -232,7 +232,7 @@ class FeedController extends Controller
             'group_id' => $post->group_id,
         ];
     });
-
+// print_r($posts);die;
     return view('user.feed', compact('memberId', 'posts', 'user', 'story','storiesByMember', 'broadcast','events', 'forums', 'groupNames', 'members'));
     }
 
