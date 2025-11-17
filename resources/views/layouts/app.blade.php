@@ -9,6 +9,117 @@
     <script src="{{ asset('js/html-validation.js') }}"></script>
     @livewireStyles
     <style>
+    /* Global Responsive Fixes */
+    * {
+        box-sizing: border-box;
+    }
+    
+    html {
+        overflow-x: hidden;
+    }
+    
+    body {
+        overflow-x: hidden;
+        width: 100%;
+        height: 100vh;
+    }
+    
+    img,
+    video {
+        max-width: 100%;
+        height: auto;
+    }
+    
+    /* Container responsive */
+    .container {
+        width: 100%;
+        padding-right: 15px;
+        padding-left: 15px;
+        margin-right: auto;
+        margin-left: auto;
+    }
+    
+    @media (max-width: 575.98px) {
+        .container {
+            padding-right: 10px;
+            padding-left: 10px;
+        }
+    }
+    
+    /* Bootstrap grid improvements */
+    .row {
+        margin-right: -15px;
+        margin-left: -15px;
+    }
+    
+    @media (max-width: 767.98px) {
+        .row {
+            margin-right: -10px;
+            margin-left: -10px;
+        }
+        
+        .col,
+        [class*="col-"] {
+            padding-right: 10px;
+            padding-left: 10px;
+        }
+    }
+    
+    @media (max-width: 575.98px) {
+        .row {
+            margin-right: -5px;
+            margin-left: -5px;
+        }
+        
+        .col,
+        [class*="col-"] {
+            padding-right: 5px;
+            padding-left: 5px;
+        }
+    }
+    
+    /* Card responsive */
+    .card {
+        width: 100%;
+        margin-bottom: 1rem;
+    }
+    
+    @media (max-width: 575.98px) {
+        .card {
+            margin-bottom: 0.75rem;
+        }
+    }
+    
+    /* Button responsive */
+    @media (max-width: 575.98px) {
+        .btn {
+            font-size: 0.875rem;
+            padding: 0.375rem 0.75rem;
+        }
+        
+        .btn-sm {
+            font-size: 0.8rem;
+            padding: 0.25rem 0.5rem;
+        }
+    }
+    
+    /* Form controls responsive */
+    @media (max-width: 575.98px) {
+        .form-control,
+        .form-select {
+            font-size: 0.9rem;
+        }
+        
+        .form-label {
+            font-size: 0.875rem;
+        }
+    }
+    
+    /* Prevent horizontal scroll */
+    .vstack {
+        overflow-x: hidden;
+    }
+    
     #pageLoader {
         transition: opacity 0.3s ease;
     }
@@ -18,9 +129,7 @@
         visibility: hidden;
         pointer-events: none;
     }
-    body{
-        height: 100vh;
-    }
+    
     .chat-dot {
     position: absolute;
     top: -4px;
