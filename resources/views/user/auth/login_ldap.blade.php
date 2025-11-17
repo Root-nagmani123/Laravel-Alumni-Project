@@ -135,6 +135,22 @@
         border-radius: 5px;
         text-align: center;
     }
+    
+    /* Responsive reCAPTCHA styling for mobile */
+    @media screen and (max-width: 768px) {
+        .g-recaptcha {
+            transform: scale(0.85);
+            transform-origin: 0 0;
+            margin-bottom: 10px;
+        }
+    }
+    
+    @media screen and (max-width: 480px) {
+        .g-recaptcha {
+            transform: scale(0.75);
+            transform-origin: 0 0;
+        }
+    }
     </style>
 </head>
 
