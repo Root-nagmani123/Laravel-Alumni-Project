@@ -43,10 +43,20 @@ class BroadcastController extends Controller
     $imageUrl = null;
     if ($request->hasFile('images')) {
         $image = $request->file('images')[0];
-        //$imageUrl = $image->store('uploads/broadcasts', 'public');
-         $path = $image->storeAs('uploads/broadcasts', $image, 'public');
-         $imageUrl = $path;
-
+        
+        // Server-side MIME validation
+        $mimeType = $image->getMimeType();
+        $allowedMimes = ['image/jpeg', 'image/png', 'image/gif'];
+        if (!in_array($mimeType, $allowedMimes)) {
+            return redirect()->back()
+                ->withErrors(['images' => 'Invalid file type. Only JPEG, PNG, and GIF images are allowed.'])
+                ->withInput();
+        }
+        
+        $extension = $image->extension();
+        $filename = uniqid() . '.' . time() . '.' . $extension;
+        $path = $image->storeAs('uploads/broadcasts', $filename, 'public');
+        $imageUrl = $path;
     }
 
     // Save to DB
@@ -71,11 +81,11 @@ public function store(Request $request)
     $validated = $request->validate([
         'title' => ['required', 'string', 'max:255', new NoHtmlOrScript()],
         'content' => ['required', 'string', new NoHtmlOrScript()],
-        'images' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
+        'images' => 'required|file|mimes:jpg,jpeg,png,gif|max:2048',
         'video_url' => 'nullable|url',
     ], [
         'images.max' => 'File too large. Max allowed is 2MB.',
-        'images.mimes' => 'Invalid file type! Accepted: jpg, jpeg, png.',
+        'images.mimes' => 'Invalid file type! Accepted: jpg, jpeg, png, gif.',
         'images.file' => 'Please upload a valid file.',
         'video_url.url' => 'Please enter a valid URL.',
     ]);
@@ -83,25 +93,20 @@ public function store(Request $request)
     // Handle image upload (store first image only if multiple uploaded)
     $imageUrl = null;
   if ($request->hasFile('images')) {
-    $image = $request->file('images'); // only first image
-
- // 1️⃣ Reject double extensions
- $originalName = $image->getClientOriginalName();
- if (substr_count($originalName, '.') > 1) {
-     return back()->withErrors([
-         'images' => 'Invalid file name! Double extensions are not allowed.'
-     ]);
- }
-
-    $extension = strtolower($image->getClientOriginalExtension());
-    $allowed = ['jpg', 'jpeg', 'png'];
-
-    if (!in_array($extension, $allowed)) {
-        return back()->withErrors(['images' => 'Invalid file type!']);
+    $file = $request->file('images'); // only first image
+    
+    // Server-side MIME validation
+    $mimeType = $file->getMimeType();
+    $allowedMimes = ['image/jpeg', 'image/png', 'image/gif'];
+    if (!in_array($mimeType, $allowedMimes)) {
+        return redirect()->back()
+            ->withErrors(['images' => 'Invalid file type. Only JPEG, PNG, and GIF images are allowed.'])
+            ->withInput();
     }
-    // ✅ generate dynamic safe filename
-    $filename = uniqid('img_', true) . '.' . $image->getClientOriginalExtension();
-    $imageUrl = $image->storeAs('uploads/broadcasts', $filename, 'private'); // SECURED to 'private' disk
+    
+    $extension = $file->extension();
+    $filename = uniqid() . '.' . time() . '.' . $extension;
+    $imageUrl = $file->storeAs('uploads/broadcasts', $filename, 'private'); // SECURED to 'private' disk
 }
 
     // Save to DB
@@ -191,11 +196,11 @@ public function destroybroadcast(Broadcast $broadcast)
     $validated = $request->validate([
         'title' => 'required|string|max:255',
         'description' => 'required|string',
-        'image' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
+        'image' => 'nullable|file|mimes:jpg,jpeg,png,gif|max:2048',
         'video_url' => 'nullable|url',
     ],[
         'image.max' => 'File too large. Max allowed is 2MB.',
-        'image.mimes' => 'Invalid file type! Accepted: jpg, jpeg, png.',
+        'image.mimes' => 'Invalid file type! Accepted: jpg, jpeg, png, gif.',
         'image.file' => 'Please upload a valid file.',
         'video_url.url' => 'Please enter a valid URL.',
     ]);
@@ -204,23 +209,18 @@ public function destroybroadcast(Broadcast $broadcast)
     // Image upload
    if ($request->hasFile('image')) {
     $file = $request->file('image');
-
-    // 1) Reject double extensions
-    $originalName = $file->getClientOriginalName();
-    if (substr_count($originalName, '.') > 1) {
-        return back()->withErrors([
-            'image' => 'Invalid file name! Double extensions are not allowed.'
-        ])->withInput();
+    
+    // Server-side MIME validation
+    $mimeType = $file->getMimeType();
+    $allowedMimes = ['image/jpeg', 'image/png', 'image/gif'];
+    if (!in_array($mimeType, $allowedMimes)) {
+        return redirect()->back()
+            ->withErrors(['image' => 'Invalid file type. Only JPEG, PNG, and GIF images are allowed.'])
+            ->withInput();
     }
-
-    $extension = strtolower($file->getClientOriginalExtension());
-    $allowed = ['jpg', 'jpeg', 'png'];
-    if (!in_array($extension, $allowed)) {
-        return back()->withErrors(['image' => 'Invalid file type!'])->withInput();
-    }
-
-    // Generate safe unique filename and store
-    $filename = uniqid('img_', true) . '.' . $extension;
+    
+    $extension = $file->extension();
+    $filename = uniqid() . '.' . time() . '.' . $extension;
     $path = $file->storeAs('uploads/broadcasts', $filename, 'private'); // SECURED to 'private' disk
 
     // Save only relative path; use asset() when rendering

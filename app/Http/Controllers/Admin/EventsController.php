@@ -47,7 +47,7 @@ class EventsController extends Controller
 			'url'            => 'nullable|url|max:255',
 			'start_datetime' => 'required|date',
 			'end_datetime'   => 'required|date|after_or_equal:start_datetime',
-			'image' => 'required|image|mimes:jpg,jpeg,png|max:2048', // max 2MB
+			'image' => 'required|file|mimes:jpg,jpeg,png,gif|max:2048', // max 2MB
             'status' => 'required|in:1,0',
 		]);
 
@@ -63,7 +63,20 @@ class EventsController extends Controller
 
 		// Check and store uploaded image
 		if ($request->hasFile('image')) {
-			$imagePath = $request->file('image')->store('events', 'private'); // SECURED: stored on private disk
+			$file = $request->file('image');
+			
+			// Server-side MIME validation
+			$mimeType = $file->getMimeType();
+			$allowedMimes = ['image/jpeg', 'image/png', 'image/gif'];
+			if (!in_array($mimeType, $allowedMimes)) {
+				return redirect()->back()
+					->withErrors(['image' => 'Invalid file type. Only JPEG, PNG, and GIF images are allowed.'])
+					->withInput();
+			}
+			
+			$extension = $file->extension();
+			$filename = uniqid() . '.' . time() . '.' . $extension;
+			$imagePath = $file->storeAs('events', $filename, 'private'); // SECURED: stored on private disk
 		}
 
 		// Create the event
@@ -127,7 +140,7 @@ return redirect()->route('events.index')->with('error', 'Event not found!');retu
             'url'            => 'nullable|url|max:255',
             'start_datetime' => 'required|date',
             'end_datetime'   => 'nullable|date|after_or_equal:start_datetime',
-            'image'          => 'nullable|image|max:2048',
+            'image'          => 'nullable|file|mimes:jpg,jpeg,png,gif|max:2048',
         ]);
 
         if ($validator->fails()) {
@@ -142,7 +155,20 @@ return redirect()->route('events.index')->with('error', 'Event not found!');retu
             if ($event->image && \Storage::disk('public')->exists($event->image)) {
                 \Storage::disk('public')->delete($event->image);
             }
-            $imagePath = $request->file('image')->store('events', 'private'); // SECURED: stored on private disk for update
+            $file = $request->file('image');
+            
+            // Server-side MIME validation
+            $mimeType = $file->getMimeType();
+            $allowedMimes = ['image/jpeg', 'image/png', 'image/gif'];
+            if (!in_array($mimeType, $allowedMimes)) {
+                return redirect()->back()
+                    ->withErrors(['image' => 'Invalid file type. Only JPEG, PNG, and GIF images are allowed.'])
+                    ->withInput();
+            }
+            
+            $extension = $file->extension();
+            $filename = uniqid() . '.' . time() . '.' . $extension;
+            $imagePath = $file->storeAs('events', $filename, 'private'); // SECURED: stored on private disk for update
             $data['image'] = $imagePath;
         }
 

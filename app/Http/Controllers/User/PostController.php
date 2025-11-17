@@ -34,8 +34,7 @@ public function store_chnagefor_video_link(Request $request)
 
         $request->validate([
             'modalContent' => ['nullable', 'string', 'max:5000', new NoHtmlOrScript()],
-           //'media.*' => 'file|mimes:jpg,jpeg,png,gif,mp4,webm,mov|max:51200'
-           'media.*' => 'file|mimes:jpg,jpeg,png,gif|max:51200'
+           'media.*' => 'nullable|file|mimes:jpg,jpeg,png,gif|max:2048'
         ]);
 
 
@@ -51,11 +50,20 @@ public function store_chnagefor_video_link(Request $request)
 
         if ($mediaFiles) {
             foreach ($mediaFiles as $file) {
-                $filename = uniqid() . '_' . $file->getClientOriginalName(); // avoid conflicts
+                // Server-side MIME validation for images
+                $mimeType = $file->getMimeType();
+                $allowedMimes = ['image/jpeg', 'image/png', 'image/gif'];
+                if (!in_array($mimeType, $allowedMimes)) {
+                    return redirect()->back()
+                        ->withErrors(['media' => 'Invalid file type. Only JPEG, PNG, and GIF images are allowed.'])
+                        ->withInput();
+                }
+                
+                $extension = $file->extension();
+                $filename = uniqid() . '.' . time() . '.' . $extension;
                 $path = $file->storeAs('posts/media', $filename, 'private');
 
-                $mime = $file->getMimeType();
-                $fileType = str_starts_with($mime, 'video') ? 'video' : 'image';
+                $fileType = 'image';
 
                 PostMedia::create([
                     'post_id' => $post->id,
@@ -74,7 +82,7 @@ public function store_chnagefor_video_link(Request $request)
 {
     $request->validate([
         'modalContent' => ['required', 'string', 'max:5000', new NoHtmlOrScript()],
-        'media.*' => 'file|mimes:jpg,jpeg,png,gif,mp4,mov,avi|max:51200', // Adjust if needed
+        'media.*' => 'nullable|file|mimes:jpg,jpeg,png,gif|max:2048',
         'video_link' => 'nullable|url|max:1000',
     ]);
 
@@ -104,11 +112,20 @@ public function store_chnagefor_video_link(Request $request)
 
     if ($mediaFiles) {
         foreach ($mediaFiles as $file) {
-            $filename = uniqid() . '_' . $file->getClientOriginalName();
+            // Server-side MIME validation for images
+            $mimeType = $file->getMimeType();
+            $allowedMimes = ['image/jpeg', 'image/png', 'image/gif'];
+            if (!in_array($mimeType, $allowedMimes)) {
+                return redirect()->back()
+                    ->withErrors(['media' => 'Invalid file type. Only JPEG, PNG, and GIF images are allowed.'])
+                    ->withInput();
+            }
+            
+            $extension = $file->extension();
+            $filename = uniqid() . '.' . time() . '.' . $extension;
             $path = $file->storeAs('posts/media', $filename, 'private');
 
-            $mime = $file->getMimeType();
-            $fileType = str_starts_with($mime, 'video') ? 'video' : 'image';
+            $fileType = 'image';
 
             PostMedia::create([
                 'post_id' => $post->id,
@@ -140,11 +157,11 @@ public function group_post_store(Request $request)
         'group_id' => 'required|integer|exists:groups,id',
         'modalContent' => ['required', 'string', new NoHtmlOrScript()],
         'media' => 'nullable',
-        'media.*' => 'image|max:5120', // 5MB max per file
+        'media.*' => 'nullable|file|mimes:jpg,jpeg,png,gif|max:2048',
         'video' => 'nullable|url',
     ]);
     $mediaFiles = $request->file('media');
- if ($request->video_link) {
+  if ($request->video_link) {
         parse_str(parse_url($request->video_link, PHP_URL_QUERY), $query);
         $embedLink = isset($query['v']) ? "https://www.youtube.com/embed/" . $query['v'] : $request->video_link;
     }
@@ -160,7 +177,17 @@ public function group_post_store(Request $request)
 
     if ($mediaFiles) {
         foreach ($mediaFiles as $file) {
-            $filename = uniqid() . '_' . $file->getClientOriginalName();
+            // Server-side MIME validation
+            $mimeType = $file->getMimeType();
+            $allowedMimes = ['image/jpeg', 'image/png', 'image/gif'];
+            if (!in_array($mimeType, $allowedMimes)) {
+                return redirect()->back()
+                    ->withErrors(['media' => 'Invalid file type. Only JPEG, PNG, and GIF images are allowed.'])
+                    ->withInput();
+            }
+            
+            $extension = $file->extension();
+            $filename = uniqid() . '.' . time() . '.' . $extension;
             $path = $file->storeAs('posts/media', $filename, 'private');
 
             PostMedia::create([
@@ -187,7 +214,7 @@ public function group_post_store(Request $request)
 {
     $request->validate([
         'modalContent' => ['nullable', 'string', 'max:5000', new NoHtmlOrScript()],
-        'media.*' => 'file|mimes:jpg,jpeg,png,gif|max:51200',
+        'media.*' => 'nullable|file|mimes:jpg,jpeg,png,gif|max:2048',
         'video_link' => 'nullable|url|max:1000'
     ]);
 
@@ -202,11 +229,20 @@ public function group_post_store(Request $request)
 
     if ($mediaFiles) {
         foreach ($mediaFiles as $file) {
-            $filename = uniqid() . '_' . $file->getClientOriginalName();
+            // Server-side MIME validation for images
+            $mimeType = $file->getMimeType();
+            $allowedMimes = ['image/jpeg', 'image/png', 'image/gif'];
+            if (!in_array($mimeType, $allowedMimes)) {
+                return redirect()->back()
+                    ->withErrors(['media' => 'Invalid file type. Only JPEG, PNG, and GIF images are allowed.'])
+                    ->withInput();
+            }
+            
+            $extension = $file->extension();
+            $filename = uniqid() . '.' . time() . '.' . $extension;
             $path = $file->storeAs('posts/media', $filename, 'private');
 
-            $mime = $file->getMimeType();
-            $fileType = str_starts_with($mime, 'video') ? 'video' : 'image';
+            $fileType = 'image';
 
             PostMedia::create([
                 'post_id' => $post->id,
@@ -364,7 +400,7 @@ function forum_store(Request $request)
    $validator = Validator::make($request->all(), [
         'forum_name' => ['required', 'string', 'max:255', new NoHtmlOrScript()],
         'forum_end_date' => 'required|date|after_or_equal:today',
-        'forum_image' => 'nullable|image|mimes:jpeg,png,jpg|max:1028', 
+        'forum_image' => 'nullable|file|mimes:jpg,jpeg,png,gif|max:2048', 
         'forum_description' => ['nullable', 'string', 'max:5000', new NoHtmlOrScript()], // Add description validation
 
       ]);
@@ -375,7 +411,20 @@ function forum_store(Request $request)
             ->withInput();
         }
          if ($request->hasFile('forum_image')) {
-            $imagePath = $request->file('forum_image')->store('uploads/images/forums_img', 'private');
+            $file = $request->file('forum_image');
+            
+            // Server-side MIME validation
+            $mimeType = $file->getMimeType();
+            $allowedMimes = ['image/jpeg', 'image/png', 'image/gif'];
+            if (!in_array($mimeType, $allowedMimes)) {
+                return redirect()->back()
+                    ->withErrors(['forum_image' => 'Invalid file type. Only JPEG, PNG, and GIF images are allowed.'])
+                    ->withInput();
+            }
+            
+            $extension = $file->extension();
+            $filename = uniqid() . '.' . time() . '.' . $extension;
+            $imagePath = $file->storeAs('uploads/images/forums_img', $filename, 'private');
             $data['images'] = $imagePath; // Store full path for secure route
         }
 

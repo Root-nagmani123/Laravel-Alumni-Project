@@ -31,8 +31,8 @@ class RegistrationRequestController extends Controller
             'service'=> 'required',
             'batch'  => 'required',
             'course_attended'  => 'required',
-            'photo'  => 'required|file|mimes:jpg,jpeg,png',
-            'govt_id'=> 'required|file|mimes:jpg,jpeg,png,pdf',
+            'photo'  => 'required|file|mimes:jpg,jpeg,png,gif|max:2048',
+            'govt_id'=> 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
            'g-recaptcha-response' => 'required',
         ]);
          $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
@@ -48,8 +48,25 @@ class RegistrationRequestController extends Controller
             'captcha' => 'Captcha verification failed. Please try again.'
         ])->withInput();
     }
-         $photo = $request->file('photo')->store('profile_pic', 'public');
-        $govt_id = $request->file('govt_id')->store('uploads/govt_ids', 'public');
+         $photoFile = $request->file('photo');
+        
+        // Server-side MIME validation
+        $photoMimeType = $photoFile->getMimeType();
+        $allowedMimes = ['image/jpeg', 'image/png', 'image/gif'];
+        if (!in_array($photoMimeType, $allowedMimes)) {
+            return back()->withErrors([
+                'photo' => 'Invalid file type. Only JPEG, PNG, and GIF images are allowed.'
+            ])->withInput();
+        }
+        
+        $photoExtension = $photoFile->extension();
+        $photoFilename = uniqid() . '.' . time() . '.' . $photoExtension;
+        $photo = $photoFile->storeAs('profile_pic', $photoFilename, 'public');
+        
+        $govtIdFile = $request->file('govt_id');
+        $govtIdMime = $govtIdFile->extension();
+        $govtIdFilename = uniqid() . '.' . time() . '.' . $govtIdMime;
+        $govt_id = $govtIdFile->storeAs('uploads/govt_ids', $govtIdFilename, 'public');
 
         RegistrationRequest::create([
             'name'    => $request->name,

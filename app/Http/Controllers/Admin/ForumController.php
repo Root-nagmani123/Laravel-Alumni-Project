@@ -45,7 +45,7 @@ class ForumController extends Controller
         'name' => ['required', 'string', 'max:255', new NoHtmlOrScript()],
         'forumdescription' => ['required', 'string', 'max:1000', new NoHtmlOrScript()],
         'end_date' => 'required|date|after_or_equal:today',
-        'images' => 'nullable|image|mimes:jpeg,png,jpg|max:1028', 
+        'images' => 'nullable|file|mimes:jpg,jpeg,png,gif|max:2048', 
         'status' => 'required|in:1,0',
 
       ]);
@@ -57,7 +57,20 @@ class ForumController extends Controller
         }
         $imagePath = null;
         if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('uploads/images/forums_img', 'private');
+            $file = $request->file('image');
+            
+            // Server-side MIME validation
+            $mimeType = $file->getMimeType();
+            $allowedMimes = ['image/jpeg', 'image/png', 'image/gif'];
+            if (!in_array($mimeType, $allowedMimes)) {
+                return redirect()->back()
+                    ->withErrors(['images' => 'Invalid file type. Only JPEG, PNG, and GIF images are allowed.'])
+                    ->withInput();
+            }
+            
+            $extension = $file->extension();
+            $filename = uniqid() . '.' . time() . '.' . $extension;
+            $imagePath = $file->storeAs('uploads/images/forums_img', $filename, 'private');
         }
     
         $forum = Forum::create([
@@ -104,7 +117,7 @@ class ForumController extends Controller
         'forumdescription' => ['required', 'string', 'max:1000', new NoHtmlOrScript()],
         'cat_id' => 'nullable|integer',
         'status' => 'required|integer',
-        'forum_image' => 'nullable|forum_image|mimes:jpeg,png,jpg|max:1048', // Optional image validation
+        'forum_image' => 'nullable|file|mimes:jpg,jpeg,png,gif|max:2048', // Optional image validation
         'end_date' => 'required|date|after_or_equal:today',
     ]);
 
@@ -115,7 +128,20 @@ class ForumController extends Controller
     }
 
     if ($request->hasFile('forum_image')) {
-            $imagePath = $request->file('forum_image')->store('uploads/images/forums_img', 'private');
+            $file = $request->file('forum_image');
+            
+            // Server-side MIME validation
+            $mimeType = $file->getMimeType();
+            $allowedMimes = ['image/jpeg', 'image/png', 'image/gif'];
+            if (!in_array($mimeType, $allowedMimes)) {
+                return redirect()->back()
+                    ->withErrors(['forum_image' => 'Invalid file type. Only JPEG, PNG, and GIF images are allowed.'])
+                    ->withInput();
+            }
+            
+            $extension = $file->extension();
+            $filename = uniqid() . '.' . time() . '.' . $extension;
+            $imagePath = $file->storeAs('uploads/images/forums_img', $filename, 'private');
             $data['images'] = $imagePath; // Store full path for secure route
         }
 
@@ -469,12 +495,25 @@ class ForumController extends Controller
         'forumdescription' => ['required', 'string', 'max:1000', new NoHtmlOrScript()],
         'forumstatus' => 'required|in:0,1',
         'end_date' => 'required|date|after_or_equal:today', // Ensure end date is valid
-        'forum_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048', // Optional image validation
+        'forum_image' => 'nullable|file|mimes:jpg,jpeg,png,gif|max:2048', // Optional image validation
 
     ]);
     // Handle image upload if provided
     if ($request->hasFile('forum_image')) {
-        $imagePath = $request->file('forum_image')->store('uploads/images/forums_img', 'private');
+        $file = $request->file('forum_image');
+        
+        // Server-side MIME validation
+        $mimeType = $file->getMimeType();
+        $allowedMimes = ['image/jpeg', 'image/png', 'image/gif'];
+        if (!in_array($mimeType, $allowedMimes)) {
+            return redirect()->back()
+                ->withErrors(['forum_image' => 'Invalid file type. Only JPEG, PNG, and GIF images are allowed.'])
+                ->withInput();
+        }
+        
+        $extension = $file->extension();
+        $filename = uniqid() . '.' . time() . '.' . $extension;
+        $imagePath = $file->storeAs('uploads/images/forums_img', $filename, 'private');
         $data['images'] = $imagePath; // Store full path for secure route
         // Delete old image if exists
         if ($forum->images) {

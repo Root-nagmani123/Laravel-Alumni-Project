@@ -22,19 +22,26 @@ class StoryController extends Controller
 	public function store(Request $request)
     {
         $request->validate([
-            'story_file' => 'required|file|mimes:jpg,jpeg,png,webp,gif,svg,mp4,mov,avi|max:10240', // 10MB
+            'story_file' => 'required|file|mimes:jpg,jpeg,png,gif|max:2048',
 
               ]);
 
-        // $path = $request->file('story_file')->store('stories', 'public');
-          // get original extension (jpg, png, mp4, etc.)
-    $extension = $request->file('story_file')->getClientOriginalExtension();
-
-    // create dynamic filename -> e.g. memberID_timestamp.extension
-    $filename = 'story_' . Auth::guard('user')->id() . '_' . time() . '.' . $extension;
+        $file = $request->file('story_file');
+        
+        // Server-side MIME validation
+        $mimeType = $file->getMimeType();
+        $allowedMimes = ['image/jpeg', 'image/png', 'image/gif'];
+        if (!in_array($mimeType, $allowedMimes)) {
+            return redirect()->back()
+                ->withErrors(['story_file' => 'Invalid file type. Only JPEG, PNG, and GIF images are allowed.'])
+                ->withInput();
+        }
+        
+        $extension = $file->extension();
+        $filename = uniqid() . '.' . time() . '.' . $extension;
 
     // store with custom name
-    $path = $request->file('story_file')->storeAs('stories', $filename, 'private');
+    $path = $file->storeAs('stories', $filename, 'private');
 
 
         $story = Story::create([

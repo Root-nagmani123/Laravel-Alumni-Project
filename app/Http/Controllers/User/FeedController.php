@@ -241,24 +241,19 @@ class FeedController extends Controller
     {
         $request->validate([
             'content' => ['nullable', 'string', 'max:1000', new NoHtmlOrScript()],
-            'media.*' => 'nullable|file|mimes:jpg,jpeg,png,mp4,mov,avi|max:30720', // 30MB
+            'media.*' => 'nullable|file|mimes:jpg,jpeg,png,gif|max:2048',
         ]);
 
         $images = 0;
-        $videos = 0;
 
         if ($request->hasFile('media')) {
             foreach ($request->file('media') as $file) {
                 $mime = $file->getMimeType();
-                if (str_starts_with($mime, 'video')) $videos++;
-                elseif (str_starts_with($mime, 'image')) $images++;
+                if (str_starts_with($mime, 'image')) $images++;
             }
 
             if ($images > 12) {
                 return response()->json(['errors' => ['media' => ['Maximum 12 images allowed.']]], 422);
-            }
-            if ($videos > 5) {
-                return response()->json(['errors' => ['media' => ['Maximum 5 videos allowed.']]], 422);
             }
         }
 
@@ -269,11 +264,20 @@ class FeedController extends Controller
 
         if ($request->hasFile('media')) {
             foreach ($request->file('media') as $file) {
-                $path = $file->store('posts', 'private');
+                // Server-side MIME validation
+                $mimeType = $file->getMimeType();
+                $allowedMimes = ['image/jpeg', 'image/png', 'image/gif'];
+                if (!in_array($mimeType, $allowedMimes)) {
+                    return response()->json(['errors' => ['media' => ['Invalid file type. Only JPEG, PNG, and GIF images are allowed.']]], 422);
+                }
+                
+                $extension = $file->extension();
+                $filename = uniqid() . '.' . time() . '.' . $extension;
+                $path = $file->storeAs('posts', $filename, 'private');
                 PostMedia::create([
                     'post_id' => $post->id,
                     'file_path' => $path,
-                    'file_type' => str_starts_with($file->getMimeType(), 'video') ? 'video' : 'image',
+                    'file_type' => 'image',
                 ]);
             }
         }
@@ -521,7 +525,7 @@ function update_topic_details(Request $request)
         'post_id' => 'required|exists:posts,id',
         'content' => ['required', 'string', new NoHtmlOrScript()],
         'video_link' => 'nullable|url',
-        'postMedia.*' => 'image|mimes:jpg,jpeg,png,gif,webp|max:2048'
+        'postMedia.*' => 'nullable|file|mimes:jpg,jpeg,png,gif|max:2048'
     ]);
        $videoId = null;
  if ($request->video_link) {
@@ -553,7 +557,18 @@ $url = $request->video_link;
     // 2. Add new media (jo user ne abhi upload kiya h)
     if ($request->hasFile('postMedia')) {
         foreach ($request->file('postMedia') as $file) {
-            $path = $file->store('posts', 'private');
+            // Server-side MIME validation
+            $mimeType = $file->getMimeType();
+            $allowedMimes = ['image/jpeg', 'image/png', 'image/gif'];
+            if (!in_array($mimeType, $allowedMimes)) {
+                return redirect()->back()
+                    ->withErrors(['postMedia' => 'Invalid file type. Only JPEG, PNG, and GIF images are allowed.'])
+                    ->withInput();
+            }
+            
+            $extension = $file->extension();
+            $filename = uniqid() . '.' . time() . '.' . $extension;
+            $path = $file->storeAs('posts', $filename, 'private');
 
             PostMedia::create([
                 'post_id' => $post->id,
