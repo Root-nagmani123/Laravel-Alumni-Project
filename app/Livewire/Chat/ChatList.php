@@ -146,15 +146,21 @@ class ChatList extends Component
         $message->message = $this->newMessage;
         
         if ($this->attachment) {
-            // Server-side MIME validation for images
-            $mimeType = $this->attachment->getMimeType();
+            // Server-side MIME validation for images (reads actual file content, not headers)
+            $mimeType = getSecureMimeType($this->attachment);
             $allowedMimes = ['image/jpeg', 'image/png', 'image/gif'];
-            if (!in_array($mimeType, $allowedMimes)) {
+            if (!$mimeType || !in_array($mimeType, $allowedMimes)) {
                 $this->addError('attachment', 'Invalid file type. Only JPEG, PNG, and GIF images are allowed.');
                 return;
             }
             
-            $extension = $this->attachment->extension();
+            // Map MIME type to extension (security: don't trust filename extension)
+            $extensionMap = [
+                'image/jpeg' => 'jpg',
+                'image/png' => 'png',
+                'image/gif' => 'gif'
+            ];
+            $extension = $extensionMap[$mimeType];
             $filename = uniqid() . '.' . time() . '.' . $extension;
             $path = $this->attachment->storeAs('chat_uploads', $filename, 'public');
             $message->file_path = $path;

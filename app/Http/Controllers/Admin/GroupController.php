@@ -76,16 +76,22 @@ class GroupController extends Controller
         if ($request->hasFile('image')) {
             $file = $request->file('image');
             
-            // Server-side MIME validation
-            $mimeType = $file->getMimeType();
+            // Server-side MIME validation (reads actual file content, not headers)
+            $mimeType = getSecureMimeType($file);
             $allowedMimes = ['image/jpeg', 'image/png', 'image/gif'];
-            if (!in_array($mimeType, $allowedMimes)) {
+            if (!$mimeType || !in_array($mimeType, $allowedMimes)) {
                 return redirect()->back()
                     ->withErrors(['image' => 'Invalid file type. Only JPEG, PNG, and GIF images are allowed.'])
                     ->withInput();
             }
             
-            $extension = $file->extension();
+            // Map MIME type to extension (security: don't trust filename extension)
+            $extensionMap = [
+                'image/jpeg' => 'jpg',
+                'image/png' => 'png',
+                'image/gif' => 'gif'
+            ];
+            $extension = $extensionMap[$mimeType];
             $filename = uniqid() . '.' . time() . '.' . $extension;
             $imagePath = $file->storeAs('uploads/images/grp_img', $filename, 'private');
         }
@@ -156,16 +162,22 @@ public function update(Request $request, Group $group)
     if ($request->hasFile('image')) {
         $file = $request->file('image');
         
-        // Server-side MIME validation
-        $mimeType = $file->getMimeType();
+        // Server-side MIME validation (reads actual file content, not headers)
+        $mimeType = getSecureMimeType($file);
         $allowedMimes = ['image/jpeg', 'image/png', 'image/gif'];
-        if (!in_array($mimeType, $allowedMimes)) {
+        if (!$mimeType || !in_array($mimeType, $allowedMimes)) {
             return redirect()->back()
                 ->withErrors(['image' => 'Invalid file type. Only JPEG, PNG, and GIF images are allowed.'])
                 ->withInput();
         }
         
-        $extension = $file->extension();
+        // Map MIME type to extension (security: don't trust filename extension)
+        $extensionMap = [
+            'image/jpeg' => 'jpg',
+            'image/png' => 'png',
+            'image/gif' => 'gif'
+        ];
+        $extension = $extensionMap[$mimeType];
         $filename = uniqid() . '.' . time() . '.' . $extension;
         $imagePath = $file->storeAs('uploads/images/grp_img', $filename, 'private');
         if ($group->image) {
@@ -466,16 +478,22 @@ public function update(Request $request, Group $group)
             $imageFiles = [];
             if ($request->hasFile('topic_image')) {
                 foreach ($request->file('topic_image') as $image) {
-                    // Server-side MIME validation
-                    $mimeType = $image->getMimeType();
+                    // Server-side MIME validation (reads actual file content, not headers)
+                    $mimeType = getSecureMimeType($image);
                     $allowedMimes = ['image/jpeg', 'image/png', 'image/gif'];
-                    if (!in_array($mimeType, $allowedMimes)) {
+                    if (!$mimeType || !in_array($mimeType, $allowedMimes)) {
                         return redirect()->back()
                             ->withErrors(['topic_image' => 'Invalid file type. Only JPEG, PNG, and GIF images are allowed.'])
                             ->withInput();
                     }
                     
-                    $extension = $image->extension();
+                    // Map MIME type to extension (security: don't trust filename extension)
+                    $extensionMap = [
+                        'image/jpeg' => 'jpg',
+                        'image/png' => 'png',
+                        'image/gif' => 'gif'
+                    ];
+                    $extension = $extensionMap[$mimeType];
                     $filename = uniqid() . '.' . time() . '.' . $extension;
                     $imageFiles[] = $image->storeAs('uploads/topics', $filename, 'private');
                 }
@@ -641,16 +659,22 @@ $authUser = Auth::guard('admin')->check()
     $imageFiles = [];
     if ($request->hasFile('topic_image')) {
         foreach ($request->file('topic_image') as $image) {
-            // Server-side MIME validation
-            $mimeType = $image->getMimeType();
+            // Server-side MIME validation (reads actual file content, not headers)
+            $mimeType = getSecureMimeType($image);
             $allowedMimes = ['image/jpeg', 'image/png', 'image/gif'];
-            if (!in_array($mimeType, $allowedMimes)) {
+            if (!$mimeType || !in_array($mimeType, $allowedMimes)) {
                 return redirect()->back()
                     ->withErrors(['topic_image' => 'Invalid file type. Only JPEG, PNG, and GIF images are allowed.'])
                     ->withInput();
             }
             
-            $extension = $image->extension();
+            // Map MIME type to extension (security: don't trust filename extension)
+            $extensionMap = [
+                'image/jpeg' => 'jpg',
+                'image/png' => 'png',
+                'image/gif' => 'gif'
+            ];
+            $extension = $extensionMap[$mimeType];
             $filename = uniqid() . '.' . time() . '.' . $extension;
             $imageFiles[] = $image->storeAs('uploads/topics', $filename, 'public');
         }
@@ -962,17 +986,23 @@ public function deleteTopic($id)
             if ($request->hasFile('grp_image')) {
                 $file = $request->file('grp_image');
                 
-                // Server-side MIME validation
-                $mimeType = $file->getMimeType();
+                // Server-side MIME validation (reads actual file content, not headers)
+                $mimeType = getSecureMimeType($file);
                 $allowedMimes = ['image/jpeg', 'image/png', 'image/gif'];
-                if (!in_array($mimeType, $allowedMimes)) {
+                if (!$mimeType || !in_array($mimeType, $allowedMimes)) {
                     return response()->json([
                         'success' => false,
                         'message' => 'Invalid file type. Only JPEG, PNG, and GIF images are allowed.'
                     ], 422);
                 }
                 
-                $extension = $file->extension();
+                // Map MIME type to extension (security: don't trust filename extension)
+                $extensionMap = [
+                    'image/jpeg' => 'jpg',
+                    'image/png' => 'png',
+                    'image/gif' => 'gif'
+                ];
+                $extension = $extensionMap[$mimeType];
                 $filename = uniqid() . '.' . time() . '.' . $extension;
                 $imagePath = $file->storeAs('uploads/images/grp_img', $filename, 'private');
             }

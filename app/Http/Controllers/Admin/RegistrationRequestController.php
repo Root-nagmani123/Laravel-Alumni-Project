@@ -50,21 +50,47 @@ class RegistrationRequestController extends Controller
     }
          $photoFile = $request->file('photo');
         
-        // Server-side MIME validation
-        $photoMimeType = $photoFile->getMimeType();
+        // Server-side MIME validation (reads actual file content, not headers)
+        $photoMimeType = getSecureMimeType($photoFile);
         $allowedMimes = ['image/jpeg', 'image/png', 'image/gif'];
-        if (!in_array($photoMimeType, $allowedMimes)) {
+        if (!$photoMimeType || !in_array($photoMimeType, $allowedMimes)) {
             return back()->withErrors([
                 'photo' => 'Invalid file type. Only JPEG, PNG, and GIF images are allowed.'
             ])->withInput();
         }
         
-        $photoExtension = $photoFile->extension();
+        // Map MIME type to extension (security: don't trust filename extension)
+        $extensionMap = [
+            'image/jpeg' => 'jpg',
+            'image/png' => 'png',
+            'image/gif' => 'gif'
+        ];
+        $photoExtension = $extensionMap[$photoMimeType];
         $photoFilename = uniqid() . '.' . time() . '.' . $photoExtension;
         $photo = $photoFile->storeAs('profile_pic', $photoFilename, 'public');
         
         $govtIdFile = $request->file('govt_id');
-        $govtIdMime = $govtIdFile->extension();
+        // Server-side MIME validation for govt_id (reads actual file content, not headers)
+        $govtIdMimeType = getSecureMimeType($govtIdFile);
+        // Note: PDF detection needs additional checks, but for now use file extension as fallback
+        if (!$govtIdMimeType) {
+            // If secure detection fails, check if it's a PDF by extension (less secure but better than nothing)
+            $govtIdMimeType = $govtIdFile->getMimeType();
+        }
+        $allowedGovtIdMimes = ['image/jpeg', 'image/png', 'application/pdf'];
+        if (!$govtIdMimeType || !in_array($govtIdMimeType, $allowedGovtIdMimes)) {
+            return back()->withErrors([
+                'govt_id' => 'Invalid file type. Only JPEG, PNG, and PDF files are allowed.'
+            ])->withInput();
+        }
+        
+        // Map MIME type to extension (security: don't trust filename extension)
+        $govtIdExtensionMap = [
+            'image/jpeg' => 'jpg',
+            'image/png' => 'png',
+            'application/pdf' => 'pdf'
+        ];
+        $govtIdMime = $govtIdExtensionMap[$govtIdMimeType];
         $govtIdFilename = uniqid() . '.' . time() . '.' . $govtIdMime;
         $govt_id = $govtIdFile->storeAs('uploads/govt_ids', $govtIdFilename, 'public');
 

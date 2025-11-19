@@ -65,16 +65,41 @@ class EventsController extends Controller
 		if ($request->hasFile('image')) {
 			$file = $request->file('image');
 			
-			// Server-side MIME validation
-			$mimeType = $file->getMimeType();
+			if (!$file || !$file->isValid()) {
+				return redirect()->back()
+					->withErrors(['image' => 'Invalid file upload. Please try again.'])
+					->withInput();
+			}
+			
+			// Server-side MIME validation (reads actual file content, not headers)
+			$mimeType = getSecureMimeType($file);
 			$allowedMimes = ['image/jpeg', 'image/png', 'image/gif'];
-			if (!in_array($mimeType, $allowedMimes)) {
+			
+			// Explicitly reject HTML/text files
+			if ($mimeType && (
+				strpos($mimeType, 'text/html') !== false ||
+				strpos($mimeType, 'text/plain') !== false ||
+				strpos($mimeType, 'application/xhtml') !== false ||
+				strpos($mimeType, 'text/xml') !== false
+			)) {
+				return redirect()->back()
+					->withErrors(['image' => 'HTML and text files are not allowed. Only JPEG, PNG, and GIF images are allowed.'])
+					->withInput();
+			}
+			
+			if (!$mimeType || !in_array($mimeType, $allowedMimes)) {
 				return redirect()->back()
 					->withErrors(['image' => 'Invalid file type. Only JPEG, PNG, and GIF images are allowed.'])
 					->withInput();
 			}
 			
-			$extension = $file->extension();
+			// Map MIME type to extension (security: don't trust filename extension)
+			$extensionMap = [
+				'image/jpeg' => 'jpg',
+				'image/png' => 'png',
+				'image/gif' => 'gif'
+			];
+			$extension = $extensionMap[$mimeType];
 			$filename = uniqid() . '.' . time() . '.' . $extension;
 			$imagePath = $file->storeAs('events', $filename, 'private'); // SECURED: stored on private disk
 		}
@@ -157,16 +182,22 @@ return redirect()->route('events.index')->with('error', 'Event not found!');retu
             }
             $file = $request->file('image');
             
-            // Server-side MIME validation
-            $mimeType = $file->getMimeType();
+            // Server-side MIME validation (reads actual file content, not headers)
+            $mimeType = getSecureMimeType($file);
             $allowedMimes = ['image/jpeg', 'image/png', 'image/gif'];
-            if (!in_array($mimeType, $allowedMimes)) {
+            if (!$mimeType || !in_array($mimeType, $allowedMimes)) {
                 return redirect()->back()
                     ->withErrors(['image' => 'Invalid file type. Only JPEG, PNG, and GIF images are allowed.'])
                     ->withInput();
             }
             
-            $extension = $file->extension();
+            // Map MIME type to extension (security: don't trust filename extension)
+            $extensionMap = [
+                'image/jpeg' => 'jpg',
+                'image/png' => 'png',
+                'image/gif' => 'gif'
+            ];
+            $extension = $extensionMap[$mimeType];
             $filename = uniqid() . '.' . time() . '.' . $extension;
             $imagePath = $file->storeAs('events', $filename, 'private'); // SECURED: stored on private disk for update
             $data['image'] = $imagePath;

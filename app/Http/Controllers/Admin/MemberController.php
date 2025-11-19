@@ -116,16 +116,22 @@ Paginator::useBootstrap();
 if ($request->hasFile('profile_pic')) {
         $file = $request->file('profile_pic');
         
-        // Server-side MIME validation
-        $mimeType = $file->getMimeType();
+        // Server-side MIME validation (reads actual file content, not headers)
+        $mimeType = getSecureMimeType($file);
         $allowedMimes = ['image/jpeg', 'image/png', 'image/gif'];
-        if (!in_array($mimeType, $allowedMimes)) {
+        if (!$mimeType || !in_array($mimeType, $allowedMimes)) {
             return redirect()->back()
                 ->withErrors(['profile_pic' => 'Invalid file type. Only JPEG, PNG, and GIF images are allowed.'])
                 ->withInput();
         }
         
-        $extension = $file->extension();
+        // Map MIME type to extension (security: don't trust filename extension)
+        $extensionMap = [
+            'image/jpeg' => 'jpg',
+            'image/png' => 'png',
+            'image/gif' => 'gif'
+        ];
+        $extension = $extensionMap[$mimeType];
         $filename = uniqid() . '.' . time() . '.' . $extension;
         $path = $file->storeAs('profile_pic', $filename, 'public'); 
 
@@ -213,16 +219,22 @@ public function edit($id)
         if ($request->hasFile('profile_pic')) {
             $file = $request->file('profile_pic');
             
-            // Server-side MIME validation
-            $mimeType = $file->getMimeType();
+            // Server-side MIME validation (reads actual file content, not headers)
+            $mimeType = getSecureMimeType($file);
             $allowedMimes = ['image/jpeg', 'image/png', 'image/gif'];
-            if (!in_array($mimeType, $allowedMimes)) {
+            if (!$mimeType || !in_array($mimeType, $allowedMimes)) {
                 return redirect()->back()
                     ->withErrors(['profile_pic' => 'Invalid file type. Only JPEG, PNG, and GIF images are allowed.'])
                     ->withInput();
             }
             
-            $extension = $file->extension();
+            // Map MIME type to extension (security: don't trust filename extension)
+            $extensionMap = [
+                'image/jpeg' => 'jpg',
+                'image/png' => 'png',
+                'image/gif' => 'gif'
+            ];
+            $extension = $extensionMap[$mimeType];
             $filename = uniqid() . '.' . time() . '.' . $extension;
             $path = $file->storeAs('profile_pic', $filename, 'public'); 
 
