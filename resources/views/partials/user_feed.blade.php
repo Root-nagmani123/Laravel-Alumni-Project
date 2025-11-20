@@ -732,6 +732,7 @@
                 <a href="#" class="text-secondary py-1 px-2" id="cardFeedAction-{{ $post->id }}" data-bs-toggle="dropdown" aria-expanded="false">
                     {{ $timeDiff }} <i class="bi bi-caret-down fa-fw pe-2"></i>
                 </a>
+                @if($post->member->id == auth()->guard('user')->id())
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="cardFeedAction-{{ $post->id }}">
                     <li>
                         <a class="dropdown-item" onclick="editGrp_post({{ $post->id }})" href="#">
@@ -750,6 +751,7 @@
                         </form>
                     </li>
                 </ul>
+                @endif
             </div>
         </div>
     </div>
