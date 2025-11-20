@@ -34,7 +34,7 @@
         <div class="col-12">
             <!-- start Person Info -->
             <div class="card">
-                <form action="{{ route('members.update', $member->id) }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('members.update', encrypt($member->id)) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
                     <div class="card-body">

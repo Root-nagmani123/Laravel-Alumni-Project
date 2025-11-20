@@ -194,8 +194,15 @@ public function edit($id)
             return view('admin.members.edit', compact('member', 'members'));
         }
 
-    public function update(Request $request, Member $member)
+    public function update(Request $request, $id)
     {
+        try {
+            $decryptedId = decrypt($id); // Decrypt the ID
+            $member = Member::findOrFail($decryptedId);
+        } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
+            abort(404); // If ID is invalid
+        }
+
         // Validate the incoming request
         $validator = Validator::make($request->all(), [
             'name' => ['required', 'string', 'max:255', new NoHtmlOrScript()],
