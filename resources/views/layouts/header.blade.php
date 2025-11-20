@@ -45,9 +45,9 @@
     <img src="{{ asset('admin_assets/images/logos/lbsnaa_logo.jpg') }}" alt="LBSNAA Logo"
         class="navbar-brand-item" style="height: 60px; object-fit: contain;" loading="lazy" decoding="async"> -->
 
-    <!-- Text: visible only on medium and up -->
-    <div class="d-md-flex flex-column lh-sm">
-        <a href="{{ url('user/feed') }}"><span class="mb-0 fw-bold" style="color:#af2910;font-size:20px;">Alumni Connect at LBSNAA</span></a>
+    <!-- Text: responsive for all screen sizes -->
+    <div class="d-flex flex-column lh-sm">
+        <a href="{{ url('user/feed') }}"><span class="mb-0 fw-bold alumni-title">Alumni Connect at LBSNAA</span></a>
     </div>
 </a>
 <!-- Logo END -->
@@ -87,10 +87,10 @@
                         <a class="nav-link {{ request()->is('user/directory') ? 'active' : '' }}" 
                         href="{{ route('user.directory') }}">Directory</a>
                     </li>
-                     <!-- <li class="nav-item">
+                     <li class="nav-item">
                         <a class="nav-link" 
                         href="#" data-bs-toggle="modal" data-bs-target="#grievanceModal">Feedback / Grievance</a>
-                    </li> -->
+                    </li>
                 </ul>
 
                 <!-- Search Input Group with Dropdown -->
@@ -149,7 +149,7 @@
 
 
 <a class="small clear-all-notifications"
-   href="{{ route('user.notifications.clear', ['id' => Auth::guard('user')->user()->id]) }}"
+   href="{{ route('user.notifications.clear', ['id' => Crypt::encryptString(Auth::guard('user')->user()->id)]) }}"
    onclick="clearNotifications(event)">Mark all as read</a>
 
 
@@ -403,14 +403,14 @@
                                 class="dropdown-item btn btn-primary-soft btn-sm my-2 text-center">View profile</a>
                             @endif
                         </li>
-                        <!-- @if(
+                        @if(
                             ($user->status == 1) && 
                             ($user->is_moderator == 1) && 
                             ($user->moderator_active_inactive == 1)
                         )
                         <li><a class="dropdown-item" href="{{ route('user.moderation') }}"><i class="bi bi-gear fa-fw me-2"></i>Moderator</a></li>
                         @endif
-                        <li> -->
+                        <li>
                             <form action="{{ route('user.logout') }}" method="POST" style="display: inline;">
                                 @csrf
                                 <button type="submit" class="dropdown-item d-flex align-items-center">
@@ -646,9 +646,39 @@ function clearNotifications(event) {
 
 <style>
 /* Adjust logo text font for better mobile experience */
+.alumni-title {
+    color: #af2910;
+    font-size: 20px;
+}
+
+@media (max-width: 991.98px) {
+    .alumni-title {
+        font-size: 16px;
+    }
+}
+
 @media (max-width: 767.98px) {
-    .navbar-brand .h5 {
-        font-size: 1rem;
+    .alumni-title {
+        font-size: 14px;
+    }
+    
+    .navbar-brand {
+        max-width: 70%;
+    }
+    
+    .navbar-toggler {
+        font-size: 1.2rem;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .alumni-title {
+        font-size: 12px;
+        line-height: 1.2;
+    }
+    
+    .navbar-brand {
+        max-width: 65%;
     }
 }
 
@@ -658,7 +688,71 @@ function clearNotifications(event) {
     word-wrap: break-word;
 }
 
+/* Notification dropdown responsive */
+.dropdown-menu-size-md {
+    min-width: 300px;
+}
+
+@media (max-width: 575.98px) {
+    .dropdown-menu-size-md {
+        min-width: 280px;
+        max-width: 95vw;
+    }
+    
+    .notification-card {
+        min-width: 250px !important;
+        max-width: 280px !important;
+    }
+}
+
+/* Nav icons responsive */
+.nav-link.icon-md {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@media (max-width: 575.98px) {
+    .nav-link.icon-md {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .nav-link.icon-md i {
+        font-size: 1rem !important;
+    }
+    
+    .badge-circle {
+        min-width: 16px;
+        min-height: 16px;
+        font-size: 0.6rem;
+        padding: 1px 4px;
+    }
+}
+
+/* Avatar responsive */
+.avatar-img {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+}
+
+@media (max-width: 575.98px) {
+    .avatar-img {
+        width: 35px;
+        height: 35px;
+    }
+}
+
 /* Fix search box for smaller screens */
+@media (max-width: 991.98px) {
+    #searchForm {
+        min-width: 200px;
+    }
+}
+
 @media (max-width: 767.98px) {
     #searchForm {
         width: 100%;
@@ -673,12 +767,103 @@ function clearNotifications(event) {
         max-height: 150px;
         font-size: 14px;
     }
+    
+    .navbar-nav {
+        text-align: center;
+    }
+    
+    .nav-item {
+        margin: 0.25rem 0;
+    }
+}
+
+@media (max-width: 575.98px) {
+    #searchForm {
+        margin-top: 0.75rem;
+    }
+    
+    #searchMemberInput {
+        font-size: 14px;
+        padding: 0.5rem 0.5rem 0.5rem 2.5rem;
+    }
+    
+    #searchResults {
+        font-size: 12px;
+        max-height: 120px;
+    }
+}
+
+/* Nav right items spacing */
+.nav.flex-nowrap {
+    gap: 0.5rem;
+}
+
+@media (max-width: 575.98px) {
+    .nav.flex-nowrap {
+        gap: 0.25rem;
+    }
+    
+    .nav-item.ms-2 {
+        margin-left: 0.25rem !important;
+    }
 }
 
 /* Toast positioning for small screens */
 @media (max-width: 576px) {
     .toast {
         width: 90vw;
+    }
+}
+
+/* Profile dropdown responsive */
+.dropdown-menu.dropdown-animation {
+    font-size: 0.9rem;
+}
+
+@media (max-width: 575.98px) {
+    .dropdown-menu.dropdown-animation {
+        font-size: 0.85rem;
+        padding: 0.5rem;
+    }
+    
+    .dropdown-item {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.85rem;
+    }
+    
+    .dropdown-menu .avatar {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .dropdown-menu .h6 {
+        font-size: 0.9rem;
+    }
+}
+
+/* Container responsive padding */
+@media (max-width: 991.98px) {
+    .container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .container {
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+    }
+}
+
+/* Navbar responsive */
+.navbar {
+    padding: 0.5rem 0;
+}
+
+@media (max-width: 575.98px) {
+    .navbar {
+        padding: 0.25rem 0;
     }
 }
 

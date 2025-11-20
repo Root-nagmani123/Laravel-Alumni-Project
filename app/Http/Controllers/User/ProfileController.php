@@ -102,6 +102,7 @@ public function showById_data(Request $request, $id): View
         'address' => ['required', 'string', new NoHtmlOrScript()],
         'bio' => ['required', 'string', new NoHtmlOrScript()],
         'marital_status' => 'required|in:single,married,divorced',
+        'profile_pic' => 'nullable|file|mimes:jpg,jpeg,png,gif|max:2048',
     ]);
 
     $user = member::findOrFail(Auth::guard('user')->id());
@@ -111,9 +112,27 @@ public function showById_data(Request $request, $id): View
     // Handle profile picture upload
     if ($request->hasFile('profile_pic')) {
         $file = $request->file('profile_pic');
+        
+        // Server-side MIME validation (reads actual file content, not headers)
+        $mimeType = getSecureMimeType($file);
+        $allowedMimes = ['image/jpeg', 'image/png', 'image/gif'];
+        if (!$mimeType || !in_array($mimeType, $allowedMimes)) {
+            return redirect()->back()
+                ->withErrors(['profile_pic' => 'Invalid file type. Only JPEG, PNG, and GIF images are allowed.'])
+                ->withInput();
+        }
+        
+        // Map MIME type to extension (security: don't trust filename extension)
+        $extensionMap = [
+            'image/jpeg' => 'jpg',
+            'image/png' => 'png',
+            'image/gif' => 'gif'
+        ];
+        $extension = $extensionMap[$mimeType];
+        $filename = uniqid() . '.' . time() . '.' . $extension;
 
         // Store file in storage/app/private/profile_pic and get the path
-        $path = $file->store('profile_pic', 'private'); // saved as storage/app/private/profile_pic/xxxx.jpg
+        $path = $file->storeAs('profile_pic', $filename, 'private'); // saved as storage/app/private/profile_pic/xxxx.jpg
 
         $user->profile_pic = $path;
     }

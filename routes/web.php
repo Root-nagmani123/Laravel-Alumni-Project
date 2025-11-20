@@ -610,3 +610,10 @@ Route::middleware('auth:admin')->group(function () {
 Route::get('/secure-file/{type}/{path}', [App\Http\Controllers\FileController::class, 'secureShow'])
     ->where(['type' => '[a-zA-Z0-9_-]+', 'path' => '.*'])
     ->name('secure.file');
+
+
+
+Route::get('/profile-pic/{path}', [App\Http\Controllers\FileController::class, 'show'])
+    ->where('path', '.*')  
+    ->middleware('auth:user')   
+    ->name('profile.pic');

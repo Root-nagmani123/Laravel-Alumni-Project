@@ -8,10 +8,6 @@
   <script src="{{asset('admin_assets/js/theme/app.min.js')}}"></script>
   <script src="{{asset('admin_assets/js/theme/sidebarmenu.js')}}"></script>
 
-  <!-- solar icons -->
-  <script src="{{asset('admin_assets/css/iconify-icon.min.js')}}"></script>
-  <script src="https://cdn.jsdelivr.net/npm/iconify-icon@1.0.8/dist/iconify-icon.min.js"></script>
-
   <!-- highlight.js (code view) -->
   <script src="{{asset('admin_assets/js/highlights/highlight.min.js')}}"></script>
 

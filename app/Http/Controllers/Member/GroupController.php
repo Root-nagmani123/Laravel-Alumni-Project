@@ -134,11 +134,30 @@ function activateGroup(Request $request) : RedirectResponse {
             'group_name' => ['required', 'string', 'max:255', new NoHtmlOrScript()],
             'mentees' => 'required|array',
             'end_date' => 'required|date',
-            'grp_image' => 'required|image|mimes:jpeg,png,jpg|max:1048', // Validate image file
+            'grp_image' => 'required|file|mimes:jpg,jpeg,png,gif|max:2048', // Validate image file
         ]);
 
         if ($request->hasFile('grp_image')) {
-            $imagePath = $request->file('grp_image')->store('uploads/images/grp_img', 'private');
+            $file = $request->file('grp_image');
+            
+            // Server-side MIME validation (reads actual file content, not headers)
+            $mimeType = getSecureMimeType($file);
+            $allowedMimes = ['image/jpeg', 'image/png', 'image/gif'];
+            if (!$mimeType || !in_array($mimeType, $allowedMimes)) {
+                return redirect()->back()
+                    ->withErrors(['grp_image' => 'Invalid file type. Only JPEG, PNG, and GIF images are allowed.'])
+                    ->withInput();
+            }
+            
+            // Map MIME type to extension (security: don't trust filename extension)
+            $extensionMap = [
+                'image/jpeg' => 'jpg',
+                'image/png' => 'png',
+                'image/gif' => 'gif'
+            ];
+            $extension = $extensionMap[$mimeType];
+            $filename = uniqid() . '.' . time() . '.' . $extension;
+            $imagePath = $file->storeAs('uploads/images/grp_img', $filename, 'private');
             $data['images'] = $imagePath; // Store full path for secure route
         }
         $data_id = DB::table('groups')->insertGetId([

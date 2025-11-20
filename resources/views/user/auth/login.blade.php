@@ -339,6 +339,24 @@
         background: transparent !important;
         border: none !important;
     }
+    
+    /* Responsive reCAPTCHA styling for mobile */
+    @media screen and (max-width: 768px) {
+        #captcha-ldap, #captcha-otp, #captcha-registration,
+        #captcha-ldap-modal, #captcha-otp-modal, #captcha-registration-modal {
+            transform: scale(0.85);
+            transform-origin: 0 0;
+            margin-bottom: 10px;
+        }
+    }
+    
+    @media screen and (max-width: 480px) {
+        #captcha-ldap, #captcha-otp, #captcha-registration,
+        #captcha-ldap-modal, #captcha-otp-modal, #captcha-registration-modal {
+            transform: scale(0.75);
+            transform-origin: 0 0;
+        }
+    }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
@@ -484,7 +502,6 @@
                                 <label class="form-label fw-bold">Password</label>
                                 <input type="password" name="password" id="password" class="form-control"
                                     placeholder="Enter your password" required autocomplete="off">
-
 
 
                             </div>
@@ -792,8 +809,9 @@
                     data-bs-dismiss="modal"></button>
                 <h4 class="mb-3 fw-bold text-center">LDAP Login</h4>
                 <hr class="my-2">
-                <form method="POST" action="{{ route('user.login.submit_ldap') }}" id="loginForm">
+                <form method="POST" action="{{ route('user.login.submit_ldap') }}" id="loginFormModal">
                     @csrf
+                    <input type="hidden" name="challenge_id" id="challenge_id_modal" value="{{ $challengeId }}">
                     <div class="mb-3">
                         <label class="form-label fw-bold">User Name</label>
                         <input type="text" name="username" class="form-control" placeholder="Enter your username"
@@ -801,8 +819,14 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-bold">Password</label>
-                        <input type="password" name="password" id="password" class="form-control"
+                        <input type="password" name="password" id="password_modal" class="form-control"
                             placeholder="Enter your password" required>
+                    </div>
+                    <div class="mb-3">
+                        <div id="captcha-ldap-modal"></div>
+                        @error('captcha')
+                        <span class="text-danger">{{ $message }}</span>
+                        @enderror
                     </div>
                     <button type="submit" class="btn btn-primary w-100">Login</button>
                 </form>
@@ -847,6 +871,12 @@
                                     pattern="[0-9]*" inputmode="numeric">
                             </div>
                             <input type="hidden" name="otp_code" id="otp_code">
+                            <div class="mb-3">
+                                <div id="captcha-otp-modal"></div>
+                                @error('captcha')
+                                <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
                             <div id="otpError" class="error-message"></div>
                             <div id="otpSuccess" class="success-message"></div>
                             <div id="resendOtp">Didn't receive OTP? Resend</div>
@@ -913,6 +943,12 @@
                             <label class="form-label fw-bold">Upload Govt. ID <span class="text-danger">*</span></label>
                             <input type="file" name="govt_id" class="form-control" accept="image/*,.pdf" required>
                         </div>
+                    </div>
+                    <div class="mb-3">
+                        <div id="captcha-registration-modal"></div>
+                        @error('captcha')
+                        <span class="text-danger">{{ $message }}</span>
+                        @enderror
                     </div>
                     <button type="submit" class="btn btn-primary w-100 mt-3">Register</button>
                 </form>
@@ -1001,19 +1037,42 @@
 
     <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer></script>
     <script nonce="{{ $cspNonce }}">
-    let captchaLdap, captchaOtp;
+    let captchaLdap, captchaOtp, captchaRegistration, captchaLdapModal, captchaOtpModal, captchaRegistrationModal;
 
     function onloadCallback() {
-        captchaLdap = grecaptcha.render('captcha-ldap', {
-            'sitekey': '6LcxQc0rAAAAAOpY8yaHMqLtQB8NW9J2eVjjGMWA'
-        });
-
-        captchaOtp = grecaptcha.render('captcha-otp', {
-            'sitekey': '6LcxQc0rAAAAAOpY8yaHMqLtQB8NW9J2eVjjGMWA'
-        });
-        captchaRegistration = grecaptcha.render('captcha-registration', {
-            'sitekey': '6LcxQc0rAAAAAOpY8yaHMqLtQB8NW9J2eVjjGMWA'
-        });
+        // Desktop panels
+        if (document.getElementById('captcha-ldap')) {
+            captchaLdap = grecaptcha.render('captcha-ldap', {
+                'sitekey': '6LcxQc0rAAAAAOpY8yaHMqLtQB8NW9J2eVjjGMWA'
+            });
+        }
+        if (document.getElementById('captcha-otp')) {
+            captchaOtp = grecaptcha.render('captcha-otp', {
+                'sitekey': '6LcxQc0rAAAAAOpY8yaHMqLtQB8NW9J2eVjjGMWA'
+            });
+        }
+        if (document.getElementById('captcha-registration')) {
+            captchaRegistration = grecaptcha.render('captcha-registration', {
+                'sitekey': '6LcxQc0rAAAAAOpY8yaHMqLtQB8NW9J2eVjjGMWA'
+            });
+        }
+        
+        // Mobile modals
+        if (document.getElementById('captcha-ldap-modal')) {
+            captchaLdapModal = grecaptcha.render('captcha-ldap-modal', {
+                'sitekey': '6LcxQc0rAAAAAOpY8yaHMqLtQB8NW9J2eVjjGMWA'
+            });
+        }
+        if (document.getElementById('captcha-otp-modal')) {
+            captchaOtpModal = grecaptcha.render('captcha-otp-modal', {
+                'sitekey': '6LcxQc0rAAAAAOpY8yaHMqLtQB8NW9J2eVjjGMWA'
+            });
+        }
+        if (document.getElementById('captcha-registration-modal')) {
+            captchaRegistrationModal = grecaptcha.render('captcha-registration-modal', {
+                'sitekey': '6LcxQc0rAAAAAOpY8yaHMqLtQB8NW9J2eVjjGMWA'
+            });
+        }
     }
     </script>
     <script nonce="{{ $cspNonce }}">
@@ -1421,20 +1480,31 @@
         return encrypted.toString();
     }
 
-    document.getElementById("loginForm").addEventListener("submit", async function(e) {
-    // append challenge id to password to send both values in one field (optional)
-        let passwordField = document.getElementById("password");
-        let encryptedPassword = await encryptPassword(passwordField.value);
-        passwordField.value = encryptedPassword; // Send encrypted password
-
-    const sep = '::';
-    const pwdField = document.getElementById('password');
-    const challengeId = document.getElementById('challenge_id').value;
-    if (!pwdField.value.includes(sep + challengeId)) {
-        pwdField.value = encryptedPassword + sep + challengeId;
+    // Handle desktop LDAP form submission
+    const desktopForm = document.getElementById("loginForm");
+    if (desktopForm) {
+        desktopForm.addEventListener("submit", async function(e) {
+            e.preventDefault();
+            const passwordField = document.getElementById("password");
+            const challengeId = document.getElementById('challenge_id').value;
+            const encryptedPassword = await encryptPassword(passwordField.value);
+            passwordField.value = encryptedPassword + '::' + challengeId;
+            this.submit();
+        });
     }
-    // let form submit normally
-});
+
+    // Handle mobile LDAP form submission
+    const mobileForm = document.getElementById("loginFormModal");
+    if (mobileForm) {
+        mobileForm.addEventListener("submit", async function(e) {
+            e.preventDefault();
+            const passwordField = document.getElementById("password_modal");
+            const challengeId = document.getElementById('challenge_id_modal').value;
+            const encryptedPassword = await encryptPassword(passwordField.value);
+            passwordField.value = encryptedPassword + '::' + challengeId;
+            this.submit();
+        });
+    }
     </script>
 
 </body>

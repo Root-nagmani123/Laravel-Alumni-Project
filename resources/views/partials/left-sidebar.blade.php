@@ -1,5 +1,256 @@
     <!-- Navbar START-->
-    <div class="mb-4 mt-lg-0" style="margin-top:7rem;">
+    <div class="mb-4 left-sidebar-container">
+<style>
+/* Left Sidebar Responsive Styles */
+.left-sidebar-container {
+    margin-top: 7rem;
+}
+
+.profile-card-body {
+    height: 167px;
+}
+
+/* Responsive breakpoints */
+@media (max-width: 1199.98px) {
+    .left-sidebar-container {
+        margin-top: 6rem;
+    }
+    
+    .profile-card-body {
+        height: auto;
+        min-height: 150px;
+    }
+}
+
+@media (max-width: 991.98px) {
+    .left-sidebar-container {
+        margin-top: 5rem;
+    }
+    
+    .sidebar-user-name {
+        font-size: 1rem;
+    }
+    
+    .sidebar-user-info {
+        font-size: 0.8rem;
+    }
+    
+    .profile-card-body {
+        min-height: 140px;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .left-sidebar-container {
+        margin-top: 4rem;
+    }
+    
+    .h-100px {
+        height: 80px !important;
+    }
+    
+    .sidebar-avatar {
+        width: 70px !important;
+        height: 70px !important;
+    }
+    
+    .sidebar-avatar img {
+        width: 70px !important;
+        height: 70px !important;
+    }
+    
+    .sidebar-user-name {
+        font-size: 0.95rem;
+    }
+    
+    .sidebar-user-info {
+        font-size: 0.75rem;
+        display: block;
+        word-break: break-word;
+    }
+    
+    .sidebar-stats {
+        font-size: 0.85rem;
+        gap: 0.5rem !important;
+    }
+    
+    .sidebar-divider {
+        margin: 0 0.25rem;
+    }
+    
+    .profile-card-body {
+        padding: 0.75rem;
+        min-height: 130px;
+    }
+    
+    .card-footer .btn {
+        font-size: 0.85rem;
+        padding: 0.375rem 0.75rem;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .left-sidebar-container {
+        margin-top: 3.5rem;
+        margin-bottom: 1rem;
+    }
+    
+    .h-100px {
+        height: 60px !important;
+    }
+    
+    .sidebar-avatar {
+        width: 60px !important;
+        height: 60px !important;
+        margin-top: -2rem !important;
+    }
+    
+    .sidebar-avatar img {
+        width: 60px !important;
+        height: 60px !important;
+    }
+    
+    .sidebar-user-name {
+        font-size: 0.9rem;
+        margin-bottom: 0.25rem !important;
+    }
+    
+    .sidebar-user-info {
+        font-size: 0.7rem;
+        line-height: 1.3;
+    }
+    
+    .sidebar-stats {
+        font-size: 0.75rem;
+        margin-top: 0.5rem !important;
+    }
+    
+    .sidebar-stat-item {
+        font-size: 0.75rem;
+    }
+    
+    .sidebar-stat-item i {
+        font-size: 0.7rem;
+    }
+    
+    .profile-card-body {
+        padding: 0.5rem;
+        min-height: 120px;
+    }
+    
+    .card-footer {
+        padding: 0.5rem;
+    }
+    
+    .card-footer .btn {
+        font-size: 0.8rem;
+        padding: 0.25rem 0.5rem;
+    }
+    
+    .card-header h5 {
+        font-size: 0.95rem;
+    }
+    
+    .card-body {
+        padding: 0.75rem;
+    }
+    
+    .hstack.gap-2 {
+        gap: 0.5rem !important;
+    }
+    
+    .avatar {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .avatar img {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .overflow-hidden .h6 {
+        font-size: 0.85rem;
+    }
+    
+    .overflow-hidden small,
+    .overflow-hidden p {
+        font-size: 0.7rem;
+    }
+    
+    .btn-sm {
+        font-size: 0.75rem;
+        padding: 0.25rem 0.5rem;
+    }
+}
+
+@media (max-width: 374.98px) {
+    .left-sidebar-container {
+        margin-top: 3rem;
+    }
+    
+    .h-100px {
+        height: 50px !important;
+    }
+    
+    .sidebar-avatar {
+        width: 50px !important;
+        height: 50px !important;
+    }
+    
+    .sidebar-avatar img {
+        width: 50px !important;
+        height: 50px !important;
+    }
+    
+    .sidebar-user-name {
+        font-size: 0.85rem;
+    }
+    
+    .sidebar-user-info {
+        font-size: 0.65rem;
+    }
+    
+    .sidebar-stats {
+        font-size: 0.7rem;
+        flex-wrap: wrap;
+    }
+    
+    .sidebar-divider {
+        display: none;
+    }
+    
+    .profile-card-body {
+        min-height: 110px;
+    }
+}
+
+/* Event and Forum Cards */
+.card-header {
+    padding: 0.75rem 1rem;
+}
+
+@media (max-width: 575.98px) {
+    .card-header {
+        padding: 0.5rem 0.75rem;
+    }
+    
+    .dropdown-menu {
+        font-size: 0.8rem;
+    }
+    
+    .dropdown-item {
+        padding: 0.35rem 0.75rem;
+    }
+}
+
+/* Ensure cards stack properly on mobile */
+@media (max-width: 991.98px) {
+    .left-sidebar-container .card {
+        margin-bottom: 1rem;
+    }
+}
+</style>
 <!-- Card START -->
                     <div class="card">
                         <!-- Cover image -->
@@ -7,16 +258,16 @@
                             style="background-image:url({{asset('user_assets/images/login/login-bg.webp')}}); background-position: center; background-size: cover; background-repeat: no-repeat;">
                         </div>
                         <!-- Card body START -->
-                        <div class="card-body pt-0" style="height:167px;">
+                        <div class="card-body pt-0 profile-card-body">
                             <div class="text-center">
                                 <!-- Avatar -->
-                                <div class="avatar avatar-lg mt-n5 mb-3">
+                                <div class="avatar avatar-lg mt-n5 mb-3 sidebar-avatar">
                                     @php
                                     $profilePic = $user->profile_pic ?? null;
                                     @endphp
                                     <img id="existingImage"
                                         src="{{ $profilePic ? route('secure.file', ['type'=>'profile','path'=>$profilePic]) : asset('feed_assets/images/avatar/07.jpg') }}"
-                                        class="rounded-circle avatar-img" height="30" width="30" alt="User"
+                                        class="rounded-circle avatar-img" alt="User"
                                         loading="lazy" decoding="async">
                                 </div>
 
@@ -25,10 +276,10 @@
 
                                 <!-- Info -->
                                 @if(Auth::guard('user')->check())
-                                <h5 class="mb-0"> <a href="#!"> {{ Auth::guard('user')->user()->name }} </a> </h5>
+                                <h5 class="mb-0 sidebar-user-name"> <a href="#!"> {{ Auth::guard('user')->user()->name }} </a> </h5>
                                 @endif
-                                <small>{{ $user->Service }} | {{ $user->current_designation }}</small>
-                                <div class="hstack gap-2 gap-xl-3 justify-content-center mt-3">
+                                <small class="sidebar-user-info">{{ $user->Service }} | {{ $user->current_designation }}</small>
+                                <div class="hstack gap-2 gap-xl-3 justify-content-center mt-3 sidebar-stats">
 											<!-- User stat item -->
 											<div>
 												<li class="list-inline-item"><i class="bi bi-briefcase me-1"></i>

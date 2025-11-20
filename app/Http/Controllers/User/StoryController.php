@@ -22,19 +22,51 @@ class StoryController extends Controller
 	public function store(Request $request)
     {
         $request->validate([
-            'story_file' => 'required|file|mimes:jpg,jpeg,png,webp,gif,svg,mp4,mov,avi|max:10240', // 10MB
+            'story_file' => 'required|file|mimes:jpg,jpeg,png,gif|max:2048',
 
               ]);
 
-        // $path = $request->file('story_file')->store('stories', 'public');
-          // get original extension (jpg, png, mp4, etc.)
-    $extension = $request->file('story_file')->getClientOriginalExtension();
-
-    // create dynamic filename -> e.g. memberID_timestamp.extension
-    $filename = 'story_' . Auth::guard('user')->id() . '_' . time() . '.' . $extension;
+        $file = $request->file('story_file');
+        
+        // Server-side MIME validation (reads actual file content, not headers)
+        if (!$file || !$file->isValid()) {
+            return redirect()->back()
+                ->withErrors(['story_file' => 'Invalid file upload. Please try again.'])
+                ->withInput();
+        }
+        
+        $mimeType = getSecureMimeType($file);
+        $allowedMimes = ['image/jpeg', 'image/png', 'image/gif'];
+        
+        // Explicitly reject HTML/text files
+        if ($mimeType && (
+            strpos($mimeType, 'text/html') !== false ||
+            strpos($mimeType, 'text/plain') !== false ||
+            strpos($mimeType, 'application/xhtml') !== false ||
+            strpos($mimeType, 'text/xml') !== false
+        )) {
+            return redirect()->back()
+                ->withErrors(['story_file' => 'HTML and text files are not allowed. Only JPEG, PNG, and GIF images are allowed.'])
+                ->withInput();
+        }
+        
+        if (!$mimeType || !in_array($mimeType, $allowedMimes)) {
+            return redirect()->back()
+                ->withErrors(['story_file' => 'Invalid file type. Only JPEG, PNG, and GIF images are allowed.'])
+                ->withInput();
+        }
+        
+        // Map MIME type to extension (security: don't trust filename extension)
+        $extensionMap = [
+            'image/jpeg' => 'jpg',
+            'image/png' => 'png',
+            'image/gif' => 'gif'
+        ];
+        $extension = $extensionMap[$mimeType];
+        $filename = uniqid() . '.' . time() . '.' . $extension;
 
     // store with custom name
-    $path = $request->file('story_file')->storeAs('stories', $filename, 'private');
+    $path = $file->storeAs('stories', $filename, 'private');
 
 
         $story = Story::create([

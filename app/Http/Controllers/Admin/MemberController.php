@@ -91,7 +91,7 @@ Paginator::useBootstrap();
             'batch' => 'required',
             'sector' => 'nullable',
             'service' => 'nullable',
-            'profile_pic' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'profile_pic' => 'required|file|mimes:jpg,jpeg,png,gif|max:2048',
         ]);
         
         // Check if validation fails
@@ -115,7 +115,25 @@ Paginator::useBootstrap();
 ];
 if ($request->hasFile('profile_pic')) {
         $file = $request->file('profile_pic');
-        $path = $file->store('profile_pic', 'public'); 
+        
+        // Server-side MIME validation (reads actual file content, not headers)
+        $mimeType = getSecureMimeType($file);
+        $allowedMimes = ['image/jpeg', 'image/png', 'image/gif'];
+        if (!$mimeType || !in_array($mimeType, $allowedMimes)) {
+            return redirect()->back()
+                ->withErrors(['profile_pic' => 'Invalid file type. Only JPEG, PNG, and GIF images are allowed.'])
+                ->withInput();
+        }
+        
+        // Map MIME type to extension (security: don't trust filename extension)
+        $extensionMap = [
+            'image/jpeg' => 'jpg',
+            'image/png' => 'png',
+            'image/gif' => 'gif'
+        ];
+        $extension = $extensionMap[$mimeType];
+        $filename = uniqid() . '.' . time() . '.' . $extension;
+        $path = $file->storeAs('profile_pic', $filename, 'public'); 
 
         $data['profile_pic'] = $path;
     }
@@ -200,7 +218,25 @@ public function edit($id)
         $profile_path = '';
         if ($request->hasFile('profile_pic')) {
             $file = $request->file('profile_pic');
-            $path = $file->store('profile_pic', 'public'); 
+            
+            // Server-side MIME validation (reads actual file content, not headers)
+            $mimeType = getSecureMimeType($file);
+            $allowedMimes = ['image/jpeg', 'image/png', 'image/gif'];
+            if (!$mimeType || !in_array($mimeType, $allowedMimes)) {
+                return redirect()->back()
+                    ->withErrors(['profile_pic' => 'Invalid file type. Only JPEG, PNG, and GIF images are allowed.'])
+                    ->withInput();
+            }
+            
+            // Map MIME type to extension (security: don't trust filename extension)
+            $extensionMap = [
+                'image/jpeg' => 'jpg',
+                'image/png' => 'png',
+                'image/gif' => 'gif'
+            ];
+            $extension = $extensionMap[$mimeType];
+            $filename = uniqid() . '.' . time() . '.' . $extension;
+            $path = $file->storeAs('profile_pic', $filename, 'public'); 
 
             $profile_path = $path;
         }

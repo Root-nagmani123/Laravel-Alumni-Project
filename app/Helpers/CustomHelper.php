@@ -34,3 +34,126 @@ if (!function_exists('menteeList')) {
     
 
 }
+
+/**
+ * Get the actual MIME type by reading file content (not headers)
+ * This prevents Content-Type header spoofing attacks
+ * 
+ * @param \Illuminate\Http\UploadedFile $file
+ * @return string|null The detected MIME type or null if unable to detect
+ */
+if (!function_exists('getSecureMimeType')) {
+    function getSecureMimeType($file)
+    {
+        $path = $file->getRealPath();
+        
+        if (!$path || !file_exists($path)) {
+            return null;
+        }
+
+        // Read first 100 bytes
+        $handle = fopen($path, 'rb');
+        if (!$handle) {
+            return null;
+        }
+        
+        // Read first bytes to check magic signature
+        $bytes = fread($handle, 100);
+        
+        // IMPORTANT FIX: Reset file pointer so Laravel can read the full file later
+        rewind($handle);
+        
+        fclose($handle);
+        
+
+        if (!$bytes || strlen($bytes) < 4) {
+            return null;
+        }
+
+        // --- MAGIC BYTE VALIDATION (strongest check) ---
+        if (substr($bytes, 0, 3) === "\xFF\xD8\xFF") {   // JPEG
+            return 'image/jpeg';
+        }
+
+        if (substr($bytes, 0, 8) === "\x89\x50\x4E\x47\x0D\x0A\x1A\x0A") { // PNG
+            return 'image/png';
+        }
+
+        if (substr($bytes, 0, 4) === "\x47\x49\x46\x38" || 
+            substr($bytes, 0, 4) === "\x47\x49\x46\x39") { // GIF
+            return 'image/gif';
+        }
+
+        // --- QUICK HTML DETECTION IN FIRST BYTES ---
+        $textContent = strtolower($bytes);
+
+        $htmlPatterns = [
+            '<html','<!doctype','<script','<?xml','<body','<head',
+            '<div','<span','<p>','<a ','<img','<input','<form',
+            '<style','<meta','<title','<link','<base'
+        ];
+
+        foreach ($htmlPatterns as $pattern) {
+            if (strpos($textContent, $pattern) !== false) {
+                return 'text/html';
+            }
+        }
+
+        if (preg_match('/^\s*<[a-z!?]/i', $bytes)) {
+            return 'text/html';
+        }
+
+        // --- FILEINFO (secondary check) ---
+        if (function_exists('finfo_open')) {
+            $finfo = finfo_open(FILEINFO_MIME_TYPE);
+            $mimeType = finfo_file($finfo, $path);
+            finfo_close($finfo);
+
+            if ($mimeType && (
+                str_contains($mimeType, 'text/html') ||
+                str_contains($mimeType, 'text/plain') ||
+                str_contains($mimeType, 'application/xhtml')
+            )) {
+                return 'text/html';
+            }
+
+            // Block SVG completely
+            if ($mimeType === 'image/svg+xml') {
+                return 'text/html';
+            }
+
+            if ($mimeType && $mimeType !== 'application/octet-stream') {
+                return $mimeType;
+            }
+        }
+
+        // --- mime_content_type fallback ---
+        if (function_exists('mime_content_type')) {
+            $mimeType = mime_content_type($path);
+
+            if ($mimeType && (
+                str_contains($mimeType, 'text/html') ||
+                str_contains($mimeType, 'text/plain') ||
+                str_contains($mimeType, 'application/xhtml')
+            )) {
+                return 'text/html';
+            }
+
+            if ($mimeType && $mimeType !== 'application/octet-stream') {
+                return $mimeType;
+            }
+        }
+
+        // --- FULL FILE XSS SCAN (VERY IMPORTANT) ---
+        $content = strtolower(file_get_contents($path));
+
+        if (preg_match('/<script|<html|<!doctype|<body|<head|<svg|javascript:/i', $content)) {
+            return 'text/html';
+        }
+
+        // If nothing matches, reject
+        return null;
+    }
+}
+
+

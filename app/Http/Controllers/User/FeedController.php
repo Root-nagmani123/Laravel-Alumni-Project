@@ -212,6 +212,7 @@ class FeedController extends Controller
                       });
               });
     })
+    ->where('approved_by_moderator', 1)
     ->orderBy('created_at', 'desc')
     ->get()
     ->map(function ($post) {
@@ -238,41 +239,80 @@ class FeedController extends Controller
 
     public function store(Request $request)
     {
+        // FIRST: Validate basic fields (but NOT file MIME types - we'll do that manually)
         $request->validate([
             'content' => ['nullable', 'string', 'max:1000', new NoHtmlOrScript()],
-            'media.*' => 'nullable|file|mimes:jpg,jpeg,png,mp4,mov,avi|max:30720', // 30MB
+            'media.*' => 'nullable|file|max:2048', // Removed mimes validation - we'll check content manually
         ]);
 
+        // SECURITY: Validate files BEFORE creating post (prevents post creation with invalid files)
+        // This MUST happen before any database operations
         $images = 0;
-        $videos = 0;
-
+        $validatedMimeTypes = [];
         if ($request->hasFile('media')) {
-            foreach ($request->file('media') as $file) {
-                $mime = $file->getMimeType();
-                if (str_starts_with($mime, 'video')) $videos++;
-                elseif (str_starts_with($mime, 'image')) $images++;
+            foreach ($request->file('media') as $index => $file) {
+                if (!$file || !$file->isValid()) {
+                    return response()->json(['errors' => ['media' => ['Invalid file upload. Please try again.']]], 422);
+                }
+                
+                // Server-side MIME validation (reads actual file content, not headers)
+                $mimeType = getSecureMimeType($file);
+                
+                // CRITICAL: Explicitly reject HTML/text files FIRST
+                if ($mimeType && (
+                    strpos($mimeType, 'text/html') !== false ||
+                    strpos($mimeType, 'text/plain') !== false ||
+                    strpos($mimeType, 'application/xhtml') !== false ||
+                    strpos($mimeType, 'text/xml') !== false ||
+                    strpos($mimeType, 'application/xml') !== false
+                )) {
+                    return response()->json(['errors' => ['media' => ['HTML and text files are not allowed. Only JPEG, PNG, and GIF images are allowed.']]], 422);
+                }
+                
+                $allowedMimes = ['image/jpeg', 'image/png', 'image/gif'];
+                if (!$mimeType || !in_array($mimeType, $allowedMimes)) {
+                    return response()->json(['errors' => ['media' => ['Invalid file type. Only JPEG, PNG, and GIF images are allowed.']]], 422);
+                }
+                
+                if (str_starts_with($mimeType, 'image')) $images++;
+                $validatedMimeTypes[$index] = $mimeType;
             }
 
             if ($images > 12) {
                 return response()->json(['errors' => ['media' => ['Maximum 12 images allowed.']]], 422);
             }
-            if ($videos > 5) {
-                return response()->json(['errors' => ['media' => ['Maximum 5 videos allowed.']]], 422);
-            }
         }
 
+        // Only create post AFTER file validation passes
         $post = Post::create([
             'member_id' => Auth::guard('user')->id(),
             'content' => $request->content,
         ]);
 
         if ($request->hasFile('media')) {
-            foreach ($request->file('media') as $file) {
-                $path = $file->store('posts', 'private');
+            foreach ($request->file('media') as $index => $file) {
+                // MIME type already validated above, now process the file
+                // Use the validated MIME type we stored earlier
+                $mimeType = $validatedMimeTypes[$index] ?? null;
+                
+                if (!$mimeType) {
+                    // This should never happen if validation worked, but safety check
+                    continue;
+                }
+                
+                // Map MIME type to extension (security: don't trust filename extension)
+                $extensionMap = [
+                    'image/jpeg' => 'jpg',
+                    'image/png' => 'png',
+                    'image/gif' => 'gif'
+                ];
+                $extension = $extensionMap[$mimeType];
+                $filename = uniqid() . '.' . time() . '.' . $extension;
+                $path = $file->storeAs('posts', $filename, 'private');
                 PostMedia::create([
                     'post_id' => $post->id,
                     'file_path' => $path,
-                    'file_type' => str_starts_with($file->getMimeType(), 'video') ? 'video' : 'image',
+                    'file_type' => 'image',
                 ]);
             }
         }
@@ -520,7 +560,7 @@ function update_topic_details(Request $request)
         'post_id' => 'required|exists:posts,id',
         'content' => ['required', 'string', new NoHtmlOrScript()],
         'video_link' => 'nullable|url',
-        'postMedia.*' => 'image|mimes:jpg,jpeg,png,gif,webp|max:2048'
+        'postMedia.*' => 'nullable|file|mimes:jpg,jpeg,png,gif|max:2048'
     ]);
        $videoId = null;
  if ($request->video_link) {
@@ -552,7 +592,24 @@ $url = $request->video_link;
     // 2. Add new media (jo user ne abhi upload kiya h)
     if ($request->hasFile('postMedia')) {
         foreach ($request->file('postMedia') as $file) {
-            $path = $file->store('posts', 'private');
+            // Server-side MIME validation (reads actual file content, not headers)
+            $mimeType = getSecureMimeType($file);
+            $allowedMimes = ['image/jpeg', 'image/png', 'image/gif'];
+            if (!$mimeType || !in_array($mimeType, $allowedMimes)) {
+                return redirect()->back()
+                    ->withErrors(['postMedia' => 'Invalid file type. Only JPEG, PNG, and GIF images are allowed.'])
+                    ->withInput();
+            }
+            
+            // Map MIME type to extension (security: don't trust filename extension)
+            $extensionMap = [
+                'image/jpeg' => 'jpg',
+                'image/png' => 'png',
+                'image/gif' => 'gif'
+            ];
+            $extension = $extensionMap[$mimeType];
+            $filename = uniqid() . '.' . time() . '.' . $extension;
+            $path = $file->storeAs('posts', $filename, 'private');
 
             PostMedia::create([
                 'post_id' => $post->id,

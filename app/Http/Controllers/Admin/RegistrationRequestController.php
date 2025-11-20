@@ -25,14 +25,14 @@ class RegistrationRequestController extends Controller
     public function registrationRequestsStore(Request $request)
     {
        $request->validate([
-            'name'   => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s]+$/', new NoHtmlOrScript()],
+            'name'   => 'required|string|max:255|regex:/^[a-zA-Z\s]+$/',
             'email'  => 'required|email',
             'mobile' => 'required|digits:10',
             'service'=> 'required',
             'batch'  => 'required',
             'course_attended'  => 'required',
-            'photo'  => 'required|file|mimes:jpg,jpeg,png',
-            'govt_id'=> 'required|file|mimes:jpg,jpeg,png,pdf',
+            'photo'  => 'required|file|mimes:jpg,jpeg,png,gif|max:2048',
+            'govt_id'=> 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
            'g-recaptcha-response' => 'required',
         ]);
          $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
@@ -48,8 +48,51 @@ class RegistrationRequestController extends Controller
             'captcha' => 'Captcha verification failed. Please try again.'
         ])->withInput();
     }
-         $photo = $request->file('photo')->store('profile_pic', 'public');
-        $govt_id = $request->file('govt_id')->store('uploads/govt_ids', 'public');
+         $photoFile = $request->file('photo');
+        
+        // Server-side MIME validation (reads actual file content, not headers)
+        $photoMimeType = getSecureMimeType($photoFile);
+        $allowedMimes = ['image/jpeg', 'image/png', 'image/gif'];
+        if (!$photoMimeType || !in_array($photoMimeType, $allowedMimes)) {
+            return back()->withErrors([
+                'photo' => 'Invalid file type. Only JPEG, PNG, and GIF images are allowed.'
+            ])->withInput();
+        }
+        
+        // Map MIME type to extension (security: don't trust filename extension)
+        $extensionMap = [
+            'image/jpeg' => 'jpg',
+            'image/png' => 'png',
+            'image/gif' => 'gif'
+        ];
+        $photoExtension = $extensionMap[$photoMimeType];
+        $photoFilename = uniqid() . '.' . time() . '.' . $photoExtension;
+        $photo = $photoFile->storeAs('profile_pic', $photoFilename, 'public');
+        
+        $govtIdFile = $request->file('govt_id');
+        // Server-side MIME validation for govt_id (reads actual file content, not headers)
+        $govtIdMimeType = getSecureMimeType($govtIdFile);
+        // Note: PDF detection needs additional checks, but for now use file extension as fallback
+        if (!$govtIdMimeType) {
+            // If secure detection fails, check if it's a PDF by extension (less secure but better than nothing)
+            $govtIdMimeType = $govtIdFile->getMimeType();
+        }
+        $allowedGovtIdMimes = ['image/jpeg', 'image/png', 'application/pdf'];
+        if (!$govtIdMimeType || !in_array($govtIdMimeType, $allowedGovtIdMimes)) {
+            return back()->withErrors([
+                'govt_id' => 'Invalid file type. Only JPEG, PNG, and PDF files are allowed.'
+            ])->withInput();
+        }
+        
+        // Map MIME type to extension (security: don't trust filename extension)
+        $govtIdExtensionMap = [
+            'image/jpeg' => 'jpg',
+            'image/png' => 'png',
+            'application/pdf' => 'pdf'
+        ];
+        $govtIdMime = $govtIdExtensionMap[$govtIdMimeType];
+        $govtIdFilename = uniqid() . '.' . time() . '.' . $govtIdMime;
+        $govt_id = $govtIdFile->storeAs('uploads/govt_ids', $govtIdFilename, 'public');
 
         RegistrationRequest::create([
             'name'    => $request->name,

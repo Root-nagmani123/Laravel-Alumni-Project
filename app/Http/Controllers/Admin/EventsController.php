@@ -47,7 +47,7 @@ class EventsController extends Controller
 			'url'            => 'nullable|url|max:255',
 			'start_datetime' => 'required|date',
 			'end_datetime'   => 'required|date|after_or_equal:start_datetime',
-			'image' => 'required|image|mimes:jpg,jpeg,png|max:2048', // max 2MB
+			'image' => 'required|file|mimes:jpg,jpeg,png,gif|max:2048', // max 2MB
             'status' => 'required|in:1,0',
 		]);
 
@@ -63,7 +63,45 @@ class EventsController extends Controller
 
 		// Check and store uploaded image
 		if ($request->hasFile('image')) {
-			$imagePath = $request->file('image')->store('events', 'private'); // SECURED: stored on private disk
+			$file = $request->file('image');
+			
+			if (!$file || !$file->isValid()) {
+				return redirect()->back()
+					->withErrors(['image' => 'Invalid file upload. Please try again.'])
+					->withInput();
+			}
+			
+			// Server-side MIME validation (reads actual file content, not headers)
+			$mimeType = getSecureMimeType($file);
+			$allowedMimes = ['image/jpeg', 'image/png', 'image/gif'];
+			
+			// Explicitly reject HTML/text files
+			if ($mimeType && (
+				strpos($mimeType, 'text/html') !== false ||
+				strpos($mimeType, 'text/plain') !== false ||
+				strpos($mimeType, 'application/xhtml') !== false ||
+				strpos($mimeType, 'text/xml') !== false
+			)) {
+				return redirect()->back()
+					->withErrors(['image' => 'HTML and text files are not allowed. Only JPEG, PNG, and GIF images are allowed.'])
+					->withInput();
+			}
+			
+			if (!$mimeType || !in_array($mimeType, $allowedMimes)) {
+				return redirect()->back()
+					->withErrors(['image' => 'Invalid file type. Only JPEG, PNG, and GIF images are allowed.'])
+					->withInput();
+			}
+			
+			// Map MIME type to extension (security: don't trust filename extension)
+			$extensionMap = [
+				'image/jpeg' => 'jpg',
+				'image/png' => 'png',
+				'image/gif' => 'gif'
+			];
+			$extension = $extensionMap[$mimeType];
+			$filename = uniqid() . '.' . time() . '.' . $extension;
+			$imagePath = $file->storeAs('events', $filename, 'private'); // SECURED: stored on private disk
 		}
 
 		// Create the event
@@ -127,7 +165,7 @@ return redirect()->route('events.index')->with('error', 'Event not found!');retu
             'url'            => 'nullable|url|max:255',
             'start_datetime' => 'required|date',
             'end_datetime'   => 'nullable|date|after_or_equal:start_datetime',
-            'image'          => 'nullable|image|max:2048',
+            'image'          => 'nullable|file|mimes:jpg,jpeg,png,gif|max:2048',
         ]);
 
         if ($validator->fails()) {
@@ -142,7 +180,26 @@ return redirect()->route('events.index')->with('error', 'Event not found!');retu
             if ($event->image && \Storage::disk('public')->exists($event->image)) {
                 \Storage::disk('public')->delete($event->image);
             }
-            $imagePath = $request->file('image')->store('events', 'private'); // SECURED: stored on private disk for update
+            $file = $request->file('image');
+            
+            // Server-side MIME validation (reads actual file content, not headers)
+            $mimeType = getSecureMimeType($file);
+            $allowedMimes = ['image/jpeg', 'image/png', 'image/gif'];
+            if (!$mimeType || !in_array($mimeType, $allowedMimes)) {
+                return redirect()->back()
+                    ->withErrors(['image' => 'Invalid file type. Only JPEG, PNG, and GIF images are allowed.'])
+                    ->withInput();
+            }
+            
+            // Map MIME type to extension (security: don't trust filename extension)
+            $extensionMap = [
+                'image/jpeg' => 'jpg',
+                'image/png' => 'png',
+                'image/gif' => 'gif'
+            ];
+            $extension = $extensionMap[$mimeType];
+            $filename = uniqid() . '.' . time() . '.' . $extension;
+            $imagePath = $file->storeAs('events', $filename, 'private'); // SECURED: stored on private disk for update
             $data['image'] = $imagePath;
         }
 

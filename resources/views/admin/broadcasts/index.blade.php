@@ -378,7 +378,8 @@ $(document).ready(function() {
 </script>
 
 @if ($errors->any())
-<script nonce="{{ $cspNonce }}">$(function(){
+<script>
+$(function(){
     const id = @json(old('broadcast_id'));
     if (id) {
         $('#broadcast_id').val(id);

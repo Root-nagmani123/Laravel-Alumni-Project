@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
+use App\Services\AuditService;
 
 class OtpLoginController extends Controller
 {
@@ -83,6 +84,8 @@ public function sendOtp(Request $request)
     // Find user
     $user = Member::where('email', $request->otp_email)->first();
     if (!$user) {
+        // Log failed login attempt
+        AuditService::logFailedLogin($request, $request->otp_email, 'Email not found during OTP verification', 'user_otp');
         return response()->json(['error' => 'Email not found'], 422);
     }
 
@@ -93,6 +96,8 @@ public function sendOtp(Request $request)
         ->first();
 
     if (!$otpRecord) {
+        // Log failed login attempt
+        AuditService::logFailedLogin($request, $request->otp_email, 'Invalid or expired OTP', 'user_otp');
         return response()->json(['error' => 'Invalid or expired OTP'], 422);
     }
 
@@ -104,6 +109,9 @@ public function sendOtp(Request $request)
         'is_online' => 1,
         'last_seen' => now(),
     ]);
+
+    // Log successful login
+    AuditService::logSuccessfulLogin($request, $user->username ?? $user->email, 'user_otp');
 
     $otpRecord->delete();
 

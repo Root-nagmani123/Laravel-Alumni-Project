@@ -3,7 +3,8 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use Illuminate\Http\Request;
+use Illuminate\Http\Request; 
+
 
 class SafeRedirect
 {
@@ -32,6 +33,21 @@ class SafeRedirect
         $response->headers->set('X-Frame-Options', 'DENY');
         $response->headers->set('X-Content-Type-Options', 'nosniff');
         $response->headers->set('X-XSS-Protection', '1; mode=block');
+
+        return $response;
+    }
+    
+    /**
+     * Check if the given URL is allowed
+     */
+    private function isUrlAllowed($url, $allowedHosts)
+    {
+        $response = $next($request);
+
+        $response->headers->set('Referrer-Policy', 'no-referrer'); // or 'same-origin'
+        // other header suggestions
+        $response->headers->set('X-Frame-Options', 'DENY');
+        $response->headers->set('X-Content-Type-Options', 'nosniff');
 
         return $response;
     }
