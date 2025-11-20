@@ -111,125 +111,259 @@ public function store_chnagefor_video_link(Request $request)
 
 
 
-    public function store(Request $request)
+//     public function store(Request $request)
+// {
+//     // FIRST: Validate basic fields (but NOT file MIME types - we'll do that manually)
+//     $request->validate([
+//         'modalContent' => ['required', 'string', 'max:5000', new NoHtmlOrScript()],
+//         'media.*' => 'nullable|file|max:2048', // Removed mimes validation - we'll check content manually
+//         'video_link' => 'nullable|url|max:1000',
+//     ]);
+
+//     $mediaFiles = $request->file('media');
+//     $videoLink = $request->video_link;
+
+//     // SECURITY: Validate files BEFORE creating post (prevents post creation with invalid files)
+//     // This MUST happen before any database operations
+//     $validatedMimeTypes = [];
+//     if ($mediaFiles && is_array($mediaFiles)) {
+//         foreach ($mediaFiles as $index => $file) {
+//             if (!$file || !$file->isValid()) {
+//                 return redirect()->back()
+//                     ->withErrors(['media' => 'Invalid file upload. Please try again.'])
+//                     ->withInput();
+//             }
+            
+//             // Server-side MIME validation for images (reads actual file content, not headers)
+//             $mimeType = getSecureMimeType($file);
+            
+//             // CRITICAL: Explicitly reject HTML/text files FIRST (before any other checks)
+//             if ($mimeType && (
+//                 strpos($mimeType, 'text/html') !== false ||
+//                 strpos($mimeType, 'text/plain') !== false ||
+//                 strpos($mimeType, 'application/xhtml') !== false ||
+//                 strpos($mimeType, 'text/xml') !== false ||
+//                 strpos($mimeType, 'application/xml') !== false
+//             )) {
+//                 // STOP EXECUTION - HTML file detected, reject immediately
+//                 return redirect()->back()
+//                     ->withErrors(['media' => 'HTML and text files are not allowed. Only JPEG, PNG, and GIF images are allowed.'])
+//                     ->withInput();
+//             }
+            
+//             // Check if it's a valid image MIME type
+//             $allowedMimes = ['image/jpeg', 'image/png', 'image/gif'];
+//             if (!$mimeType || !in_array($mimeType, $allowedMimes)) {
+//                 // STOP EXECUTION - Invalid file type, reject immediately
+//                 return redirect()->back()
+//                     ->withErrors(['media' => 'Invalid file type. Only JPEG, PNG, and GIF images are allowed.'])
+//                     ->withInput();
+//             }
+            
+//             // Store validated MIME type for later use
+//             $validatedMimeTypes[$index] = $mimeType;
+//         }
+//     }
+
+//     // Extract YouTube video ID if video_link is YouTube
+//     $embedLink = null;
+//     if ($videoLink && str_contains($videoLink, 'youtube.com')) {
+//         parse_str(parse_url($videoLink, PHP_URL_QUERY), $query);
+//         if (isset($query['v'])) {
+//             $embedLink = 'https://www.youtube.com/embed/' . $query['v'];
+//         }
+//     } elseif ($videoLink && str_contains($videoLink, 'youtu.be')) {
+//         $videoId = basename(parse_url($videoLink, PHP_URL_PATH));
+//         $embedLink = 'https://www.youtube.com/embed/' . $videoId;
+//     } else {
+//         $embedLink = $videoLink; // fallback for other URLs (optional)
+//     }
+
+//     // FINAL SAFETY CHECK: Ensure all files were validated before creating post
+//     if ($mediaFiles && is_array($mediaFiles)) {
+//         if (count($validatedMimeTypes) !== count($mediaFiles)) {
+//             // This should never happen, but if it does, reject the request
+//             return redirect()->back()
+//                 ->withErrors(['media' => 'File validation failed. Please try again.'])
+//                 ->withInput();
+//         }
+//     }
+    
+//     // Only create post AFTER file validation passes
+//     $post = new Post();
+//     $post->member_id = auth()->guard('user')->id();  // Or 'member' guard if applicable
+//     $post->content = $request->modalContent;
+//     $post->media_type = $mediaFiles ? 'photo_video' : ($videoLink ? 'video_link' : 'none');
+//     $post->video_link = $embedLink;
+//     $post->save();
+
+//     if ($mediaFiles && is_array($mediaFiles)) {
+//         foreach ($mediaFiles as $index => $file) {
+//             // MIME type already validated above, now process the file
+//             // Use the validated MIME type we stored earlier
+//             $mimeType = $validatedMimeTypes[$index] ?? null;
+            
+//             if (!$mimeType) {
+//                 // This should never happen if validation worked, but safety check
+//                 continue;
+//             }
+            
+//             // Map MIME type to extension (security: don't trust filename extension)
+//             $extensionMap = [
+//                 'image/jpeg' => 'jpg',
+//                 'image/png' => 'png',
+//                 'image/gif' => 'gif'
+//             ];
+//             $extension = $extensionMap[$mimeType];
+//             $filename = uniqid() . '.' . time() . '.' . $extension;
+//             $path = $file->storeAs('posts/media', $filename, 'private');
+
+//             $fileType = 'image';
+
+//             PostMedia::create([
+//                 'post_id' => $post->id,
+//                 'file_path' => $path,
+//                 'file_type' => $fileType,
+//             ]);
+//         }
+//     }
+
+//     //post redirection
+//     $notification = $this->notificationService->notifyAllMembers('post', $post->content . ' post has been created.', $post->id, 'SinglePost',Auth::id());
+
+//     $this->recentActivityService->logActivity(
+//         'Post Submitted',
+//         'Posts',
+//         auth()->guard('user')->id(),
+//         'New post submitted and pending for approval',
+//         2,
+//         $post->id
+//     );
+
+//     // return redirect('/user/feed')->with('success', 'Post created succsessfully.');
+//     return redirect('/user/feed')->with('success', 'Post submitted and waiting for moderator approval.');
+// }
+
+public function store(Request $request)
 {
-    // FIRST: Validate basic fields (but NOT file MIME types - we'll do that manually)
+    // BASIC VALIDATION
     $request->validate([
         'modalContent' => ['required', 'string', 'max:5000', new NoHtmlOrScript()],
-        'media.*' => 'nullable|file|max:2048', // Removed mimes validation - we'll check content manually
+        'media.*' => 'nullable|file|max:2048', // MIME check done manually below
         'video_link' => 'nullable|url|max:1000',
     ]);
 
     $mediaFiles = $request->file('media');
     $videoLink = $request->video_link;
 
-    // SECURITY: Validate files BEFORE creating post (prevents post creation with invalid files)
-    // This MUST happen before any database operations
+    // -----------------------------------------
+    // 1️⃣ SECURITY: Validate MIME Type Manually
+    // -----------------------------------------
     $validatedMimeTypes = [];
+    $allowedMimes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+
     if ($mediaFiles && is_array($mediaFiles)) {
+
         foreach ($mediaFiles as $index => $file) {
             if (!$file || !$file->isValid()) {
-                return redirect()->back()
-                    ->withErrors(['media' => 'Invalid file upload. Please try again.'])
-                    ->withInput();
+                return back()->withErrors(['media' => 'Invalid file uploaded.']);
             }
-            
-            // Server-side MIME validation for images (reads actual file content, not headers)
+
+            // DETECT REAL MIME TYPE USING FILEINFO
             $mimeType = getSecureMimeType($file);
-            
-            // CRITICAL: Explicitly reject HTML/text files FIRST (before any other checks)
-            if ($mimeType && (
-                strpos($mimeType, 'text/html') !== false ||
-                strpos($mimeType, 'text/plain') !== false ||
-                strpos($mimeType, 'application/xhtml') !== false ||
-                strpos($mimeType, 'text/xml') !== false ||
-                strpos($mimeType, 'application/xml') !== false
-            )) {
-                // STOP EXECUTION - HTML file detected, reject immediately
-                return redirect()->back()
-                    ->withErrors(['media' => 'HTML and text files are not allowed. Only JPEG, PNG, and GIF images are allowed.'])
-                    ->withInput();
+
+            // ❌ REJECT HTML / TEXT FILES FIRST
+            if (!$mimeType || preg_match('/(html|xml|plain)/i', $mimeType)) {
+                return back()->withErrors([
+                    'media' => 'HTML, XML and text files are not allowed.'
+                ]);
             }
-            
-            // Check if it's a valid image MIME type
-            $allowedMimes = ['image/jpeg', 'image/png', 'image/gif'];
-            if (!$mimeType || !in_array($mimeType, $allowedMimes)) {
-                // STOP EXECUTION - Invalid file type, reject immediately
-                return redirect()->back()
-                    ->withErrors(['media' => 'Invalid file type. Only JPEG, PNG, and GIF images are allowed.'])
-                    ->withInput();
+
+            // ❌ REJECT ANYTHING NOT AN IMAGE
+            if (!in_array($mimeType, $allowedMimes)) {
+                return back()->withErrors([
+                    'media' => 'Invalid file type. Only JPEG, JPG, PNG & GIF allowed.'
+                ]);
             }
-            
-            // Store validated MIME type for later use
+
+            // STORE CLEAN MIME
             $validatedMimeTypes[$index] = $mimeType;
         }
     }
 
-    // Extract YouTube video ID if video_link is YouTube
+    // -----------------------------------------
+    // 2️⃣ PROCESS VIDEO LINK
+    // -----------------------------------------
     $embedLink = null;
-    if ($videoLink && str_contains($videoLink, 'youtube.com')) {
-        parse_str(parse_url($videoLink, PHP_URL_QUERY), $query);
-        if (isset($query['v'])) {
-            $embedLink = 'https://www.youtube.com/embed/' . $query['v'];
-        }
-    } elseif ($videoLink && str_contains($videoLink, 'youtu.be')) {
-        $videoId = basename(parse_url($videoLink, PHP_URL_PATH));
-        $embedLink = 'https://www.youtube.com/embed/' . $videoId;
-    } else {
-        $embedLink = $videoLink; // fallback for other URLs (optional)
-    }
 
-    // FINAL SAFETY CHECK: Ensure all files were validated before creating post
-    if ($mediaFiles && is_array($mediaFiles)) {
-        if (count($validatedMimeTypes) !== count($mediaFiles)) {
-            // This should never happen, but if it does, reject the request
-            return redirect()->back()
-                ->withErrors(['media' => 'File validation failed. Please try again.'])
-                ->withInput();
-        }
-    }
-    
-    // Only create post AFTER file validation passes
-    $post = new Post();
-    $post->member_id = auth()->guard('user')->id();  // Or 'member' guard if applicable
-    $post->content = $request->modalContent;
-    $post->media_type = $mediaFiles ? 'photo_video' : ($videoLink ? 'video_link' : 'none');
-    $post->video_link = $embedLink;
-    $post->save();
+    if ($videoLink) {
 
-    if ($mediaFiles && is_array($mediaFiles)) {
-        foreach ($mediaFiles as $index => $file) {
-            // MIME type already validated above, now process the file
-            // Use the validated MIME type we stored earlier
-            $mimeType = $validatedMimeTypes[$index] ?? null;
-            
-            if (!$mimeType) {
-                // This should never happen if validation worked, but safety check
-                continue;
+        if (str_contains($videoLink, 'youtube.com')) {
+            parse_str(parse_url($videoLink, PHP_URL_QUERY), $query);
+            if (!empty($query['v'])) {
+                $embedLink = 'https://www.youtube.com/embed/' . $query['v'];
             }
-            
-            // Map MIME type to extension (security: don't trust filename extension)
-            $extensionMap = [
-                'image/jpeg' => 'jpg',
-                'image/png' => 'png',
-                'image/gif' => 'gif'
-            ];
+        }
+
+        elseif (str_contains($videoLink, 'youtu.be')) {
+            $videoId = basename(parse_url($videoLink, PHP_URL_PATH));
+            $embedLink = 'https://www.youtube.com/embed/' . $videoId;
+        }
+
+        else {
+            $embedLink = $videoLink;
+        }
+    }
+
+    // -----------------------------------------
+    // 3️⃣ SAVE POST → ONLY AFTER FILE VALIDATION
+    // -----------------------------------------
+    $post = Post::create([
+        'member_id'  => auth()->guard('user')->id(),
+        'content'    => $request->modalContent,
+        'media_type' => $mediaFiles ? 'photo_video' : ($videoLink ? 'video_link' : 'none'),
+        'video_link' => $embedLink,
+    ]);
+
+    // -----------------------------------------
+    // 4️⃣ SAVE IMAGE FILES
+    // -----------------------------------------
+    if ($mediaFiles) {
+
+        $extensionMap = [
+            'image/jpeg' => 'jpg',
+            'image/png'  => 'png',
+            'image/gif'  => 'gif',
+        ];
+
+        foreach ($mediaFiles as $index => $file) {
+
+            $mimeType = $validatedMimeTypes[$index];
             $extension = $extensionMap[$mimeType];
-            $filename = uniqid() . '.' . time() . '.' . $extension;
+
+            $filename = uniqid() . '_' . time() . '.' . $extension;
+
+            // Save to PRIVATE disk (good security)
             $path = $file->storeAs('posts/media', $filename, 'private');
 
-            $fileType = 'image';
-
             PostMedia::create([
-                'post_id' => $post->id,
+                'post_id'   => $post->id,
                 'file_path' => $path,
-                'file_type' => $fileType,
+                'file_type' => 'image'
             ]);
         }
     }
 
-    //post redirection
-    $notification = $this->notificationService->notifyAllMembers('post', $post->content . ' post has been created.', $post->id, 'SinglePost',Auth::id());
+    // -----------------------------------------
+    // 5️⃣ NOTIFICATION + RECENT ACTIVITY
+    // -----------------------------------------
+    $this->notificationService->notifyAllMembers(
+        'post',
+        $post->content . ' post has been created.',
+        $post->id,
+        'SinglePost',
+        Auth::id()
+    );
 
     $this->recentActivityService->logActivity(
         'Post Submitted',
@@ -240,9 +374,9 @@ public function store_chnagefor_video_link(Request $request)
         $post->id
     );
 
-    // return redirect('/user/feed')->with('success', 'Post created succsessfully.');
     return redirect('/user/feed')->with('success', 'Post submitted and waiting for moderator approval.');
 }
+
 public function group_post_store(Request $request)
 {
     $request->validate([
