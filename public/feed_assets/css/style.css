@@ -17891,7 +17891,7 @@ a.badge:hover {
 .left-sidebar,
 .right-sidebar {
   position: sticky;
-  top: 80px;
+  top: 100px;
   height: 90vh;
   overflow-y: auto; /* Always scrollable */
   scrollbar-gutter: stable overlay;
@@ -17901,7 +17901,7 @@ a.badge:hover {
   scrollbar-color: transparent transparent; /* Firefox */
 }
 .middle-sidebar{
-  margin-top:100px;
+  margin-top:120px;
 }
 
 /* Hide scrollbar in WebKit by default */
