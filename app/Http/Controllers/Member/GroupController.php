@@ -221,8 +221,15 @@ function activateGroup(Request $request) : RedirectResponse {
 }
 public function post_destroy(Request $request, $id) : RedirectResponse
 {
+    // Decrypt the encrypted post ID
+    try {
+        $decryptedId = Crypt::decrypt($id);
+    } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
+        return redirect()->back()->with('error', 'Invalid post ID.');
+    }
+
     // Post with media relation fetch karo
-    $post = Post::with('media')->find($id);
+    $post = Post::with('media')->find($decryptedId);
 
     if (!$post) {
         return redirect()->back()->with('error', 'Post not found.');

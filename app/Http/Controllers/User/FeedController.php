@@ -534,9 +534,16 @@ if ($group) {
     return view('user.grouppost_details', compact('posts','group','isMentee','grp_members','members'));
 }
 function edit_data_get($id){
-     $post = Post::select('id', 'content', 'video_link')
+    // Decrypt the encrypted post ID
+    try {
+        $decryptedId = \Crypt::decrypt($id);
+    } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
+        return response()->json(['error' => 'Invalid post ID'], 400);
+    }
+
+    $post = Post::select('id', 'content', 'video_link')
         ->with(['media:id,post_id,file_path'])
-        ->findOrFail($id);
+        ->findOrFail($decryptedId);
 
     return response()->json([
         'post' => $post

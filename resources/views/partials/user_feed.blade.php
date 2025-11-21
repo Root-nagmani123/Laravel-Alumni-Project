@@ -735,12 +735,12 @@
                 @if($post->member->id == auth()->guard('user')->id())
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="cardFeedAction-{{ $post->id }}">
                     <li>
-                        <a class="dropdown-item" onclick="editGrp_post({{ $post->id }})" href="#">
+                        <a class="dropdown-item" onclick="editGrp_post('{{ Crypt::encrypt($post->id) }}')" href="#">
                             <i class="bi bi-pen fa-fw pe-2"></i>Edit post 
                         </a>
                     </li>
                     <li>
-                        <form action="{{ route('user.group.post.destroy', $post->id) }}" method="POST"
+                        <form action="{{ route('user.group.post.destroy', Crypt::encrypt($post->id)) }}" method="POST"
                             onsubmit="return confirm('Are you sure you want to delete this post?');">
                             @csrf
                             @method('DELETE')

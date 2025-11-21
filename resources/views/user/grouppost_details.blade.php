@@ -223,7 +223,7 @@
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end">
                                 <li>
-                                    <form action="{{ route('user.group.post.destroy', $post->id) }}" method="POST"
+                                    <form action="{{ route('user.group.post.destroy', Crypt::encrypt($post->id)) }}" method="POST"
                                         onsubmit="return confirm('Are you sure you want to delete this post?');">
                                         @csrf
                                         @method('DELETE')
@@ -236,7 +236,7 @@
                                 <li>
                                     <a href="#"
                                         class="text-decoration-none ms-2 border-0 bg-transparent d-flex align-items-center gap-2"
-                                        data-bs-toggle="modal" onclick="editGrp_post({{ $post->id }})">
+                                        data-bs-toggle="modal" onclick="editGrp_post('{{ Crypt::encrypt($post->id) }}')">
                                         <i class="bi bi-pencil"></i> Edit Post
                                     </a>
                                 </li>
